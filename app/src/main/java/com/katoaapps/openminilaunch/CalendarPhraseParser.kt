@@ -50,6 +50,7 @@ private val unsupportedDateCuePattern = Regex(
 
 internal fun parseCalendarPhrase(
     input: String,
+    defaultTitle: String,
     now: ZonedDateTime = ZonedDateTime.now(),
 ): CalendarDraft {
     val clean = input.trim().replace(Regex("\\s+"), " ")
@@ -70,7 +71,7 @@ internal fun parseCalendarPhrase(
     val forMatch = calendarForPattern.find(eventWords)
     val title = forMatch?.let { eventWords.substring(0, it.range.first).trim() }
         .orEmpty()
-        .ifBlank { eventWords.ifBlank { "New event" } }
+        .ifBlank { eventWords.ifBlank { defaultTitle } }
     val description = forMatch?.let {
         eventWords.substring(it.range.last + 1).trim().takeIf(String::isNotEmpty)?.let { detail -> "for $detail" }
     }.orEmpty()

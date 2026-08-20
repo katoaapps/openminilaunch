@@ -40,12 +40,12 @@ internal fun AppPickerDialog(
     selected: Set<String>,
     onApp: (LaunchableApp) -> Unit,
     onReset: (() -> Unit)? = null,
-    resetLabel: String = "Reset to system default",
+    resetLabel: String? = null,
     onDismiss: () -> Unit,
     multiSelect: Boolean = false,
     selectionLimit: Int = 5,
     loading: Boolean = true,
-    emptyMessage: String = "No apps found.",
+    emptyMessage: String? = null,
     onSelectionLimit: () -> Unit = {},
     extraActionLabel: String? = null,
     onExtraAction: () -> Unit = {},
@@ -67,121 +67,121 @@ internal fun AppPickerDialog(
         }
     }
     Dialog(onDismissRequest = onDismiss) {
-        Surface(Modifier.fillMaxWidth().fillMaxHeight(.78f), shape = RoundedCornerShape(24.dp), color = MaterialTheme.colorScheme.background) {
-            Column(Modifier.padding(16.dp)) {
+        Surface(Modifier.fillMaxWidth().fillMaxHeight(.78f), shape = RoundedCornerShape(Dimens.dp24), color = MaterialTheme.colorScheme.background) {
+            Column(Modifier.padding(Dimens.dp16)) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
-                    Text(title, Modifier.weight(1f), fontWeight = FontWeight.Black, fontSize = 18.sp)
-                    IconButton(onClick = onDismiss) { Icon(Icons.Default.Close, "Close") }
+                    Text(title, Modifier.weight(1f), fontWeight = FontWeight.Black, fontSize = Dimens.sp18)
+                    IconButton(onClick = onDismiss) { Icon(Icons.Default.Close, stringResource(R.string.close)) }
                 }
                 supportingText?.let { guide ->
                     Surface(
                         color = MaterialTheme.colorScheme.secondaryContainer,
-                        shape = RoundedCornerShape(14.dp),
-                        modifier = Modifier.fillMaxWidth().padding(bottom = 6.dp),
+                        shape = RoundedCornerShape(Dimens.dp14),
+                        modifier = Modifier.fillMaxWidth().padding(bottom = Dimens.dp6),
                     ) {
-                        Column(Modifier.padding(horizontal = 12.dp, vertical = 10.dp)) {
+                        Column(Modifier.padding(horizontal = Dimens.dp12, vertical = Dimens.dp10)) {
                             Row(verticalAlignment = Alignment.Top) {
-                                Icon(Icons.Default.Info, null, Modifier.size(18.dp), tint = MaterialTheme.colorScheme.onSecondaryContainer)
+                                Icon(Icons.Default.Info, null, Modifier.size(Dimens.dp18), tint = MaterialTheme.colorScheme.onSecondaryContainer)
                                 Text(
                                     guide,
                                     color = MaterialTheme.colorScheme.onSecondaryContainer,
-                                    fontSize = 12.sp,
-                                    modifier = Modifier.padding(start = 8.dp).weight(1f),
+                                    fontSize = Dimens.sp12,
+                                    modifier = Modifier.padding(start = Dimens.dp8).weight(1f),
                                 )
                             }
                             supportingActionLabel?.let { label ->
                                 TextButton(
                                     onClick = onSupportingAction,
                                     modifier = Modifier.align(Alignment.End),
-                                    contentPadding = PaddingValues(horizontal = 6.dp),
+                                    contentPadding = PaddingValues(horizontal = Dimens.dp6),
                                 ) { Text(label) }
                             }
                         }
                     }
                 }
                 onReset?.let {
-                    TextButton(onClick = it, contentPadding = PaddingValues(horizontal = 4.dp)) {
-                        Icon(Icons.Default.Restore, null, Modifier.size(18.dp))
-                        Text(resetLabel, Modifier.padding(start = 6.dp))
+                    TextButton(onClick = it, contentPadding = PaddingValues(horizontal = Dimens.dp4)) {
+                        Icon(Icons.Default.Restore, null, Modifier.size(Dimens.dp18))
+                        Text(resetLabel ?: stringResource(R.string.reset_system_default), Modifier.padding(start = Dimens.dp6))
                     }
                 }
                 extraActionLabel?.let { label ->
-                    TextButton(onClick = onExtraAction, contentPadding = PaddingValues(horizontal = 4.dp)) {
-                        Icon(Icons.Default.MoreHoriz, null, Modifier.size(18.dp))
-                        Text(label, Modifier.padding(start = 6.dp))
+                    TextButton(onClick = onExtraAction, contentPadding = PaddingValues(horizontal = Dimens.dp4)) {
+                        Icon(Icons.Default.MoreHoriz, null, Modifier.size(Dimens.dp18))
+                        Text(label, Modifier.padding(start = Dimens.dp6))
                     }
                 }
                 if (multiSelect && selected.isNotEmpty()) {
                     Text(
-                        "SELECTED · TAP TO REMOVE",
+                        stringResource(R.string.selected_tap_to_remove),
                         color = Muted,
-                        fontSize = 10.sp,
+                        fontSize = Dimens.sp10,
                         fontWeight = FontWeight.Bold,
-                        letterSpacing = 1.sp,
-                        modifier = Modifier.padding(top = 4.dp, bottom = 6.dp),
+                        letterSpacing = Dimens.sp1,
+                        modifier = Modifier.padding(top = Dimens.dp4, bottom = Dimens.dp6),
                     )
                     val selectedApps = apps.filter { it.packageName in selected }.take(selectionLimit)
                     selectedApps.chunked(4).forEach { rowApps ->
-                        Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+                        Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(Dimens.dp6)) {
                             rowApps.forEach { app ->
                                 Column(
-                                    Modifier.weight(1f).clip(RoundedCornerShape(12.dp))
+                                    Modifier.weight(1f).clip(RoundedCornerShape(Dimens.dp12))
                                         .background(MaterialTheme.colorScheme.surfaceContainerLow)
-                                        .clickable { onApp(app) }.padding(horizontal = 3.dp, vertical = 7.dp),
+                                        .clickable { onApp(app) }.padding(horizontal = Dimens.dp3, vertical = Dimens.dp7),
                                     horizontalAlignment = Alignment.CenterHorizontally,
                                 ) {
                                     Box {
-                                        AppIcon(app.packageName, actions = null, size = 31.dp)
+                                        AppIcon(app.packageName, actions = null, size = Dimens.dp31)
                                         Surface(
-                                            modifier = Modifier.align(Alignment.TopEnd).offset(x = 5.dp, y = (-5).dp),
+                                            modifier = Modifier.align(Alignment.TopEnd).offset(x = Dimens.dp5, y = -Dimens.dp5),
                                             shape = CircleShape,
                                             color = MaterialTheme.colorScheme.error,
                                         ) {
-                                            Icon(Icons.Default.Close, "Remove ${app.label}", Modifier.size(14.dp), tint = MaterialTheme.colorScheme.onError)
+                                            Icon(Icons.Default.Close, stringResource(R.string.remove_app, app.label), Modifier.size(Dimens.dp14), tint = MaterialTheme.colorScheme.onError)
                                         }
                                     }
-                                    Text(app.label, fontSize = 9.sp, maxLines = 1, textAlign = TextAlign.Center, modifier = Modifier.padding(top = 4.dp))
+                                    Text(app.label, fontSize = Dimens.sp9, maxLines = 1, textAlign = TextAlign.Center, modifier = Modifier.padding(top = Dimens.dp4))
                                 }
                             }
                             repeat(4 - rowApps.size) { Spacer(Modifier.weight(1f)) }
                         }
-                        Spacer(Modifier.height(6.dp))
+                        Spacer(Modifier.height(Dimens.dp6))
                     }
-                    HorizontalDivider(Modifier.padding(top = 10.dp), color = Sage)
+                    HorizontalDivider(Modifier.padding(top = Dimens.dp10), color = Sage)
                 }
                 Box(Modifier.weight(1f).fillMaxWidth()) {
                     if (apps.isEmpty() && loading) {
                         CircularProgressIndicator(Modifier.align(Alignment.Center), color = MaterialTheme.colorScheme.onSurface)
                     } else if (apps.isEmpty()) {
-                        Text(emptyMessage, Modifier.align(Alignment.Center).padding(24.dp), textAlign = TextAlign.Center, color = Muted)
+                        Text(emptyMessage ?: stringResource(R.string.no_apps_found), Modifier.align(Alignment.Center).padding(Dimens.dp24), textAlign = TextAlign.Center, color = Muted)
                     } else {
                         LazyVerticalGrid(
                             columns = GridCells.Fixed(3),
                             state = gridState,
-                            contentPadding = PaddingValues(top = 8.dp, bottom = 8.dp, end = 34.dp),
+                            contentPadding = PaddingValues(top = Dimens.dp8, bottom = Dimens.dp8, end = Dimens.dp34),
                             modifier = Modifier.fillMaxSize(),
                         ) {
                             items(apps, key = { it.packageName }) { app ->
                                 val isSelected = app.packageName in selected
                                 Column(
-                                    Modifier.padding(5.dp).clip(RoundedCornerShape(16.dp))
+                                    Modifier.padding(Dimens.dp5).clip(RoundedCornerShape(Dimens.dp16))
                                         .background(if (isSelected) Sage else MaterialTheme.colorScheme.surfaceContainerLow)
                                         .clickable {
                                             if (multiSelect && !isSelected && selected.size >= selectionLimit) onSelectionLimit()
                                             else onApp(app)
                                         }
-                                        .padding(10.dp),
+                                        .padding(Dimens.dp10),
                                     horizontalAlignment = Alignment.CenterHorizontally,
                                 ) {
-                                    AppIcon(app.packageName, actions = null, size = 42.dp)
-                                    Text(app.label, textAlign = TextAlign.Center, fontSize = 11.sp, maxLines = 2, modifier = Modifier.padding(top = 7.dp))
+                                    AppIcon(app.packageName, actions = null, size = Dimens.dp42)
+                                    Text(app.label, textAlign = TextAlign.Center, fontSize = Dimens.sp11, maxLines = 2, modifier = Modifier.padding(top = Dimens.dp7))
                                 }
                             }
                         }
                         Column(
-                            Modifier.align(Alignment.CenterEnd).fillMaxHeight().width(28.dp)
+                            Modifier.align(Alignment.CenterEnd).fillMaxHeight().width(Dimens.dp28)
                                 .onSizeChanged { railHeight = it.height }
-                                .clip(RoundedCornerShape(12.dp)).background(MaterialTheme.colorScheme.background.copy(alpha = .94f))
+                                .clip(RoundedCornerShape(Dimens.dp12)).background(MaterialTheme.colorScheme.background.copy(alpha = .94f))
                                 .pointerInput(apps, railHeight) {
                                     fun selectAt(y: Float) {
                                         railLetterIndex = ((y / railHeight) * letters.size).toInt().coerceIn(0, letters.lastIndex)
@@ -205,25 +205,25 @@ internal fun AppPickerDialog(
                                 )
                                 Text(
                                     letter.toString(),
-                                    fontSize = 9.sp,
+                                    fontSize = Dimens.sp9,
                                     fontWeight = FontWeight.Bold,
                                     color = if (isFocused) MaterialTheme.colorScheme.onSurface else Rust.copy(alpha = .72f),
                                     modifier = Modifier.clickable {
                                         railLetterIndex = letters.indexOf(letter)
                                     }.graphicsLayer { scaleX = scale; scaleY = scale }
-                                        .padding(horizontal = 6.dp),
+                                        .padding(horizontal = Dimens.dp6),
                                 )
                             }
                         }
                         if (railDragging) {
                             Surface(
-                                modifier = Modifier.align(Alignment.CenterEnd).padding(end = 38.dp),
+                                modifier = Modifier.align(Alignment.CenterEnd).padding(end = Dimens.dp38),
                                 shape = CircleShape,
                                 color = Rust,
-                                shadowElevation = 8.dp,
+                                shadowElevation = Dimens.dp8,
                             ) {
-                                Box(Modifier.size(48.dp), contentAlignment = Alignment.Center) {
-                                    Text(letters[railLetterIndex].toString(), color = Color.White, fontSize = 22.sp, fontWeight = FontWeight.Black)
+                                Box(Modifier.size(Dimens.dp48), contentAlignment = Alignment.Center) {
+                                    Text(letters[railLetterIndex].toString(), color = MinkWhite, fontSize = Dimens.sp22, fontWeight = FontWeight.Black)
                                 }
                             }
                         }
@@ -237,17 +237,17 @@ internal fun AppPickerDialog(
 @Composable
 internal fun ThemeChooser(selected: ThemePreference, onSelect: (ThemePreference) -> Unit) {
     Column(
-        Modifier.fillMaxWidth().clip(RoundedCornerShape(16.dp)).background(MaterialTheme.colorScheme.surfaceContainerLow).padding(14.dp),
-        verticalArrangement = Arrangement.spacedBy(10.dp),
+        Modifier.fillMaxWidth().clip(RoundedCornerShape(Dimens.dp16)).background(MaterialTheme.colorScheme.surfaceContainerLow).padding(Dimens.dp14),
+        verticalArrangement = Arrangement.spacedBy(Dimens.dp10),
     ) {
-        Text("Light Mode", fontWeight = FontWeight.SemiBold)
-        Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(7.dp)) {
+        Text(stringResource(R.string.light_mode), fontWeight = FontWeight.SemiBold)
+        Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(Dimens.dp7)) {
             ThemePreference.entries.forEach { option ->
                 FilterChip(
                     selected = selected == option,
                     onClick = { onSelect(option) },
-                    label = { Text(option.label) },
-                    leadingIcon = if (selected == option) ({ Icon(Icons.Default.Check, null, Modifier.size(15.dp)) }) else null,
+                    label = { Text(stringResource(option.labelRes)) },
+                    leadingIcon = if (selected == option) ({ Icon(Icons.Default.Check, null, Modifier.size(Dimens.dp15)) }) else null,
                     modifier = Modifier.weight(1f),
                 )
             }
@@ -257,19 +257,19 @@ internal fun ThemeChooser(selected: ThemePreference, onSelect: (ThemePreference)
 
 @Composable
 internal fun MessageSendModeChooser(selected: MessageSendMode, onSelect: (MessageSendMode) -> Unit) {
-    Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+    Column(verticalArrangement = Arrangement.spacedBy(Dimens.dp8)) {
         MessageSendMode.entries.forEach { option ->
             Surface(
                 onClick = { onSelect(option) },
-                shape = RoundedCornerShape(14.dp),
+                shape = RoundedCornerShape(Dimens.dp14),
                 color = if (selected == option) MaterialTheme.colorScheme.primaryContainer else MaterialTheme.colorScheme.surfaceContainerLow,
             ) {
                 Row(
-                    Modifier.fillMaxWidth().padding(horizontal = 12.dp, vertical = 10.dp),
+                    Modifier.fillMaxWidth().padding(horizontal = Dimens.dp12, vertical = Dimens.dp10),
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
                     RadioButton(selected = selected == option, onClick = null)
-                    Text(option.label, Modifier.padding(start = 8.dp), fontWeight = FontWeight.Medium)
+                    Text(stringResource(option.labelRes), Modifier.padding(start = Dimens.dp8), fontWeight = FontWeight.Medium)
                 }
             }
         }
@@ -286,20 +286,20 @@ internal fun PermissionCard(
     onManage: () -> Unit,
 ) {
     Column(
-        Modifier.fillMaxWidth().clip(RoundedCornerShape(16.dp)).background(MaterialTheme.colorScheme.surfaceContainerLow).padding(14.dp),
-        verticalArrangement = Arrangement.spacedBy(9.dp),
+        Modifier.fillMaxWidth().clip(RoundedCornerShape(Dimens.dp16)).background(MaterialTheme.colorScheme.surfaceContainerLow).padding(Dimens.dp14),
+        verticalArrangement = Arrangement.spacedBy(Dimens.dp9),
     ) {
         Row(verticalAlignment = Alignment.CenterVertically) {
             Icon(icon, null, tint = MaterialTheme.colorScheme.onSurface)
-            Column(Modifier.weight(1f).padding(start = 10.dp)) {
+            Column(Modifier.weight(1f).padding(start = Dimens.dp10)) {
                 Text(title, fontWeight = FontWeight.SemiBold)
-                Text(description, color = Muted, fontSize = 12.sp)
+                Text(description, color = Muted, fontSize = Dimens.sp12)
             }
-            if (granted) Icon(Icons.Default.CheckCircle, "Granted", tint = Color(0xFF198754))
+            if (granted) Icon(Icons.Default.CheckCircle, stringResource(R.string.granted), tint = MagicCallColor)
         }
         Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
-            TextButton(onClick = onManage) { Text("Manage") }
-            if (!granted) FilledTonalButton(onClick = onGrant) { Text("Allow") }
+            TextButton(onClick = onManage) { Text(stringResource(R.string.manage)) }
+            if (!granted) FilledTonalButton(onClick = onGrant) { Text(stringResource(R.string.allow)) }
         }
     }
 }
@@ -310,16 +310,16 @@ internal fun LockAccessibilityDisclosureDialog(onContinue: () -> Unit, onDismiss
     AlertDialog(
         onDismissRequest = onDismiss,
         icon = { Icon(Icons.Default.Lock, null, tint = Rust) },
-        title = { Text("Enable double-tap to lock?") },
+        title = { Text(stringResource(R.string.enable_double_tap_lock)) },
         text = {
-            Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
-                Text("To make double-tap behave like the power button, $appName uses Android's accessibility Lock screen action.")
-                Text("The service runs only when you double-tap empty Home space. It does not observe accessibility events, read screen content, perform gestures, or collect data.")
-                Text("Android will ask you to enable Double-tap screen lock. You can disable it at any time in Accessibility settings.")
+            Column(verticalArrangement = Arrangement.spacedBy(Dimens.dp10)) {
+                Text(stringResource(R.string.double_tap_disclosure_one, appName))
+                Text(stringResource(R.string.double_tap_disclosure_two))
+                Text(stringResource(R.string.double_tap_disclosure_three))
             }
         },
-        confirmButton = { Button(onClick = onContinue) { Text("Continue") } },
-        dismissButton = { TextButton(onClick = onDismiss) { Text("Not now") } },
+        confirmButton = { Button(onClick = onContinue) { Text(stringResource(R.string.continue_action)) } },
+        dismissButton = { TextButton(onClick = onDismiss) { Text(stringResource(R.string.not_now)) } },
     )
 }
 
@@ -329,18 +329,18 @@ internal fun AssistantDisclosureDialog(active: Boolean, onContinue: () -> Unit, 
     AlertDialog(
         onDismissRequest = onDismiss,
         icon = { Icon(Icons.Default.Assistant, null, tint = Rust) },
-        title = { Text(if (active) "Mink Assistant is active" else "Use Mink Assistant?") },
+        title = { Text(stringResource(if (active) R.string.assistant_active_title else R.string.assistant_enable_title)) },
         text = {
-            Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
-                Text("Your phone's assistant gesture will open the keyboard-first Magic Box over your current app.")
-                Text("Choosing $appName replaces your current default digital assistant. You can switch back at any time in system settings.")
-                Text("Mink Assistant does not request microphone, call-log, screen-reading, or screen-context access. Android may grant Send SMS as part of the assistant role; $appName uses it only after you choose a recipient, write the message, and press the @ action.")
+            Column(verticalArrangement = Arrangement.spacedBy(Dimens.dp10)) {
+                Text(stringResource(R.string.assistant_disclosure_one))
+                Text(stringResource(R.string.assistant_disclosure_two, appName))
+                Text(stringResource(R.string.assistant_disclosure_three, appName))
             }
         },
         confirmButton = {
-            Button(onClick = onContinue) { Text(if (active) "Manage assistant" else "Choose assistant") }
+            Button(onClick = onContinue) { Text(stringResource(if (active) R.string.manage_assistant else R.string.choose_assistant)) }
         },
-        dismissButton = { TextButton(onClick = onDismiss) { Text("Cancel") } },
+        dismissButton = { TextButton(onClick = onDismiss) { Text(stringResource(R.string.cancel)) } },
     )
 }
 
@@ -350,15 +350,15 @@ internal fun NotificationAccessDisclosureDialog(onContinue: () -> Unit, onDismis
     AlertDialog(
         onDismissRequest = onDismiss,
         icon = { Icon(Icons.Default.Forum, null, tint = Rust) },
-        title = { Text("Enable Conversations?") },
+        title = { Text(stringResource(R.string.enable_conversations)) },
         text = {
-            Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
-                Text("Android notification access lets $appName read active message and email notifications, group them into conversations, and offer inline reply when the originating app provides a reply action.")
-                Text("Notifications outside messages and email are ignored. Conversation contents and replies are kept in memory only. They are not stored by $appName, uploaded, or sent to Katoa Apps.")
-                Text("Replies are handed directly to the app that created the notification. You can revoke access at any time in Android settings.")
+            Column(verticalArrangement = Arrangement.spacedBy(Dimens.dp10)) {
+                Text(stringResource(R.string.conversations_disclosure_one, appName))
+                Text(stringResource(R.string.conversations_disclosure_two, appName))
+                Text(stringResource(R.string.conversations_disclosure_three))
             }
         },
-        confirmButton = { Button(onClick = onContinue) { Text("Continue") } },
-        dismissButton = { TextButton(onClick = onDismiss) { Text("Not now") } },
+        confirmButton = { Button(onClick = onContinue) { Text(stringResource(R.string.continue_action)) } },
+        dismissButton = { TextButton(onClick = onDismiss) { Text(stringResource(R.string.not_now)) } },
     )
 }

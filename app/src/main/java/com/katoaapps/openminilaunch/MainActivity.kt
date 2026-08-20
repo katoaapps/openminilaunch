@@ -10,7 +10,6 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
-import android.net.Uri
 import android.provider.Settings
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.BackHandler
@@ -35,14 +34,7 @@ import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import kotlinx.coroutines.launch
 
-internal val LightInk = Color(0xFF1E2A24)
-internal val LightPaper = Color(0xFFF4F1E8)
-internal val Sage = Color(0xFFB8C7B0)
-internal val Rust = Color(0xFFB85C3C)
-internal val MinkForest = Color(0xFF173529)
-internal val MinkForestPanel = Color(0xFF10271F)
-internal val Muted = Color(0xFF6B746D)
-private const val FEATURE_UPDATE_ID = "open_1_0"
+private const val FEATURE_UPDATE_ID = "generic_shortcuts"
 private const val REQUEST_CONFIGURE_APP_WIDGET = 0x4D4B
 private const val MINK_DAY_PAGE = 0
 private const val HOME_PAGE = 1
@@ -173,14 +165,14 @@ private fun MiniLaunchApp(
     }
     val fallbackColors = if (darkTheme) {
         darkColorScheme(
-            primary = Color(0xFFC8D8C1), onPrimary = Color(0xFF152018),
-            background = Color(0xFF101512), surface = Color(0xFF171D19),
-            surfaceContainerLow = Color(0xFF1C2420), onSurface = Color(0xFFF1F3EE), secondary = Rust,
+            primary = DarkPrimary, onPrimary = DarkOnPrimary,
+            background = DarkBackground, surface = DarkSurface,
+            surfaceContainerLow = DarkSurfaceContainerLow, onSurface = DarkOnSurface, secondary = Rust,
         )
     } else {
         lightColorScheme(
             primary = LightInk, onPrimary = LightPaper, background = LightPaper,
-            surface = LightPaper, surfaceContainerLow = Color.White, onSurface = LightInk, secondary = Rust,
+            surface = LightPaper, surfaceContainerLow = MinkWhite, onSurface = LightInk, secondary = Rust,
         )
     }
     val colors = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
@@ -234,10 +226,11 @@ private fun MiniLaunchApp(
             onboardingCallPermission.launch(Manifest.permission.CALL_PHONE)
         }
     }
+    val transparent = MinkTransparent
     SideEffect {
         val window = (context as Activity).window
-        window.statusBarColor = Color.Transparent.toArgb()
-        window.navigationBarColor = Color.Transparent.toArgb()
+        window.statusBarColor = transparent.toArgb()
+        window.navigationBarColor = transparent.toArgb()
         WindowInsetsControllerCompat(window, view).apply {
             isAppearanceLightStatusBars = !darkTheme
             isAppearanceLightNavigationBars = !darkTheme

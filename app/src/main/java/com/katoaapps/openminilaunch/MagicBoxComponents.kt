@@ -88,12 +88,12 @@ internal fun FileResultsGrid(
 ) {
     LazyVerticalGrid(
         columns = GridCells.Fixed(3),
-        modifier = Modifier.fillMaxWidth().heightIn(max = 240.dp)
-            .clip(RoundedCornerShape(18.dp)).background(MaterialTheme.colorScheme.surface.copy(alpha = .96f))
-            .padding(horizontal = 9.dp),
-        contentPadding = PaddingValues(vertical = 8.dp),
-        horizontalArrangement = Arrangement.spacedBy(8.dp),
-        verticalArrangement = Arrangement.spacedBy(9.dp),
+        modifier = Modifier.fillMaxWidth().heightIn(max = Dimens.dp240)
+            .clip(RoundedCornerShape(Dimens.dp18)).background(MaterialTheme.colorScheme.surface.copy(alpha = .96f))
+            .padding(horizontal = Dimens.dp9),
+        contentPadding = PaddingValues(vertical = Dimens.dp8),
+        horizontalArrangement = Arrangement.spacedBy(Dimens.dp8),
+        verticalArrangement = Arrangement.spacedBy(Dimens.dp9),
     ) {
         FileResultGroup.entries.forEach { group ->
             val groupedResults = results.filter { fileResultGroup(it) == group }
@@ -102,10 +102,10 @@ internal fun FileResultsGrid(
                     Text(
                         stringResource(group.labelRes),
                         color = Muted,
-                        fontSize = 10.sp,
+                        fontSize = Dimens.sp10,
                         fontWeight = FontWeight.Bold,
-                        letterSpacing = 1.2.sp,
-                        modifier = Modifier.padding(top = 4.dp),
+                        letterSpacing = Dimens.sp1_2,
+                        modifier = Modifier.padding(top = Dimens.dp4),
                     )
                 }
                 items(groupedResults, key = { it.uri.toString() }) { file ->
@@ -122,11 +122,11 @@ internal fun FileResultTile(file: FileSearchResult, repository: FileSearchReposi
         value = withContext(Dispatchers.IO) { repository.loadThumbnail(file) }
     }
     Column(
-        Modifier.clip(RoundedCornerShape(12.dp)).clickable(onClick = onClick).padding(3.dp),
+        Modifier.clip(RoundedCornerShape(Dimens.dp12)).clickable(onClick = onClick).padding(Dimens.dp3),
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Box(
-            Modifier.fillMaxWidth().aspectRatio(1f).clip(RoundedCornerShape(10.dp))
+            Modifier.fillMaxWidth().aspectRatio(1f).clip(RoundedCornerShape(Dimens.dp10))
                 .background(MaterialTheme.colorScheme.surfaceContainerLow),
             contentAlignment = Alignment.Center,
         ) {
@@ -138,21 +138,21 @@ internal fun FileResultTile(file: FileSearchResult, repository: FileSearchReposi
                     modifier = Modifier.fillMaxSize(),
                 )
             } else {
-                Icon(fileResultIcon(file), null, Modifier.size(34.dp), tint = Rust)
+                Icon(fileResultIcon(file), null, Modifier.size(Dimens.dp34), tint = Rust)
             }
             if (fileResultGroup(file) == FileResultGroup.VIDEOS) {
-                Surface(shape = CircleShape, color = Color.Black.copy(alpha = .62f)) {
-                    Icon(Icons.Default.PlayArrow, null, Modifier.padding(5.dp).size(20.dp), tint = Color.White)
+                Surface(shape = CircleShape, color = MinkBlack.copy(alpha = .62f)) {
+                    Icon(Icons.Default.PlayArrow, null, Modifier.padding(Dimens.dp5).size(Dimens.dp20), tint = MinkWhite)
                 }
             }
         }
         Text(
             file.name,
-            fontSize = 10.sp,
-            lineHeight = 12.sp,
+            fontSize = Dimens.sp10,
+            lineHeight = Dimens.sp12,
             maxLines = 2,
             textAlign = TextAlign.Center,
-            modifier = Modifier.fillMaxWidth().padding(top = 4.dp),
+            modifier = Modifier.fillMaxWidth().padding(top = Dimens.dp4),
         )
     }
 }
@@ -165,21 +165,21 @@ internal fun SearchHistoryList(
     onClearAll: () -> Unit,
 ) {
     Surface(
-        shape = RoundedCornerShape(18.dp),
+        shape = RoundedCornerShape(Dimens.dp18),
         color = MaterialTheme.colorScheme.surface,
-        shadowElevation = 6.dp,
+        shadowElevation = Dimens.dp6,
     ) {
         Column(Modifier.fillMaxWidth()) {
             Row(
-                Modifier.fillMaxWidth().padding(start = 16.dp, end = 8.dp, top = 8.dp, bottom = 4.dp),
+                Modifier.fillMaxWidth().padding(start = Dimens.dp16, end = Dimens.dp8, top = Dimens.dp8, bottom = Dimens.dp4),
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 Text(
                     stringResource(R.string.recent_searches),
                     Modifier.weight(1f),
-                    fontSize = 12.sp,
+                    fontSize = Dimens.sp12,
                     fontWeight = FontWeight.Bold,
-                    letterSpacing = 1.sp,
+                    letterSpacing = Dimens.sp1,
                     color = Muted,
                 )
                 TextButton(onClick = onClearAll) { Text(stringResource(R.string.clear_all)) }
@@ -187,11 +187,11 @@ internal fun SearchHistoryList(
             queries.forEach { query ->
                 Row(
                     Modifier.fillMaxWidth().clickable { onSelect(query) }
-                        .padding(start = 16.dp, end = 4.dp, top = 4.dp, bottom = 4.dp),
+                        .padding(start = Dimens.dp16, end = Dimens.dp4, top = Dimens.dp4, bottom = Dimens.dp4),
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
-                    Icon(Icons.Default.History, null, Modifier.size(20.dp), tint = Muted)
-                    Text(query, Modifier.weight(1f).padding(horizontal = 12.dp), maxLines = 1)
+                    Icon(Icons.Default.History, null, Modifier.size(Dimens.dp20), tint = Muted)
+                    Text(query, Modifier.weight(1f).padding(horizontal = Dimens.dp12), maxLines = 1)
                     IconButton(onClick = { onDelete(query) }) {
                         Icon(
                             Icons.Default.Close,
@@ -201,7 +201,7 @@ internal fun SearchHistoryList(
                     }
                 }
             }
-            Spacer(Modifier.height(4.dp))
+            Spacer(Modifier.height(Dimens.dp4))
         }
     }
 }
@@ -211,45 +211,45 @@ private data class MagicCommand(val key: Char, val labelRes: Int, val color: Col
 @Composable
 internal fun MagicBoxLegend(activePrefix: Char?, enabled: Boolean = true, onSelect: (Char) -> Unit) {
     val commands = listOf(
-        MagicCommand('@', R.string.command_text, Color(0xFF2563EB)),
-        MagicCommand('#', R.string.command_call, Color(0xFF198754)),
-        MagicCommand('-', R.string.command_todo, Color(0xFFD6A300)),
-        MagicCommand('$', R.string.command_note, Color(0xFF7C3AED)),
-        MagicCommand('+', R.string.command_event, Color(0xFF8B5A2B)),
-        MagicCommand('?', R.string.command_app, Color(0xFFC62828)),
+        MagicCommand('@', R.string.command_text, MagicTextColor),
+        MagicCommand('#', R.string.command_call, MagicCallColor),
+        MagicCommand('-', R.string.command_todo, MagicTodoColor),
+        MagicCommand('$', R.string.command_note, MagicNoteColor),
+        MagicCommand('+', R.string.command_event, MagicEventColor),
+        MagicCommand('?', R.string.command_app, MagicAppColor),
     )
     Surface(
-        shape = RoundedCornerShape(18.dp),
+        shape = RoundedCornerShape(Dimens.dp18),
         color = MaterialTheme.colorScheme.surface.copy(alpha = .96f),
-        shadowElevation = 8.dp,
+        shadowElevation = Dimens.dp8,
     ) {
-        Column(Modifier.fillMaxWidth().padding(10.dp), verticalArrangement = Arrangement.spacedBy(7.dp)) {
+        Column(Modifier.fillMaxWidth().padding(Dimens.dp10), verticalArrangement = Arrangement.spacedBy(Dimens.dp7)) {
             Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
                 Text(
                     stringResource(R.string.hot_keys),
                     Modifier.weight(1f),
                     color = Muted,
-                    fontSize = 10.sp,
+                    fontSize = Dimens.sp10,
                     fontWeight = FontWeight.Bold,
-                    letterSpacing = 1.2.sp,
+                    letterSpacing = Dimens.sp1_2,
                 )
-                Text(stringResource(R.string.just_type_to_search), color = Muted, fontSize = 11.sp)
+                Text(stringResource(R.string.just_type_to_search), color = Muted, fontSize = Dimens.sp11)
             }
             commands.chunked(3).forEach { rowCommands ->
-                Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(7.dp)) {
+                Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(Dimens.dp7)) {
                     rowCommands.forEach { command ->
                         val active = activePrefix == command.key
-                        val activeContentColor = if (command.key == '-') LightInk else Color.White
+                        val activeContentColor = if (command.key == '-') LightInk else MinkWhite
                         Surface(
                             onClick = { if (enabled) onSelect(command.key) },
                             modifier = Modifier.weight(1f),
-                            shape = RoundedCornerShape(12.dp),
+                            shape = RoundedCornerShape(Dimens.dp12),
                             color = if (active) command.color else MaterialTheme.colorScheme.surfaceContainerLow,
                             contentColor = (if (active) activeContentColor else MaterialTheme.colorScheme.onSurface)
                                 .copy(alpha = if (enabled) 1f else .45f),
                         ) {
                             Row(
-                                Modifier.padding(horizontal = 9.dp, vertical = 7.dp),
+                                Modifier.padding(horizontal = Dimens.dp9, vertical = Dimens.dp7),
                                 verticalAlignment = Alignment.CenterVertically,
                             ) {
                                 Text(
@@ -259,8 +259,8 @@ internal fun MagicBoxLegend(activePrefix: Char?, enabled: Boolean = true, onSele
                                 )
                                 Text(
                                     stringResource(command.labelRes),
-                                    Modifier.padding(start = 6.dp),
-                                    fontSize = 12.sp,
+                                    Modifier.padding(start = Dimens.dp6),
+                                    fontSize = Dimens.sp12,
                                     maxLines = 1,
                                 )
                             }
@@ -278,13 +278,13 @@ internal fun CommandChip(label: String, color: Color, contentColor: Color, onCle
         selected = true,
         onClick = onClear,
         label = { Text(label, maxLines = 1) },
-        trailingIcon = { Icon(Icons.Default.Close, stringResource(R.string.clear_command), Modifier.size(16.dp)) },
+        trailingIcon = { Icon(Icons.Default.Close, stringResource(R.string.clear_command), Modifier.size(Dimens.dp16)) },
         colors = InputChipDefaults.inputChipColors(
             selectedContainerColor = color,
             selectedLabelColor = contentColor,
             selectedTrailingIconColor = contentColor,
         ),
-        modifier = Modifier.widthIn(max = 145.dp),
+        modifier = Modifier.widthIn(max = Dimens.dp145),
     )
 }
 
@@ -296,13 +296,13 @@ internal fun SuggestionRow(
     onClick: () -> Unit,
 ) {
     Row(
-        Modifier.fillMaxWidth().clip(RoundedCornerShape(14.dp))
+        Modifier.fillMaxWidth().clip(RoundedCornerShape(Dimens.dp14))
             .background(MaterialTheme.colorScheme.surfaceContainerLow)
-            .clickable(onClick = onClick).padding(12.dp),
+            .clickable(onClick = onClick).padding(Dimens.dp12),
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        if (leadingContent != null) leadingContent() else icon?.let { Icon(it, null, Modifier.size(20.dp)) }
-        Text(text, Modifier.padding(start = 10.dp), maxLines = 1, fontSize = 14.sp)
+        if (leadingContent != null) leadingContent() else icon?.let { Icon(it, null, Modifier.size(Dimens.dp20)) }
+        Text(text, Modifier.padding(start = Dimens.dp10), maxLines = 1, fontSize = Dimens.sp14)
     }
 }
 
@@ -317,14 +317,14 @@ internal fun SearchDestinationButton(
     Surface(
         onClick = onClick,
         modifier = modifier,
-        shape = RoundedCornerShape(14.dp),
+        shape = RoundedCornerShape(Dimens.dp14),
         color = MaterialTheme.colorScheme.surfaceContainerLow,
     ) {
-        Row(Modifier.padding(12.dp), verticalAlignment = Alignment.CenterVertically) {
-            Icon(icon, null, Modifier.size(21.dp))
-            Column(Modifier.padding(start = 9.dp)) {
-                Text(label, fontWeight = FontWeight.SemiBold, fontSize = 14.sp)
-                Text(detail, color = Muted, fontSize = 10.sp, maxLines = 1)
+        Row(Modifier.padding(Dimens.dp12), verticalAlignment = Alignment.CenterVertically) {
+            Icon(icon, null, Modifier.size(Dimens.dp21))
+            Column(Modifier.padding(start = Dimens.dp9)) {
+                Text(label, fontWeight = FontWeight.SemiBold, fontSize = Dimens.sp14)
+                Text(detail, color = Muted, fontSize = Dimens.sp10, maxLines = 1)
             }
         }
     }

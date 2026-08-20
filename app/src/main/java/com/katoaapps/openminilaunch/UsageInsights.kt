@@ -49,32 +49,35 @@ internal data class MinkDaySummary(
     val errorMessage: String? = null,
 ) {
     companion object {
-        fun loading(nowMillis: Long = System.currentTimeMillis()): MinkDaySummary {
+        fun loading(context: Context, nowMillis: Long = System.currentTimeMillis()): MinkDaySummary {
             val hour = Instant.ofEpochMilli(nowMillis).atZone(ZoneId.systemDefault()).hour
             return MinkDaySummary(
                 accessGranted = false,
                 state = if (hour >= 22 || hour < 5) MinkState.SLEEPING else MinkState.WALKING,
-                headline = if (hour >= 22 || hour < 5) "Mink made it home" else "Mink is checking the trail",
-                detail = "Looking at today’s tracked apps on this device…",
+                headline = context.getString(if (hour >= 22 || hour < 5) R.string.mink_made_it_home else R.string.mink_checking_trail),
+                detail = context.getString(R.string.mink_loading_detail),
                 isLoading = true,
             )
         }
 
-        fun unavailable(accessGranted: Boolean, nowMillis: Long = System.currentTimeMillis()): MinkDaySummary {
+        fun unavailable(context: Context, accessGranted: Boolean, nowMillis: Long = System.currentTimeMillis()): MinkDaySummary {
             val hour = Instant.ofEpochMilli(nowMillis).atZone(ZoneId.systemDefault()).hour
             return MinkDaySummary(
                 accessGranted = accessGranted,
                 state = if (hour >= 22 || hour < 5) MinkState.SLEEPING else MinkState.WALKING,
-                headline = "Mink lost the trail",
-                detail = "Today’s tracked-app activity could not be read just now.",
-                errorMessage = "MinkLauncher OpenSource couldn’t read Android’s usage data. Try again, or check Usage Access in Settings.",
+                headline = context.getString(R.string.mink_lost_trail),
+                detail = context.getString(R.string.mink_unavailable_detail),
+                errorMessage = context.getString(R.string.mink_unavailable_error, context.getString(R.string.app_name)),
             )
         }
     }
 }
 
-internal fun effectiveTrackedPackages(selectedPackages: Set<String>, androidSocialPackages: Set<String>): Set<String> =
-    selectedPackages.ifEmpty { androidSocialPackages }
+internal fun effectiveTrackedPackages(
+    selectedPackages: Set<String>,
+    androidSocialPackages: Set<String>,
+    usesAutomaticSocialApps: Boolean,
+): Set<String> = if (usesAutomaticSocialApps) androidSocialPackages else selectedPackages
 
 internal fun MinkDaySummary.needsAttention(): Boolean = errorMessage != null || accessGranted && when (state) {
     MinkState.PHONE, MinkState.DISTRACTED, MinkState.RESTING -> true
@@ -205,6 +208,7 @@ internal class UsageInsightsRepository(private val context: Context) {
 
     fun summary(
         socialPackages: Set<String>,
+        usesAutomaticSocialApps: Boolean,
         socialGoalMinutes: Int,
         nowMillis: Long = System.currentTimeMillis(),
     ): MinkDaySummary {
@@ -216,7 +220,7 @@ internal class UsageInsightsRepository(private val context: Context) {
         val events = readTimelineEvents(dayStart - EVENT_LOOKBACK_MILLIS, nowMillis)
         val observedPackages = events.mapNotNull(UsageTimelineEvent::packageName).toSet()
         val automaticPackages = observedPackages.filterTo(mutableSetOf()) { isSocial(it, emptySet()) }
-        val trackedPackages = effectiveTrackedPackages(socialPackages, automaticPackages)
+        val trackedPackages = effectiveTrackedPackages(socialPackages, automaticPackages, usesAutomaticSocialApps)
         val ignored = observedPackages.filterTo(mutableSetOf(), ::isIgnoredPackage)
         val analysis = analyzeUsageTimeline(
             dayStart = dayStart,
@@ -296,8 +300,8 @@ internal class UsageInsightsRepository(private val context: Context) {
     private fun noAccessSummary(hour: Int) = MinkDaySummary(
         accessGranted = false,
         state = if (hour >= 22 || hour < 5) MinkState.SLEEPING else MinkState.WALKING,
-        headline = if (hour >= 22 || hour < 5) "Mink made it home" else "Mink is ready for the day",
-        detail = "Enable optional Usage Access to measure time in the social apps you choose, entirely on this device.",
+        headline = context.getString(if (hour >= 22 || hour < 5) R.string.mink_made_it_home else R.string.mink_ready_for_day),
+        detail = context.getString(R.string.mink_enable_usage_detail),
     )
 
     private fun stateCopy(
@@ -309,18 +313,23 @@ internal class UsageInsightsRepository(private val context: Context) {
         longestSocialMillis: Long,
         topSocial: MinkAppUsage?,
     ): Pair<String, String> = when (state) {
-        MinkState.SLEEPING -> "Mink made it home" to "Today is tucked away. Tomorrow starts with a clean trail."
-        MinkState.PHONE -> "Mink stopped to scroll" to if (topSocial != null) {
-            "${topSocial.label} led tracked time today. You’re ${formatDuration(socialMillis)} into a $socialGoalMinutes-minute goal."
-        } else "Social time passed today’s $socialGoalMinutes-minute goal."
-        MinkState.DISTRACTED -> "Mink keeps checking the trail" to "$socialOpensLastHour tracked-app opens in the last hour may be making it harder to settle in."
-        MinkState.RESTING -> "Mink could use a pause" to if (longestSocial != null) {
-            "Your longest visit was ${formatDuration(longestSocialMillis)} in ${longestSocial.label}."
-        } else "A short break from your tracked apps might feel good."
-        MinkState.PURPOSEFUL -> "Mink found a quiet trail" to "No time in your tracked social apps yet today."
-        MinkState.WALKING -> "Mink is moving along" to if (topSocial == null) {
-            "There isn’t enough tracked activity yet to describe today’s trail."
-        } else "${topSocial.label} leads tracked time so far at ${formatDuration(topSocial.foregroundMillis)}."
+        MinkState.SLEEPING -> context.getString(R.string.mink_made_it_home) to context.getString(R.string.mink_sleeping_detail)
+        MinkState.PHONE -> context.getString(R.string.mink_stopped_to_scroll) to if (topSocial != null) {
+            context.getString(R.string.mink_top_app_goal_detail, topSocial.label, formatDuration(context, socialMillis), socialGoalMinutes)
+        } else context.getString(R.string.mink_goal_passed_detail, socialGoalMinutes)
+        MinkState.DISTRACTED -> context.getString(R.string.mink_checking_headline) to
+            context.resources.getQuantityString(
+                R.plurals.mink_opens_detail,
+                socialOpensLastHour,
+                socialOpensLastHour,
+            )
+        MinkState.RESTING -> context.getString(R.string.mink_pause_headline) to if (longestSocial != null) {
+            context.getString(R.string.mink_longest_visit_detail, formatDuration(context, longestSocialMillis), longestSocial.label)
+        } else context.getString(R.string.mink_break_detail)
+        MinkState.PURPOSEFUL -> context.getString(R.string.mink_quiet_trail_headline) to context.getString(R.string.mink_no_social_detail)
+        MinkState.WALKING -> context.getString(R.string.mink_moving_headline) to if (topSocial == null) {
+            context.getString(R.string.mink_not_enough_detail)
+        } else context.getString(R.string.mink_leading_detail, topSocial.label, formatDuration(context, topSocial.foregroundMillis))
     }
 
     private fun isSocial(packageName: String, selected: Set<String>): Boolean {
@@ -350,13 +359,13 @@ internal class UsageInsightsRepository(private val context: Context) {
     }
 }
 
-internal fun formatDuration(millis: Long): String {
+internal fun formatDuration(context: Context, millis: Long): String {
     val minutes = (millis / 60_000L).coerceAtLeast(0)
     val hours = minutes / 60
     val remaining = minutes % 60
     return when {
-        hours > 0 && remaining > 0 -> "${hours}h ${remaining}m"
-        hours > 0 -> "${hours}h"
-        else -> "${minutes}m"
+        hours > 0 && remaining > 0 -> context.getString(R.string.duration_hours_minutes, hours, remaining)
+        hours > 0 -> context.getString(R.string.hours_short, hours)
+        else -> context.getString(R.string.minutes_short, minutes)
     }
 }

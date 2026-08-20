@@ -6,6 +6,7 @@ import org.junit.Test
 class TodoExportTest {
     @Test fun includesCompletionStateAndText() {
         val export = formatTodoExport(
+            "MinkLauncher To-do List",
             listOf(
                 TodoItem("1", "Book train tickets"),
                 TodoItem("2", "Send revised deck", completed = true),

@@ -11,7 +11,7 @@ Current version: **Open 1.0** (`1.0.0`). Feature releases show existing users a 
 - Replayable onboarding from Settings, including permission setup
 - A responsive raised Home panel with a two-thirds to-do area and a one-third icon-only shortcut grid
 - Three-at-a-time, horizontally snapping to-do preview with unfinished tasks first
-- Eight home shortcuts: Note, Event, Weather, To-do, Call, Message, Files, and Drawer
+- Eight home shortcuts: six generic app slots with built-in Note, Calendar, Weather, Call, Messenger, and Files defaults, plus To-do and Top 8
 - Long-press shortcut edit mode with persistent drag reordering and a reset control in Settings
 - An active-only **Conversations** space opened from Home:
   - Android-standard message and email notifications are included; other notification categories are ignored
@@ -34,8 +34,8 @@ Current version: **Open 1.0** (`1.0.0`). Feature releases show existing users a 
   - The app has no Internet permission and cannot upload usage data itself
   - Without Usage Access, the page remains available as a time-of-day companion
 - Weather opens a user-selected app, with Weather.com as the browser fallback
-- Configurable default apps for the six external shortcuts
-- One-tap reset back to each shortcut's system intent
+- Six generic app slots that accept any installed app and replace the default Home icon; Android monochrome icons follow the Home panel theme when available
+- One-tap reset restores each slot's original built-in action and icon
 - A compact drawer containing up to eight selected apps
 - Real installed-app icons and an alphabetical jump rail in both app pickers
 - A searchable Magic Box:
@@ -85,7 +85,7 @@ After installing, press the device Home button and select **MinkLauncher OpenSou
 
 On first launch, MinkLauncher OpenSource explicitly opens Android's default Home-app prompt. If it is dismissed, it can be reopened from **Settings → Default home app**.
 
-After onboarding and its initial permission prompts, each external shortcut must be assigned deliberately in a separate setup dialog. The user can choose an installed app or tap **Use system defaults for remaining**; MinkLauncher OpenSource no longer silently assumes every system handler.
+After onboarding and its initial permission prompts, a separate setup dialog shows all six generic shortcut slots. The user can assign any installed app or tap **Keep built-in defaults for remaining**; assigning an app replaces that slot's action and Home icon, while resetting restores its original default.
 
 ## Test contacts
 
@@ -104,6 +104,7 @@ Android's Contacts importer opens so the developer can confirm the destination a
 
 - `MainActivity.kt` — activity lifecycle, theme, and top-level navigation
 - `HomeScreen.kt` — launcher home, Magic Box, and local-search presentation
+- `ShortcutPresentation.kt` — default shortcut icons and generic shortcut assignment rows
 - `OnboardingScreen.kt` — first-run setup, update notice, and replayable tutorial
 - `SettingsScreen.kt` — launcher preferences and installed-app pickers
 - `TodosScreen.kt` — to-do management

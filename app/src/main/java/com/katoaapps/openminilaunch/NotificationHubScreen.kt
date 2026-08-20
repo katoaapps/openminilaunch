@@ -52,6 +52,8 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.unit.dp
@@ -94,27 +96,27 @@ internal fun NotificationHubScreen(actions: DeviceActions, goBack: () -> Unit) {
         )
     } else {
         Column(Modifier.fillMaxSize().statusBarsPadding().navigationBarsPadding()) {
-            PageHeader("Conversations", goBack)
+            PageHeader(stringResource(R.string.conversations), goBack)
             when {
                 !accessGranted -> ConversationAccessEmptyState { showAccessDisclosure = true }
                 conversations.isEmpty() -> NoConversationsEmptyState()
                 else -> LazyColumn(
-                    Modifier.fillMaxSize().padding(horizontal = 18.dp),
-                    verticalArrangement = Arrangement.spacedBy(10.dp),
+                    Modifier.fillMaxSize().padding(horizontal = Dimens.dp18),
+                    verticalArrangement = Arrangement.spacedBy(Dimens.dp10),
                 ) {
                     item {
                         Text(
-                            "ACTIVE CONVERSATIONS",
-                            Modifier.padding(top = 14.dp, bottom = 2.dp),
-                            letterSpacing = 1.sp,
+                            stringResource(R.string.active_conversations),
+                            Modifier.padding(top = Dimens.dp14, bottom = Dimens.dp2),
+                            letterSpacing = Dimens.sp1,
                             fontWeight = FontWeight.Black,
-                            fontSize = 12.sp,
+                            fontSize = Dimens.sp12,
                         )
                     }
                     items(conversations, key = HubConversation::id) { conversation ->
                         ConversationCard(conversation, actions) { selectedConversationId = conversation.id }
                     }
-                    item { Spacer(Modifier.height(28.dp)) }
+                    item { Spacer(Modifier.height(Dimens.dp28)) }
                 }
             }
         }
@@ -134,31 +136,31 @@ internal fun NotificationHubScreen(actions: DeviceActions, goBack: () -> Unit) {
 @Composable
 private fun ConversationAccessEmptyState(onEnable: () -> Unit) {
     Column(
-        Modifier.fillMaxSize().padding(28.dp),
+        Modifier.fillMaxSize().padding(Dimens.dp28),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        Icon(Icons.Default.NotificationsOff, null, Modifier.size(54.dp), tint = Rust)
-        Text("Conversation access is off", fontSize = 22.sp, fontWeight = FontWeight.Black, modifier = Modifier.padding(top = 18.dp))
+        Icon(Icons.Default.NotificationsOff, null, Modifier.size(Dimens.dp54), tint = Rust)
+        Text(stringResource(R.string.conversation_access_off), fontSize = Dimens.sp22, fontWeight = FontWeight.Black, modifier = Modifier.padding(top = Dimens.dp18))
         Text(
-            "MinkLauncher OpenSource uses Android notification access only to show active message and email conversations and send replies through the originating apps. Contents stay on this device and are never sent to Katoa Apps.",
+            stringResource(R.string.conversation_access_local_description, stringResource(R.string.app_name)),
             color = Muted,
-            modifier = Modifier.padding(vertical = 14.dp),
+            modifier = Modifier.padding(vertical = Dimens.dp14),
         )
-        Button(onClick = onEnable) { Text("Open notification access") }
+        Button(onClick = onEnable) { Text(stringResource(R.string.open_notification_access)) }
     }
 }
 
 @Composable
 private fun NoConversationsEmptyState() {
     Column(
-        Modifier.fillMaxSize().padding(28.dp),
+        Modifier.fillMaxSize().padding(Dimens.dp28),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        Icon(Icons.Default.Forum, null, Modifier.size(54.dp), tint = Sage)
-        Text("No active conversations", fontSize = 22.sp, fontWeight = FontWeight.Black, modifier = Modifier.padding(top = 18.dp))
-        Text("New message and email conversations will appear here.", color = Muted)
+        Icon(Icons.Default.Forum, null, Modifier.size(Dimens.dp54), tint = Sage)
+        Text(stringResource(R.string.no_active_conversations), fontSize = Dimens.sp22, fontWeight = FontWeight.Black, modifier = Modifier.padding(top = Dimens.dp18))
+        Text(stringResource(R.string.no_active_conversations_description), color = Muted)
     }
 }
 
@@ -167,28 +169,37 @@ private fun ConversationCard(conversation: HubConversation, actions: DeviceActio
     val latest = conversation.latestMessage
     Card(
         Modifier.fillMaxWidth().clickable(onClick = onOpen),
-        shape = RoundedCornerShape(18.dp),
+        shape = RoundedCornerShape(Dimens.dp18),
         colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainerLow),
     ) {
-        Row(Modifier.fillMaxWidth().padding(14.dp), verticalAlignment = Alignment.CenterVertically) {
+        Row(Modifier.fillMaxWidth().padding(Dimens.dp14), verticalAlignment = Alignment.CenterVertically) {
             ConversationSourceIcons(conversation.sourcePackages, actions)
-            Column(Modifier.weight(1f).padding(horizontal = 12.dp)) {
+            Column(Modifier.weight(1f).padding(horizontal = Dimens.dp12)) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Text(conversation.name, Modifier.weight(1f), fontWeight = FontWeight.Bold, maxLines = 1)
                     Text(
                         DateFormat.getTimeInstance(DateFormat.SHORT).format(Date(latest?.timestamp ?: conversation.latestNotification.postedAt)),
                         color = Muted,
-                        fontSize = 11.sp,
+                        fontSize = Dimens.sp11,
                     )
                 }
                 Text(
                     latest?.text.orEmpty(),
                     color = MaterialTheme.colorScheme.onSurface.copy(alpha = .72f),
                     maxLines = 2,
-                    modifier = Modifier.padding(top = 4.dp),
+                    modifier = Modifier.padding(top = Dimens.dp4),
                 )
                 if (conversation.messages.size > 1) {
-                    Text("${conversation.messages.size} messages", color = Rust, fontSize = 11.sp, modifier = Modifier.padding(top = 4.dp))
+                    Text(
+                        pluralStringResource(
+                            R.plurals.message_count,
+                            conversation.messages.size,
+                            conversation.messages.size,
+                        ),
+                        color = Rust,
+                        fontSize = Dimens.sp11,
+                        modifier = Modifier.padding(top = Dimens.dp4),
+                    )
                 }
             }
         }
@@ -197,7 +208,7 @@ private fun ConversationCard(conversation: HubConversation, actions: DeviceActio
 
 @Composable
 private fun ConversationSourceIcons(packages: List<String>, actions: DeviceActions) {
-    Box(Modifier.size(if (packages.size > 1) 46.dp else 38.dp)) {
+    Box(Modifier.size(if (packages.size > 1) Dimens.dp46 else Dimens.dp38)) {
         packages.take(3).forEachIndexed { index, packageName ->
             Box(
                 Modifier.align(
@@ -207,9 +218,9 @@ private fun ConversationSourceIcons(packages: List<String>, actions: DeviceActio
                         else -> Alignment.BottomEnd
                     },
                 )
-                    .background(MaterialTheme.colorScheme.surface, CircleShape).padding(2.dp),
+                    .background(MaterialTheme.colorScheme.surface, CircleShape).padding(Dimens.dp2),
             ) {
-                AppIcon(packageName, actions, if (index == 0) 34.dp else 22.dp)
+                AppIcon(packageName, actions, if (index == 0) Dimens.dp34 else Dimens.dp22)
             }
         }
     }
@@ -221,7 +232,7 @@ private fun ConversationWindow(conversation: HubConversation, actions: DeviceAct
     val activity = context as androidx.activity.ComponentActivity
     val scope = rememberCoroutineScope()
     var replyText by remember(conversation.id) { mutableStateOf("") }
-    var replyStatus by remember(conversation.id) { mutableStateOf<String?>(null) }
+    var replyStatus by remember(conversation.id) { mutableStateOf<Int?>(null) }
     val replyTarget = conversation.replyTarget
     val messageListState = rememberLazyListState()
 
@@ -229,9 +240,9 @@ private fun ConversationWindow(conversation: HubConversation, actions: DeviceAct
         val target = replyTarget ?: return
         if (NotificationHub.reply(target, replyText)) {
             replyText = ""
-            replyStatus = "Sent"
+            replyStatus = R.string.sent
         } else {
-            replyStatus = "Reply unavailable"
+            replyStatus = R.string.reply_unavailable
         }
     }
 
@@ -245,15 +256,16 @@ private fun ConversationWindow(conversation: HubConversation, actions: DeviceAct
     Column(Modifier.fillMaxSize().statusBarsPadding().navigationBarsPadding().imePadding()) {
         PageHeader(conversation.name, goBack)
         Row(
-            Modifier.fillMaxWidth().padding(horizontal = 20.dp, vertical = 6.dp),
+            Modifier.fillMaxWidth().padding(horizontal = Dimens.dp20, vertical = Dimens.dp6),
             verticalAlignment = Alignment.CenterVertically,
         ) {
             ConversationSourceIcons(conversation.sourcePackages, actions)
             Text(
-                conversation.notifications.map(HubNotification::appName).distinct().joinToString(" · "),
-                Modifier.weight(1f).padding(horizontal = 10.dp),
+                conversation.notifications.map(HubNotification::appName).distinct()
+                    .joinToString(stringResource(R.string.middle_dot_separator)),
+                Modifier.weight(1f).padding(horizontal = Dimens.dp10),
                 color = Muted,
-                fontSize = 12.sp,
+                fontSize = Dimens.sp12,
                 maxLines = 2,
             )
             OutlinedButton(
@@ -261,7 +273,7 @@ private fun ConversationWindow(conversation: HubConversation, actions: DeviceAct
                     val target = conversation.openTarget
                     if (!NotificationHub.open(context, target)) {
                         if (!actions.launchPackage(target.packageName)) {
-                            Toast.makeText(context, "Could not open ${target.appName}", Toast.LENGTH_SHORT).show()
+                            Toast.makeText(context, context.getString(R.string.could_not_open_app, target.appName), Toast.LENGTH_SHORT).show()
                         }
                     } else {
                         scope.launch {
@@ -269,36 +281,36 @@ private fun ConversationWindow(conversation: HubConversation, actions: DeviceAct
                             if (activity.lifecycle.currentState.isAtLeast(Lifecycle.State.RESUMED) &&
                                 !actions.launchPackage(target.packageName)
                             ) {
-                                Toast.makeText(context, "Could not open ${target.appName}", Toast.LENGTH_SHORT).show()
+                                Toast.makeText(context, context.getString(R.string.could_not_open_app, target.appName), Toast.LENGTH_SHORT).show()
                             }
                         }
                     }
                 },
             ) {
-                Icon(Icons.AutoMirrored.Filled.OpenInNew, null, Modifier.size(17.dp))
-                Text("View full conversation", Modifier.padding(start = 6.dp))
+                Icon(Icons.AutoMirrored.Filled.OpenInNew, null, Modifier.size(Dimens.dp17))
+                Text(stringResource(R.string.view_full_conversation), Modifier.padding(start = Dimens.dp6))
             }
         }
         LazyColumn(
-            Modifier.weight(1f).fillMaxWidth().padding(horizontal = 18.dp),
+            Modifier.weight(1f).fillMaxWidth().padding(horizontal = Dimens.dp18),
             state = messageListState,
-            verticalArrangement = Arrangement.spacedBy(10.dp),
+            verticalArrangement = Arrangement.spacedBy(Dimens.dp10),
         ) {
-            item { Spacer(Modifier.height(8.dp)) }
+            item { Spacer(Modifier.height(Dimens.dp8)) }
             items(conversation.messages, key = ConversationMessage::id) { message ->
                 ConversationBubble(message, showSource = conversation.sourcePackages.size > 1, actions = actions)
             }
-            item { Spacer(Modifier.height(8.dp)) }
+            item { Spacer(Modifier.height(Dimens.dp8)) }
         }
-        Column(Modifier.fillMaxWidth().padding(horizontal = 18.dp, vertical = 10.dp)) {
+        Column(Modifier.fillMaxWidth().padding(horizontal = Dimens.dp18, vertical = Dimens.dp10)) {
             replyStatus?.let { status ->
                 Row(
-                    Modifier.fillMaxWidth().padding(bottom = 6.dp),
+                    Modifier.fillMaxWidth().padding(bottom = Dimens.dp6),
                     horizontalArrangement = Arrangement.End,
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
-                    if (status == "Sent") Icon(Icons.Default.Check, null, Modifier.size(16.dp), tint = Sage)
-                    Text(if (status == "Sent") "Sent" else status, color = if (status == "Sent") Sage else Rust, fontSize = 12.sp, modifier = Modifier.padding(start = 4.dp))
+                    if (status == R.string.sent) Icon(Icons.Default.Check, null, Modifier.size(Dimens.dp16), tint = Sage)
+                    Text(stringResource(status), color = if (status == R.string.sent) Sage else Rust, fontSize = Dimens.sp12, modifier = Modifier.padding(start = Dimens.dp4))
                 }
             }
             if (replyTarget != null) {
@@ -306,19 +318,19 @@ private fun ConversationWindow(conversation: HubConversation, actions: DeviceAct
                     value = replyText,
                     onValueChange = { replyText = it },
                     modifier = Modifier.fillMaxWidth(),
-                    placeholder = { Text("Reply") },
+                    placeholder = { Text(stringResource(R.string.reply)) },
                     minLines = 1,
                     maxLines = 4,
                     keyboardOptions = KeyboardOptions(imeAction = ImeAction.Send),
                     keyboardActions = KeyboardActions(onSend = { if (replyText.isNotBlank()) sendReply() }),
                     trailingIcon = {
                         FilledIconButton(onClick = ::sendReply, enabled = replyText.isNotBlank()) {
-                            Icon(Icons.AutoMirrored.Filled.Reply, "Send reply")
+                            Icon(Icons.AutoMirrored.Filled.Reply, stringResource(R.string.send_reply))
                         }
                     },
                 )
             } else {
-                Text("This conversation does not provide an inline reply action.", color = Muted, fontSize = 12.sp)
+                Text(stringResource(R.string.inline_reply_unavailable), color = Muted, fontSize = Dimens.sp12)
             }
         }
     }
@@ -344,32 +356,32 @@ private fun ConversationBubble(message: ConversationMessage, showSource: Boolean
         CompositionLocalProvider(LocalContentColor provides bubbleContentColor) {
             Column(
                 Modifier.fillMaxWidth(.82f)
-                    .background(bubbleColor, RoundedCornerShape(18.dp))
-                    .padding(horizontal = 14.dp, vertical = 10.dp),
+                    .background(bubbleColor, RoundedCornerShape(Dimens.dp18))
+                    .padding(horizontal = Dimens.dp14, vertical = Dimens.dp10),
             ) {
                 if (!message.isOutgoing && !message.senderName.isNullOrBlank()) {
-                    Text(message.senderName, fontSize = 11.sp, fontWeight = FontWeight.Bold)
+                    Text(message.senderName, fontSize = Dimens.sp11, fontWeight = FontWeight.Bold)
                 }
-                Text(message.text, modifier = Modifier.padding(top = if (message.senderName.isNullOrBlank()) 0.dp else 2.dp))
+                Text(message.text, modifier = Modifier.padding(top = if (message.senderName.isNullOrBlank()) Dimens.dp0 else Dimens.dp2))
                 Row(
-                    Modifier.fillMaxWidth().padding(top = 5.dp),
+                    Modifier.fillMaxWidth().padding(top = Dimens.dp5),
                     horizontalArrangement = Arrangement.End,
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
                     if (showSource) {
-                        AppIcon(message.packageName, actions, 14.dp)
+                        AppIcon(message.packageName, actions, Dimens.dp14)
                         Text(
                             message.appName,
                             color = bubbleContentColor.copy(alpha = .68f),
-                            fontSize = 10.sp,
-                            modifier = Modifier.padding(start = 4.dp),
+                            fontSize = Dimens.sp10,
+                            modifier = Modifier.padding(start = Dimens.dp4),
                         )
                         Spacer(Modifier.weight(1f))
                     }
                     Text(
                         DateFormat.getTimeInstance(DateFormat.SHORT).format(Date(message.timestamp)),
                         color = bubbleContentColor.copy(alpha = .68f),
-                        fontSize = 10.sp,
+                        fontSize = Dimens.sp10,
                     )
                 }
             }

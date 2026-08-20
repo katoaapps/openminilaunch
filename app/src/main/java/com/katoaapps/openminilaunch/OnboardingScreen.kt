@@ -72,6 +72,7 @@ import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.layout.positionInRoot
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.platform.LocalView
 import androidx.compose.ui.zIndex
@@ -108,28 +109,28 @@ internal fun FeatureUpdateDialog(
     onReviewTutorial: () -> Unit,
     onNotNow: () -> Unit,
 ) {
+    val appName = stringResource(R.string.app_name)
     AlertDialog(
         onDismissRequest = onNotNow,
         icon = { Icon(Icons.Default.Pets, null, tint = Rust) },
-        title = { Text("What’s new in Open 1.0") },
+        title = { Text(stringResource(R.string.whats_new)) },
         text = {
             Column(
-                Modifier.heightIn(max = 560.dp).verticalScroll(rememberScrollState()),
-                verticalArrangement = Arrangement.spacedBy(14.dp),
+                Modifier.heightIn(max = Dimens.dp560).verticalScroll(rememberScrollState()),
+                verticalArrangement = Arrangement.spacedBy(Dimens.dp14),
             ) {
-                Text("More focused by design", fontSize = 18.sp, fontWeight = FontWeight.Bold)
-                UpdatePoint(Icons.Default.Pets, "Social apps only", "Mink’s Day now measures only the social apps you want to limit. Other apps never enter the trail or totals.")
-                UpdatePoint(Icons.Default.Tune, "Defaults you can see", "Android’s Social category is preselected until you create a custom list. Your current apps stay pinned at the top of the picker.")
-                UpdatePoint(Icons.Default.Email, "Email conversations", "Conversations now includes active email threads when the originating app marks them with Android’s email category.")
-                UpdatePoint(Icons.Default.Folder, "Folders you choose", "Document search now works only inside folders you explicitly select. All files access has been removed.")
-                UpdatePoint(Icons.Default.Security, "Still private", "Usage and conversation analysis stays on your device. No new permission is required for this update.")
-                TextButton(onClick = onReviewTutorial, contentPadding = PaddingValues(0.dp)) {
-                    Text("Review the updated tutorial")
+                Text(stringResource(R.string.your_shortcuts_are_yours), fontSize = Dimens.sp18, fontWeight = FontWeight.Bold)
+                UpdatePoint(Icons.Default.Apps, stringResource(R.string.six_generic_app_slots), stringResource(R.string.six_generic_app_slots_description, appName))
+                UpdatePoint(Icons.Default.Palette, stringResource(R.string.icons_that_belong_on_home), stringResource(R.string.icons_that_belong_on_home_description))
+                UpdatePoint(Icons.Default.Restore, stringResource(R.string.defaults_are_always_there), stringResource(R.string.defaults_are_always_there_description))
+                UpdatePoint(Icons.Default.DragIndicator, stringResource(R.string.your_layout_stays_put), stringResource(R.string.your_layout_stays_put_description))
+                TextButton(onClick = onReviewTutorial, contentPadding = PaddingValues(Dimens.dp0)) {
+                    Text(stringResource(R.string.review_updated_tutorial))
                 }
             }
         },
-        confirmButton = { Button(onClick = onOpenSettings) { Text("Open settings") } },
-        dismissButton = { TextButton(onClick = onNotNow) { Text("Not now") } },
+        confirmButton = { Button(onClick = onOpenSettings) { Text(stringResource(R.string.open_settings)) } },
+        dismissButton = { TextButton(onClick = onNotNow) { Text(stringResource(R.string.not_now)) } },
     )
 }
 
@@ -138,69 +139,72 @@ internal fun FileSearchScopeDialog(
     onChooseFolder: () -> Unit,
     onSkip: () -> Unit,
 ) {
+    val appName = stringResource(R.string.app_name)
     AlertDialog(
         onDismissRequest = onSkip,
         icon = { Icon(Icons.Default.FolderOpen, null, tint = Rust) },
-        title = { Text("Where should MinkLauncher OpenSource search?") },
+        title = { Text(stringResource(R.string.file_scope_title, appName)) },
         text = {
-            Column(verticalArrangement = Arrangement.spacedBy(14.dp)) {
-                Text("Choose a folder for document search. You can add or remove folders later in Settings.")
+            Column(verticalArrangement = Arrangement.spacedBy(Dimens.dp14)) {
+                Text(stringResource(R.string.file_scope_description))
                 Surface(
                     onClick = onChooseFolder,
-                    shape = RoundedCornerShape(16.dp),
+                    shape = RoundedCornerShape(Dimens.dp16),
                     color = MaterialTheme.colorScheme.surfaceContainerLow,
                 ) {
-                    Box(Modifier.padding(14.dp)) {
+                    Box(Modifier.padding(Dimens.dp14)) {
                         UpdatePoint(
                             Icons.Default.Folder,
-                            "Choose a folder",
-                            "MinkLauncher OpenSource searches only folders you explicitly approve through Android.",
+                            stringResource(R.string.choose_folder),
+                            stringResource(R.string.choose_folder_description, appName),
                         )
                     }
                 }
                 Text(
-                    "Search queries and filenames stay on your device and are never sent to us.",
+                    stringResource(R.string.queries_files_stay_local),
                     color = Muted,
-                    fontSize = 12.sp,
+                    fontSize = Dimens.sp12,
                 )
             }
         },
         confirmButton = {},
-        dismissButton = { TextButton(onClick = onSkip) { Text("Skip for now") } },
+        dismissButton = { TextButton(onClick = onSkip) { Text(stringResource(R.string.skip_for_now)) } },
     )
 }
 
 @Composable
 internal fun UpdatePoint(icon: ImageVector, title: String, description: String) {
     Row(verticalAlignment = Alignment.Top) {
-        Icon(icon, null, Modifier.size(22.dp), tint = Rust)
-        Column(Modifier.padding(start = 10.dp)) {
+        Icon(icon, null, Modifier.size(Dimens.dp22), tint = Rust)
+        Column(Modifier.padding(start = Dimens.dp10)) {
             Text(title, fontWeight = FontWeight.SemiBold)
-            Text(description, color = Muted, fontSize = 13.sp)
+            Text(description, color = Muted, fontSize = Dimens.sp13)
         }
     }
 }
 
 @Composable
 internal fun UsageAccessDisclosureDialog(onContinue: () -> Unit, onDismiss: () -> Unit) {
+    val appName = stringResource(R.string.app_name)
     AlertDialog(
         onDismissRequest = onDismiss,
         icon = { Icon(Icons.Default.Pets, null, tint = Rust) },
-        title = { Text("Let Mink reflect your day?") },
+        title = { Text(stringResource(R.string.usage_disclosure_title)) },
         text = {
-            Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
-                Text("Android’s Usage Access lets MinkLauncher OpenSource measure when your tracked social apps are in the foreground and for how long.")
-                Text("MinkLauncher OpenSource uses this only to calculate today’s Mink state and insights on your device. It does not upload your activity, sell it, or keep a separate usage-history database.")
-                Text("This is optional. Mink’s page still works as a time-of-day companion if you skip it, and you can revoke access whenever you want.")
+            Column(verticalArrangement = Arrangement.spacedBy(Dimens.dp10)) {
+                Text(stringResource(R.string.usage_disclosure_body_one, appName))
+                Text(stringResource(R.string.usage_disclosure_body_two, appName))
+                Text(stringResource(R.string.usage_disclosure_body_three))
             }
         },
-        confirmButton = { Button(onClick = onContinue) { Text("Continue") } },
-        dismissButton = { TextButton(onClick = onDismiss) { Text("Not now") } },
+        confirmButton = { Button(onClick = onContinue) { Text(stringResource(R.string.continue_action)) } },
+        dismissButton = { TextButton(onClick = onDismiss) { Text(stringResource(R.string.not_now)) } },
     )
 }
 
 @Composable
 internal fun OnboardingDialog(store: LauncherStore, actions: DeviceActions, onFinish: () -> Unit) {
+    val appName = stringResource(R.string.app_name)
     var page by rememberSaveable { mutableIntStateOf(0) }
     var pickingAi by remember { mutableStateOf(false) }
     var pickingAllAi by remember { mutableStateOf(false) }
@@ -219,14 +223,14 @@ internal fun OnboardingDialog(store: LauncherStore, actions: DeviceActions, onFi
         allAiAppsLoaded = true
     }
     val titles = listOf(
-        "A quieter home screen",
-        "Meet the Magic Box",
-        "To-dos, kept close",
-        "Search locally or beyond",
-        "Magic Box, from anywhere",
-        "Meet Mink’s Day",
-        "Conversations and widgets",
-        "Permissions, on your terms",
+        stringResource(R.string.onboarding_page_home),
+        stringResource(R.string.onboarding_page_magic),
+        stringResource(R.string.onboarding_page_todos),
+        stringResource(R.string.onboarding_page_search),
+        stringResource(R.string.onboarding_page_assistant),
+        stringResource(R.string.onboarding_page_mink_day),
+        stringResource(R.string.onboarding_page_spaces),
+        stringResource(R.string.onboarding_page_permissions),
     )
     val icons = listOf(
         Icons.Default.Keyboard,
@@ -244,133 +248,134 @@ internal fun OnboardingDialog(store: LauncherStore, actions: DeviceActions, onFi
     ) {
         Surface(
             Modifier.fillMaxWidth(.92f).fillMaxHeight(.82f),
-            shape = RoundedCornerShape(30.dp),
+            shape = RoundedCornerShape(Dimens.dp30),
             color = MaterialTheme.colorScheme.background,
         ) {
-            Column(Modifier.fillMaxSize().padding(26.dp)) {
-                Icon(icons[page], null, Modifier.size(46.dp), tint = Rust)
-                Text(titles[page], fontSize = 28.sp, fontWeight = FontWeight.Black, modifier = Modifier.padding(top = 16.dp))
-                Spacer(Modifier.height(18.dp))
+            Column(Modifier.fillMaxSize().padding(Dimens.dp26)) {
+                Icon(icons[page], null, Modifier.size(Dimens.dp46), tint = Rust)
+                Text(titles[page], fontSize = Dimens.sp28, fontWeight = FontWeight.Black, modifier = Modifier.padding(top = Dimens.dp16))
+                Spacer(Modifier.height(Dimens.dp18))
                 Box(Modifier.weight(1f).fillMaxWidth().verticalScroll(rememberScrollState())) {
                     when (page) {
-                        0 -> Column(verticalArrangement = Arrangement.spacedBy(18.dp)) {
-                            Text("MinkLauncher OpenSource is a minimal keyboard launcher designed around fast, keyboard-based input.", fontSize = 18.sp)
-                            OnboardingPoint(Icons.Default.FilterAlt, "Less visual noise", "One focused home page, eight shortcuts, and only eight drawer apps.")
-                            OnboardingPoint(Icons.Default.Palette, "Choose your panel color", "Pick from five presets in Settings, or swipe through a custom color and enter its hex value.")
-                            OnboardingPoint(Icons.Default.Keyboard, "Just start typing", "On a physical-keyboard phone, press any text key from home. The Magic Box appears with that first character already entered.")
-                            OnboardingPoint(Icons.Default.Search, "Everything is still reachable", "Use ? to find any installed app.")
+                        0 -> Column(verticalArrangement = Arrangement.spacedBy(Dimens.dp18)) {
+                            Text(stringResource(R.string.onboarding_intro_description, appName), fontSize = Dimens.sp18)
+                            OnboardingPoint(Icons.Default.FilterAlt, stringResource(R.string.less_visual_noise), stringResource(R.string.less_visual_noise_description))
+                            OnboardingPoint(Icons.Default.Palette, stringResource(R.string.choose_panel_color), stringResource(R.string.choose_panel_color_description))
+                            OnboardingPoint(Icons.Default.Keyboard, stringResource(R.string.just_start_typing), stringResource(R.string.just_start_typing_description))
+                            OnboardingPoint(Icons.Default.Search, stringResource(R.string.everything_reachable), stringResource(R.string.everything_reachable_description))
                         }
-                        1 -> Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-                            Text("The Magic Box is ready from the moment home opens. No tap is required on a physical keyboard.", color = Muted, fontSize = 12.sp)
+                        1 -> Column(verticalArrangement = Arrangement.spacedBy(Dimens.dp8)) {
+                            Text(stringResource(R.string.magic_box_ready_description), color = Muted, fontSize = Dimens.sp12)
                             listOf(
-                                "@" to "Text a contact",
-                                "#" to "Call a contact",
-                                "-" to "Create a to-do",
-                                "$" to "Send text to a notes app",
-                                "+" to "Create an event, e.g. next Friday or in 4 weeks",
-                                "?" to "Find and launch an app",
+                                "@" to stringResource(R.string.magic_text_contact),
+                                "#" to stringResource(R.string.magic_call_contact),
+                                "-" to stringResource(R.string.magic_create_todo),
+                                "$" to stringResource(R.string.magic_send_note),
+                                "+" to stringResource(R.string.magic_create_event),
+                                "?" to stringResource(R.string.magic_find_app),
                             ).forEach { (key, description) -> MagicKeyRow(key, description) }
-                            Text("Message behavior defaults to Always ask: send carrier SMS now or choose a compatible messaging app for the final send. Calls offer the same choice between calling now and choosing a calling app. Direct SMS requires Mink Assistant; Android may grant Send SMS access as part of that role.", color = Muted, fontSize = 12.sp)
+                            Text(stringResource(R.string.message_behavior_onboarding), color = Muted, fontSize = Dimens.sp12)
                         }
-                        2 -> Column(verticalArrangement = Arrangement.spacedBy(18.dp)) {
-                            Text("Type - followed by your task to send it straight to the home widget.", fontSize = 18.sp)
-                            OnboardingPoint(Icons.Default.Swipe, "Swipe the widget", "Each page shows three items at a time.")
-                            OnboardingPoint(Icons.Default.TouchApp, "Tap the widget", "Open the full list to check, edit, delete, add, or rearrange items.")
-                            OnboardingPoint(Icons.Default.IosShare, "Take the list with you", "Export the current checklist to a notes app or save it as a PDF.")
-                            OnboardingPoint(Icons.Default.CheckCircle, "Keep the context", "New Magic Box tasks animate into the newest to-do page.")
+                        2 -> Column(verticalArrangement = Arrangement.spacedBy(Dimens.dp18)) {
+                            Text(stringResource(R.string.todo_onboarding_intro), fontSize = Dimens.sp18)
+                            OnboardingPoint(Icons.Default.Swipe, stringResource(R.string.swipe_widget), stringResource(R.string.swipe_widget_description))
+                            OnboardingPoint(Icons.Default.TouchApp, stringResource(R.string.tap_widget), stringResource(R.string.tap_widget_description))
+                            OnboardingPoint(Icons.Default.IosShare, stringResource(R.string.take_list_with_you), stringResource(R.string.take_list_with_you_description))
+                            OnboardingPoint(Icons.Default.CheckCircle, stringResource(R.string.keep_context), stringResource(R.string.keep_context_description))
                         }
-                        3 -> Column(verticalArrangement = Arrangement.spacedBy(18.dp)) {
-                            Text("Type normally in the Magic Box to find local files, search the web, or hand the query to an AI app you choose.", fontSize = 18.sp)
-                            OnboardingPoint(Icons.Default.Language, "Links stay links", "Type a web address to open it directly; other plain text remains a web or AI query.")
-                            OnboardingPoint(Icons.Default.History, "Recent activity", "Your last five successful searches and ? app launches stay on this device. Reuse one, delete one, or clear them all from the empty Magic Box.")
-                            OnboardingPoint(Icons.Default.AutoAwesome, "AI is optional", "MinkLauncher OpenSource shares your query only after you tap AI. The selected app then handles it under its own privacy terms.")
+                        3 -> Column(verticalArrangement = Arrangement.spacedBy(Dimens.dp18)) {
+                            Text(stringResource(R.string.search_onboarding_intro), fontSize = Dimens.sp18)
+                            OnboardingPoint(Icons.Default.Language, stringResource(R.string.links_stay_links), stringResource(R.string.links_stay_links_description))
+                            OnboardingPoint(Icons.Default.History, stringResource(R.string.recent_activity), stringResource(R.string.recent_activity_description))
+                            OnboardingPoint(Icons.Default.AutoAwesome, stringResource(R.string.ai_optional), stringResource(R.string.ai_optional_description, appName))
                             OutlinedButton(onClick = { pickingAi = true }, modifier = Modifier.fillMaxWidth()) {
                                 Icon(Icons.Default.AutoAwesome, null)
                                 Text(
-                                    store.preferredAiPackage?.let { "AI app: ${actions.appLabel(it)}" } ?: "Choose an AI app",
-                                    Modifier.padding(start = 8.dp),
+                                    store.preferredAiPackage?.let { stringResource(R.string.ai_app_selected, actions.appLabel(it)) }
+                                        ?: stringResource(R.string.choose_an_ai_app),
+                                    Modifier.padding(start = Dimens.dp8),
                                 )
                             }
-                            Text("Optional. Skip this and MinkLauncher OpenSource will ask the first time you tap AI.", color = Muted, fontSize = 12.sp)
-                            OnboardingPoint(Icons.Default.PhotoLibrary, "Media filenames", "Optional access finds photos, videos, and audio through Android’s media index.")
-                            OnboardingPoint(Icons.Default.FolderOpen, "Choose your scope", "Select specific folders, or optionally grant full-device file access for broader filename search.")
-                            OnboardingPoint(Icons.Default.Security, "Never sent to us", "MinkLauncher OpenSource does not receive your queries, filenames, or selected folder locations.")
+                            Text(stringResource(R.string.ai_optional_first_use, appName), color = Muted, fontSize = Dimens.sp12)
+                            OnboardingPoint(Icons.Default.PhotoLibrary, stringResource(R.string.media_filenames), stringResource(R.string.media_filenames_description))
+                            OnboardingPoint(Icons.Default.FolderOpen, stringResource(R.string.choose_scope), stringResource(R.string.choose_scope_description))
+                            OnboardingPoint(Icons.Default.Security, stringResource(R.string.never_sent_to_us), stringResource(R.string.never_sent_to_us_description, appName))
                         }
-                        4 -> Column(verticalArrangement = Arrangement.spacedBy(18.dp)) {
-                            Text("MinkLauncher OpenSource is also a keyboard-first digital assistant, putting the Magic Box behind your phone’s assistant gesture.", fontSize = 18.sp)
-                            OnboardingPoint(Icons.Default.Keyboard, "Keyboard first", "Invoke it over any app and start typing immediately. The same hotkeys, local file search, Web, and AI handoffs remain available.")
-                            OnboardingPoint(Icons.Default.TouchApp, "A deliberate choice", "This replaces Gemini, Bixby, or your current default assistant until you change it back in Android settings.")
-                            OnboardingPoint(Icons.Default.PrivacyTip, "No screen inspection", "Mink Assistant ignores assist context and does not request microphone, call-log, screen-reading, or screen-context access.")
-                            OnboardingPoint(Icons.Default.Sms, "Direct SMS", "Android may grant Send SMS access with the Assistant role. MinkLauncher OpenSource uses it only after you choose a contact, write the message, and press the @ action.")
+                        4 -> Column(verticalArrangement = Arrangement.spacedBy(Dimens.dp18)) {
+                            Text(stringResource(R.string.assistant_onboarding_intro, appName), fontSize = Dimens.sp18)
+                            OnboardingPoint(Icons.Default.Keyboard, stringResource(R.string.keyboard_first), stringResource(R.string.keyboard_first_description))
+                            OnboardingPoint(Icons.Default.TouchApp, stringResource(R.string.deliberate_choice), stringResource(R.string.deliberate_choice_description))
+                            OnboardingPoint(Icons.Default.PrivacyTip, stringResource(R.string.no_screen_inspection), stringResource(R.string.no_screen_inspection_description))
+                            OnboardingPoint(Icons.Default.Sms, stringResource(R.string.direct_sms), stringResource(R.string.direct_sms_onboarding_description, appName))
                             Button(
                                 onClick = { assistantRoleSettings.launch(actions.assistantRoleSelectionIntent()) },
                                 modifier = Modifier.fillMaxWidth(),
                             ) {
                                 Icon(Icons.Default.Assistant, null)
                                 Text(
-                                    if (assistantRoleHeld) "Manage Mink Assistant" else "Choose Mink Assistant",
-                                    Modifier.padding(start = 8.dp),
+                                    stringResource(if (assistantRoleHeld) R.string.manage_mink_assistant else R.string.choose_mink_assistant),
+                                    Modifier.padding(start = Dimens.dp8),
                                 )
                             }
                             Text(
-                                if (assistantRoleHeld) "Mink Assistant is active. Direct SMS can be enabled during the permission setup that follows."
-                                else "You can skip this, but direct SMS stays unavailable until Mink Assistant is active.",
+                                stringResource(if (assistantRoleHeld) R.string.assistant_active_description else R.string.assistant_inactive_description),
                                 color = Muted,
-                                fontSize = 13.sp,
+                                fontSize = Dimens.sp13,
                             )
-                            Text("Choose message behavior", fontWeight = FontWeight.Bold)
+                            Text(stringResource(R.string.choose_message_behavior), fontWeight = FontWeight.Bold)
                             MessageSendModeChooser(store.messageSendMode, store::updateMessageSendMode)
                         }
-                        5 -> Column(verticalArrangement = Arrangement.spacedBy(18.dp)) {
-                            Text("Swipe right from Home to visit Mink’s Day: a private view of time spent in the social apps you want to limit.", fontSize = 18.sp)
-                            OnboardingPoint(Icons.Default.Pets, "Six gentle states", "Mink walks, moves steadily, gets distracted, checks a phone, rests, or goes to sleep based on today’s local activity and the time of day.")
-                            OnboardingPoint(Icons.Default.Tune, "Your tracked apps and goal", "Use Android’s Social category or choose the apps you want to limit, then set a daily tracked-time goal.")
-                            OnboardingPoint(Icons.Default.Security, "Calculated on your device", "Other apps are excluded from the trail. MinkLauncher OpenSource never sends tracked activity, app choices, or insights to Katoa Apps.")
-                            OnboardingPoint(Icons.Default.VisibilityOff, "Completely optional", "Without Usage Access, Mink’s page remains available as a quiet time-of-day companion.")
+                        5 -> Column(verticalArrangement = Arrangement.spacedBy(Dimens.dp18)) {
+                            Text(stringResource(R.string.mink_day_onboarding_intro), fontSize = Dimens.sp18)
+                            OnboardingPoint(Icons.Default.Pets, stringResource(R.string.six_gentle_states), stringResource(R.string.six_gentle_states_description))
+                            OnboardingPoint(Icons.Default.Tune, stringResource(R.string.tracked_apps_and_goal), stringResource(R.string.tracked_apps_and_goal_description))
+                            OnboardingPoint(Icons.Default.Security, stringResource(R.string.calculated_on_device), stringResource(R.string.calculated_on_device_description, appName))
+                            OnboardingPoint(Icons.Default.VisibilityOff, stringResource(R.string.completely_optional), stringResource(R.string.completely_optional_description))
                         }
-                        6 -> Column(verticalArrangement = Arrangement.spacedBy(18.dp)) {
-                            Text("The main page stays focused while optional spaces remain close by.", fontSize = 18.sp)
-                            OnboardingPoint(Icons.Default.Forum, "Conversations", "Tap the chat icon beside Settings to read active message and email threads. Inline reply appears only when the originating app supplies Android's reply action.")
-                            OnboardingPoint(Icons.Default.Widgets, "Widget page", "Swipe left from Home to add up to four Android widgets. Swipe right or use Back to return Home.")
-                            OnboardingPoint(Icons.Default.Pets, "Mink’s Day", "Swipe right from Home for local daily insights. Swipe left or use Back to return Home.")
-                            OnboardingPoint(Icons.Default.DragIndicator, "Arrange your grid", "Long-press any Home shortcut to enter edit mode, then drag shortcuts into your preferred order.")
-                            OnboardingPoint(Icons.Default.PrivacyTip, "Active and local", "MinkLauncher OpenSource does not keep conversation history. Message text and replies remain in memory and are never sent to Katoa Apps.")
+                        6 -> Column(verticalArrangement = Arrangement.spacedBy(Dimens.dp18)) {
+                            Text(stringResource(R.string.spaces_onboarding_intro), fontSize = Dimens.sp18)
+                            OnboardingPoint(Icons.Default.Forum, stringResource(R.string.conversations), stringResource(R.string.conversations_onboarding_description))
+                            OnboardingPoint(Icons.Default.Widgets, stringResource(R.string.widget_page), stringResource(R.string.widget_page_onboarding_description))
+                            OnboardingPoint(Icons.Default.Pets, stringResource(R.string.mink_day), stringResource(R.string.mink_day_onboarding_short_description))
+                            OnboardingPoint(Icons.Default.Apps, stringResource(R.string.six_shortcuts_any_apps), stringResource(R.string.six_shortcuts_any_apps_description))
+                            OnboardingPoint(Icons.Default.DragIndicator, stringResource(R.string.arrange_grid), stringResource(R.string.arrange_grid_description))
+                            OnboardingPoint(Icons.Default.PrivacyTip, stringResource(R.string.active_and_local), stringResource(R.string.active_and_local_description, appName))
                         }
-                        else -> Column(verticalArrangement = Arrangement.spacedBy(18.dp)) {
-                            Text("MinkLauncher OpenSource asks only for access tied to features you use.", fontSize = 18.sp)
+                        else -> Column(verticalArrangement = Arrangement.spacedBy(Dimens.dp18)) {
+                            Text(stringResource(R.string.permissions_onboarding_intro, appName), fontSize = Dimens.sp18)
                             Row(
-                                Modifier.fillMaxWidth().clip(RoundedCornerShape(16.dp))
-                                    .background(MaterialTheme.colorScheme.surfaceContainerLow).padding(16.dp),
+                                Modifier.fillMaxWidth().clip(RoundedCornerShape(Dimens.dp16))
+                                    .background(MaterialTheme.colorScheme.surfaceContainerLow).padding(Dimens.dp16),
                                 verticalAlignment = Alignment.CenterVertically,
                             ) {
                                 Icon(Icons.Default.Contacts, null, tint = Rust)
-                                Column(Modifier.padding(start = 12.dp)) {
-                                    Text("Contacts", fontWeight = FontWeight.Bold)
-                                    Text("Only read when you search for a person.", color = Muted, fontSize = 13.sp)
+                                Column(Modifier.padding(start = Dimens.dp12)) {
+                                    Text(stringResource(R.string.contacts), fontWeight = FontWeight.Bold)
+                                    Text(stringResource(R.string.contacts_onboarding_description), color = Muted, fontSize = Dimens.sp13)
                                 }
                             }
-                            OnboardingPoint(Icons.Default.Phone, "Calls", "Call access is used only when you choose Call now. Choose calling app hands the number to an Android-compatible dialer instead.")
-                            OnboardingPoint(Icons.Default.Sms, "Direct SMS", "Send SMS access is used only after you choose a contact, write a message, and press the @ action. Always ask adds a separate confirmation; Always send treats that action as approval.")
-                            OnboardingPoint(Icons.Default.Lock, "Double-tap lock", "Optional accessibility access performs only Android's Lock screen action after your double-tap. It cannot read screen content or observe what you do.")
-                            OnboardingPoint(Icons.Default.PhotoLibrary, "Media", "Optional access searches photo, video, and audio filenames locally.")
-                            OnboardingPoint(Icons.Default.Forum, "Conversation access", "Optional notification access powers message and email conversations. Other notification types are ignored, and you can revoke access whenever you want.")
-                            OnboardingPoint(Icons.Default.Pets, "Mink’s Day usage", "Optional Usage Access measures foreground time and opens for your tracked social apps only, entirely on this device.")
-                            Text("For documents, Android lets you choose specific folders. MinkLauncher OpenSource cannot search outside folders you approve.", color = Muted, fontSize = 13.sp)
-                            Text("Android will show Contacts and Call prompts next. If Mink Assistant is active and your messaging choice includes direct SMS, Android may grant or request Send SMS access before the optional Conversations and Mink’s Day explanations. Media access appears only when you enable file search.", color = Muted)
+                            OnboardingPoint(Icons.Default.Phone, stringResource(R.string.calls), stringResource(R.string.calls_onboarding_description))
+                            OnboardingPoint(Icons.Default.Sms, stringResource(R.string.direct_sms), stringResource(R.string.direct_sms_onboarding_permission_description))
+                            OnboardingPoint(Icons.Default.Lock, stringResource(R.string.double_tap_lock), stringResource(R.string.double_tap_lock_onboarding_description))
+                            OnboardingPoint(Icons.Default.PhotoLibrary, stringResource(R.string.media), stringResource(R.string.media_onboarding_description))
+                            OnboardingPoint(Icons.Default.Forum, stringResource(R.string.conversation_access), stringResource(R.string.conversation_access_onboarding_description))
+                            OnboardingPoint(Icons.Default.Pets, stringResource(R.string.mink_day_usage), stringResource(R.string.mink_day_usage_onboarding_description))
+                            Text(stringResource(R.string.document_folder_scope_description, appName), color = Muted, fontSize = Dimens.sp13)
+                            Text(stringResource(R.string.permission_sequence_description), color = Muted)
                         }
                     }
                 }
                 Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
-                    Row(Modifier.weight(1f), horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+                    Row(Modifier.weight(1f), horizontalArrangement = Arrangement.spacedBy(Dimens.dp6)) {
                         repeat(titles.size) { index ->
-                            Box(Modifier.size(if (index == page) 22.dp else 8.dp, 8.dp).clip(CircleShape).background(if (index == page) Rust else Sage))
+                            Box(Modifier.size(if (index == page) Dimens.dp22 else Dimens.dp8, Dimens.dp8).clip(CircleShape).background(if (index == page) Rust else Sage))
                         }
                     }
-                    if (page > 0) TextButton(onClick = { page-- }) { Text("Back") }
+                    if (page > 0) TextButton(onClick = { page-- }) { Text(stringResource(R.string.back)) }
                     Button(
                         onClick = { if (page < titles.lastIndex) page++ else onFinish() },
                     ) {
-                        Text(if (page < titles.lastIndex) "Next" else "Finish setup")
+                        Text(stringResource(if (page < titles.lastIndex) R.string.next else R.string.finish_setup))
                     }
                 }
             }
@@ -378,22 +383,22 @@ internal fun OnboardingDialog(store: LauncherStore, actions: DeviceActions, onFi
     }
     if (pickingAi) {
         AppPickerDialog(
-            title = "Choose AI app",
+            title = stringResource(R.string.choose_ai_app_title),
             apps = curatedAiApps,
             selected = setOfNotNull(store.preferredAiPackage),
             loading = !aiAppsLoaded,
-            emptyMessage = "No curated AI apps were found.",
-            extraActionLabel = "Other compatible app",
+            emptyMessage = stringResource(R.string.no_curated_ai_apps_short),
+            extraActionLabel = stringResource(R.string.other_compatible_app),
             onExtraAction = { pickingAi = false; pickingAllAi = true },
             onApp = { store.setPreferredAiApp(it.packageName); pickingAi = false },
             onReset = { store.resetPreferredAiApp(); pickingAi = false },
-            resetLabel = "Choose on first use",
+            resetLabel = stringResource(R.string.choose_on_first_use),
             onDismiss = { pickingAi = false },
         )
     }
     if (pickingAllAi) {
         AppPickerDialog(
-            title = "Other compatible apps",
+            title = stringResource(R.string.other_compatible_apps),
             apps = allAiApps,
             selected = setOfNotNull(store.preferredAiPackage),
             loading = !allAiAppsLoaded,
@@ -435,35 +440,43 @@ internal fun ShortcutSetupDialog(store: LauncherStore, actions: DeviceActions, o
     ) {
         Surface(
             Modifier.fillMaxWidth(.92f).fillMaxHeight(.82f),
-            shape = RoundedCornerShape(30.dp),
+            shape = RoundedCornerShape(Dimens.dp30),
             color = MaterialTheme.colorScheme.background,
         ) {
-            Column(Modifier.fillMaxSize().padding(26.dp)) {
-                Icon(Icons.Default.Apps, null, Modifier.size(46.dp), tint = Rust)
+            Column(Modifier.fillMaxSize().padding(Dimens.dp26)) {
+                Icon(Icons.Default.Apps, null, Modifier.size(Dimens.dp46), tint = Rust)
                 Text(
-                    "Choose your shortcut apps",
-                    fontSize = 28.sp,
+                    stringResource(R.string.choose_your_shortcut_apps),
+                    fontSize = Dimens.sp28,
                     fontWeight = FontWeight.Black,
-                    modifier = Modifier.padding(top = 16.dp),
+                    modifier = Modifier.padding(top = Dimens.dp16),
                 )
                 Text(
-                    "Setup is almost done. Choose what each external shortcut opens, or explicitly use Android's system default.",
+                    stringResource(R.string.shortcut_setup_description),
                     color = Muted,
-                    modifier = Modifier.padding(top = 10.dp, bottom = 18.dp),
+                    modifier = Modifier.padding(top = Dimens.dp10, bottom = Dimens.dp18),
                 )
                 Column(
                     Modifier.weight(1f).fillMaxWidth().verticalScroll(rememberScrollState()),
-                    verticalArrangement = Arrangement.spacedBy(12.dp),
+                    verticalArrangement = Arrangement.spacedBy(Dimens.dp12),
                 ) {
                     configurableShortcuts.forEach { shortcut ->
-                        SettingsRow(
-                            title = shortcut.label,
+                        val packageName = store.shortcutPackages[shortcut]
+                        ShortcutAssignmentRow(
+                            shortcut = shortcut,
+                            packageName = packageName,
+                            actions = actions,
                             subtitle = when {
-                                shortcut in store.shortcutPackages -> actions.appLabel(store.shortcutPackages.getValue(shortcut))
-                                shortcut in store.confirmedShortcutChoices -> "System default"
-                                else -> "Choose an app"
+                                packageName != null -> actions.appLabel(packageName)
+                                shortcut in store.confirmedShortcutChoices -> stringResource(
+                                    R.string.shortcut_default,
+                                    shortcut.displayLabel(),
+                                )
+                                else -> stringResource(
+                                    R.string.choose_app_or_keep_default,
+                                    shortcut.displayLabel(),
+                                )
                             },
-                            icon = shortcut.setupIcon(),
                         ) { pickingShortcut = shortcut }
                     }
                     if (!store.hasConfirmedAllShortcutChoices()) {
@@ -472,30 +485,30 @@ internal fun ShortcutSetupDialog(store: LauncherStore, actions: DeviceActions, o
                             modifier = Modifier.fillMaxWidth(),
                         ) {
                             Icon(Icons.Default.Restore, null)
-                            Text("Use system defaults for remaining", Modifier.padding(start = 8.dp))
+                            Text(stringResource(R.string.keep_built_in_defaults_remaining), Modifier.padding(start = Dimens.dp8))
                         }
                     }
                 }
                 Button(
                     onClick = onFinish,
                     enabled = store.hasConfirmedAllShortcutChoices(),
-                    modifier = Modifier.fillMaxWidth().padding(top = 18.dp),
+                    modifier = Modifier.fillMaxWidth().padding(top = Dimens.dp18),
                 ) {
-                    Text("Finish launcher setup")
+                    Text(stringResource(R.string.finish_launcher_setup))
                 }
             }
         }
     }
 
     pickingShortcut?.let { shortcut ->
-        val showSamsungWeatherGuide = shortcut == Shortcut.WEATHER && Build.MANUFACTURER.equals("samsung", ignoreCase = true)
+        val showSamsungWeatherGuide = Build.MANUFACTURER.equals("samsung", ignoreCase = true)
         AppPickerDialog(
-            title = "Choose ${shortcut.label} app",
+            title = stringResource(R.string.choose_app_for_shortcut, shortcut.displaySlotLabel()),
             apps = installedApps,
             selected = setOfNotNull(store.shortcutPackages[shortcut]),
             loading = !installedAppsLoaded,
-            supportingText = if (showSamsungWeatherGuide) SAMSUNG_WEATHER_GUIDE else null,
-            supportingActionLabel = if (showSamsungWeatherGuide) "Open Apps settings" else null,
+            supportingText = if (showSamsungWeatherGuide) stringResource(R.string.samsung_weather_guide) else null,
+            supportingActionLabel = if (showSamsungWeatherGuide) stringResource(R.string.open_apps_settings) else null,
             onSupportingAction = actions::openInstalledAppsSettings,
             onApp = {
                 store.assignShortcut(shortcut, it.packageName)
@@ -505,33 +518,19 @@ internal fun ShortcutSetupDialog(store: LauncherStore, actions: DeviceActions, o
                 store.resetShortcut(shortcut)
                 pickingShortcut = null
             },
-            resetLabel = "Use system default",
+            resetLabel = stringResource(R.string.restore_shortcut_default, shortcut.displayLabel()),
             onDismiss = { pickingShortcut = null },
         )
     }
 }
 
-internal const val SAMSUNG_WEATHER_GUIDE =
-    "Samsung Weather missing? Turn on Settings > Apps > Samsung app settings > Weather settings > Show Weather on Apps screen, then return here."
-
-private fun Shortcut.setupIcon(): ImageVector = when (this) {
-    Shortcut.NOTE -> Icons.Default.EditNote
-    Shortcut.EVENT -> Icons.Default.Event
-    Shortcut.WEATHER -> Icons.Default.Cloud
-    Shortcut.CALL -> Icons.Default.Call
-    Shortcut.MESSAGE -> Icons.AutoMirrored.Filled.Message
-    Shortcut.FILES -> Icons.Default.FolderOpen
-    Shortcut.TODO -> Icons.Default.CheckCircle
-    Shortcut.DRAWER -> Icons.Default.GridView
-}
-
 @Composable
 internal fun OnboardingPoint(icon: ImageVector, title: String, description: String) {
     Row(verticalAlignment = Alignment.Top) {
-        Icon(icon, null, tint = Rust, modifier = Modifier.size(24.dp))
-        Column(Modifier.padding(start = 12.dp)) {
+        Icon(icon, null, tint = Rust, modifier = Modifier.size(Dimens.dp24))
+        Column(Modifier.padding(start = Dimens.dp12)) {
             Text(title, fontWeight = FontWeight.Bold)
-            Text(description, color = Muted, fontSize = 14.sp)
+            Text(description, color = Muted, fontSize = Dimens.sp14)
         }
     }
 }
@@ -539,12 +538,12 @@ internal fun OnboardingPoint(icon: ImageVector, title: String, description: Stri
 @Composable
 internal fun MagicKeyRow(key: String, description: String) {
     Row(
-        Modifier.fillMaxWidth().clip(RoundedCornerShape(14.dp)).background(MaterialTheme.colorScheme.surfaceContainerLow).padding(11.dp),
+        Modifier.fillMaxWidth().clip(RoundedCornerShape(Dimens.dp14)).background(MaterialTheme.colorScheme.surfaceContainerLow).padding(Dimens.dp11),
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        Box(Modifier.size(36.dp).clip(CircleShape).background(LightInk), contentAlignment = Alignment.Center) {
-            Text(key, color = LightPaper, fontSize = 20.sp, fontWeight = FontWeight.Black)
+        Box(Modifier.size(Dimens.dp36).clip(CircleShape).background(LightInk), contentAlignment = Alignment.Center) {
+            Text(key, color = LightPaper, fontSize = Dimens.sp20, fontWeight = FontWeight.Black)
         }
-        Text(description, Modifier.padding(start = 12.dp), fontWeight = FontWeight.SemiBold)
+        Text(description, Modifier.padding(start = Dimens.dp12), fontWeight = FontWeight.SemiBold)
     }
 }

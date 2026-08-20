@@ -110,7 +110,7 @@ class DeviceActions(private val context: Context) {
         return runCatching {
             val info = context.packageManager.getApplicationInfo(packageName, 0)
             context.packageManager.getApplicationLabel(info).toString()
-        }.getOrDefault("Not installed").also { synchronized(labelCache) { labelCache[packageName] = it } }
+        }.getOrDefault(context.getString(R.string.not_installed)).also { synchronized(labelCache) { labelCache[packageName] = it } }
     }
 
     fun appIcon(packageName: String): Drawable? {
@@ -141,8 +141,7 @@ class DeviceActions(private val context: Context) {
 
     fun launchShortcut(shortcut: Shortcut, assignedPackage: String?, openTodos: () -> Unit, openDrawer: () -> Unit) {
         if (!assignedPackage.isNullOrBlank() && shortcut !in listOf(Shortcut.TODO, Shortcut.DRAWER)) {
-            launchPackage(assignedPackage)
-            return
+            if (launchPackage(assignedPackage)) return
         }
         when (shortcut) {
             Shortcut.NOTE -> createNote("")
@@ -189,7 +188,7 @@ class DeviceActions(private val context: Context) {
                         context.resources,
                         cursor.getInt(typeIndex),
                         cursor.getString(labelIndex),
-                    ).toString().ifBlank { "Phone" }
+                    ).toString().ifBlank { context.getString(R.string.phone) }
                     val contactUri = ContentUris.withAppendedId(
                         ContactsContract.Contacts.CONTENT_URI,
                         cursor.getLong(contactIdIndex),
@@ -341,20 +340,21 @@ class DeviceActions(private val context: Context) {
     fun exportTodosToNotes(text: String): Boolean {
         val clean = text.trim()
         if (clean.isEmpty()) return false
+        val title = context.getString(R.string.todo_export_title, context.getString(R.string.app_name))
         val createNote = Intent(Intent.ACTION_CREATE_NOTE).setType("text/plain")
-            .putExtra(Intent.EXTRA_TITLE, "MinkLauncher To-do List")
+            .putExtra(Intent.EXTRA_TITLE, title)
             .putExtra(Intent.EXTRA_TEXT, clean)
         if (hasHandler(createNote)) return start(createNote, chooser = true)
         return start(
             Intent(Intent.ACTION_SEND).setType("text/plain")
-                .putExtra(Intent.EXTRA_TITLE, "MinkLauncher To-do List")
+                .putExtra(Intent.EXTRA_TITLE, title)
                 .putExtra(Intent.EXTRA_TEXT, clean),
             chooser = true,
         )
     }
 
     fun createEvent(description: String): Boolean {
-        val draft = parseCalendarPhrase(description)
+        val draft = parseCalendarPhrase(description, context.getString(R.string.new_event))
         val intent = Intent(Intent.ACTION_INSERT).setData(CalendarContract.Events.CONTENT_URI)
             .putExtra(CalendarContract.Events.TITLE, draft.title)
             .putExtra(CalendarContract.Events.DESCRIPTION, draft.description)

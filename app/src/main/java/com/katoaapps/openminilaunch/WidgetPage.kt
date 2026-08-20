@@ -66,6 +66,7 @@ import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.IntSize
@@ -172,7 +173,7 @@ internal fun WidgetPage(store: LauncherStore, actions: DeviceActions, goHome: ()
             }
             if (!launched) {
                 abandonPendingWidget()
-                Toast.makeText(context, "This widget couldn't be configured", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, context.getString(R.string.widget_configuration_failed), Toast.LENGTH_SHORT).show()
             }
         } else {
             finishPendingWidget()
@@ -208,38 +209,44 @@ internal fun WidgetPage(store: LauncherStore, actions: DeviceActions, goHome: ()
 
     Column(Modifier.fillMaxSize().statusBarsPadding().navigationBarsPadding()) {
         Row(
-            Modifier.fillMaxWidth().padding(horizontal = 20.dp, vertical = 12.dp),
+            Modifier.fillMaxWidth().padding(horizontal = Dimens.dp20, vertical = Dimens.dp12),
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Column(Modifier.weight(1f).clickable(onClick = goHome)) {
-                Text("Widgets", fontSize = 26.sp, fontWeight = FontWeight.Black)
+                Text(stringResource(R.string.widgets), fontSize = Dimens.sp26, fontWeight = FontWeight.Black)
                 if (store.widgetIds.isNotEmpty()) {
-                    Text("${store.widgetIds.size} of 4", color = Muted, fontSize = 12.sp)
+                    Text(stringResource(R.string.widget_count, store.widgetIds.size, 4), color = Muted, fontSize = Dimens.sp12)
                 }
             }
             FilledTonalIconButton(
                 onClick = {
-                    if (store.widgetIds.size >= 4) Toast.makeText(context, "Maximum of 4 widgets", Toast.LENGTH_SHORT).show()
+                    if (store.widgetIds.size >= 4) {
+                        Toast.makeText(
+                            context,
+                            context.resources.getQuantityString(R.plurals.maximum_widgets, 4, 4),
+                            Toast.LENGTH_SHORT,
+                        ).show()
+                    }
                     else showPicker = true
                 },
-            ) { Icon(Icons.Default.Add, "Add widget") }
+            ) { Icon(Icons.Default.Add, stringResource(R.string.add_widget)) }
         }
 
         if (store.widgetIds.isEmpty()) {
             Column(
-                Modifier.fillMaxSize().padding(28.dp),
+                Modifier.fillMaxSize().padding(Dimens.dp28),
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
-                Icon(Icons.Default.Widgets, null, Modifier.size(58.dp), tint = Sage)
-                Text("Your widget page", fontSize = 24.sp, fontWeight = FontWeight.Black, modifier = Modifier.padding(top = 16.dp))
-                Text("Add up to four Android widgets. Their apps control the content they display.", color = Muted, modifier = Modifier.padding(vertical = 12.dp))
-                Button(onClick = { showPicker = true }) { Icon(Icons.Default.Add, null); Text("Add widget", Modifier.padding(start = 8.dp)) }
+                Icon(Icons.Default.Widgets, null, Modifier.size(Dimens.dp58), tint = Sage)
+                Text(stringResource(R.string.your_widget_page), fontSize = Dimens.sp24, fontWeight = FontWeight.Black, modifier = Modifier.padding(top = Dimens.dp16))
+                Text(stringResource(R.string.your_widget_page_description), color = Muted, modifier = Modifier.padding(vertical = Dimens.dp12))
+                Button(onClick = { showPicker = true }) { Icon(Icons.Default.Add, null); Text(stringResource(R.string.add_widget), Modifier.padding(start = Dimens.dp8)) }
             }
         } else {
             LazyColumn(
-                Modifier.fillMaxSize().padding(horizontal = 20.dp),
-                verticalArrangement = Arrangement.spacedBy(20.dp),
+                Modifier.fillMaxSize().padding(horizontal = Dimens.dp20),
+                verticalArrangement = Arrangement.spacedBy(Dimens.dp20),
             ) {
                 itemsIndexed(store.widgetIds, key = { _, id -> id }) { index, id ->
                     val info = manager.getAppWidgetInfo(id)
@@ -259,7 +266,7 @@ internal fun WidgetPage(store: LauncherStore, actions: DeviceActions, goHome: ()
                         )
                     }
                 }
-                item { Spacer(Modifier.height(32.dp)) }
+                item { Spacer(Modifier.height(Dimens.dp32)) }
             }
         }
     }
@@ -283,7 +290,7 @@ internal fun WidgetPage(store: LauncherStore, actions: DeviceActions, goHome: ()
         WidgetSizeDialog(
             info = info,
             current = preferred,
-            confirmLabel = "Add widget",
+            confirmLabelRes = R.string.add_widget,
             onConfirm = { size ->
                 sizingProvider = null
                 beginWidgetBinding(info, size)
@@ -318,44 +325,44 @@ private fun WidgetPanel(
 
     Column(Modifier.fillMaxWidth()) {
         Row(
-            Modifier.fillMaxWidth().padding(start = 4.dp, bottom = 6.dp),
+            Modifier.fillMaxWidth().padding(start = Dimens.dp4, bottom = Dimens.dp6),
             verticalAlignment = Alignment.CenterVertically,
         ) {
             Text(
                 info.loadLabel(context.packageManager),
                 Modifier.weight(1f),
                 color = Muted,
-                fontSize = 11.sp,
+                fontSize = Dimens.sp11,
                 fontWeight = FontWeight.Bold,
-                letterSpacing = .5.sp,
+                letterSpacing = Dimens.sp0_5,
                 maxLines = 1,
             )
             Box {
-                IconButton(onClick = { menuExpanded = true }, Modifier.size(32.dp)) {
-                    Icon(Icons.Default.MoreVert, "Widget options", Modifier.size(19.dp), tint = Muted)
+                IconButton(onClick = { menuExpanded = true }, Modifier.size(Dimens.dp32)) {
+                    Icon(Icons.Default.MoreVert, stringResource(R.string.widget_options), Modifier.size(Dimens.dp19), tint = Muted)
                 }
                 DropdownMenu(expanded = menuExpanded, onDismissRequest = { menuExpanded = false }) {
                     if (sizeRange.isResizable) {
                         DropdownMenuItem(
-                            text = { Text("Resize · ${gridSize.label}") },
+                            text = { Text(stringResource(R.string.resize_widget, gridSize.displayLabel())) },
                             leadingIcon = { Icon(Icons.Default.Widgets, null) },
                             onClick = { menuExpanded = false; showResize = true },
                         )
                     }
                     DropdownMenuItem(
-                        text = { Text("Move up") },
+                        text = { Text(stringResource(R.string.move_up)) },
                         leadingIcon = { Icon(Icons.Default.ArrowUpward, null) },
                         enabled = canMoveUp,
                         onClick = { menuExpanded = false; onMoveUp() },
                     )
                     DropdownMenuItem(
-                        text = { Text("Move down") },
+                        text = { Text(stringResource(R.string.move_down)) },
                         leadingIcon = { Icon(Icons.Default.ArrowDownward, null) },
                         enabled = canMoveDown,
                         onClick = { menuExpanded = false; onMoveDown() },
                     )
                     DropdownMenuItem(
-                        text = { Text("Remove", color = MaterialTheme.colorScheme.error) },
+                        text = { Text(stringResource(R.string.remove), color = MaterialTheme.colorScheme.error) },
                         leadingIcon = { Icon(Icons.Default.Close, null, tint = MaterialTheme.colorScheme.error) },
                         onClick = { menuExpanded = false; onRemove() },
                     )
@@ -365,11 +372,11 @@ private fun WidgetPanel(
         BoxWithConstraints(Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
             val cellWidth = maxWidth / 4
             val panelWidth = (cellWidth * gridSize.columns)
-                .coerceAtLeast(96.dp)
+                .coerceAtLeast(Dimens.dp96)
                 .coerceAtMost(maxWidth)
             val panelHeight = (cellWidth * gridSize.rows)
-                .coerceAtLeast(72.dp)
-                .coerceAtMost(420.dp)
+                .coerceAtLeast(Dimens.dp72)
+                .coerceAtMost(Dimens.dp420)
 
             AndroidView(
                 factory = { host.createView(it, id, info).apply { setAppWidget(id, info) } },
@@ -385,7 +392,7 @@ private fun WidgetPanel(
                 modifier = Modifier
                     .fillMaxWidth(panelWidth / maxWidth)
                     .height(panelHeight)
-                    .clip(RoundedCornerShape(24.dp))
+                    .clip(RoundedCornerShape(Dimens.dp24))
                     .onSizeChanged { measuredSize = it },
             )
         }
@@ -394,7 +401,7 @@ private fun WidgetPanel(
         WidgetSizeDialog(
             info = info,
             current = gridSize,
-            confirmLabel = "Apply",
+            confirmLabelRes = R.string.apply,
             onConfirm = { showResize = false; onResize(it) },
             onDismiss = { showResize = false },
         )
@@ -405,7 +412,7 @@ private fun WidgetPanel(
 private fun WidgetSizeDialog(
     info: AppWidgetProviderInfo,
     current: WidgetGridSize,
-    confirmLabel: String,
+    @androidx.annotation.StringRes confirmLabelRes: Int,
     onConfirm: (WidgetGridSize) -> Unit,
     onDismiss: () -> Unit,
 ) {
@@ -424,15 +431,15 @@ private fun WidgetSizeDialog(
     Dialog(onDismissRequest = onDismiss) {
         Surface(
             Modifier.fillMaxWidth(),
-            shape = RoundedCornerShape(26.dp),
+            shape = RoundedCornerShape(Dimens.dp26),
             color = MaterialTheme.colorScheme.background,
         ) {
-            Column(Modifier.padding(22.dp), verticalArrangement = Arrangement.spacedBy(14.dp)) {
-                Text("Widget size", fontSize = 22.sp, fontWeight = FontWeight.Black)
-                Text(info.loadLabel(context.packageManager), color = Muted, fontSize = 13.sp)
-                Text(selected.label, fontSize = 32.sp, fontWeight = FontWeight.Black, color = MaterialTheme.colorScheme.primary)
-                Text("WIDTH", color = Muted, fontSize = 10.sp, fontWeight = FontWeight.Bold, letterSpacing = 1.sp)
-                Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+            Column(Modifier.padding(Dimens.dp22), verticalArrangement = Arrangement.spacedBy(Dimens.dp14)) {
+                Text(stringResource(R.string.widget_size), fontSize = Dimens.sp22, fontWeight = FontWeight.Black)
+                Text(info.loadLabel(context.packageManager), color = Muted, fontSize = Dimens.sp13)
+                Text(selected.displayLabel(), fontSize = Dimens.sp32, fontWeight = FontWeight.Black, color = MaterialTheme.colorScheme.primary)
+                Text(stringResource(R.string.width), color = Muted, fontSize = Dimens.sp10, fontWeight = FontWeight.Bold, letterSpacing = Dimens.sp1)
+                Row(horizontalArrangement = Arrangement.spacedBy(Dimens.dp8)) {
                     (range.minColumns..range.maxColumns).forEach { columns ->
                         FilterChip(
                             selected = selected.columns == columns,
@@ -441,8 +448,8 @@ private fun WidgetSizeDialog(
                         )
                     }
                 }
-                Text("HEIGHT", color = Muted, fontSize = 10.sp, fontWeight = FontWeight.Bold, letterSpacing = 1.sp)
-                Row(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                Text(stringResource(R.string.height), color = Muted, fontSize = Dimens.sp10, fontWeight = FontWeight.Bold, letterSpacing = Dimens.sp1)
+                Row(horizontalArrangement = Arrangement.spacedBy(Dimens.dp8)) {
                     (range.minRows..range.maxRows).forEach { rows ->
                         FilterChip(
                             selected = selected.rows == rows,
@@ -452,13 +459,13 @@ private fun WidgetSizeDialog(
                     }
                 }
                 Text(
-                    "MinkLauncher OpenSource uses a four-column widget grid. The widget app chooses the layout it displays inside this space.",
+                    stringResource(R.string.widget_grid_description, stringResource(R.string.app_name)),
                     color = Muted,
-                    fontSize = 12.sp,
+                    fontSize = Dimens.sp12,
                 )
                 Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
-                    TextButton(onClick = onDismiss) { Text("Cancel") }
-                    Button(onClick = { onConfirm(selected) }, modifier = Modifier.padding(start = 8.dp)) { Text(confirmLabel) }
+                    TextButton(onClick = onDismiss) { Text(stringResource(R.string.cancel)) }
+                    Button(onClick = { onConfirm(selected) }, modifier = Modifier.padding(start = Dimens.dp8)) { Text(stringResource(confirmLabelRes)) }
                 }
             }
         }
@@ -533,33 +540,33 @@ private fun WidgetProviderDialog(
     Dialog(onDismissRequest = onDismiss) {
         Surface(
             Modifier.fillMaxWidth().fillMaxHeight(.86f),
-            shape = RoundedCornerShape(26.dp),
+            shape = RoundedCornerShape(Dimens.dp26),
             color = MaterialTheme.colorScheme.background,
         ) {
-            Column(Modifier.fillMaxSize().padding(16.dp)) {
+            Column(Modifier.fillMaxSize().padding(Dimens.dp16)) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
-                    Text("Add a widget", Modifier.weight(1f), fontSize = 22.sp, fontWeight = FontWeight.Black)
-                    IconButton(onClick = onDismiss) { Icon(Icons.Default.Close, "Close") }
+                    Text(stringResource(R.string.add_a_widget), Modifier.weight(1f), fontSize = Dimens.sp22, fontWeight = FontWeight.Black)
+                    IconButton(onClick = onDismiss) { Icon(Icons.Default.Close, stringResource(R.string.close)) }
                 }
                 LazyColumn(
                     Modifier.fillMaxSize(),
-                    verticalArrangement = Arrangement.spacedBy(10.dp),
+                    verticalArrangement = Arrangement.spacedBy(Dimens.dp10),
                 ) {
                     groups.forEach { group ->
                         item(key = "header:${group.packageName}") {
                             Row(
-                                Modifier.fillMaxWidth().padding(top = 10.dp, bottom = 2.dp),
+                                Modifier.fillMaxWidth().padding(top = Dimens.dp10, bottom = Dimens.dp2),
                                 verticalAlignment = Alignment.CenterVertically,
                             ) {
-                                AppIcon(group.packageName, actions, 34.dp)
-                                Text(group.appName, Modifier.padding(start = 10.dp), fontWeight = FontWeight.Bold)
+                                AppIcon(group.packageName, actions, Dimens.dp34)
+                                Text(group.appName, Modifier.padding(start = Dimens.dp10), fontWeight = FontWeight.Bold)
                             }
                         }
                         items(
                             items = group.providers.chunked(2),
                             key = { row -> row.joinToString("|") { it.provider.flattenToShortString() } },
                         ) { rowProviders ->
-                            Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(10.dp)) {
+                            Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(Dimens.dp10)) {
                                 rowProviders.forEach { info ->
                                     WidgetPreviewCard(info, Modifier.weight(1f)) { onSelect(info) }
                                 }
@@ -568,7 +575,7 @@ private fun WidgetProviderDialog(
                         }
                     }
                     if (groups.isEmpty()) {
-                        item { Text("No widget providers are installed.", color = Muted, modifier = Modifier.padding(12.dp)) }
+                        item { Text(stringResource(R.string.no_widget_providers), color = Muted, modifier = Modifier.padding(Dimens.dp12)) }
                     }
                 }
             }
@@ -601,38 +608,38 @@ private fun WidgetPreviewCard(info: AppWidgetProviderInfo, modifier: Modifier = 
     Surface(
         onClick = onClick,
         modifier = modifier,
-        shape = RoundedCornerShape(16.dp),
+        shape = RoundedCornerShape(Dimens.dp16),
         color = MaterialTheme.colorScheme.surfaceContainerLow,
     ) {
-        Column(Modifier.fillMaxWidth().padding(10.dp)) {
+        Column(Modifier.fillMaxWidth().padding(Dimens.dp10)) {
             Box(
-                Modifier.fillMaxWidth().height(116.dp)
-                    .background(MaterialTheme.colorScheme.surfaceVariant, RoundedCornerShape(12.dp))
-                    .padding(8.dp),
+                Modifier.fillMaxWidth().height(Dimens.dp116)
+                    .background(MaterialTheme.colorScheme.surfaceVariant, RoundedCornerShape(Dimens.dp12))
+                    .padding(Dimens.dp8),
                 contentAlignment = Alignment.Center,
             ) {
                 if (bitmap != null) {
                     Image(bitmap, null, Modifier.fillMaxSize(), contentScale = ContentScale.Fit)
                 } else {
-                    Icon(Icons.Default.Widgets, null, Modifier.size(42.dp), tint = Muted)
+                    Icon(Icons.Default.Widgets, null, Modifier.size(Dimens.dp42), tint = Muted)
                 }
             }
             Text(
                 info.loadLabel(context.packageManager),
-                modifier = Modifier.padding(top = 8.dp),
-                fontSize = 12.sp,
+                modifier = Modifier.padding(top = Dimens.dp8),
+                fontSize = Dimens.sp12,
                 fontWeight = FontWeight.SemiBold,
                 maxLines = 2,
             )
             Text(
                 if (sizeRange.isResizable) {
-                    "${sizeRange.preferred.label} · resizable"
+                    stringResource(R.string.widget_resizable, sizeRange.preferred.displayLabel())
                 } else {
-                    sizeRange.preferred.label
+                    sizeRange.preferred.displayLabel()
                 },
                 color = Muted,
-                fontSize = 10.sp,
-                modifier = Modifier.padding(top = 3.dp),
+                fontSize = Dimens.sp10,
+                modifier = Modifier.padding(top = Dimens.dp3),
             )
         }
     }

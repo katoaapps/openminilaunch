@@ -9,7 +9,6 @@ import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
-import android.os.Environment
 import android.net.Uri
 import android.provider.Settings
 import android.widget.Toast
@@ -119,6 +118,8 @@ import kotlin.math.roundToInt
 @Composable
 internal fun TodosScreen(store: LauncherStore, actions: DeviceActions, goBack: () -> Unit) {
     val context = LocalContext.current
+    val appName = stringResource(R.string.app_name)
+    val todoListTitle = stringResource(R.string.todo_export_title, appName)
     var newText by remember { mutableStateOf("") }
     var editing by remember { mutableStateOf<TodoItem?>(null) }
     var deleting by remember { mutableStateOf<TodoItem?>(null) }
@@ -153,7 +154,7 @@ internal fun TodosScreen(store: LauncherStore, actions: DeviceActions, goBack: (
         }
     }
     Column(Modifier.fillMaxSize().statusBarsPadding()) {
-        PageHeader("To-do", goBack) {
+        PageHeader(stringResource(R.string.todo_page_title), goBack) {
             IconButton(
                 onClick = { showExportOptions = true },
                 enabled = store.todos.isNotEmpty(),
@@ -161,30 +162,30 @@ internal fun TodosScreen(store: LauncherStore, actions: DeviceActions, goBack: (
                 Icon(Icons.Default.IosShare, stringResource(R.string.export_todo_list))
             }
         }
-        Row(Modifier.fillMaxWidth().padding(horizontal = 22.dp, vertical = 8.dp), verticalAlignment = Alignment.CenterVertically) {
+        Row(Modifier.fillMaxWidth().padding(horizontal = Dimens.dp22, vertical = Dimens.dp8), verticalAlignment = Alignment.CenterVertically) {
             OutlinedTextField(
                 value = newText,
                 onValueChange = { newText = it },
-                placeholder = { Text("Add a to-do") },
+                placeholder = { Text(stringResource(R.string.add_todo)) },
                 singleLine = true,
                 modifier = Modifier.weight(1f),
-                shape = RoundedCornerShape(16.dp),
+                shape = RoundedCornerShape(Dimens.dp16),
                 keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
                 keyboardActions = KeyboardActions(onDone = { store.addTodo(newText); newText = "" }),
             )
             IconButton(onClick = { store.addTodo(newText); newText = "" }, enabled = newText.isNotBlank()) {
-                Icon(Icons.Default.AddCircle, "Add", tint = Rust, modifier = Modifier.size(32.dp))
+                Icon(Icons.Default.AddCircle, stringResource(R.string.add), tint = Rust, modifier = Modifier.size(Dimens.dp32))
             }
         }
         if (store.todos.isEmpty()) {
             Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                Text("Nothing here yet.", color = Muted)
+                Text(stringResource(R.string.nothing_here_yet), color = Muted)
             }
         } else {
             LazyColumn(
                 modifier = Modifier.fillMaxSize(),
                 state = listState,
-                contentPadding = PaddingValues(horizontal = 14.dp, vertical = 8.dp),
+                contentPadding = PaddingValues(horizontal = Dimens.dp14, vertical = Dimens.dp8),
             ) {
                 itemsIndexed(visibleTodos, key = { _, item -> item.id }) { _, item ->
                     ReorderableItem(reorderableState, key = item.id) { isDragging ->
@@ -214,7 +215,7 @@ internal fun TodosScreen(store: LauncherStore, actions: DeviceActions, goBack: (
                         Row(
                             Modifier
                                 .fillMaxWidth()
-                                .padding(vertical = 3.dp)
+                                .padding(vertical = Dimens.dp3)
                                 .zIndex(if (isDragging) 1f else 0f)
                                 .graphicsLayer {
                                     scaleX = scale
@@ -222,9 +223,9 @@ internal fun TodosScreen(store: LauncherStore, actions: DeviceActions, goBack: (
                                     rotationZ = jiggle
                                     shadowElevation = elevation
                                 }
-                                .clip(RoundedCornerShape(16.dp))
+                                .clip(RoundedCornerShape(Dimens.dp16))
                                 .background(MaterialTheme.colorScheme.surfaceContainerLow)
-                                .padding(8.dp),
+                                .padding(Dimens.dp8),
                             verticalAlignment = Alignment.CenterVertically,
                         ) {
                             Checkbox(checked = item.completed, onCheckedChange = { store.toggleTodo(item.id) })
@@ -236,10 +237,10 @@ internal fun TodosScreen(store: LauncherStore, actions: DeviceActions, goBack: (
                             )
                             Icon(
                                 Icons.Default.DragHandle,
-                                contentDescription = "Hold and drag to reorder",
+                                contentDescription = stringResource(R.string.hold_drag_reorder),
                                 tint = Muted,
                                 modifier = Modifier
-                                    .size(44.dp)
+                                    .size(Dimens.dp44)
                                     .longPressDraggableHandle(
                                         interactionSource = interactionSource,
                                         onDragStarted = {
@@ -251,10 +252,10 @@ internal fun TodosScreen(store: LauncherStore, actions: DeviceActions, goBack: (
                                             draggedTodoId = null
                                         },
                                     )
-                                    .padding(10.dp),
+                                    .padding(Dimens.dp10),
                             )
                             IconButton(onClick = { deleting = item }) {
-                                Icon(Icons.Default.DeleteOutline, "Delete", tint = Rust)
+                                Icon(Icons.Default.DeleteOutline, stringResource(R.string.delete), tint = Rust)
                             }
                         }
                     }
@@ -267,34 +268,34 @@ internal fun TodosScreen(store: LauncherStore, actions: DeviceActions, goBack: (
         AlertDialog(
             modifier = Modifier.fillMaxWidth(.94f),
             onDismissRequest = { editing = null },
-            title = { Text("Edit to-do") },
+            title = { Text(stringResource(R.string.edit_todo)) },
             text = {
                 OutlinedTextField(
                     value = editText,
                     onValueChange = { editText = it },
-                    modifier = Modifier.fillMaxWidth().heightIn(min = 160.dp, max = 280.dp),
+                    modifier = Modifier.fillMaxWidth().heightIn(min = Dimens.dp160, max = Dimens.dp280),
                     minLines = 5,
                     maxLines = 10,
                     singleLine = false,
                     keyboardOptions = KeyboardOptions(imeAction = ImeAction.Default),
                 )
             },
-            confirmButton = { TextButton(onClick = { if (editText.isNotBlank()) store.renameTodo(item.id, editText); editing = null }) { Text("Save") } },
-            dismissButton = { TextButton(onClick = { editing = null }) { Text("Cancel") } },
+            confirmButton = { TextButton(onClick = { if (editText.isNotBlank()) store.renameTodo(item.id, editText); editing = null }) { Text(stringResource(R.string.save)) } },
+            dismissButton = { TextButton(onClick = { editing = null }) { Text(stringResource(R.string.cancel)) } },
         )
     }
     deleting?.let { item ->
         AlertDialog(
             onDismissRequest = { deleting = null },
             icon = { Icon(Icons.Default.DeleteOutline, null, tint = Rust) },
-            title = { Text("Delete this to-do?") },
-            text = { Text("“${item.text}” will be permanently removed.") },
+            title = { Text(stringResource(R.string.delete_todo_title)) },
+            text = { Text(stringResource(R.string.delete_todo_description, item.text)) },
             confirmButton = {
                 TextButton(onClick = { store.deleteTodo(item.id); deleting = null }) {
-                    Text("Delete", color = Rust)
+                    Text(stringResource(R.string.delete), color = Rust)
                 }
             },
-            dismissButton = { TextButton(onClick = { deleting = null }) { Text("Cancel") } },
+            dismissButton = { TextButton(onClick = { deleting = null }) { Text(stringResource(R.string.cancel)) } },
         )
     }
     if (showExportOptions) {
@@ -303,31 +304,31 @@ internal fun TodosScreen(store: LauncherStore, actions: DeviceActions, goBack: (
             icon = { Icon(Icons.Default.IosShare, null) },
             title = { Text(stringResource(R.string.export_todo_list)) },
             text = {
-                Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                Column(verticalArrangement = Arrangement.spacedBy(Dimens.dp8)) {
                     Text(stringResource(R.string.export_todo_list_description))
                     FilledTonalButton(
                         onClick = {
                             showExportOptions = false
-                            if (!actions.exportTodosToNotes(formatTodoExport(store.todos))) {
+                            if (!actions.exportTodosToNotes(formatTodoExport(todoListTitle, store.todos))) {
                                 Toast.makeText(context, R.string.todo_export_failed, Toast.LENGTH_SHORT).show()
                             }
                         },
                         modifier = Modifier.fillMaxWidth(),
                     ) {
                         Icon(Icons.AutoMirrored.Filled.NoteAdd, null)
-                        Spacer(Modifier.width(8.dp))
+                        Spacer(Modifier.width(Dimens.dp8))
                         Text(stringResource(R.string.send_to_notes_app))
                     }
                     FilledTonalButton(
                         onClick = {
                             showExportOptions = false
                             val date = LocalDate.now().format(DateTimeFormatter.ISO_LOCAL_DATE)
-                            pdfLauncher.launch("MinkLauncher-todos-$date.pdf")
+                            pdfLauncher.launch(context.getString(R.string.todo_export_filename, date))
                         },
                         modifier = Modifier.fillMaxWidth(),
                     ) {
                         Icon(Icons.Default.PictureAsPdf, null)
-                        Spacer(Modifier.width(8.dp))
+                        Spacer(Modifier.width(Dimens.dp8))
                         Text(stringResource(R.string.save_as_pdf))
                     }
                 }
@@ -344,12 +345,12 @@ internal fun TodosScreen(store: LauncherStore, actions: DeviceActions, goBack: (
 
 @Composable
 internal fun PageHeader(title: String, goBack: () -> Unit, action: (@Composable () -> Unit)? = null) {
-    Row(Modifier.fillMaxWidth().padding(horizontal = 10.dp, vertical = 8.dp), verticalAlignment = Alignment.CenterVertically) {
-        IconButton(onClick = goBack) { Icon(Icons.AutoMirrored.Filled.ArrowBack, "Back") }
+    Row(Modifier.fillMaxWidth().padding(horizontal = Dimens.dp10, vertical = Dimens.dp8), verticalAlignment = Alignment.CenterVertically) {
+        IconButton(onClick = goBack) { Icon(Icons.AutoMirrored.Filled.ArrowBack, stringResource(R.string.back)) }
         Text(
             title,
             Modifier.weight(1f),
-            fontSize = 28.sp,
+            fontSize = Dimens.sp28,
             fontWeight = FontWeight.Black,
             maxLines = 1,
             overflow = TextOverflow.Ellipsis,
@@ -360,19 +361,19 @@ internal fun PageHeader(title: String, goBack: () -> Unit, action: (@Composable 
 
 @Composable
 internal fun SectionLabel(text: String) {
-    Text(text, fontSize = 12.sp, fontWeight = FontWeight.Black, letterSpacing = 1.4.sp, color = Rust, modifier = Modifier.padding(top = 10.dp))
+    Text(text, fontSize = Dimens.sp12, fontWeight = FontWeight.Black, letterSpacing = Dimens.sp1_4, color = Rust, modifier = Modifier.padding(top = Dimens.dp10))
 }
 
 @Composable
 internal fun SettingsRow(title: String, subtitle: String, icon: ImageVector, enabled: Boolean = true, onClick: () -> Unit) {
     Row(
-        Modifier.fillMaxWidth().clip(RoundedCornerShape(16.dp)).background(MaterialTheme.colorScheme.surfaceContainerLow)
-            .clickable(enabled = enabled, onClick = onClick).padding(14.dp),
+        Modifier.fillMaxWidth().clip(RoundedCornerShape(Dimens.dp16)).background(MaterialTheme.colorScheme.surfaceContainerLow)
+            .clickable(enabled = enabled, onClick = onClick).padding(Dimens.dp14),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Column(Modifier.weight(1f)) {
             Text(title, fontWeight = FontWeight.SemiBold)
-            Text(subtitle, color = Muted, fontSize = 12.sp, maxLines = 1)
+            Text(subtitle, color = Muted, fontSize = Dimens.sp12, maxLines = 1)
         }
         Icon(icon, null, tint = Muted)
     }

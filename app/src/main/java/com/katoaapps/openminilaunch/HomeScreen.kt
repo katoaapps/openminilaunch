@@ -98,10 +98,10 @@ internal fun HomeScreen(
     val homePanelColor = Color(store.homePanelColorArgb)
     val homePanelContentColor = readableContentColor(homePanelColor)
     val homePanelMutedColor = homePanelContentColor.copy(alpha = .68f)
-    val homePanelInsetColor = if (homePanelContentColor == Color.White) {
-        Color.Black.copy(alpha = .16f)
+    val homePanelInsetColor = if (homePanelContentColor == MinkWhite) {
+        MinkBlack.copy(alpha = .16f)
     } else {
-        Color.White.copy(alpha = .24f)
+        MinkWhite.copy(alpha = .24f)
     }
     val lockServiceLauncher = rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) {
         if (actions.isLockServiceEnabled()) actions.lockDevice()
@@ -109,7 +109,7 @@ internal fun HomeScreen(
 
     fun lockFromHome() {
         if (!actions.supportsLockScreenAction()) {
-            Toast.makeText(context, "Double-tap lock requires Android 9 or newer", Toast.LENGTH_SHORT).show()
+            Toast.makeText(context, context.getString(R.string.double_tap_lock_requires_android_9), Toast.LENGTH_SHORT).show()
         } else if (!actions.lockDevice()) {
             showLockDisclosure = true
         }
@@ -138,23 +138,23 @@ internal fun HomeScreen(
         },
     ) {
         val qwertyHome = maxHeight <= maxWidth * 1.55f
-        val homeHorizontalPadding = if (qwertyHome) 14.dp else 22.dp
-        val headerActionSize = if (qwertyHome) 40.dp else 48.dp
-        val headerIconSize = if (qwertyHome) 21.dp else 24.dp
-        val focusPanelHeight = (maxWidth * .78f).coerceIn(310.dp, 350.dp)
+        val homeHorizontalPadding = if (qwertyHome) Dimens.dp14 else Dimens.dp22
+        val headerActionSize = if (qwertyHome) Dimens.dp40 else Dimens.dp48
+        val headerIconSize = if (qwertyHome) Dimens.dp21 else Dimens.dp24
+        val focusPanelHeight = (maxWidth * .78f).coerceIn(Dimens.dp310, Dimens.dp350)
         val imeBottom = WindowInsets.ime.asPaddingValues().calculateBottomPadding()
         val navigationBottom = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()
-        val softInputRowHeight = if (magicExpanded) 0.dp else (imeBottom - navigationBottom).coerceAtLeast(0.dp)
+        val softInputRowHeight = if (magicExpanded) Dimens.dp0 else (imeBottom - navigationBottom).coerceAtLeast(Dimens.dp0)
         Column(
             Modifier.fillMaxSize()
                 .background(MaterialTheme.colorScheme.background)
-                .blur(if (magicExpanded) 10.dp else 0.dp),
+                .blur(if (magicExpanded) Dimens.dp10 else Dimens.dp0),
         ) {
             CompositionLocalProvider(LocalMinimumInteractiveComponentSize provides headerActionSize) {
                 Row(
                     Modifier.fillMaxWidth().statusBarsPadding()
                         .padding(horizontal = homeHorizontalPadding)
-                        .padding(vertical = if (qwertyHome) 0.dp else 8.dp),
+                        .padding(vertical = if (qwertyHome) Dimens.dp0 else Dimens.dp8),
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
                     MinkHomeIcon(
@@ -164,10 +164,10 @@ internal fun HomeScreen(
                         modifier = Modifier.size(headerActionSize),
                     )
                     Text(
-                        LocalDate.now().format(DateTimeFormatter.ofPattern("EEE, MMM d")).uppercase(),
+                        LocalDate.now().format(DateTimeFormatter.ofPattern(stringResource(R.string.home_date_pattern))).uppercase(),
                         color = MaterialTheme.colorScheme.onSurface,
-                        letterSpacing = 1.5.sp,
-                        fontSize = 13.sp,
+                        letterSpacing = Dimens.sp1_5,
+                        fontSize = Dimens.sp13,
                         fontWeight = FontWeight.Bold,
                         modifier = Modifier.weight(1f).clickable {
                             if (!actions.openClock()) {
@@ -179,18 +179,20 @@ internal fun HomeScreen(
                         BadgedBox(
                             badge = {
                                 val count = NotificationHub.conversations().size
-                                if (count > 0) Badge { Text(if (count > 99) "99+" else count.toString()) }
+                                if (count > 0) Badge {
+                                    Text(if (count > 99) stringResource(R.string.notification_count_overflow) else count.toString())
+                                }
                             },
-                        ) { Icon(Icons.Default.Forum, "Conversations", Modifier.size(headerIconSize)) }
+                        ) { Icon(Icons.Default.Forum, stringResource(R.string.conversations), Modifier.size(headerIconSize)) }
                     }
                     IconButton(onClick = openSettings, modifier = Modifier.size(headerActionSize)) {
-                        Icon(Icons.Default.Settings, "Settings", Modifier.size(headerIconSize))
+                        Icon(Icons.Default.Settings, stringResource(R.string.settings), Modifier.size(headerIconSize))
                     }
                 }
             }
             BoxWithConstraints(
                 Modifier.fillMaxWidth().weight(1f)
-                    .padding(horizontal = homeHorizontalPadding, vertical = if (qwertyHome) 2.dp else 10.dp),
+                    .padding(horizontal = homeHorizontalPadding, vertical = if (qwertyHome) Dimens.dp2 else Dimens.dp10),
             ) {
                 val todoPanelHeight = if (qwertyHome) maxHeight else minOf(maxHeight, focusPanelHeight)
                 val todoItemsPerPage = visibleTodoItemsForHeight(todoPanelHeight.value)
@@ -200,16 +202,16 @@ internal fun HomeScreen(
                     Modifier.fillMaxWidth().height(focusPanelHeight).align(Alignment.TopCenter)
                 }
                 Surface(
-                    modifier = focusModifier.widthIn(max = 620.dp).align(if (qwertyHome) Alignment.Center else Alignment.TopCenter),
-                    shape = RoundedCornerShape(if (qwertyHome) 26.dp else 34.dp),
+                    modifier = focusModifier.widthIn(max = Dimens.dp620).align(if (qwertyHome) Alignment.Center else Alignment.TopCenter),
+                    shape = RoundedCornerShape(if (qwertyHome) Dimens.dp26 else Dimens.dp34),
                     color = homePanelColor,
                     contentColor = homePanelContentColor,
-                    shadowElevation = if (isSystemInDarkTheme()) 2.dp else 8.dp,
-                    tonalElevation = 1.dp,
+                    shadowElevation = if (isSystemInDarkTheme()) Dimens.dp2 else Dimens.dp8,
+                    tonalElevation = Dimens.dp1,
                 ) {
                     Row(
-                        Modifier.fillMaxSize().padding(if (qwertyHome) 10.dp else 14.dp),
-                        horizontalArrangement = Arrangement.spacedBy(if (qwertyHome) 8.dp else 12.dp),
+                        Modifier.fillMaxSize().padding(if (qwertyHome) Dimens.dp10 else Dimens.dp14),
+                        horizontalArrangement = Arrangement.spacedBy(if (qwertyHome) Dimens.dp8 else Dimens.dp12),
                     ) {
                         TodoPager(
                             store,
@@ -240,7 +242,7 @@ internal fun HomeScreen(
             }
             Spacer(
                 Modifier.navigationBarsPadding()
-                    .height(88.dp + softInputRowHeight),
+                    .height(Dimens.dp88 + softInputRowHeight),
             )
         }
         flyingTodo?.takeIf { flightActive }?.let { text ->
@@ -254,13 +256,13 @@ internal fun HomeScreen(
                 modifier = Modifier.offset {
                     IntOffset((position.x - 100).roundToInt(), (position.y - 26).roundToInt())
                 }.graphicsLayer { this.alpha = alpha }
-                    .zIndex(10f).shadow(8.dp, RoundedCornerShape(18.dp)),
-                color = Color(0xFFD6A300),
-                shape = RoundedCornerShape(18.dp),
+                    .zIndex(10f).shadow(Dimens.dp8, RoundedCornerShape(Dimens.dp18)),
+                color = MagicTodoColor,
+                shape = RoundedCornerShape(Dimens.dp18),
             ) {
-                Row(Modifier.widthIn(max = 200.dp).padding(horizontal = 14.dp, vertical = 9.dp), verticalAlignment = Alignment.CenterVertically) {
-                    Icon(Icons.Default.Checklist, null, Modifier.size(18.dp), tint = LightInk)
-                    Text(text, Modifier.padding(start = 7.dp), maxLines = 1, color = LightInk, fontWeight = FontWeight.SemiBold)
+                Row(Modifier.widthIn(max = Dimens.dp200).padding(horizontal = Dimens.dp14, vertical = Dimens.dp9), verticalAlignment = Alignment.CenterVertically) {
+                    Icon(Icons.Default.Checklist, null, Modifier.size(Dimens.dp18), tint = LightInk)
+                    Text(text, Modifier.padding(start = Dimens.dp7), maxLines = 1, color = LightInk, fontWeight = FontWeight.SemiBold)
                 }
             }
         }
@@ -268,8 +270,8 @@ internal fun HomeScreen(
             store = store,
             actions = actions,
             modifier = Modifier.fillMaxSize().zIndex(if (magicExpanded) 20f else 0f),
-            collapsedModifier = Modifier.widthIn(max = 620.dp).fillMaxWidth().navigationBarsPadding().imePadding()
-                .padding(horizontal = 22.dp, vertical = 12.dp)
+            collapsedModifier = Modifier.widthIn(max = Dimens.dp620).fillMaxWidth().navigationBarsPadding().imePadding()
+                .padding(horizontal = Dimens.dp22, vertical = Dimens.dp12)
                 .onGloballyPositioned { coordinates ->
                     val origin = coordinates.positionInRoot()
                     magicCenter = origin + Offset(coordinates.size.width / 2f, coordinates.size.height / 2f)
@@ -295,28 +297,28 @@ internal fun HomeScreen(
 
     if (drawerOpen) {
         ModalBottomSheet(onDismissRequest = { drawerOpen = false }, containerColor = MaterialTheme.colorScheme.background) {
-            Text(stringResource(R.string.your_drawer), Modifier.padding(horizontal = 24.dp), fontWeight = FontWeight.Black, letterSpacing = 1.sp)
+            Text(stringResource(R.string.your_drawer), Modifier.padding(horizontal = Dimens.dp24), fontWeight = FontWeight.Black, letterSpacing = Dimens.sp1)
             if (store.drawerPackages.isEmpty()) {
-                Text(stringResource(R.string.choose_drawer_apps), Modifier.padding(24.dp), color = Muted)
+                Text(stringResource(R.string.choose_drawer_apps), Modifier.padding(Dimens.dp24), color = Muted)
             } else {
                 val drawerRows = ceil(store.drawerPackages.size / 2f).toInt()
                 LazyVerticalGrid(
                     columns = GridCells.Fixed(2),
                     modifier = Modifier.fillMaxWidth().height((drawerRows * 68).dp),
-                    contentPadding = PaddingValues(horizontal = 12.dp, vertical = 8.dp),
+                    contentPadding = PaddingValues(horizontal = Dimens.dp12, vertical = Dimens.dp8),
                 ) {
                     items(store.drawerPackages, key = { it }) { packageName ->
                         ListItem(
                             headlineContent = { Text(actions.appLabel(packageName), maxLines = 1, overflow = TextOverflow.Ellipsis) },
-                            leadingContent = { AppIcon(packageName, actions, 36.dp) },
-                            modifier = Modifier.clip(RoundedCornerShape(16.dp))
+                            leadingContent = { AppIcon(packageName, actions, Dimens.dp36) },
+                            modifier = Modifier.clip(RoundedCornerShape(Dimens.dp16))
                                 .clickable { actions.launchPackage(packageName); drawerOpen = false },
                             colors = ListItemDefaults.colors(containerColor = MaterialTheme.colorScheme.background),
                         )
                     }
                 }
             }
-            Spacer(Modifier.height(28.dp))
+            Spacer(Modifier.height(Dimens.dp28))
         }
     }
 }
@@ -347,18 +349,18 @@ internal fun TodoPager(
             pagerState.animateScrollToPage(newestUnfinishedPage.coerceAtMost(pages - 1))
         }
     }
-    val shape = RoundedCornerShape(if (compact) 18.dp else 24.dp)
+    val shape = RoundedCornerShape(if (compact) Dimens.dp18 else Dimens.dp24)
     Column(
         modifier.fillMaxWidth().clip(shape)
             .background(if (embedded) insetColor else MinkForestPanel)
-            .then(if (embedded) Modifier else Modifier.border(1.dp, mutedContentColor.copy(alpha = .42f), shape))
+            .then(if (embedded) Modifier else Modifier.border(Dimens.dp1, mutedContentColor.copy(alpha = .42f), shape))
             .clickable(onClick = openTodos)
-            .padding(if (compact) 8.dp else 16.dp),
-        verticalArrangement = Arrangement.spacedBy(if (compact) 3.dp else 8.dp),
+            .padding(if (compact) Dimens.dp8 else Dimens.dp16),
+        verticalArrangement = Arrangement.spacedBy(if (compact) Dimens.dp3 else Dimens.dp8),
     ) {
         Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
-            Text(stringResource(R.string.todo_heading), color = contentColor, fontWeight = FontWeight.Black, letterSpacing = 1.sp, modifier = Modifier.weight(1f))
-            Text(stringResource(R.string.page_of_pages, pagerState.currentPage + 1, pages), color = mutedContentColor, fontSize = 12.sp)
+            Text(stringResource(R.string.todo_heading), color = contentColor, fontWeight = FontWeight.Black, letterSpacing = Dimens.sp1, modifier = Modifier.weight(1f))
+            Text(stringResource(R.string.page_of_pages, pagerState.currentPage + 1, pages), color = mutedContentColor, fontSize = Dimens.sp12)
         }
         HorizontalPager(state = pagerState, modifier = Modifier.fillMaxWidth().weight(1f)) { page ->
             val pageItems = store.todos
@@ -369,7 +371,7 @@ internal fun TodoPager(
                     Text(stringResource(R.string.tap_to_add_first_todo), color = mutedContentColor)
                 }
             } else {
-                Column(Modifier.fillMaxSize(), verticalArrangement = Arrangement.spacedBy(if (compact) 5.dp else 8.dp)) {
+                Column(Modifier.fillMaxSize(), verticalArrangement = Arrangement.spacedBy(if (compact) Dimens.dp5 else Dimens.dp8)) {
                     pageItems.forEach { item ->
                         Row(
                             Modifier.fillMaxWidth().weight(1f),
@@ -381,19 +383,19 @@ internal fun TodoPager(
                                 colors = CheckboxDefaults.colors(
                                     checkedColor = contentColor,
                                     uncheckedColor = mutedContentColor,
-                                    checkmarkColor = if (contentColor == Color.White) Color.Black else Color.White,
+                                    checkmarkColor = if (contentColor == MinkWhite) MinkBlack else MinkWhite,
                                 ),
-                                modifier = Modifier.size(if (compact) 24.dp else 26.dp),
+                                modifier = Modifier.size(if (compact) Dimens.dp24 else Dimens.dp26),
                             )
                             Text(
                                 item.text,
                                 color = if (item.completed) mutedContentColor else contentColor,
-                                fontSize = if (compact) 13.sp else 15.sp,
-                                lineHeight = if (compact) 17.sp else 20.sp,
+                                fontSize = if (compact) Dimens.sp13 else Dimens.sp15,
+                                lineHeight = if (compact) Dimens.sp17 else Dimens.sp20,
                                 maxLines = 2,
                                 overflow = TextOverflow.Ellipsis,
                                 textDecoration = if (item.completed) TextDecoration.LineThrough else null,
-                                modifier = Modifier.padding(start = 7.dp, top = 2.dp).weight(1f),
+                                modifier = Modifier.padding(start = Dimens.dp7, top = Dimens.dp2).weight(1f),
                             )
                         }
                     }
@@ -403,9 +405,10 @@ internal fun TodoPager(
     }
 }
 
+@Composable
 private fun readableContentColor(background: Color): Color {
     val luminance = .2126f * background.red + .7152f * background.green + .0722f * background.blue
-    return if (luminance > .55f) Color(0xFF172019) else Color.White
+    return if (luminance > .55f) ReadableDark else MinkWhite
 }
 
 @Composable
@@ -415,16 +418,10 @@ internal fun ShortcutGrid(
     openTodos: () -> Unit,
     compact: Boolean = false,
     contentColor: Color = MaterialTheme.colorScheme.onSurface,
-    itemContainerColor: Color = Color.Transparent,
+    itemContainerColor: Color = MinkTransparent,
     modifier: Modifier = Modifier,
     openDrawer: () -> Unit,
 ) {
-    val icons = mapOf(
-        Shortcut.NOTE to Icons.Default.EditNote, Shortcut.EVENT to Icons.Default.Event,
-        Shortcut.WEATHER to Icons.Default.Cloud, Shortcut.TODO to Icons.Default.CheckCircle,
-        Shortcut.CALL to Icons.Default.Call, Shortcut.MESSAGE to Icons.AutoMirrored.Filled.Message,
-        Shortcut.FILES to Icons.Default.FolderOpen, Shortcut.DRAWER to Icons.Default.GridView,
-    )
     var editing by remember { mutableStateOf(false) }
     val draftOrder = remember { mutableStateListOf<Shortcut>().apply { addAll(store.shortcutOrder) } }
     val gridState = rememberLazyGridState()
@@ -455,26 +452,27 @@ internal fun ShortcutGrid(
 
     BackHandler(enabled = editing) { cancelEditing() }
 
-    Column(modifier, verticalArrangement = Arrangement.spacedBy(4.dp)) {
+    Column(modifier, verticalArrangement = Arrangement.spacedBy(Dimens.dp4)) {
         if (editing) {
             Row(
                 Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceEvenly,
                 verticalAlignment = Alignment.CenterVertically,
             ) {
-                IconButton(onClick = ::cancelEditing) { Icon(Icons.Default.Close, "Cancel shortcut reorder", tint = contentColor) }
-                IconButton(onClick = ::finishEditing) { Icon(Icons.Default.Check, "Save shortcut order", tint = contentColor) }
+                IconButton(onClick = ::cancelEditing) { Icon(Icons.Default.Close, stringResource(R.string.cancel_shortcut_reorder), tint = contentColor) }
+                IconButton(onClick = ::finishEditing) { Icon(Icons.Default.Check, stringResource(R.string.save_shortcut_order), tint = contentColor) }
             }
         }
         val visibleOrder: List<Shortcut> = if (editing) draftOrder else store.shortcutOrder
         BoxWithConstraints(Modifier.fillMaxWidth().weight(1f)) {
             val shortcutSize = shortcutCellSizeDp(maxWidth.value, maxHeight.value).dp
+            val dragShadowElevation = Dimens.dp14
             LazyVerticalGrid(
                 columns = GridCells.Fixed(2),
                 state = gridState,
                 modifier = Modifier.fillMaxSize(),
-                contentPadding = PaddingValues(vertical = 2.dp),
-                horizontalArrangement = Arrangement.spacedBy(4.dp),
+                contentPadding = PaddingValues(vertical = Dimens.dp2),
+                horizontalArrangement = Arrangement.spacedBy(Dimens.dp4),
                 verticalArrangement = Arrangement.SpaceEvenly,
                 userScrollEnabled = false,
             ) {
@@ -525,24 +523,35 @@ internal fun ShortcutGrid(
                                         if (isDragging) {
                                             scaleX = 1.06f
                                             scaleY = 1.06f
-                                            shadowElevation = 14.dp.toPx()
+                                            shadowElevation = dragShadowElevation.toPx()
                                         }
                                     }
-                                    .clip(RoundedCornerShape(if (compact) 14.dp else 18.dp))
+                                    .clip(RoundedCornerShape(if (compact) Dimens.dp14 else Dimens.dp18))
                                     .background(
                                         if (editing) contentColor.copy(alpha = .17f)
                                         else itemContainerColor
                                     )
                                     .then(interactionModifier)
-                                    .padding(6.dp),
+                                    .padding(Dimens.dp6),
                                 contentAlignment = Alignment.Center,
                             ) {
-                                Icon(
-                                    icons.getValue(shortcut),
-                                    shortcut.label,
-                                    Modifier.size(if (compact) 24.dp else 28.dp),
-                                    tint = contentColor,
-                                )
+                                val assignedPackage = store.shortcutPackages[shortcut]
+                                if (shortcut in configurableShortcuts && assignedPackage != null) {
+                                    AppIcon(
+                                        packageName = assignedPackage,
+                                        actions = actions,
+                                        size = if (compact) Dimens.dp25 else Dimens.dp29,
+                                        themedTint = contentColor,
+                                        contentDescription = actions.appLabel(assignedPackage),
+                                    )
+                                } else {
+                                    Icon(
+                                        shortcut.defaultIcon(),
+                                        shortcut.displayLabel(),
+                                        Modifier.size(if (compact) Dimens.dp24 else Dimens.dp28),
+                                        tint = contentColor,
+                                    )
+                                }
                             }
                         }
                     }

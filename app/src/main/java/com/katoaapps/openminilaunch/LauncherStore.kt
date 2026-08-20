@@ -1,6 +1,7 @@
 package com.katoaapps.openminilaunch
 
 import android.content.Context
+import androidx.core.content.ContextCompat
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableIntStateOf
@@ -28,6 +29,8 @@ class LauncherStore(context: Context) {
     val widgetIds = mutableStateListOf<Int>()
     val widgetSizes = mutableStateMapOf<Int, WidgetGridSize>()
     val socialPackages = mutableStateListOf<String>()
+    var usesAutomaticSocialApps by mutableStateOf(!prefs.contains("social_packages"))
+        private set
     var onboardingComplete by mutableStateOf(prefs.getBoolean("onboarding_complete", false))
         private set
     var themePreference by mutableStateOf(
@@ -35,7 +38,7 @@ class LauncherStore(context: Context) {
     )
         private set
     var homePanelColorArgb by mutableIntStateOf(
-        prefs.getInt("home_panel_color", DEFAULT_HOME_PANEL_COLOR_ARGB)
+        prefs.getInt("home_panel_color", ContextCompat.getColor(context, R.color.mink_forest))
     )
         private set
     var messageSendMode by mutableStateOf(
@@ -249,17 +252,20 @@ class LauncherStore(context: Context) {
     }
 
     fun reconcileSocialApps(installedPackages: Set<String>) {
+        if (usesAutomaticSocialApps) return
         val changed = socialPackages.removeAll { it !in installedPackages }
         if (changed) prefs.edit().putStringSet("social_packages", socialPackages.toSet()).apply()
     }
 
     fun replaceSocialApps(packageNames: Set<String>) {
+        usesAutomaticSocialApps = false
         socialPackages.clear()
         socialPackages.addAll(packageNames.sorted())
         prefs.edit().putStringSet("social_packages", socialPackages.toSet()).apply()
     }
 
     fun clearSocialApps() {
+        usesAutomaticSocialApps = true
         socialPackages.clear()
         prefs.edit().remove("social_packages").apply()
     }

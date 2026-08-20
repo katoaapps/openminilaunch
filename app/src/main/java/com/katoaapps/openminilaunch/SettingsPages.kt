@@ -18,6 +18,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -75,7 +76,9 @@ internal data class SettingsPermissionState(
 
 private fun Boolean.toInt(): Int = if (this) 1 else 0
 
-private fun folderCountLabel(count: Int): String = if (count == 1) "1 folder" else "$count folders"
+@Composable
+private fun folderCountLabel(count: Int): String =
+    pluralStringResource(R.plurals.folder_count, count, count)
 
 internal data class SettingsPermissionActions(
     val requestUsageAccess: () -> Unit,
@@ -100,41 +103,41 @@ internal fun SettingsOverviewPage(
     goBack: () -> Unit,
 ) {
     val appName = stringResource(R.string.app_name)
-    SettingsPage("Settings", goBack) {
+    SettingsPage(stringResource(R.string.settings), goBack) {
         Text(
-            "Everything has a home. Choose a section to make $appName yours.",
+            stringResource(R.string.settings_overview_description, appName),
             color = Muted,
-            fontSize = 13.sp,
-            modifier = Modifier.padding(bottom = 2.dp),
+            fontSize = Dimens.sp13,
+            modifier = Modifier.padding(bottom = Dimens.dp2),
         )
         SettingsCategoryRow(
-            title = "Launcher",
-            subtitle = "Home app, appearance, shortcuts and drawer",
-            status = store.themePreference.label,
+            title = stringResource(R.string.launcher),
+            subtitle = stringResource(R.string.settings_launcher_summary),
+            status = stringResource(store.themePreference.labelRes),
             icon = Icons.Default.Home,
         ) { onNavigate(SettingsDestination.LAUNCHER) }
         SettingsCategoryRow(
-            title = "Magic Box",
-            subtitle = "Search, AI, messages and local files",
+            title = stringResource(R.string.magic_box),
+            subtitle = stringResource(R.string.settings_magic_box_summary),
             status = folderCountLabel(store.searchFolders.size),
             icon = Icons.Default.AutoAwesome,
         ) { onNavigate(SettingsDestination.MAGIC_BOX) }
         SettingsCategoryRow(
-            title = "Mink’s Day",
-            subtitle = "Choose the social apps you want to limit",
+            title = stringResource(R.string.mink_day),
+            subtitle = stringResource(R.string.settings_mink_day_summary),
             status = socialGoalLabel(store.socialGoalMinutes),
             icon = Icons.Default.Pets,
         ) { onNavigate(SettingsDestination.MINK_DAY) }
         SettingsCategoryRow(
-            title = "Permissions",
-            subtitle = "Manage private device access in one place",
-            status = "${permissionState.activeCount}/${permissionState.supportedCount} active",
+            title = stringResource(R.string.permissions),
+            subtitle = stringResource(R.string.settings_permissions_summary),
+            status = stringResource(R.string.permission_active_count, permissionState.activeCount, permissionState.supportedCount),
             icon = Icons.Default.Security,
         ) { onNavigate(SettingsDestination.PERMISSIONS) }
         SettingsCategoryRow(
-            title = "About",
-            subtitle = "Help, legal information and tutorial",
-            status = "v${BuildConfig.VERSION_NAME}",
+            title = stringResource(R.string.about),
+            subtitle = stringResource(R.string.settings_about_summary),
+            status = stringResource(R.string.version_summary, BuildConfig.VERSION_NAME),
             icon = Icons.Default.Info,
         ) { onNavigate(SettingsDestination.ABOUT) }
     }
@@ -150,25 +153,30 @@ internal fun LauncherSettingsPage(
     goBack: () -> Unit,
 ) {
     val appName = stringResource(R.string.app_name)
-    SettingsPage("Launcher", goBack) {
-        SectionLabel("SYSTEM ROLES")
-        SettingsRow("Default home app", "Choose $appName as your launcher", Icons.Default.Home, onClick = requestHomeRole)
+    SettingsPage(stringResource(R.string.launcher), goBack) {
+        SectionLabel(stringResource(R.string.system_roles))
+        SettingsRow(stringResource(R.string.default_home_app), stringResource(R.string.choose_as_launcher, appName), Icons.Default.Home, onClick = requestHomeRole)
         SettingsRow(
-            "Mink Assistant",
-            if (assistantRoleHeld) "Active · Magic Box from anywhere" else "Optional · use the system assistant gesture",
+            stringResource(R.string.mink_assistant),
+            stringResource(if (assistantRoleHeld) R.string.assistant_active_summary else R.string.assistant_optional_summary),
             Icons.Default.Assistant,
             onClick = showAssistantDisclosure,
         )
         HorizontalDivider(color = Sage)
-        SectionLabel("CUSTOMIZE")
+        SectionLabel(stringResource(R.string.customize))
         SettingsRow(
-            "Appearance",
-            "${store.themePreference.label} theme · home panel color",
+            stringResource(R.string.appearance),
+            stringResource(R.string.appearance_summary, stringResource(store.themePreference.labelRes)),
             Icons.Default.Palette,
         ) { onNavigate(SettingsDestination.APPEARANCE) }
         SettingsRow(
-            "Shortcuts & Drawer",
-            "Choose shortcut apps · ${store.drawerPackages.size}/$MAX_DRAWER_APPS drawer apps",
+            stringResource(R.string.shortcuts_and_drawer),
+            pluralStringResource(
+                R.plurals.shortcuts_drawer_summary,
+                store.drawerPackages.size,
+                store.drawerPackages.size,
+                MAX_DRAWER_APPS,
+            ),
             Icons.Default.GridView,
         ) { onNavigate(SettingsDestination.SHORTCUTS) }
     }
@@ -176,7 +184,7 @@ internal fun LauncherSettingsPage(
 
 @Composable
 internal fun AppearanceSettingsPage(store: LauncherStore, goBack: () -> Unit) {
-    SettingsPage("Appearance", goBack) {
+    SettingsPage(stringResource(R.string.appearance), goBack) {
         ThemeChooser(store.themePreference, store::setTheme)
         HomePanelColorSetting(store.homePanelColorArgb, store::setHomePanelColor)
     }
@@ -191,28 +199,35 @@ internal fun ShortcutsSettingsPage(
     goBack: () -> Unit,
 ) {
     val context = androidx.compose.ui.platform.LocalContext.current
-    SettingsPage("Shortcuts & Drawer", goBack) {
-        SectionLabel("SHORTCUT APPS")
-        Text("Choose the app each shortcut opens. To-do and Drawer stay built in.", color = Muted, fontSize = 13.sp)
+    SettingsPage(stringResource(R.string.shortcuts_and_drawer), goBack) {
+        SectionLabel(stringResource(R.string.home_shortcuts))
+        Text(
+            stringResource(R.string.home_shortcuts_description),
+            color = Muted,
+            fontSize = Dimens.sp13,
+        )
         configurableShortcuts.forEach { shortcut ->
-            SettingsRow(
-                shortcut.label,
-                store.shortcutPackages[shortcut]?.let(actions::appLabel) ?: "System default",
-                Icons.Default.ChevronRight,
+            val packageName = store.shortcutPackages[shortcut]
+            ShortcutAssignmentRow(
+                shortcut = shortcut,
+                packageName = packageName,
+                actions = actions,
+                subtitle = packageName?.let(actions::appLabel)
+                    ?: stringResource(R.string.shortcut_default, shortcut.displayLabel()),
             ) { onPickShortcut(shortcut) }
         }
         SettingsRow(
-            "Reset Home grid order",
-            "Return shortcuts to the original 4 × 2 order",
+            stringResource(R.string.reset_home_grid_order),
+            stringResource(R.string.reset_home_grid_order_description),
             Icons.Default.Restore,
         ) {
             store.resetShortcutOrder()
-            android.widget.Toast.makeText(context, "Shortcut order reset", android.widget.Toast.LENGTH_SHORT).show()
+            android.widget.Toast.makeText(context, context.getString(R.string.shortcut_order_reset), android.widget.Toast.LENGTH_SHORT).show()
         }
         HorizontalDivider(color = Sage)
-        SectionLabel("APP DRAWER")
-        SettingsRow("Selected apps", "${store.drawerPackages.size} of $MAX_DRAWER_APPS", Icons.Default.Apps, onClick = onPickDrawer)
-        Text("Use ? in the Magic Box to find any other installed app.", color = Muted, fontSize = 13.sp)
+        SectionLabel(stringResource(R.string.app_drawer))
+        SettingsRow(stringResource(R.string.selected_apps), stringResource(R.string.count_of_max, store.drawerPackages.size, MAX_DRAWER_APPS), Icons.Default.Apps, onClick = onPickDrawer)
+        Text(stringResource(R.string.magic_box_find_other_apps), color = Muted, fontSize = Dimens.sp13)
     }
 }
 
@@ -226,38 +241,42 @@ internal fun MagicBoxSettingsPage(
     onOpenFileSearch: () -> Unit,
     goBack: () -> Unit,
 ) {
-    SettingsPage("Magic Box", goBack) {
-        SectionLabel("SEARCH")
+    SettingsPage(stringResource(R.string.magic_box), goBack) {
+        SectionLabel(stringResource(R.string.search))
         SettingsRow(
-            "Web app",
-            store.preferredWebPackage?.let(actions::appLabel) ?: "System browser",
+            stringResource(R.string.web_app),
+            store.preferredWebPackage?.let(actions::appLabel) ?: stringResource(R.string.system_browser),
             Icons.Default.Public,
             onClick = onPickWeb,
         )
         SettingsRow(
-            "AI app",
-            store.preferredAiPackage?.let(actions::appLabel) ?: "Choose on first use",
+            stringResource(R.string.ai_app),
+            store.preferredAiPackage?.let(actions::appLabel) ?: stringResource(R.string.choose_on_first_use),
             Icons.Default.AutoAwesome,
             onClick = onPickAi,
         )
         Text(
-            "Known AI assistants are shown first. Other compatible apps remain available. Your query is handled under the selected app’s privacy terms.",
+            stringResource(R.string.ai_provider_privacy_description),
             color = Muted,
-            fontSize = 13.sp,
+            fontSize = Dimens.sp13,
         )
         HorizontalDivider(color = Sage)
-        SectionLabel("MESSAGING")
+        SectionLabel(stringResource(R.string.messaging))
         MessageSendModeChooser(store.messageSendMode, store::updateMessageSendMode)
         Text(
-            "Always ask offers Send SMS now and Choose messaging app each time. Direct SMS uses your carrier and may incur charges; a chosen provider controls its own final send and delivery method.",
+            stringResource(R.string.messaging_mode_description),
             color = Muted,
-            fontSize = 13.sp,
+            fontSize = Dimens.sp13,
         )
         HorizontalDivider(color = Sage)
-        SectionLabel("FILES")
+        SectionLabel(stringResource(R.string.files_section))
         SettingsRow(
-            "File Search",
-            "${folderCountLabel(store.searchFolders.size)} · media access ${if (mediaGranted) "on" else "off"}",
+            stringResource(R.string.file_search),
+            stringResource(
+                R.string.file_search_status,
+                folderCountLabel(store.searchFolders.size),
+                stringResource(if (mediaGranted) R.string.status_on else R.string.status_off),
+            ),
             Icons.Default.FolderOpen,
             onClick = onOpenFileSearch,
         )
@@ -274,35 +293,35 @@ internal fun FileSearchSettingsPage(
     goBack: () -> Unit,
 ) {
     val appName = stringResource(R.string.app_name)
-    SettingsPage("File Search", goBack) {
+    SettingsPage(stringResource(R.string.file_search), goBack) {
         Text(
-            "Choose the document folders $appName may search. Only filenames are indexed, and everything remains on this device.",
+            stringResource(R.string.file_search_description, appName),
             color = Muted,
-            fontSize = 13.sp,
+            fontSize = Dimens.sp13,
         )
         SettingsRow(
-            "Photos, videos & audio",
-            if (mediaGranted) "Media filename access is active" else "Open Permissions to enable media search",
+            stringResource(R.string.photos_videos_audio),
+            stringResource(if (mediaGranted) R.string.media_access_active else R.string.media_access_open_permissions),
             Icons.Default.PhotoLibrary,
             onClick = onOpenPermissions,
         )
         OutlinedButton(onClick = onAddFolder, modifier = Modifier.fillMaxWidth()) {
             Icon(Icons.Default.CreateNewFolder, null)
-            Text("Add search folder", Modifier.padding(start = 8.dp))
+            Text(stringResource(R.string.add_search_folder), Modifier.padding(start = Dimens.dp8))
         }
         if (store.searchFolders.isEmpty()) {
-            Text("No document folders selected.", color = Muted, fontSize = 12.sp)
+            Text(stringResource(R.string.no_document_folders), color = Muted, fontSize = Dimens.sp12)
         } else {
             store.searchFolders.forEach { folder ->
                 Row(
-                    Modifier.fillMaxWidth().clip(RoundedCornerShape(14.dp))
-                        .background(MaterialTheme.colorScheme.surfaceContainerLow).padding(start = 14.dp, end = 4.dp),
+                    Modifier.fillMaxWidth().clip(RoundedCornerShape(Dimens.dp14))
+                        .background(MaterialTheme.colorScheme.surfaceContainerLow).padding(start = Dimens.dp14, end = Dimens.dp4),
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
                     Icon(Icons.Default.Folder, null, tint = Rust)
-                    Text(folder.label, Modifier.weight(1f).padding(horizontal = 10.dp), maxLines = 1, overflow = TextOverflow.Ellipsis)
+                    Text(folder.label, Modifier.weight(1f).padding(horizontal = Dimens.dp10), maxLines = 1, overflow = TextOverflow.Ellipsis)
                     IconButton(onClick = { onRemoveFolder(folder) }) {
-                        Icon(Icons.Default.Close, "Remove ${folder.label}")
+                        Icon(Icons.Default.Close, stringResource(R.string.remove_folder, folder.label))
                     }
                 }
             }
@@ -318,20 +337,20 @@ internal fun MinkDaySettingsPage(
     onOpenPermissions: () -> Unit,
     goBack: () -> Unit,
 ) {
-    SettingsPage("Mink’s Day", goBack) {
+    SettingsPage(stringResource(R.string.mink_day), goBack) {
         Text(
-            "Mink measures time and opens only for the social apps you choose, then keeps those insights on this device.",
+            stringResource(R.string.mink_day_settings_description),
             color = Muted,
-            fontSize = 13.sp,
+            fontSize = Dimens.sp13,
         )
         SettingsRow(
-            "Usage access",
-            if (usageAccessGranted) "Active for private on-device insights" else "Open Permissions to enable insights",
+            stringResource(R.string.usage_access),
+            stringResource(if (usageAccessGranted) R.string.usage_access_active else R.string.usage_access_open_permissions),
             Icons.Default.Security,
             onClick = onOpenPermissions,
         )
-        SectionLabel("DAILY SOCIAL GOAL")
-        Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(7.dp)) {
+        SectionLabel(stringResource(R.string.daily_social_goal))
+        Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(Dimens.dp7)) {
             SOCIAL_GOAL_OPTIONS.forEach { minutes ->
                 FilterChip(
                     selected = store.socialGoalMinutes == minutes,
@@ -342,8 +361,9 @@ internal fun MinkDaySettingsPage(
             }
         }
         SettingsRow(
-            "Apps you want to limit",
-            if (store.socialPackages.isEmpty()) "Automatic Android categories" else "${store.socialPackages.size} selected",
+            stringResource(R.string.apps_you_want_to_limit),
+            if (store.usesAutomaticSocialApps) stringResource(R.string.automatic_android_categories)
+            else stringResource(R.string.selected_count, store.socialPackages.size),
             Icons.Default.Apps,
             onClick = onPickSocialApps,
         )
@@ -357,31 +377,31 @@ internal fun PermissionsSettingsPage(
     goBack: () -> Unit,
 ) {
     val appName = stringResource(R.string.app_name)
-    SettingsPage("Permissions", goBack) {
+    SettingsPage(stringResource(R.string.permissions), goBack) {
         Text(
-            "Access is optional and can be changed at any time. Device data stays local unless you explicitly hand it to another app.",
+            stringResource(R.string.permissions_description),
             color = Muted,
-            fontSize = 13.sp,
+            fontSize = Dimens.sp13,
         )
         PermissionCard(
-            title = "Mink’s Day usage",
-            description = "Reads foreground activity for your tracked social apps only to calculate private, on-device daily insights.",
+            title = stringResource(R.string.mink_day_usage),
+            description = stringResource(R.string.mink_day_usage_permission_description),
             granted = state.usageAccessGranted,
             icon = Icons.Default.Pets,
             onGrant = actions.requestUsageAccess,
             onManage = actions.manageUsageAccess,
         )
         PermissionCard(
-            title = "Conversations",
-            description = "Shows active message and email conversations locally and uses reply actions supplied by their apps.",
+            title = stringResource(R.string.conversations),
+            description = stringResource(R.string.conversations_permission_description),
             granted = state.notificationAccessGranted,
             icon = Icons.Default.Forum,
             onGrant = actions.requestNotificationAccess,
             onManage = actions.manageNotificationAccess,
         )
         PermissionCard(
-            title = "Contacts",
-            description = "Used only for @ messages and # calls.",
+            title = stringResource(R.string.contacts),
+            description = stringResource(R.string.contacts_permission_description),
             granted = state.contactsGranted,
             icon = Icons.Default.Contacts,
             onGrant = actions.requestContacts,
@@ -389,23 +409,23 @@ internal fun PermissionsSettingsPage(
         )
         if (state.directCallsSupported) {
             PermissionCard(
-                title = "Direct calls",
-                description = "Used only after you confirm a # call in $appName.",
+                title = stringResource(R.string.direct_calls),
+                description = stringResource(R.string.direct_calls_permission_description, appName),
                 granted = state.callsGranted,
                 icon = Icons.Default.Phone,
                 onGrant = actions.requestCalls,
                 onManage = actions.manageAppPermissions,
             )
         } else {
-            SettingsRow("Direct calls", "Not supported on this device; # uses the dialer", Icons.Default.Phone, enabled = false) { }
+            SettingsRow(stringResource(R.string.direct_calls), stringResource(R.string.direct_calls_unsupported), Icons.Default.Phone, enabled = false) { }
         }
         if (state.directSmsSupported) {
             PermissionCard(
-                title = "Direct SMS",
+                title = stringResource(R.string.direct_sms),
                 description = if (state.assistantRoleHeld) {
-                    "Used when you press @ Send with direct SMS selected. Uses carrier SMS, not RCS; messaging rates may apply."
+                    stringResource(R.string.direct_sms_permission_description)
                 } else {
-                    "Choose Mink Assistant first. Google Play restricts direct SMS access to eligible default handlers."
+                    stringResource(R.string.direct_sms_requires_assistant)
                 },
                 granted = state.smsGranted,
                 icon = Icons.AutoMirrored.Filled.Send,
@@ -413,11 +433,11 @@ internal fun PermissionsSettingsPage(
                 onManage = actions.manageAppPermissions,
             )
         } else {
-            SettingsRow("Direct SMS", "Not supported on this device; @ opens Messages", Icons.AutoMirrored.Filled.Send, enabled = false) { }
+            SettingsRow(stringResource(R.string.direct_sms), stringResource(R.string.direct_sms_unsupported), Icons.AutoMirrored.Filled.Send, enabled = false) { }
         }
         PermissionCard(
-            title = "Photos, videos & audio",
-            description = "Searches media filenames locally. $appName never uploads your library.",
+            title = stringResource(R.string.photos_videos_audio),
+            description = stringResource(R.string.media_permission_description, appName),
             granted = state.mediaGranted,
             icon = Icons.Default.PhotoLibrary,
             onGrant = actions.requestMedia,
@@ -425,15 +445,15 @@ internal fun PermissionsSettingsPage(
         )
         if (state.lockSupported) {
             PermissionCard(
-                title = "Double-tap screen lock",
-                description = "Uses Android's Lock screen action only after you double-tap. It cannot read screen content.",
+                title = stringResource(R.string.double_tap_screen_lock),
+                description = stringResource(R.string.double_tap_permission_description),
                 granted = state.lockServiceEnabled,
                 icon = Icons.Default.Lock,
                 onGrant = actions.requestLockService,
                 onManage = actions.manageLockService,
             )
         } else {
-            SettingsRow("Double-tap screen lock", "Requires Android 9 or newer", Icons.Default.Lock, enabled = false) { }
+            SettingsRow(stringResource(R.string.double_tap_screen_lock), stringResource(R.string.requires_android_9), Icons.Default.Lock, enabled = false) { }
         }
     }
 }
@@ -445,18 +465,18 @@ internal fun AboutSettingsPage(
     goBack: () -> Unit,
 ) {
     val appName = stringResource(R.string.app_name)
-    SettingsPage("About", goBack) {
-        SettingsRow("Email us", "contact@katoaapps.com", Icons.Default.Email, onClick = actions::emailSupport)
-        SettingsRow("Privacy policy", "How $appName handles device data", Icons.Default.PrivacyTip, onClick = actions::openPrivacyPolicy)
-        SettingsRow("Terms of use", "Responsibilities, warranties, and data-loss limitations", Icons.Default.Gavel, onClick = actions::openTermsOfUse)
+    SettingsPage(stringResource(R.string.about), goBack) {
+        SettingsRow(stringResource(R.string.email_us), stringResource(R.string.support_email), Icons.Default.Email, onClick = actions::emailSupport)
+        SettingsRow(stringResource(R.string.privacy_policy), stringResource(R.string.privacy_policy_summary, appName), Icons.Default.PrivacyTip, onClick = actions::openPrivacyPolicy)
+        SettingsRow(stringResource(R.string.terms_of_use), stringResource(R.string.terms_summary), Icons.Default.Gavel, onClick = actions::openTermsOfUse)
         SettingsRow(
-            "Repeat tutorial",
-            "Review setup, Magic Box, Mink’s Day, Conversations, widgets, and permissions",
+            stringResource(R.string.repeat_tutorial),
+            stringResource(R.string.repeat_tutorial_summary),
             Icons.Default.School,
             onClick = onRepeatTutorial,
         )
-        Row(Modifier.fillMaxWidth().padding(vertical = 12.dp)) {
-            Text("Version", Modifier.weight(1f), fontWeight = FontWeight.Medium)
+        Row(Modifier.fillMaxWidth().padding(vertical = Dimens.dp12)) {
+            Text(stringResource(R.string.version), Modifier.weight(1f), fontWeight = FontWeight.Medium)
             Text(BuildConfig.VERSION_NAME, color = Muted)
         }
     }
@@ -471,11 +491,11 @@ private fun SettingsPage(
     Column(Modifier.fillMaxSize().statusBarsPadding()) {
         PageHeader(title, goBack)
         Column(
-            Modifier.fillMaxSize().verticalScroll(LocalSettingsScrollState.current).padding(horizontal = 22.dp),
-            verticalArrangement = Arrangement.spacedBy(14.dp),
+            Modifier.fillMaxSize().verticalScroll(LocalSettingsScrollState.current).padding(horizontal = Dimens.dp22),
+            verticalArrangement = Arrangement.spacedBy(Dimens.dp14),
         ) {
             content()
-            Spacer(Modifier.height(24.dp))
+            Spacer(Modifier.height(Dimens.dp24))
         }
     }
 }
@@ -489,24 +509,24 @@ private fun SettingsCategoryRow(
     onClick: () -> Unit,
 ) {
     Row(
-        Modifier.fillMaxWidth().clip(RoundedCornerShape(18.dp))
+        Modifier.fillMaxWidth().clip(RoundedCornerShape(Dimens.dp18))
             .background(MaterialTheme.colorScheme.surfaceContainerLow)
             .clickable(onClick = onClick)
-            .padding(horizontal = 14.dp, vertical = 13.dp),
+            .padding(horizontal = Dimens.dp14, vertical = Dimens.dp13),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Surface(shape = CircleShape, color = MaterialTheme.colorScheme.primaryContainer) {
-            Box(Modifier.size(40.dp), contentAlignment = Alignment.Center) {
-                Icon(icon, null, Modifier.size(21.dp), tint = MaterialTheme.colorScheme.onPrimaryContainer)
+            Box(Modifier.size(Dimens.dp40), contentAlignment = Alignment.Center) {
+                Icon(icon, null, Modifier.size(Dimens.dp21), tint = MaterialTheme.colorScheme.onPrimaryContainer)
             }
         }
-        Column(Modifier.weight(1f).padding(horizontal = 12.dp)) {
+        Column(Modifier.weight(1f).padding(horizontal = Dimens.dp12)) {
             Text(title, fontWeight = FontWeight.SemiBold)
-            Text(subtitle, color = Muted, fontSize = 12.sp, maxLines = 1, overflow = TextOverflow.Ellipsis)
+            Text(subtitle, color = Muted, fontSize = Dimens.sp12, maxLines = 1, overflow = TextOverflow.Ellipsis)
         }
         Column(horizontalAlignment = Alignment.End) {
-            Text(status, color = Muted, fontSize = 10.sp, maxLines = 1)
-            Icon(Icons.Default.ChevronRight, null, tint = Muted, modifier = Modifier.size(20.dp))
+            Text(status, color = Muted, fontSize = Dimens.sp10, maxLines = 1)
+            Icon(Icons.Default.ChevronRight, null, tint = Muted, modifier = Modifier.size(Dimens.dp20))
         }
     }
 }

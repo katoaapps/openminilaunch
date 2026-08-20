@@ -43,6 +43,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.onSizeChanged
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.IntSize
@@ -51,15 +52,7 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import java.util.Locale
 
-internal data class HomePanelColorPreset(val label: String, val argb: Int)
-
-internal val HOME_PANEL_COLOR_PRESETS = listOf(
-    HomePanelColorPreset("Forest", DEFAULT_HOME_PANEL_COLOR_ARGB),
-    HomePanelColorPreset("Mink", 0xFF602C00.toInt()),
-    HomePanelColorPreset("Navy", 0xFF183A5A.toInt()),
-    HomePanelColorPreset("Plum", 0xFF512B58.toInt()),
-    HomePanelColorPreset("Charcoal", 0xFF34383B.toInt()),
-)
+internal data class HomePanelColorPreset(@androidx.annotation.StringRes val labelRes: Int, val argb: Int)
 
 internal fun parseHomePanelHex(value: String): Int? {
     val clean = value.trim().removePrefix("#")
@@ -72,57 +65,65 @@ internal fun formatHomePanelHex(argb: Int): String =
 
 @Composable
 internal fun HomePanelColorSetting(selectedArgb: Int, onColorSelected: (Int) -> Unit) {
+    val context = androidx.compose.ui.platform.LocalContext.current
+    val presets = listOf(
+        HomePanelColorPreset(R.string.color_forest, androidx.core.content.ContextCompat.getColor(context, R.color.mink_forest)),
+        HomePanelColorPreset(R.string.color_mink, androidx.core.content.ContextCompat.getColor(context, R.color.home_panel_mink)),
+        HomePanelColorPreset(R.string.color_navy, androidx.core.content.ContextCompat.getColor(context, R.color.home_panel_navy)),
+        HomePanelColorPreset(R.string.color_plum, androidx.core.content.ContextCompat.getColor(context, R.color.home_panel_plum)),
+        HomePanelColorPreset(R.string.color_charcoal, androidx.core.content.ContextCompat.getColor(context, R.color.home_panel_charcoal)),
+    )
     var showCustomPicker by remember { mutableStateOf(false) }
-    val selectedPreset = HOME_PANEL_COLOR_PRESETS.firstOrNull { it.argb == selectedArgb }
+    val selectedPreset = presets.firstOrNull { it.argb == selectedArgb }
 
     Surface(
         modifier = Modifier.fillMaxWidth(),
-        shape = RoundedCornerShape(16.dp),
+        shape = RoundedCornerShape(Dimens.dp16),
         color = MaterialTheme.colorScheme.surfaceContainerLow,
     ) {
-        Column(Modifier.padding(14.dp), verticalArrangement = Arrangement.spacedBy(10.dp)) {
+        Column(Modifier.padding(Dimens.dp14), verticalArrangement = Arrangement.spacedBy(Dimens.dp10)) {
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Icon(Icons.Default.Palette, null, tint = MaterialTheme.colorScheme.onSurface)
-                Column(Modifier.padding(start = 12.dp).weight(1f)) {
-                    Text("Home panel color", fontWeight = FontWeight.Bold)
+                Column(Modifier.padding(start = Dimens.dp12).weight(1f)) {
+                    Text(stringResource(R.string.home_panel_color), fontWeight = FontWeight.Bold)
                     Text(
-                        "Changes the large To-do and shortcuts pill.",
+                        stringResource(R.string.home_panel_color_description),
                         color = Muted,
-                        fontSize = 12.sp,
+                        fontSize = Dimens.sp12,
                     )
                 }
-                Text(formatHomePanelHex(selectedArgb), color = Muted, fontSize = 12.sp)
+                Text(formatHomePanelHex(selectedArgb), color = Muted, fontSize = Dimens.sp12)
             }
             Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
-                HOME_PANEL_COLOR_PRESETS.forEach { preset ->
+                presets.forEach { preset ->
                     val selected = preset.argb == selectedArgb
                     Column(horizontalAlignment = Alignment.CenterHorizontally) {
                         Surface(
                             onClick = { onColorSelected(preset.argb) },
-                            modifier = Modifier.size(42.dp)
+                            modifier = Modifier.size(Dimens.dp42)
                                 .then(
-                                    if (selected) Modifier.border(3.dp, MaterialTheme.colorScheme.onSurface, CircleShape)
+                                    if (selected) Modifier.border(Dimens.dp3, MaterialTheme.colorScheme.onSurface, CircleShape)
                                     else Modifier,
                                 ),
                             shape = CircleShape,
                             color = Color(preset.argb),
-                            shadowElevation = if (selected) 4.dp else 0.dp,
+                            shadowElevation = if (selected) Dimens.dp4 else Dimens.dp0,
                         ) {
                             if (selected) {
                                 Box(contentAlignment = Alignment.Center) {
-                                    Icon(Icons.Default.Check, preset.label, tint = Color.White)
+                                    Icon(Icons.Default.Check, stringResource(preset.labelRes), tint = MinkWhite)
                                 }
                             }
                         }
-                        Text(preset.label, color = Muted, fontSize = 9.sp, modifier = Modifier.padding(top = 4.dp))
+                        Text(stringResource(preset.labelRes), color = Muted, fontSize = Dimens.sp9, modifier = Modifier.padding(top = Dimens.dp4))
                     }
                 }
             }
             OutlinedButton(onClick = { showCustomPicker = true }, modifier = Modifier.fillMaxWidth()) {
-                Icon(Icons.Default.Palette, null, Modifier.size(18.dp))
+                Icon(Icons.Default.Palette, null, Modifier.size(Dimens.dp18))
                 Text(
-                    if (selectedPreset == null) "Edit custom color" else "Choose a custom color",
-                    Modifier.padding(start = 8.dp),
+                    stringResource(if (selectedPreset == null) R.string.edit_custom_color else R.string.choose_custom_color),
+                    Modifier.padding(start = Dimens.dp8),
                 )
             }
         }
@@ -161,19 +162,19 @@ private fun HomePanelColorDialog(
 
     Dialog(onDismissRequest = onDismiss) {
         Surface(
-            modifier = Modifier.fillMaxWidth().heightIn(max = 620.dp),
-            shape = RoundedCornerShape(28.dp),
+            modifier = Modifier.fillMaxWidth().heightIn(max = Dimens.dp620),
+            shape = RoundedCornerShape(Dimens.dp28),
             color = MaterialTheme.colorScheme.background,
         ) {
             Column(
-                Modifier.padding(20.dp).verticalScroll(rememberScrollState()),
-                verticalArrangement = Arrangement.spacedBy(14.dp),
+                Modifier.padding(Dimens.dp20).verticalScroll(rememberScrollState()),
+                verticalArrangement = Arrangement.spacedBy(Dimens.dp14),
             ) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
-                    Surface(Modifier.size(42.dp), shape = CircleShape, color = Color(currentArgb)) {}
-                    Column(Modifier.padding(start = 12.dp).weight(1f)) {
-                        Text("Custom panel color", fontWeight = FontWeight.Black, fontSize = 20.sp)
-                        Text("Swipe the field and hue strip, or enter a hex color.", color = Muted, fontSize = 12.sp)
+                    Surface(Modifier.size(Dimens.dp42), shape = CircleShape, color = Color(currentArgb)) {}
+                    Column(Modifier.padding(start = Dimens.dp12).weight(1f)) {
+                        Text(stringResource(R.string.custom_panel_color), fontWeight = FontWeight.Black, fontSize = Dimens.sp20)
+                        Text(stringResource(R.string.custom_panel_color_description), color = Muted, fontSize = Dimens.sp12)
                     }
                 }
                 SaturationBrightnessField(
@@ -205,9 +206,9 @@ private fun HomePanelColorDialog(
                             brightness = hsv[2]
                         }
                     },
-                    label = { Text("Hex color") },
+                    label = { Text(stringResource(R.string.hex_color)) },
                     supportingText = {
-                        if (parseHomePanelHex(hexText) == null) Text("Use six digits, for example #602C00")
+                        if (parseHomePanelHex(hexText) == null) Text(stringResource(R.string.invalid_hex_color))
                     },
                     isError = parseHomePanelHex(hexText) == null,
                     singleLine = true,
@@ -215,12 +216,12 @@ private fun HomePanelColorDialog(
                     modifier = Modifier.fillMaxWidth(),
                 )
                 Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
-                    TextButton(onClick = onDismiss) { Text("Cancel") }
-                    Spacer(Modifier.size(8.dp))
+                    TextButton(onClick = onDismiss) { Text(stringResource(R.string.cancel)) }
+                    Spacer(Modifier.size(Dimens.dp8))
                     Button(
                         onClick = { onConfirm(currentArgb) },
                         enabled = parseHomePanelHex(hexText) != null,
-                    ) { Text("Apply") }
+                    ) { Text(stringResource(R.string.apply)) }
                 }
             }
         }
@@ -235,6 +236,14 @@ private fun SaturationBrightnessField(
     onChange: (Float, Float) -> Unit,
 ) {
     var fieldSize by remember { mutableStateOf(IntSize.Zero) }
+    val fieldCornerRadius = Dimens.dp18
+    val outerMarkerRadius = Dimens.dp11
+    val innerMarkerRadius = Dimens.dp9
+    val outerMarkerStroke = Dimens.dp1
+    val innerMarkerStroke = Dimens.dp3
+    val white = MinkWhite
+    val black = MinkBlack
+    val transparent = MinkTransparent
 
     fun update(position: Offset) {
         if (fieldSize.width <= 0 || fieldSize.height <= 0) return
@@ -245,7 +254,7 @@ private fun SaturationBrightnessField(
     }
 
     Canvas(
-        Modifier.fillMaxWidth().height(180.dp).onSizeChanged { fieldSize = it }
+        Modifier.fillMaxWidth().height(Dimens.dp180).onSizeChanged { fieldSize = it }
             .pointerInput(hue, fieldSize) {
                 detectDragGestures(
                     onDragStart = ::update,
@@ -254,22 +263,28 @@ private fun SaturationBrightnessField(
             },
     ) {
         drawRoundRect(
-            brush = Brush.horizontalGradient(listOf(Color.White, Color(android.graphics.Color.HSVToColor(floatArrayOf(hue, 1f, 1f))))),
-            cornerRadius = androidx.compose.ui.geometry.CornerRadius(18.dp.toPx()),
+            brush = Brush.horizontalGradient(listOf(white, Color(android.graphics.Color.HSVToColor(floatArrayOf(hue, 1f, 1f))))),
+            cornerRadius = androidx.compose.ui.geometry.CornerRadius(fieldCornerRadius.toPx()),
         )
         drawRoundRect(
-            brush = Brush.verticalGradient(listOf(Color.Transparent, Color.Black)),
-            cornerRadius = androidx.compose.ui.geometry.CornerRadius(18.dp.toPx()),
+            brush = Brush.verticalGradient(listOf(transparent, black)),
+            cornerRadius = androidx.compose.ui.geometry.CornerRadius(fieldCornerRadius.toPx()),
         )
         val marker = Offset(saturation * size.width, (1f - brightness) * size.height)
-        drawCircle(Color.White, radius = 9.dp.toPx(), center = marker, style = Stroke(3.dp.toPx()))
-        drawCircle(Color.Black.copy(alpha = .55f), radius = 11.dp.toPx(), center = marker, style = Stroke(1.dp.toPx()))
+        drawCircle(white, radius = innerMarkerRadius.toPx(), center = marker, style = Stroke(innerMarkerStroke.toPx()))
+        drawCircle(black.copy(alpha = .55f), radius = outerMarkerRadius.toPx(), center = marker, style = Stroke(outerMarkerStroke.toPx()))
     }
 }
 
 @Composable
 private fun HueStrip(hue: Float, onChange: (Float) -> Unit) {
     var stripSize by remember { mutableStateOf(IntSize.Zero) }
+    val outerMarkerRadius = Dimens.dp10
+    val innerMarkerRadius = Dimens.dp8
+    val outerMarkerStroke = Dimens.dp1
+    val innerMarkerStroke = Dimens.dp3
+    val white = MinkWhite
+    val black = MinkBlack
     val hueColors = remember {
         (0..6).map { step -> Color(android.graphics.Color.HSVToColor(floatArrayOf(step * 60f, 1f, 1f))) }
     }
@@ -280,7 +295,7 @@ private fun HueStrip(hue: Float, onChange: (Float) -> Unit) {
     }
 
     Canvas(
-        Modifier.fillMaxWidth().height(28.dp).onSizeChanged { stripSize = it }
+        Modifier.fillMaxWidth().height(Dimens.dp28).onSizeChanged { stripSize = it }
             .pointerInput(stripSize) {
                 detectDragGestures(
                     onDragStart = ::update,
@@ -293,7 +308,7 @@ private fun HueStrip(hue: Float, onChange: (Float) -> Unit) {
             cornerRadius = androidx.compose.ui.geometry.CornerRadius(size.height / 2f),
         )
         val marker = Offset(hue / 360f * size.width, size.height / 2f)
-        drawCircle(Color.White, radius = 8.dp.toPx(), center = marker, style = Stroke(3.dp.toPx()))
-        drawCircle(Color.Black.copy(alpha = .55f), radius = 10.dp.toPx(), center = marker, style = Stroke(1.dp.toPx()))
+        drawCircle(white, radius = innerMarkerRadius.toPx(), center = marker, style = Stroke(innerMarkerStroke.toPx()))
+        drawCircle(black.copy(alpha = .55f), radius = outerMarkerRadius.toPx(), center = marker, style = Stroke(outerMarkerStroke.toPx()))
     }
 }

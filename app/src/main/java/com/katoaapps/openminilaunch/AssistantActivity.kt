@@ -46,12 +46,12 @@ class AssistantActivity : ComponentActivity() {
             }
             val fallback = if (darkTheme) {
                 darkColorScheme(
-                    primary = Color(0xFFC8D8C1),
-                    onPrimary = Color(0xFF152018),
-                    background = Color(0xFF101512),
-                    surface = Color(0xFF171D19),
-                    surfaceContainerLow = Color(0xFF1C2420),
-                    onSurface = Color(0xFFF1F3EE),
+                    primary = DarkPrimary,
+                    onPrimary = DarkOnPrimary,
+                    background = DarkBackground,
+                    surface = DarkSurface,
+                    surfaceContainerLow = DarkSurfaceContainerLow,
+                    onSurface = DarkOnSurface,
                     secondary = Rust,
                 )
             } else {
@@ -60,7 +60,7 @@ class AssistantActivity : ComponentActivity() {
                     onPrimary = LightPaper,
                     background = LightPaper,
                     surface = LightPaper,
-                    surfaceContainerLow = Color.White,
+                    surfaceContainerLow = MinkWhite,
                     onSurface = LightInk,
                     secondary = Rust,
                 )
@@ -69,10 +69,11 @@ class AssistantActivity : ComponentActivity() {
                 if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
             } else fallback
             val view = LocalView.current
+            val transparent = MinkTransparent
             SideEffect {
                 val activityWindow = (context as Activity).window
-                activityWindow.statusBarColor = Color.Transparent.toArgb()
-                activityWindow.navigationBarColor = Color.Transparent.toArgb()
+                activityWindow.statusBarColor = transparent.toArgb()
+                activityWindow.navigationBarColor = transparent.toArgb()
                 WindowInsetsControllerCompat(activityWindow, view).apply {
                     isAppearanceLightStatusBars = false
                     isAppearanceLightNavigationBars = false

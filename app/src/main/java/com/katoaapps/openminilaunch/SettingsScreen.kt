@@ -21,6 +21,8 @@ import androidx.compose.animation.core.tween
 import androidx.compose.foundation.ScrollState
 import androidx.compose.runtime.*
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.res.pluralStringResource
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
@@ -340,33 +342,57 @@ internal fun SettingsScreen(
     }
 
     pickingShortcut?.let { shortcut ->
-        val showSamsungWeatherGuide = shortcut == Shortcut.WEATHER && Build.MANUFACTURER.equals("samsung", ignoreCase = true)
+        val showSamsungWeatherGuide = Build.MANUFACTURER.equals("samsung", ignoreCase = true)
         AppPickerDialog(
-            title = "Choose ${shortcut.label} app",
+            title = stringResource(R.string.choose_app_for_shortcut, shortcut.displaySlotLabel()),
             apps = installedApps.apps,
             selected = setOfNotNull(store.shortcutPackages[shortcut]),
             loading = !installedApps.loaded,
-            supportingText = if (showSamsungWeatherGuide) SAMSUNG_WEATHER_GUIDE else null,
-            supportingActionLabel = if (showSamsungWeatherGuide) "Open Apps settings" else null,
+            supportingText = if (showSamsungWeatherGuide) stringResource(R.string.samsung_weather_guide) else null,
+            supportingActionLabel = if (showSamsungWeatherGuide) stringResource(R.string.open_apps_settings) else null,
             onSupportingAction = actions::openInstalledAppsSettings,
             onApp = { store.assignShortcut(shortcut, it.packageName); pickingShortcut = null },
             onReset = { store.resetShortcut(shortcut); pickingShortcut = null },
+            resetLabel = stringResource(R.string.restore_shortcut_default, shortcut.displayLabel()),
             onDismiss = { pickingShortcut = null },
         )
     }
     if (pickingDrawer) {
         AppPickerDialog(
-            title = "Drawer apps · ${store.drawerPackages.size}/$MAX_DRAWER_APPS",
+            title = pluralStringResource(
+                R.plurals.drawer_apps_title,
+                store.drawerPackages.size,
+                store.drawerPackages.size,
+                MAX_DRAWER_APPS,
+            ),
             apps = installedApps.apps,
             selected = store.drawerPackages.toSet(),
             loading = !installedApps.loaded,
             onApp = { app ->
                 val fillingDrawer = app.packageName !in store.drawerPackages && store.drawerPackages.size == MAX_DRAWER_APPS - 1
                 store.toggleDrawerApp(app.packageName)
-                if (fillingDrawer) Toast.makeText(context, "$MAX_DRAWER_APPS apps selected", Toast.LENGTH_SHORT).show()
+                if (fillingDrawer) {
+                    Toast.makeText(
+                        context,
+                        context.resources.getQuantityString(
+                            R.plurals.apps_selected,
+                            MAX_DRAWER_APPS,
+                            MAX_DRAWER_APPS,
+                        ),
+                        Toast.LENGTH_SHORT,
+                    ).show()
+                }
             },
             onSelectionLimit = {
-                Toast.makeText(context, "Maximum of $MAX_DRAWER_APPS apps selected", Toast.LENGTH_SHORT).show()
+                Toast.makeText(
+                    context,
+                    context.resources.getQuantityString(
+                        R.plurals.maximum_apps_selected,
+                        MAX_DRAWER_APPS,
+                        MAX_DRAWER_APPS,
+                    ),
+                    Toast.LENGTH_SHORT,
+                ).show()
             },
             onDismiss = { pickingDrawer = false },
             multiSelect = true,
@@ -375,41 +401,41 @@ internal fun SettingsScreen(
     }
     if (pickingAi) {
         AppPickerDialog(
-            title = "Choose AI app",
+            title = stringResource(R.string.choose_ai_app_title),
             apps = curatedAiApps.apps,
             selected = setOfNotNull(store.preferredAiPackage),
             loading = !curatedAiApps.loaded,
-            emptyMessage = "No curated AI apps were found.",
-            extraActionLabel = "Other compatible app",
+            emptyMessage = stringResource(R.string.no_curated_ai_apps_short),
+            extraActionLabel = stringResource(R.string.other_compatible_app),
             onExtraAction = { pickingAi = false; pickingAllAi = true },
             onApp = { store.setPreferredAiApp(it.packageName); pickingAi = false },
             onReset = { store.resetPreferredAiApp(); pickingAi = false },
-            resetLabel = "Reset to chooser",
+            resetLabel = stringResource(R.string.reset_to_chooser),
             onDismiss = { pickingAi = false },
         )
     }
     if (pickingAllAi) {
         AppPickerDialog(
-            title = "Other compatible apps",
+            title = stringResource(R.string.other_compatible_apps),
             apps = allAiApps.apps,
             selected = setOfNotNull(store.preferredAiPackage),
             loading = !allAiApps.loaded,
             onApp = { store.setPreferredAiApp(it.packageName); pickingAllAi = false },
             onReset = { store.resetPreferredAiApp(); pickingAllAi = false },
-            resetLabel = "Reset to chooser",
+            resetLabel = stringResource(R.string.reset_to_chooser),
             onDismiss = { pickingAllAi = false },
         )
     }
     if (pickingWeb) {
         AppPickerDialog(
-            title = "Choose web search app",
+            title = stringResource(R.string.choose_web_search_app),
             apps = webApps.apps,
             selected = setOfNotNull(store.preferredWebPackage),
             loading = !webApps.loaded,
-            emptyMessage = "No web search apps found.",
+            emptyMessage = stringResource(R.string.no_web_search_apps),
             onApp = { store.setPreferredWebApp(it.packageName); pickingWeb = false },
             onReset = { store.resetPreferredWebApp(); pickingWeb = false },
-            resetLabel = "Use system browser",
+            resetLabel = stringResource(R.string.use_system_browser),
             onDismiss = { pickingWeb = false },
         )
     }

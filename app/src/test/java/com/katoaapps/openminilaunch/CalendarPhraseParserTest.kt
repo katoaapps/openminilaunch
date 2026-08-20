@@ -12,7 +12,7 @@ class CalendarPhraseParserTest {
     private val now = ZonedDateTime.of(2026, 8, 18, 10, 0, 0, 0, ZoneId.of("America/Los_Angeles"))
 
     @Test fun parsesTitleDescriptionAndNaturalTime() {
-        val draft = parseCalendarPhrase("movie for friends at 5pm", now)
+        val draft = parseCalendarPhrase("movie for friends at 5pm", "New event", now)
 
         assertEquals("movie", draft.title)
         assertEquals("for friends", draft.description)
@@ -22,7 +22,7 @@ class CalendarPhraseParserTest {
     }
 
     @Test fun parsesNextWeekday() {
-        val draft = parseCalendarPhrase("movie for friends next Friday at 5pm", now)
+        val draft = parseCalendarPhrase("movie for friends next Friday at 5pm", "New event", now)
 
         assertEquals("movie", draft.title)
         assertEquals("for friends", draft.description)
@@ -30,7 +30,7 @@ class CalendarPhraseParserTest {
     }
 
     @Test fun reportedNextFridayPhraseRemainsOnFriday() {
-        val draft = parseCalendarPhrase("next friday sceduled a teapart", now)
+        val draft = parseCalendarPhrase("next friday sceduled a teapart", "New event", now)
 
         assertEquals("sceduled a teapart", draft.title)
         assertStart(draft, 2026, 8, 21, 0, 0)
@@ -39,7 +39,7 @@ class CalendarPhraseParserTest {
     }
 
     @Test fun parsesRelativeWeeksAsAnAllDayEvent() {
-        val draft = parseCalendarPhrase("renew subscription in 4 weeks", now)
+        val draft = parseCalendarPhrase("renew subscription in 4 weeks", "New event", now)
 
         assertEquals("renew subscription", draft.title)
         assertStart(draft, 2026, 9, 15, 0, 0)
@@ -48,7 +48,7 @@ class CalendarPhraseParserTest {
     }
 
     @Test fun parsesFirstWeekdayAfterDayOfMonth() {
-        val draft = parseCalendarPhrase("team dinner 1st Thursday after the 15th at 6:30pm", now)
+        val draft = parseCalendarPhrase("team dinner 1st Thursday after the 15th at 6:30pm", "New event", now)
 
         assertEquals("team dinner", draft.title)
         assertStart(draft, 2026, 8, 20, 18, 30)
@@ -56,26 +56,26 @@ class CalendarPhraseParserTest {
 
     @Test fun movesOrdinalRuleToNextMonthWhenThisMonthsOccurrencePassed() {
         val laterNow = now.withDayOfMonth(21)
-        val draft = parseCalendarPhrase("billing review first Thursday after the 15th at 9am", laterNow)
+        val draft = parseCalendarPhrase("billing review first Thursday after the 15th at 9am", "New event", laterNow)
 
         assertStart(draft, 2026, 9, 17, 9, 0)
     }
 
     @Test fun understandsThisAndBareWeekdays() {
-        assertStart(parseCalendarPhrase("lunch this Friday at noon", now), 2026, 8, 21, 12, 0)
-        assertStart(parseCalendarPhrase("lunch on Wednesday at noon", now), 2026, 8, 19, 12, 0)
+        assertStart(parseCalendarPhrase("lunch this Friday at noon", "New event", now), 2026, 8, 21, 12, 0)
+        assertStart(parseCalendarPhrase("lunch on Wednesday at noon", "New event", now), 2026, 8, 19, 12, 0)
     }
 
     @Test fun conversationalBareEarlyHourMeansPm() {
-        assertStart(parseCalendarPhrase("movie tomorrow at 5", now), 2026, 8, 19, 17, 0)
+        assertStart(parseCalendarPhrase("movie tomorrow at 5", "New event", now), 2026, 8, 19, 17, 0)
     }
 
     @Test fun rollsAnUnqualifiedPastTimeToTomorrow() {
-        assertStart(parseCalendarPhrase("walk at 8am", now), 2026, 8, 19, 8, 0)
+        assertStart(parseCalendarPhrase("walk at 8am", "New event", now), 2026, 8, 19, 8, 0)
     }
 
     @Test fun leavesTimeUnsetWhenNoDateOrTimeWasProvided() {
-        val draft = parseCalendarPhrase("team planning for launch", now)
+        val draft = parseCalendarPhrase("team planning for launch", "New event", now)
 
         assertEquals("team planning", draft.title)
         assertEquals("for launch", draft.description)
@@ -85,7 +85,7 @@ class CalendarPhraseParserTest {
     }
 
     @Test fun unsupportedDateLanguageCannotBecomeAWrongTimeOnlyEvent() {
-        val draft = parseCalendarPhrase("review next month at 5pm", now)
+        val draft = parseCalendarPhrase("review next month at 5pm", "New event", now)
 
         assertEquals("review next month", draft.title)
         assertNull(draft.startMillis)
@@ -93,7 +93,7 @@ class CalendarPhraseParserTest {
     }
 
     @Test fun unsupportedOrdinalCannotFallBackToTheMentionedWeekday() {
-        val draft = parseCalendarPhrase("review second Thursday after the 15th at 5pm", now)
+        val draft = parseCalendarPhrase("review second Thursday after the 15th at 5pm", "New event", now)
 
         assertEquals("review second Thursday after the 15th", draft.title)
         assertNull(draft.startMillis)
@@ -101,7 +101,7 @@ class CalendarPhraseParserTest {
     }
 
     @Test fun invalidFirstOrdinalDateCannotFallBackToTheMentionedWeekday() {
-        val draft = parseCalendarPhrase("review first Thursday after the 32nd at 5pm", now)
+        val draft = parseCalendarPhrase("review first Thursday after the 32nd at 5pm", "New event", now)
 
         assertEquals("review first Thursday after the 32nd", draft.title)
         assertNull(draft.startMillis)

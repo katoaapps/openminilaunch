@@ -5,9 +5,10 @@ import android.graphics.Paint
 import android.graphics.Typeface
 import android.graphics.pdf.PdfDocument
 import android.net.Uri
+import androidx.core.content.ContextCompat
 
-internal fun formatTodoExport(todos: List<TodoItem>): String = buildString {
-    appendLine("MinkLauncher To-do List")
+internal fun formatTodoExport(title: String, todos: List<TodoItem>): String = buildString {
+    appendLine(title)
     appendLine()
     todos.forEach { todo ->
         append(if (todo.completed) "[x] " else "[ ] ")
@@ -22,18 +23,19 @@ internal object TodoPdfExporter {
     private const val LINE_HEIGHT = 22f
 
     fun write(context: Context, uri: Uri, todos: List<TodoItem>): Boolean = runCatching {
+        val title = context.getString(R.string.todo_export_title, context.getString(R.string.app_name))
         val document = PdfDocument()
         try {
             var pageNumber = 0
             var page: PdfDocument.Page? = null
             var y = 0f
             val titlePaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-                color = android.graphics.Color.rgb(96, 44, 0)
+                color = ContextCompat.getColor(context, R.color.todo_export_title)
                 textSize = 22f
                 typeface = Typeface.create(Typeface.DEFAULT, Typeface.BOLD)
             }
             val bodyPaint = Paint(Paint.ANTI_ALIAS_FLAG).apply {
-                color = android.graphics.Color.rgb(28, 28, 28)
+                color = ContextCompat.getColor(context, R.color.todo_export_body)
                 textSize = 14f
             }
 
@@ -43,7 +45,7 @@ internal object TodoPdfExporter {
                     PdfDocument.PageInfo.Builder(PAGE_WIDTH, PAGE_HEIGHT, pageNumber).create(),
                 )
                 y = MARGIN
-                page!!.canvas.drawText("MinkLauncher To-do List", MARGIN, y, titlePaint)
+                page!!.canvas.drawText(title, MARGIN, y, titlePaint)
                 y += 38f
             }
 

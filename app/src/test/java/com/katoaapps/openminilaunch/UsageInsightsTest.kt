@@ -8,11 +8,15 @@ import org.junit.Test
 
 class UsageInsightsTest {
     @Test
-    fun androidSocialDefaultsAreSelectedUntilUserCreatesCustomSelection() {
+    fun automaticAndCustomSocialSelectionsRemainDistinct() {
         val defaults = setOf("social.chat", "social.photos")
 
-        assertEquals(defaults, effectiveTrackedPackages(emptySet(), defaults))
-        assertEquals(setOf("social.custom"), effectiveTrackedPackages(setOf("social.custom"), defaults))
+        assertEquals(defaults, effectiveTrackedPackages(emptySet(), defaults, usesAutomaticSocialApps = true))
+        assertEquals(
+            setOf("social.custom"),
+            effectiveTrackedPackages(setOf("social.custom"), defaults, usesAutomaticSocialApps = false),
+        )
+        assertEquals(emptySet<String>(), effectiveTrackedPackages(emptySet(), defaults, usesAutomaticSocialApps = false))
     }
 
     @Test

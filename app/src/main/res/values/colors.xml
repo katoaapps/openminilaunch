@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="light_ink">#1E2A24</color>
+    <color name="light_paper">#F4F1E8</color>
+    <color name="sage">#B8C7B0</color>
+    <color name="rust">#B85C3C</color>
+    <color name="mink_forest">#173529</color>
+    <color name="mink_forest_panel">#10271F</color>
+    <color name="muted">#6B746D</color>
+    <color name="dark_primary">#C8D8C1</color>
+    <color name="dark_on_primary">#152018</color>
+    <color name="dark_background">#101512</color>
+    <color name="dark_surface">#171D19</color>
+    <color name="dark_surface_container_low">#1C2420</color>
+    <color name="dark_on_surface">#F1F3EE</color>
+    <color name="readable_dark">#172019</color>
+    <color name="magic_text">#2563EB</color>
+    <color name="magic_call">#198754</color>
+    <color name="magic_todo">#D6A300</color>
+    <color name="magic_note">#7C3AED</color>
+    <color name="magic_event">#8B5A2B</color>
+    <color name="magic_app">#C62828</color>
+    <color name="home_panel_mink">#602C00</color>
+    <color name="home_panel_navy">#183A5A</color>
+    <color name="home_panel_plum">#512B58</color>
+    <color name="home_panel_charcoal">#34383B</color>
+    <color name="todo_export_title">#602C00</color>
+    <color name="todo_export_body">#1C1C1C</color>
+    <color name="mink_white">#FFFFFF</color>
+    <color name="mink_black">#000000</color>
+    <color name="transparent">#00000000</color>
+</resources>

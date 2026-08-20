@@ -37,6 +37,7 @@ import androidx.compose.ui.focus.FocusRequester
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.input.key.Key
 import androidx.compose.ui.input.key.KeyEventType
 import androidx.compose.ui.input.key.key
@@ -61,7 +62,10 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
 
-private val MagicBoxMinimumHeight = 64.dp
+private data class MagicActionVisuals(
+    val color: Color,
+    val icon: ImageVector,
+)
 
 @Composable
 internal fun MagicBox(
@@ -76,6 +80,7 @@ internal fun MagicBox(
     onExpandedChange: (Boolean) -> Unit = {},
     onSessionComplete: () -> Unit = {},
 ) {
+    val magicBoxMinimumHeight = Dimens.dp64
     val context = LocalContext.current
     val fileSearchRepository = remember { FileSearchRepository(context.applicationContext) }
     var text by remember { mutableStateOf(TextFieldValue()) }
@@ -270,28 +275,22 @@ internal fun MagicBox(
             }
         }
     }
-    val actionColor = when (prefix) {
-        '@' -> Color(0xFF2563EB)
-        '#' -> Color(0xFF198754)
-        '-' -> Color(0xFFD6A300)
-        '$' -> Color(0xFF7C3AED)
-        '+' -> Color(0xFF8B5A2B)
-        '?' -> Color(0xFFC62828)
-        else -> MaterialTheme.colorScheme.primary
-    }
-    val actionIcon = when (prefix) {
-        '@' -> Icons.AutoMirrored.Filled.Send
-        '#' -> Icons.Default.Phone
-        '-' -> Icons.Default.Checklist
-        '$' -> Icons.AutoMirrored.Filled.NoteAdd
-        '+' -> Icons.Default.Event
-        '?' -> Icons.Default.Apps
-        else -> Icons.Default.Search
+    val actionVisuals = when (prefix) {
+        '@' -> MagicActionVisuals(MagicTextColor, Icons.AutoMirrored.Filled.Send)
+        '#' -> MagicActionVisuals(MagicCallColor, Icons.Default.Phone)
+        '-' -> MagicActionVisuals(MagicTodoColor, Icons.Default.Checklist)
+        '$' -> MagicActionVisuals(MagicNoteColor, Icons.AutoMirrored.Filled.NoteAdd)
+        '+' -> MagicActionVisuals(MagicEventColor, Icons.Default.Event)
+        '?' -> MagicActionVisuals(MagicAppColor, Icons.Default.Apps)
+        else -> MagicActionVisuals(
+            MaterialTheme.colorScheme.primary,
+            Icons.Default.Search,
+        )
     }
     val actionContentColor = when (prefix) {
         '-' -> LightInk
         null -> MaterialTheme.colorScheme.onPrimary
-        else -> Color.White
+        else -> MinkWhite
     }
     fun refocus(showSoftwareKeyboard: Boolean = true) {
         focusRequestShowsKeyboard = showSoftwareKeyboard
@@ -400,7 +399,7 @@ internal fun MagicBox(
 
     Box(modifier) {
         if (expanded) {
-            Box(Modifier.matchParentSize().background(Color.Black.copy(alpha = .48f)).clickable(onClick = { dismiss() }))
+            Box(Modifier.matchParentSize().background(MinkBlack.copy(alpha = .48f)).clickable(onClick = { dismiss() }))
         }
 
         Column(
@@ -408,8 +407,8 @@ internal fun MagicBox(
                 .matchParentSize()
                 .statusBarsPadding()
                 .imePadding()
-                .padding(horizontal = 18.dp, vertical = 18.dp),
-            verticalArrangement = Arrangement.spacedBy(8.dp),
+                .padding(horizontal = Dimens.dp18, vertical = Dimens.dp18),
+            verticalArrangement = Arrangement.spacedBy(Dimens.dp8),
         ) {
             Box(
                 modifier = Modifier.fillMaxWidth().weight(1f),
@@ -418,7 +417,7 @@ internal fun MagicBox(
                 if (expanded) {
                     Column(
                         Modifier.fillMaxWidth().verticalScroll(magicResultsScroll),
-                        verticalArrangement = Arrangement.spacedBy(8.dp),
+                        verticalArrangement = Arrangement.spacedBy(Dimens.dp8),
                     ) {
                         if (text.text.isBlank() && lockedPrefix == null && store.searchHistory.isNotEmpty()) {
                             SearchHistoryList(
@@ -443,28 +442,28 @@ internal fun MagicBox(
                         }
                         if (plainQuery.length >= 2 && !hasMediaAccess) {
                             FilledTonalButton(onClick = { mediaPermissionLauncher.launch(mediaReadPermissions()) }) {
-                                Icon(Icons.Default.PhotoLibrary, null, Modifier.size(18.dp))
-                                Text(stringResource(R.string.search_media_filenames), Modifier.padding(start = 8.dp))
+                                Icon(Icons.Default.PhotoLibrary, null, Modifier.size(Dimens.dp18))
+                                Text(stringResource(R.string.search_media_filenames), Modifier.padding(start = Dimens.dp8))
                             }
                         }
                         if (plainQuery.isNotBlank() && store.searchFolders.isEmpty()) {
                             Surface(
                                 onClick = { showFileScopeChoice = true },
-                                shape = RoundedCornerShape(14.dp),
-                                color = Color(0xFFD6A300).copy(alpha = .18f),
+                                shape = RoundedCornerShape(Dimens.dp14),
+                                color = MagicTodoColor.copy(alpha = .18f),
                             ) {
-                                Row(Modifier.fillMaxWidth().padding(12.dp), verticalAlignment = Alignment.CenterVertically) {
-                                    Icon(Icons.Default.FolderOff, null, tint = Color(0xFFD6A300))
-                                    Column(Modifier.weight(1f).padding(start = 10.dp)) {
+                                Row(Modifier.fillMaxWidth().padding(Dimens.dp12), verticalAlignment = Alignment.CenterVertically) {
+                                    Icon(Icons.Default.FolderOff, null, tint = MagicTodoColor)
+                                    Column(Modifier.weight(1f).padding(start = Dimens.dp10)) {
                                         Text(stringResource(R.string.document_search_not_set_up), fontWeight = FontWeight.SemiBold)
-                                        Text(stringResource(R.string.choose_document_search_folder), color = Muted, fontSize = 12.sp)
+                                        Text(stringResource(R.string.choose_document_search_folder), color = Muted, fontSize = Dimens.sp12)
                                     }
                                     Icon(Icons.Default.ChevronRight, null)
                                 }
                             }
                         }
                         if (prefix !in listOf('@', '#', '-', '$', '+', '?') && text.text.isNotBlank()) {
-                            Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
+                            Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(Dimens.dp8)) {
                                 SearchDestinationButton(
                                     label = stringResource(R.string.web),
                                     detail = stringResource(R.string.search_browser),
@@ -482,7 +481,10 @@ internal fun MagicBox(
                             }
                         }
                         contactResults.forEach { contact ->
-                            SuggestionRow("${contact.name}  ·  ${contact.phoneLabel}", Icons.Default.Person) {
+                            SuggestionRow(
+                                stringResource(R.string.two_part_label, contact.name, contact.phoneLabel),
+                                Icons.Default.Person,
+                            ) {
                                 if (prefix == '#') {
                                     callToConfirm = contact
                                     collapseForDialog()
@@ -497,7 +499,7 @@ internal fun MagicBox(
                         appResults.forEach { app ->
                             SuggestionRow(
                                 text = app.label,
-                                leadingContent = { AppIcon(app.packageName, actions, 26.dp) },
+                                leadingContent = { AppIcon(app.packageName, actions, Dimens.dp26) },
                             ) {
                                 if (actions.launchPackage(app.packageName)) {
                                     store.addSearchQuery("?${app.label}")
@@ -523,18 +525,22 @@ internal fun MagicBox(
             }
 
             Surface(
-                modifier = Modifier.fillMaxWidth().heightIn(min = MagicBoxMinimumHeight)
+                modifier = Modifier.fillMaxWidth().heightIn(min = magicBoxMinimumHeight)
                     .graphicsLayer { alpha = if (expanded) 1f else 0f },
-                shape = RoundedCornerShape(24.dp),
+                shape = RoundedCornerShape(Dimens.dp24),
                 color = MaterialTheme.colorScheme.surface,
-                shadowElevation = 12.dp,
+                shadowElevation = Dimens.dp12,
             ) {
                 Row(
-                    Modifier.fillMaxWidth().padding(start = 12.dp, end = 6.dp),
+                    Modifier.fillMaxWidth().padding(start = Dimens.dp12, end = Dimens.dp6),
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
                     selectedContact?.let { contact ->
-                        CommandChip("${contact.name} · ${contact.phoneLabel}", actionColor, actionContentColor) {
+                        CommandChip(
+                            stringResource(R.string.two_part_label, contact.name, contact.phoneLabel),
+                            actionVisuals.color,
+                            actionContentColor,
+                        ) {
                             clearCommand()
                             refocus()
                         }
@@ -561,10 +567,10 @@ internal fun MagicBox(
                                 } else false
                             },
                         colors = TextFieldDefaults.colors(
-                            focusedContainerColor = Color.Transparent,
-                            unfocusedContainerColor = Color.Transparent,
-                            focusedIndicatorColor = Color.Transparent,
-                            unfocusedIndicatorColor = Color.Transparent,
+                            focusedContainerColor = MinkTransparent,
+                            unfocusedContainerColor = MinkTransparent,
+                            focusedIndicatorColor = MinkTransparent,
+                            unfocusedIndicatorColor = MinkTransparent,
                         ),
                         minLines = 1,
                         maxLines = 5,
@@ -584,10 +590,10 @@ internal fun MagicBox(
                     FilledIconButton(
                         onClick = { submit() },
                         colors = IconButtonDefaults.filledIconButtonColors(
-                            containerColor = actionColor,
+                            containerColor = actionVisuals.color,
                             contentColor = actionContentColor,
                         ),
-                    ) { Icon(actionIcon, stringResource(R.string.run_command)) }
+                    ) { Icon(actionVisuals.icon, stringResource(R.string.run_command)) }
                 }
             }
         }
@@ -595,7 +601,7 @@ internal fun MagicBox(
         if (!expanded && !showSmsSentConfirmation) {
             Row(
                 collapsedModifier.align(Alignment.BottomCenter)
-                    .clip(RoundedCornerShape(22.dp))
+                    .clip(RoundedCornerShape(Dimens.dp22))
                     .background(MaterialTheme.colorScheme.surfaceContainerLow)
                     .clickable {
                         clearCommand()
@@ -603,11 +609,11 @@ internal fun MagicBox(
                         onExpandedChange(true)
                         refocus(showSoftwareKeyboard = true)
                     }
-                    .heightIn(min = MagicBoxMinimumHeight)
-                    .padding(start = 18.dp, end = 6.dp),
+                    .heightIn(min = magicBoxMinimumHeight)
+                    .padding(start = Dimens.dp18, end = Dimens.dp6),
                 verticalAlignment = Alignment.CenterVertically,
             ) {
-                Text(stringResource(R.string.magic_box_collapsed_hint), Modifier.weight(1f), color = Muted, fontSize = 14.sp)
+                Text(stringResource(R.string.magic_box_collapsed_hint), Modifier.weight(1f), color = Muted, fontSize = Dimens.sp14)
                 FilledIconButton(
                     onClick = {
                         clearCommand()
@@ -629,20 +635,20 @@ internal fun MagicBox(
             exit = fadeOut(tween(350)) + scaleOut(tween(350), targetScale = .94f),
         ) {
             Surface(
-                shape = RoundedCornerShape(28.dp),
+                shape = RoundedCornerShape(Dimens.dp28),
                 color = MaterialTheme.colorScheme.primaryContainer,
                 contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
-                shadowElevation = 16.dp,
+                shadowElevation = Dimens.dp16,
             ) {
                 Row(
-                    Modifier.padding(horizontal = 28.dp, vertical = 20.dp),
+                    Modifier.padding(horizontal = Dimens.dp28, vertical = Dimens.dp20),
                     verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(12.dp),
+                    horizontalArrangement = Arrangement.spacedBy(Dimens.dp12),
                 ) {
-                    Icon(Icons.Default.CheckCircle, null, Modifier.size(30.dp))
+                    Icon(Icons.Default.CheckCircle, null, Modifier.size(Dimens.dp30))
                     Column {
-                        Text(stringResource(R.string.message_sent), fontSize = 19.sp, fontWeight = FontWeight.Bold)
-                        Text(stringResource(R.string.sent_as_sms), color = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = .72f), fontSize = 13.sp)
+                        Text(stringResource(R.string.message_sent), fontSize = Dimens.sp19, fontWeight = FontWeight.Bold)
+                        Text(stringResource(R.string.sent_as_sms), color = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = .72f), fontSize = Dimens.sp13)
                     }
                 }
             }
@@ -726,7 +732,7 @@ internal fun MagicBox(
     callToConfirm?.let { contact ->
         AlertDialog(
             onDismissRequest = { callToConfirm = null; onSessionComplete() },
-            icon = { Icon(Icons.Default.Phone, null, tint = Color(0xFF198754)) },
+            icon = { Icon(Icons.Default.Phone, null, tint = MagicCallColor) },
             title = { Text(stringResource(R.string.call_contact, contact.name)) },
             text = { Text(stringResource(R.string.phone_type_and_number, contact.phoneLabel, contact.phone)) },
             confirmButton = {
@@ -741,7 +747,7 @@ internal fun MagicBox(
                             callPermissionLauncher.launch(Manifest.permission.CALL_PHONE)
                         }
                     },
-                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF198754), contentColor = Color.White),
+                    colors = ButtonDefaults.buttonColors(containerColor = MagicCallColor, contentColor = MinkWhite),
                 ) { Text(stringResource(R.string.call_now)) }
             },
             dismissButton = {
@@ -764,18 +770,18 @@ internal fun MagicBox(
         val assistantActive = actions.isAssistantRoleHeld()
         AlertDialog(
             onDismissRequest = { smsToConfirm = null; onSessionComplete() },
-            icon = { Icon(Icons.AutoMirrored.Filled.Send, null, tint = Color(0xFF2563EB)) },
+            icon = { Icon(Icons.AutoMirrored.Filled.Send, null, tint = MagicTextColor) },
             title = { Text(stringResource(R.string.send_message_to_contact, draft.contact.name)) },
             text = {
-                Column(verticalArrangement = Arrangement.spacedBy(10.dp)) {
+                Column(verticalArrangement = Arrangement.spacedBy(Dimens.dp10)) {
                     Text(stringResource(R.string.phone_type_and_number, draft.contact.phoneLabel, draft.contact.phone))
                     Text(
                         draft.body,
-                        Modifier.heightIn(max = 180.dp).verticalScroll(rememberScrollState()),
+                        Modifier.heightIn(max = Dimens.dp180).verticalScroll(rememberScrollState()),
                     )
-                    Text(stringResource(R.string.sms_carrier_notice), color = Muted, fontSize = 12.sp)
+                    Text(stringResource(R.string.sms_carrier_notice), color = Muted, fontSize = Dimens.sp12)
                     if (!assistantActive) {
-                        Text(stringResource(R.string.assistant_sms_restriction), color = Muted, fontSize = 12.sp)
+                        Text(stringResource(R.string.assistant_sms_restriction), color = Muted, fontSize = Dimens.sp12)
                     }
                 }
             },
@@ -785,7 +791,7 @@ internal fun MagicBox(
                         smsToConfirm = null
                         sendDirectOrRequestAccess(draft)
                     },
-                    colors = ButtonDefaults.buttonColors(containerColor = Color(0xFF2563EB), contentColor = Color.White),
+                    colors = ButtonDefaults.buttonColors(containerColor = MagicTextColor, contentColor = MinkWhite),
                 ) { Text(stringResource(if (assistantActive) R.string.send_sms_now else R.string.choose_assistant)) }
             },
             dismissButton = {

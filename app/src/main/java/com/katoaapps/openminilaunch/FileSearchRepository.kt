@@ -29,7 +29,7 @@ class FileSearchRepository(private val context: Context) {
             null,
             null,
         )?.use { cursor -> if (cursor.moveToFirst()) cursor.getString(0) else null }
-    }.getOrNull() ?: "Selected folder"
+    }.getOrNull() ?: context.getString(R.string.selected_folder)
 
     fun search(query: String, folders: List<SearchFolder>, includeMedia: Boolean): List<FileSearchResult> {
         val clean = query.trim()

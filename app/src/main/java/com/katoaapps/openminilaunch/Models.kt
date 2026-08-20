@@ -1,6 +1,7 @@
 package com.katoaapps.openminilaunch
 
 import android.net.Uri
+import androidx.annotation.StringRes
 
 data class TodoItem(
     val id: String,
@@ -28,9 +29,7 @@ data class SearchFolder(
 data class WidgetGridSize(
     val columns: Int,
     val rows: Int,
-) {
-    val label: String get() = "$columns × $rows"
-}
+)
 
 data class FileSearchResult(
     val name: String,
@@ -39,34 +38,34 @@ data class FileSearchResult(
     val modifiedAt: Long,
 )
 
-enum class Shortcut(val label: String) {
-    NOTE("Note"), EVENT("Calendar"), WEATHER("Weather"), TODO("To-do"),
-    CALL("Call"), MESSAGE("Messenger"), FILES("Files"), DRAWER("Top 8")
+enum class Shortcut(@StringRes val labelRes: Int) {
+    NOTE(R.string.shortcut_note),
+    EVENT(R.string.shortcut_calendar),
+    WEATHER(R.string.shortcut_weather),
+    TODO(R.string.shortcut_todo),
+    CALL(R.string.shortcut_call),
+    MESSAGE(R.string.shortcut_messenger),
+    FILES(R.string.shortcut_files),
+    DRAWER(R.string.shortcut_top_eight),
 }
 
 internal const val MAX_DRAWER_APPS = 8
-internal const val DEFAULT_HOME_PANEL_COLOR_ARGB = 0xFF173529.toInt()
-
 val configurableShortcuts: List<Shortcut> = Shortcut.entries.filterNot {
     it == Shortcut.TODO || it == Shortcut.DRAWER
 }
 
 enum class Screen { HOME, SETTINGS, TODOS, HUB }
 
-enum class ThemePreference(val label: String) {
-    SYSTEM("System"), LIGHT("Light"), DARK("Dark")
+enum class ThemePreference(@StringRes val labelRes: Int) {
+    SYSTEM(R.string.theme_system),
+    LIGHT(R.string.theme_light),
+    DARK(R.string.theme_dark),
 }
 
-enum class MessageSendMode(val label: String) {
-    ALWAYS_ASK("Always ask"),
-    DIRECT_SMS("Always send as SMS"),
-    MESSAGING_APP("Always choose messaging app"),
+enum class MessageSendMode(@StringRes val labelRes: Int) {
+    ALWAYS_ASK(R.string.message_mode_always_ask),
+    DIRECT_SMS(R.string.message_mode_direct_sms),
+    MESSAGING_APP(R.string.message_mode_messaging_app),
 }
 
 internal val SOCIAL_GOAL_OPTIONS = listOf(30, 60, 90, 120)
-
-internal fun socialGoalLabel(minutes: Int): String = when {
-    minutes < 60 -> "${minutes}m"
-    minutes % 60 == 0 -> "${minutes / 60}h"
-    else -> "${minutes}m"
-}
