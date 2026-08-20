@@ -61,6 +61,8 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
 
+private val MagicBoxMinimumHeight = 64.dp
+
 @Composable
 internal fun MagicBox(
     store: LauncherStore,
@@ -521,7 +523,8 @@ internal fun MagicBox(
             }
 
             Surface(
-                modifier = Modifier.fillMaxWidth().graphicsLayer { alpha = if (expanded) 1f else 0f },
+                modifier = Modifier.fillMaxWidth().heightIn(min = MagicBoxMinimumHeight)
+                    .graphicsLayer { alpha = if (expanded) 1f else 0f },
                 shape = RoundedCornerShape(24.dp),
                 color = MaterialTheme.colorScheme.surface,
                 shadowElevation = 12.dp,
@@ -600,6 +603,7 @@ internal fun MagicBox(
                         onExpandedChange(true)
                         refocus(showSoftwareKeyboard = true)
                     }
+                    .heightIn(min = MagicBoxMinimumHeight)
                     .padding(start = 18.dp, end = 6.dp),
                 verticalAlignment = Alignment.CenterVertically,
             ) {

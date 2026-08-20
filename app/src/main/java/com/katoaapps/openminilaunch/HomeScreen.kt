@@ -73,8 +73,6 @@ import java.time.format.DateTimeFormatter
 import kotlin.math.ceil
 import kotlin.math.roundToInt
 
-private const val TODO_ITEMS_PER_PAGE = 3
-
 @Composable
 internal fun HomeScreen(
     store: LauncherStore,
@@ -144,6 +142,9 @@ internal fun HomeScreen(
         val headerActionSize = if (qwertyHome) 40.dp else 48.dp
         val headerIconSize = if (qwertyHome) 21.dp else 24.dp
         val focusPanelHeight = (maxWidth * .78f).coerceIn(310.dp, 350.dp)
+        val imeBottom = WindowInsets.ime.asPaddingValues().calculateBottomPadding()
+        val navigationBottom = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()
+        val softInputRowHeight = if (magicExpanded) 0.dp else (imeBottom - navigationBottom).coerceAtLeast(0.dp)
         Column(
             Modifier.fillMaxSize()
                 .background(MaterialTheme.colorScheme.background)
@@ -187,10 +188,12 @@ internal fun HomeScreen(
                     }
                 }
             }
-            Box(
+            BoxWithConstraints(
                 Modifier.fillMaxWidth().weight(1f)
                     .padding(horizontal = homeHorizontalPadding, vertical = if (qwertyHome) 2.dp else 10.dp),
             ) {
+                val todoPanelHeight = if (qwertyHome) maxHeight else minOf(maxHeight, focusPanelHeight)
+                val todoItemsPerPage = visibleTodoItemsForHeight(todoPanelHeight.value)
                 val focusModifier = if (qwertyHome) {
                     Modifier.fillMaxSize()
                 } else {
@@ -212,6 +215,7 @@ internal fun HomeScreen(
                             store,
                             openTodos,
                             todoJumpToken,
+                            itemsPerPage = todoItemsPerPage,
                             compact = qwertyHome,
                             embedded = true,
                             contentColor = homePanelContentColor,
@@ -236,7 +240,7 @@ internal fun HomeScreen(
             }
             Spacer(
                 Modifier.navigationBarsPadding()
-                    .height(if (qwertyHome) 64.dp else 52.dp),
+                    .height(88.dp + softInputRowHeight),
             )
         }
         flyingTodo?.takeIf { flightActive }?.let { text ->
@@ -264,7 +268,7 @@ internal fun HomeScreen(
             store = store,
             actions = actions,
             modifier = Modifier.fillMaxSize().zIndex(if (magicExpanded) 20f else 0f),
-            collapsedModifier = Modifier.widthIn(max = 620.dp).fillMaxWidth().navigationBarsPadding()
+            collapsedModifier = Modifier.widthIn(max = 620.dp).fillMaxWidth().navigationBarsPadding().imePadding()
                 .padding(horizontal = 22.dp, vertical = 12.dp)
                 .onGloballyPositioned { coordinates ->
                     val origin = coordinates.positionInRoot()
@@ -322,6 +326,7 @@ internal fun TodoPager(
     store: LauncherStore,
     openTodos: () -> Unit,
     jumpToken: Int,
+    itemsPerPage: Int = 3,
     compact: Boolean = false,
     embedded: Boolean = false,
     contentColor: Color = LightPaper,
@@ -329,12 +334,16 @@ internal fun TodoPager(
     insetColor: Color = MinkForestPanel,
     modifier: Modifier = Modifier,
 ) {
-    val pages = maxOf(1, ceil(store.todos.size / TODO_ITEMS_PER_PAGE.toFloat()).toInt())
+    val safeItemsPerPage = itemsPerPage.coerceIn(1, 5)
+    val pages = maxOf(1, ceil(store.todos.size / safeItemsPerPage.toFloat()).toInt())
     val pagerState = rememberPagerState(pageCount = { pages })
+    LaunchedEffect(pages) {
+        if (pagerState.currentPage >= pages) pagerState.scrollToPage(pages - 1)
+    }
     LaunchedEffect(jumpToken, pages) {
         if (jumpToken > 0) {
             val newestUnfinishedPage = store.todos.indexOfLast { !it.completed }
-                .coerceAtLeast(0) / TODO_ITEMS_PER_PAGE
+                .coerceAtLeast(0) / safeItemsPerPage
             pagerState.animateScrollToPage(newestUnfinishedPage.coerceAtMost(pages - 1))
         }
     }
@@ -353,8 +362,8 @@ internal fun TodoPager(
         }
         HorizontalPager(state = pagerState, modifier = Modifier.fillMaxWidth().weight(1f)) { page ->
             val pageItems = store.todos
-                .drop(page * TODO_ITEMS_PER_PAGE)
-                .take(TODO_ITEMS_PER_PAGE)
+                .drop(page * safeItemsPerPage)
+                .take(safeItemsPerPage)
             if (pageItems.isEmpty()) {
                 Box(Modifier.fillMaxSize(), contentAlignment = Alignment.CenterStart) {
                     Text(stringResource(R.string.tap_to_add_first_todo), color = mutedContentColor)
@@ -458,17 +467,19 @@ internal fun ShortcutGrid(
             }
         }
         val visibleOrder: List<Shortcut> = if (editing) draftOrder else store.shortcutOrder
-        LazyVerticalGrid(
-            columns = GridCells.Fixed(2),
-            state = gridState,
-            modifier = Modifier.fillMaxWidth().weight(1f),
-            contentPadding = PaddingValues(vertical = 2.dp),
-            horizontalArrangement = Arrangement.spacedBy(2.dp),
-            verticalArrangement = Arrangement.SpaceEvenly,
-            userScrollEnabled = false,
-        ) {
-            items(visibleOrder, key = Shortcut::name) { shortcut ->
-                ReorderableItem(reorderableState, key = shortcut.name) { isDragging ->
+        BoxWithConstraints(Modifier.fillMaxWidth().weight(1f)) {
+            val shortcutSize = shortcutCellSizeDp(maxWidth.value, maxHeight.value).dp
+            LazyVerticalGrid(
+                columns = GridCells.Fixed(2),
+                state = gridState,
+                modifier = Modifier.fillMaxSize(),
+                contentPadding = PaddingValues(vertical = 2.dp),
+                horizontalArrangement = Arrangement.spacedBy(4.dp),
+                verticalArrangement = Arrangement.SpaceEvenly,
+                userScrollEnabled = false,
+            ) {
+                items(visibleOrder, key = Shortcut::name) { shortcut ->
+                    ReorderableItem(reorderableState, key = shortcut.name) { isDragging ->
                     val shortcutIndex = Shortcut.entries.indexOf(shortcut)
                     val jiggleAngle = if (editing) {
                         val jiggle = rememberInfiniteTransition(label = "${shortcut.name} jiggle")
@@ -503,35 +514,37 @@ internal fun ShortcutGrid(
                             onLongClick = ::beginEditing,
                         )
                     }
-                    Box(
-                        Modifier
-                            .fillMaxWidth()
-                            .height(if (compact) 42.dp else 50.dp)
-                            .animateItem()
-                            .zIndex(if (isDragging) 4f else 0f)
-                            .graphicsLayer {
-                                rotationZ = if (isDragging) 0f else jiggleAngle
-                                if (isDragging) {
-                                    scaleX = 1.06f
-                                    scaleY = 1.06f
-                                    shadowElevation = 14.dp.toPx()
-                                }
+                        Box(Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
+                            Box(
+                                Modifier
+                                    .size(shortcutSize)
+                                    .animateItem()
+                                    .zIndex(if (isDragging) 4f else 0f)
+                                    .graphicsLayer {
+                                        rotationZ = if (isDragging) 0f else jiggleAngle
+                                        if (isDragging) {
+                                            scaleX = 1.06f
+                                            scaleY = 1.06f
+                                            shadowElevation = 14.dp.toPx()
+                                        }
+                                    }
+                                    .clip(RoundedCornerShape(if (compact) 14.dp else 18.dp))
+                                    .background(
+                                        if (editing) contentColor.copy(alpha = .17f)
+                                        else itemContainerColor
+                                    )
+                                    .then(interactionModifier)
+                                    .padding(6.dp),
+                                contentAlignment = Alignment.Center,
+                            ) {
+                                Icon(
+                                    icons.getValue(shortcut),
+                                    shortcut.label,
+                                    Modifier.size(if (compact) 24.dp else 28.dp),
+                                    tint = contentColor,
+                                )
                             }
-                            .clip(RoundedCornerShape(if (compact) 14.dp else 18.dp))
-                            .background(
-                                if (editing) contentColor.copy(alpha = .17f)
-                                else itemContainerColor
-                            )
-                            .then(interactionModifier)
-                            .padding(6.dp),
-                        contentAlignment = Alignment.Center,
-                    ) {
-                        Icon(
-                            icons.getValue(shortcut),
-                            shortcut.label,
-                            Modifier.size(if (compact) 24.dp else 28.dp),
-                            tint = contentColor,
-                        )
+                        }
                     }
                 }
             }
