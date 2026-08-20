@@ -97,6 +97,14 @@ internal fun HomeScreen(
     var magicExpanded by remember { mutableStateOf(false) }
     var showLockDisclosure by remember { mutableStateOf(false) }
     val flightProgress = remember { Animatable(0f) }
+    val homePanelColor = Color(store.homePanelColorArgb)
+    val homePanelContentColor = readableContentColor(homePanelColor)
+    val homePanelMutedColor = homePanelContentColor.copy(alpha = .68f)
+    val homePanelInsetColor = if (homePanelContentColor == Color.White) {
+        Color.Black.copy(alpha = .16f)
+    } else {
+        Color.White.copy(alpha = .24f)
+    }
     val lockServiceLauncher = rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) {
         if (actions.isLockServiceEnabled()) actions.lockDevice()
     }
@@ -160,7 +168,11 @@ internal fun HomeScreen(
                         letterSpacing = 1.5.sp,
                         fontSize = 13.sp,
                         fontWeight = FontWeight.Bold,
-                        modifier = Modifier.weight(1f),
+                        modifier = Modifier.weight(1f).clickable {
+                            if (!actions.openClock()) {
+                                Toast.makeText(context, R.string.no_clock_app_found, Toast.LENGTH_SHORT).show()
+                            }
+                        },
                     )
                     IconButton(onClick = openHub, modifier = Modifier.size(headerActionSize)) {
                         BadgedBox(
@@ -187,8 +199,8 @@ internal fun HomeScreen(
                 Surface(
                     modifier = focusModifier.widthIn(max = 620.dp).align(if (qwertyHome) Alignment.Center else Alignment.TopCenter),
                     shape = RoundedCornerShape(if (qwertyHome) 26.dp else 34.dp),
-                    color = MinkForest,
-                    contentColor = LightPaper,
+                    color = homePanelColor,
+                    contentColor = homePanelContentColor,
                     shadowElevation = if (isSystemInDarkTheme()) 2.dp else 8.dp,
                     tonalElevation = 1.dp,
                 ) {
@@ -202,6 +214,9 @@ internal fun HomeScreen(
                             todoJumpToken,
                             compact = qwertyHome,
                             embedded = true,
+                            contentColor = homePanelContentColor,
+                            mutedContentColor = homePanelMutedColor,
+                            insetColor = homePanelInsetColor,
                             modifier = Modifier.weight(2f).fillMaxHeight().onGloballyPositioned { coordinates ->
                                 val origin = coordinates.positionInRoot()
                                 widgetCenter = origin + Offset(coordinates.size.width / 2f, coordinates.size.height / 2f)
@@ -212,8 +227,8 @@ internal fun HomeScreen(
                             actions = actions,
                             openTodos = openTodos,
                             compact = qwertyHome,
-                            contentColor = LightPaper,
-                            itemContainerColor = LightPaper.copy(alpha = .09f),
+                            contentColor = homePanelContentColor,
+                            itemContainerColor = homePanelContentColor.copy(alpha = .09f),
                             modifier = Modifier.weight(1f).fillMaxHeight(),
                         ) { drawerOpen = true }
                     }
@@ -280,13 +295,21 @@ internal fun HomeScreen(
             if (store.drawerPackages.isEmpty()) {
                 Text(stringResource(R.string.choose_drawer_apps), Modifier.padding(24.dp), color = Muted)
             } else {
-                store.drawerPackages.forEach { packageName ->
-                    ListItem(
-                        headlineContent = { Text(actions.appLabel(packageName)) },
-                        leadingContent = { AppIcon(packageName, actions, 38.dp) },
-                        modifier = Modifier.clickable { actions.launchPackage(packageName); drawerOpen = false },
-                        colors = ListItemDefaults.colors(containerColor = MaterialTheme.colorScheme.background),
-                    )
+                val drawerRows = ceil(store.drawerPackages.size / 2f).toInt()
+                LazyVerticalGrid(
+                    columns = GridCells.Fixed(2),
+                    modifier = Modifier.fillMaxWidth().height((drawerRows * 68).dp),
+                    contentPadding = PaddingValues(horizontal = 12.dp, vertical = 8.dp),
+                ) {
+                    items(store.drawerPackages, key = { it }) { packageName ->
+                        ListItem(
+                            headlineContent = { Text(actions.appLabel(packageName), maxLines = 1, overflow = TextOverflow.Ellipsis) },
+                            leadingContent = { AppIcon(packageName, actions, 36.dp) },
+                            modifier = Modifier.clip(RoundedCornerShape(16.dp))
+                                .clickable { actions.launchPackage(packageName); drawerOpen = false },
+                            colors = ListItemDefaults.colors(containerColor = MaterialTheme.colorScheme.background),
+                        )
+                    }
                 }
             }
             Spacer(Modifier.height(28.dp))
@@ -301,6 +324,9 @@ internal fun TodoPager(
     jumpToken: Int,
     compact: Boolean = false,
     embedded: Boolean = false,
+    contentColor: Color = LightPaper,
+    mutedContentColor: Color = Sage,
+    insetColor: Color = MinkForestPanel,
     modifier: Modifier = Modifier,
 ) {
     val pages = maxOf(1, ceil(store.todos.size / TODO_ITEMS_PER_PAGE.toFloat()).toInt())
@@ -315,15 +341,15 @@ internal fun TodoPager(
     val shape = RoundedCornerShape(if (compact) 18.dp else 24.dp)
     Column(
         modifier.fillMaxWidth().clip(shape)
-            .background(if (embedded) MinkForestPanel.copy(alpha = .78f) else MinkForestPanel)
-            .then(if (embedded) Modifier else Modifier.border(1.dp, Sage.copy(alpha = .42f), shape))
+            .background(if (embedded) insetColor else MinkForestPanel)
+            .then(if (embedded) Modifier else Modifier.border(1.dp, mutedContentColor.copy(alpha = .42f), shape))
             .clickable(onClick = openTodos)
             .padding(if (compact) 8.dp else 16.dp),
         verticalArrangement = Arrangement.spacedBy(if (compact) 3.dp else 8.dp),
     ) {
         Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
-            Text(stringResource(R.string.todo_heading), color = LightPaper, fontWeight = FontWeight.Black, letterSpacing = 1.sp, modifier = Modifier.weight(1f))
-            Text(stringResource(R.string.page_of_pages, pagerState.currentPage + 1, pages), color = Sage, fontSize = 12.sp)
+            Text(stringResource(R.string.todo_heading), color = contentColor, fontWeight = FontWeight.Black, letterSpacing = 1.sp, modifier = Modifier.weight(1f))
+            Text(stringResource(R.string.page_of_pages, pagerState.currentPage + 1, pages), color = mutedContentColor, fontSize = 12.sp)
         }
         HorizontalPager(state = pagerState, modifier = Modifier.fillMaxWidth().weight(1f)) { page ->
             val pageItems = store.todos
@@ -331,7 +357,7 @@ internal fun TodoPager(
                 .take(TODO_ITEMS_PER_PAGE)
             if (pageItems.isEmpty()) {
                 Box(Modifier.fillMaxSize(), contentAlignment = Alignment.CenterStart) {
-                    Text(stringResource(R.string.tap_to_add_first_todo), color = Sage)
+                    Text(stringResource(R.string.tap_to_add_first_todo), color = mutedContentColor)
                 }
             } else {
                 Column(Modifier.fillMaxSize(), verticalArrangement = Arrangement.spacedBy(if (compact) 5.dp else 8.dp)) {
@@ -343,12 +369,16 @@ internal fun TodoPager(
                             Checkbox(
                                 checked = item.completed,
                                 onCheckedChange = { store.toggleTodo(item.id) },
-                                colors = CheckboxDefaults.colors(checkedColor = Rust, uncheckedColor = Sage, checkmarkColor = LightPaper),
+                                colors = CheckboxDefaults.colors(
+                                    checkedColor = contentColor,
+                                    uncheckedColor = mutedContentColor,
+                                    checkmarkColor = if (contentColor == Color.White) Color.Black else Color.White,
+                                ),
                                 modifier = Modifier.size(if (compact) 24.dp else 26.dp),
                             )
                             Text(
                                 item.text,
-                                color = if (item.completed) Sage else LightPaper,
+                                color = if (item.completed) mutedContentColor else contentColor,
                                 fontSize = if (compact) 13.sp else 15.sp,
                                 lineHeight = if (compact) 17.sp else 20.sp,
                                 maxLines = 2,
@@ -362,6 +392,11 @@ internal fun TodoPager(
             }
         }
     }
+}
+
+private fun readableContentColor(background: Color): Color {
+    val luminance = .2126f * background.red + .7152f * background.green + .0722f * background.blue
+    return if (luminance > .55f) Color(0xFF172019) else Color.White
 }
 
 @Composable

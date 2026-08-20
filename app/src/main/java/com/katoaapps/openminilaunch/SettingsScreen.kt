@@ -240,6 +240,7 @@ internal fun SettingsScreen(
             HorizontalDivider(color = Sage)
             SectionLabel("APPEARANCE")
             ThemeChooser(store.themePreference, store::setTheme)
+            HomePanelColorSetting(store.homePanelColorArgb, store::setHomePanelColor)
             HorizontalDivider(color = Sage)
             SectionLabel("MINK’S DAY")
             Text("Mink measures time and opens only for the social apps you choose, then keeps those insights on this device.", color = Muted, fontSize = 13.sp)
@@ -278,7 +279,7 @@ internal fun SettingsScreen(
             }
             HorizontalDivider(color = Sage)
             SectionLabel("APP DRAWER")
-            SettingsRow("Selected apps", "${store.drawerPackages.size} of 5", Icons.Default.Apps) { pickingDrawer = true }
+            SettingsRow("Selected apps", "${store.drawerPackages.size} of $MAX_DRAWER_APPS", Icons.Default.Apps) { pickingDrawer = true }
             Text("Use ? in the Magic Box to find any other installed app.", color = Muted, fontSize = 13.sp)
             HorizontalDivider(color = Sage)
             SectionLabel("SEARCH")
@@ -487,19 +488,20 @@ internal fun SettingsScreen(
     }
     if (pickingDrawer) {
         AppPickerDialog(
-            title = "Drawer apps · ${store.drawerPackages.size}/5",
+            title = "Drawer apps · ${store.drawerPackages.size}/$MAX_DRAWER_APPS",
             apps = apps,
             selected = store.drawerPackages.toSet(),
             onApp = { app ->
-                val addingFifth = app.packageName !in store.drawerPackages && store.drawerPackages.size == 4
+                val fillingDrawer = app.packageName !in store.drawerPackages && store.drawerPackages.size == MAX_DRAWER_APPS - 1
                 store.toggleDrawerApp(app.packageName)
-                if (addingFifth) Toast.makeText(context, "5 apps selected", Toast.LENGTH_SHORT).show()
+                if (fillingDrawer) Toast.makeText(context, "$MAX_DRAWER_APPS apps selected", Toast.LENGTH_SHORT).show()
             },
             onSelectionLimit = {
-                Toast.makeText(context, "Maximum of 5 apps selected", Toast.LENGTH_SHORT).show()
+                Toast.makeText(context, "Maximum of $MAX_DRAWER_APPS apps selected", Toast.LENGTH_SHORT).show()
             },
             onDismiss = { pickingDrawer = false },
             multiSelect = true,
+            selectionLimit = MAX_DRAWER_APPS,
         )
     }
     if (pickingAi) {
@@ -566,6 +568,7 @@ internal fun AppPickerDialog(
     resetLabel: String = "Reset to system default",
     onDismiss: () -> Unit,
     multiSelect: Boolean = false,
+    selectionLimit: Int = 5,
     loading: Boolean = true,
     emptyMessage: String = "No apps found.",
     onSelectionLimit: () -> Unit = {},
@@ -642,28 +645,32 @@ internal fun AppPickerDialog(
                         letterSpacing = 1.sp,
                         modifier = Modifier.padding(top = 4.dp, bottom = 6.dp),
                     )
-                    Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(6.dp)) {
-                        apps.filter { it.packageName in selected }.take(5).forEach { app ->
-                            Column(
-                                Modifier.weight(1f).clip(RoundedCornerShape(12.dp))
-                                    .background(MaterialTheme.colorScheme.surfaceContainerLow)
-                                    .clickable { onApp(app) }.padding(horizontal = 3.dp, vertical = 7.dp),
-                                horizontalAlignment = Alignment.CenterHorizontally,
-                            ) {
-                                Box {
-                                    AppIcon(app.packageName, actions = null, size = 31.dp)
-                                    Surface(
-                                        modifier = Modifier.align(Alignment.TopEnd).offset(x = 5.dp, y = (-5).dp),
-                                        shape = CircleShape,
-                                        color = MaterialTheme.colorScheme.error,
-                                    ) {
-                                        Icon(Icons.Default.Close, "Remove ${app.label}", Modifier.size(14.dp), tint = MaterialTheme.colorScheme.onError)
+                    val selectedApps = apps.filter { it.packageName in selected }.take(selectionLimit)
+                    selectedApps.chunked(4).forEach { rowApps ->
+                        Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(6.dp)) {
+                            rowApps.forEach { app ->
+                                Column(
+                                    Modifier.weight(1f).clip(RoundedCornerShape(12.dp))
+                                        .background(MaterialTheme.colorScheme.surfaceContainerLow)
+                                        .clickable { onApp(app) }.padding(horizontal = 3.dp, vertical = 7.dp),
+                                    horizontalAlignment = Alignment.CenterHorizontally,
+                                ) {
+                                    Box {
+                                        AppIcon(app.packageName, actions = null, size = 31.dp)
+                                        Surface(
+                                            modifier = Modifier.align(Alignment.TopEnd).offset(x = 5.dp, y = (-5).dp),
+                                            shape = CircleShape,
+                                            color = MaterialTheme.colorScheme.error,
+                                        ) {
+                                            Icon(Icons.Default.Close, "Remove ${app.label}", Modifier.size(14.dp), tint = MaterialTheme.colorScheme.onError)
+                                        }
                                     }
+                                    Text(app.label, fontSize = 9.sp, maxLines = 1, textAlign = TextAlign.Center, modifier = Modifier.padding(top = 4.dp))
                                 }
-                                Text(app.label, fontSize = 9.sp, maxLines = 1, textAlign = TextAlign.Center, modifier = Modifier.padding(top = 4.dp))
                             }
+                            repeat(4 - rowApps.size) { Spacer(Modifier.weight(1f)) }
                         }
-                        repeat((5 - selected.size).coerceAtLeast(0)) { Spacer(Modifier.weight(1f)) }
+                        Spacer(Modifier.height(6.dp))
                     }
                     HorizontalDivider(Modifier.padding(top = 10.dp), color = Sage)
                 }
@@ -685,7 +692,7 @@ internal fun AppPickerDialog(
                                     Modifier.padding(5.dp).clip(RoundedCornerShape(16.dp))
                                         .background(if (isSelected) Sage else MaterialTheme.colorScheme.surfaceContainerLow)
                                         .clickable {
-                                            if (multiSelect && !isSelected && selected.size >= 5) onSelectionLimit()
+                                            if (multiSelect && !isSelected && selected.size >= selectionLimit) onSelectionLimit()
                                             else onApp(app)
                                         }
                                         .padding(10.dp),

@@ -342,7 +342,7 @@ internal fun MagicBox(
             '$' -> payload.isNotBlank().also {
                 if (it) actions.createNote(payload, store.shortcutPackages[Shortcut.NOTE])
             }
-            '+' -> payload.isNotBlank().also { if (it) actions.createEvent(payload) }
+            '+' -> payload.isNotBlank() && actions.createEvent(payload)
             '@' -> (selectedContact != null && payload.isNotBlank()).also {
                 if (it) {
                     val draft = PendingSms(selectedContact!!, payload)
@@ -497,7 +497,10 @@ internal fun MagicBox(
                                 text = app.label,
                                 leadingContent = { AppIcon(app.packageName, actions, 26.dp) },
                             ) {
-                                if (actions.launchPackage(app.packageName)) dismiss()
+                                if (actions.launchPackage(app.packageName)) {
+                                    store.addSearchQuery("?${app.label}")
+                                    dismiss()
+                                }
                             }
                         }
                         if (prefix in listOf('@', '#') && !hasContacts) {

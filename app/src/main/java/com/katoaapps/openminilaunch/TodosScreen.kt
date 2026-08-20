@@ -82,6 +82,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.platform.LocalView
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.zIndex
 import androidx.compose.ui.text.font.FontWeight
@@ -116,10 +117,24 @@ import kotlin.math.ceil
 import kotlin.math.roundToInt
 
 @Composable
-internal fun TodosScreen(store: LauncherStore, goBack: () -> Unit) {
+internal fun TodosScreen(store: LauncherStore, actions: DeviceActions, goBack: () -> Unit) {
+    val context = LocalContext.current
     var newText by remember { mutableStateOf("") }
     var editing by remember { mutableStateOf<TodoItem?>(null) }
     var deleting by remember { mutableStateOf<TodoItem?>(null) }
+    var showExportOptions by remember { mutableStateOf(false) }
+    val pdfLauncher = rememberLauncherForActivityResult(
+        ActivityResultContracts.CreateDocument("application/pdf"),
+    ) { uri ->
+        if (uri != null) {
+            val saved = TodoPdfExporter.write(context, uri, store.todos.toList())
+            Toast.makeText(
+                context,
+                if (saved) context.getString(R.string.todo_pdf_saved) else context.getString(R.string.todo_export_failed),
+                Toast.LENGTH_SHORT,
+            ).show()
+        }
+    }
     val listState = rememberLazyListState()
     var draggedTodoId by remember { mutableStateOf<String?>(null) }
     val visibleTodos = remember { mutableStateListOf<TodoItem>().apply { addAll(store.todos) } }
@@ -138,7 +153,14 @@ internal fun TodosScreen(store: LauncherStore, goBack: () -> Unit) {
         }
     }
     Column(Modifier.fillMaxSize().statusBarsPadding()) {
-        PageHeader("To-do", goBack)
+        PageHeader("To-do", goBack) {
+            IconButton(
+                onClick = { showExportOptions = true },
+                enabled = store.todos.isNotEmpty(),
+            ) {
+                Icon(Icons.Default.IosShare, stringResource(R.string.export_todo_list))
+            }
+        }
         Row(Modifier.fillMaxWidth().padding(horizontal = 22.dp, vertical = 8.dp), verticalAlignment = Alignment.CenterVertically) {
             OutlinedTextField(
                 value = newText,
@@ -275,10 +297,53 @@ internal fun TodosScreen(store: LauncherStore, goBack: () -> Unit) {
             dismissButton = { TextButton(onClick = { deleting = null }) { Text("Cancel") } },
         )
     }
+    if (showExportOptions) {
+        AlertDialog(
+            onDismissRequest = { showExportOptions = false },
+            icon = { Icon(Icons.Default.IosShare, null) },
+            title = { Text(stringResource(R.string.export_todo_list)) },
+            text = {
+                Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
+                    Text(stringResource(R.string.export_todo_list_description))
+                    FilledTonalButton(
+                        onClick = {
+                            showExportOptions = false
+                            if (!actions.exportTodosToNotes(formatTodoExport(store.todos))) {
+                                Toast.makeText(context, R.string.todo_export_failed, Toast.LENGTH_SHORT).show()
+                            }
+                        },
+                        modifier = Modifier.fillMaxWidth(),
+                    ) {
+                        Icon(Icons.AutoMirrored.Filled.NoteAdd, null)
+                        Spacer(Modifier.width(8.dp))
+                        Text(stringResource(R.string.send_to_notes_app))
+                    }
+                    FilledTonalButton(
+                        onClick = {
+                            showExportOptions = false
+                            val date = LocalDate.now().format(DateTimeFormatter.ISO_LOCAL_DATE)
+                            pdfLauncher.launch("MinkLauncher-todos-$date.pdf")
+                        },
+                        modifier = Modifier.fillMaxWidth(),
+                    ) {
+                        Icon(Icons.Default.PictureAsPdf, null)
+                        Spacer(Modifier.width(8.dp))
+                        Text(stringResource(R.string.save_as_pdf))
+                    }
+                }
+            },
+            confirmButton = {},
+            dismissButton = {
+                TextButton(onClick = { showExportOptions = false }) {
+                    Text(stringResource(R.string.cancel))
+                }
+            },
+        )
+    }
 }
 
 @Composable
-internal fun PageHeader(title: String, goBack: () -> Unit) {
+internal fun PageHeader(title: String, goBack: () -> Unit, action: (@Composable () -> Unit)? = null) {
     Row(Modifier.fillMaxWidth().padding(horizontal = 10.dp, vertical = 8.dp), verticalAlignment = Alignment.CenterVertically) {
         IconButton(onClick = goBack) { Icon(Icons.AutoMirrored.Filled.ArrowBack, "Back") }
         Text(
@@ -289,6 +354,7 @@ internal fun PageHeader(title: String, goBack: () -> Unit) {
             maxLines = 1,
             overflow = TextOverflow.Ellipsis,
         )
+        action?.invoke()
     }
 }
 

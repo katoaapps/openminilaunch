@@ -292,7 +292,7 @@ private fun MiniLaunchApp(
                     requestHomeRole,
                     onRepeatTutorial = { tutorialRun++; showTutorial = true },
                 ) { screen = Screen.HOME }
-                Screen.TODOS -> TodosScreen(store) { screen = Screen.HOME }
+                Screen.TODOS -> TodosScreen(store, actions) { screen = Screen.HOME }
                 Screen.HUB -> NotificationHubScreen(actions) { screen = Screen.HOME }
             }
         }

@@ -3,6 +3,7 @@ package com.katoaapps.openminilaunch
 import android.content.Context
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateMapOf
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
@@ -31,6 +32,10 @@ class LauncherStore(context: Context) {
         private set
     var themePreference by mutableStateOf(
         runCatching { ThemePreference.valueOf(prefs.getString("theme_preference", "SYSTEM") ?: "SYSTEM") }.getOrDefault(ThemePreference.SYSTEM)
+    )
+        private set
+    var homePanelColorArgb by mutableIntStateOf(
+        prefs.getInt("home_panel_color", DEFAULT_HOME_PANEL_COLOR_ARGB)
     )
         private set
     var messageSendMode by mutableStateOf(
@@ -92,7 +97,7 @@ class LauncherStore(context: Context) {
                     ?.let { if (it !in confirmedShortcutChoices) confirmedShortcutChoices += it }
             }
             val drawer = JSONArray(prefs.getString("drawer", "[]") ?: "[]")
-            repeat(drawer.length()) { drawerPackages += drawer.getString(it) }
+            repeat(minOf(drawer.length(), MAX_DRAWER_APPS)) { drawerPackages += drawer.getString(it) }
             val folders = JSONArray(prefs.getString("search_folders", "[]") ?: "[]")
             repeat(folders.length()) { index ->
                 val folder = folders.getJSONObject(index)
@@ -210,7 +215,7 @@ class LauncherStore(context: Context) {
 
     fun toggleDrawerApp(packageName: String) {
         if (packageName in drawerPackages) drawerPackages.remove(packageName)
-        else if (drawerPackages.size < 5) drawerPackages += packageName
+        else if (drawerPackages.size < MAX_DRAWER_APPS) drawerPackages += packageName
         saveSettings()
     }
 
@@ -230,6 +235,11 @@ class LauncherStore(context: Context) {
     fun setTheme(preference: ThemePreference) {
         themePreference = preference
         prefs.edit().putString("theme_preference", preference.name).apply()
+    }
+
+    fun setHomePanelColor(argb: Int) {
+        homePanelColorArgb = argb or 0xFF000000.toInt()
+        prefs.edit().putInt("home_panel_color", homePanelColorArgb).apply()
     }
 
     fun updateSocialGoalMinutes(minutes: Int) {

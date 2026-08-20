@@ -41,8 +41,11 @@ data class FileSearchResult(
 
 enum class Shortcut(val label: String) {
     NOTE("Note"), EVENT("Calendar"), WEATHER("Weather"), TODO("To-do"),
-    CALL("Call"), MESSAGE("Messenger"), FILES("Files"), DRAWER("Top 5")
+    CALL("Call"), MESSAGE("Messenger"), FILES("Files"), DRAWER("Top 8")
 }
+
+internal const val MAX_DRAWER_APPS = 8
+internal const val DEFAULT_HOME_PANEL_COLOR_ARGB = 0xFF173529.toInt()
 
 val configurableShortcuts: List<Shortcut> = Shortcut.entries.filterNot {
     it == Shortcut.TODO || it == Shortcut.DRAWER

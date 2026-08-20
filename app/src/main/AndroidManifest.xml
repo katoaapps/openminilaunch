@@ -44,6 +44,9 @@
         <package android:name="com.facebook.stella" />
         <package android:name="com.google.android.apps.bard" />
         <package android:name="com.samsung.android.app.notes" />
+        <package android:name="com.sec.android.app.clockpackage" />
+        <package android:name="com.google.android.deskclock" />
+        <package android:name="com.android.deskclock" />
     </queries>
 
     <application

@@ -255,7 +255,8 @@ internal fun OnboardingDialog(store: LauncherStore, actions: DeviceActions, onFi
                     when (page) {
                         0 -> Column(verticalArrangement = Arrangement.spacedBy(18.dp)) {
                             Text("MinkLauncher OpenSource is a minimal keyboard launcher designed around fast, keyboard-based input.", fontSize = 18.sp)
-                            OnboardingPoint(Icons.Default.FilterAlt, "Less visual noise", "One focused home page, eight shortcuts, and only five drawer apps.")
+                            OnboardingPoint(Icons.Default.FilterAlt, "Less visual noise", "One focused home page, eight shortcuts, and only eight drawer apps.")
+                            OnboardingPoint(Icons.Default.Palette, "Choose your panel color", "Pick from five presets in Settings, or swipe through a custom color and enter its hex value.")
                             OnboardingPoint(Icons.Default.Keyboard, "Just start typing", "On a physical-keyboard phone, press any text key from home. The Magic Box appears with that first character already entered.")
                             OnboardingPoint(Icons.Default.Search, "Everything is still reachable", "Use ? to find any installed app.")
                         }
@@ -266,7 +267,7 @@ internal fun OnboardingDialog(store: LauncherStore, actions: DeviceActions, onFi
                                 "#" to "Call a contact",
                                 "-" to "Create a to-do",
                                 "$" to "Send text to a notes app",
-                                "+" to "Create a calendar event",
+                                "+" to "Create an event, e.g. next Friday or in 4 weeks",
                                 "?" to "Find and launch an app",
                             ).forEach { (key, description) -> MagicKeyRow(key, description) }
                             Text("Message behavior defaults to Always ask: send carrier SMS now or choose a compatible messaging app for the final send. Calls offer the same choice between calling now and choosing a calling app. Direct SMS requires Mink Assistant; Android may grant Send SMS access as part of that role.", color = Muted, fontSize = 12.sp)
@@ -275,11 +276,13 @@ internal fun OnboardingDialog(store: LauncherStore, actions: DeviceActions, onFi
                             Text("Type - followed by your task to send it straight to the home widget.", fontSize = 18.sp)
                             OnboardingPoint(Icons.Default.Swipe, "Swipe the widget", "Each page shows three items at a time.")
                             OnboardingPoint(Icons.Default.TouchApp, "Tap the widget", "Open the full list to check, edit, delete, add, or rearrange items.")
+                            OnboardingPoint(Icons.Default.IosShare, "Take the list with you", "Export the current checklist to a notes app or save it as a PDF.")
                             OnboardingPoint(Icons.Default.CheckCircle, "Keep the context", "New Magic Box tasks animate into the newest to-do page.")
                         }
                         3 -> Column(verticalArrangement = Arrangement.spacedBy(18.dp)) {
                             Text("Type normally in the Magic Box to find local files, search the web, or hand the query to an AI app you choose.", fontSize = 18.sp)
-                            OnboardingPoint(Icons.Default.History, "Recent searches", "Your last five plain-text searches stay on this device. Reuse one, delete one, or clear them all from the empty Magic Box.")
+                            OnboardingPoint(Icons.Default.Language, "Links stay links", "Type a web address to open it directly; other plain text remains a web or AI query.")
+                            OnboardingPoint(Icons.Default.History, "Recent activity", "Your last five successful searches and ? app launches stay on this device. Reuse one, delete one, or clear them all from the empty Magic Box.")
                             OnboardingPoint(Icons.Default.AutoAwesome, "AI is optional", "MinkLauncher OpenSource shares your query only after you tap AI. The selected app then handles it under its own privacy terms.")
                             OutlinedButton(onClick = { pickingAi = true }, modifier = Modifier.fillMaxWidth()) {
                                 Icon(Icons.Default.AutoAwesome, null)

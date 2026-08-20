@@ -6,7 +6,7 @@ Current version: **Open 1.0** (`1.0.0`). Feature releases show existing users a 
 
 ## Included
 
-- Date header and settings access
+- Tappable date header that opens the system clock, plus settings access
 - First-run onboarding for the launcher, Magic Box, to-dos, search, and permissions, followed by a dedicated shortcut-app setup step
 - Replayable onboarding from Settings, including permission setup
 - A responsive raised Home panel with a two-thirds to-do area and a one-third icon-only shortcut grid
@@ -36,29 +36,29 @@ Current version: **Open 1.0** (`1.0.0`). Feature releases show existing users a 
 - Weather opens a user-selected app, with Weather.com as the browser fallback
 - Configurable default apps for the six external shortcuts
 - One-tap reset back to each shortcut's system intent
-- A compact drawer containing up to five selected apps
+- A compact drawer containing up to eight selected apps
 - Real installed-app icons and an alphabetical jump rail in both app pickers
 - A searchable Magic Box:
   - Physical-keyboard instant typing — press any printable key from the home screen to reveal the already-focused Magic Box with the first character preserved
-  - Plain text — search locally accessible file names, then search the web with Android's system browser or a user-selected search app
+  - Plain text — search locally accessible file names, then open valid web addresses directly or search other text with Android's system browser or a user-selected search app
   - Plain text can also be handed to a user-selected app that accepts shared text, for review and submission there
   - `@name message` — choose a contact, then send carrier SMS now or hand the recipient and text to an Android-compatible messaging app
   - `#name` — choose a contact, then place the confirmed carrier call or open Android’s compatible calling-app chooser
   - `-task` — save an internal to-do
   - `$text` — enter a multiline note; prefer Android's dedicated create-note action, use the chosen Notes app when compatible, and use Samsung Notes' text handoff on Samsung devices
-  - `+text` — create a calendar event with the text as its description
+  - `+text` — create a calendar draft with local English-language parsing for titles, `for …` descriptions, today/tomorrow, weekdays, `in N days/weeks/months`, `first weekday after the Nth`, and common 12/24-hour times
   - `?app` — search and launch any installed app
 - **Mink Assistant** integration: invoke the same keyboard-first Magic Box over the current app using the phone's system assistant gesture
 - Direct SMS is available only while MinkLauncher OpenSource is the active assistant handler. Android may grant Send SMS access automatically as part of that role; MinkLauncher OpenSource uses it only after the user approves a specific recipient and message. If it is not role-granted, it is requested on first use or from Settings.
 - Message behavior defaults to **Always ask**, which offers **Send SMS now**, **Choose messaging app**, and **Cancel**. Settings can instead remember **Always send as SMS** or **Always choose messaging app**; remembered modes treat pressing the Magic Box action as the user's approval and skip MinkLauncher OpenSource's extra confirmation.
 - Direct sends use the carrier SMS stack, not RCS, and may incur carrier charges. The provider chooser first uses Android’s contact-aware messaging contract, then falls back to the SMS/RCS composer contract. The selected provider controls the final send.
 - Mink Assistant deliberately ignores assist context and requests no microphone, call-log, screen-reading, or screen-context access; selecting it replaces the current default digital assistant until the user changes it back
-- The five most recent plain-text searches are stored locally, with controls to reuse, delete, or clear them; hot-key actions are never added
+- The five most recent successful query handoffs and `?` app launches are stored locally, with controls to reuse, delete, or clear them; other hot-key actions are never added
 - Direct calling uses Android's Call permission; emergency numbers and failed direct-call attempts fall back to the system dialer. **Choose calling app** sends the number through Android’s dial intent, so only apps that publicly support telephone dialing appear.
 - AI setup shows a curated list of known assistants plus an explicit fallback list of apps accepting shared text
 - Android exposes the selected system assistant role, but not a universal "AI app" capability; MinkLauncher OpenSource therefore validates every selected app against the text-sharing contract
 - AI handoff does not call AI APIs, submit prompts silently, or render responses inside MinkLauncher OpenSource
-- Full to-do management: add, check, edit, delete, and reorder
+- Full to-do management: add, check, edit, delete, reorder, send to a notes app, or save as PDF through Android’s document picker
 - Delete confirmation to protect against accidental taps and back-swipe gestures
 - Animated Magic Box to-do delivery into the newest widget page
 - System, light, and dark appearance modes

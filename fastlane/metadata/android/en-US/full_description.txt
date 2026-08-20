@@ -1,6 +1,6 @@
 MinkLauncher OpenSource is a focused Android home-screen launcher and keyboard-first assistant designed around fast input and low visual noise.
 
-The responsive Home panel combines a three-item to-do preview with eight configurable icon shortcuts. A compact drawer holds up to five chosen apps, while every installed launcher app remains one keyboard search away.
+The responsive Home panel combines a three-item to-do preview with eight configurable icon shortcuts. A compact drawer holds up to eight chosen apps, while every installed launcher app remains one keyboard search away.
 
 On a physical-keyboard phone, just start typing from Home. The already-focused Magic Box appears with the first character preserved; no tap is required. It can also open over another app when MinkLauncher OpenSource is selected as Android’s assistant.
 

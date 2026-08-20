@@ -1,6 +1,7 @@
 package com.katoaapps.openminilaunch
 
 import android.Manifest
+import android.provider.AlarmClock
 import android.content.ContentUris
 import android.content.Context
 import android.content.ComponentName
@@ -120,6 +121,22 @@ class DeviceActions(private val context: Context) {
 
     fun launchPackage(packageName: String): Boolean =
         context.packageManager.getLaunchIntentForPackage(packageName)?.let(::start) ?: false
+
+    fun openClock(): Boolean {
+        if (Build.MANUFACTURER.equals("samsung", ignoreCase = true) && launchPackage(SAMSUNG_CLOCK_PACKAGE)) {
+            return true
+        }
+        val showAlarms = Intent(AlarmClock.ACTION_SHOW_ALARMS)
+        if (canResolve(showAlarms) && start(showAlarms)) return true
+        CLOCK_PACKAGES.forEach { packageName ->
+            if (launchPackage(packageName)) return true
+        }
+        val discoveredClock = installedApps().firstOrNull { app ->
+            app.packageName.contains("clock", ignoreCase = true) ||
+                app.label.equals("Clock", ignoreCase = true)
+        }
+        return discoveredClock?.let { launchPackage(it.packageName) } == true
+    }
 
     fun launchShortcut(shortcut: Shortcut, assignedPackage: String?, openTodos: () -> Unit, openDrawer: () -> Unit) {
         if (!assignedPackage.isNullOrBlank() && shortcut !in listOf(Shortcut.TODO, Shortcut.DRAWER)) {
@@ -320,10 +337,31 @@ class DeviceActions(private val context: Context) {
         return start(Intent(Intent.ACTION_SEND).setType("text/plain").putExtra(Intent.EXTRA_TEXT, clean), chooser = true)
     }
 
-    fun createEvent(description: String) = start(
-        Intent(Intent.ACTION_INSERT).setData(CalendarContract.Events.CONTENT_URI)
-            .putExtra(CalendarContract.Events.DESCRIPTION, description)
-    )
+    fun exportTodosToNotes(text: String): Boolean {
+        val clean = text.trim()
+        if (clean.isEmpty()) return false
+        val createNote = Intent(Intent.ACTION_CREATE_NOTE).setType("text/plain")
+            .putExtra(Intent.EXTRA_TITLE, "MinkLauncher To-do List")
+            .putExtra(Intent.EXTRA_TEXT, clean)
+        if (hasHandler(createNote)) return start(createNote, chooser = true)
+        return start(
+            Intent(Intent.ACTION_SEND).setType("text/plain")
+                .putExtra(Intent.EXTRA_TITLE, "MinkLauncher To-do List")
+                .putExtra(Intent.EXTRA_TEXT, clean),
+            chooser = true,
+        )
+    }
+
+    fun createEvent(description: String): Boolean {
+        val draft = parseCalendarPhrase(description)
+        val intent = Intent(Intent.ACTION_INSERT).setData(CalendarContract.Events.CONTENT_URI)
+            .putExtra(CalendarContract.Events.TITLE, draft.title)
+            .putExtra(CalendarContract.Events.DESCRIPTION, draft.description)
+            .putExtra(CalendarContract.EXTRA_EVENT_ALL_DAY, draft.allDay)
+        draft.startMillis?.let { intent.putExtra(CalendarContract.EXTRA_EVENT_BEGIN_TIME, it) }
+        draft.endMillis?.let { intent.putExtra(CalendarContract.EXTRA_EVENT_END_TIME, it) }
+        return start(intent)
+    }
 
     fun emailSupport() = start(Intent(Intent.ACTION_SENDTO, Uri.parse("mailto:contact@katoaapps.com")))
 
@@ -334,10 +372,9 @@ class DeviceActions(private val context: Context) {
     fun webSearch(query: String, preferredPackage: String? = null): Boolean {
         val clean = query.trim()
         if (clean.isEmpty()) return false
-        val searchIntent = Intent(
-            Intent.ACTION_VIEW,
-            Uri.parse("https://www.google.com/search?q=${Uri.encode(clean)}"),
-        )
+        val destination = normalizedWebUrl(clean)
+            ?: "https://www.google.com/search?q=${Uri.encode(clean)}"
+        val searchIntent = Intent(Intent.ACTION_VIEW, Uri.parse(destination))
         if (!preferredPackage.isNullOrBlank()) {
             val explicitUrl = Intent(searchIntent).setPackage(preferredPackage)
             if (canResolve(explicitUrl)) return start(explicitUrl)
@@ -385,6 +422,13 @@ class DeviceActions(private val context: Context) {
     }
 
     private companion object {
+        const val SAMSUNG_CLOCK_PACKAGE = "com.sec.android.app.clockpackage"
+        val CLOCK_PACKAGES = listOf(
+            SAMSUNG_CLOCK_PACKAGE,
+            "com.google.android.deskclock",
+            "com.android.deskclock",
+        )
+
         // Package icons are reused by search, shortcuts, setup, and Settings.
         // ConstantState gives each caller a fresh Drawable while keeping decoded icon data cached.
         val iconStateCache = LruCache<String, Drawable.ConstantState>(96)
