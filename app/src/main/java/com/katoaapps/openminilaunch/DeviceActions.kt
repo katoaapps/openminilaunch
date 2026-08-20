@@ -14,6 +14,7 @@ import android.graphics.drawable.Drawable
 import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Build
+import android.app.SearchManager
 import android.provider.Settings
 import android.provider.CalendarContract
 import android.provider.ContactsContract
@@ -285,9 +286,9 @@ class DeviceActions(private val context: Context) {
     }
 
     fun webSearchApps(): List<LaunchableApp> {
-        val searchUrl = Uri.parse("https://www.google.com/search?q=minklauncher")
+        val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse("https://example.com"))
         return context.packageManager.queryIntentActivities(
-            Intent(Intent.ACTION_VIEW, searchUrl),
+            browserIntent,
             PackageManager.MATCH_DEFAULT_ONLY,
         )
             .asSequence()
@@ -372,12 +373,12 @@ class DeviceActions(private val context: Context) {
     fun webSearch(query: String, preferredPackage: String? = null): Boolean {
         val clean = query.trim()
         if (clean.isEmpty()) return false
-        val destination = normalizedWebUrl(clean)
-            ?: "https://www.google.com/search?q=${Uri.encode(clean)}"
-        val searchIntent = Intent(Intent.ACTION_VIEW, Uri.parse(destination))
+        val searchIntent = normalizedWebUrl(clean)?.let { destination ->
+            Intent(Intent.ACTION_VIEW, Uri.parse(destination))
+        } ?: Intent(Intent.ACTION_WEB_SEARCH).putExtra(SearchManager.QUERY, clean)
         if (!preferredPackage.isNullOrBlank()) {
-            val explicitUrl = Intent(searchIntent).setPackage(preferredPackage)
-            if (canResolve(explicitUrl)) return start(explicitUrl)
+            val explicitSearch = Intent(searchIntent).setPackage(preferredPackage)
+            if (canResolve(explicitSearch)) return start(explicitSearch)
         }
         return start(searchIntent)
     }
