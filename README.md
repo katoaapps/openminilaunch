@@ -2,7 +2,17 @@
 
 A focused, keyboard-first Android home-screen launcher and digital assistant built with Kotlin and Jetpack Compose.
 
-Current version: **Open 1.0** (`1.0.0`). Feature releases show existing users a one-time in-app update notice covering new behavior, privacy impact, and any optional permissions; the onboarding tutorial is updated alongside each release.
+Current version: **Open 1.1** (`1.1.0`). Feature releases show existing users a one-time in-app update notice covering new behavior, privacy impact, and any optional permissions; the onboarding tutorial is updated alongside each release.
+
+## Download
+
+- [Download the latest GitHub build](https://github.com/katoaapps/openminilaunch/releases/latest/download/MinkLauncher-OpenSource.apk)
+- [Download from F-Droid](https://f-droid.org/packages/com.katoaapps.openminilaunch/)
+- Google Play: coming soon
+
+GitHub and F-Droid builds currently use different signing keys. Android cannot
+update one distribution channel with the other; switching requires uninstalling
+the existing app first and clears MinkLauncher OpenSource's local data.
 
 ## Included
 

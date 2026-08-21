@@ -34,7 +34,7 @@ import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import kotlinx.coroutines.launch
 
-private const val FEATURE_UPDATE_ID = "generic_shortcuts"
+private const val FEATURE_UPDATE_ID = "open_1_1_0"
 private const val REQUEST_CONFIGURE_APP_WIDGET = 0x4D4B
 private const val MINK_DAY_PAGE = 0
 private const val HOME_PAGE = 1
@@ -240,14 +240,35 @@ private fun MiniLaunchApp(
         colorScheme = colors,
         typography = Typography(),
     ) {
-        BackHandler(enabled = screen != Screen.HOME) { screen = Screen.HOME }
-        BackHandler(enabled = screen == Screen.HOME && launcherPagerState.currentPage != HOME_PAGE) {
+        BackHandler(enabled = !showTutorial && screen != Screen.HOME) { screen = Screen.HOME }
+        BackHandler(enabled = !showTutorial && screen == Screen.HOME && launcherPagerState.currentPage != HOME_PAGE) {
             launcherScope.launch { launcherPagerState.animateScrollToPage(HOME_PAGE) }
         }
         val imeVisible = WindowInsets.isImeVisible
-        BackHandler(enabled = screen == Screen.HOME && launcherPagerState.currentPage == HOME_PAGE && !imeVisible) { }
+        BackHandler(enabled = !showTutorial && screen == Screen.HOME && launcherPagerState.currentPage == HOME_PAGE && !imeVisible) { }
         Surface(Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
-            when (screen) {
+            if (showTutorial) {
+                key(tutorialRun) {
+                    OnboardingScreen(
+                        store = store,
+                        actions = actions,
+                        onFinish = {
+                            store.completeOnboarding()
+                            store.markUpdateSeen(FEATURE_UPDATE_ID)
+                            showTutorial = false
+                            if (ContextCompat.checkSelfPermission(context, Manifest.permission.READ_CONTACTS) == PackageManager.PERMISSION_GRANTED) {
+                                if (!supportsDirectCalls(context) || ContextCompat.checkSelfPermission(context, Manifest.permission.CALL_PHONE) == PackageManager.PERMISSION_GRANTED) {
+                                    continueAfterCallPermission()
+                                } else {
+                                    onboardingCallPermission.launch(Manifest.permission.CALL_PHONE)
+                                }
+                            } else {
+                                onboardingPermission.launch(Manifest.permission.READ_CONTACTS)
+                            }
+                        },
+                    )
+                }
+            } else when (screen) {
                 Screen.HOME -> HorizontalPager(
                     state = launcherPagerState,
                     modifier = Modifier.fillMaxSize(),
@@ -287,28 +308,6 @@ private fun MiniLaunchApp(
                 ) { screen = Screen.HOME }
                 Screen.TODOS -> TodosScreen(store, actions) { screen = Screen.HOME }
                 Screen.HUB -> NotificationHubScreen(actions) { screen = Screen.HOME }
-            }
-        }
-        if (showTutorial) {
-            key(tutorialRun) {
-                OnboardingDialog(
-                    store = store,
-                    actions = actions,
-                    onFinish = {
-                        store.completeOnboarding()
-                        store.markUpdateSeen(FEATURE_UPDATE_ID)
-                        showTutorial = false
-                        if (ContextCompat.checkSelfPermission(context, Manifest.permission.READ_CONTACTS) == PackageManager.PERMISSION_GRANTED) {
-                            if (!supportsDirectCalls(context) || ContextCompat.checkSelfPermission(context, Manifest.permission.CALL_PHONE) == PackageManager.PERMISSION_GRANTED) {
-                                continueAfterCallPermission()
-                            } else {
-                                onboardingCallPermission.launch(Manifest.permission.CALL_PHONE)
-                            }
-                        } else {
-                            onboardingPermission.launch(Manifest.permission.READ_CONTACTS)
-                        }
-                    },
-                )
             }
         }
         if (showShortcutSetup && !showTutorial && !showUpdateNotice) {

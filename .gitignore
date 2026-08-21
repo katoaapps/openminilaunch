@@ -26,6 +26,7 @@ local.properties
 /app/release/
 
 # Signing material and machine-local secrets
+/.signing/
 *.jks
 *.keystore
 *.p12

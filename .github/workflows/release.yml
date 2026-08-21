@@ -1,0 +1,71 @@
+name: Publish GitHub APK
+
+on:
+  push:
+    tags:
+      - "v*"
+
+permissions:
+  contents: write
+
+concurrency:
+  group: github-release-${{ github.ref }}
+  cancel-in-progress: false
+
+jobs:
+  release:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Check out tagged source
+        uses: actions/checkout@v4
+
+      - name: Set up Java 17
+        uses: actions/setup-java@v4
+        with:
+          distribution: temurin
+          java-version: "17"
+
+      - name: Set up Gradle
+        uses: gradle/actions/setup-gradle@v4
+
+      - name: Restore release signing key
+        env:
+          SIGNING_KEY_BASE64: ${{ secrets.ANDROID_SIGNING_KEY_BASE64 }}
+        run: |
+          test -n "$SIGNING_KEY_BASE64"
+          printf '%s' "$SIGNING_KEY_BASE64" | base64 --decode > "$RUNNER_TEMP/openminilaunch-release.jks"
+
+      - name: Test and build signed release
+        env:
+          ANDROID_KEYSTORE_PATH: ${{ runner.temp }}/openminilaunch-release.jks
+          ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          ANDROID_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+          ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
+        run: ./gradlew testDebugUnitTest lintDebug assembleRelease
+
+      - name: Verify and prepare release assets
+        run: |
+          APK="app/build/outputs/apk/release/app-release.apk"
+          test -f "$APK"
+          APKSIGNER="$(find "$ANDROID_HOME/build-tools" -name apksigner -type f | sort -V | tail -1)"
+          "$APKSIGNER" verify --verbose --print-certs "$APK"
+          cp "$APK" MinkLauncher-OpenSource.apk
+          sha256sum MinkLauncher-OpenSource.apk > MinkLauncher-OpenSource.apk.sha256
+
+      - name: Publish GitHub release
+        env:
+          GH_TOKEN: ${{ github.token }}
+        run: |
+          if gh release view "$GITHUB_REF_NAME" >/dev/null 2>&1; then
+            gh release upload "$GITHUB_REF_NAME" \
+              MinkLauncher-OpenSource.apk \
+              MinkLauncher-OpenSource.apk.sha256 \
+              --clobber
+          else
+            gh release create "$GITHUB_REF_NAME" \
+              MinkLauncher-OpenSource.apk \
+              MinkLauncher-OpenSource.apk.sha256 \
+              --verify-tag \
+              --generate-notes \
+              --title "MinkLauncher OpenSource $GITHUB_REF_NAME"
+          fi

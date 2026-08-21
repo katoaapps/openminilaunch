@@ -1,0 +1,3 @@
+MinkLauncher OpenSource 1.1 makes the six configurable Home shortcuts fully generic: keep their built-in defaults or assign any installed app, with its real icon, to any slot.
+
+This release also adds a calmer full-screen guided setup, a more compact responsive Home layout, nested Settings pages, custom Home panel colors, smarter system web search and URL opening, local calendar phrase parsing, and to-do sharing or PDF export. No new permission is required.

@@ -40,6 +40,7 @@ import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
+import androidx.compose.material.icons.automirrored.filled.ArrowForward
 import androidx.compose.material.icons.automirrored.filled.Message
 import androidx.compose.material.icons.automirrored.filled.NoteAdd
 import androidx.compose.material.icons.automirrored.filled.Send
@@ -203,7 +204,7 @@ internal fun UsageAccessDisclosureDialog(onContinue: () -> Unit, onDismiss: () -
 }
 
 @Composable
-internal fun OnboardingDialog(store: LauncherStore, actions: DeviceActions, onFinish: () -> Unit) {
+internal fun OnboardingScreen(store: LauncherStore, actions: DeviceActions, onFinish: () -> Unit) {
     val appName = stringResource(R.string.app_name)
     var page by rememberSaveable { mutableIntStateOf(0) }
     var pickingAi by remember { mutableStateOf(false) }
@@ -242,19 +243,69 @@ internal fun OnboardingDialog(store: LauncherStore, actions: DeviceActions, onFi
         Icons.Default.Widgets,
         Icons.Default.Security,
     )
-    Dialog(
-        onDismissRequest = {},
-        properties = DialogProperties(usePlatformDefaultWidth = false, dismissOnBackPress = false, dismissOnClickOutside = false),
+    BackHandler {
+        if (page > 0) page--
+    }
+    Surface(
+        Modifier.fillMaxSize(),
+        color = MaterialTheme.colorScheme.background,
     ) {
-        Surface(
-            Modifier.fillMaxWidth(.92f).fillMaxHeight(.82f),
-            shape = RoundedCornerShape(Dimens.dp30),
-            color = MaterialTheme.colorScheme.background,
+        Column(
+            Modifier.fillMaxSize()
+                .statusBarsPadding()
+                .navigationBarsPadding()
+                .padding(horizontal = Dimens.dp24),
         ) {
-            Column(Modifier.fillMaxSize().padding(Dimens.dp26)) {
-                Icon(icons[page], null, Modifier.size(Dimens.dp46), tint = Rust)
-                Text(titles[page], fontSize = Dimens.sp28, fontWeight = FontWeight.Black, modifier = Modifier.padding(top = Dimens.dp16))
-                Spacer(Modifier.height(Dimens.dp18))
+            Row(
+                Modifier.fillMaxWidth().padding(top = Dimens.dp18),
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                Surface(
+                    shape = CircleShape,
+                    color = MaterialTheme.colorScheme.primaryContainer,
+                ) {
+                    Icon(
+                        Icons.Default.Pets,
+                        contentDescription = null,
+                        modifier = Modifier.padding(Dimens.dp10).size(Dimens.dp24),
+                        tint = MaterialTheme.colorScheme.onPrimaryContainer,
+                    )
+                }
+                Column(Modifier.padding(start = Dimens.dp12).weight(1f)) {
+                    Text(appName, fontWeight = FontWeight.Bold, fontSize = Dimens.sp15)
+                    Text(
+                        stringResource(R.string.setup),
+                        color = MaterialTheme.colorScheme.onSurfaceVariant,
+                        fontSize = Dimens.sp12,
+                    )
+                }
+                Text(
+                    "${page + 1} / ${titles.size}",
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    fontWeight = FontWeight.SemiBold,
+                    fontSize = Dimens.sp13,
+                )
+            }
+            LinearProgressIndicator(
+                progress = { (page + 1).toFloat() / titles.size },
+                modifier = Modifier.fillMaxWidth().padding(top = Dimens.dp18),
+                color = Rust,
+                trackColor = MaterialTheme.colorScheme.surfaceContainerHighest,
+                drawStopIndicator = {},
+            )
+            Row(
+                Modifier.fillMaxWidth().padding(top = Dimens.dp28, bottom = Dimens.dp20),
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                Icon(icons[page], null, Modifier.size(Dimens.dp40), tint = Rust)
+                Text(
+                    titles[page],
+                    fontSize = Dimens.sp28,
+                    fontWeight = FontWeight.Black,
+                    modifier = Modifier.padding(start = Dimens.dp14),
+                )
+            }
+            key(page) {
                 Box(Modifier.weight(1f).fillMaxWidth().verticalScroll(rememberScrollState())) {
                     when (page) {
                         0 -> Column(verticalArrangement = Arrangement.spacedBy(Dimens.dp18)) {
@@ -365,17 +416,28 @@ internal fun OnboardingDialog(store: LauncherStore, actions: DeviceActions, onFi
                         }
                     }
                 }
-                Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
-                    Row(Modifier.weight(1f), horizontalArrangement = Arrangement.spacedBy(Dimens.dp6)) {
-                        repeat(titles.size) { index ->
-                            Box(Modifier.size(if (index == page) Dimens.dp22 else Dimens.dp8, Dimens.dp8).clip(CircleShape).background(if (index == page) Rust else Sage))
-                        }
+            }
+            HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant)
+            Row(
+                Modifier.fillMaxWidth().padding(vertical = Dimens.dp16),
+                horizontalArrangement = Arrangement.spacedBy(Dimens.dp12),
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                if (page > 0) {
+                    OutlinedButton(onClick = { page-- }) {
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, null)
+                        Text(stringResource(R.string.back), Modifier.padding(start = Dimens.dp6))
                     }
-                    if (page > 0) TextButton(onClick = { page-- }) { Text(stringResource(R.string.back)) }
-                    Button(
-                        onClick = { if (page < titles.lastIndex) page++ else onFinish() },
-                    ) {
-                        Text(stringResource(if (page < titles.lastIndex) R.string.next else R.string.finish_setup))
+                } else {
+                    Spacer(Modifier.weight(1f))
+                }
+                Button(
+                    onClick = { if (page < titles.lastIndex) page++ else onFinish() },
+                    modifier = if (page > 0) Modifier.weight(1f) else Modifier,
+                ) {
+                    Text(stringResource(if (page < titles.lastIndex) R.string.next else R.string.finish_setup))
+                    if (page < titles.lastIndex) {
+                        Icon(Icons.AutoMirrored.Filled.ArrowForward, null, Modifier.padding(start = Dimens.dp6))
                     }
                 }
             }

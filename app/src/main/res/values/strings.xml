@@ -251,6 +251,7 @@
     <string name="conversation_access_onboarding_description">Optional notification access powers message and email conversations. Other notification types are ignored, and you can revoke access whenever you want.</string>
     <string name="mink_day_usage_onboarding_description">Optional Usage Access measures foreground time and opens for your tracked social apps only, entirely on this device.</string>
     <string name="next">Next</string>
+    <string name="setup">Guided setup</string>
     <string name="finish_setup">Finish setup</string>
     <string name="samsung_weather_guide">Samsung Weather missing? Turn on Settings &gt; Apps &gt; Samsung app settings &gt; Weather settings &gt; Show Weather on Apps screen, then return here.</string>
 

@@ -31,7 +31,7 @@ class LauncherStore(context: Context) {
     val socialPackages = mutableStateListOf<String>()
     var usesAutomaticSocialApps by mutableStateOf(!prefs.contains("social_packages"))
         private set
-    var onboardingComplete by mutableStateOf(prefs.getBoolean("onboarding_complete", false))
+    var onboardingComplete by mutableStateOf(prefs.getBoolean(ONBOARDING_COMPLETE_KEY, false))
         private set
     var themePreference by mutableStateOf(
         runCatching { ThemePreference.valueOf(prefs.getString("theme_preference", "SYSTEM") ?: "SYSTEM") }.getOrDefault(ThemePreference.SYSTEM)
@@ -224,7 +224,7 @@ class LauncherStore(context: Context) {
 
     fun completeOnboarding() {
         onboardingComplete = true
-        prefs.edit().putBoolean("onboarding_complete", true).apply()
+        prefs.edit().putBoolean(ONBOARDING_COMPLETE_KEY, true).apply()
     }
 
     fun hasSeenUpdate(updateId: String): Boolean = updateId in (prefs.getStringSet("seen_updates", emptySet()) ?: emptySet())
@@ -406,6 +406,7 @@ class LauncherStore(context: Context) {
     }
 
     private companion object {
+        const val ONBOARDING_COMPLETE_KEY = "onboarding_complete_v2"
         const val MAX_SEARCH_HISTORY = 5
         const val MAX_WIDGETS = 4
     }
