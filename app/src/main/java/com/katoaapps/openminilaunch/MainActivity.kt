@@ -34,7 +34,7 @@ import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import kotlinx.coroutines.launch
 
-private const val FEATURE_UPDATE_ID = "open_1_1_0"
+private const val FEATURE_UPDATE_ID = "open_1_2_0"
 private const val REQUEST_CONFIGURE_APP_WIDGET = 0x4D4B
 private const val MINK_DAY_PAGE = 0
 private const val HOME_PAGE = 1

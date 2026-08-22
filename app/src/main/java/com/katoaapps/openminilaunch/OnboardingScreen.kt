@@ -110,7 +110,6 @@ internal fun FeatureUpdateDialog(
     onReviewTutorial: () -> Unit,
     onNotNow: () -> Unit,
 ) {
-    val appName = stringResource(R.string.app_name)
     AlertDialog(
         onDismissRequest = onNotNow,
         icon = { Icon(Icons.Default.Pets, null, tint = Rust) },
@@ -120,11 +119,11 @@ internal fun FeatureUpdateDialog(
                 Modifier.heightIn(max = Dimens.dp560).verticalScroll(rememberScrollState()),
                 verticalArrangement = Arrangement.spacedBy(Dimens.dp14),
             ) {
-                Text(stringResource(R.string.your_shortcuts_are_yours), fontSize = Dimens.sp18, fontWeight = FontWeight.Bold)
-                UpdatePoint(Icons.Default.Apps, stringResource(R.string.six_generic_app_slots), stringResource(R.string.six_generic_app_slots_description, appName))
-                UpdatePoint(Icons.Default.Palette, stringResource(R.string.icons_that_belong_on_home), stringResource(R.string.icons_that_belong_on_home_description))
-                UpdatePoint(Icons.Default.Restore, stringResource(R.string.defaults_are_always_there), stringResource(R.string.defaults_are_always_there_description))
-                UpdatePoint(Icons.Default.DragIndicator, stringResource(R.string.your_layout_stays_put), stringResource(R.string.your_layout_stays_put_description))
+                Text(stringResource(R.string.your_app_library_has_a_new_home), fontSize = Dimens.sp18, fontWeight = FontWeight.Bold)
+                UpdatePoint(Icons.Default.Apps, stringResource(R.string.see_every_installed_app), stringResource(R.string.see_every_installed_app_description))
+                UpdatePoint(Icons.Default.DragIndicator, stringResource(R.string.swipe_one_app_at_a_time), stringResource(R.string.swipe_one_app_at_a_time_description))
+                UpdatePoint(Icons.Default.Restore, stringResource(R.string.jump_by_letter), stringResource(R.string.jump_by_letter_description))
+                UpdatePoint(Icons.Default.Palette, stringResource(R.string.color_follows_focus), stringResource(R.string.color_follows_focus_description))
                 TextButton(onClick = onReviewTutorial, contentPadding = PaddingValues(Dimens.dp0)) {
                     Text(stringResource(R.string.review_updated_tutorial))
                 }

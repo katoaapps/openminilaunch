@@ -155,6 +155,15 @@
     <string name="defaults_are_always_there_description">Reset an individual slot in Settings to restore its original Note, Calendar, Weather, Call, Messenger, or Files action.</string>
     <string name="your_layout_stays_put">Your layout stays put</string>
     <string name="your_layout_stays_put_description">Existing app choices and your custom grid order are preserved automatically.</string>
+    <string name="your_app_library_has_a_new_home">Your app library has a new home</string>
+    <string name="see_every_installed_app">See every installed app</string>
+    <string name="see_every_installed_app_description">Open Top 8 and choose See all to browse your complete installed-app library.</string>
+    <string name="swipe_one_app_at_a_time">Swipe one app at a time</string>
+    <string name="swipe_one_app_at_a_time_description">The focused app stays large and clear while its neighbors remain close enough for quick movement.</string>
+    <string name="jump_by_letter">Jump by letter</string>
+    <string name="jump_by_letter_description">Tap or trace the A–Z rail to move directly through your apps, with M at the center.</string>
+    <string name="color_follows_focus">Color follows focus</string>
+    <string name="color_follows_focus_description">Each focused app supplies the screen gradient, and higher-resolution icons stay crisp on dense displays.</string>
     <string name="review_updated_tutorial">Review the updated tutorial</string>
     <string name="choose_your_shortcut_apps">Choose your shortcut apps</string>
     <string name="shortcut_setup_description">The six app slots keep their built-in defaults until you replace them. Choose any installed app for a slot, or explicitly keep the defaults you want.</string>

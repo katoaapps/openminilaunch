@@ -1,0 +1,5 @@
+MinkLauncher OpenSource 1.2 adds a full installed-app browser behind the Top 8 drawer’s new See all button.
+
+Swipe through a focused three-app carousel or tap and trace the A–Z letter rail to jump through your library. The focused app supplies the screen gradient, app icons now render sharply on dense displays, and returning from a launched app brings you back to All Apps.
+
+No new permission is required.
