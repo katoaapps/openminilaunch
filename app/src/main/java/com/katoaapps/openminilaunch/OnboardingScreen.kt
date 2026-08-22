@@ -321,7 +321,7 @@ internal fun OnboardingScreen(store: LauncherStore, actions: DeviceActions, onFi
                                 "@" to stringResource(R.string.magic_text_contact),
                                 "#" to stringResource(R.string.magic_call_contact),
                                 "-" to stringResource(R.string.magic_create_todo),
-                                "$" to stringResource(R.string.magic_send_note),
+                                MAGIC_NOTE_PREFIX.toString() to stringResource(R.string.magic_send_note),
                                 "+" to stringResource(R.string.magic_create_event),
                                 "?" to stringResource(R.string.magic_find_app),
                             ).forEach { (key, description) -> MagicKeyRow(key, description) }

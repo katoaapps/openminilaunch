@@ -9,7 +9,7 @@ Magic Box commands:
 • @ — choose a contact, then send carrier SMS or open a messaging provider
 • # — choose a contact, confirm, then call or choose a calling provider
 • - — add an internal to-do
-• $ — create a multiline note through an installed notes app
+• / — create a multiline note through an installed notes app
 • + — create a calendar event
 • ? — find and immediately launch an installed app
 • Plain text — search local filenames, open a web search, or hand the query to a selected compatible AI app

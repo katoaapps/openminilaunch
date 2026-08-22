@@ -1,6 +1,7 @@
 package com.katoaapps.openminilaunch
 
-internal val MAGIC_COMMAND_PREFIXES = setOf('@', '#', '-', '$', '+', '?')
+internal const val MAGIC_NOTE_PREFIX = '/'
+internal val MAGIC_COMMAND_PREFIXES = setOf('@', '#', '-', MAGIC_NOTE_PREFIX, '+', '?')
 
 internal data class MagicBoxInput(
     val prefix: Char?,

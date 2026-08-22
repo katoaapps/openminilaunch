@@ -102,7 +102,7 @@ private fun MagicInputField(
         keyboardOptions = KeyboardOptions(
             showKeyboardOnFocus = false,
             imeAction = when {
-                prefix == '$' -> ImeAction.Default
+                prefix == MAGIC_NOTE_PREFIX -> ImeAction.Default
                 prefix in listOf('@', '#', '-', '+', '?') -> ImeAction.Send
                 else -> ImeAction.Search
             },
@@ -299,7 +299,7 @@ internal fun MagicBox(
         } else emptyList()
     }
     val plainQuery = parsedInput.plainQuery
-    val noteMode = expanded && prefix == '$'
+    val noteMode = expanded && prefix == MAGIC_NOTE_PREFIX
     val hasNoteDraft = noteMode && text.text.drop(1).isNotBlank()
     val indexedFolderUris = store.searchFolders.map { it.uri }
     LaunchedEffect(plainQuery, indexedFolderUris, hasMediaAccess) {
@@ -329,7 +329,7 @@ internal fun MagicBox(
         '@' -> MagicActionVisuals(MagicTextColor, Icons.AutoMirrored.Filled.Send)
         '#' -> MagicActionVisuals(MagicCallColor, Icons.Default.Phone)
         '-' -> MagicActionVisuals(MagicTodoColor, Icons.Default.Checklist)
-        '$' -> MagicActionVisuals(MagicNoteColor, Icons.AutoMirrored.Filled.NoteAdd)
+        MAGIC_NOTE_PREFIX -> MagicActionVisuals(MagicNoteColor, Icons.AutoMirrored.Filled.NoteAdd)
         '+' -> MagicActionVisuals(MagicEventColor, Icons.Default.Event)
         '?' -> MagicActionVisuals(MagicAppColor, Icons.Default.Apps)
         else -> MagicActionVisuals(
@@ -400,7 +400,7 @@ internal fun MagicBox(
         var keepDraftAfterExternalHandoff = false
         val handled = when (prefix) {
             '-' -> payload.isNotBlank().also { if (it) { store.addTodo(payload); onTodoAdded(payload) } }
-            '$' -> payload.isNotBlank() && actions.createNote(payload).also { opened ->
+            MAGIC_NOTE_PREFIX -> payload.isNotBlank() && actions.createNote(payload).also { opened ->
                 keepDraftAfterExternalHandoff = opened
             }
             '+' -> payload.isNotBlank() && actions.createEvent(payload)
@@ -455,6 +455,18 @@ internal fun MagicBox(
                 withFrameNanos { }
                 keyboard?.show()
             }
+        }
+    }
+
+    LaunchedEffect(noteMode) {
+        if (noteMode) {
+            // Entering note mode replaces the compact field with the full-screen editor.
+            // Wait for that editor to be placed before restoring focus so hardware-keyboard
+            // input immediately following the slash command is not dropped.
+            textFieldPlaced = false
+            while (!textFieldPlaced) withFrameNanos { }
+            withFrameNanos { }
+            runCatching { focusRequester.requestFocus() }
         }
     }
 
@@ -526,7 +538,7 @@ internal fun MagicBox(
                                 }
                             }
                         }
-                        if (prefix !in listOf('@', '#', '-', '$', '+', '?') && text.text.isNotBlank()) {
+                        if (prefix !in MAGIC_COMMAND_PREFIXES && text.text.isNotBlank()) {
                             Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(Dimens.dp8)) {
                                 SearchDestinationButton(
                                     label = stringResource(R.string.web),

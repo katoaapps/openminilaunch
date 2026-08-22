@@ -22,6 +22,22 @@ class MagicBoxInputTest {
     }
 
     @Test
+    fun slashPrefixProducesNoteCommandWithoutPlainSearch() {
+        val input = parseMagicBoxInput("/Draft the release announcement")
+
+        assertEquals(MAGIC_NOTE_PREFIX, input.prefix)
+        assertEquals("", input.plainQuery)
+    }
+
+    @Test
+    fun dollarPrefixIsNowPlainSearchText() {
+        val input = parseMagicBoxInput("\$quarterly revenue")
+
+        assertEquals('$', input.prefix)
+        assertEquals("\$quarterly revenue", input.plainQuery)
+    }
+
+    @Test
     fun selectedContactLocksCommandAndStopsContactFiltering() {
         val input = parseMagicBoxInput("message body", lockedPrefix = '@')
 

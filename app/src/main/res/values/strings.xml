@@ -36,9 +36,9 @@
     <string name="ai">AI</string>
     <string name="choose_an_app">Choose an app</string>
     <string name="allow_contacts_to_search_people">Allow contacts to search people</string>
-    <string name="magic_box_hotkey_hint">@  #  -  $  +  ?</string>
+    <string name="magic_box_hotkey_hint">@  #  -  /  +  ?</string>
     <string name="magic_box">Magic Box</string>
-    <string name="magic_box_collapsed_hint">Magic box  @  #  -  $  +  ?</string>
+    <string name="magic_box_collapsed_hint">Magic box  @  #  -  /  +  ?</string>
     <string name="run_command">Run command</string>
     <string name="open_magic_box">Open Magic Box</string>
     <string name="message_sent">Message sent</string>

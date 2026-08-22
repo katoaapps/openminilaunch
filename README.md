@@ -55,7 +55,7 @@ the existing app first and clears MinkLauncher OpenSource's local data.
   - `@name message` — choose a contact, then send carrier SMS now or hand the recipient and text to an Android-compatible messaging app
   - `#name` — choose a contact, then place the confirmed carrier call or open Android’s compatible calling-app chooser
   - `-task` — save an internal to-do
-  - `$text` — enter a multiline note; prefer Android's dedicated create-note action, use the chosen Notes app when compatible, and use Samsung Notes' text handoff on Samsung devices
+  - `/text` — enter a multiline note; prefer Android's dedicated create-note action, use the chosen Notes app when compatible, and use Samsung Notes' text handoff on Samsung devices
   - `+text` — create a calendar draft with local English-language parsing for titles, `for …` descriptions, today/tomorrow, weekdays, `in N days/weeks/months`, `first weekday after the Nth`, and common 12/24-hour times
   - `?app` — search and launch any installed app
 - **Mink Assistant** integration: invoke the same keyboard-first Magic Box over the current app using the phone's system assistant gesture

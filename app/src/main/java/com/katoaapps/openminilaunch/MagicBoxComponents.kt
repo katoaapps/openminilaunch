@@ -214,7 +214,7 @@ internal fun MagicBoxLegend(activePrefix: Char?, enabled: Boolean = true, onSele
         MagicCommand('@', R.string.command_text, MagicTextColor),
         MagicCommand('#', R.string.command_call, MagicCallColor),
         MagicCommand('-', R.string.command_todo, MagicTodoColor),
-        MagicCommand('$', R.string.command_note, MagicNoteColor),
+        MagicCommand(MAGIC_NOTE_PREFIX, R.string.command_note, MagicNoteColor),
         MagicCommand('+', R.string.command_event, MagicEventColor),
         MagicCommand('?', R.string.command_app, MagicAppColor),
     )
