@@ -22,10 +22,12 @@ import androidx.compose.ui.graphics.ImageBitmap
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.luminance
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Dp
 import androidx.core.graphics.drawable.toBitmap
 
 private const val MONOCHROME_ICON_SCALE = 1.3f
+private const val MIN_ICON_BITMAP_SIZE_PX = 96
 
 /** Shared app-icon rendering used by search, setup, the drawer, and Settings. */
 @Composable
@@ -37,7 +39,11 @@ internal fun AppIcon(
     contentDescription: String? = null,
 ) {
     val context = LocalContext.current
-    val rendered = remember(packageName, actions, themedTint != null) {
+    val density = LocalDensity.current
+    val targetBitmapSize = with(density) {
+        (size * MONOCHROME_ICON_SCALE).roundToPx()
+    }.coerceAtLeast(MIN_ICON_BITMAP_SIZE_PX)
+    val rendered = remember(packageName, actions, themedTint != null, targetBitmapSize) {
         val drawable = actions?.appIcon(packageName)
             ?: runCatching { context.packageManager.getApplicationIcon(packageName) }.getOrNull()
         val monochrome = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
@@ -46,7 +52,7 @@ internal fun AppIcon(
             null
         }
         val source = if (themedTint != null) monochrome ?: drawable else drawable
-        source?.toBitmap(width = 96, height = 96)?.asImageBitmap()?.let {
+        source?.toBitmap(width = targetBitmapSize, height = targetBitmapSize)?.asImageBitmap()?.let {
             RenderedAppIcon(it, monochrome != null && source === monochrome)
         }
     }

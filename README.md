@@ -46,7 +46,8 @@ the existing app first and clears MinkLauncher OpenSource's local data.
 - Weather opens a user-selected app, with Weather.com as the browser fallback
 - Six generic app slots that accept any installed app and replace the default Home icon; Android monochrome icons follow the Home panel theme when available
 - One-tap reset restores each slot's original built-in action and icon
-- A compact drawer containing up to eight selected apps
+- A compact drawer containing up to eight selected apps, with a **See all** handoff to a full installed-app browser
+- The all-apps browser uses a three-app, one-at-a-time carousel and a draggable A–Z arc with M at its center; the focused app supplies the screen's gradient color
 - Real installed-app icons and an alphabetical jump rail in both app pickers
 - A searchable Magic Box:
   - Physical-keyboard instant typing — press any printable key from the home screen to reveal the already-focused Magic Box with the first character preserved

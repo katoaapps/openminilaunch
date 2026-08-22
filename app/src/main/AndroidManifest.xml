@@ -92,6 +92,13 @@
             </intent-filter>
         </activity>
         <activity
+            android:name=".AllAppsActivity"
+            android:excludeFromRecents="true"
+            android:exported="false"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:theme="@style/Theme.MiniLaunch" />
+        <activity
             android:name=".MainActivity"
             android:exported="true"
             android:launchMode="singleTask"

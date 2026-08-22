@@ -105,6 +105,8 @@ class DeviceActions(private val context: Context) {
 
     fun openInstalledAppsSettings() = start(Intent(Settings.ACTION_APPLICATION_SETTINGS))
 
+    fun openAllApps() = start(Intent(context, AllAppsActivity::class.java))
+
     fun appLabel(packageName: String): String {
         synchronized(labelCache) { labelCache[packageName]?.let { return it } }
         return runCatching {

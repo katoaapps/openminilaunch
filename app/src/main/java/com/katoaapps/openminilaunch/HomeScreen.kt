@@ -27,6 +27,7 @@ import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.ArrowForward
 import androidx.compose.material.icons.automirrored.filled.Message
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
@@ -333,7 +334,7 @@ internal fun HomeScreen(
                 val drawerRows = ceil(store.drawerPackages.size / 2f).toInt()
                 LazyVerticalGrid(
                     columns = GridCells.Fixed(2),
-                    modifier = Modifier.fillMaxWidth().height((drawerRows * 76).dp),
+                    modifier = Modifier.fillMaxWidth().height(Dimens.dp72 * drawerRows),
                     contentPadding = PaddingValues(horizontal = Dimens.dp12, vertical = Dimens.dp8),
                 ) {
                     items(store.drawerPackages, key = { it }) { packageName ->
@@ -345,6 +346,24 @@ internal fun HomeScreen(
                             colors = ListItemDefaults.colors(containerColor = MaterialTheme.colorScheme.background),
                         )
                     }
+                }
+            }
+            Row(
+                Modifier.fillMaxWidth().padding(horizontal = Dimens.dp18, vertical = Dimens.dp4),
+                horizontalArrangement = Arrangement.End,
+            ) {
+                FilledTonalButton(
+                    onClick = {
+                        drawerOpen = false
+                        actions.openAllApps()
+                    },
+                ) {
+                    Text(stringResource(R.string.see_all_apps))
+                    Icon(
+                        Icons.AutoMirrored.Filled.ArrowForward,
+                        null,
+                        modifier = Modifier.padding(start = Dimens.dp6),
+                    )
                 }
             }
             Spacer(Modifier.height(Dimens.dp28))
