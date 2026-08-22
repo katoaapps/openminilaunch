@@ -68,6 +68,53 @@ private data class MagicActionVisuals(
 )
 
 @Composable
+private fun MagicInputField(
+    value: TextFieldValue,
+    onValueChange: (TextFieldValue) -> Unit,
+    prefix: Char?,
+    focusRequester: FocusRequester,
+    onPlaced: () -> Unit,
+    onSubmit: () -> Unit,
+    modifier: Modifier = Modifier,
+    minLines: Int = 1,
+    maxLines: Int = 5,
+) {
+    TextField(
+        value = value,
+        onValueChange = onValueChange,
+        placeholder = { Text(stringResource(R.string.magic_box_hotkey_hint), color = Muted) },
+        modifier = modifier.focusRequester(focusRequester)
+            .onGloballyPositioned { onPlaced() }
+            .onPreviewKeyEvent { event ->
+                if (prefix == '-' && event.key == Key.Enter) {
+                    if (event.type == KeyEventType.KeyUp) onSubmit()
+                    true
+                } else false
+            },
+        colors = TextFieldDefaults.colors(
+            focusedContainerColor = MinkTransparent,
+            unfocusedContainerColor = MinkTransparent,
+            focusedIndicatorColor = MinkTransparent,
+            unfocusedIndicatorColor = MinkTransparent,
+        ),
+        minLines = minLines,
+        maxLines = maxLines,
+        keyboardOptions = KeyboardOptions(
+            showKeyboardOnFocus = false,
+            imeAction = when {
+                prefix == '$' -> ImeAction.Default
+                prefix in listOf('@', '#', '-', '+', '?') -> ImeAction.Send
+                else -> ImeAction.Search
+            },
+        ),
+        keyboardActions = KeyboardActions(
+            onSearch = { onSubmit() },
+            onSend = { onSubmit() },
+        ),
+    )
+}
+
+@Composable
 internal fun MagicBox(
     store: LauncherStore,
     actions: DeviceActions,
@@ -103,6 +150,7 @@ internal fun MagicBox(
     var showSmsSentConfirmation by remember { mutableStateOf(false) }
     var smsSentConfirmationToken by remember { mutableIntStateOf(0) }
     var showSmsAssistantDisclosure by remember { mutableStateOf(false) }
+    var showNoteDeleteConfirmation by remember { mutableStateOf(false) }
     var fileResults by remember { mutableStateOf<List<FileSearchResult>>(emptyList()) }
     var fileSearchLoading by remember { mutableStateOf(false) }
     val fileSearchRequests = remember { FileSearchRequestTracker() }
@@ -251,6 +299,8 @@ internal fun MagicBox(
         } else emptyList()
     }
     val plainQuery = parsedInput.plainQuery
+    val noteMode = expanded && prefix == '$'
+    val hasNoteDraft = noteMode && text.text.drop(1).isNotBlank()
     val indexedFolderUris = store.searchFolders.map { it.uri }
     LaunchedEffect(plainQuery, indexedFolderUris, hasMediaAccess) {
         val request = fileSearchRequests.begin(plainQuery)
@@ -314,6 +364,15 @@ internal fun MagicBox(
         onSessionComplete()
     }
 
+    fun requestDismiss() {
+        if (hasNoteDraft) {
+            keyboard?.hide()
+            showNoteDeleteConfirmation = true
+        } else {
+            dismiss()
+        }
+    }
+
     fun collapseForDialog() {
         clearCommand()
         keyboard?.hide()
@@ -338,10 +397,11 @@ internal fun MagicBox(
 
     fun submit() {
         val payload = if (lockedPrefix != null) text.text.trim() else text.text.drop(1).trim()
+        var keepDraftAfterExternalHandoff = false
         val handled = when (prefix) {
             '-' -> payload.isNotBlank().also { if (it) { store.addTodo(payload); onTodoAdded(payload) } }
-            '$' -> payload.isNotBlank().also {
-                if (it) actions.createNote(payload, store.shortcutPackages[Shortcut.NOTE])
+            '$' -> payload.isNotBlank() && actions.createNote(payload).also { opened ->
+                keepDraftAfterExternalHandoff = opened
             }
             '+' -> payload.isNotBlank() && actions.createEvent(payload)
             '@' -> (selectedContact != null && payload.isNotBlank()).also {
@@ -362,8 +422,11 @@ internal fun MagicBox(
             }
         }
         if (handled && prefix != '@') {
-            clearCommand()
-            dismiss()
+            if (keepDraftAfterExternalHandoff) {
+                keyboard?.hide()
+            } else {
+                dismiss()
+            }
         }
     }
 
@@ -395,11 +458,11 @@ internal fun MagicBox(
         }
     }
 
-    BackHandler(enabled = expanded) { dismiss() }
+    BackHandler(enabled = expanded) { requestDismiss() }
 
     Box(modifier) {
         if (expanded) {
-            Box(Modifier.matchParentSize().background(MinkBlack.copy(alpha = .48f)).clickable(onClick = { dismiss() }))
+            Box(Modifier.matchParentSize().background(MinkBlack.copy(alpha = .48f)).clickable(onClick = { requestDismiss() }))
         }
 
         Column(
@@ -410,11 +473,12 @@ internal fun MagicBox(
                 .padding(horizontal = Dimens.dp18, vertical = Dimens.dp18),
             verticalArrangement = Arrangement.spacedBy(Dimens.dp8),
         ) {
-            Box(
-                modifier = Modifier.fillMaxWidth().weight(1f),
-                contentAlignment = Alignment.BottomCenter,
-            ) {
-                if (expanded) {
+            if (!noteMode) {
+                Box(
+                    modifier = Modifier.fillMaxWidth().weight(1f),
+                    contentAlignment = Alignment.BottomCenter,
+                ) {
+                    if (expanded) {
                     Column(
                         Modifier.fillMaxWidth().verticalScroll(magicResultsScroll),
                         verticalArrangement = Arrangement.spacedBy(Dimens.dp8),
@@ -513,10 +577,11 @@ internal fun MagicBox(
                             }
                         }
                     }
+                    }
                 }
             }
 
-            if (expanded && text.text.isBlank() && lockedPrefix == null) {
+            if (!noteMode && expanded && text.text.isBlank() && lockedPrefix == null) {
                 MagicBoxLegend(prefix, enabled = true) { key ->
                     clearCommand()
                     text = TextFieldValue(key.toString(), selection = TextRange(1))
@@ -525,75 +590,89 @@ internal fun MagicBox(
             }
 
             Surface(
-                modifier = Modifier.fillMaxWidth().heightIn(min = magicBoxMinimumHeight)
+                modifier = Modifier.fillMaxWidth().then(
+                    if (noteMode) Modifier.weight(1f) else Modifier.heightIn(min = magicBoxMinimumHeight),
+                )
                     .graphicsLayer { alpha = if (expanded) 1f else 0f },
                 shape = RoundedCornerShape(Dimens.dp24),
                 color = MaterialTheme.colorScheme.surface,
                 shadowElevation = Dimens.dp12,
             ) {
-                Row(
-                    Modifier.fillMaxWidth().padding(start = Dimens.dp12, end = Dimens.dp6),
-                    verticalAlignment = Alignment.CenterVertically,
-                ) {
-                    selectedContact?.let { contact ->
-                        CommandChip(
-                            stringResource(R.string.two_part_label, contact.name, contact.phoneLabel),
-                            actionVisuals.color,
-                            actionContentColor,
+                if (noteMode) {
+                    Box(Modifier.fillMaxSize()) {
+                        MagicInputField(
+                            value = text,
+                            onValueChange = { text = it },
+                            prefix = prefix,
+                            focusRequester = focusRequester,
+                            onPlaced = { textFieldPlaced = true },
+                            onSubmit = { submit() },
+                            modifier = Modifier.fillMaxSize().padding(end = Dimens.dp48, bottom = Dimens.dp54),
+                            maxLines = Int.MAX_VALUE,
+                        )
+                        IconButton(
+                            onClick = {
+                                keyboard?.hide()
+                                showNoteDeleteConfirmation = true
+                            },
+                            modifier = Modifier.align(Alignment.TopEnd).padding(Dimens.dp6),
                         ) {
-                            clearCommand()
-                            refocus()
+                            Icon(
+                                Icons.Default.DeleteOutline,
+                                stringResource(R.string.delete_note_draft),
+                                tint = MaterialTheme.colorScheme.error,
+                            )
                         }
+                        FilledIconButton(
+                            onClick = { submit() },
+                            modifier = Modifier.align(Alignment.BottomEnd).padding(Dimens.dp10),
+                            colors = IconButtonDefaults.filledIconButtonColors(
+                                containerColor = actionVisuals.color,
+                                contentColor = actionContentColor,
+                            ),
+                        ) { Icon(actionVisuals.icon, stringResource(R.string.run_command)) }
                     }
-                    TextField(
-                        value = text,
-                        onValueChange = { value ->
-                            text = value
-                            if (!expanded && value.text.isNotEmpty()) {
-                                expanded = true
-                                onExpandedChange(true)
+                } else {
+                    Row(
+                        Modifier.fillMaxWidth().padding(start = Dimens.dp12, end = Dimens.dp6),
+                        verticalAlignment = Alignment.CenterVertically,
+                    ) {
+                        selectedContact?.let { contact ->
+                            CommandChip(
+                                stringResource(R.string.two_part_label, contact.name, contact.phoneLabel),
+                                actionVisuals.color,
+                                actionContentColor,
+                            ) {
+                                clearCommand()
+                                refocus()
                             }
-                            if (lockedPrefix == null && value.text.firstOrNull() != prefix) {
-                                selectedContact = null
-                            }
-                        },
-                        placeholder = { Text(stringResource(R.string.magic_box_hotkey_hint), color = Muted) },
-                        modifier = Modifier.weight(1f).focusRequester(focusRequester)
-                            .onGloballyPositioned { textFieldPlaced = true }
-                            .onPreviewKeyEvent { event ->
-                                if (prefix == '-' && event.key == Key.Enter) {
-                                    if (event.type == KeyEventType.KeyUp) submit()
-                                    true
-                                } else false
+                        }
+                        MagicInputField(
+                            value = text,
+                            onValueChange = { value ->
+                                text = value
+                                if (!expanded && value.text.isNotEmpty()) {
+                                    expanded = true
+                                    onExpandedChange(true)
+                                }
+                                if (lockedPrefix == null && value.text.firstOrNull() != prefix) {
+                                    selectedContact = null
+                                }
                             },
-                        colors = TextFieldDefaults.colors(
-                            focusedContainerColor = MinkTransparent,
-                            unfocusedContainerColor = MinkTransparent,
-                            focusedIndicatorColor = MinkTransparent,
-                            unfocusedIndicatorColor = MinkTransparent,
-                        ),
-                        minLines = 1,
-                        maxLines = 5,
-                        keyboardOptions = KeyboardOptions(
-                            showKeyboardOnFocus = false,
-                            imeAction = when {
-                                prefix == '$' -> ImeAction.Default
-                                prefix in listOf('@', '#', '-', '+', '?') -> ImeAction.Send
-                                else -> ImeAction.Search
-                            },
-                        ),
-                        keyboardActions = KeyboardActions(
-                            onSearch = { submit() },
-                            onSend = { submit() },
-                        ),
-                    )
-                    FilledIconButton(
-                        onClick = { submit() },
-                        colors = IconButtonDefaults.filledIconButtonColors(
-                            containerColor = actionVisuals.color,
-                            contentColor = actionContentColor,
-                        ),
-                    ) { Icon(actionVisuals.icon, stringResource(R.string.run_command)) }
+                            prefix = prefix,
+                            focusRequester = focusRequester,
+                            onPlaced = { textFieldPlaced = true },
+                            onSubmit = { submit() },
+                            modifier = Modifier.weight(1f),
+                        )
+                        FilledIconButton(
+                            onClick = { submit() },
+                            colors = IconButtonDefaults.filledIconButtonColors(
+                                containerColor = actionVisuals.color,
+                                contentColor = actionContentColor,
+                            ),
+                        ) { Icon(actionVisuals.icon, stringResource(R.string.run_command)) }
+                    }
                 }
             }
         }
@@ -653,6 +732,35 @@ internal fun MagicBox(
                 }
             }
         }
+    }
+    if (showNoteDeleteConfirmation) {
+        AlertDialog(
+            onDismissRequest = {
+                showNoteDeleteConfirmation = false
+                refocus()
+            },
+            icon = { Icon(Icons.Default.DeleteOutline, null) },
+            title = { Text(stringResource(R.string.delete_note_draft_title)) },
+            text = { Text(stringResource(R.string.delete_note_draft_description)) },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        showNoteDeleteConfirmation = false
+                        dismiss()
+                    },
+                ) {
+                    Text(stringResource(R.string.delete), color = MaterialTheme.colorScheme.error)
+                }
+            },
+            dismissButton = {
+                TextButton(
+                    onClick = {
+                        showNoteDeleteConfirmation = false
+                        refocus()
+                    },
+                ) { Text(stringResource(R.string.cancel)) }
+            },
+        )
     }
     if (showFileScopeChoice) {
         FileSearchScopeDialog(

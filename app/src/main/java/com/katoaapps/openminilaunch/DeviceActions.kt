@@ -141,7 +141,8 @@ class DeviceActions(private val context: Context) {
 
     fun launchShortcut(shortcut: Shortcut, assignedPackage: String?, openTodos: () -> Unit, openDrawer: () -> Unit) {
         if (!assignedPackage.isNullOrBlank() && shortcut !in listOf(Shortcut.TODO, Shortcut.DRAWER)) {
-            if (launchPackage(assignedPackage)) return
+            launchPackage(assignedPackage)
+            return
         }
         when (shortcut) {
             Shortcut.NOTE -> createNote("")
@@ -309,42 +310,24 @@ class DeviceActions(private val context: Context) {
         Intent(Intent.ACTION_SEND).setType("text/plain").putExtra(Intent.EXTRA_TEXT, text), chooser = true
     )
 
-    fun createNote(text: String, preferredPackage: String? = null): Boolean {
+    fun createNote(text: String): Boolean {
         val clean = text.trim()
-        fun modern(packageName: String? = null) = Intent(Intent.ACTION_CREATE_NOTE).setType("text/plain")
-            .putExtra(Intent.EXTRA_TEXT, clean)
-            .apply { if (!packageName.isNullOrBlank()) setPackage(packageName) }
-        fun legacy(packageName: String? = null) = Intent("com.google.android.gms.actions.CREATE_NOTE").setType("text/plain")
-            .putExtra("com.google.android.gms.actions.extra.TEXT", clean)
-            .apply { if (!packageName.isNullOrBlank()) setPackage(packageName) }
-        fun shared(packageName: String) = Intent(Intent.ACTION_SEND).setType("text/plain")
-            .putExtra(Intent.EXTRA_TEXT, clean)
-            .setPackage(packageName)
+        if (clean.isNotEmpty()) return shareText(clean)
 
-        if (!preferredPackage.isNullOrBlank()) {
-            modern(preferredPackage).takeIf(::canResolve)?.let { return start(it) }
-            legacy(preferredPackage).takeIf(::canResolve)?.let { return start(it) }
-            shared(preferredPackage).takeIf(::canResolve)?.let { return start(it) }
-        }
-        modern().takeIf(::canResolve)?.let { return start(it) }
-        legacy().takeIf(::canResolve)?.let { return start(it) }
+        val modern = Intent(Intent.ACTION_CREATE_NOTE).setType("text/plain")
+        val legacy = Intent("com.google.android.gms.actions.CREATE_NOTE").setType("text/plain")
 
-        // Samsung Notes does not currently advertise either standardized create-note action.
-        // Its exported text share target is the stable public handoff available to launchers.
+        modern.takeIf(::canResolve)?.let { return start(it) }
+        legacy.takeIf(::canResolve)?.let { return start(it) }
+
         val samsungPackage = "com.samsung.android.app.notes"
-        if (clean.isEmpty() && launchPackage(samsungPackage)) return true
-        shared(samsungPackage).takeIf(::canResolve)?.let { return start(it) }
-        return start(Intent(Intent.ACTION_SEND).setType("text/plain").putExtra(Intent.EXTRA_TEXT, clean), chooser = true)
+        return launchPackage(samsungPackage)
     }
 
     fun exportTodosToNotes(text: String): Boolean {
         val clean = text.trim()
         if (clean.isEmpty()) return false
         val title = context.getString(R.string.todo_export_title, context.getString(R.string.app_name))
-        val createNote = Intent(Intent.ACTION_CREATE_NOTE).setType("text/plain")
-            .putExtra(Intent.EXTRA_TITLE, title)
-            .putExtra(Intent.EXTRA_TEXT, clean)
-        if (hasHandler(createNote)) return start(createNote, chooser = true)
         return start(
             Intent(Intent.ACTION_SEND).setType("text/plain")
                 .putExtra(Intent.EXTRA_TITLE, title)

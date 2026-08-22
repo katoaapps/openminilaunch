@@ -40,6 +40,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.onSizeChanged
@@ -73,6 +74,57 @@ internal fun HomePanelColorSetting(selectedArgb: Int, onColorSelected: (Int) -> 
         HomePanelColorPreset(R.string.color_plum, androidx.core.content.ContextCompat.getColor(context, R.color.home_panel_plum)),
         HomePanelColorPreset(R.string.color_charcoal, androidx.core.content.ContextCompat.getColor(context, R.color.home_panel_charcoal)),
     )
+    AppearanceColorSetting(
+        selectedArgb = selectedArgb,
+        pickerArgb = selectedArgb,
+        titleRes = R.string.home_panel_color,
+        descriptionRes = R.string.home_panel_color_description,
+        customTitleRes = R.string.custom_panel_color,
+        customDescriptionRes = R.string.custom_panel_color_description,
+        presets = presets,
+        onColorSelected = onColorSelected,
+    )
+}
+
+@Composable
+internal fun AppBackgroundColorSetting(
+    selectedArgb: Int?,
+    onColorSelected: (Int) -> Unit,
+    onUseThemeDefault: () -> Unit,
+) {
+    val context = androidx.compose.ui.platform.LocalContext.current
+    val presets = listOf(
+        HomePanelColorPreset(R.string.color_paper, androidx.core.content.ContextCompat.getColor(context, R.color.app_background_paper)),
+        HomePanelColorPreset(R.string.color_midnight, androidx.core.content.ContextCompat.getColor(context, R.color.app_background_midnight)),
+        HomePanelColorPreset(R.string.color_cream, androidx.core.content.ContextCompat.getColor(context, R.color.app_background_cream)),
+        HomePanelColorPreset(R.string.color_soft_sage, androidx.core.content.ContextCompat.getColor(context, R.color.app_background_sage)),
+        HomePanelColorPreset(R.string.color_slate, androidx.core.content.ContextCompat.getColor(context, R.color.app_background_slate)),
+    )
+    AppearanceColorSetting(
+        selectedArgb = selectedArgb,
+        pickerArgb = selectedArgb ?: MaterialTheme.colorScheme.background.toArgb(),
+        titleRes = R.string.app_background_color,
+        descriptionRes = R.string.app_background_color_description,
+        customTitleRes = R.string.custom_background_color,
+        customDescriptionRes = R.string.custom_background_color_description,
+        presets = presets,
+        onColorSelected = onColorSelected,
+        onUseThemeDefault = onUseThemeDefault,
+    )
+}
+
+@Composable
+private fun AppearanceColorSetting(
+    selectedArgb: Int?,
+    pickerArgb: Int,
+    @androidx.annotation.StringRes titleRes: Int,
+    @androidx.annotation.StringRes descriptionRes: Int,
+    @androidx.annotation.StringRes customTitleRes: Int,
+    @androidx.annotation.StringRes customDescriptionRes: Int,
+    presets: List<HomePanelColorPreset>,
+    onColorSelected: (Int) -> Unit,
+    onUseThemeDefault: (() -> Unit)? = null,
+) {
     var showCustomPicker by remember { mutableStateOf(false) }
     val selectedPreset = presets.firstOrNull { it.argb == selectedArgb }
 
@@ -85,14 +137,18 @@ internal fun HomePanelColorSetting(selectedArgb: Int, onColorSelected: (Int) -> 
             Row(verticalAlignment = Alignment.CenterVertically) {
                 Icon(Icons.Default.Palette, null, tint = MaterialTheme.colorScheme.onSurface)
                 Column(Modifier.padding(start = Dimens.dp12).weight(1f)) {
-                    Text(stringResource(R.string.home_panel_color), fontWeight = FontWeight.Bold)
+                    Text(stringResource(titleRes), fontWeight = FontWeight.Bold)
                     Text(
-                        stringResource(R.string.home_panel_color_description),
+                        stringResource(descriptionRes),
                         color = Muted,
                         fontSize = Dimens.sp12,
                     )
                 }
-                Text(formatHomePanelHex(selectedArgb), color = Muted, fontSize = Dimens.sp12)
+                Text(
+                    selectedArgb?.let(::formatHomePanelHex) ?: stringResource(R.string.theme_background),
+                    color = Muted,
+                    fontSize = Dimens.sp12,
+                )
             }
             Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.SpaceBetween) {
                 presets.forEach { preset ->
@@ -111,7 +167,11 @@ internal fun HomePanelColorSetting(selectedArgb: Int, onColorSelected: (Int) -> 
                         ) {
                             if (selected) {
                                 Box(contentAlignment = Alignment.Center) {
-                                    Icon(Icons.Default.Check, stringResource(preset.labelRes), tint = MinkWhite)
+                                    Icon(
+                                        Icons.Default.Check,
+                                        stringResource(preset.labelRes),
+                                        tint = readableContentColor(Color(preset.argb)),
+                                    )
                                 }
                             }
                         }
@@ -126,12 +186,23 @@ internal fun HomePanelColorSetting(selectedArgb: Int, onColorSelected: (Int) -> 
                     Modifier.padding(start = Dimens.dp8),
                 )
             }
+            onUseThemeDefault?.let { useThemeDefault ->
+                TextButton(
+                    onClick = useThemeDefault,
+                    enabled = selectedArgb != null,
+                    modifier = Modifier.fillMaxWidth(),
+                ) {
+                    Text(stringResource(R.string.use_theme_background))
+                }
+            }
         }
     }
 
     if (showCustomPicker) {
-        HomePanelColorDialog(
-            initialArgb = selectedArgb,
+        AppearanceColorDialog(
+            initialArgb = pickerArgb,
+            titleRes = customTitleRes,
+            descriptionRes = customDescriptionRes,
             onConfirm = {
                 onColorSelected(it)
                 showCustomPicker = false
@@ -142,8 +213,10 @@ internal fun HomePanelColorSetting(selectedArgb: Int, onColorSelected: (Int) -> 
 }
 
 @Composable
-private fun HomePanelColorDialog(
+private fun AppearanceColorDialog(
     initialArgb: Int,
+    @androidx.annotation.StringRes titleRes: Int,
+    @androidx.annotation.StringRes descriptionRes: Int,
     onConfirm: (Int) -> Unit,
     onDismiss: () -> Unit,
 ) {
@@ -173,8 +246,8 @@ private fun HomePanelColorDialog(
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Surface(Modifier.size(Dimens.dp42), shape = CircleShape, color = Color(currentArgb)) {}
                     Column(Modifier.padding(start = Dimens.dp12).weight(1f)) {
-                        Text(stringResource(R.string.custom_panel_color), fontWeight = FontWeight.Black, fontSize = Dimens.sp20)
-                        Text(stringResource(R.string.custom_panel_color_description), color = Muted, fontSize = Dimens.sp12)
+                        Text(stringResource(titleRes), fontWeight = FontWeight.Black, fontSize = Dimens.sp20)
+                        Text(stringResource(descriptionRes), color = Muted, fontSize = Dimens.sp12)
                     }
                 }
                 SaturationBrightnessField(

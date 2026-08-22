@@ -65,9 +65,10 @@ class AssistantActivity : ComponentActivity() {
                     secondary = Rust,
                 )
             }
-            val colors = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+            val baseColors = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
                 if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
             } else fallback
+            val colors = baseColors.withAppBackground(store.appBackgroundColorArgb)
             val view = LocalView.current
             val transparent = MinkTransparent
             SideEffect {

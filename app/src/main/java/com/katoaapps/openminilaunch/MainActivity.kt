@@ -138,6 +138,7 @@ private fun MiniLaunchApp(
     homeRequestToken: Int,
 ) {
     var screen by remember { mutableStateOf(Screen.HOME) }
+    var settingsDestination by remember { mutableStateOf(SettingsDestination.OVERVIEW) }
     var showTutorial by rememberSaveable { mutableStateOf(!store.onboardingComplete) }
     var showUpdateNotice by rememberSaveable {
         mutableStateOf(store.onboardingComplete && !store.hasSeenUpdate(FEATURE_UPDATE_ID))
@@ -175,9 +176,10 @@ private fun MiniLaunchApp(
             surface = LightPaper, surfaceContainerLow = MinkWhite, onSurface = LightInk, secondary = Rust,
         )
     }
-    val colors = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+    val baseColors = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
         if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
     } else fallbackColors
+    val colors = baseColors.withAppBackground(store.appBackgroundColorArgb)
     val view = LocalView.current
     val finishOnboardingSetup = {
         if (store.hasConfirmedAllShortcutChoices()) requestHomeRole()
@@ -284,7 +286,10 @@ private fun MiniLaunchApp(
                         HomeScreen(
                             store = store,
                             actions = actions,
-                            openSettings = { screen = Screen.SETTINGS },
+                            openSettings = { destination ->
+                                settingsDestination = destination
+                                screen = Screen.SETTINGS
+                            },
                             openTodos = { screen = Screen.TODOS },
                             openHub = { screen = Screen.HUB },
                             openMinkDay = { launcherScope.launch { launcherPagerState.animateScrollToPage(MINK_DAY_PAGE) } },
@@ -305,7 +310,11 @@ private fun MiniLaunchApp(
                     actions,
                     requestHomeRole,
                     onRepeatTutorial = { tutorialRun++; showTutorial = true },
-                ) { screen = Screen.HOME }
+                    initialDestination = settingsDestination,
+                ) {
+                    settingsDestination = SettingsDestination.OVERVIEW
+                    screen = Screen.HOME
+                }
                 Screen.TODOS -> TodosScreen(store, actions) { screen = Screen.HOME }
                 Screen.HUB -> NotificationHubScreen(actions) { screen = Screen.HOME }
             }

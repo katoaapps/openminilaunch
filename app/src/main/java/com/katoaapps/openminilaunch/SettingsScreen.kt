@@ -40,6 +40,7 @@ internal fun SettingsScreen(
     actions: DeviceActions,
     requestHomeRole: () -> Unit,
     onRepeatTutorial: () -> Unit,
+    initialDestination: SettingsDestination = SettingsDestination.OVERVIEW,
     goBack: () -> Unit,
 ) {
     val context = LocalContext.current
@@ -200,7 +201,7 @@ internal fun SettingsScreen(
         manageLockService = actions::openLockAccessibilitySettings,
         showAssistantSetup = { showAssistantDisclosure = true },
     )
-    var settingsStack by remember { mutableStateOf(listOf(SettingsDestination.OVERVIEW)) }
+    var settingsStack by remember(initialDestination) { mutableStateOf(settingsPathTo(initialDestination)) }
     var navigatingBack by remember { mutableStateOf(false) }
     val settingsScrollStates = remember {
         SettingsDestination.entries.associateWith { ScrollState(0) }

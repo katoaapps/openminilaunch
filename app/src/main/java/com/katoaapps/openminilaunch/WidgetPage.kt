@@ -39,6 +39,7 @@ import androidx.compose.material.icons.filled.ArrowDownward
 import androidx.compose.material.icons.filled.ArrowUpward
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.MoreVert
+import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material.icons.filled.Widgets
 import androidx.compose.material3.Button
 import androidx.compose.material3.DropdownMenu
@@ -75,6 +76,7 @@ import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.compose.ui.window.Dialog
 import androidx.core.graphics.drawable.toBitmap
+import androidx.core.view.ViewCompat
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import kotlin.math.ceil
@@ -112,6 +114,7 @@ internal fun WidgetPage(store: LauncherStore, actions: DeviceActions, goHome: ()
     var pendingId by remember { mutableIntStateOf(AppWidgetManager.INVALID_APPWIDGET_ID) }
     var pendingSize by remember { mutableStateOf<WidgetGridSize?>(null) }
     var bindingStage by remember { mutableStateOf(WidgetBindingStage.IDLE) }
+    var widgetInfoRevision by remember { mutableIntStateOf(0) }
 
     fun abandonPendingWidget() {
         if (pendingId != AppWidgetManager.INVALID_APPWIDGET_ID) host.deleteAppWidgetId(pendingId)
@@ -183,25 +186,29 @@ internal fun WidgetPage(store: LauncherStore, actions: DeviceActions, goHome: ()
     DisposableEffect(activity, host) {
         val observer = LifecycleEventObserver { _, event ->
             when (event) {
-                Lifecycle.Event.ON_START -> runCatching { host.startListening() }
+                Lifecycle.Event.ON_START -> {
+                    runCatching { host.startListening() }
+                    widgetInfoRevision++
+                }
                 Lifecycle.Event.ON_STOP -> host.stopListening()
                 else -> Unit
             }
         }
         activity.lifecycle.addObserver(observer)
-        if (activity.lifecycle.currentState.isAtLeast(Lifecycle.State.STARTED)) runCatching { host.startListening() }
+        if (activity.lifecycle.currentState.isAtLeast(Lifecycle.State.STARTED)) {
+            runCatching { host.startListening() }
+            widgetInfoRevision++
+        }
         onDispose {
             activity.lifecycle.removeObserver(observer)
             host.stopListening()
         }
     }
 
-    LaunchedEffect(Unit) {
+    LaunchedEffect(widgetInfoRevision, store.widgetIds.size) {
         store.widgetIds.toList().forEach { id ->
             val info = manager.getAppWidgetInfo(id)
-            if (info == null) {
-                store.removeWidget(id)
-            } else if (store.widgetSizes[id] == null) {
+            if (info != null && store.widgetSizes[id] == null) {
                 store.setWidgetSize(id, widgetSizeRange(info, context.resources.displayMetrics.density).preferred)
             }
         }
@@ -249,7 +256,7 @@ internal fun WidgetPage(store: LauncherStore, actions: DeviceActions, goHome: ()
                 verticalArrangement = Arrangement.spacedBy(Dimens.dp20),
             ) {
                 itemsIndexed(store.widgetIds, key = { _, id -> id }) { index, id ->
-                    val info = manager.getAppWidgetInfo(id)
+                    val info = remember(id, widgetInfoRevision) { manager.getAppWidgetInfo(id) }
                     if (info != null) {
                         WidgetPanel(
                             host = host,
@@ -261,8 +268,19 @@ internal fun WidgetPage(store: LauncherStore, actions: DeviceActions, goHome: ()
                             canMoveDown = index < store.widgetIds.lastIndex,
                             onMoveUp = { store.moveWidget(id, -1) },
                             onMoveDown = { store.moveWidget(id, 1) },
-                            onRemove = { store.removeWidget(id); host.deleteAppWidgetId(id) },
+                            onRemove = {
+                                store.removeWidget(id)
+                                runCatching { host.deleteAppWidgetId(id) }
+                            },
                             onResize = { store.setWidgetSize(id, it) },
+                        )
+                    } else {
+                        UnavailableWidgetPanel(
+                            onRetry = { widgetInfoRevision++ },
+                            onRemove = {
+                                store.removeWidget(id)
+                                runCatching { host.deleteAppWidgetId(id) }
+                            },
                         )
                     }
                 }
@@ -297,6 +315,39 @@ internal fun WidgetPage(store: LauncherStore, actions: DeviceActions, goHome: ()
             },
             onDismiss = { sizingProvider = null },
         )
+    }
+}
+
+@Composable
+private fun UnavailableWidgetPanel(onRetry: () -> Unit, onRemove: () -> Unit) {
+    Surface(
+        modifier = Modifier.fillMaxWidth(),
+        shape = RoundedCornerShape(Dimens.dp24),
+        color = MaterialTheme.colorScheme.surfaceContainerLow,
+    ) {
+        Column(
+            Modifier.padding(Dimens.dp20),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(Dimens.dp8),
+        ) {
+            Icon(Icons.Default.Widgets, null, Modifier.size(Dimens.dp34), tint = MaterialTheme.colorScheme.onSurfaceVariant)
+            Text(stringResource(R.string.widget_temporarily_unavailable), fontWeight = FontWeight.Bold)
+            Text(
+                stringResource(R.string.widget_temporarily_unavailable_description),
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+                fontSize = Dimens.sp12,
+            )
+            Row(horizontalArrangement = Arrangement.spacedBy(Dimens.dp8)) {
+                TextButton(onClick = onRetry) {
+                    Icon(Icons.Default.Refresh, null, Modifier.size(Dimens.dp18))
+                    Text(stringResource(R.string.retry), Modifier.padding(start = Dimens.dp6))
+                }
+                TextButton(onClick = onRemove) {
+                    Icon(Icons.Default.Close, null, Modifier.size(Dimens.dp18), tint = MaterialTheme.colorScheme.error)
+                    Text(stringResource(R.string.remove), Modifier.padding(start = Dimens.dp6), color = MaterialTheme.colorScheme.error)
+                }
+            }
+        }
     }
 }
 
@@ -379,7 +430,12 @@ private fun WidgetPanel(
                 .coerceAtMost(Dimens.dp420)
 
             AndroidView(
-                factory = { host.createView(it, id, info).apply { setAppWidget(id, info) } },
+                factory = {
+                    host.createView(it, id, info).apply {
+                        setAppWidget(id, info)
+                        ViewCompat.setNestedScrollingEnabled(this, true)
+                    }
+                },
                 update = { view ->
                     if (measuredSize != IntSize.Zero &&
                         (lastReportedSize[0] != measuredSize.width || lastReportedSize[1] != measuredSize.height)

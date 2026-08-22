@@ -46,6 +46,22 @@ internal fun pushSettingsDestination(
 internal fun popSettingsDestination(stack: List<SettingsDestination>): List<SettingsDestination> =
     if (stack.size > 1) stack.dropLast(1) else stack
 
+internal fun settingsPathTo(destination: SettingsDestination): List<SettingsDestination> = when (destination) {
+    SettingsDestination.OVERVIEW -> listOf(SettingsDestination.OVERVIEW)
+    SettingsDestination.LAUNCHER -> listOf(SettingsDestination.OVERVIEW, SettingsDestination.LAUNCHER)
+    SettingsDestination.APPEARANCE,
+    SettingsDestination.SHORTCUTS -> listOf(SettingsDestination.OVERVIEW, SettingsDestination.LAUNCHER, destination)
+    SettingsDestination.MAGIC_BOX -> listOf(SettingsDestination.OVERVIEW, SettingsDestination.MAGIC_BOX)
+    SettingsDestination.FILE_SEARCH -> listOf(
+        SettingsDestination.OVERVIEW,
+        SettingsDestination.MAGIC_BOX,
+        SettingsDestination.FILE_SEARCH,
+    )
+    SettingsDestination.MINK_DAY,
+    SettingsDestination.PERMISSIONS,
+    SettingsDestination.ABOUT -> listOf(SettingsDestination.OVERVIEW, destination)
+}
+
 internal data class SettingsPermissionState(
     val usageAccessGranted: Boolean,
     val notificationAccessGranted: Boolean,
@@ -187,6 +203,11 @@ internal fun AppearanceSettingsPage(store: LauncherStore, goBack: () -> Unit) {
     SettingsPage(stringResource(R.string.appearance), goBack) {
         ThemeChooser(store.themePreference, store::setTheme)
         HomePanelColorSetting(store.homePanelColorArgb, store::setHomePanelColor)
+        AppBackgroundColorSetting(
+            selectedArgb = store.appBackgroundColorArgb,
+            onColorSelected = store::setAppBackgroundColor,
+            onUseThemeDefault = { store.setAppBackgroundColor(null) },
+        )
     }
 }
 

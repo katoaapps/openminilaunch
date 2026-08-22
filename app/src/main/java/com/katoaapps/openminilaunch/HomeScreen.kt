@@ -77,7 +77,7 @@ import kotlin.math.roundToInt
 internal fun HomeScreen(
     store: LauncherStore,
     actions: DeviceActions,
-    openSettings: () -> Unit,
+    openSettings: (SettingsDestination) -> Unit,
     openTodos: () -> Unit,
     openHub: () -> Unit,
     openMinkDay: () -> Unit,
@@ -165,7 +165,7 @@ internal fun HomeScreen(
                     )
                     Text(
                         LocalDate.now().format(DateTimeFormatter.ofPattern(stringResource(R.string.home_date_pattern))).uppercase(),
-                        color = MaterialTheme.colorScheme.onSurface,
+                        color = MaterialTheme.colorScheme.onBackground,
                         letterSpacing = Dimens.sp1_5,
                         fontSize = Dimens.sp13,
                         fontWeight = FontWeight.Bold,
@@ -185,7 +185,7 @@ internal fun HomeScreen(
                             },
                         ) { Icon(Icons.Default.Forum, stringResource(R.string.conversations), Modifier.size(headerIconSize)) }
                     }
-                    IconButton(onClick = openSettings, modifier = Modifier.size(headerActionSize)) {
+                    IconButton(onClick = { openSettings(SettingsDestination.OVERVIEW) }, modifier = Modifier.size(headerActionSize)) {
                         Icon(Icons.Default.Settings, stringResource(R.string.settings), Modifier.size(headerIconSize))
                     }
                 }
@@ -296,15 +296,44 @@ internal fun HomeScreen(
     }
 
     if (drawerOpen) {
-        ModalBottomSheet(onDismissRequest = { drawerOpen = false }, containerColor = MaterialTheme.colorScheme.background) {
+        ModalBottomSheet(
+            onDismissRequest = { drawerOpen = false },
+            sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true),
+            containerColor = MaterialTheme.colorScheme.background,
+        ) {
             Text(stringResource(R.string.your_drawer), Modifier.padding(horizontal = Dimens.dp24), fontWeight = FontWeight.Black, letterSpacing = Dimens.sp1)
             if (store.drawerPackages.isEmpty()) {
-                Text(stringResource(R.string.choose_drawer_apps), Modifier.padding(Dimens.dp24), color = Muted)
+                Column(
+                    Modifier.fillMaxWidth().padding(horizontal = Dimens.dp28, vertical = Dimens.dp24),
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                ) {
+                    Icon(Icons.Default.Apps, null, Modifier.size(Dimens.dp48), tint = Sage)
+                    Text(
+                        stringResource(R.string.empty_drawer),
+                        fontSize = Dimens.sp22,
+                        fontWeight = FontWeight.Black,
+                        modifier = Modifier.padding(top = Dimens.dp14),
+                    )
+                    Text(
+                        stringResource(R.string.choose_drawer_apps),
+                        color = Muted,
+                        modifier = Modifier.padding(vertical = Dimens.dp10),
+                    )
+                    Button(
+                        onClick = {
+                            drawerOpen = false
+                            openSettings(SettingsDestination.SHORTCUTS)
+                        },
+                    ) {
+                        Icon(Icons.Default.Add, null)
+                        Text(stringResource(R.string.choose_apps), Modifier.padding(start = Dimens.dp8))
+                    }
+                }
             } else {
                 val drawerRows = ceil(store.drawerPackages.size / 2f).toInt()
                 LazyVerticalGrid(
                     columns = GridCells.Fixed(2),
-                    modifier = Modifier.fillMaxWidth().height((drawerRows * 68).dp),
+                    modifier = Modifier.fillMaxWidth().height((drawerRows * 76).dp),
                     contentPadding = PaddingValues(horizontal = Dimens.dp12, vertical = Dimens.dp8),
                 ) {
                     items(store.drawerPackages, key = { it }) { packageName ->
@@ -406,12 +435,6 @@ internal fun TodoPager(
 }
 
 @Composable
-private fun readableContentColor(background: Color): Color {
-    val luminance = .2126f * background.red + .7152f * background.green + .0722f * background.blue
-    return if (luminance > .55f) ReadableDark else MinkWhite
-}
-
-@Composable
 internal fun ShortcutGrid(
     store: LauncherStore,
     actions: DeviceActions,
@@ -478,6 +501,8 @@ internal fun ShortcutGrid(
             ) {
                 items(visibleOrder, key = Shortcut::name) { shortcut ->
                     ReorderableItem(reorderableState, key = shortcut.name) { isDragging ->
+                    val assignedPackage = store.shortcutPackages[shortcut]
+                    val hasAssignedApp = shortcut in configurableShortcuts && assignedPackage != null
                     val shortcutIndex = Shortcut.entries.indexOf(shortcut)
                     val jiggleAngle = if (editing) {
                         val jiggle = rememberInfiniteTransition(label = "${shortcut.name} jiggle")
@@ -532,15 +557,17 @@ internal fun ShortcutGrid(
                                         else itemContainerColor
                                     )
                                     .then(interactionModifier)
-                                    .padding(Dimens.dp6),
+                                    .padding(if (hasAssignedApp) Dimens.dp0 else Dimens.dp6),
                                 contentAlignment = Alignment.Center,
                             ) {
-                                val assignedPackage = store.shortcutPackages[shortcut]
-                                if (shortcut in configurableShortcuts && assignedPackage != null) {
+                                if (hasAssignedApp) {
                                     AppIcon(
-                                        packageName = assignedPackage,
+                                        packageName = checkNotNull(assignedPackage),
                                         actions = actions,
-                                        size = if (compact) Dimens.dp25 else Dimens.dp29,
+                                        size = (shortcutSize * .56f).coerceIn(
+                                            if (compact) Dimens.dp28 else Dimens.dp32,
+                                            if (compact) Dimens.dp42 else Dimens.dp48,
+                                        ),
                                         themedTint = contentColor,
                                         contentDescription = actions.appLabel(assignedPackage),
                                     )

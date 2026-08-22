@@ -32,4 +32,11 @@ class SettingsNavigationTest {
             popSettingsDestination(listOf(SettingsDestination.OVERVIEW)),
         )
     }
+
+    @Test fun deepLinksToShortcutsThroughItsLauncherParent() {
+        assertEquals(
+            listOf(SettingsDestination.OVERVIEW, SettingsDestination.LAUNCHER, SettingsDestination.SHORTCUTS),
+            settingsPathTo(SettingsDestination.SHORTCUTS),
+        )
+    }
 }

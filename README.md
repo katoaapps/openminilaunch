@@ -33,14 +33,14 @@ the existing app first and clears MinkLauncher OpenSource's local data.
   - Conversation contents and replies remain transient in memory, are not retained as history, and are never sent to Katoa Apps
 - A horizontally adjacent widget page for up to four Android app widgets, including an app-grouped visual picker, system binding/configuration, reordering, and removal
 - A dedicated **Mink’s Day** page to the left of Home:
-  - Six illustrated Mink states reflect the time of day and, when optional Usage Access is enabled, foreground time and opens only for the social apps the user chooses to track
+  - Six illustrated Mink states reflect the time of day and, when optional Usage Access is enabled, foreground time and opens only for the social apps the user chooses to include
   - A compact Mink icon in the Home header opens the page and shows an attention dot only when something is actionable
   - The daily social goal can be set to 30, 60, 90, or 120 minutes
   - Android’s Social category is the visible default; selecting custom apps replaces it, and Restore defaults returns to Android’s category
-  - Selected tracked apps stay pinned in a fixed section at the top of the picker for quick review and removal
+  - Selected apps stay pinned in a fixed section at the top of the picker for quick review and removal
   - Top-app activity and short, non-judgmental observations are calculated only while the app is open
   - MinkLauncher OpenSource stores the goal and category choices, but does not create a separate usage-history database
-  - Activity is refreshed only while MinkLauncher OpenSource is visible; non-tracked apps can end a session but never enter the trail or totals
+  - Activity is refreshed only while MinkLauncher OpenSource is visible; other apps can end a session but never enter the trail or totals
   - The app has no Internet permission and cannot upload usage data itself
   - Without Usage Access, the page remains available as a time-of-day companion
 - Weather opens a user-selected app, with Weather.com as the browser fallback
@@ -60,8 +60,8 @@ the existing app first and clears MinkLauncher OpenSource's local data.
   - `?app` — search and launch any installed app
 - **Mink Assistant** integration: invoke the same keyboard-first Magic Box over the current app using the phone's system assistant gesture
 - Direct SMS is available only while MinkLauncher OpenSource is the active assistant handler. Android may grant Send SMS access automatically as part of that role; MinkLauncher OpenSource uses it only after the user approves a specific recipient and message. If it is not role-granted, it is requested on first use or from Settings.
-- Message behavior defaults to **Always ask**, which offers **Send SMS now**, **Choose messaging app**, and **Cancel**. Settings can instead remember **Always send as SMS** or **Always choose messaging app**; remembered modes treat pressing the Magic Box action as the user's approval and skip MinkLauncher OpenSource's extra confirmation.
-- Direct sends use the carrier SMS stack, not RCS, and may incur carrier charges. The provider chooser first uses Android’s contact-aware messaging contract, then falls back to the SMS/RCS composer contract. The selected provider controls the final send.
+- Message behavior applies only to one-time `@` messages from the Magic Box, not replies in Conversations. It defaults to **Always ask**, which offers **Send SMS now**, **Choose messaging app**, and **Cancel**. Settings can instead remember **Always send as SMS** or **Always choose messaging app**; remembered modes treat pressing the Magic Box action as the user's approval and skip MinkLauncher OpenSource's extra confirmation.
+- **Send SMS now** uses the carrier SMS stack for that message and may incur carrier charges, but it does not disable RCS or change any setting in the user's messaging app. Conversation replies continue through the reply action supplied by their source app. The provider chooser first uses Android’s contact-aware messaging contract, then falls back to the SMS/RCS composer contract; the selected provider controls the final send.
 - Mink Assistant deliberately ignores assist context and requests no microphone, call-log, screen-reading, or screen-context access; selecting it replaces the current default digital assistant until the user changes it back
 - The five most recent successful query handoffs and `?` app launches are stored locally, with controls to reuse, delete, or clear them; other hot-key actions are never added
 - Direct calling uses Android's Call permission; emergency numbers and failed direct-call attempts fall back to the system dialer. **Choose calling app** sends the number through Android’s dial intent, so only apps that publicly support telephone dialing appear.
@@ -95,7 +95,7 @@ After installing, press the device Home button and select **MinkLauncher OpenSou
 
 On first launch, MinkLauncher OpenSource explicitly opens Android's default Home-app prompt. If it is dismissed, it can be reopened from **Settings → Default home app**.
 
-After onboarding and its initial permission prompts, a separate setup dialog shows all six generic shortcut slots. The user can assign any installed app or tap **Keep built-in defaults for remaining**; assigning an app replaces that slot's action and Home icon, while resetting restores its original default.
+After onboarding and its initial permission prompts, a separate setup dialog shows all six generic shortcut slots. The user can assign any installed app or tap **Keep built-in defaults for remaining**; assigning an app makes that slot a direct app launcher and replaces its Home icon, while resetting restores its original default. Shortcut assignments never change how Magic Box commands hand content to Android.
 
 ## Test contacts
 

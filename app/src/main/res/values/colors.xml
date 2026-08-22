@@ -24,6 +24,11 @@
     <color name="home_panel_navy">#183A5A</color>
     <color name="home_panel_plum">#512B58</color>
     <color name="home_panel_charcoal">#34383B</color>
+    <color name="app_background_paper">#F4F1E8</color>
+    <color name="app_background_midnight">#000000</color>
+    <color name="app_background_cream">#F7E7CE</color>
+    <color name="app_background_sage">#DCE6DD</color>
+    <color name="app_background_slate">#283039</color>
     <color name="todo_export_title">#602C00</color>
     <color name="todo_export_body">#1C1C1C</color>
     <color name="mink_white">#FFFFFF</color>

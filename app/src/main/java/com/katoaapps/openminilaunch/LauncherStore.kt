@@ -41,6 +41,10 @@ class LauncherStore(context: Context) {
         prefs.getInt("home_panel_color", ContextCompat.getColor(context, R.color.mink_forest))
     )
         private set
+    var appBackgroundColorArgb by mutableStateOf(
+        if (prefs.contains(APP_BACKGROUND_COLOR_KEY)) prefs.getInt(APP_BACKGROUND_COLOR_KEY, 0) else null
+    )
+        private set
     var messageSendMode by mutableStateOf(
         runCatching {
             when (val saved = prefs.getString("message_send_mode", "ALWAYS_ASK") ?: "ALWAYS_ASK") {
@@ -245,6 +249,14 @@ class LauncherStore(context: Context) {
         prefs.edit().putInt("home_panel_color", homePanelColorArgb).apply()
     }
 
+    fun setAppBackgroundColor(argb: Int?) {
+        appBackgroundColorArgb = argb?.or(0xFF000000.toInt())
+        prefs.edit().apply {
+            appBackgroundColorArgb?.let { putInt(APP_BACKGROUND_COLOR_KEY, it) }
+                ?: remove(APP_BACKGROUND_COLOR_KEY)
+        }.apply()
+    }
+
     fun updateSocialGoalMinutes(minutes: Int) {
         if (minutes !in SOCIAL_GOAL_OPTIONS) return
         socialGoalMinutes = minutes
@@ -406,6 +418,7 @@ class LauncherStore(context: Context) {
     }
 
     private companion object {
+        const val APP_BACKGROUND_COLOR_KEY = "app_background_color"
         const val ONBOARDING_COMPLETE_KEY = "onboarding_complete_v2"
         const val MAX_SEARCH_HISTORY = 5
         const val MAX_WIDGETS = 4

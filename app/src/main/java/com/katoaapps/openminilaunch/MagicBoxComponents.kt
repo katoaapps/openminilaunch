@@ -295,14 +295,17 @@ internal fun SuggestionRow(
     leadingContent: (@Composable () -> Unit)? = null,
     onClick: () -> Unit,
 ) {
+    val contentColor = MaterialTheme.colorScheme.onSurface
     Row(
         Modifier.fillMaxWidth().clip(RoundedCornerShape(Dimens.dp14))
             .background(MaterialTheme.colorScheme.surfaceContainerLow)
             .clickable(onClick = onClick).padding(Dimens.dp12),
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        if (leadingContent != null) leadingContent() else icon?.let { Icon(it, null, Modifier.size(Dimens.dp20)) }
-        Text(text, Modifier.padding(start = Dimens.dp10), maxLines = 1, fontSize = Dimens.sp14)
+        if (leadingContent != null) leadingContent() else icon?.let {
+            Icon(it, null, Modifier.size(Dimens.dp20), tint = contentColor)
+        }
+        Text(text, Modifier.padding(start = Dimens.dp10), color = contentColor, maxLines = 1, fontSize = Dimens.sp14)
     }
 }
 
