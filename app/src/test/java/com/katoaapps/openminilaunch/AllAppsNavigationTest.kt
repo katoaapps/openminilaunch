@@ -1,5 +1,8 @@
 package com.katoaapps.openminilaunch
 
+import com.katoaapps.openminilaunch.features.apps.*
+import com.katoaapps.openminilaunch.model.*
+
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNull
 import org.junit.Test

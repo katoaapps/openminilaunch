@@ -1,5 +1,7 @@
 package com.katoaapps.openminilaunch
 
+import com.katoaapps.openminilaunch.features.magic.*
+
 import android.content.res.Configuration
 import org.junit.Assert.assertEquals
 import org.junit.Test

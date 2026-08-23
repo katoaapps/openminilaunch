@@ -1,5 +1,10 @@
 package com.katoaapps.openminilaunch
 
+import com.katoaapps.openminilaunch.ui.settings.SettingsDestination
+import com.katoaapps.openminilaunch.ui.settings.popSettingsDestination
+import com.katoaapps.openminilaunch.ui.settings.pushSettingsDestination
+import com.katoaapps.openminilaunch.ui.settings.settingsPathTo
+
 import org.junit.Assert.assertEquals
 import org.junit.Test
 

@@ -1,5 +1,8 @@
 package com.katoaapps.openminilaunch
 
+import com.katoaapps.openminilaunch.ui.settings.formatHomePanelHex
+import com.katoaapps.openminilaunch.ui.settings.parseHomePanelHex
+
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNull
 import org.junit.Test

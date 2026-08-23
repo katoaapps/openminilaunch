@@ -1,5 +1,7 @@
 package com.katoaapps.openminilaunch
 
+import com.katoaapps.openminilaunch.features.conversations.*
+
 import android.app.Notification
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue

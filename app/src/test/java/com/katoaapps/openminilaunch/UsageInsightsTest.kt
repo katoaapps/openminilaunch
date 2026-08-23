@@ -1,5 +1,7 @@
 package com.katoaapps.openminilaunch
 
+import com.katoaapps.openminilaunch.features.wellbeing.*
+
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNull
