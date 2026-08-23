@@ -33,6 +33,8 @@ class LauncherStore(context: Context) {
         private set
     var onboardingComplete by mutableStateOf(prefs.getBoolean(ONBOARDING_COMPLETE_KEY, false))
         private set
+    var hasOpenedClockFromDate by mutableStateOf(prefs.getBoolean(CLOCK_DATE_OPENED_KEY, false))
+        private set
     var themePreference by mutableStateOf(
         runCatching { ThemePreference.valueOf(prefs.getString("theme_preference", "SYSTEM") ?: "SYSTEM") }.getOrDefault(ThemePreference.SYSTEM)
     )
@@ -231,6 +233,11 @@ class LauncherStore(context: Context) {
         prefs.edit().putBoolean(ONBOARDING_COMPLETE_KEY, true).apply()
     }
 
+    fun markClockOpenedFromDate() {
+        hasOpenedClockFromDate = true
+        prefs.edit().putBoolean(CLOCK_DATE_OPENED_KEY, true).apply()
+    }
+
     fun hasSeenUpdate(updateId: String): Boolean = updateId in (prefs.getStringSet("seen_updates", emptySet()) ?: emptySet())
 
     fun markUpdateSeen(updateId: String) {
@@ -419,6 +426,7 @@ class LauncherStore(context: Context) {
 
     private companion object {
         const val APP_BACKGROUND_COLOR_KEY = "app_background_color"
+        const val CLOCK_DATE_OPENED_KEY = "clock_date_opened"
         const val ONBOARDING_COMPLETE_KEY = "onboarding_complete_v2"
         const val MAX_SEARCH_HISTORY = 5
         const val MAX_WIDGETS = 4

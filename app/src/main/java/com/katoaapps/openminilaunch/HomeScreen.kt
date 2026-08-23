@@ -164,18 +164,32 @@ internal fun HomeScreen(
                         onClick = openMinkDay,
                         modifier = Modifier.size(headerActionSize),
                     )
-                    Text(
-                        LocalDate.now().format(DateTimeFormatter.ofPattern(stringResource(R.string.home_date_pattern))).uppercase(),
-                        color = MaterialTheme.colorScheme.onBackground,
-                        letterSpacing = Dimens.sp1_5,
-                        fontSize = Dimens.sp13,
-                        fontWeight = FontWeight.Bold,
+                    Column(
                         modifier = Modifier.weight(1f).clickable {
-                            if (!actions.openClock()) {
+                            if (actions.openClock()) {
+                                store.markClockOpenedFromDate()
+                            } else {
                                 Toast.makeText(context, R.string.no_clock_app_found, Toast.LENGTH_SHORT).show()
                             }
                         },
-                    )
+                    ) {
+                        Text(
+                            LocalDate.now().format(DateTimeFormatter.ofPattern(stringResource(R.string.home_date_pattern))).uppercase(),
+                            color = MaterialTheme.colorScheme.onBackground,
+                            letterSpacing = Dimens.sp1_5,
+                            fontSize = Dimens.sp13,
+                            fontWeight = FontWeight.Bold,
+                            maxLines = 1,
+                        )
+                        if (!store.hasOpenedClockFromDate) {
+                            Text(
+                                stringResource(R.string.tap_for_clock),
+                                color = MaterialTheme.colorScheme.onBackground.copy(alpha = .58f),
+                                fontSize = Dimens.sp9,
+                                maxLines = 1,
+                            )
+                        }
+                    }
                     IconButton(onClick = openHub, modifier = Modifier.size(headerActionSize)) {
                         BadgedBox(
                             badge = {

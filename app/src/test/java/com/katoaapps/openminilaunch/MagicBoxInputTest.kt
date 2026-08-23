@@ -1,9 +1,39 @@
 package com.katoaapps.openminilaunch
 
+import android.content.res.Configuration
 import org.junit.Assert.assertEquals
 import org.junit.Test
 
 class MagicBoxInputTest {
+    @Test
+    fun printableHardwareInputKeepsShiftedHotkeysAndUnicode() {
+        assertEquals("@", printableHardwareText('@'.code))
+        assertEquals("M", printableHardwareText('M'.code))
+        assertEquals("é", printableHardwareText('é'.code))
+    }
+
+    @Test
+    fun nonPrintableHardwareInputIsIgnored() {
+        assertEquals(null, printableHardwareText(0))
+        assertEquals(null, printableHardwareText('\n'.code))
+    }
+
+    @Test
+    fun exposedQwertyKeyboardUsesDirectTextInput() {
+        assertEquals(
+            true,
+            hasUsableHardwareKeyboard(Configuration.KEYBOARD_QWERTY, Configuration.HARDKEYBOARDHIDDEN_NO),
+        )
+        assertEquals(
+            false,
+            hasUsableHardwareKeyboard(Configuration.KEYBOARD_NOKEYS, Configuration.HARDKEYBOARDHIDDEN_NO),
+        )
+        assertEquals(
+            false,
+            hasUsableHardwareKeyboard(Configuration.KEYBOARD_QWERTY, Configuration.HARDKEYBOARDHIDDEN_YES),
+        )
+    }
+
     @Test
     fun plainTextBecomesSearchQuery() {
         val input = parseMagicBoxInput("  quarterly budget  ")

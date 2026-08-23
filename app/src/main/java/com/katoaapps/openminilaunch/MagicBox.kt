@@ -12,6 +12,7 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.focusable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -45,6 +46,7 @@ import androidx.compose.ui.input.key.onPreviewKeyEvent
 import androidx.compose.ui.input.key.type
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
@@ -129,6 +131,11 @@ internal fun MagicBox(
 ) {
     val magicBoxMinimumHeight = Dimens.dp64
     val context = LocalContext.current
+    val configuration = LocalConfiguration.current
+    val useDirectHardwareInput = hasUsableHardwareKeyboard(
+        configuration.keyboard,
+        configuration.hardKeyboardHidden,
+    )
     val fileSearchRepository = remember { FileSearchRepository(context.applicationContext) }
     var text by remember { mutableStateOf(TextFieldValue()) }
     var selectedContact by remember { mutableStateOf<ContactResult?>(null) }
@@ -281,11 +288,13 @@ internal fun MagicBox(
         }
     }
     val focusRequester = remember { FocusRequester() }
+    val armedFocusRequester = remember { FocusRequester() }
     val focusManager = LocalFocusManager.current
     val keyboard = LocalSoftwareKeyboardController.current
     var focusRequestSerial by remember { mutableIntStateOf(0) }
     var focusRequestShowsKeyboard by remember { mutableStateOf(true) }
     var textFieldPlaced by remember { mutableStateOf(false) }
+    var armedTargetPlaced by remember { mutableStateOf(false) }
     val magicResultsScroll = rememberScrollState()
     val parsedInput = parseMagicBoxInput(text.text, lockedPrefix)
     val prefix = parsedInput.prefix
@@ -430,17 +439,31 @@ internal fun MagicBox(
         }
     }
 
-    LaunchedEffect(keyboardInputEnabled) {
-        if (keyboardInputEnabled) {
-            while (!textFieldPlaced) withFrameNanos { }
-            withFrameNanos { }
-            focusRequester.requestFocus()
-            withFrameNanos { }
-            if (initiallyExpanded && showSoftwareKeyboardOnStart) keyboard?.show() else keyboard?.hide()
-            if (initiallyExpanded) onExpandedChange(true)
-        } else {
+    LaunchedEffect(keyboardInputEnabled, expanded, showSmsSentConfirmation, useDirectHardwareInput) {
+        if (!keyboardInputEnabled) {
             keyboard?.hide()
             focusManager.clearFocus(force = true)
+        } else if (!expanded && !showSmsSentConfirmation) {
+            if (useDirectHardwareInput) {
+                while (!textFieldPlaced) withFrameNanos { }
+                withFrameNanos { }
+                focusRequester.requestFocus()
+            } else {
+                while (!armedTargetPlaced) withFrameNanos { }
+                withFrameNanos { }
+                armedFocusRequester.requestFocus()
+            }
+            keyboard?.hide()
+        } else {
+            armedTargetPlaced = false
+            if (expanded && initiallyExpanded && focusRequestSerial == 0) {
+                while (!textFieldPlaced) withFrameNanos { }
+                withFrameNanos { }
+                focusRequester.requestFocus()
+                withFrameNanos { }
+                if (showSoftwareKeyboardOnStart) keyboard?.show() else keyboard?.hide()
+                onExpandedChange(true)
+            }
         }
     }
 
@@ -692,6 +715,35 @@ internal fun MagicBox(
         if (!expanded && !showSmsSentConfirmation) {
             Row(
                 collapsedModifier.align(Alignment.BottomCenter)
+                    .then(
+                        if (useDirectHardwareInput) {
+                            Modifier
+                        } else {
+                            Modifier.focusRequester(armedFocusRequester)
+                                .onGloballyPositioned { armedTargetPlaced = true }
+                                .onPreviewKeyEvent { event ->
+                                    val typedText = printableHardwareText(event.nativeKeyEvent.unicodeChar)
+                                    if (typedText == null) {
+                                        false
+                                    } else {
+                                        if (event.type == KeyEventType.KeyDown) {
+                                            if (!expanded) {
+                                                clearCommand()
+                                                text = TextFieldValue(typedText, selection = TextRange(typedText.length))
+                                                expanded = true
+                                                onExpandedChange(true)
+                                                refocus(showSoftwareKeyboard = false)
+                                            } else {
+                                                val updatedText = text.text + typedText
+                                                text = TextFieldValue(updatedText, selection = TextRange(updatedText.length))
+                                            }
+                                        }
+                                        true
+                                    }
+                                }
+                                .focusable()
+                        }
+                    )
                     .clip(RoundedCornerShape(Dimens.dp22))
                     .background(MaterialTheme.colorScheme.surfaceContainerLow)
                     .clickable {
