@@ -1,0 +1,5 @@
+MinkLauncher OpenSource 1.2.1 improves keyboard-first behavior and clock access.
+
+Hardware-keyboard users can keep typing from Home without forcing the software keyboard open, including cleaner long-press hotkey entry. Clock discovery is more reliable, and the date now explains that it opens the Clock app until the user tries it.
+
+This release also reorganizes the internal project structure for easier maintenance. No new permission is required.

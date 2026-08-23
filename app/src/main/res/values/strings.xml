@@ -80,7 +80,7 @@
     <string name="todo_pdf_saved">To-do PDF saved</string>
     <string name="todo_export_failed">Couldn’t export the to-do list</string>
     <string name="no_clock_app_found">Couldn’t open a clock app</string>
-    <string name="tap_for_clock">(Tap for Clock)</string>
+    <string name="tap_for_clock">(Tap for Clock App)</string>
     <string name="selected_folder">Selected folder</string>
     <string name="not_installed">Not installed</string>
     <string name="phone">Phone</string>
