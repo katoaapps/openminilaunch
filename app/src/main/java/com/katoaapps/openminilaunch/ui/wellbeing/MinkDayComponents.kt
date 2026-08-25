@@ -25,11 +25,10 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
@@ -43,7 +42,6 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowForward
-import androidx.compose.material.icons.filled.Apps
 import androidx.compose.material.icons.filled.ChevronRight
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Flag
@@ -52,7 +50,6 @@ import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material.icons.filled.Schedule
 import androidx.compose.material.icons.filled.Security
 import androidx.compose.material.icons.filled.TouchApp
-import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Badge
 import androidx.compose.material3.BadgedBox
 import androidx.compose.material3.Button
@@ -93,6 +90,8 @@ import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.Dialog
+import androidx.compose.ui.window.DialogProperties
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import kotlinx.coroutines.Dispatchers
@@ -286,37 +285,49 @@ internal fun SocialAppsDialog(store: LauncherStore, repository: UsageInsightsRep
         apps?.takeIf { it.isNotEmpty() }
             ?.let { store.reconcileSocialApps(it.map(LaunchableApp::packageName).toSet()) }
     }
-    AlertDialog(
+    Dialog(
         onDismissRequest = onDismiss,
-        icon = { Icon(Icons.Default.Apps, null, tint = Rust) },
-        title = { Text(stringResource(R.string.choose_tracked_apps)) },
-        text = {
-            Column {
-                Text(
-                    if (store.usesAutomaticSocialApps) {
-                        stringResource(
-                            R.string.automatic_social_count,
-                            automaticPackages.size,
-                            stringResource(if (automaticPackages.size == 1) R.string.app_singular else R.string.app_plural),
-                        )
-                    } else if (store.socialPackages.isEmpty()) {
-                        stringResource(R.string.no_tracked_apps)
-                    } else {
-                        pluralStringResource(
-                            R.plurals.tracked_selected_count,
-                            store.socialPackages.size,
-                            store.socialPackages.size,
-                        )
-                    },
-                    color = Muted,
-                    fontSize = Dimens.sp13,
-                )
+        properties = DialogProperties(usePlatformDefaultWidth = false),
+    ) {
+        Surface(
+            Modifier.fillMaxSize().padding(Dimens.dp10),
+            shape = RoundedCornerShape(Dimens.dp24),
+            color = MaterialTheme.colorScheme.background,
+        ) {
+            Column(Modifier.padding(Dimens.dp14)) {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Text(
+                        if (store.usesAutomaticSocialApps) {
+                            stringResource(
+                                R.string.automatic_social_count,
+                                automaticPackages.size,
+                                stringResource(if (automaticPackages.size == 1) R.string.app_singular else R.string.app_plural),
+                            )
+                        } else if (store.socialPackages.isEmpty()) {
+                            stringResource(R.string.no_tracked_apps)
+                        } else {
+                            pluralStringResource(
+                                R.plurals.tracked_selected_count,
+                                store.socialPackages.size,
+                                store.socialPackages.size,
+                            )
+                        },
+                        color = Muted,
+                        fontSize = Dimens.sp13,
+                        maxLines = 2,
+                        overflow = TextOverflow.Ellipsis,
+                        modifier = Modifier.weight(1f),
+                    )
+                    IconButton(onClick = onDismiss) {
+                        Icon(Icons.Default.Close, stringResource(R.string.close))
+                    }
+                }
                 androidx.compose.material3.OutlinedTextField(
                     value = query,
                     onValueChange = { query = it },
                     placeholder = { Text(stringResource(R.string.find_app)) },
                     singleLine = true,
-                    modifier = Modifier.fillMaxWidth().padding(vertical = Dimens.dp10),
+                    modifier = Modifier.fillMaxWidth().padding(bottom = Dimens.dp8),
                 )
                 if (selectedPackages.isNotEmpty()) {
                     Text(
@@ -325,15 +336,15 @@ internal fun SocialAppsDialog(store: LauncherStore, repository: UsageInsightsRep
                         fontSize = Dimens.sp10,
                         fontWeight = FontWeight.Bold,
                         letterSpacing = Dimens.sp1,
-                        modifier = Modifier.padding(bottom = Dimens.dp6),
+                        modifier = Modifier.padding(bottom = Dimens.dp4),
                     )
                     LazyRow(
-                        Modifier.fillMaxWidth().padding(bottom = Dimens.dp10),
+                        Modifier.fillMaxWidth().padding(bottom = Dimens.dp6),
                         horizontalArrangement = Arrangement.spacedBy(Dimens.dp6),
                     ) {
                         items(apps.orEmpty().filter { it.packageName in selectedPackages }, key = { it.packageName }) { app ->
                             Column(
-                                Modifier.width(Dimens.dp70).clip(RoundedCornerShape(Dimens.dp12))
+                                Modifier.width(Dimens.dp64).clip(RoundedCornerShape(Dimens.dp12))
                                     .background(MaterialTheme.colorScheme.surfaceContainerLow)
                                     .clickable {
                                         store.replaceSocialApps(selectedPackages - app.packageName)
@@ -341,7 +352,7 @@ internal fun SocialAppsDialog(store: LauncherStore, repository: UsageInsightsRep
                                 horizontalAlignment = Alignment.CenterHorizontally,
                             ) {
                                 Box {
-                                    AppIcon(app.packageName, actions = null, size = Dimens.dp31)
+                                    AppIcon(app.packageName, actions = null, size = Dimens.dp28)
                                     Surface(
                                         modifier = Modifier.align(Alignment.TopEnd).offset(x = Dimens.dp5, y = -Dimens.dp5),
                                         shape = CircleShape,
@@ -362,48 +373,60 @@ internal fun SocialAppsDialog(store: LauncherStore, repository: UsageInsightsRep
                         }
                     }
                 }
-                when {
-                    apps == null -> Box(Modifier.fillMaxWidth().height(Dimens.dp180), contentAlignment = Alignment.Center) {
-                        androidx.compose.material3.CircularProgressIndicator()
-                    }
-                    visible.isEmpty() -> Box(Modifier.fillMaxWidth().height(Dimens.dp140), contentAlignment = Alignment.Center) {
-                        Text(stringResource(if (query.isBlank()) R.string.no_launchable_apps else R.string.no_matching_apps), color = Muted)
-                    }
-                    else -> LazyColumn(Modifier.heightIn(min = Dimens.dp140, max = Dimens.dp330)) {
-                        items(visible, key = { it.packageName }) { app ->
-                            val selected = app.packageName in selectedPackages
-                        Row(
-                            Modifier.fillMaxWidth().clickable {
-                                store.replaceSocialApps(
-                                    if (selected) selectedPackages - app.packageName else selectedPackages + app.packageName,
-                                )
-                            }.padding(vertical = Dimens.dp7),
-                            verticalAlignment = Alignment.CenterVertically,
-                        ) {
-                            AppIcon(app.packageName, actions = null, size = Dimens.dp34)
-                            Column(Modifier.weight(1f).padding(horizontal = Dimens.dp10)) {
-                                Text(app.label, maxLines = 1)
-                                if (app.packageName in automaticPackages) {
-                                    Text(stringResource(R.string.android_default_social), color = Rust, fontSize = Dimens.sp10)
-                                }
-                            }
-                            Checkbox(
-                                checked = selected,
-                                onCheckedChange = {
-                                    store.replaceSocialApps(
-                                        if (it) selectedPackages + app.packageName else selectedPackages - app.packageName,
-                                    )
-                                },
+                Box(Modifier.fillMaxWidth().weight(1f)) {
+                    when {
+                        apps == null -> Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                            androidx.compose.material3.CircularProgressIndicator()
+                        }
+                        visible.isEmpty() -> Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                            Text(
+                                stringResource(if (query.isBlank()) R.string.no_launchable_apps else R.string.no_matching_apps),
+                                color = Muted,
                             )
                         }
-                    }
+                        else -> LazyColumn(Modifier.fillMaxSize()) {
+                            items(visible, key = { it.packageName }) { app ->
+                                val selected = app.packageName in selectedPackages
+                                Row(
+                                    Modifier.fillMaxWidth().clickable {
+                                        store.replaceSocialApps(
+                                            if (selected) selectedPackages - app.packageName else selectedPackages + app.packageName,
+                                        )
+                                    }.padding(vertical = Dimens.dp5),
+                                    verticalAlignment = Alignment.CenterVertically,
+                                ) {
+                                    AppIcon(app.packageName, actions = null, size = Dimens.dp34)
+                                    Column(Modifier.weight(1f).padding(horizontal = Dimens.dp10)) {
+                                        Text(app.label, maxLines = 1)
+                                        if (app.packageName in automaticPackages) {
+                                            Text(
+                                                stringResource(R.string.android_default_social),
+                                                color = Rust,
+                                                fontSize = Dimens.sp10,
+                                            )
+                                        }
+                                    }
+                                    Checkbox(
+                                        checked = selected,
+                                        onCheckedChange = {
+                                            store.replaceSocialApps(
+                                                if (it) selectedPackages + app.packageName else selectedPackages - app.packageName,
+                                            )
+                                        },
+                                    )
+                                }
+                            }
                         }
+                    }
+                }
+                Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
+                    TextButton(onClick = store::clearSocialApps) {
+                        Text(stringResource(R.string.restore_android_defaults))
+                    }
+                    Spacer(Modifier.weight(1f))
+                    Button(onClick = onDismiss) { Text(stringResource(R.string.done)) }
                 }
             }
-        },
-        confirmButton = { Button(onClick = onDismiss) { Text(stringResource(R.string.done)) } },
-        dismissButton = {
-            TextButton(onClick = store::clearSocialApps) { Text(stringResource(R.string.restore_android_defaults)) }
-        },
-    )
+        }
+    }
 }

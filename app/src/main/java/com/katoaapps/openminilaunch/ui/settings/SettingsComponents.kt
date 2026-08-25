@@ -15,6 +15,8 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.gestures.detectVerticalDragGestures
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyRow
+import androidx.compose.foundation.lazy.items as lazyRowItems
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
@@ -41,6 +43,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
+import androidx.compose.ui.window.DialogProperties
 
 @Composable
 internal fun AppPickerDialog(
@@ -75,9 +78,16 @@ internal fun AppPickerDialog(
             if (index >= 0) gridState.scrollToItem(index)
         }
     }
-    Dialog(onDismissRequest = onDismiss) {
-        Surface(Modifier.fillMaxWidth().fillMaxHeight(.78f), shape = RoundedCornerShape(Dimens.dp24), color = MaterialTheme.colorScheme.background) {
-            Column(Modifier.padding(Dimens.dp16)) {
+    Dialog(
+        onDismissRequest = onDismiss,
+        properties = DialogProperties(usePlatformDefaultWidth = false),
+    ) {
+        Surface(
+            Modifier.fillMaxSize().padding(Dimens.dp10),
+            shape = RoundedCornerShape(Dimens.dp24),
+            color = MaterialTheme.colorScheme.background,
+        ) {
+            Column(Modifier.padding(Dimens.dp14)) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Text(title, Modifier.weight(1f), fontWeight = FontWeight.Black, fontSize = Dimens.sp18)
                     IconButton(onClick = onDismiss) { Icon(Icons.Default.Close, stringResource(R.string.close)) }
@@ -130,33 +140,32 @@ internal fun AppPickerDialog(
                         modifier = Modifier.padding(top = Dimens.dp4, bottom = Dimens.dp6),
                     )
                     val selectedApps = apps.filter { it.packageName in selected }.take(selectionLimit)
-                    selectedApps.chunked(4).forEach { rowApps ->
-                        Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(Dimens.dp6)) {
-                            rowApps.forEach { app ->
-                                Column(
-                                    Modifier.weight(1f).clip(RoundedCornerShape(Dimens.dp12))
-                                        .background(MaterialTheme.colorScheme.surfaceContainerLow)
-                                        .clickable { onApp(app) }.padding(horizontal = Dimens.dp3, vertical = Dimens.dp7),
-                                    horizontalAlignment = Alignment.CenterHorizontally,
-                                ) {
-                                    Box {
-                                        AppIcon(app.packageName, actions = null, size = Dimens.dp31)
-                                        Surface(
-                                            modifier = Modifier.align(Alignment.TopEnd).offset(x = Dimens.dp5, y = -Dimens.dp5),
-                                            shape = CircleShape,
-                                            color = MaterialTheme.colorScheme.error,
-                                        ) {
-                                            Icon(Icons.Default.Close, stringResource(R.string.remove_app, app.label), Modifier.size(Dimens.dp14), tint = MaterialTheme.colorScheme.onError)
-                                        }
+                    LazyRow(
+                        Modifier.fillMaxWidth(),
+                        horizontalArrangement = Arrangement.spacedBy(Dimens.dp6),
+                    ) {
+                        lazyRowItems(selectedApps, key = { it.packageName }) { app ->
+                            Column(
+                                Modifier.width(Dimens.dp64).clip(RoundedCornerShape(Dimens.dp12))
+                                    .background(MaterialTheme.colorScheme.surfaceContainerLow)
+                                    .clickable { onApp(app) }.padding(horizontal = Dimens.dp3, vertical = Dimens.dp6),
+                                horizontalAlignment = Alignment.CenterHorizontally,
+                            ) {
+                                Box {
+                                    AppIcon(app.packageName, actions = null, size = Dimens.dp30)
+                                    Surface(
+                                        modifier = Modifier.align(Alignment.TopEnd).offset(x = Dimens.dp5, y = -Dimens.dp5),
+                                        shape = CircleShape,
+                                        color = MaterialTheme.colorScheme.error,
+                                    ) {
+                                        Icon(Icons.Default.Close, stringResource(R.string.remove_app, app.label), Modifier.size(Dimens.dp14), tint = MaterialTheme.colorScheme.onError)
                                     }
-                                    Text(app.label, fontSize = Dimens.sp9, maxLines = 1, textAlign = TextAlign.Center, modifier = Modifier.padding(top = Dimens.dp4))
                                 }
+                                Text(app.label, fontSize = Dimens.sp9, maxLines = 1, textAlign = TextAlign.Center, modifier = Modifier.padding(top = Dimens.dp3))
                             }
-                            repeat(4 - rowApps.size) { Spacer(Modifier.weight(1f)) }
                         }
-                        Spacer(Modifier.height(Dimens.dp6))
                     }
-                    HorizontalDivider(Modifier.padding(top = Dimens.dp10), color = Sage)
+                    HorizontalDivider(Modifier.padding(top = Dimens.dp8), color = Sage)
                 }
                 Box(Modifier.weight(1f).fillMaxWidth()) {
                     if (apps.isEmpty() && loading) {
@@ -173,17 +182,17 @@ internal fun AppPickerDialog(
                             items(apps, key = { it.packageName }) { app ->
                                 val isSelected = app.packageName in selected
                                 Column(
-                                    Modifier.padding(Dimens.dp5).clip(RoundedCornerShape(Dimens.dp16))
+                                    Modifier.padding(Dimens.dp4).clip(RoundedCornerShape(Dimens.dp16))
                                         .background(if (isSelected) Sage else MaterialTheme.colorScheme.surfaceContainerLow)
                                         .clickable {
                                             if (multiSelect && !isSelected && selected.size >= selectionLimit) onSelectionLimit()
                                             else onApp(app)
                                         }
-                                        .padding(Dimens.dp10),
+                                        .padding(Dimens.dp8),
                                     horizontalAlignment = Alignment.CenterHorizontally,
                                 ) {
-                                    AppIcon(app.packageName, actions = null, size = Dimens.dp42)
-                                    Text(app.label, textAlign = TextAlign.Center, fontSize = Dimens.sp11, maxLines = 2, modifier = Modifier.padding(top = Dimens.dp7))
+                                    AppIcon(app.packageName, actions = null, size = Dimens.dp48)
+                                    Text(app.label, textAlign = TextAlign.Center, fontSize = Dimens.sp11, maxLines = 2, modifier = Modifier.padding(top = Dimens.dp6))
                                 }
                             }
                         }
