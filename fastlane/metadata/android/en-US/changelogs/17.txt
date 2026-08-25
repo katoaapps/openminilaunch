@@ -1,0 +1,5 @@
+MinkLauncher OpenSource 1.2.2 makes app selection much easier on compact and square displays.
+
+Shortcut, Top 8, AI, browser, and setup app pickers now use nearly the full screen, with larger icons and a compact selected-app strip. Mink’s Day also gives its app list the available space instead of crowding it beneath a large dialog header.
+
+No new permission is required.
