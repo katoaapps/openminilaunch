@@ -3,6 +3,7 @@ package com.katoaapps.openminilaunch.platform
 import com.katoaapps.openminilaunch.R
 import com.katoaapps.openminilaunch.features.calendar.parseCalendarPhrase
 import com.katoaapps.openminilaunch.features.conversations.NotificationHub
+import com.katoaapps.openminilaunch.features.demo.DemoSearchData
 import com.katoaapps.openminilaunch.features.magic.normalizedWebUrl
 import com.katoaapps.openminilaunch.model.*
 import com.katoaapps.openminilaunch.ui.apps.AllAppsActivity
@@ -165,7 +166,8 @@ class DeviceActions(private val context: Context) {
         }
     }
 
-    fun searchContacts(query: String): List<ContactResult> {
+    fun searchContacts(query: String, useDemoData: Boolean = false): List<ContactResult> {
+        if (useDemoData) return DemoSearchData.searchContacts(query)
         if (query.isBlank()) return emptyList()
         val results = mutableListOf<ContactResult>()
         val seenNumbers = mutableSetOf<String>()

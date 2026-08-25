@@ -67,6 +67,8 @@ class LauncherStore(context: Context) {
         prefs.getInt("social_goal_minutes", 60).takeIf { it in SOCIAL_GOAL_OPTIONS } ?: 60
     )
         private set
+    var demoSearchDataEnabled by mutableStateOf(prefs.getBoolean(DEMO_SEARCH_DATA_KEY, false))
+        private set
 
     init {
         prefs.edit()
@@ -239,6 +241,12 @@ class LauncherStore(context: Context) {
     fun markClockOpenedFromDate() {
         hasOpenedClockFromDate = true
         prefs.edit().putBoolean(CLOCK_DATE_OPENED_KEY, true).apply()
+    }
+
+    fun toggleDemoSearchData(): Boolean {
+        demoSearchDataEnabled = !demoSearchDataEnabled
+        prefs.edit().putBoolean(DEMO_SEARCH_DATA_KEY, demoSearchDataEnabled).apply()
+        return demoSearchDataEnabled
     }
 
     fun hasSeenUpdate(updateId: String): Boolean = updateId in (prefs.getStringSet("seen_updates", emptySet()) ?: emptySet())
@@ -430,6 +438,7 @@ class LauncherStore(context: Context) {
     private companion object {
         const val APP_BACKGROUND_COLOR_KEY = "app_background_color"
         const val CLOCK_DATE_OPENED_KEY = "clock_date_opened"
+        const val DEMO_SEARCH_DATA_KEY = "demo_search_data_enabled"
         const val ONBOARDING_COMPLETE_KEY = "onboarding_complete_v2"
         const val MAX_SEARCH_HISTORY = 5
         const val MAX_WIDGETS = 4

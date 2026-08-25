@@ -1,6 +1,7 @@
 package com.katoaapps.openminilaunch.features.files
 
 import com.katoaapps.openminilaunch.R
+import com.katoaapps.openminilaunch.features.demo.DemoSearchData
 import com.katoaapps.openminilaunch.model.FileSearchResult
 import com.katoaapps.openminilaunch.model.SearchFolder
 
@@ -35,9 +36,15 @@ class FileSearchRepository(private val context: Context) {
         )?.use { cursor -> if (cursor.moveToFirst()) cursor.getString(0) else null }
     }.getOrNull() ?: context.getString(R.string.selected_folder)
 
-    fun search(query: String, folders: List<SearchFolder>, includeMedia: Boolean): List<FileSearchResult> {
+    fun search(
+        query: String,
+        folders: List<SearchFolder>,
+        includeMedia: Boolean,
+        useDemoData: Boolean = false,
+    ): List<FileSearchResult> {
         val clean = query.trim()
         if (clean.length < 2) return emptyList()
+        if (useDemoData) return DemoSearchData.searchFiles(context, clean)
         val results = mutableListOf<FileSearchResult>()
         if (includeMedia) results += searchMedia(clean)
         ensureDocumentIndex(folders)

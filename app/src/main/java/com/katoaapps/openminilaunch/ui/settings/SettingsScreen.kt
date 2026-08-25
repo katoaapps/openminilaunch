@@ -318,7 +318,7 @@ internal fun SettingsScreen(
                 actions = permissionActions,
                 goBack = ::navigateBack,
             )
-            SettingsDestination.ABOUT -> AboutSettingsPage(actions, onRepeatTutorial, ::navigateBack)
+            SettingsDestination.ABOUT -> AboutSettingsPage(store, actions, onRepeatTutorial, ::navigateBack)
             }
         }
     }

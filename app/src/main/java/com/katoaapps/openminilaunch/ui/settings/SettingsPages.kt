@@ -5,6 +5,7 @@ import com.katoaapps.openminilaunch.data.*
 import com.katoaapps.openminilaunch.model.*
 import com.katoaapps.openminilaunch.platform.*
 import com.katoaapps.openminilaunch.features.files.*
+import com.katoaapps.openminilaunch.features.demo.DemoSearchData
 import com.katoaapps.openminilaunch.features.wellbeing.*
 import com.katoaapps.openminilaunch.ui.components.*
 import com.katoaapps.openminilaunch.ui.launcher.ShortcutAssignmentRow
@@ -27,6 +28,10 @@ import androidx.compose.material.icons.automirrored.filled.Send
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.runtime.staticCompositionLocalOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -38,6 +43,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.platform.LocalContext
+import android.widget.Toast
 
 internal enum class SettingsDestination {
     OVERVIEW,
@@ -496,11 +503,16 @@ internal fun PermissionsSettingsPage(
 
 @Composable
 internal fun AboutSettingsPage(
+    store: LauncherStore,
     actions: DeviceActions,
     onRepeatTutorial: () -> Unit,
     goBack: () -> Unit,
 ) {
+    val context = LocalContext.current
     val appName = stringResource(R.string.app_name)
+    val enabledMessage = stringResource(R.string.demo_search_data_enabled)
+    val disabledMessage = stringResource(R.string.demo_search_data_disabled)
+    var versionTapCount by remember { mutableIntStateOf(0) }
     SettingsPage(stringResource(R.string.about), goBack) {
         SettingsRow(stringResource(R.string.email_us), stringResource(R.string.support_email), Icons.Default.Email, onClick = actions::emailSupport)
         SettingsRow(stringResource(R.string.privacy_policy), stringResource(R.string.privacy_policy_summary, appName), Icons.Default.PrivacyTip, onClick = actions::openPrivacyPolicy)
@@ -511,12 +523,24 @@ internal fun AboutSettingsPage(
             Icons.Default.School,
             onClick = onRepeatTutorial,
         )
-        Row(Modifier.fillMaxWidth().padding(vertical = Dimens.dp12)) {
+        Row(
+            Modifier.fillMaxWidth().clickable {
+                versionTapCount++
+                if (versionTapCount >= DEMO_MODE_TAP_COUNT) {
+                    versionTapCount = 0
+                    val enabled = store.toggleDemoSearchData()
+                    if (!enabled) DemoSearchData.clearFiles(context.applicationContext)
+                    Toast.makeText(context, if (enabled) enabledMessage else disabledMessage, Toast.LENGTH_SHORT).show()
+                }
+            }.padding(vertical = Dimens.dp12),
+        ) {
             Text(stringResource(R.string.version), Modifier.weight(1f), fontWeight = FontWeight.Medium)
             Text(BuildConfig.VERSION_NAME, color = Muted)
         }
     }
 }
+
+private const val DEMO_MODE_TAP_COUNT = 8
 
 @Composable
 private fun SettingsPage(

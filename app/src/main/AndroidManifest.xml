@@ -55,6 +55,15 @@
         android:label="MinkLauncher OpenSource"
         android:roundIcon="@mipmap/ic_launcher_round"
         android:theme="@style/Theme.MiniLaunch">
+        <provider
+            android:name="androidx.core.content.FileProvider"
+            android:authorities="${applicationId}.demo-files"
+            android:exported="false"
+            android:grantUriPermissions="true">
+            <meta-data
+                android:name="android.support.FILE_PROVIDER_PATHS"
+                android:resource="@xml/demo_file_paths" />
+        </provider>
         <service
             android:name=".features.conversations.MinkNotificationListenerService"
             android:exported="true"

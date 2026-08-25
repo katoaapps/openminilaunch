@@ -380,6 +380,8 @@
     <string name="repeat_tutorial">Repeat tutorial</string>
     <string name="repeat_tutorial_summary">Review setup, Magic Box, Mink’s Day, Conversations, widgets, and permissions</string>
     <string name="version">Version</string>
+    <string name="demo_search_data_enabled">Demo contact and file search enabled</string>
+    <string name="demo_search_data_disabled">Demo contact and file search disabled</string>
 
     <!-- Settings dialogs and pickers -->
     <string name="light_mode">Light Mode</string>

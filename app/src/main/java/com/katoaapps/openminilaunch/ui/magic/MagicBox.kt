@@ -320,8 +320,11 @@ internal fun MagicBox(
     val parsedInput = parseMagicBoxInput(text.text, lockedPrefix)
     val prefix = parsedInput.prefix
     val searchTerm = parsedInput.searchTerm
-    val contactResults = remember(prefix, searchTerm, hasContacts) {
-        if (prefix in listOf('@', '#') && hasContacts && selectedContact == null) actions.searchContacts(searchTerm).take(5) else emptyList()
+    val canSearchContacts = hasContacts || store.demoSearchDataEnabled
+    val contactResults = remember(prefix, searchTerm, canSearchContacts, store.demoSearchDataEnabled) {
+        if (prefix in listOf('@', '#') && canSearchContacts && selectedContact == null) {
+            actions.searchContacts(searchTerm, useDemoData = store.demoSearchDataEnabled).take(5)
+        } else emptyList()
     }
     val appResults = remember(prefix, searchTerm) {
         if (prefix == '?' && searchTerm.isNotBlank()) {
@@ -332,7 +335,7 @@ internal fun MagicBox(
     val noteMode = expanded && prefix == MAGIC_NOTE_PREFIX
     val hasNoteDraft = noteMode && text.text.drop(1).isNotBlank()
     val indexedFolderUris = store.searchFolders.map { it.uri }
-    LaunchedEffect(plainQuery, indexedFolderUris, hasMediaAccess) {
+    LaunchedEffect(plainQuery, indexedFolderUris, hasMediaAccess, store.demoSearchDataEnabled) {
         val request = fileSearchRequests.begin(plainQuery)
         if (plainQuery.length < 2) {
             fileResults = emptyList()
@@ -344,7 +347,12 @@ internal fun MagicBox(
                 delay(180)
                 val folders = store.searchFolders.toList()
                 val results = withContext(Dispatchers.IO) {
-                    fileSearchRepository.search(request.query, folders, hasMediaAccess)
+                    fileSearchRepository.search(
+                        query = request.query,
+                        folders = folders,
+                        includeMedia = hasMediaAccess,
+                        useDemoData = store.demoSearchDataEnabled,
+                    )
                 }
                 if (fileSearchRequests.isCurrent(request)) {
                     fileResults = results
@@ -563,13 +571,13 @@ internal fun MagicBox(
                                 dismiss()
                             }
                         }
-                        if (plainQuery.length >= 2 && !hasMediaAccess) {
+                        if (plainQuery.length >= 2 && !hasMediaAccess && !store.demoSearchDataEnabled) {
                             FilledTonalButton(onClick = { mediaPermissionLauncher.launch(mediaReadPermissions()) }) {
                                 Icon(Icons.Default.PhotoLibrary, null, Modifier.size(Dimens.dp18))
                                 Text(stringResource(R.string.search_media_filenames), Modifier.padding(start = Dimens.dp8))
                             }
                         }
-                        if (plainQuery.isNotBlank() && store.searchFolders.isEmpty()) {
+                        if (plainQuery.isNotBlank() && store.searchFolders.isEmpty() && !store.demoSearchDataEnabled) {
                             Surface(
                                 onClick = { showFileScopeChoice = true },
                                 shape = RoundedCornerShape(Dimens.dp14),
@@ -630,7 +638,7 @@ internal fun MagicBox(
                                 }
                             }
                         }
-                        if (prefix in listOf('@', '#') && !hasContacts) {
+                        if (prefix in listOf('@', '#') && !canSearchContacts) {
                             FilledTonalButton(onClick = { permissionLauncher.launch(Manifest.permission.READ_CONTACTS) }) {
                                 Text(stringResource(R.string.allow_contacts_to_search_people))
                             }
