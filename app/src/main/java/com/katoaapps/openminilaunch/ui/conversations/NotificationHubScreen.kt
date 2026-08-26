@@ -1,6 +1,7 @@
 package com.katoaapps.openminilaunch.ui.conversations
 
 import com.katoaapps.openminilaunch.R
+import com.katoaapps.openminilaunch.data.LauncherStore
 import com.katoaapps.openminilaunch.model.*
 import com.katoaapps.openminilaunch.platform.*
 import com.katoaapps.openminilaunch.features.conversations.*
@@ -37,6 +38,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.OpenInNew
 import androidx.compose.material.icons.automirrored.filled.Reply
 import androidx.compose.material.icons.filled.Check
+import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Forum
 import androidx.compose.material.icons.filled.NotificationsOff
 import androidx.compose.material3.Button
@@ -61,6 +63,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -75,13 +78,14 @@ import java.text.DateFormat
 import java.util.Date
 
 @Composable
-internal fun NotificationHubScreen(actions: DeviceActions, goBack: () -> Unit) {
+internal fun NotificationHubScreen(store: LauncherStore, actions: DeviceActions, goBack: () -> Unit) {
     val context = LocalContext.current
     val activity = context as androidx.activity.ComponentActivity
     var accessGranted by remember { mutableStateOf(NotificationHub.hasAccess(context)) }
     var showAccessDisclosure by remember { mutableStateOf(false) }
     var selectedConversationId by remember { mutableStateOf<String?>(null) }
-    val conversations = NotificationHub.conversations()
+    val demoModeEnabled = store.demoSearchDataEnabled
+    val conversations = NotificationHub.conversations(useDemoData = demoModeEnabled)
     val selectedConversation = conversations.firstOrNull { it.id == selectedConversationId }
 
     DisposableEffect(activity, context) {
@@ -107,7 +111,7 @@ internal fun NotificationHubScreen(actions: DeviceActions, goBack: () -> Unit) {
         Column(Modifier.fillMaxSize().statusBarsPadding().navigationBarsPadding()) {
             PageHeader(stringResource(R.string.conversations), goBack)
             when {
-                !accessGranted -> ConversationAccessEmptyState { showAccessDisclosure = true }
+                !accessGranted && !demoModeEnabled -> ConversationAccessEmptyState { showAccessDisclosure = true }
                 conversations.isEmpty() -> NoConversationsEmptyState()
                 else -> LazyColumn(
                     Modifier.fillMaxSize().padding(horizontal = Dimens.dp18),
@@ -229,9 +233,46 @@ private fun ConversationSourceIcons(packages: List<String>, actions: DeviceActio
                 )
                     .background(MaterialTheme.colorScheme.surface, CircleShape).padding(Dimens.dp2),
             ) {
-                AppIcon(packageName, actions, if (index == 0) Dimens.dp34 else Dimens.dp22)
+                ConversationSourceIcon(packageName, actions, if (index == 0) Dimens.dp34 else Dimens.dp22)
             }
         }
+    }
+}
+
+@Composable
+private fun ConversationSourceIcon(packageName: String, actions: DeviceActions, size: androidx.compose.ui.unit.Dp) {
+    val installedIconAvailable = remember(packageName, actions) { actions.appIcon(packageName) != null }
+    if (installedIconAvailable) {
+        AppIcon(packageName, actions, size)
+        return
+    }
+    when (packageName) {
+        DemoConversationData.SLACK_PACKAGE -> DemoSourceIcon(
+            icon = Icons.Default.Forum,
+            background = colorResource(R.color.demo_slack),
+            size = size,
+        )
+        DemoConversationData.GMAIL_PACKAGE -> DemoSourceIcon(
+            icon = Icons.Default.Email,
+            background = colorResource(R.color.demo_gmail),
+            size = size,
+        )
+        DemoConversationData.GOOGLE_MESSAGES_PACKAGE -> DemoSourceIcon(
+            icon = Icons.Default.Forum,
+            background = colorResource(R.color.demo_google_messages),
+            size = size,
+        )
+        else -> AppIcon(packageName, actions, size)
+    }
+}
+
+@Composable
+private fun DemoSourceIcon(icon: androidx.compose.ui.graphics.vector.ImageVector, background: androidx.compose.ui.graphics.Color, size: androidx.compose.ui.unit.Dp) {
+    Box(
+        Modifier.size(size).background(background, CircleShape),
+        contentAlignment = Alignment.Center,
+    ) {
+        Icon(icon, null, Modifier.size(size * .56f), tint = MinkWhite)
     }
 }
 
@@ -378,7 +419,7 @@ private fun ConversationBubble(message: ConversationMessage, showSource: Boolean
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
                     if (showSource) {
-                        AppIcon(message.packageName, actions, Dimens.dp14)
+                        ConversationSourceIcon(message.packageName, actions, Dimens.dp14)
                         Text(
                             message.appName,
                             color = bubbleContentColor.copy(alpha = .68f),

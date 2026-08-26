@@ -111,7 +111,7 @@ internal fun HomeScreen(
     var magicExpanded by remember { mutableStateOf(false) }
     var showLockDisclosure by remember { mutableStateOf(false) }
     val flightProgress = remember { Animatable(0f) }
-    val homePanelColor = Color(store.homePanelColorArgb)
+    val homePanelColor = Color(store.effectiveHomePanelColorArgb)
     val homePanelContentColor = readableContentColor(homePanelColor)
     val homePanelMutedColor = homePanelContentColor.copy(alpha = .68f)
     val homePanelInsetColor = if (homePanelContentColor == MinkWhite) {

@@ -80,7 +80,7 @@ class AssistantActivity : ComponentActivity() {
             val baseColors = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
                 if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
             } else fallback
-            val colors = baseColors.withAppBackground(store.appBackgroundColorArgb)
+            val colors = baseColors.withAppBackground(store.effectiveAppBackgroundColorArgb)
             val view = LocalView.current
             val transparent = MinkTransparent
             SideEffect {

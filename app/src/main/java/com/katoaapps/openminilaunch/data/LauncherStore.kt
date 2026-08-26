@@ -1,6 +1,7 @@
 package com.katoaapps.openminilaunch.data
 
 import com.katoaapps.openminilaunch.R
+import com.katoaapps.openminilaunch.features.demo.DemoHomeData
 import com.katoaapps.openminilaunch.model.*
 
 import android.content.Context
@@ -22,6 +23,10 @@ internal fun unfinishedFirst(items: List<TodoItem>): List<TodoItem> {
 
 class LauncherStore(context: Context) {
     private val prefs = context.getSharedPreferences("mini_launch", Context.MODE_PRIVATE)
+    private val defaultDemoHomePanelColorArgb = ContextCompat.getColor(context, R.color.mink_forest)
+    private val defaultDemoAppBackgroundColorArgb = ContextCompat.getColor(context, R.color.demo_app_background)
+    private var demoHomePanelColorArgb by mutableIntStateOf(defaultDemoHomePanelColorArgb)
+    private var demoAppBackgroundColorArgb by mutableStateOf<Int?>(defaultDemoAppBackgroundColorArgb)
     val todos = mutableStateListOf<TodoItem>()
     val shortcutPackages = mutableStateMapOf<Shortcut, String>()
     val shortcutOrder = mutableStateListOf<Shortcut>()
@@ -69,6 +74,10 @@ class LauncherStore(context: Context) {
         private set
     var demoSearchDataEnabled by mutableStateOf(prefs.getBoolean(DEMO_SEARCH_DATA_KEY, false))
         private set
+    val effectiveHomePanelColorArgb: Int
+        get() = if (demoSearchDataEnabled) demoHomePanelColorArgb else homePanelColorArgb
+    val effectiveAppBackgroundColorArgb: Int?
+        get() = if (demoSearchDataEnabled) demoAppBackgroundColorArgb else appBackgroundColorArgb
 
     init {
         prefs.edit()
@@ -82,13 +91,8 @@ class LauncherStore(context: Context) {
     }
 
     private fun load() {
+        restoreSavedTodos()
         runCatching {
-            val array = JSONArray(prefs.getString("todos", "[]") ?: "[]")
-            repeat(array.length()) { index ->
-                val item = array.getJSONObject(index)
-                todos += TodoItem(item.getString("id"), item.getString("text"), item.optBoolean("completed"))
-            }
-            keepUnfinishedTodosFirst()
             val shortcuts = JSONObject(prefs.getString("shortcuts", "{}") ?: "{}")
             Shortcut.entries.forEach { shortcut ->
                 shortcuts.optString(shortcut.name).takeIf(String::isNotBlank)?.let {
@@ -135,6 +139,31 @@ class LauncherStore(context: Context) {
             }
             socialPackages += prefs.getStringSet("social_packages", emptySet()).orEmpty().sorted()
         }
+        if (demoSearchDataEnabled) showDemoTodos()
+    }
+
+    private fun restoreSavedTodos() {
+        val saved = runCatching {
+            val array = JSONArray(prefs.getString("todos", "[]") ?: "[]")
+            buildList {
+                repeat(array.length()) { index ->
+                    val item = array.getJSONObject(index)
+                    add(TodoItem(item.getString("id"), item.getString("text"), item.optBoolean("completed")))
+                }
+            }
+        }.getOrDefault(emptyList())
+        todos.clear()
+        todos.addAll(unfinishedFirst(saved))
+    }
+
+    private fun showDemoTodos() {
+        todos.clear()
+        todos.addAll(DemoHomeData.todos())
+    }
+
+    private fun resetDemoAppearance() {
+        demoHomePanelColorArgb = defaultDemoHomePanelColorArgb
+        demoAppBackgroundColorArgb = defaultDemoAppBackgroundColorArgb
     }
 
     fun addTodo(text: String) {
@@ -245,6 +274,12 @@ class LauncherStore(context: Context) {
 
     fun toggleDemoSearchData(): Boolean {
         demoSearchDataEnabled = !demoSearchDataEnabled
+        if (demoSearchDataEnabled) {
+            resetDemoAppearance()
+            showDemoTodos()
+        } else {
+            restoreSavedTodos()
+        }
         prefs.edit().putBoolean(DEMO_SEARCH_DATA_KEY, demoSearchDataEnabled).apply()
         return demoSearchDataEnabled
     }
@@ -263,12 +298,22 @@ class LauncherStore(context: Context) {
     }
 
     fun setHomePanelColor(argb: Int) {
-        homePanelColorArgb = argb or 0xFF000000.toInt()
+        val opaqueArgb = argb or 0xFF000000.toInt()
+        if (demoSearchDataEnabled) {
+            demoHomePanelColorArgb = opaqueArgb
+            return
+        }
+        homePanelColorArgb = opaqueArgb
         prefs.edit().putInt("home_panel_color", homePanelColorArgb).apply()
     }
 
     fun setAppBackgroundColor(argb: Int?) {
-        appBackgroundColorArgb = argb?.or(0xFF000000.toInt())
+        val opaqueArgb = argb?.or(0xFF000000.toInt())
+        if (demoSearchDataEnabled) {
+            demoAppBackgroundColorArgb = opaqueArgb
+            return
+        }
+        appBackgroundColorArgb = opaqueArgb
         prefs.edit().apply {
             appBackgroundColorArgb?.let { putInt(APP_BACKGROUND_COLOR_KEY, it) }
                 ?: remove(APP_BACKGROUND_COLOR_KEY)
@@ -386,6 +431,7 @@ class LauncherStore(context: Context) {
     }
 
     private fun saveTodos() {
+        if (demoSearchDataEnabled) return
         val value = JSONArray().apply {
             todos.forEach { put(JSONObject().put("id", it.id).put("text", it.text).put("completed", it.completed)) }
         }

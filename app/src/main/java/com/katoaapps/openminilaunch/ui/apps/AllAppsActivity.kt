@@ -137,7 +137,7 @@ private fun AllAppsTheme(
     } else {
         fallback
     }
-    val colors = baseColors.withAppBackground(store.appBackgroundColorArgb)
+    val colors = baseColors.withAppBackground(store.effectiveAppBackgroundColorArgb)
     val view = LocalView.current
     val transparent = MinkTransparent
     SideEffect {
@@ -170,7 +170,7 @@ internal fun AllAppsScreen(
     }
 
     val focusedApp = apps.getOrNull(pagerState.currentPage)
-    val fallbackAccent = Color(store.homePanelColorArgb)
+    val fallbackAccent = Color(store.effectiveHomePanelColorArgb)
     val targetAccent = remember(focusedApp?.packageName, fallbackAccent) {
         focusedApp?.let { dominantAppColor(actions.appIcon(it.packageName)) } ?: fallbackAccent
     }

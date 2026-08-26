@@ -6,6 +6,7 @@ import com.katoaapps.openminilaunch.model.*
 import com.katoaapps.openminilaunch.platform.*
 import com.katoaapps.openminilaunch.features.files.*
 import com.katoaapps.openminilaunch.features.demo.DemoSearchData
+import com.katoaapps.openminilaunch.features.conversations.NotificationHub
 import com.katoaapps.openminilaunch.features.wellbeing.*
 import com.katoaapps.openminilaunch.ui.components.*
 import com.katoaapps.openminilaunch.ui.launcher.ShortcutAssignmentRow
@@ -224,9 +225,9 @@ internal fun LauncherSettingsPage(
 internal fun AppearanceSettingsPage(store: LauncherStore, goBack: () -> Unit) {
     SettingsPage(stringResource(R.string.appearance), goBack) {
         ThemeChooser(store.themePreference, store::setTheme)
-        HomePanelColorSetting(store.homePanelColorArgb, store::setHomePanelColor)
+        HomePanelColorSetting(store.effectiveHomePanelColorArgb, store::setHomePanelColor)
         AppBackgroundColorSetting(
-            selectedArgb = store.appBackgroundColorArgb,
+            selectedArgb = store.effectiveAppBackgroundColorArgb,
             onColorSelected = store::setAppBackgroundColor,
             onUseThemeDefault = { store.setAppBackgroundColor(null) },
         )
@@ -529,7 +530,10 @@ internal fun AboutSettingsPage(
                 if (versionTapCount >= DEMO_MODE_TAP_COUNT) {
                     versionTapCount = 0
                     val enabled = store.toggleDemoSearchData()
-                    if (!enabled) DemoSearchData.clearFiles(context.applicationContext)
+                    if (!enabled) {
+                        DemoSearchData.clearFiles(context.applicationContext)
+                        NotificationHub.clearDemoReplies()
+                    }
                     Toast.makeText(context, if (enabled) enabledMessage else disabledMessage, Toast.LENGTH_SHORT).show()
                 }
             }.padding(vertical = Dimens.dp12),

@@ -1,11 +1,22 @@
 package com.katoaapps.openminilaunch
 
 import com.katoaapps.openminilaunch.features.demo.DemoSearchData
+import com.katoaapps.openminilaunch.features.demo.DemoHomeData
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Test
 
 class DemoSearchDataTest {
+    @Test
+    fun demoHomeProvidesFiveSafeTodosWithKaraCompleted() {
+        val todos = DemoHomeData.todos()
+
+        assertEquals(5, todos.size)
+        assertEquals(todos.size, todos.map { it.id }.distinct().size)
+        assertEquals(1, todos.count { it.completed })
+        assertEquals("Call Kara after work", todos.single { it.completed }.text)
+    }
+
     @Test
     fun contactSearchProvidesTwoToFourNamedResultsForEveryLetter() {
         var totalResults = 0

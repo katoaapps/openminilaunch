@@ -203,7 +203,7 @@ private fun MiniLaunchApp(
     val baseColors = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
         if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
     } else fallbackColors
-    val colors = baseColors.withAppBackground(store.appBackgroundColorArgb)
+    val colors = baseColors.withAppBackground(store.effectiveAppBackgroundColorArgb)
     val view = LocalView.current
     val finishOnboardingSetup = {
         if (store.hasConfirmedAllShortcutChoices()) requestHomeRole()
@@ -340,7 +340,7 @@ private fun MiniLaunchApp(
                     screen = Screen.HOME
                 }
                 Screen.TODOS -> TodosScreen(store, actions) { screen = Screen.HOME }
-                Screen.HUB -> NotificationHubScreen(actions) { screen = Screen.HOME }
+                Screen.HUB -> NotificationHubScreen(store, actions) { screen = Screen.HOME }
             }
         }
         if (showShortcutSetup && !showTutorial && !showUpdateNotice) {

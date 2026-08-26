@@ -59,8 +59,9 @@ data class HubNotification(
     val messages: List<ConversationMessage>,
     internal val contentIntent: PendingIntent?,
     internal val replyAction: Notification.Action?,
+    val isDemo: Boolean = false,
 ) {
-    val canReply: Boolean get() = replyAction != null
+    val canReply: Boolean get() = isDemo || replyAction != null
 }
 
 data class HubConversation(
@@ -79,18 +80,27 @@ data class HubConversation(
 object NotificationHub {
     val notifications = mutableStateListOf<HubNotification>()
     private val sentReplies = mutableStateListOf<ConversationMessage>()
+    private val demoReplies = mutableStateListOf<ConversationMessage>()
 
     fun hasAccess(context: Context): Boolean =
         context.packageName in NotificationManagerCompat.getEnabledListenerPackages(context)
 
     fun accessSettingsIntent(): Intent = Intent(Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS)
 
-    fun conversations(): List<HubConversation> = notifications
+    fun conversations(useDemoData: Boolean = false): List<HubConversation> = buildConversations(
+        sourceNotifications = if (useDemoData) DemoConversationData.notifications() else notifications,
+        replies = if (useDemoData) demoReplies else sentReplies,
+    )
+
+    internal fun buildConversations(
+        sourceNotifications: List<HubNotification>,
+        replies: List<ConversationMessage>,
+    ): List<HubConversation> = sourceNotifications
         .groupBy(HubNotification::conversationId)
         .map { (id, grouped) ->
             val orderedNotifications = grouped.sortedByDescending(HubNotification::postedAt)
             val providerMessages = grouped.flatMap(HubNotification::messages)
-            val localReplies = sentReplies.filter { it.conversationId == id }.filterNot { local ->
+            val localReplies = replies.filter { it.conversationId == id }.filterNot { local ->
                 providerMessages.any { provider ->
                     provider.isOutgoing && provider.text == local.text &&
                         kotlin.math.abs(provider.timestamp - local.timestamp) < 120_000L
@@ -147,9 +157,24 @@ object NotificationHub {
     }
 
     fun reply(item: HubNotification, reply: String): Boolean {
-        val action = item.replyAction ?: return false
         val clean = reply.trim()
         if (clean.isEmpty()) return false
+        if (item.isDemo) {
+            val now = System.currentTimeMillis()
+            demoReplies += ConversationMessage(
+                id = "demo-local|${item.conversationId}|$now|${System.nanoTime()}",
+                conversationId = item.conversationId,
+                notificationKey = item.key,
+                packageName = item.packageName,
+                appName = item.appName,
+                text = clean,
+                timestamp = now,
+                senderName = null,
+                isOutgoing = true,
+            )
+            return true
+        }
+        val action = item.replyAction ?: return false
         val inputs = action.remoteInputs?.filter(RemoteInput::getAllowFreeFormInput)?.toTypedArray().orEmpty()
         if (inputs.isEmpty()) return false
         return runCatching {
@@ -171,6 +196,10 @@ object NotificationHub {
             )
             true
         }.getOrDefault(false)
+    }
+
+    fun clearDemoReplies() {
+        demoReplies.clear()
     }
 
     fun requestReconnect(context: Context) {
