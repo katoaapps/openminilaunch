@@ -9,8 +9,6 @@ import com.katoaapps.openminilaunch.ui.theme.*
 import com.katoaapps.openminilaunch.ui.launcher.MainActivity
 
 import android.app.Activity
-import android.appwidget.AppWidgetHost
-import android.appwidget.AppWidgetHostView
 import android.appwidget.AppWidgetManager
 import android.appwidget.AppWidgetProviderInfo
 import android.content.Intent
@@ -116,7 +114,7 @@ internal fun WidgetPage(store: LauncherStore, actions: DeviceActions, goHome: ()
     val context = LocalContext.current
     val activity = context as MainActivity
     val manager = remember { AppWidgetManager.getInstance(context) }
-    val host = remember { AppWidgetHost(context, MINK_WIDGET_HOST_ID) }
+    val host = remember { InteractiveAppWidgetHost(context, MINK_WIDGET_HOST_ID) }
     var showPicker by remember { mutableStateOf(false) }
     var sizingProvider by remember { mutableStateOf<AppWidgetProviderInfo?>(null) }
     var pendingId by remember { mutableIntStateOf(AppWidgetManager.INVALID_APPWIDGET_ID) }

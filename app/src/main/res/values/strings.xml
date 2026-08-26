@@ -38,6 +38,9 @@
     <string name="allow_contacts_to_search_people">Allow contacts to search people</string>
     <string name="magic_box_hotkey_hint">@  #  -  /  +  ?</string>
     <string name="magic_box">Magic Box</string>
+    <string name="keyboard">KEYBOARD</string>
+    <string name="open_keyboard_on_home">Open keyboard on Home</string>
+    <string name="open_keyboard_on_home_description">On phones without a physical keyboard, show the software keyboard beneath the regular Home screen.</string>
     <string name="magic_box_collapsed_hint">Magic box  @  #  -  /  +  ?</string>
     <string name="run_command">Run command</string>
     <string name="open_magic_box">Open Magic Box</string>

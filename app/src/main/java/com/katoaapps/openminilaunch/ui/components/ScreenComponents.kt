@@ -9,6 +9,7 @@ import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -77,5 +78,28 @@ internal fun SettingsRow(
             Text(subtitle, color = Muted, fontSize = Dimens.sp12, maxLines = 1)
         }
         Icon(icon, null, tint = Muted)
+    }
+}
+
+@Composable
+internal fun SettingsSwitchRow(
+    title: String,
+    subtitle: String,
+    checked: Boolean,
+    onCheckedChange: (Boolean) -> Unit,
+) {
+    Row(
+        Modifier.fillMaxWidth()
+            .clip(RoundedCornerShape(Dimens.dp16))
+            .background(MaterialTheme.colorScheme.surfaceContainerLow)
+            .clickable { onCheckedChange(!checked) }
+            .padding(Dimens.dp14),
+        verticalAlignment = Alignment.CenterVertically,
+    ) {
+        Column(Modifier.weight(1f).padding(end = Dimens.dp12)) {
+            Text(title, fontWeight = FontWeight.SemiBold)
+            Text(subtitle, color = Muted, fontSize = Dimens.sp12)
+        }
+        Switch(checked = checked, onCheckedChange = onCheckedChange)
     }
 }

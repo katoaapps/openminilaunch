@@ -286,6 +286,14 @@ internal fun MagicBoxSettingsPage(
     goBack: () -> Unit,
 ) {
     SettingsPage(stringResource(R.string.magic_box), goBack) {
+        SectionLabel(stringResource(R.string.keyboard))
+        SettingsSwitchRow(
+            title = stringResource(R.string.open_keyboard_on_home),
+            subtitle = stringResource(R.string.open_keyboard_on_home_description),
+            checked = store.openSoftwareKeyboardOnHome,
+            onCheckedChange = store::updateOpenSoftwareKeyboardOnHome,
+        )
+        HorizontalDivider(color = Sage)
         SectionLabel(stringResource(R.string.search))
         SettingsRow(
             stringResource(R.string.web_app),

@@ -37,6 +37,34 @@ class MagicBoxInputTest {
     }
 
     @Test
+    fun autoOpenKeyboardOnlyAppliesToEnabledTouchDevices() {
+        assertEquals(
+            true,
+            shouldAutoOpenSoftwareKeyboard(
+                true,
+                Configuration.KEYBOARD_NOKEYS,
+                Configuration.HARDKEYBOARDHIDDEN_NO,
+            ),
+        )
+        assertEquals(
+            false,
+            shouldAutoOpenSoftwareKeyboard(
+                false,
+                Configuration.KEYBOARD_NOKEYS,
+                Configuration.HARDKEYBOARDHIDDEN_NO,
+            ),
+        )
+        assertEquals(
+            false,
+            shouldAutoOpenSoftwareKeyboard(
+                true,
+                Configuration.KEYBOARD_QWERTY,
+                Configuration.HARDKEYBOARDHIDDEN_NO,
+            ),
+        )
+    }
+
+    @Test
     fun plainTextBecomesSearchQuery() {
         val input = parseMagicBoxInput("  quarterly budget  ")
 

@@ -320,6 +320,7 @@ private fun MiniLaunchApp(
                             minkStatusActive = launcherPagerState.currentPage == HOME_PAGE,
                             onMagicExpandedChange = { homeMagicExpanded = it },
                             keyboardInputEnabled = launcherPagerState.currentPage == HOME_PAGE && !showTutorial && !showUpdateNotice && !showShortcutSetup,
+                            homeRequestToken = homeRequestToken,
                         )
                     } else {
                         WidgetPage(

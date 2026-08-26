@@ -100,6 +100,7 @@ internal fun HomeScreen(
     minkStatusActive: Boolean,
     onMagicExpandedChange: (Boolean) -> Unit,
     keyboardInputEnabled: Boolean,
+    homeRequestToken: Int,
 ) {
     val context = LocalContext.current
     var drawerOpen by remember { mutableStateOf(false) }
@@ -307,6 +308,8 @@ internal fun HomeScreen(
                     magicCenter = origin + Offset(coordinates.size.width / 2f, coordinates.size.height / 2f)
                 },
             keyboardInputEnabled = keyboardInputEnabled,
+            autoOpenSoftwareKeyboardOnHome = store.openSoftwareKeyboardOnHome,
+            homeRequestToken = homeRequestToken,
             onTodoAdded = { text ->
                 flyingTodo = text
                 todoJumpToken++

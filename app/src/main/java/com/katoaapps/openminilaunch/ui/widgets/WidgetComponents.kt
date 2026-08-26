@@ -13,10 +13,12 @@ import android.appwidget.AppWidgetHost
 import android.appwidget.AppWidgetHostView
 import android.appwidget.AppWidgetManager
 import android.appwidget.AppWidgetProviderInfo
+import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.util.SizeF
+import android.view.MotionEvent
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -89,6 +91,36 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import kotlin.math.ceil
 import kotlin.math.roundToInt
+
+/**
+ * Keeps a gesture that starts inside a widget with that widget. Without this,
+ * the Compose LazyColumn can intercept vertical drags before a RemoteViews list
+ * or calendar has a chance to scroll.
+ */
+internal class InteractiveAppWidgetHost(context: Context, hostId: Int) : AppWidgetHost(context, hostId) {
+    override fun onCreateView(
+        context: Context,
+        appWidgetId: Int,
+        appWidget: AppWidgetProviderInfo,
+    ): AppWidgetHostView = InteractiveAppWidgetHostView(context)
+}
+
+private class InteractiveAppWidgetHostView(context: Context) : AppWidgetHostView(context) {
+    override fun dispatchTouchEvent(event: MotionEvent): Boolean {
+        val handled = super.dispatchTouchEvent(event)
+        when (event.actionMasked) {
+            MotionEvent.ACTION_DOWN -> parent?.requestDisallowInterceptTouchEvent(handled)
+            MotionEvent.ACTION_UP, MotionEvent.ACTION_CANCEL ->
+                parent?.requestDisallowInterceptTouchEvent(false)
+        }
+        return handled
+    }
+
+    override fun onDetachedFromWindow() {
+        parent?.requestDisallowInterceptTouchEvent(false)
+        super.onDetachedFromWindow()
+    }
+}
 
 @Composable
 internal fun UnavailableWidgetPanel(onRetry: () -> Unit, onRemove: () -> Unit) {

@@ -146,6 +146,8 @@ internal fun MagicBox(
     keyboardInputEnabled: Boolean = true,
     initiallyExpanded: Boolean = false,
     showSoftwareKeyboardOnStart: Boolean = false,
+    autoOpenSoftwareKeyboardOnHome: Boolean = false,
+    homeRequestToken: Int = 0,
     onTodoAdded: (String) -> Unit = {},
     onExpandedChange: (Boolean) -> Unit = {},
     onSessionComplete: () -> Unit = {},
@@ -157,11 +159,19 @@ internal fun MagicBox(
         configuration.keyboard,
         configuration.hardKeyboardHidden,
     )
+    val shouldAutoOpenOnHome = shouldAutoOpenSoftwareKeyboard(
+        autoOpenSoftwareKeyboardOnHome,
+        configuration.keyboard,
+        configuration.hardKeyboardHidden,
+    )
     val fileSearchRepository = remember { FileSearchRepository(context.applicationContext) }
     var text by remember { mutableStateOf(TextFieldValue()) }
     var selectedContact by remember { mutableStateOf<ContactResult?>(null) }
     var lockedPrefix by remember { mutableStateOf<Char?>(null) }
     var expanded by remember { mutableStateOf(initiallyExpanded) }
+    var showKeyboardWhileCollapsed by remember {
+        mutableStateOf(shouldAutoOpenOnHome && !initiallyExpanded)
+    }
     var hasContacts by remember {
         mutableStateOf(ContextCompat.checkSelfPermission(context, Manifest.permission.READ_CONTACTS) == PackageManager.PERMISSION_GRANTED)
     }
@@ -469,9 +479,15 @@ internal fun MagicBox(
     }
 
     // Physical QWERTY phones keep the real text field focused so OEM long-press symbol
-    // replacement still works. Touch-first phones focus an invisible key target instead,
-    // which keeps "type to begin" available without opening the software keyboard at Home.
-    LaunchedEffect(keyboardInputEnabled, expanded, showSmsSentConfirmation, useDirectHardwareInput) {
+    // replacement still works. Touch-first phones normally focus an invisible key target;
+    // the Home-keyboard preference focuses the same field without expanding Magic Mode.
+    LaunchedEffect(
+        keyboardInputEnabled,
+        expanded,
+        showSmsSentConfirmation,
+        useDirectHardwareInput,
+        showKeyboardWhileCollapsed,
+    ) {
         if (!keyboardInputEnabled) {
             keyboard?.hide()
             focusManager.clearFocus(force = true)
@@ -480,14 +496,22 @@ internal fun MagicBox(
                 while (!textFieldPlaced) withFrameNanos { }
                 withFrameNanos { }
                 focusRequester.requestFocus()
+                keyboard?.hide()
+            } else if (showKeyboardWhileCollapsed) {
+                while (!textFieldPlaced) withFrameNanos { }
+                withFrameNanos { }
+                focusRequester.requestFocus()
+                withFrameNanos { }
+                keyboard?.show()
             } else {
                 while (!armedTargetPlaced) withFrameNanos { }
                 withFrameNanos { }
                 armedFocusRequester.requestFocus()
+                keyboard?.hide()
             }
-            keyboard?.hide()
         } else {
             armedTargetPlaced = false
+            if (expanded) showKeyboardWhileCollapsed = false
             if (expanded && initiallyExpanded && focusRequestSerial == 0) {
                 while (!textFieldPlaced) withFrameNanos { }
                 withFrameNanos { }
@@ -497,6 +521,19 @@ internal fun MagicBox(
                 onExpandedChange(true)
             }
         }
+    }
+
+    LaunchedEffect(homeRequestToken, shouldAutoOpenOnHome, keyboardInputEnabled) {
+        if (homeRequestToken > 0 && shouldAutoOpenOnHome && keyboardInputEnabled) {
+            clearCommand()
+            expanded = false
+            onExpandedChange(false)
+            showKeyboardWhileCollapsed = true
+        }
+    }
+
+    LaunchedEffect(shouldAutoOpenOnHome) {
+        showKeyboardWhileCollapsed = shouldAutoOpenOnHome && !expanded
     }
 
     LaunchedEffect(focusRequestSerial) {
@@ -510,18 +547,6 @@ internal fun MagicBox(
                 withFrameNanos { }
                 keyboard?.show()
             }
-        }
-    }
-
-    LaunchedEffect(noteMode) {
-        if (noteMode) {
-            // Entering note mode replaces the compact field with the full-screen editor.
-            // Wait for that editor to be placed before restoring focus so hardware-keyboard
-            // input immediately following the slash command is not dropped.
-            textFieldPlaced = false
-            while (!textFieldPlaced) withFrameNanos { }
-            withFrameNanos { }
-            runCatching { focusRequester.requestFocus() }
         }
     }
 
@@ -665,18 +690,63 @@ internal fun MagicBox(
                 color = MaterialTheme.colorScheme.surface,
                 shadowElevation = Dimens.dp12,
             ) {
-                if (noteMode) {
-                    Box(Modifier.fillMaxSize()) {
+                Box(if (noteMode) Modifier.fillMaxSize() else Modifier.fillMaxWidth()) {
+                    Row(
+                        modifier = if (noteMode) {
+                            Modifier.fillMaxSize()
+                        } else {
+                            Modifier.fillMaxWidth().padding(start = Dimens.dp12, end = Dimens.dp6)
+                        },
+                        verticalAlignment = Alignment.CenterVertically,
+                    ) {
+                        if (!noteMode) {
+                            selectedContact?.let { contact ->
+                                CommandChip(
+                                    stringResource(R.string.two_part_label, contact.name, contact.phoneLabel),
+                                    actionVisuals.color,
+                                    actionContentColor,
+                                ) {
+                                    clearCommand()
+                                    refocus()
+                                }
+                            }
+                        }
                         MagicInputField(
                             value = text,
-                            onValueChange = { text = it },
+                            onValueChange = { value ->
+                                text = value
+                                if (!expanded && value.text.isNotEmpty()) {
+                                    expanded = true
+                                    onExpandedChange(true)
+                                }
+                                if (!noteMode && lockedPrefix == null && value.text.firstOrNull() != prefix) {
+                                    selectedContact = null
+                                }
+                            },
                             prefix = prefix,
                             focusRequester = focusRequester,
                             onPlaced = { textFieldPlaced = true },
                             onSubmit = { submit() },
-                            modifier = Modifier.fillMaxSize().padding(end = Dimens.dp48, bottom = Dimens.dp54),
-                            maxLines = Int.MAX_VALUE,
+                            modifier = Modifier.weight(1f).then(
+                                if (noteMode) {
+                                    Modifier.fillMaxHeight().padding(end = Dimens.dp48, bottom = Dimens.dp54)
+                                } else {
+                                    Modifier
+                                },
+                            ),
+                            maxLines = if (noteMode) Int.MAX_VALUE else 5,
                         )
+                        if (!noteMode) {
+                            FilledIconButton(
+                                onClick = { submit() },
+                                colors = IconButtonDefaults.filledIconButtonColors(
+                                    containerColor = actionVisuals.color,
+                                    contentColor = actionContentColor,
+                                ),
+                            ) { Icon(actionVisuals.icon, stringResource(R.string.run_command)) }
+                        }
+                    }
+                    if (noteMode) {
                         IconButton(
                             onClick = {
                                 keyboard?.hide()
@@ -693,47 +763,6 @@ internal fun MagicBox(
                         FilledIconButton(
                             onClick = { submit() },
                             modifier = Modifier.align(Alignment.BottomEnd).padding(Dimens.dp10),
-                            colors = IconButtonDefaults.filledIconButtonColors(
-                                containerColor = actionVisuals.color,
-                                contentColor = actionContentColor,
-                            ),
-                        ) { Icon(actionVisuals.icon, stringResource(R.string.run_command)) }
-                    }
-                } else {
-                    Row(
-                        Modifier.fillMaxWidth().padding(start = Dimens.dp12, end = Dimens.dp6),
-                        verticalAlignment = Alignment.CenterVertically,
-                    ) {
-                        selectedContact?.let { contact ->
-                            CommandChip(
-                                stringResource(R.string.two_part_label, contact.name, contact.phoneLabel),
-                                actionVisuals.color,
-                                actionContentColor,
-                            ) {
-                                clearCommand()
-                                refocus()
-                            }
-                        }
-                        MagicInputField(
-                            value = text,
-                            onValueChange = { value ->
-                                text = value
-                                if (!expanded && value.text.isNotEmpty()) {
-                                    expanded = true
-                                    onExpandedChange(true)
-                                }
-                                if (lockedPrefix == null && value.text.firstOrNull() != prefix) {
-                                    selectedContact = null
-                                }
-                            },
-                            prefix = prefix,
-                            focusRequester = focusRequester,
-                            onPlaced = { textFieldPlaced = true },
-                            onSubmit = { submit() },
-                            modifier = Modifier.weight(1f),
-                        )
-                        FilledIconButton(
-                            onClick = { submit() },
                             colors = IconButtonDefaults.filledIconButtonColors(
                                 containerColor = actionVisuals.color,
                                 contentColor = actionContentColor,

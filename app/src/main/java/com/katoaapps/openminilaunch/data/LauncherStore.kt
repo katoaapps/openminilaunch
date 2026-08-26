@@ -43,6 +43,10 @@ class LauncherStore(context: Context) {
         private set
     var hasOpenedClockFromDate by mutableStateOf(prefs.getBoolean(CLOCK_DATE_OPENED_KEY, false))
         private set
+    var openSoftwareKeyboardOnHome by mutableStateOf(
+        prefs.getBoolean(OPEN_SOFTWARE_KEYBOARD_ON_HOME_KEY, true)
+    )
+        private set
     var themePreference by mutableStateOf(
         runCatching { ThemePreference.valueOf(prefs.getString("theme_preference", "SYSTEM") ?: "SYSTEM") }.getOrDefault(ThemePreference.SYSTEM)
     )
@@ -272,6 +276,11 @@ class LauncherStore(context: Context) {
         prefs.edit().putBoolean(CLOCK_DATE_OPENED_KEY, true).apply()
     }
 
+    fun updateOpenSoftwareKeyboardOnHome(enabled: Boolean) {
+        openSoftwareKeyboardOnHome = enabled
+        prefs.edit().putBoolean(OPEN_SOFTWARE_KEYBOARD_ON_HOME_KEY, enabled).apply()
+    }
+
     fun toggleDemoSearchData(): Boolean {
         demoSearchDataEnabled = !demoSearchDataEnabled
         if (demoSearchDataEnabled) {
@@ -486,6 +495,7 @@ class LauncherStore(context: Context) {
         const val CLOCK_DATE_OPENED_KEY = "clock_date_opened"
         const val DEMO_SEARCH_DATA_KEY = "demo_search_data_enabled"
         const val ONBOARDING_COMPLETE_KEY = "onboarding_complete_v2"
+        const val OPEN_SOFTWARE_KEYBOARD_ON_HOME_KEY = "open_software_keyboard_on_home"
         const val MAX_SEARCH_HISTORY = 5
         const val MAX_WIDGETS = 4
     }

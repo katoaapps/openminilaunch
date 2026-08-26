@@ -38,3 +38,9 @@ internal fun hasUsableHardwareKeyboard(keyboardType: Int, hardKeyboardHidden: In
         keyboardType == Configuration.KEYBOARD_12KEY
     return hasKeys && hardKeyboardHidden != Configuration.HARDKEYBOARDHIDDEN_YES
 }
+
+internal fun shouldAutoOpenSoftwareKeyboard(
+    enabled: Boolean,
+    keyboardType: Int,
+    hardKeyboardHidden: Int,
+): Boolean = enabled && !hasUsableHardwareKeyboard(keyboardType, hardKeyboardHidden)
