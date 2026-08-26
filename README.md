@@ -7,12 +7,30 @@ Current version: **Open 1.2.2** (`1.2.2`). Feature releases show existing users 
 ## Download
 
 - [Download the latest GitHub build](https://github.com/katoaapps/openminilaunch/releases/latest/download/MinkLauncher-OpenSource.apk)
-- [Download from F-Droid](https://f-droid.org/packages/com.katoaapps.openminilaunch/)
+- [Download from F-Droid](https://f-droid.org/packages/com.katoaapps.openminilaunch/) *(May be unstable, have fatal bugs, and be several versions behind)*
 - Google Play: coming soon
 
 GitHub and F-Droid builds currently use different signing keys. Android cannot
 update one distribution channel with the other; switching requires uninstalling
 the existing app first and clears MinkLauncher OpenSource's local data.
+
+### How to install the GitHub APK
+
+1. Download `MinkLauncher-OpenSource.apk` from the latest GitHub release above.
+2. Open the downloaded file and approve installation from that source if Android asks.
+3. Launch MinkLauncher OpenSource and complete onboarding.
+4. Press the device Home button and select **MinkLauncher OpenSource** as the home app.
+5. If you want to use **Conversations**, follow the notification-access steps below.
+
+> [!IMPORTANT]
+> **GitHub APK and Conversations on Android 13 or newer:** Android may block
+> Notification access for apps installed outside an app store. Open Android
+> **Settings → Apps → MinkLauncher OpenSource**, open the top-right menu, and tap
+> **Allow restricted settings**. Confirm with your device lock if requested, then
+> return to MinkLauncher OpenSource and open **Settings → Permissions →
+> Conversations** to enable Notification access. Menu names can vary by device.
+> Only allow restricted settings when you trust the APK source. See
+> [Google's restricted-settings guidance](https://support.google.com/android/answer/12623953?hl=en).
 
 ## Included
 
@@ -31,6 +49,7 @@ the existing app first and clears MinkLauncher OpenSource's local data.
   - Inline reply appears only when a provider supplies a compatible Android `RemoteInput` action
   - Successful reply handoff is acknowledged with `Sent`; MinkLauncher OpenSource does not claim delivery or read status
   - Conversation contents and replies remain transient in memory, are not retained as history, and are never sent to Katoa Apps
+  - GitHub APK installs on Android 13 or newer may require **Allow restricted settings** on MinkLauncher OpenSource's Android App info page before Notification access can be enabled; see [How to install the GitHub APK](#how-to-install-the-github-apk)
 - A horizontally adjacent widget page for up to four Android app widgets, including an app-grouped visual picker, system binding/configuration, reordering, and removal
 - A dedicated **Mink’s Day** page to the left of Home:
   - Six illustrated Mink states reflect the time of day and, when optional Usage Access is enabled, foreground time and opens only for the social apps the user chooses to include
