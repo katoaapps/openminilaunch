@@ -5,6 +5,7 @@ import com.katoaapps.openminilaunch.features.calendar.parseCalendarPhrase
 import com.katoaapps.openminilaunch.features.conversations.NotificationHub
 import com.katoaapps.openminilaunch.features.demo.DemoSearchData
 import com.katoaapps.openminilaunch.features.magic.normalizedWebUrl
+import com.katoaapps.openminilaunch.features.updates.GITHUB_LATEST_APK_URL
 import com.katoaapps.openminilaunch.model.*
 import com.katoaapps.openminilaunch.ui.apps.AllAppsActivity
 
@@ -363,6 +364,9 @@ class DeviceActions(private val context: Context) {
     fun openPrivacyPolicy() = start(Intent(Intent.ACTION_VIEW, Uri.parse("https://minklauncher.com/privacy")))
 
     fun openTermsOfUse() = start(Intent(Intent.ACTION_VIEW, Uri.parse("https://minklauncher.com/terms")))
+
+    fun openLatestGitHubReleaseDownload(): Boolean =
+        start(Intent(Intent.ACTION_VIEW, Uri.parse(GITHUB_LATEST_APK_URL)))
 
     fun webSearch(query: String, preferredPackage: String? = null): Boolean {
         val clean = query.trim()

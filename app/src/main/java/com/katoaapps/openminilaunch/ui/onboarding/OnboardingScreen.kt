@@ -134,10 +134,10 @@ internal fun FeatureUpdateDialog(
                 verticalArrangement = Arrangement.spacedBy(Dimens.dp14),
             ) {
                 Text(stringResource(R.string.your_app_library_has_a_new_home), fontSize = Dimens.sp18, fontWeight = FontWeight.Bold)
-                UpdatePoint(Icons.Default.Apps, stringResource(R.string.see_every_installed_app), stringResource(R.string.see_every_installed_app_description))
-                UpdatePoint(Icons.Default.DragIndicator, stringResource(R.string.swipe_one_app_at_a_time), stringResource(R.string.swipe_one_app_at_a_time_description))
-                UpdatePoint(Icons.Default.Restore, stringResource(R.string.jump_by_letter), stringResource(R.string.jump_by_letter_description))
-                UpdatePoint(Icons.Default.Palette, stringResource(R.string.color_follows_focus), stringResource(R.string.color_follows_focus_description))
+                UpdatePoint(Icons.Default.EditNote, stringResource(R.string.update_notice_notes_title), stringResource(R.string.update_notice_notes_description))
+                UpdatePoint(Icons.Default.Widgets, stringResource(R.string.update_notice_widgets_title), stringResource(R.string.update_notice_widgets_description))
+                UpdatePoint(Icons.Default.Keyboard, stringResource(R.string.update_notice_keyboard_title), stringResource(R.string.update_notice_keyboard_description))
+                UpdatePoint(Icons.Default.SystemUpdateAlt, stringResource(R.string.update_notice_github_title), stringResource(R.string.update_notice_github_description))
                 TextButton(onClick = onReviewTutorial, contentPadding = PaddingValues(Dimens.dp0)) {
                     Text(stringResource(R.string.review_updated_tutorial))
                 }
@@ -422,6 +422,7 @@ internal fun OnboardingScreen(store: LauncherStore, actions: DeviceActions, onFi
                             OnboardingPoint(Icons.Default.Sms, stringResource(R.string.direct_sms), stringResource(R.string.direct_sms_onboarding_permission_description))
                             OnboardingPoint(Icons.Default.Lock, stringResource(R.string.double_tap_lock), stringResource(R.string.double_tap_lock_onboarding_description))
                             OnboardingPoint(Icons.Default.PhotoLibrary, stringResource(R.string.media), stringResource(R.string.media_onboarding_description))
+                            OnboardingPoint(Icons.Default.SystemUpdateAlt, stringResource(R.string.github_update_checks), stringResource(R.string.github_updates_onboarding_description, appName))
                             OnboardingPoint(Icons.Default.Forum, stringResource(R.string.conversation_access), stringResource(R.string.conversation_access_onboarding_description))
                             OnboardingPoint(Icons.Default.Pets, stringResource(R.string.mink_day_usage), stringResource(R.string.mink_day_usage_onboarding_description))
                             Text(stringResource(R.string.document_folder_scope_description, appName), color = Muted, fontSize = Dimens.sp13)

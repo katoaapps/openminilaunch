@@ -523,6 +523,13 @@ internal fun AboutSettingsPage(
     val disabledMessage = stringResource(R.string.demo_search_data_disabled)
     var versionTapCount by remember { mutableIntStateOf(0) }
     SettingsPage(stringResource(R.string.about), goBack) {
+        SettingsSwitchRow(
+            title = stringResource(R.string.github_update_checks),
+            subtitle = stringResource(R.string.github_update_checks_description),
+            checked = store.githubUpdateChecksEnabled,
+            onCheckedChange = store::setGitHubUpdateChecksEnabled,
+        )
+        HorizontalDivider(color = Sage)
         SettingsRow(stringResource(R.string.email_us), stringResource(R.string.support_email), Icons.Default.Email, onClick = actions::emailSupport)
         SettingsRow(stringResource(R.string.privacy_policy), stringResource(R.string.privacy_policy_summary, appName), Icons.Default.PrivacyTip, onClick = actions::openPrivacyPolicy)
         SettingsRow(stringResource(R.string.terms_of_use), stringResource(R.string.terms_summary), Icons.Default.Gavel, onClick = actions::openTermsOfUse)

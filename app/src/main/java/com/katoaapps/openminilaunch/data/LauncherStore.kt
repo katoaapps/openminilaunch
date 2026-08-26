@@ -78,6 +78,14 @@ class LauncherStore(context: Context) {
         private set
     var demoSearchDataEnabled by mutableStateOf(prefs.getBoolean(DEMO_SEARCH_DATA_KEY, false))
         private set
+    var githubUpdateChecksEnabled by mutableStateOf(
+        prefs.getBoolean(GITHUB_UPDATE_CHECKS_ENABLED_KEY, true)
+    )
+        private set
+    var latestGitHubReleaseTag by mutableStateOf(
+        prefs.getString(LATEST_GITHUB_RELEASE_TAG_KEY, null)
+    )
+        private set
     val effectiveHomePanelColorArgb: Int
         get() = if (demoSearchDataEnabled) demoHomePanelColorArgb else homePanelColorArgb
     val effectiveAppBackgroundColorArgb: Int?
@@ -279,6 +287,28 @@ class LauncherStore(context: Context) {
     fun updateOpenSoftwareKeyboardOnHome(enabled: Boolean) {
         openSoftwareKeyboardOnHome = enabled
         prefs.edit().putBoolean(OPEN_SOFTWARE_KEYBOARD_ON_HOME_KEY, enabled).apply()
+    }
+
+    fun setGitHubUpdateChecksEnabled(enabled: Boolean) {
+        githubUpdateChecksEnabled = enabled
+        val editor = prefs.edit().putBoolean(GITHUB_UPDATE_CHECKS_ENABLED_KEY, enabled)
+        if (enabled) editor.remove(LAST_GITHUB_RELEASE_CHECK_KEY)
+        editor.apply()
+    }
+
+    fun shouldCheckGitHubRelease(nowMillis: Long = System.currentTimeMillis()): Boolean {
+        if (!githubUpdateChecksEnabled) return false
+        val lastCheck = prefs.getLong(LAST_GITHUB_RELEASE_CHECK_KEY, 0L)
+        return nowMillis < lastCheck || nowMillis - lastCheck >= GITHUB_UPDATE_CHECK_INTERVAL_MILLIS
+    }
+
+    fun markGitHubReleaseCheckStarted(nowMillis: Long = System.currentTimeMillis()) {
+        prefs.edit().putLong(LAST_GITHUB_RELEASE_CHECK_KEY, nowMillis).apply()
+    }
+
+    fun cacheLatestGitHubReleaseTag(tag: String) {
+        latestGitHubReleaseTag = tag
+        prefs.edit().putString(LATEST_GITHUB_RELEASE_TAG_KEY, tag).apply()
     }
 
     fun toggleDemoSearchData(): Boolean {
@@ -494,8 +524,12 @@ class LauncherStore(context: Context) {
         const val APP_BACKGROUND_COLOR_KEY = "app_background_color"
         const val CLOCK_DATE_OPENED_KEY = "clock_date_opened"
         const val DEMO_SEARCH_DATA_KEY = "demo_search_data_enabled"
+        const val GITHUB_UPDATE_CHECKS_ENABLED_KEY = "github_update_checks_enabled"
+        const val LAST_GITHUB_RELEASE_CHECK_KEY = "last_github_release_check"
+        const val LATEST_GITHUB_RELEASE_TAG_KEY = "latest_github_release_tag"
         const val ONBOARDING_COMPLETE_KEY = "onboarding_complete_v2"
         const val OPEN_SOFTWARE_KEYBOARD_ON_HOME_KEY = "open_software_keyboard_on_home"
+        const val GITHUB_UPDATE_CHECK_INTERVAL_MILLIS = 12 * 60 * 60 * 1_000L
         const val MAX_SEARCH_HISTORY = 5
         const val MAX_WIDGETS = 4
     }

@@ -1,0 +1,5 @@
+MinkLauncher OpenSource 1.2.3 improves everyday input and adds a passive path to GitHub updates.
+
+Multiline notes now keep physical-keyboard focus while the editor expands. Vertically scrollable widgets receive their own gestures, and touch-only phones can show the software keyboard on Home by default or disable it in Magic Box settings.
+
+The app can now check GitHub release metadata at most twice a day. When a newer release exists, a small update icon in the Home header lets you approve opening the APK download in your browser. MinkLauncher never downloads or installs an APK itself, and the check can be disabled in Settings. This adds Android's normal Internet permission; no new runtime permission is requested.

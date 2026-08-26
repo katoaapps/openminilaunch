@@ -159,7 +159,7 @@
     <string name="defaults_are_always_there_description">Reset an individual slot in Settings to restore its original Note, Calendar, Weather, Call, Messenger, or Files action.</string>
     <string name="your_layout_stays_put">Your layout stays put</string>
     <string name="your_layout_stays_put_description">Existing app choices and your custom grid order are preserved automatically.</string>
-    <string name="your_app_library_has_a_new_home">Your app library has a new home</string>
+    <string name="your_app_library_has_a_new_home">Small improvements that stay out of your way</string>
     <string name="see_every_installed_app">See every installed app</string>
     <string name="see_every_installed_app_description">Open Top 8 and choose See all to browse your complete installed-app library.</string>
     <string name="swipe_one_app_at_a_time">Swipe one app at a time</string>
@@ -168,6 +168,14 @@
     <string name="jump_by_letter_description">Tap or trace the A–Z rail to move directly through your apps, with M at the center.</string>
     <string name="color_follows_focus">Color follows focus</string>
     <string name="color_follows_focus_description">Each focused app supplies the screen gradient, and higher-resolution icons stay crisp on dense displays.</string>
+    <string name="update_notice_notes_title">Notes keep the keyboard</string>
+    <string name="update_notice_notes_description">Multiline note mode keeps physical-keyboard focus while its editor expands.</string>
+    <string name="update_notice_widgets_title">Scrollable widgets behave normally</string>
+    <string name="update_notice_widgets_description">Vertical gestures reach widgets that manage their own scrolling.</string>
+    <string name="update_notice_keyboard_title">Touch keyboards are optional</string>
+    <string name="update_notice_keyboard_description">Touch-only phones open the software keyboard on Home by default, with an off switch in Magic Box settings.</string>
+    <string name="update_notice_github_title">Updates wait for you</string>
+    <string name="update_notice_github_description">A small update icon appears in the Home header when GitHub has a newer release. Nothing downloads until you tap it and approve the browser handoff.</string>
     <string name="review_updated_tutorial">Review the updated tutorial</string>
     <string name="choose_your_shortcut_apps">Choose your shortcut apps</string>
     <string name="shortcut_setup_description">The six app slots keep their built-in defaults until you replace them. Choose any installed app for a slot, or explicitly keep the defaults you want.</string>
@@ -271,6 +279,7 @@
     <string name="double_tap_lock_onboarding_description">Optional accessibility access performs only Android’s Lock screen action after your double-tap. It cannot read screen content or observe what you do.</string>
     <string name="media">Media</string>
     <string name="media_onboarding_description">Optional access searches photo, video, and audio filenames locally.</string>
+    <string name="github_updates_onboarding_description">By default, %1$s checks GitHub release metadata at most twice a day. GitHub receives normal connection metadata, but no launcher content. An update icon appears in the Home header when a newer release exists; the app never downloads or installs APKs. You can disable checks in About.</string>
     <string name="conversation_access">Conversation access</string>
     <string name="conversation_access_onboarding_description">Optional notification access powers message and email conversations. Other notification types are ignored, and you can revoke access whenever you want.</string>
     <string name="mink_day_usage_onboarding_description">Optional Usage Access measures foreground time and opens for the social apps you choose, entirely on this device.</string>
@@ -382,6 +391,13 @@
     <string name="terms_summary">Responsibilities, warranties, and data-loss limitations</string>
     <string name="repeat_tutorial">Repeat tutorial</string>
     <string name="repeat_tutorial_summary">Review setup, Magic Box, Mink’s Day, Conversations, widgets, and permissions</string>
+    <string name="github_update_checks">GitHub update checks</string>
+    <string name="github_update_checks_description">Check at most twice a day; show an update icon in the Home header when needed</string>
+    <string name="update_available">Update available</string>
+    <string name="github_update_title">MinkLauncher OpenSource %1$s is available</string>
+    <string name="github_update_description">Open the APK download in your browser? MinkLauncher does not download or install anything itself.\n\nIf this copy came from F-Droid, update through F-Droid instead. GitHub and F-Droid builds use different signing keys, so Android cannot install one over the other.</string>
+    <string name="open_download">Open download</string>
+    <string name="no_browser_available">No browser is available</string>
     <string name="version">Version</string>
     <string name="demo_search_data_enabled">Demo home, contacts, files, and conversations enabled</string>
     <string name="demo_search_data_disabled">Demo home, contacts, files, and conversations disabled</string>

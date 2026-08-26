@@ -24,7 +24,8 @@ Optional spaces remain one swipe away:
 
 Privacy is a core feature:
 
-• No accounts, ads, analytics, trackers, application server, or Internet permission
+• No accounts, ads, analytics, trackers, or application server
+• An optional, twice-daily GitHub release-metadata check shows a passive update icon in the Home header; GitHub receives normal connection metadata but no launcher content, and the app never downloads or installs APKs
 • Queries, to-dos, settings, conversations, usage analysis, and filename indexing stay on the device
 • Android cloud backup is disabled
 • Notification, Usage, Accessibility, and Assistant special access are optional and explained before Android Settings opens

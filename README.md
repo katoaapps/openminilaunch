@@ -2,7 +2,7 @@
 
 A focused, keyboard-first Android home-screen launcher and digital assistant built with Kotlin and Jetpack Compose.
 
-Current version: **Open 1.2.2** (`1.2.2`). Feature releases show existing users a one-time in-app update notice covering new behavior, privacy impact, and any optional permissions; the onboarding tutorial is updated alongside each release.
+Current version: **Open 1.2.3** (`1.2.3`). Feature releases show existing users a one-time in-app update notice covering new behavior, privacy impact, and any optional permissions; the onboarding tutorial is updated alongside each release.
 
 ## Download
 
@@ -60,12 +60,13 @@ the existing app first and clears MinkLauncher OpenSource's local data.
   - Top-app activity and short, non-judgmental observations are calculated only while the app is open
   - MinkLauncher OpenSource stores the goal and category choices, but does not create a separate usage-history database
   - Activity is refreshed only while MinkLauncher OpenSource is visible; other apps can end a session but never enter the trail or totals
-  - The app has no Internet permission and cannot upload usage data itself
+  - Usage insights remain on-device and are never included in the app's GitHub release check
   - Without Usage Access, the page remains available as a time-of-day companion
 - Weather opens a user-selected app, with Weather.com as the browser fallback
 - Six generic app slots that accept any installed app and replace the default Home icon; Android monochrome icons follow the Home panel theme when available
 - One-tap reset restores each slot's original built-in action and icon
 - A compact drawer containing up to eight selected apps, with a **See all** handoff to a full installed-app browser
+- A passive update indicator checks GitHub release metadata at most twice a day and appears in the Home header only when a newer release exists. GitHub receives ordinary connection metadata but no launcher content. The check can be disabled in **Settings → About**; MinkLauncher OpenSource never downloads or installs an APK itself.
 - The all-apps browser uses a three-app, one-at-a-time carousel and a draggable A–Z arc with M at its center; the focused app supplies the screen's gradient color
 - Real installed-app icons and an alphabetical jump rail in both app pickers
 - A searchable Magic Box:
@@ -94,7 +95,7 @@ the existing app first and clears MinkLauncher OpenSource's local data.
 - System, light, and dark appearance modes
 - Swipe down anywhere on the home screen to expand notifications
 - Optionally enable the minimal **Double-tap screen lock** accessibility service, then double-tap empty home-screen space to lock like the power button. The service cannot read screen content, subscribe to accessibility events, perform gestures, or collect data.
-- Local persistence via SharedPreferences; no account or network is required
+- Local persistence via SharedPreferences; no account is required. Network access is used only for the optional GitHub release-metadata check, which sends no launcher data.
 - Privacy-first file search through Android's MediaStore and user-selected document folders; filenames never leave the device
 - Document search uses only folders the user explicitly selects through Android's system folder picker, with an in-search setup reminder until one is selected
 - File results are grouped as Photos, Videos, Documents, and Audio, with locally generated thumbnails where Android provides them

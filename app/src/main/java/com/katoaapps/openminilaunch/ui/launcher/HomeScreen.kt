@@ -2,6 +2,7 @@
 
 package com.katoaapps.openminilaunch.ui.launcher
 
+import com.katoaapps.openminilaunch.BuildConfig
 import com.katoaapps.openminilaunch.R
 import com.katoaapps.openminilaunch.data.*
 import com.katoaapps.openminilaunch.model.*
@@ -9,6 +10,8 @@ import com.katoaapps.openminilaunch.platform.*
 import com.katoaapps.openminilaunch.features.conversations.*
 import com.katoaapps.openminilaunch.features.magic.*
 import com.katoaapps.openminilaunch.features.todos.*
+import com.katoaapps.openminilaunch.features.updates.GitHubReleaseChecker
+import com.katoaapps.openminilaunch.features.updates.isNewerRelease
 import com.katoaapps.openminilaunch.features.wellbeing.*
 import com.katoaapps.openminilaunch.ui.components.*
 import com.katoaapps.openminilaunch.ui.theme.*
@@ -82,6 +85,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.sp
 import androidx.core.graphics.drawable.toBitmap
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 import sh.calvin.reorderable.ReorderableItem
 import sh.calvin.reorderable.rememberReorderableLazyGridState
 import java.time.LocalDate
@@ -111,6 +116,10 @@ internal fun HomeScreen(
     var magicCenter by remember { mutableStateOf(Offset.Zero) }
     var magicExpanded by remember { mutableStateOf(false) }
     var showLockDisclosure by remember { mutableStateOf(false) }
+    var showUpdateConfirmation by remember { mutableStateOf(false) }
+    val releaseChecker = remember { GitHubReleaseChecker() }
+    val updateAvailable = store.githubUpdateChecksEnabled &&
+        store.latestGitHubReleaseTag?.let { isNewerRelease(BuildConfig.VERSION_NAME, it) } == true
     val flightProgress = remember { Animatable(0f) }
     val homePanelColor = Color(store.effectiveHomePanelColorArgb)
     val homePanelContentColor = readableContentColor(homePanelColor)
@@ -139,6 +148,14 @@ internal fun HomeScreen(
             flightProgress.animateTo(1f, tween(1_300, easing = FastOutSlowInEasing))
             flightActive = false
             flyingTodo = null
+        }
+    }
+
+    LaunchedEffect(homeRequestToken, store.onboardingComplete, store.githubUpdateChecksEnabled) {
+        if (store.onboardingComplete && store.shouldCheckGitHubRelease()) {
+            store.markGitHubReleaseCheckStarted()
+            withContext(Dispatchers.IO) { releaseChecker.latestReleaseTag() }
+                ?.let(store::cacheLatestGitHubReleaseTag)
         }
     }
 
@@ -203,6 +220,19 @@ internal fun HomeScreen(
                                 color = MaterialTheme.colorScheme.onBackground.copy(alpha = .58f),
                                 fontSize = Dimens.sp9,
                                 maxLines = 1,
+                            )
+                        }
+                    }
+                    if (updateAvailable) {
+                        IconButton(
+                            onClick = { showUpdateConfirmation = true },
+                            modifier = Modifier.size(headerActionSize),
+                        ) {
+                            Icon(
+                                Icons.Default.SystemUpdateAlt,
+                                stringResource(R.string.update_available),
+                                Modifier.size(headerIconSize),
+                                tint = MaterialTheme.colorScheme.primary,
                             )
                         }
                     }
@@ -328,6 +358,19 @@ internal fun HomeScreen(
         )
     }
 
+    if (showUpdateConfirmation) {
+        GitHubUpdateDialog(
+            version = store.latestGitHubReleaseTag.orEmpty().removePrefix("v"),
+            onOpenBrowser = {
+                showUpdateConfirmation = false
+                if (!actions.openLatestGitHubReleaseDownload()) {
+                    Toast.makeText(context, R.string.no_browser_available, Toast.LENGTH_SHORT).show()
+                }
+            },
+            onDismiss = { showUpdateConfirmation = false },
+        )
+    }
+
     if (drawerOpen) {
         ModalBottomSheet(
             onDismissRequest = { drawerOpen = false },
@@ -401,4 +444,24 @@ internal fun HomeScreen(
             Spacer(Modifier.height(Dimens.dp28))
         }
     }
+}
+
+@Composable
+private fun GitHubUpdateDialog(
+    version: String,
+    onOpenBrowser: () -> Unit,
+    onDismiss: () -> Unit,
+) {
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        icon = { Icon(Icons.Default.SystemUpdateAlt, null) },
+        title = { Text(stringResource(R.string.github_update_title, version)) },
+        text = { Text(stringResource(R.string.github_update_description)) },
+        confirmButton = {
+            Button(onClick = onOpenBrowser) { Text(stringResource(R.string.open_download)) }
+        },
+        dismissButton = {
+            TextButton(onClick = onDismiss) { Text(stringResource(R.string.not_now)) }
+        },
+    )
 }
