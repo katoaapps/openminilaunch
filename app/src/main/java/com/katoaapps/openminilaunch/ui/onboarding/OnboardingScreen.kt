@@ -125,7 +125,9 @@ internal fun FeatureUpdateDialog(
     onNotNow: () -> Unit,
 ) {
     AlertDialog(
+        modifier = Modifier.minkDialogWidth(),
         onDismissRequest = onNotNow,
+        properties = MinkDialogDefaults.properties,
         icon = { Icon(Icons.Default.Pets, null, tint = Rust) },
         title = { Text(stringResource(R.string.whats_new)) },
         text = {
@@ -155,7 +157,9 @@ internal fun FileSearchScopeDialog(
 ) {
     val appName = stringResource(R.string.app_name)
     AlertDialog(
+        modifier = Modifier.minkDialogWidth(),
         onDismissRequest = onSkip,
+        properties = MinkDialogDefaults.properties,
         icon = { Icon(Icons.Default.FolderOpen, null, tint = Rust) },
         title = { Text(stringResource(R.string.file_scope_title, appName)) },
         text = {
@@ -201,7 +205,9 @@ internal fun UpdatePoint(icon: ImageVector, title: String, description: String) 
 internal fun UsageAccessDisclosureDialog(onContinue: () -> Unit, onDismiss: () -> Unit) {
     val appName = stringResource(R.string.app_name)
     AlertDialog(
+        modifier = Modifier.minkDialogWidth(),
         onDismissRequest = onDismiss,
+        properties = MinkDialogDefaults.properties,
         icon = { Icon(Icons.Default.Pets, null, tint = Rust) },
         title = { Text(stringResource(R.string.usage_disclosure_title)) },
         text = {
@@ -515,7 +521,7 @@ internal fun ShortcutSetupDialog(store: LauncherStore, actions: DeviceActions, o
         ),
     ) {
         Surface(
-            Modifier.fillMaxWidth(.92f).fillMaxHeight(.82f),
+            Modifier.minkDialogWidth().fillMaxHeight(.82f),
             shape = RoundedCornerShape(Dimens.dp30),
             color = MaterialTheme.colorScheme.background,
         ) {

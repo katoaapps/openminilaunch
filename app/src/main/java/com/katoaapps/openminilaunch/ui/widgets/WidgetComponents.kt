@@ -50,6 +50,7 @@ import androidx.compose.material.icons.filled.ArrowUpward
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Refresh
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Widgets
 import androidx.compose.material3.Button
 import androidx.compose.material3.DropdownMenu
@@ -59,6 +60,7 @@ import androidx.compose.material3.FilterChip
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -76,15 +78,18 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.layout.onSizeChanged
+import androidx.compose.ui.input.nestedscroll.nestedScroll
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.rememberNestedScrollInteropConnection
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.compose.ui.window.Dialog
+import androidx.compose.ui.window.DialogProperties
 import androidx.core.graphics.drawable.toBitmap
 import androidx.core.view.ViewCompat
 import androidx.lifecycle.Lifecycle
@@ -170,6 +175,7 @@ internal fun WidgetPanel(
 ) {
     val context = LocalContext.current
     val density = LocalDensity.current
+    val nestedScrollInterop = rememberNestedScrollInteropConnection()
     val sizeRange = remember(info.provider, info.minWidth, info.minHeight) {
         widgetSizeRange(info, context.resources.displayMetrics.density)
     }
@@ -252,6 +258,7 @@ internal fun WidgetPanel(
                 modifier = Modifier
                     .fillMaxWidth(panelWidth / maxWidth)
                     .height(panelHeight)
+                    .nestedScroll(nestedScrollInterop)
                     .clip(RoundedCornerShape(Dimens.dp24))
                     .onSizeChanged { measuredSize = it },
             )
@@ -288,9 +295,12 @@ internal fun WidgetSizeDialog(
             ),
         )
     }
-    Dialog(onDismissRequest = onDismiss) {
+    Dialog(
+        onDismissRequest = onDismiss,
+        properties = MinkDialogDefaults.properties,
+    ) {
         Surface(
-            Modifier.fillMaxWidth(),
+            Modifier.minkDialogWidth(),
             shape = RoundedCornerShape(Dimens.dp26),
             color = MaterialTheme.colorScheme.background,
         ) {
@@ -386,7 +396,8 @@ internal fun WidgetProviderDialog(
     onDismiss: () -> Unit,
 ) {
     val context = LocalContext.current
-    val groups = remember(providers) {
+    var query by remember { mutableStateOf("") }
+    val allGroups = remember(providers) {
         providers.groupBy { it.provider.packageName }
             .map { (packageName, appProviders) ->
                 WidgetAppGroup(
@@ -397,9 +408,24 @@ internal fun WidgetProviderDialog(
             }
             .sortedBy { it.appName.lowercase() }
     }
-    Dialog(onDismissRequest = onDismiss) {
+    val groups = remember(allGroups, query) {
+        val search = query.trim().lowercase()
+        if (search.isEmpty()) allGroups
+        else allGroups.mapNotNull { group ->
+            if (group.appName.lowercase().contains(search)) group
+            else group.copy(
+                providers = group.providers.filter {
+                    it.loadLabel(context.packageManager).toString().lowercase().contains(search)
+                },
+            ).takeIf { it.providers.isNotEmpty() }
+        }
+    }
+    Dialog(
+        onDismissRequest = onDismiss,
+        properties = MinkDialogDefaults.properties,
+    ) {
         Surface(
-            Modifier.fillMaxWidth().fillMaxHeight(.86f),
+            Modifier.minkDialogWidth().fillMaxHeight(.94f),
             shape = RoundedCornerShape(Dimens.dp26),
             color = MaterialTheme.colorScheme.background,
         ) {
@@ -408,6 +434,19 @@ internal fun WidgetProviderDialog(
                     Text(stringResource(R.string.add_a_widget), Modifier.weight(1f), fontSize = Dimens.sp22, fontWeight = FontWeight.Black)
                     IconButton(onClick = onDismiss) { Icon(Icons.Default.Close, stringResource(R.string.close)) }
                 }
+                OutlinedTextField(
+                    value = query,
+                    onValueChange = { query = it },
+                    modifier = Modifier.fillMaxWidth().padding(bottom = Dimens.dp6),
+                    singleLine = true,
+                    label = { Text(stringResource(R.string.search_widgets)) },
+                    leadingIcon = { Icon(Icons.Default.Search, null) },
+                    trailingIcon = if (query.isNotEmpty()) ({
+                        IconButton(onClick = { query = "" }) {
+                            Icon(Icons.Default.Close, stringResource(R.string.clear_search))
+                        }
+                    }) else null,
+                )
                 LazyColumn(
                     Modifier.fillMaxSize(),
                     verticalArrangement = Arrangement.spacedBy(Dimens.dp10),
@@ -435,7 +474,13 @@ internal fun WidgetProviderDialog(
                         }
                     }
                     if (groups.isEmpty()) {
-                        item { Text(stringResource(R.string.no_widget_providers), color = Muted, modifier = Modifier.padding(Dimens.dp12)) }
+                        item {
+                            Text(
+                                stringResource(if (query.isBlank()) R.string.no_widget_providers else R.string.no_widgets_match),
+                                color = Muted,
+                                modifier = Modifier.padding(Dimens.dp12),
+                            )
+                        }
                     }
                 }
             }

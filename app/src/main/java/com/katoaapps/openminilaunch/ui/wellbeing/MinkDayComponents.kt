@@ -28,6 +28,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.aspectRatio
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.offset
@@ -287,10 +288,10 @@ internal fun SocialAppsDialog(store: LauncherStore, repository: UsageInsightsRep
     }
     Dialog(
         onDismissRequest = onDismiss,
-        properties = DialogProperties(usePlatformDefaultWidth = false),
+        properties = MinkDialogDefaults.properties,
     ) {
         Surface(
-            Modifier.fillMaxSize().padding(Dimens.dp10),
+            Modifier.minkDialogWidth().fillMaxHeight(.96f),
             shape = RoundedCornerShape(Dimens.dp24),
             color = MaterialTheme.colorScheme.background,
         ) {

@@ -242,9 +242,12 @@ private fun AppearanceColorDialog(
         hexText = formatHomePanelHex(android.graphics.Color.HSVToColor(floatArrayOf(hue, saturation, brightness)))
     }
 
-    Dialog(onDismissRequest = onDismiss) {
+    Dialog(
+        onDismissRequest = onDismiss,
+        properties = MinkDialogDefaults.properties,
+    ) {
         Surface(
-            modifier = Modifier.fillMaxWidth().heightIn(max = Dimens.dp620),
+            modifier = Modifier.minkDialogWidth().heightIn(max = Dimens.dp620),
             shape = RoundedCornerShape(Dimens.dp28),
             color = MaterialTheme.colorScheme.background,
         ) {

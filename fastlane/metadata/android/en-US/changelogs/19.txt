@@ -1,0 +1,1 @@
+MinkLauncher OpenSource 1.2.4 improves widget scrolling and setup reliability. Dialogs are roomier, widget selection includes search, conversation access better explains restricted settings, and the widget page has a responsive draggable scroll indicator.

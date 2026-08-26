@@ -420,6 +420,14 @@
     <string name="conversations_disclosure_one">Android notification access lets %1$s read active message and email notifications, group them into conversations, and offer inline reply when the originating app provides a reply action.</string>
     <string name="conversations_disclosure_two">Notifications outside messages and email are ignored. Conversation contents and replies are kept in memory only. They are not stored by %1$s, uploaded, or sent to Katoa Apps.</string>
     <string name="conversations_disclosure_three">Replies are handed directly to the app that created the notification. You can revoke access at any time in Android settings.</string>
+    <string name="restricted_settings_setup_intro">Installed outside Google Play? Android 13 and newer may disable the notification-access switch until you allow restricted settings for MinkLauncher.</string>
+    <string name="restricted_settings_example_description">Example App info screen showing the Allow restricted settings menu item</string>
+    <string name="restricted_settings_example_caption">Example only. Your phone’s App info screen may look different.</string>
+    <string name="restricted_settings_step_one_title">Allow restricted settings</string>
+    <string name="restricted_settings_step_one_body">Open App info, tap the three-dot menu, then choose Allow restricted settings. Return here when finished.</string>
+    <string name="open_app_info">Open App info</string>
+    <string name="restricted_settings_step_two_title">Enable notification access</string>
+    <string name="restricted_settings_step_two_body">Open Notification access and enable MinkLauncher. If its switch is disabled, complete step 1 first.</string>
     <string name="choose_ai_app_title">Choose AI app</string>
     <string name="no_curated_ai_apps_short">No curated AI apps were found.</string>
     <string name="choose_web_search_app">Choose web search app</string>
@@ -514,6 +522,12 @@
     <string name="widget_grid_description">%1$s uses a four-column widget grid. The widget app chooses the layout it displays inside this space.</string>
     <string name="add_a_widget">Add a widget</string>
     <string name="no_widget_providers">No widget providers are installed.</string>
+    <string name="search_widgets">Search widgets</string>
+    <string name="clear_search">Clear search</string>
+    <string name="no_widgets_match">No widgets match this search.</string>
+    <string name="scroll_widgets">Drag to scroll widgets</string>
+    <string name="previous_widget">Previous widget</string>
+    <string name="next_widget">Next widget</string>
     <string name="widget_resizable">%1$s · resizable</string>
 
     <!-- Mink’s Day -->

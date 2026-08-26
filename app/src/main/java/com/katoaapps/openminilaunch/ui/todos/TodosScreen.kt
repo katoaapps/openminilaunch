@@ -275,8 +275,9 @@ internal fun TodosScreen(store: LauncherStore, actions: DeviceActions, goBack: (
     editing?.let { item ->
         var editText by remember(item.id) { mutableStateOf(item.text) }
         AlertDialog(
-            modifier = Modifier.fillMaxWidth(.94f),
+            modifier = Modifier.minkDialogWidth(),
             onDismissRequest = { editing = null },
+            properties = MinkDialogDefaults.properties,
             title = { Text(stringResource(R.string.edit_todo)) },
             text = {
                 OutlinedTextField(
@@ -295,7 +296,9 @@ internal fun TodosScreen(store: LauncherStore, actions: DeviceActions, goBack: (
     }
     deleting?.let { item ->
         AlertDialog(
+            modifier = Modifier.minkDialogWidth(),
             onDismissRequest = { deleting = null },
+            properties = MinkDialogDefaults.properties,
             icon = { Icon(Icons.Default.DeleteOutline, null, tint = Rust) },
             title = { Text(stringResource(R.string.delete_todo_title)) },
             text = { Text(stringResource(R.string.delete_todo_description, item.text)) },
@@ -309,7 +312,9 @@ internal fun TodosScreen(store: LauncherStore, actions: DeviceActions, goBack: (
     }
     if (showExportOptions) {
         AlertDialog(
+            modifier = Modifier.minkDialogWidth(),
             onDismissRequest = { showExportOptions = false },
+            properties = MinkDialogDefaults.properties,
             icon = { Icon(Icons.Default.IosShare, null) },
             title = { Text(stringResource(R.string.export_todo_list)) },
             text = {

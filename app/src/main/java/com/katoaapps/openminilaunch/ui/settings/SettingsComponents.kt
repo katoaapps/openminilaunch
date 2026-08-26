@@ -13,8 +13,11 @@ import com.katoaapps.openminilaunch.ui.theme.*
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.gestures.detectVerticalDragGestures
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.foundation.lazy.LazyRow
 import androidx.compose.foundation.lazy.items as lazyRowItems
 import androidx.compose.foundation.lazy.grid.GridCells
@@ -24,6 +27,7 @@ import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.OpenInNew
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.animation.core.animateFloatAsState
@@ -37,6 +41,9 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.onSizeChanged
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.painterResource
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -70,6 +77,7 @@ internal fun AppPickerDialog(
     var railHeight by remember { mutableIntStateOf(1) }
     var railLetterIndex by remember { mutableIntStateOf(0) }
     var railDragging by remember { mutableStateOf(false) }
+    val fontScale = LocalDensity.current.fontScale
     LaunchedEffect(railLetterIndex, apps) {
         if (apps.isNotEmpty()) {
             val letter = letters[railLetterIndex]
@@ -80,10 +88,10 @@ internal fun AppPickerDialog(
     }
     Dialog(
         onDismissRequest = onDismiss,
-        properties = DialogProperties(usePlatformDefaultWidth = false),
+        properties = MinkDialogDefaults.properties,
     ) {
         Surface(
-            Modifier.fillMaxSize().padding(Dimens.dp10),
+            Modifier.minkDialogWidth().fillMaxHeight(.96f),
             shape = RoundedCornerShape(Dimens.dp24),
             color = MaterialTheme.colorScheme.background,
         ) {
@@ -196,7 +204,7 @@ internal fun AppPickerDialog(
                                 }
                             }
                         }
-                        Column(
+                        BoxWithConstraints(
                             Modifier.align(Alignment.CenterEnd).fillMaxHeight().width(Dimens.dp28)
                                 .onSizeChanged { railHeight = it.height }
                                 .clip(RoundedCornerShape(Dimens.dp12)).background(MaterialTheme.colorScheme.background.copy(alpha = .94f))
@@ -211,26 +219,35 @@ internal fun AppPickerDialog(
                                         onDragCancel = { railDragging = false },
                                     )
                                 },
-                            horizontalAlignment = Alignment.CenterHorizontally,
-                            verticalArrangement = Arrangement.SpaceEvenly,
                         ) {
-                            letters.forEach { letter ->
-                                val isFocused = letters.indexOf(letter) == railLetterIndex
-                                val scale by animateFloatAsState(
-                                    targetValue = if (isFocused) 1.7f else .9f,
-                                    animationSpec = spring(dampingRatio = .7f, stiffness = 500f),
-                                    label = "rail-letter-scale",
-                                )
-                                Text(
-                                    letter.toString(),
-                                    fontSize = Dimens.sp9,
-                                    fontWeight = FontWeight.Bold,
-                                    color = if (isFocused) MaterialTheme.colorScheme.onSurface else Rust.copy(alpha = .72f),
-                                    modifier = Modifier.clickable {
-                                        railLetterIndex = letters.indexOf(letter)
-                                    }.graphicsLayer { scaleX = scale; scaleY = scale }
-                                        .padding(horizontal = Dimens.dp6),
-                                )
+                            val compactRail = maxHeight < Dimens.dp310 * fontScale
+                            val visibleLetters = remember(compactRail) {
+                                if (compactRail) letters.filterIndexed { index, _ -> index % 2 == 0 || index == letters.lastIndex }
+                                else letters
+                            }
+                            Column(
+                                Modifier.fillMaxSize().padding(vertical = Dimens.dp4),
+                                horizontalAlignment = Alignment.CenterHorizontally,
+                                verticalArrangement = Arrangement.SpaceEvenly,
+                            ) {
+                                visibleLetters.forEach { letter ->
+                                    val isFocused = letters.indexOf(letter) == railLetterIndex
+                                    val scale by animateFloatAsState(
+                                        targetValue = if (isFocused) (if (compactRail) 1.35f else 1.55f) else .9f,
+                                        animationSpec = spring(dampingRatio = .7f, stiffness = 500f),
+                                        label = "rail-letter-scale",
+                                    )
+                                    Text(
+                                        letter.toString(),
+                                        fontSize = if (compactRail) Dimens.sp8 else Dimens.sp9,
+                                        fontWeight = FontWeight.Bold,
+                                        color = if (isFocused) MaterialTheme.colorScheme.onSurface else Rust.copy(alpha = .72f),
+                                        modifier = Modifier.clickable {
+                                            railLetterIndex = letters.indexOf(letter)
+                                        }.graphicsLayer { scaleX = scale; scaleY = scale }
+                                            .padding(horizontal = Dimens.dp6),
+                                    )
+                                }
                             }
                         }
                         if (railDragging) {
@@ -326,7 +343,9 @@ internal fun PermissionCard(
 internal fun LockAccessibilityDisclosureDialog(onContinue: () -> Unit, onDismiss: () -> Unit) {
     val appName = stringResource(R.string.app_name)
     AlertDialog(
+        modifier = Modifier.minkDialogWidth(),
         onDismissRequest = onDismiss,
+        properties = MinkDialogDefaults.properties,
         icon = { Icon(Icons.Default.Lock, null, tint = Rust) },
         title = { Text(stringResource(R.string.enable_double_tap_lock)) },
         text = {
@@ -345,7 +364,9 @@ internal fun LockAccessibilityDisclosureDialog(onContinue: () -> Unit, onDismiss
 internal fun AssistantDisclosureDialog(active: Boolean, onContinue: () -> Unit, onDismiss: () -> Unit) {
     val appName = stringResource(R.string.app_name)
     AlertDialog(
+        modifier = Modifier.minkDialogWidth(),
         onDismissRequest = onDismiss,
+        properties = MinkDialogDefaults.properties,
         icon = { Icon(Icons.Default.Assistant, null, tint = Rust) },
         title = { Text(stringResource(if (active) R.string.assistant_active_title else R.string.assistant_enable_title)) },
         text = {
@@ -363,20 +384,112 @@ internal fun AssistantDisclosureDialog(active: Boolean, onContinue: () -> Unit, 
 }
 
 @Composable
-internal fun NotificationAccessDisclosureDialog(onContinue: () -> Unit, onDismiss: () -> Unit) {
+internal fun NotificationAccessDisclosureDialog(
+    onOpenAppInfo: () -> Unit,
+    onOpenNotificationAccess: () -> Unit,
+    onDismiss: () -> Unit,
+) {
     val appName = stringResource(R.string.app_name)
-    AlertDialog(
+    val showRestrictedSettingsStep = android.os.Build.VERSION.SDK_INT >= android.os.Build.VERSION_CODES.TIRAMISU
+    Dialog(
         onDismissRequest = onDismiss,
-        icon = { Icon(Icons.Default.Forum, null, tint = Rust) },
-        title = { Text(stringResource(R.string.enable_conversations)) },
-        text = {
-            Column(verticalArrangement = Arrangement.spacedBy(Dimens.dp10)) {
-                Text(stringResource(R.string.conversations_disclosure_one, appName))
-                Text(stringResource(R.string.conversations_disclosure_two, appName))
-                Text(stringResource(R.string.conversations_disclosure_three))
+        properties = MinkDialogDefaults.properties,
+    ) {
+        Surface(
+            modifier = Modifier.minkDialogWidth().fillMaxHeight(0.94f),
+            shape = RoundedCornerShape(Dimens.dp24),
+            color = MaterialTheme.colorScheme.background,
+        ) {
+            Column(Modifier.padding(Dimens.dp18)) {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    Icon(Icons.Default.Forum, null, tint = Rust)
+                    Text(
+                        stringResource(R.string.enable_conversations),
+                        Modifier.weight(1f).padding(start = Dimens.dp10),
+                        fontWeight = FontWeight.Black,
+                        fontSize = Dimens.sp20,
+                    )
+                    IconButton(onClick = onDismiss) {
+                        Icon(Icons.Default.Close, stringResource(R.string.close))
+                    }
+                }
+                Column(
+                    Modifier.weight(1f).fillMaxWidth().verticalScroll(rememberScrollState()),
+                    verticalArrangement = Arrangement.spacedBy(Dimens.dp12),
+                ) {
+                    Text(stringResource(R.string.conversations_disclosure_one, appName))
+                    if (showRestrictedSettingsStep) {
+                        Surface(
+                            color = MaterialTheme.colorScheme.secondaryContainer,
+                            shape = RoundedCornerShape(Dimens.dp14),
+                        ) {
+                            Text(
+                                stringResource(R.string.restricted_settings_setup_intro),
+                                Modifier.padding(Dimens.dp12),
+                                color = MaterialTheme.colorScheme.onSecondaryContainer,
+                                fontSize = Dimens.sp12,
+                            )
+                        }
+                        Image(
+                            painter = painterResource(R.drawable.restricted_settings_openmink_example),
+                            contentDescription = stringResource(R.string.restricted_settings_example_description),
+                            modifier = Modifier.fillMaxWidth().aspectRatio(1280f / 579f)
+                                .clip(RoundedCornerShape(Dimens.dp14)),
+                            contentScale = ContentScale.Crop,
+                        )
+                        Text(
+                            stringResource(R.string.restricted_settings_example_caption),
+                            color = Muted,
+                            fontSize = Dimens.sp11,
+                        )
+                        ConversationAccessStep(
+                            number = "1",
+                            title = stringResource(R.string.restricted_settings_step_one_title),
+                            body = stringResource(R.string.restricted_settings_step_one_body),
+                        )
+                        OutlinedButton(onClick = onOpenAppInfo, modifier = Modifier.fillMaxWidth()) {
+                            Icon(Icons.AutoMirrored.Filled.OpenInNew, null)
+                            Text(stringResource(R.string.open_app_info), Modifier.padding(start = Dimens.dp8))
+                        }
+                        ConversationAccessStep(
+                            number = "2",
+                            title = stringResource(R.string.restricted_settings_step_two_title),
+                            body = stringResource(R.string.restricted_settings_step_two_body),
+                        )
+                    }
+                    Text(stringResource(R.string.conversations_disclosure_two, appName), color = Muted, fontSize = Dimens.sp12)
+                    Text(stringResource(R.string.conversations_disclosure_three), color = Muted, fontSize = Dimens.sp12)
+                }
+                Row(
+                    Modifier.fillMaxWidth().padding(top = Dimens.dp12),
+                    horizontalArrangement = Arrangement.spacedBy(Dimens.dp8, Alignment.End),
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    TextButton(onClick = onDismiss) { Text(stringResource(R.string.not_now)) }
+                    Button(onClick = onOpenNotificationAccess) {
+                        Text(stringResource(R.string.open_notification_access))
+                    }
+                }
             }
-        },
-        confirmButton = { Button(onClick = onContinue) { Text(stringResource(R.string.continue_action)) } },
-        dismissButton = { TextButton(onClick = onDismiss) { Text(stringResource(R.string.not_now)) } },
-    )
+        }
+    }
+}
+
+@Composable
+private fun ConversationAccessStep(number: String, title: String, body: String) {
+    Row(verticalAlignment = Alignment.Top) {
+        Surface(shape = CircleShape, color = MaterialTheme.colorScheme.primary) {
+            Text(
+                number,
+                modifier = Modifier.size(Dimens.dp26).wrapContentSize(Alignment.Center),
+                color = MaterialTheme.colorScheme.onPrimary,
+                fontWeight = FontWeight.Black,
+                fontSize = Dimens.sp12,
+            )
+        }
+        Column(Modifier.padding(start = Dimens.dp10)) {
+            Text(title, fontWeight = FontWeight.SemiBold)
+            Text(body, color = Muted, fontSize = Dimens.sp12)
+        }
+    }
 }

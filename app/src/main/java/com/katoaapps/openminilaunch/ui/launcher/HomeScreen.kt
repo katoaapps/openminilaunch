@@ -453,7 +453,9 @@ private fun GitHubUpdateDialog(
     onDismiss: () -> Unit,
 ) {
     AlertDialog(
+        modifier = Modifier.minkDialogWidth(),
         onDismissRequest = onDismiss,
+        properties = MinkDialogDefaults.properties,
         icon = { Icon(Icons.Default.SystemUpdateAlt, null) },
         title = { Text(stringResource(R.string.github_update_title, version)) },
         text = { Text(stringResource(R.string.github_update_description)) },

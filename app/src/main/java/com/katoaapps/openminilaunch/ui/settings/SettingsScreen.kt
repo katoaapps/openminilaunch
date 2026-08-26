@@ -346,7 +346,8 @@ internal fun SettingsScreen(
 
     if (showNotificationDisclosure) {
         NotificationAccessDisclosureDialog(
-            onContinue = {
+            onOpenAppInfo = actions::openAppSettings,
+            onOpenNotificationAccess = {
                 showNotificationDisclosure = false
                 notificationAccessSettings.launch(NotificationHub.accessSettingsIntent())
             },

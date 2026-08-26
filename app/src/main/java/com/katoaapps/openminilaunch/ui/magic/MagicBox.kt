@@ -860,10 +860,12 @@ internal fun MagicBox(
     }
     if (showNoteDeleteConfirmation) {
         AlertDialog(
+            modifier = Modifier.minkDialogWidth(),
             onDismissRequest = {
                 showNoteDeleteConfirmation = false
                 refocus()
             },
+            properties = MinkDialogDefaults.properties,
             icon = { Icon(Icons.Default.DeleteOutline, null) },
             title = { Text(stringResource(R.string.delete_note_draft_title)) },
             text = { Text(stringResource(R.string.delete_note_draft_description)) },
@@ -964,7 +966,9 @@ internal fun MagicBox(
     }
     callToConfirm?.let { contact ->
         AlertDialog(
+            modifier = Modifier.minkDialogWidth(),
             onDismissRequest = { callToConfirm = null; onSessionComplete() },
+            properties = MinkDialogDefaults.properties,
             icon = { Icon(Icons.Default.Phone, null, tint = MagicCallColor) },
             title = { Text(stringResource(R.string.call_contact, contact.name)) },
             text = { Text(stringResource(R.string.phone_type_and_number, contact.phoneLabel, contact.phone)) },
@@ -1002,7 +1006,9 @@ internal fun MagicBox(
     smsToConfirm?.let { draft ->
         val assistantActive = actions.isAssistantRoleHeld()
         AlertDialog(
+            modifier = Modifier.minkDialogWidth(),
             onDismissRequest = { smsToConfirm = null; onSessionComplete() },
+            properties = MinkDialogDefaults.properties,
             icon = { Icon(Icons.AutoMirrored.Filled.Send, null, tint = MagicTextColor) },
             title = { Text(stringResource(R.string.send_message_to_contact, draft.contact.name)) },
             text = {

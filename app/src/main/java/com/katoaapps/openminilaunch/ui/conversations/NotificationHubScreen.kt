@@ -137,7 +137,8 @@ internal fun NotificationHubScreen(store: LauncherStore, actions: DeviceActions,
 
     if (showAccessDisclosure) {
         NotificationAccessDisclosureDialog(
-            onContinue = {
+            onOpenAppInfo = actions::openAppSettings,
+            onOpenNotificationAccess = {
                 showAccessDisclosure = false
                 actions.openNotificationAccessSettings()
             },

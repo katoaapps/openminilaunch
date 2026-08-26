@@ -23,11 +23,9 @@ import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -38,11 +36,9 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.ArrowDownward
-import androidx.compose.material.icons.filled.ArrowUpward
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Refresh
@@ -53,9 +49,6 @@ import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.FilledTonalIconButton
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -121,6 +114,7 @@ internal fun WidgetPage(store: LauncherStore, actions: DeviceActions, goHome: ()
     var pendingSize by remember { mutableStateOf<WidgetGridSize?>(null) }
     var bindingStage by remember { mutableStateOf(WidgetBindingStage.IDLE) }
     var widgetInfoRevision by remember { mutableIntStateOf(0) }
+    val widgetListState = rememberLazyListState()
 
     fun abandonPendingWidget() {
         if (pendingId != AppWidgetManager.INVALID_APPWIDGET_ID) host.deleteAppWidgetId(pendingId)
@@ -261,40 +255,51 @@ internal fun WidgetPage(store: LauncherStore, actions: DeviceActions, goHome: ()
                 Button(onClick = { showPicker = true }) { Icon(Icons.Default.Add, null); Text(stringResource(R.string.add_widget), Modifier.padding(start = Dimens.dp8)) }
             }
         } else {
-            LazyColumn(
-                Modifier.fillMaxSize().padding(horizontal = Dimens.dp20),
-                verticalArrangement = Arrangement.spacedBy(Dimens.dp20),
-            ) {
-                itemsIndexed(store.widgetIds, key = { _, id -> id }) { index, id ->
-                    val info = remember(id, widgetInfoRevision) { manager.getAppWidgetInfo(id) }
-                    if (info != null) {
-                        WidgetPanel(
-                            host = host,
-                            id = id,
-                            info = info,
-                            gridSize = store.widgetSizes[id]
-                                ?: widgetSizeRange(info, context.resources.displayMetrics.density).preferred,
-                            canMoveUp = index > 0,
-                            canMoveDown = index < store.widgetIds.lastIndex,
-                            onMoveUp = { store.moveWidget(id, -1) },
-                            onMoveDown = { store.moveWidget(id, 1) },
-                            onRemove = {
-                                store.removeWidget(id)
-                                runCatching { host.deleteAppWidgetId(id) }
-                            },
-                            onResize = { store.setWidgetSize(id, it) },
-                        )
-                    } else {
-                        UnavailableWidgetPanel(
-                            onRetry = { widgetInfoRevision++ },
-                            onRemove = {
-                                store.removeWidget(id)
-                                runCatching { host.deleteAppWidgetId(id) }
-                            },
-                        )
+            Box(Modifier.fillMaxSize()) {
+                LazyColumn(
+                    state = widgetListState,
+                    modifier = Modifier.fillMaxSize().padding(start = Dimens.dp20, end = Dimens.dp48),
+                    verticalArrangement = Arrangement.spacedBy(Dimens.dp20),
+                ) {
+                    itemsIndexed(store.widgetIds, key = { _, id -> id }) { index, id ->
+                        val info = remember(id, widgetInfoRevision) { manager.getAppWidgetInfo(id) }
+                        if (info != null) {
+                            WidgetPanel(
+                                host = host,
+                                id = id,
+                                info = info,
+                                gridSize = store.widgetSizes[id]
+                                    ?: widgetSizeRange(info, context.resources.displayMetrics.density).preferred,
+                                canMoveUp = index > 0,
+                                canMoveDown = index < store.widgetIds.lastIndex,
+                                onMoveUp = { store.moveWidget(id, -1) },
+                                onMoveDown = { store.moveWidget(id, 1) },
+                                onRemove = {
+                                    store.removeWidget(id)
+                                    runCatching { host.deleteAppWidgetId(id) }
+                                },
+                                onResize = { store.setWidgetSize(id, it) },
+                            )
+                        } else {
+                            UnavailableWidgetPanel(
+                                onRetry = { widgetInfoRevision++ },
+                                onRemove = {
+                                    store.removeWidget(id)
+                                    runCatching { host.deleteAppWidgetId(id) }
+                                },
+                            )
+                        }
                     }
+                    item { Spacer(Modifier.height(Dimens.dp32)) }
                 }
-                item { Spacer(Modifier.height(Dimens.dp32)) }
+                if (widgetListState.canScrollBackward || widgetListState.canScrollForward) {
+                    WidgetScrollIndicator(
+                        state = widgetListState,
+                        widgetCount = store.widgetIds.size,
+                        contentDescription = stringResource(R.string.scroll_widgets),
+                        modifier = Modifier.align(Alignment.CenterEnd).padding(end = Dimens.dp10),
+                    )
+                }
             }
         }
     }

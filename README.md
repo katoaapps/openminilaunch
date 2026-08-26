@@ -2,7 +2,7 @@
 
 A focused, keyboard-first Android home-screen launcher and digital assistant built with Kotlin and Jetpack Compose.
 
-Current version: **Open 1.2.3** (`1.2.3`). Feature releases show existing users a one-time in-app update notice covering new behavior, privacy impact, and any optional permissions; the onboarding tutorial is updated alongside each release.
+Current version: **Open 1.2.4** (`1.2.4`). Feature releases show existing users a one-time in-app update notice covering new behavior, privacy impact, and any optional permissions; the onboarding tutorial is updated alongside each release.
 
 ## Download
 

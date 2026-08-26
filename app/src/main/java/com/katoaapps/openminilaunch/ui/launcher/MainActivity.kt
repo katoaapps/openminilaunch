@@ -356,7 +356,8 @@ private fun MiniLaunchApp(
         }
         if (showNotificationAccessPrompt && !showTutorial && !showUpdateNotice) {
             NotificationAccessDisclosureDialog(
-                onContinue = {
+                onOpenAppInfo = actions::openAppSettings,
+                onOpenNotificationAccess = {
                     showNotificationAccessPrompt = false
                     onboardingNotificationAccess.launch(NotificationHub.accessSettingsIntent())
                 },
