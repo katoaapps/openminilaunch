@@ -46,12 +46,16 @@ internal data class MessagingDraftProvider(
     val id: String,
     @param:StringRes val labelRes: Int,
     val packageName: String,
+    val alternatePackageNames: List<String> = emptyList(),
     val kind: MessagingDraftKind,
     val supportTier: MessagingSupportTier,
     @param:DrawableRes val bundledIconRes: Int? = null,
     val storeUrl: String,
     val documentationUrl: String,
 )
+
+internal val MessagingDraftProvider.packageNames: List<String>
+    get() = listOf(packageName) + alternatePackageNames
 
 /** Resolved provider state used by both Settings and the one-time send chooser. */
 internal data class MessagingProviderOption(
@@ -98,6 +102,7 @@ internal object MessagingProviderCatalog {
             id = "telegram",
             labelRes = R.string.provider_telegram,
             packageName = "org.telegram.messenger",
+            alternatePackageNames = listOf("org.telegram.messenger.web"),
             kind = MessagingDraftKind.TELEGRAM,
             supportTier = MessagingSupportTier.CONTACT_AND_DRAFT,
             bundledIconRes = R.drawable.messaging_provider_telegram,
@@ -214,7 +219,7 @@ internal object MessagingProviderCatalog {
     )
 
     fun providerForPackage(packageName: String?): MessagingDraftProvider? =
-        providers.firstOrNull { it.packageName == packageName }
+        providers.firstOrNull { packageName in it.packageNames }
 
     private fun genericShareProvider(
         id: String,

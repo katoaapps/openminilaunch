@@ -50,6 +50,7 @@
         <package android:name="com.whatsapp" />
         <package android:name="com.whatsapp.w4b" />
         <package android:name="org.telegram.messenger" />
+        <package android:name="org.telegram.messenger.web" />
         <package android:name="jp.naver.line.android" />
         <package android:name="org.thoughtcrime.securesms" />
         <package android:name="com.kakao.talk" />

@@ -10,6 +10,7 @@ import com.katoaapps.openminilaunch.features.messaging.MessagingDraftProvider
 import com.katoaapps.openminilaunch.features.messaging.MessagingProviderCatalog
 import com.katoaapps.openminilaunch.features.messaging.MessagingProviderOption
 import com.katoaapps.openminilaunch.features.messaging.MessagingSupportTier
+import com.katoaapps.openminilaunch.features.messaging.packageNames
 import com.katoaapps.openminilaunch.features.updates.GITHUB_LATEST_APK_URL
 import com.katoaapps.openminilaunch.model.*
 import com.katoaapps.openminilaunch.ui.apps.AllAppsActivity
@@ -257,17 +258,19 @@ class DeviceActions(private val context: Context) {
             systemDefault = true,
         )
         val providerOptions = MessagingProviderCatalog.providers.map { provider ->
-            val installed = isPackageInstalled(provider.packageName)
-            val selectable = installed && preferredMessageIntent(
+            val installedPackage = provider.packageNames.firstOrNull(::isPackageInstalled)
+            val installed = installedPackage != null
+            val selectable = installedPackage != null && preferredMessageIntent(
                 provider,
                 "+15551234567",
                 "MinkLauncher",
+                installedPackage,
             )?.let(::canResolve) == true
             MessagingProviderOption(
                 id = provider.id,
-                label = if (installed) appLabel(provider.packageName) else context.getString(provider.labelRes),
-                preferencePackageName = provider.packageName,
-                installedPackageName = provider.packageName.takeIf { installed },
+                label = installedPackage?.let(::appLabel) ?: context.getString(provider.labelRes),
+                preferencePackageName = installedPackage ?: provider.packageName,
+                installedPackageName = installedPackage,
                 supportTier = provider.supportTier,
                 bundledIconRes = provider.bundledIconRes,
                 installed = installed,
@@ -296,7 +299,12 @@ class DeviceActions(private val context: Context) {
     ): PreferredMessageDraftResult {
         val provider = MessagingProviderCatalog.providerForPackage(preferredPackage)
         if (provider != null) {
-            val intent = preferredMessageIntent(provider, contact.phone, body)
+            val intent = preferredMessageIntent(
+                provider,
+                contact.phone,
+                body,
+                preferredPackage ?: provider.packageName,
+            )
             if (intent != null && canResolve(intent) && start(intent)) {
                 return if (provider.supportTier == MessagingSupportTier.RECIPIENT_IN_APP) {
                     PreferredMessageDraftResult.OPENED_WITH_RECIPIENT_PICKER
@@ -323,6 +331,7 @@ class DeviceActions(private val context: Context) {
         provider: MessagingDraftProvider,
         phone: String,
         body: String,
+        packageName: String = provider.packageName,
     ): Intent? {
         val cleanBody = body.trim()
         val internationalPhone = internationalPhoneNumber(phone)
@@ -356,11 +365,11 @@ class DeviceActions(private val context: Context) {
             MessagingDraftKind.GENERIC_SHARE -> return Intent(Intent.ACTION_SEND)
                 .setType("text/plain")
                 .putExtra(Intent.EXTRA_TEXT, cleanBody)
-                .setPackage(provider.packageName)
+                .setPackage(packageName)
         }
         val action = if (provider.kind == MessagingDraftKind.SMS_URI) Intent.ACTION_SENDTO else Intent.ACTION_VIEW
         return Intent(action, uri)
-            .setPackage(provider.packageName)
+            .setPackage(packageName)
             .apply {
                 if (provider.kind == MessagingDraftKind.SMS_URI) putExtra("sms_body", cleanBody)
             }

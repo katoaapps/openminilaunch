@@ -3,6 +3,7 @@ package com.katoaapps.openminilaunch
 import com.katoaapps.openminilaunch.data.restoredAutomaticMessageSend
 import com.katoaapps.openminilaunch.features.messaging.MessagingSendRoute
 import com.katoaapps.openminilaunch.features.messaging.MessagingProviderCatalog
+import com.katoaapps.openminilaunch.features.messaging.packageNames
 import com.katoaapps.openminilaunch.features.messaging.messagingSendRoute
 import com.katoaapps.openminilaunch.platform.PreferredMessageDraftResult
 import com.katoaapps.openminilaunch.platform.defaultMessageDraftResult
@@ -50,10 +51,19 @@ class MessagingBehaviorTest {
         val providers = MessagingProviderCatalog.providers
 
         assertEquals(providers.size, providers.map { it.id }.distinct().size)
-        assertEquals(providers.size, providers.map { it.packageName }.distinct().size)
+        val packageNames = providers.flatMap { it.packageNames }
+        assertEquals(packageNames.size, packageNames.distinct().size)
         assertTrue(providers.all { it.bundledIconRes != null })
         assertTrue(providers.all { it.storeUrl.startsWith("https://") })
         assertTrue(providers.all { it.documentationUrl.startsWith("https://") })
+    }
+
+    @Test fun telegramWebsiteAndPlayBuildsResolveToTheSameProvider() {
+        val playProvider = MessagingProviderCatalog.providerForPackage("org.telegram.messenger")
+        val websiteProvider = MessagingProviderCatalog.providerForPackage("org.telegram.messenger.web")
+
+        assertEquals("telegram", playProvider?.id)
+        assertEquals(playProvider, websiteProvider)
     }
 
     @Test fun deliberatelySelectedSystemMessagesIsNotReportedAsAFallback() {

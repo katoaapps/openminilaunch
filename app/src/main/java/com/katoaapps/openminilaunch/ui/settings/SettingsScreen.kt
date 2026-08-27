@@ -220,14 +220,18 @@ internal fun SettingsScreen(
         messagingProviders.options,
         store.preferredMessagingPackage,
     ) {
-        if (
-            messagingProviders.loaded &&
-            store.preferredMessagingPackage != null &&
-            messagingProviders.options.none {
-                it.preferencePackageName == store.preferredMessagingPackage && it.selectable
+        val savedPackage = store.preferredMessagingPackage
+        if (messagingProviders.loaded && savedPackage != null) {
+            val savedProviderId = MessagingProviderCatalog.providerForPackage(savedPackage)?.id
+            val installedVariant = messagingProviders.options.firstOrNull {
+                it.id == savedProviderId && it.selectable
             }
-        ) {
-            store.resetPreferredMessagingApp()
+            when {
+                installedVariant == null -> store.resetPreferredMessagingApp()
+                installedVariant.preferencePackageName != savedPackage -> {
+                    installedVariant.preferencePackageName?.let(store::setPreferredMessagingApp)
+                }
+            }
         }
     }
     val permissionState = SettingsPermissionState(
