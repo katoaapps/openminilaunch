@@ -10,6 +10,7 @@ import com.katoaapps.openminilaunch.features.calendar.*
 import com.katoaapps.openminilaunch.features.conversations.*
 import com.katoaapps.openminilaunch.features.files.*
 import com.katoaapps.openminilaunch.features.magic.*
+import com.katoaapps.openminilaunch.features.messaging.*
 import com.katoaapps.openminilaunch.features.todos.*
 import com.katoaapps.openminilaunch.ui.components.*
 import com.katoaapps.openminilaunch.ui.theme.*
@@ -22,6 +23,7 @@ import com.katoaapps.openminilaunch.ui.launcher.supportsDirectSms
 import com.katoaapps.openminilaunch.ui.onboarding.FileSearchScopeDialog
 import com.katoaapps.openminilaunch.ui.settings.AppPickerDialog
 import com.katoaapps.openminilaunch.ui.settings.AssistantDisclosureDialog
+import com.katoaapps.openminilaunch.ui.settings.MessagingProviderPickerDialog
 
 import android.Manifest
 import android.content.Intent
@@ -185,6 +187,7 @@ internal fun MagicBox(
     var smsToConfirm by remember { mutableStateOf<PendingSms?>(null) }
     var pendingPermissionSms by remember { mutableStateOf<PendingSms?>(null) }
     var pendingAssistantSms by remember { mutableStateOf<PendingSms?>(null) }
+    var pendingMessagingChoiceSms by remember { mutableStateOf<PendingSms?>(null) }
     var showSmsSentConfirmation by remember { mutableStateOf(false) }
     var smsSentConfirmationToken by remember { mutableIntStateOf(0) }
     var showSmsAssistantDisclosure by remember { mutableStateOf(false) }
@@ -201,6 +204,17 @@ internal fun MagicBox(
     val allAiApps by produceState<List<LaunchableApp>>(initialValue = emptyList()) {
         value = withContext(Dispatchers.IO) { actions.textShareApps() }
         allAiAppsLoaded = true
+    }
+    val messagingProviders by produceState(
+        initialValue = MessagingOptionsLoadState(),
+        key1 = pendingMessagingChoiceSms,
+    ) {
+        if (pendingMessagingChoiceSms != null) {
+            value = MessagingOptionsLoadState(
+                options = withContext(Dispatchers.IO) { actions.messagingProviderOptions() },
+                loaded = true,
+            )
+        }
     }
     DisposableEffect(context) {
         val lifecycle = (context as? ComponentActivity)?.lifecycle
@@ -308,11 +322,11 @@ internal fun MagicBox(
         onSessionComplete()
     }
 
-    fun openPreferredMessagingApp(draft: PendingSms) {
+    fun openMessagingProvider(draft: PendingSms, providerPackage: String?) {
         when (actions.openPreferredMessageDraft(
             draft.contact,
             draft.body,
-            store.preferredMessagingPackage,
+            providerPackage,
         )) {
             PreferredMessageDraftResult.OPENED -> Unit
             PreferredMessageDraftResult.OPENED_WITH_RECIPIENT_PICKER -> Toast.makeText(
@@ -483,10 +497,16 @@ internal fun MagicBox(
                 if (it) {
                     val draft = PendingSms(selectedContact!!, payload)
                     collapseForDialog()
-                    when (store.messageSendMode) {
-                        MessageSendMode.DIRECT_SMS -> sendDirectOrRequestAccess(draft)
-                        MessageSendMode.PREFERRED_APP -> openPreferredMessagingApp(draft)
-                        MessageSendMode.SYSTEM_CHOOSER -> chooseMessagingApp(draft)
+                    when (messagingSendRoute(
+                        sendAutomatically = store.sendMessagesAutomatically,
+                        preferredPackage = store.preferredMessagingPackage,
+                    )) {
+                        MessagingSendRoute.DIRECT_SMS -> sendDirectOrRequestAccess(draft)
+                        MessagingSendRoute.PREFERRED_DRAFT -> openMessagingProvider(
+                            draft,
+                            store.preferredMessagingPackage,
+                        )
+                        MessagingSendRoute.PROVIDER_PICKER -> pendingMessagingChoiceSms = draft
                     }
                 }
             }
@@ -941,6 +961,33 @@ internal fun MagicBox(
             },
         )
     }
+    pendingMessagingChoiceSms?.let { draft ->
+        MessagingProviderPickerDialog(
+            title = stringResource(R.string.send_with),
+            options = messagingProviders.options,
+            loading = !messagingProviders.loaded,
+            selectedProviderId = MessagingProviderCatalog.providerForPackage(
+                store.preferredMessagingPackage,
+            )?.id ?: MessagingProviderCatalog.SYSTEM_DEFAULT_PROVIDER_ID,
+            showUnavailable = false,
+            onProvider = { option ->
+                pendingMessagingChoiceSms = null
+                if (option.systemDefault) {
+                    openMessagingProvider(draft, providerPackage = null)
+                } else {
+                    openMessagingProvider(draft, option.preferencePackageName)
+                }
+            },
+            onSeeAllApps = {
+                pendingMessagingChoiceSms = null
+                chooseMessagingApp(draft)
+            },
+            onDismiss = {
+                pendingMessagingChoiceSms = null
+                onSessionComplete()
+            },
+        )
+    }
     if (showAiPicker) {
         AppPickerDialog(
             title = stringResource(R.string.choose_ai_app),
@@ -1063,7 +1110,12 @@ internal fun MagicBox(
             dismissButton = {
                 Row {
                     TextButton(onClick = { smsToConfirm = null; onSessionComplete() }) { Text(stringResource(R.string.cancel)) }
-                    TextButton(onClick = { smsToConfirm = null; chooseMessagingApp(draft) }) { Text(stringResource(R.string.choose_messaging_app)) }
+                    TextButton(
+                        onClick = {
+                            smsToConfirm = null
+                            pendingMessagingChoiceSms = draft
+                        },
+                    ) { Text(stringResource(R.string.choose_messaging_app)) }
                 }
             },
         )
@@ -1071,3 +1123,8 @@ internal fun MagicBox(
 }
 
 private data class PendingSms(val contact: ContactResult, val body: String)
+
+private data class MessagingOptionsLoadState(
+    val options: List<MessagingProviderOption> = emptyList(),
+    val loaded: Boolean = false,
+)

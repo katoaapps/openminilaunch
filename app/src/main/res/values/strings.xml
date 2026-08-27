@@ -132,9 +132,6 @@
     <string name="theme_system">System</string>
     <string name="theme_light">Light</string>
     <string name="theme_dark">Dark</string>
-    <string name="message_mode_direct_sms">Send as SMS immediately</string>
-    <string name="message_mode_preferred_app">Open draft in preferred app</string>
-    <string name="message_mode_system_chooser">Open Send via…</string>
     <string name="widget_grid_size">%1$d × %2$d</string>
 
     <!-- Home -->
@@ -207,7 +204,7 @@
     <string name="magic_send_note">Send text to a notes app</string>
     <string name="magic_create_event">Create an event, e.g. next Friday or in 4 weeks</string>
     <string name="magic_find_app">Find and launch an app</string>
-    <string name="message_behavior_onboarding">Message behavior applies only to one-time @ messages from the Magic Box, not replies in Conversations. Mink can send carrier SMS immediately, open a draft in your preferred compatible app, or let Android show compatible messaging apps. Direct SMS requires Mink Assistant; drafts remain under the selected app’s control.</string>
+    <string name="message_behavior_onboarding">Choose an integrated messaging app, then decide whether Mink should act automatically or ask each time. This applies only to one-time @ messages from the Magic Box. Conversation replies still use the app that posted the notification.</string>
     <string name="todo_onboarding_intro">Type - followed by your task to send it straight to the Home widget.</string>
     <string name="swipe_widget">Swipe the widget</string>
     <string name="swipe_widget_description">Each page shows up to five items, adapting to the available screen height.</string>
@@ -271,10 +268,10 @@
     <string name="contacts">Contacts</string>
     <string name="contacts_onboarding_description">Only read when you search for a person.</string>
     <string name="document_folder_scope_description">For documents, Android lets you choose only the folders %1$s may search.</string>
-    <string name="permission_sequence_description">Android will show Contacts and Call prompts next. If Mink Assistant is active and your messaging choice includes direct SMS, Android may grant or request Send SMS access before the optional Conversations and Mink’s Day explanations. Media access appears only when you enable file search.</string>
+    <string name="permission_sequence_description">Android will show Contacts and Call prompts next. If Mink Assistant is active and automatic System Messages sending is enabled, Android may grant or request Send SMS access before the optional Conversations and Mink’s Day explanations. Media access appears only when you enable file search.</string>
     <string name="calls">Calls</string>
     <string name="calls_onboarding_description">Call access is used only when you choose Call now. Choose calling app hands the number to an Android-compatible dialer instead.</string>
-    <string name="direct_sms_onboarding_permission_description">Send SMS access is used only for one-time @ messages when Send as SMS immediately is selected, never Conversation replies. Draft and app-chooser modes do not use this permission or change your messaging app’s RCS settings.</string>
+    <string name="direct_sms_onboarding_permission_description">Send SMS access is used only for one-time @ messages when System Messages is selected and automatic sending is on. It is never used for Conversation replies. Provider drafts and the app picker do not use this permission or change any app’s RCS settings.</string>
     <string name="double_tap_lock">Double-tap lock</string>
     <string name="double_tap_lock_onboarding_description">Optional accessibility access performs only Android’s Lock screen action after your double-tap. It cannot read screen content or observe what you do.</string>
     <string name="media">Media</string>
@@ -345,15 +342,28 @@
     <string name="ai_app">AI app</string>
     <string name="ai_provider_privacy_description">Known AI assistants are shown first. Other compatible apps remain available. Your query is handled under the selected app’s privacy terms.</string>
     <string name="messaging">Messaging</string>
-    <string name="preferred_messaging_app">Preferred messaging app</string>
+    <string name="preferred_messaging_app">Integrated messaging app</string>
     <string name="system_messages">System Messages</string>
-    <string name="choose_preferred_messaging_app">Choose preferred messaging app</string>
+    <string name="choose_preferred_messaging_app">Choose integrated messaging app</string>
     <string name="use_system_messages">Use System Messages</string>
-    <string name="no_contact_messaging_apps">No supported draft apps are installed. System Messages remains available as the fallback.</string>
-    <string name="preferred_messaging_picker_description">Mink shows apps with a known draft handoff. WhatsApp and Telegram preserve the selected phone contact. LINE opens its recipient picker. Compatible TextNow and TextFree versions appear when they accept a phone-addressed draft.</string>
-    <string name="messaging_mode_description">This applies only to one-time @ messages from the Magic Box. Immediate send uses carrier SMS. Preferred app uses a provider-specific draft handoff and falls back to System Messages if needed. Send via opens Android’s share sheet; you will usually choose the recipient again. Conversation replies still use their source app.</string>
+    <string name="send_messages_automatically">Send automatically</string>
+    <string name="send_messages_automatically_description">With System Messages, this sends carrier SMS immediately. Other integrated apps open a prepared draft.</string>
+    <string name="send_messages_automatically_onboarding_description">Turn this on to send carrier SMS immediately with System Messages. If you choose another integrated app later, Mink opens its prepared draft instead.</string>
+    <string name="messaging_behavior_description">This applies only to one-time @ messages from the Magic Box. With automatic sending off, Mink asks which installed supported app to use. See all apps opens Android’s share sheet. Conversation replies still use their source app, and Mink does not change RCS settings.</string>
+    <string name="search_messaging_apps">Search messaging apps</string>
+    <string name="no_messaging_providers_found">No matching messaging apps</string>
+    <string name="messaging_full_support">Contact and draft</string>
+    <string name="messaging_reselect_contact">Must select contact in app</string>
+    <string name="messaging_system_default_description">System default · carrier SMS when sent automatically</string>
+    <string name="messaging_not_installed">Not installed</string>
+    <string name="messaging_version_not_supported">This installed version does not accept Mink’s draft handoff</string>
+    <string name="messaging_body_only_support">Message carried over · choose the contact again</string>
+    <string name="messaging_contact_and_body_support">Contact and message carried over</string>
+    <string name="see_all_messaging_apps">See all apps…</string>
+    <string name="send_with">Send with</string>
+    <string name="selected">Selected</string>
     <string name="choose_contact_in_preferred_app">Choose %1$s in the messaging app.</string>
-    <string name="preferred_messaging_fallback">Preferred app unavailable. Opened System Messages instead.</string>
+    <string name="preferred_messaging_fallback">Integrated app unavailable. Opened System Messages instead.</string>
     <string name="provider_whatsapp" translatable="false">WhatsApp</string>
     <string name="provider_whatsapp_business" translatable="false">WhatsApp Business</string>
     <string name="provider_telegram" translatable="false">Telegram</string>

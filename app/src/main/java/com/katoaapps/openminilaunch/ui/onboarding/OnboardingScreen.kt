@@ -14,7 +14,6 @@ import com.katoaapps.openminilaunch.ui.launcher.displaySlotLabel
 import com.katoaapps.openminilaunch.ui.theme.*
 import com.katoaapps.openminilaunch.R
 import com.katoaapps.openminilaunch.ui.settings.AppPickerDialog
-import com.katoaapps.openminilaunch.ui.settings.MessageSendModeChooser
 
 import android.Manifest
 import android.app.Activity
@@ -393,7 +392,12 @@ internal fun OnboardingScreen(store: LauncherStore, actions: DeviceActions, onFi
                                 fontSize = Dimens.sp13,
                             )
                             Text(stringResource(R.string.choose_message_behavior), fontWeight = FontWeight.Bold)
-                            MessageSendModeChooser(store.messageSendMode, store::updateMessageSendMode)
+                            SettingsSwitchRow(
+                                title = stringResource(R.string.send_messages_automatically),
+                                subtitle = stringResource(R.string.send_messages_automatically_onboarding_description),
+                                checked = store.sendMessagesAutomatically,
+                                onCheckedChange = store::updateSendMessagesAutomatically,
+                            )
                         }
                         5 -> Column(verticalArrangement = Arrangement.spacedBy(Dimens.dp18)) {
                             Text(stringResource(R.string.mink_day_onboarding_intro), fontSize = Dimens.sp18)

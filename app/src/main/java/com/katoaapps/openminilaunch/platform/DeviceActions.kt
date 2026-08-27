@@ -8,6 +8,7 @@ import com.katoaapps.openminilaunch.features.magic.normalizedWebUrl
 import com.katoaapps.openminilaunch.features.messaging.MessagingDraftKind
 import com.katoaapps.openminilaunch.features.messaging.MessagingDraftProvider
 import com.katoaapps.openminilaunch.features.messaging.MessagingProviderCatalog
+import com.katoaapps.openminilaunch.features.messaging.MessagingProviderOption
 import com.katoaapps.openminilaunch.features.messaging.MessagingSupportTier
 import com.katoaapps.openminilaunch.features.updates.GITHUB_LATEST_APK_URL
 import com.katoaapps.openminilaunch.model.*
@@ -232,20 +233,48 @@ class DeviceActions(private val context: Context) {
         else start(Intent(Intent.ACTION_MAIN).addCategory(Intent.CATEGORY_APP_MESSAGING))
     }
 
-    /**
-     * Preferred providers are intentionally curated. Each entry has a handoff Mink knows how
-     * to build instead of relying on a generic Android share-intent query.
-     */
-    fun preferredMessagingApps(): List<LaunchableApp> = CURATED_MESSAGING_PROVIDERS
-        .asSequence()
-        .filter { provider -> isPackageInstalled(provider.packageName) }
-        .filter { provider ->
-            val probe = preferredMessageIntent(provider, "+15551234567", "MinkLauncher")
-            probe != null && canResolve(probe)
+    /** Resolves the complete curated catalog, including disabled ghost entries for missing apps. */
+    internal fun messagingProviderOptions(): List<MessagingProviderOption> {
+        val defaultPackage = Telephony.Sms.getDefaultSmsPackage(context)
+        val systemOption = MessagingProviderOption(
+            id = MessagingProviderCatalog.SYSTEM_DEFAULT_PROVIDER_ID,
+            label = defaultPackage?.let(::appLabel) ?: context.getString(R.string.system_messages),
+            preferencePackageName = null,
+            installedPackageName = defaultPackage,
+            supportTier = MessagingSupportTier.CONTACT_AND_DRAFT,
+            bundledIconRes = null,
+            installed = true,
+            selectable = true,
+            systemDefault = true,
+        )
+        val providerOptions = MessagingProviderCatalog.providers.map { provider ->
+            val installed = isPackageInstalled(provider.packageName)
+            val selectable = installed && preferredMessageIntent(
+                provider,
+                "+15551234567",
+                "MinkLauncher",
+            )?.let(::canResolve) == true
+            MessagingProviderOption(
+                id = provider.id,
+                label = if (installed) appLabel(provider.packageName) else context.getString(provider.labelRes),
+                preferencePackageName = provider.packageName,
+                installedPackageName = provider.packageName.takeIf { installed },
+                supportTier = provider.supportTier,
+                bundledIconRes = provider.bundledIconRes,
+                installed = installed,
+                selectable = selectable,
+            )
         }
-        .map { provider -> LaunchableApp(appLabel(provider.packageName), provider.packageName) }
-        .sortedBy { it.label.lowercase() }
-        .toList()
+        return listOf(systemOption) + providerOptions.sortedWith(
+            compareBy<MessagingProviderOption> { it.supportTier != MessagingSupportTier.CONTACT_AND_DRAFT }
+                .thenBy { it.supportTier == MessagingSupportTier.RECIPIENT_IN_APP }
+                .thenBy { it.label.lowercase() },
+        )
+    }
+
+    fun defaultMessagingAppLabel(): String = Telephony.Sms.getDefaultSmsPackage(context)
+        ?.let(::appLabel)
+        ?: context.getString(R.string.system_messages)
 
     /**
      * Opens the chosen provider's documented draft handoff. A missing or incompatible
@@ -256,7 +285,7 @@ class DeviceActions(private val context: Context) {
         body: String,
         preferredPackage: String?,
     ): PreferredMessageDraftResult {
-        val provider = CURATED_MESSAGING_PROVIDERS.firstOrNull { it.packageName == preferredPackage }
+        val provider = MessagingProviderCatalog.providerForPackage(preferredPackage)
         if (provider != null) {
             val intent = preferredMessageIntent(provider, contact.phone, body)
             if (intent != null && canResolve(intent) && start(intent)) {
@@ -566,6 +595,5 @@ class DeviceActions(private val context: Context) {
             "com.google.android.apps.bard",
         )
 
-        val CURATED_MESSAGING_PROVIDERS = MessagingProviderCatalog.currentPickerProviders
     }
 }

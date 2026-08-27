@@ -64,10 +64,4 @@ enum class ThemePreference(@StringRes val labelRes: Int) {
     DARK(R.string.theme_dark),
 }
 
-enum class MessageSendMode(@StringRes val labelRes: Int) {
-    DIRECT_SMS(R.string.message_mode_direct_sms),
-    PREFERRED_APP(R.string.message_mode_preferred_app),
-    SYSTEM_CHOOSER(R.string.message_mode_system_chooser),
-}
-
 internal val SOCIAL_GOAL_OPTIONS = listOf(30, 60, 90, 120)

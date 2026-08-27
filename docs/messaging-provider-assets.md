@@ -1,6 +1,6 @@
 # Messaging provider assets
 
-OpenMink bundles a current icon for every provider in `MessagingProviderCatalog` so the preferred
+OpenMink bundles a current icon for every provider in `MessagingProviderCatalog` so the integrated
 app picker can identify supported services even when they are not installed. When an app is
 installed, Android's `PackageManager` remains the source of truth for its current label and icon.
 
@@ -38,6 +38,6 @@ respective owners.
 - Installed apps use the icon returned by Android, not the bundled copy.
 - Unavailable supported apps use the bundled icon with the surrounding row visually disabled.
 - Do not recolor, redraw, add effects to, or crop the provider artwork.
-- Never allow an unavailable provider to become the saved preferred package.
+- Never allow an unavailable provider to become the saved integrated package.
 - Refresh an asset only from the same package's official listing, then verify the package ID,
   512 x 512 dimensions, PNG encoding, and Android resource build.

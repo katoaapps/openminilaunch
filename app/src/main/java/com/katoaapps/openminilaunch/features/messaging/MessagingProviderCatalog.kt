@@ -11,6 +11,22 @@ internal enum class MessagingSupportTier {
     CONDITIONAL,
 }
 
+/** Decides what pressing Send does before Android or a provider is invoked. */
+internal enum class MessagingSendRoute {
+    DIRECT_SMS,
+    PREFERRED_DRAFT,
+    PROVIDER_PICKER,
+}
+
+internal fun messagingSendRoute(
+    sendAutomatically: Boolean,
+    preferredPackage: String?,
+): MessagingSendRoute = when {
+    !sendAutomatically -> MessagingSendRoute.PROVIDER_PICKER
+    preferredPackage.isNullOrBlank() -> MessagingSendRoute.DIRECT_SMS
+    else -> MessagingSendRoute.PREFERRED_DRAFT
+}
+
 /** The Android or provider-owned contract used to prepare a message draft. */
 internal enum class MessagingDraftKind {
     WHATSAPP,
@@ -35,8 +51,19 @@ internal data class MessagingDraftProvider(
     @param:DrawableRes val bundledIconRes: Int? = null,
     val storeUrl: String,
     val documentationUrl: String,
-    val advertiseWhenNotInstalled: Boolean = true,
-    val currentPickerEligible: Boolean = false,
+)
+
+/** Resolved provider state used by both Settings and the one-time send chooser. */
+internal data class MessagingProviderOption(
+    val id: String,
+    val label: String,
+    val preferencePackageName: String?,
+    val installedPackageName: String?,
+    val supportTier: MessagingSupportTier,
+    @param:DrawableRes val bundledIconRes: Int?,
+    val installed: Boolean,
+    val selectable: Boolean,
+    val systemDefault: Boolean = false,
 )
 
 /**
@@ -56,7 +83,6 @@ internal object MessagingProviderCatalog {
             bundledIconRes = R.drawable.messaging_provider_whatsapp,
             storeUrl = "https://play.google.com/store/apps/details?id=com.whatsapp",
             documentationUrl = "https://faq.whatsapp.com/5913398998672934/",
-            currentPickerEligible = true,
         ),
         MessagingDraftProvider(
             id = "whatsapp_business",
@@ -67,7 +93,6 @@ internal object MessagingProviderCatalog {
             bundledIconRes = R.drawable.messaging_provider_whatsapp_business,
             storeUrl = "https://play.google.com/store/apps/details?id=com.whatsapp.w4b",
             documentationUrl = "https://faq.whatsapp.com/5913398998672934/",
-            currentPickerEligible = true,
         ),
         MessagingDraftProvider(
             id = "telegram",
@@ -78,7 +103,6 @@ internal object MessagingProviderCatalog {
             bundledIconRes = R.drawable.messaging_provider_telegram,
             storeUrl = "https://play.google.com/store/apps/details?id=org.telegram.messenger",
             documentationUrl = "https://core.telegram.org/api/links#phone-number-links",
-            currentPickerEligible = true,
         ),
         MessagingDraftProvider(
             id = "line",
@@ -89,7 +113,6 @@ internal object MessagingProviderCatalog {
             bundledIconRes = R.drawable.messaging_provider_line,
             storeUrl = "https://play.google.com/store/apps/details?id=jp.naver.line.android",
             documentationUrl = "https://developers.line.biz/en/docs/messaging-api/using-line-url-scheme/#sending-text-messages",
-            currentPickerEligible = true,
         ),
         genericShareProvider(
             id = "signal",
@@ -177,8 +200,6 @@ internal object MessagingProviderCatalog {
             bundledIconRes = R.drawable.messaging_provider_textnow,
             storeUrl = "https://play.google.com/store/apps/details?id=com.enflick.android.TextNow",
             documentationUrl = "https://help.textnow.com/",
-            advertiseWhenNotInstalled = false,
-            currentPickerEligible = true,
         ),
         MessagingDraftProvider(
             id = "textfree",
@@ -189,17 +210,8 @@ internal object MessagingProviderCatalog {
             bundledIconRes = R.drawable.messaging_provider_textfree,
             storeUrl = "https://play.google.com/store/apps/details?id=com.pinger.textfree",
             documentationUrl = "https://pinger.zendesk.com/",
-            advertiseWhenNotInstalled = false,
-            currentPickerEligible = true,
         ),
     )
-
-    val currentPickerProviders: List<MessagingDraftProvider> =
-        providers.filter(MessagingDraftProvider::currentPickerEligible)
-
-    /** Providers the future picker may render even before their app is installed. */
-    val advertisedProviders: List<MessagingDraftProvider> =
-        providers.filter(MessagingDraftProvider::advertiseWhenNotInstalled)
 
     fun providerForPackage(packageName: String?): MessagingDraftProvider? =
         providers.firstOrNull { it.packageName == packageName }

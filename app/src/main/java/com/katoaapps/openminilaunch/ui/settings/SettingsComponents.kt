@@ -291,27 +291,6 @@ internal fun ThemeChooser(selected: ThemePreference, onSelect: (ThemePreference)
 }
 
 @Composable
-internal fun MessageSendModeChooser(selected: MessageSendMode, onSelect: (MessageSendMode) -> Unit) {
-    Column(verticalArrangement = Arrangement.spacedBy(Dimens.dp8)) {
-        MessageSendMode.entries.forEach { option ->
-            Surface(
-                onClick = { onSelect(option) },
-                shape = RoundedCornerShape(Dimens.dp14),
-                color = if (selected == option) MaterialTheme.colorScheme.primaryContainer else MaterialTheme.colorScheme.surfaceContainerLow,
-            ) {
-                Row(
-                    Modifier.fillMaxWidth().padding(horizontal = Dimens.dp12, vertical = Dimens.dp10),
-                    verticalAlignment = Alignment.CenterVertically,
-                ) {
-                    RadioButton(selected = selected == option, onClick = null)
-                    Text(stringResource(option.labelRes), Modifier.padding(start = Dimens.dp8), fontWeight = FontWeight.Medium)
-                }
-            }
-        }
-    }
-}
-
-@Composable
 internal fun PermissionCard(
     title: String,
     description: String,

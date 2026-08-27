@@ -21,13 +21,11 @@ internal fun unfinishedFirst(items: List<TodoItem>): List<TodoItem> {
     return unfinished + completed
 }
 
-internal fun restoredMessageSendMode(saved: String?): MessageSendMode = runCatching {
-    when (saved ?: MessageSendMode.SYSTEM_CHOOSER.name) {
-        "DEFAULT_MESSENGER", "MESSAGING_APP" -> MessageSendMode.PREFERRED_APP
-        "ALWAYS_ASK" -> MessageSendMode.SYSTEM_CHOOSER
-        else -> MessageSendMode.valueOf(saved ?: MessageSendMode.SYSTEM_CHOOSER.name)
+internal fun restoredAutomaticMessageSend(saved: Boolean?, legacyMode: String?): Boolean =
+    saved ?: when (legacyMode) {
+        "DIRECT_SMS", "PREFERRED_APP", "DEFAULT_MESSENGER", "MESSAGING_APP" -> true
+        else -> false
     }
-}.getOrDefault(MessageSendMode.SYSTEM_CHOOSER)
 
 class LauncherStore(context: Context) {
     private val prefs = context.getSharedPreferences("mini_launch", Context.MODE_PRIVATE)
@@ -67,7 +65,13 @@ class LauncherStore(context: Context) {
         if (prefs.contains(APP_BACKGROUND_COLOR_KEY)) prefs.getInt(APP_BACKGROUND_COLOR_KEY, 0) else null
     )
         private set
-    var messageSendMode by mutableStateOf(restoredMessageSendMode(prefs.getString("message_send_mode", null)))
+    var sendMessagesAutomatically by mutableStateOf(
+        restoredAutomaticMessageSend(
+            saved = prefs.getBoolean(SEND_MESSAGES_AUTOMATICALLY_KEY, false)
+                .takeIf { prefs.contains(SEND_MESSAGES_AUTOMATICALLY_KEY) },
+            legacyMode = prefs.getString(LEGACY_MESSAGE_SEND_MODE_KEY, null),
+        )
+    )
         private set
     var preferredMessagingPackage by mutableStateOf(prefs.getString(PREFERRED_MESSAGING_PACKAGE_KEY, null))
         private set
@@ -101,6 +105,8 @@ class LauncherStore(context: Context) {
             .remove("weather_temperature_f")
             .remove("weather_summary")
             .remove("weather_fetched_at")
+            .putBoolean(SEND_MESSAGES_AUTOMATICALLY_KEY, sendMessagesAutomatically)
+            .remove(LEGACY_MESSAGE_SEND_MODE_KEY)
             .apply()
         load()
     }
@@ -387,9 +393,9 @@ class LauncherStore(context: Context) {
         prefs.edit().remove("social_packages").apply()
     }
 
-    fun updateMessageSendMode(mode: MessageSendMode) {
-        messageSendMode = mode
-        prefs.edit().putString("message_send_mode", mode.name).apply()
+    fun updateSendMessagesAutomatically(enabled: Boolean) {
+        sendMessagesAutomatically = enabled
+        prefs.edit().putBoolean(SEND_MESSAGES_AUTOMATICALLY_KEY, enabled).apply()
     }
 
     fun setPreferredMessagingApp(packageName: String) {
@@ -543,6 +549,8 @@ class LauncherStore(context: Context) {
         const val ONBOARDING_COMPLETE_KEY = "onboarding_complete_v2"
         const val OPEN_SOFTWARE_KEYBOARD_ON_HOME_KEY = "open_software_keyboard_on_home"
         const val PREFERRED_MESSAGING_PACKAGE_KEY = "preferred_messaging_package"
+        const val SEND_MESSAGES_AUTOMATICALLY_KEY = "send_messages_automatically"
+        const val LEGACY_MESSAGE_SEND_MODE_KEY = "message_send_mode"
         const val GITHUB_UPDATE_CHECK_INTERVAL_MILLIS = 12 * 60 * 60 * 1_000L
         const val MAX_SEARCH_HISTORY = 5
         const val MAX_WIDGETS = 4

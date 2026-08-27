@@ -51,6 +51,17 @@
         <package android:name="com.whatsapp.w4b" />
         <package android:name="org.telegram.messenger" />
         <package android:name="jp.naver.line.android" />
+        <package android:name="org.thoughtcrime.securesms" />
+        <package android:name="com.kakao.talk" />
+        <package android:name="com.tencent.mm" />
+        <package android:name="com.viber.voip" />
+        <package android:name="com.facebook.orca" />
+        <package android:name="com.Slack" />
+        <package android:name="com.microsoft.teams" />
+        <package android:name="com.discord" />
+        <package android:name="com.snapchat.android" />
+        <package android:name="com.groupme.android" />
+        <package android:name="com.zing.zalo" />
         <package android:name="com.enflick.android.TextNow" />
         <package android:name="com.pinger.textfree" />
     </queries>

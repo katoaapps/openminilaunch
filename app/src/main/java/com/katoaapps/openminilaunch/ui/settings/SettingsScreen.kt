@@ -6,6 +6,8 @@ import com.katoaapps.openminilaunch.data.*
 import com.katoaapps.openminilaunch.model.*
 import com.katoaapps.openminilaunch.platform.*
 import com.katoaapps.openminilaunch.features.files.*
+import com.katoaapps.openminilaunch.features.messaging.MessagingProviderCatalog
+import com.katoaapps.openminilaunch.features.messaging.MessagingProviderOption
 import com.katoaapps.openminilaunch.features.conversations.NotificationHub
 import com.katoaapps.openminilaunch.features.wellbeing.*
 import com.katoaapps.openminilaunch.ui.components.*
@@ -52,6 +54,11 @@ import kotlinx.coroutines.withContext
 
 private data class AppListLoadState(
     val apps: List<LaunchableApp> = emptyList(),
+    val loaded: Boolean = false,
+)
+
+private data class MessagingProviderLoadState(
+    val options: List<MessagingProviderOption> = emptyList(),
     val loaded: Boolean = false,
 )
 
@@ -107,10 +114,14 @@ internal fun SettingsScreen(
             )
         }
     }
-    val messagingApps by produceState(AppListLoadState(), pickingMessagingApp, appListRefresh) {
+    val messagingProviders by produceState(
+        MessagingProviderLoadState(),
+        pickingMessagingApp,
+        appListRefresh,
+    ) {
         if (pickingMessagingApp) {
-            value = AppListLoadState(
-                apps = withContext(Dispatchers.IO) { actions.preferredMessagingApps() },
+            value = MessagingProviderLoadState(
+                options = withContext(Dispatchers.IO) { actions.messagingProviderOptions() },
                 loaded = true,
             )
         }
@@ -204,11 +215,17 @@ internal fun SettingsScreen(
             store.resetPreferredWebApp()
         }
     }
-    LaunchedEffect(messagingApps.loaded, messagingApps.apps, store.preferredMessagingPackage) {
+    LaunchedEffect(
+        messagingProviders.loaded,
+        messagingProviders.options,
+        store.preferredMessagingPackage,
+    ) {
         if (
-            messagingApps.loaded &&
+            messagingProviders.loaded &&
             store.preferredMessagingPackage != null &&
-            messagingApps.apps.none { it.packageName == store.preferredMessagingPackage }
+            messagingProviders.options.none {
+                it.preferencePackageName == store.preferredMessagingPackage && it.selectable
+            }
         ) {
             store.resetPreferredMessagingApp()
         }
@@ -491,16 +508,19 @@ internal fun SettingsScreen(
         )
     }
     if (pickingMessagingApp) {
-        AppPickerDialog(
+        MessagingProviderPickerDialog(
             title = stringResource(R.string.choose_preferred_messaging_app),
-            apps = messagingApps.apps,
-            selected = setOfNotNull(store.preferredMessagingPackage),
-            loading = !messagingApps.loaded,
-            emptyMessage = stringResource(R.string.no_contact_messaging_apps),
-            supportingText = stringResource(R.string.preferred_messaging_picker_description),
-            onApp = { store.setPreferredMessagingApp(it.packageName); pickingMessagingApp = false },
-            onReset = { store.resetPreferredMessagingApp(); pickingMessagingApp = false },
-            resetLabel = stringResource(R.string.use_system_messages),
+            options = messagingProviders.options,
+            selectedProviderId = MessagingProviderCatalog.providerForPackage(
+                store.preferredMessagingPackage,
+            )?.id ?: MessagingProviderCatalog.SYSTEM_DEFAULT_PROVIDER_ID,
+            loading = !messagingProviders.loaded,
+            showUnavailable = true,
+            onProvider = { option ->
+                option.preferencePackageName?.let(store::setPreferredMessagingApp)
+                    ?: store.resetPreferredMessagingApp()
+                pickingMessagingApp = false
+            },
             onDismiss = { pickingMessagingApp = false },
         )
     }

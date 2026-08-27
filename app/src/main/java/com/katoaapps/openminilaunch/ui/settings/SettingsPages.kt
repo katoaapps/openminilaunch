@@ -179,7 +179,7 @@ internal fun SettingsOverviewPage(
             title = stringResource(R.string.messaging),
             subtitle = stringResource(R.string.settings_messaging_summary),
             status = store.preferredMessagingPackage?.let(actions::appLabel)
-                ?: stringResource(R.string.system_messages),
+                ?: actions.defaultMessagingAppLabel(),
             icon = Icons.AutoMirrored.Filled.Chat,
         ) { onNavigate(SettingsDestination.MESSAGING) }
         SettingsCategoryRow(
@@ -373,15 +373,20 @@ internal fun MessagingSettingsPage(
     goBack: () -> Unit,
 ) {
     SettingsPage(stringResource(R.string.messaging), goBack) {
-        MessageSendModeChooser(store.messageSendMode, store::updateMessageSendMode)
         SettingsRow(
             stringResource(R.string.preferred_messaging_app),
-            store.preferredMessagingPackage?.let(actions::appLabel) ?: stringResource(R.string.system_messages),
+            store.preferredMessagingPackage?.let(actions::appLabel) ?: actions.defaultMessagingAppLabel(),
             Icons.AutoMirrored.Filled.Chat,
             onClick = onPickMessagingApp,
         )
+        SettingsSwitchRow(
+            title = stringResource(R.string.send_messages_automatically),
+            subtitle = stringResource(R.string.send_messages_automatically_description),
+            checked = store.sendMessagesAutomatically,
+            onCheckedChange = store::updateSendMessagesAutomatically,
+        )
         Text(
-            stringResource(R.string.messaging_mode_description),
+            stringResource(R.string.messaging_behavior_description),
             color = Muted,
             fontSize = Dimens.sp13,
         )

@@ -231,7 +231,7 @@ private fun MiniLaunchApp(
     val continueAfterCallPermission = {
         val directSmsCanBeUsed = supportsDirectSms(context) &&
             actions.isAssistantRoleHeld() &&
-            store.messageSendMode == MessageSendMode.DIRECT_SMS
+            store.sendMessagesAutomatically && store.preferredMessagingPackage == null
         if (directSmsCanBeUsed && ContextCompat.checkSelfPermission(context, Manifest.permission.SEND_SMS) != PackageManager.PERMISSION_GRANTED) {
             onboardingSmsPermission.launch(Manifest.permission.SEND_SMS)
         } else {
