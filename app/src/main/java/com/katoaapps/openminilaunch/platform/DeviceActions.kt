@@ -47,6 +47,15 @@ internal enum class PreferredMessageDraftResult {
     FAILED,
 }
 
+internal fun defaultMessageDraftResult(
+    integratedPackage: String?,
+    opened: Boolean,
+): PreferredMessageDraftResult = when {
+    !opened -> PreferredMessageDraftResult.FAILED
+    integratedPackage.isNullOrBlank() -> PreferredMessageDraftResult.OPENED
+    else -> PreferredMessageDraftResult.FALLBACK_OPENED
+}
+
 internal enum class DirectSmsResult {
     QUEUED,
     NO_DEFAULT_SUBSCRIPTION,
@@ -296,11 +305,10 @@ class DeviceActions(private val context: Context) {
                 }
             }
         }
-        return if (openDefaultMessageDraft(contact, body)) {
-            PreferredMessageDraftResult.FALLBACK_OPENED
-        } else {
-            PreferredMessageDraftResult.FAILED
-        }
+        return defaultMessageDraftResult(
+            integratedPackage = preferredPackage,
+            opened = openDefaultMessageDraft(contact, body),
+        )
     }
 
     /** Opens Android's real share sheet. Shared-text apps choose their own recipient flow. */

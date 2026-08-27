@@ -97,6 +97,10 @@
     <string name="delete_note_draft">Delete note draft</string>
     <string name="delete_note_draft_title">Delete this note?</string>
     <string name="delete_note_draft_description">This draft will be permanently cleared.</string>
+    <string name="clear_message_draft">Clear message draft</string>
+    <string name="discard_message_draft_title">Discard this message draft?</string>
+    <string name="discard_message_draft_description">The selected contact and message will be cleared.</string>
+    <string name="discard">Discard</string>
     <string name="save">Save</string>
     <string name="apply">Apply</string>
     <string name="done">Done</string>
@@ -354,12 +358,13 @@
     <string name="no_messaging_providers_found">No matching messaging apps</string>
     <string name="messaging_full_support">Contact and draft</string>
     <string name="messaging_reselect_contact">Must select contact in app</string>
+    <string name="messaging_choose_default_behavior">Select a default app in\nSettings > Messaging > Integrated messaging app</string>
     <string name="messaging_system_default_description">System default · carrier SMS when sent automatically</string>
     <string name="messaging_not_installed">Not installed</string>
     <string name="messaging_version_not_supported">This installed version does not accept Mink’s draft handoff</string>
     <string name="messaging_body_only_support">Message carried over · choose the contact again</string>
     <string name="messaging_contact_and_body_support">Contact and message carried over</string>
-    <string name="see_all_messaging_apps">See all apps…</string>
+    <string name="see_more_messaging_options">See more options…</string>
     <string name="send_with">Send with</string>
     <string name="selected">Selected</string>
     <string name="choose_contact_in_preferred_app">Choose %1$s in the messaging app.</string>

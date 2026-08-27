@@ -4,6 +4,8 @@ import com.katoaapps.openminilaunch.data.restoredAutomaticMessageSend
 import com.katoaapps.openminilaunch.features.messaging.MessagingSendRoute
 import com.katoaapps.openminilaunch.features.messaging.MessagingProviderCatalog
 import com.katoaapps.openminilaunch.features.messaging.messagingSendRoute
+import com.katoaapps.openminilaunch.platform.PreferredMessageDraftResult
+import com.katoaapps.openminilaunch.platform.defaultMessageDraftResult
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
@@ -52,5 +54,20 @@ class MessagingBehaviorTest {
         assertTrue(providers.all { it.bundledIconRes != null })
         assertTrue(providers.all { it.storeUrl.startsWith("https://") })
         assertTrue(providers.all { it.documentationUrl.startsWith("https://") })
+    }
+
+    @Test fun deliberatelySelectedSystemMessagesIsNotReportedAsAFallback() {
+        assertEquals(
+            PreferredMessageDraftResult.OPENED,
+            defaultMessageDraftResult(integratedPackage = null, opened = true),
+        )
+        assertEquals(
+            PreferredMessageDraftResult.FALLBACK_OPENED,
+            defaultMessageDraftResult(integratedPackage = "com.whatsapp", opened = true),
+        )
+        assertEquals(
+            PreferredMessageDraftResult.FAILED,
+            defaultMessageDraftResult(integratedPackage = null, opened = false),
+        )
     }
 }

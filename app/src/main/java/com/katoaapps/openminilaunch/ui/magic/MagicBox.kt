@@ -192,6 +192,7 @@ internal fun MagicBox(
     var smsSentConfirmationToken by remember { mutableIntStateOf(0) }
     var showSmsAssistantDisclosure by remember { mutableStateOf(false) }
     var showNoteDeleteConfirmation by remember { mutableStateOf(false) }
+    var showMessageDiscardConfirmation by remember { mutableStateOf(false) }
     var fileResults by remember { mutableStateOf<List<FileSearchResult>>(emptyList()) }
     var fileSearchLoading by remember { mutableStateOf(false) }
     val fileSearchRequests = remember { FileSearchRequestTracker() }
@@ -241,6 +242,20 @@ internal fun MagicBox(
         }
         onSessionComplete()
     }
+    val focusRequester = remember { FocusRequester() }
+    val armedFocusRequester = remember { FocusRequester() }
+    val focusManager = LocalFocusManager.current
+    val keyboard = LocalSoftwareKeyboardController.current
+    var focusRequestSerial by remember { mutableIntStateOf(0) }
+    var focusRequestShowsKeyboard by remember { mutableStateOf(true) }
+    var textFieldPlaced by remember { mutableStateOf(false) }
+    var armedTargetPlaced by remember { mutableStateOf(false) }
+
+    fun refocus(showSoftwareKeyboard: Boolean = true) {
+        focusRequestShowsKeyboard = showSoftwareKeyboard
+        focusRequestSerial += 1
+    }
+
     fun completeSmsAttempt(draft: PendingSms) {
         fun openComposerFallback(message: String) {
             val result = actions.openPreferredMessageDraft(draft.contact, draft.body, preferredPackage = null)
@@ -318,16 +333,23 @@ internal fun MagicBox(
 
     fun chooseMessagingApp(draft: PendingSms) {
         val opened = actions.chooseMessagingApp(draft.body)
-        if (!opened) Toast.makeText(context, context.getString(R.string.no_compatible_messaging_app), Toast.LENGTH_LONG).show()
-        onSessionComplete()
+        if (!opened) {
+            Toast.makeText(
+                context,
+                context.getString(R.string.no_compatible_messaging_app),
+                Toast.LENGTH_LONG,
+            ).show()
+            refocus()
+        }
     }
 
     fun openMessagingProvider(draft: PendingSms, providerPackage: String?) {
-        when (actions.openPreferredMessageDraft(
+        val result = actions.openPreferredMessageDraft(
             draft.contact,
             draft.body,
             providerPackage,
-        )) {
+        )
+        when (result) {
             PreferredMessageDraftResult.OPENED -> Unit
             PreferredMessageDraftResult.OPENED_WITH_RECIPIENT_PICKER -> Toast.makeText(
                 context,
@@ -345,7 +367,7 @@ internal fun MagicBox(
                 Toast.LENGTH_LONG,
             ).show()
         }
-        onSessionComplete()
+        if (result == PreferredMessageDraftResult.FAILED) refocus()
     }
     val mediaPermissionLauncher = rememberLauncherForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) {
         hasMediaAccess = hasMediaReadAccess(context)
@@ -359,14 +381,6 @@ internal fun MagicBox(
             fileSearchRepository.invalidateFolders()
         }
     }
-    val focusRequester = remember { FocusRequester() }
-    val armedFocusRequester = remember { FocusRequester() }
-    val focusManager = LocalFocusManager.current
-    val keyboard = LocalSoftwareKeyboardController.current
-    var focusRequestSerial by remember { mutableIntStateOf(0) }
-    var focusRequestShowsKeyboard by remember { mutableStateOf(true) }
-    var textFieldPlaced by remember { mutableStateOf(false) }
-    var armedTargetPlaced by remember { mutableStateOf(false) }
     val magicResultsScroll = rememberScrollState()
     val parsedInput = parseMagicBoxInput(text.text, lockedPrefix)
     val prefix = parsedInput.prefix
@@ -385,6 +399,7 @@ internal fun MagicBox(
     val plainQuery = parsedInput.plainQuery
     val noteMode = expanded && prefix == MAGIC_NOTE_PREFIX
     val hasNoteDraft = noteMode && text.text.drop(1).isNotBlank()
+    val hasMessageDraft = expanded && lockedPrefix == '@' && selectedContact != null && text.text.isNotBlank()
     val indexedFolderUris = store.searchFolders.map { it.uri }
     LaunchedEffect(plainQuery, indexedFolderUris, hasMediaAccess, store.demoSearchDataEnabled) {
         val request = fileSearchRequests.begin(plainQuery)
@@ -431,11 +446,6 @@ internal fun MagicBox(
         null -> MaterialTheme.colorScheme.onPrimary
         else -> MinkWhite
     }
-    fun refocus(showSoftwareKeyboard: Boolean = true) {
-        focusRequestShowsKeyboard = showSoftwareKeyboard
-        focusRequestSerial += 1
-    }
-
     fun clearCommand() {
         fileSearchRequests.invalidate()
         text = TextFieldValue()
@@ -443,6 +453,16 @@ internal fun MagicBox(
         lockedPrefix = null
         fileResults = emptyList()
         fileSearchLoading = false
+    }
+
+    fun requestClearMessageDraft() {
+        if (text.text.isBlank()) {
+            clearCommand()
+            refocus()
+        } else {
+            keyboard?.hide()
+            showMessageDiscardConfirmation = true
+        }
     }
 
     fun dismiss() {
@@ -496,17 +516,25 @@ internal fun MagicBox(
             '@' -> (selectedContact != null && payload.isNotBlank()).also {
                 if (it) {
                     val draft = PendingSms(selectedContact!!, payload)
-                    collapseForDialog()
-                    when (messagingSendRoute(
+                    val route = messagingSendRoute(
                         sendAutomatically = store.sendMessagesAutomatically,
                         preferredPackage = store.preferredMessagingPackage,
-                    )) {
-                        MessagingSendRoute.DIRECT_SMS -> sendDirectOrRequestAccess(draft)
-                        MessagingSendRoute.PREFERRED_DRAFT -> openMessagingProvider(
-                            draft,
-                            store.preferredMessagingPackage,
-                        )
-                        MessagingSendRoute.PROVIDER_PICKER -> pendingMessagingChoiceSms = draft
+                    )
+                    when (route) {
+                        MessagingSendRoute.DIRECT_SMS -> {
+                            collapseForDialog()
+                            sendDirectOrRequestAccess(draft)
+                        }
+                        // A composer can be dismissed without sending. Keep the contact and body
+                        // in Magic Mode just as note handoffs keep their unsaved text.
+                        MessagingSendRoute.PREFERRED_DRAFT -> {
+                            keyboard?.hide()
+                            openMessagingProvider(draft, store.preferredMessagingPackage)
+                        }
+                        MessagingSendRoute.PROVIDER_PICKER -> {
+                            keyboard?.hide()
+                            pendingMessagingChoiceSms = draft
+                        }
                     }
                 }
             }
@@ -716,6 +744,21 @@ internal fun MagicBox(
                             }
                         }
                     }
+                    if (hasMessageDraft) {
+                        FilledTonalIconButton(
+                            onClick = ::requestClearMessageDraft,
+                            modifier = Modifier.align(Alignment.TopEnd),
+                            colors = IconButtonDefaults.filledTonalIconButtonColors(
+                                containerColor = MaterialTheme.colorScheme.errorContainer,
+                                contentColor = MaterialTheme.colorScheme.onErrorContainer,
+                            ),
+                        ) {
+                            Icon(
+                                Icons.Default.DeleteOutline,
+                                stringResource(R.string.clear_message_draft),
+                            )
+                        }
+                    }
                     }
                 }
             }
@@ -752,10 +795,8 @@ internal fun MagicBox(
                                     stringResource(R.string.two_part_label, contact.name, contact.phoneLabel),
                                     actionVisuals.color,
                                     actionContentColor,
-                                ) {
-                                    clearCommand()
-                                    refocus()
-                                }
+                                    onClear = ::requestClearMessageDraft,
+                                )
                             }
                         }
                         MagicInputField(
@@ -936,6 +977,38 @@ internal fun MagicBox(
             },
         )
     }
+    if (showMessageDiscardConfirmation) {
+        AlertDialog(
+            modifier = Modifier.minkDialogWidth(),
+            onDismissRequest = {
+                showMessageDiscardConfirmation = false
+                refocus()
+            },
+            properties = MinkDialogDefaults.properties,
+            icon = { Icon(Icons.Default.DeleteOutline, null) },
+            title = { Text(stringResource(R.string.discard_message_draft_title)) },
+            text = { Text(stringResource(R.string.discard_message_draft_description)) },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        showMessageDiscardConfirmation = false
+                        clearCommand()
+                        refocus()
+                    },
+                ) {
+                    Text(stringResource(R.string.discard), color = MaterialTheme.colorScheme.error)
+                }
+            },
+            dismissButton = {
+                TextButton(
+                    onClick = {
+                        showMessageDiscardConfirmation = false
+                        refocus()
+                    },
+                ) { Text(stringResource(R.string.cancel)) }
+            },
+        )
+    }
     if (showFileScopeChoice) {
         FileSearchScopeDialog(
             onChooseFolder = {
@@ -984,7 +1057,7 @@ internal fun MagicBox(
             },
             onDismiss = {
                 pendingMessagingChoiceSms = null
-                onSessionComplete()
+                refocus()
             },
         )
     }

@@ -103,6 +103,13 @@ internal fun MessagingProviderPickerDialog(
                     leadingIcon = { Icon(Icons.Default.Search, null) },
                     placeholder = { Text(stringResource(R.string.search_messaging_apps)) },
                 )
+                Text(
+                    stringResource(R.string.messaging_choose_default_behavior),
+                    color = Muted,
+                    fontSize = Dimens.sp11,
+                    maxLines = 2,
+                    overflow = TextOverflow.Ellipsis,
+                )
                 when {
                     loading -> CircularProgressIndicator(
                         modifier = Modifier.align(Alignment.CenterHorizontally).padding(Dimens.dp24),
@@ -136,8 +143,7 @@ internal fun MessagingProviderPickerDialog(
                         onClick = seeAll,
                         modifier = Modifier.fillMaxWidth().padding(top = Dimens.dp10),
                     ) {
-                        Icon(Icons.Default.MoreHoriz, null)
-                        Text(stringResource(R.string.see_all_messaging_apps), Modifier.padding(start = Dimens.dp8))
+                        Text(stringResource(R.string.see_more_messaging_options), Modifier.padding(start = Dimens.dp8))
                     }
                 }
             }
