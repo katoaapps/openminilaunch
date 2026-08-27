@@ -54,6 +54,8 @@ internal enum class SettingsDestination {
     APPEARANCE,
     SHORTCUTS,
     MAGIC_BOX,
+    MINK_ASSISTANT,
+    MESSAGING,
     FILE_SEARCH,
     MINK_DAY,
     PERMISSIONS,
@@ -81,6 +83,8 @@ internal fun settingsPathTo(destination: SettingsDestination): List<SettingsDest
         SettingsDestination.MAGIC_BOX,
         SettingsDestination.FILE_SEARCH,
     )
+    SettingsDestination.MINK_ASSISTANT,
+    SettingsDestination.MESSAGING,
     SettingsDestination.MINK_DAY,
     SettingsDestination.PERMISSIONS,
     SettingsDestination.ABOUT -> listOf(SettingsDestination.OVERVIEW, destination)
@@ -138,6 +142,7 @@ internal data class SettingsPermissionActions(
 @Composable
 internal fun SettingsOverviewPage(
     store: LauncherStore,
+    actions: DeviceActions,
     permissionState: SettingsPermissionState,
     onNavigate: (SettingsDestination) -> Unit,
     goBack: () -> Unit,
@@ -163,6 +168,21 @@ internal fun SettingsOverviewPage(
             icon = Icons.Default.AutoAwesome,
         ) { onNavigate(SettingsDestination.MAGIC_BOX) }
         SettingsCategoryRow(
+            title = stringResource(R.string.mink_assistant),
+            subtitle = stringResource(R.string.settings_assistant_summary),
+            status = stringResource(
+                if (permissionState.assistantRoleHeld) R.string.status_active else R.string.status_optional,
+            ),
+            icon = Icons.Default.Assistant,
+        ) { onNavigate(SettingsDestination.MINK_ASSISTANT) }
+        SettingsCategoryRow(
+            title = stringResource(R.string.messaging),
+            subtitle = stringResource(R.string.settings_messaging_summary),
+            status = store.preferredMessagingPackage?.let(actions::appLabel)
+                ?: stringResource(R.string.system_messages),
+            icon = Icons.AutoMirrored.Filled.Chat,
+        ) { onNavigate(SettingsDestination.MESSAGING) }
+        SettingsCategoryRow(
             title = stringResource(R.string.mink_day),
             subtitle = stringResource(R.string.settings_mink_day_summary),
             status = socialGoalLabel(store.socialGoalMinutes),
@@ -186,9 +206,7 @@ internal fun SettingsOverviewPage(
 @Composable
 internal fun LauncherSettingsPage(
     store: LauncherStore,
-    assistantRoleHeld: Boolean,
     requestHomeRole: () -> Unit,
-    showAssistantDisclosure: () -> Unit,
     onNavigate: (SettingsDestination) -> Unit,
     goBack: () -> Unit,
 ) {
@@ -196,12 +214,6 @@ internal fun LauncherSettingsPage(
     SettingsPage(stringResource(R.string.launcher), goBack) {
         SectionLabel(stringResource(R.string.system_roles))
         SettingsRow(stringResource(R.string.default_home_app), stringResource(R.string.choose_as_launcher, appName), Icons.Default.Home, onClick = requestHomeRole)
-        SettingsRow(
-            stringResource(R.string.mink_assistant),
-            stringResource(if (assistantRoleHeld) R.string.assistant_active_summary else R.string.assistant_optional_summary),
-            Icons.Default.Assistant,
-            onClick = showAssistantDisclosure,
-        )
         HorizontalDivider(color = Sage)
         SectionLabel(stringResource(R.string.customize))
         SettingsRow(
@@ -283,7 +295,6 @@ internal fun MagicBoxSettingsPage(
     mediaGranted: Boolean,
     onPickWeb: () -> Unit,
     onPickAi: () -> Unit,
-    onPickMessagingApp: () -> Unit,
     onOpenFileSearch: () -> Unit,
     goBack: () -> Unit,
 ) {
@@ -315,7 +326,53 @@ internal fun MagicBoxSettingsPage(
             fontSize = Dimens.sp13,
         )
         HorizontalDivider(color = Sage)
-        SectionLabel(stringResource(R.string.messaging))
+        SectionLabel(stringResource(R.string.files_section))
+        SettingsRow(
+            stringResource(R.string.file_search),
+            stringResource(
+                R.string.file_search_status,
+                folderCountLabel(store.searchFolders.size),
+                stringResource(if (mediaGranted) R.string.status_on else R.string.status_off),
+            ),
+            Icons.Default.FolderOpen,
+            onClick = onOpenFileSearch,
+        )
+    }
+}
+
+@Composable
+internal fun MinkAssistantSettingsPage(
+    assistantRoleHeld: Boolean,
+    showAssistantDisclosure: () -> Unit,
+    goBack: () -> Unit,
+) {
+    SettingsPage(stringResource(R.string.mink_assistant), goBack) {
+        Text(
+            stringResource(R.string.assistant_settings_description),
+            color = Muted,
+            fontSize = Dimens.sp13,
+        )
+        SettingsRow(
+            title = stringResource(
+                if (assistantRoleHeld) R.string.manage_mink_assistant else R.string.choose_mink_assistant,
+            ),
+            subtitle = stringResource(
+                if (assistantRoleHeld) R.string.assistant_active_description else R.string.assistant_inactive_description,
+            ),
+            icon = Icons.Default.Assistant,
+            onClick = showAssistantDisclosure,
+        )
+    }
+}
+
+@Composable
+internal fun MessagingSettingsPage(
+    store: LauncherStore,
+    actions: DeviceActions,
+    onPickMessagingApp: () -> Unit,
+    goBack: () -> Unit,
+) {
+    SettingsPage(stringResource(R.string.messaging), goBack) {
         MessageSendModeChooser(store.messageSendMode, store::updateMessageSendMode)
         SettingsRow(
             stringResource(R.string.preferred_messaging_app),
@@ -327,18 +384,6 @@ internal fun MagicBoxSettingsPage(
             stringResource(R.string.messaging_mode_description),
             color = Muted,
             fontSize = Dimens.sp13,
-        )
-        HorizontalDivider(color = Sage)
-        SectionLabel(stringResource(R.string.files_section))
-        SettingsRow(
-            stringResource(R.string.file_search),
-            stringResource(
-                R.string.file_search_status,
-                folderCountLabel(store.searchFolders.size),
-                stringResource(if (mediaGranted) R.string.status_on else R.string.status_off),
-            ),
-            Icons.Default.FolderOpen,
-            onClick = onOpenFileSearch,
         )
     }
 }

@@ -278,15 +278,14 @@ internal fun SettingsScreen(
             when (page) {
             SettingsDestination.OVERVIEW -> SettingsOverviewPage(
                 store = store,
+                actions = actions,
                 permissionState = permissionState,
                 onNavigate = ::navigateTo,
                 goBack = goBack,
             )
             SettingsDestination.LAUNCHER -> LauncherSettingsPage(
                 store = store,
-                assistantRoleHeld = assistantRoleHeld,
                 requestHomeRole = requestHomeRole,
-                showAssistantDisclosure = { showAssistantDisclosure = true },
                 onNavigate = ::navigateTo,
                 goBack = ::navigateBack,
             )
@@ -304,8 +303,18 @@ internal fun SettingsScreen(
                 mediaGranted = mediaGranted,
                 onPickWeb = { pickingWeb = true },
                 onPickAi = { pickingAi = true },
-                onPickMessagingApp = { pickingMessagingApp = true },
                 onOpenFileSearch = { navigateTo(SettingsDestination.FILE_SEARCH) },
+                goBack = ::navigateBack,
+            )
+            SettingsDestination.MINK_ASSISTANT -> MinkAssistantSettingsPage(
+                assistantRoleHeld = assistantRoleHeld,
+                showAssistantDisclosure = { showAssistantDisclosure = true },
+                goBack = ::navigateBack,
+            )
+            SettingsDestination.MESSAGING -> MessagingSettingsPage(
+                store = store,
+                actions = actions,
+                onPickMessagingApp = { pickingMessagingApp = true },
                 goBack = ::navigateBack,
             )
             SettingsDestination.FILE_SEARCH -> FileSearchSettingsPage(

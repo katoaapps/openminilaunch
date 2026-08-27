@@ -44,4 +44,15 @@ class SettingsNavigationTest {
             settingsPathTo(SettingsDestination.SHORTCUTS),
         )
     }
+
+    @Test fun assistantAndMessagingAreTopLevelDestinations() {
+        assertEquals(
+            listOf(SettingsDestination.OVERVIEW, SettingsDestination.MINK_ASSISTANT),
+            settingsPathTo(SettingsDestination.MINK_ASSISTANT),
+        )
+        assertEquals(
+            listOf(SettingsDestination.OVERVIEW, SettingsDestination.MESSAGING),
+            settingsPathTo(SettingsDestination.MESSAGING),
+        )
+    }
 }
