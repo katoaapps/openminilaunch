@@ -175,7 +175,7 @@ private fun MiniLaunchApp(
     LaunchedEffect(homeRequestToken) {
         if (homeRequestToken > 0) {
             screen = Screen.HOME
-            launcherPagerState.scrollToPage(HOME_PAGE)
+            launcherPagerState.animateScrollToPage(HOME_PAGE)
         }
     }
     val context = LocalContext.current
