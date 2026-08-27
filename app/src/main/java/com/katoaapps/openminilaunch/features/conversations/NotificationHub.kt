@@ -1,6 +1,5 @@
 package com.katoaapps.openminilaunch.features.conversations
 
-import com.katoaapps.openminilaunch.R
 
 import android.Manifest
 import android.app.Activity

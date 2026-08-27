@@ -13,9 +13,6 @@ import com.katoaapps.openminilaunch.ui.launcher.ShortcutAssignmentRow
 import com.katoaapps.openminilaunch.ui.launcher.displayLabel
 import com.katoaapps.openminilaunch.ui.theme.*
 import com.katoaapps.openminilaunch.R
-import com.katoaapps.openminilaunch.ui.components.PageHeader
-import com.katoaapps.openminilaunch.ui.components.SectionLabel
-import com.katoaapps.openminilaunch.ui.components.SettingsRow
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -43,8 +40,6 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
-import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import androidx.compose.ui.platform.LocalContext
 import android.widget.Toast
 
