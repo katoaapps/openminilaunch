@@ -28,7 +28,6 @@
         </intent>
         <intent><action android:name="android.intent.action.SENDTO" /><data android:scheme="sms" /></intent>
         <intent><action android:name="android.intent.action.SENDTO" /><data android:scheme="smsto" /></intent>
-        <intent><action android:name="android.provider.action.VOICE_SEND_MESSAGE_TO_CONTACTS" /><data android:mimeType="text/plain" /></intent>
         <intent><action android:name="android.intent.action.DIAL" /><data android:scheme="tel" /></intent>
         <intent><action android:name="android.intent.action.CALL" /></intent>
         <intent><action android:name="android.intent.action.SEND" /><data android:mimeType="text/plain" /></intent>
@@ -48,6 +47,12 @@
         <package android:name="com.sec.android.app.clockpackage" />
         <package android:name="com.google.android.deskclock" />
         <package android:name="com.android.deskclock" />
+        <package android:name="com.whatsapp" />
+        <package android:name="com.whatsapp.w4b" />
+        <package android:name="org.telegram.messenger" />
+        <package android:name="jp.naver.line.android" />
+        <package android:name="com.enflick.android.TextNow" />
+        <package android:name="com.pinger.textfree" />
     </queries>
 
     <application

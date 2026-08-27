@@ -71,6 +71,7 @@ internal fun SettingsScreen(
     var pickingAi by remember { mutableStateOf(false) }
     var pickingAllAi by remember { mutableStateOf(false) }
     var pickingWeb by remember { mutableStateOf(false) }
+    var pickingMessagingApp by remember { mutableStateOf(false) }
     var pickingSocialApps by remember { mutableStateOf(false) }
     var appListRefresh by remember { mutableIntStateOf(0) }
     val loadInstalledApps = pickingShortcut != null || pickingDrawer
@@ -102,6 +103,14 @@ internal fun SettingsScreen(
         if (pickingWeb) {
             value = AppListLoadState(
                 apps = withContext(Dispatchers.IO) { actions.webSearchApps() },
+                loaded = true,
+            )
+        }
+    }
+    val messagingApps by produceState(AppListLoadState(), pickingMessagingApp, appListRefresh) {
+        if (pickingMessagingApp) {
+            value = AppListLoadState(
+                apps = withContext(Dispatchers.IO) { actions.preferredMessagingApps() },
                 loaded = true,
             )
         }
@@ -195,6 +204,15 @@ internal fun SettingsScreen(
             store.resetPreferredWebApp()
         }
     }
+    LaunchedEffect(messagingApps.loaded, messagingApps.apps, store.preferredMessagingPackage) {
+        if (
+            messagingApps.loaded &&
+            store.preferredMessagingPackage != null &&
+            messagingApps.apps.none { it.packageName == store.preferredMessagingPackage }
+        ) {
+            store.resetPreferredMessagingApp()
+        }
+    }
     val permissionState = SettingsPermissionState(
         usageAccessGranted = usageAccessGranted,
         notificationAccessGranted = notificationAccessGranted,
@@ -286,6 +304,7 @@ internal fun SettingsScreen(
                 mediaGranted = mediaGranted,
                 onPickWeb = { pickingWeb = true },
                 onPickAi = { pickingAi = true },
+                onPickMessagingApp = { pickingMessagingApp = true },
                 onOpenFileSearch = { navigateTo(SettingsDestination.FILE_SEARCH) },
                 goBack = ::navigateBack,
             )
@@ -460,6 +479,20 @@ internal fun SettingsScreen(
             onReset = { store.resetPreferredWebApp(); pickingWeb = false },
             resetLabel = stringResource(R.string.use_system_browser),
             onDismiss = { pickingWeb = false },
+        )
+    }
+    if (pickingMessagingApp) {
+        AppPickerDialog(
+            title = stringResource(R.string.choose_preferred_messaging_app),
+            apps = messagingApps.apps,
+            selected = setOfNotNull(store.preferredMessagingPackage),
+            loading = !messagingApps.loaded,
+            emptyMessage = stringResource(R.string.no_contact_messaging_apps),
+            supportingText = stringResource(R.string.preferred_messaging_picker_description),
+            onApp = { store.setPreferredMessagingApp(it.packageName); pickingMessagingApp = false },
+            onReset = { store.resetPreferredMessagingApp(); pickingMessagingApp = false },
+            resetLabel = stringResource(R.string.use_system_messages),
+            onDismiss = { pickingMessagingApp = false },
         )
     }
     if (pickingSocialApps) {

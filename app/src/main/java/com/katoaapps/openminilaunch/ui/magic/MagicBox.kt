@@ -229,7 +229,8 @@ internal fun MagicBox(
     }
     fun completeSmsAttempt(draft: PendingSms) {
         fun openComposerFallback(message: String) {
-            val opened = actions.chooseMessagingApp(draft.contact, draft.body)
+            val result = actions.openPreferredMessageDraft(draft.contact, draft.body, preferredPackage = null)
+            val opened = result != PreferredMessageDraftResult.FAILED
             Toast.makeText(
                 context,
                 if (opened) message else context.getString(R.string.sms_no_compatible_fallback),
@@ -302,8 +303,34 @@ internal fun MagicBox(
     }
 
     fun chooseMessagingApp(draft: PendingSms) {
-        val opened = actions.chooseMessagingApp(draft.contact, draft.body)
+        val opened = actions.chooseMessagingApp(draft.body)
         if (!opened) Toast.makeText(context, context.getString(R.string.no_compatible_messaging_app), Toast.LENGTH_LONG).show()
+        onSessionComplete()
+    }
+
+    fun openPreferredMessagingApp(draft: PendingSms) {
+        when (actions.openPreferredMessageDraft(
+            draft.contact,
+            draft.body,
+            store.preferredMessagingPackage,
+        )) {
+            PreferredMessageDraftResult.OPENED -> Unit
+            PreferredMessageDraftResult.OPENED_WITH_RECIPIENT_PICKER -> Toast.makeText(
+                context,
+                context.getString(R.string.choose_contact_in_preferred_app, draft.contact.name),
+                Toast.LENGTH_LONG,
+            ).show()
+            PreferredMessageDraftResult.FALLBACK_OPENED -> Toast.makeText(
+                context,
+                context.getString(R.string.preferred_messaging_fallback),
+                Toast.LENGTH_LONG,
+            ).show()
+            PreferredMessageDraftResult.FAILED -> Toast.makeText(
+                context,
+                context.getString(R.string.no_compatible_messaging_app),
+                Toast.LENGTH_LONG,
+            ).show()
+        }
         onSessionComplete()
     }
     val mediaPermissionLauncher = rememberLauncherForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) {
@@ -457,9 +484,9 @@ internal fun MagicBox(
                     val draft = PendingSms(selectedContact!!, payload)
                     collapseForDialog()
                     when (store.messageSendMode) {
-                        MessageSendMode.ALWAYS_ASK -> smsToConfirm = draft
                         MessageSendMode.DIRECT_SMS -> sendDirectOrRequestAccess(draft)
-                        MessageSendMode.MESSAGING_APP -> chooseMessagingApp(draft)
+                        MessageSendMode.PREFERRED_APP -> openPreferredMessagingApp(draft)
+                        MessageSendMode.SYSTEM_CHOOSER -> chooseMessagingApp(draft)
                     }
                 }
             }

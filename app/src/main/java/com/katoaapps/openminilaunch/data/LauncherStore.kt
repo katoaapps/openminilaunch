@@ -21,6 +21,14 @@ internal fun unfinishedFirst(items: List<TodoItem>): List<TodoItem> {
     return unfinished + completed
 }
 
+internal fun restoredMessageSendMode(saved: String?): MessageSendMode = runCatching {
+    when (saved ?: MessageSendMode.SYSTEM_CHOOSER.name) {
+        "DEFAULT_MESSENGER", "MESSAGING_APP" -> MessageSendMode.PREFERRED_APP
+        "ALWAYS_ASK" -> MessageSendMode.SYSTEM_CHOOSER
+        else -> MessageSendMode.valueOf(saved ?: MessageSendMode.SYSTEM_CHOOSER.name)
+    }
+}.getOrDefault(MessageSendMode.SYSTEM_CHOOSER)
+
 class LauncherStore(context: Context) {
     private val prefs = context.getSharedPreferences("mini_launch", Context.MODE_PRIVATE)
     private val defaultDemoHomePanelColorArgb = ContextCompat.getColor(context, R.color.mink_forest)
@@ -59,14 +67,9 @@ class LauncherStore(context: Context) {
         if (prefs.contains(APP_BACKGROUND_COLOR_KEY)) prefs.getInt(APP_BACKGROUND_COLOR_KEY, 0) else null
     )
         private set
-    var messageSendMode by mutableStateOf(
-        runCatching {
-            when (val saved = prefs.getString("message_send_mode", "ALWAYS_ASK") ?: "ALWAYS_ASK") {
-                "DEFAULT_MESSENGER" -> MessageSendMode.MESSAGING_APP
-                else -> MessageSendMode.valueOf(saved)
-            }
-        }.getOrDefault(MessageSendMode.ALWAYS_ASK)
-    )
+    var messageSendMode by mutableStateOf(restoredMessageSendMode(prefs.getString("message_send_mode", null)))
+        private set
+    var preferredMessagingPackage by mutableStateOf(prefs.getString(PREFERRED_MESSAGING_PACKAGE_KEY, null))
         private set
     var preferredAiPackage by mutableStateOf(prefs.getString("preferred_ai_package", null))
         private set
@@ -389,6 +392,16 @@ class LauncherStore(context: Context) {
         prefs.edit().putString("message_send_mode", mode.name).apply()
     }
 
+    fun setPreferredMessagingApp(packageName: String) {
+        preferredMessagingPackage = packageName
+        prefs.edit().putString(PREFERRED_MESSAGING_PACKAGE_KEY, packageName).apply()
+    }
+
+    fun resetPreferredMessagingApp() {
+        preferredMessagingPackage = null
+        prefs.edit().remove(PREFERRED_MESSAGING_PACKAGE_KEY).apply()
+    }
+
     fun setPreferredAiApp(packageName: String) {
         preferredAiPackage = packageName
         prefs.edit().putString("preferred_ai_package", packageName).apply()
@@ -529,6 +542,7 @@ class LauncherStore(context: Context) {
         const val LATEST_GITHUB_RELEASE_TAG_KEY = "latest_github_release_tag"
         const val ONBOARDING_COMPLETE_KEY = "onboarding_complete_v2"
         const val OPEN_SOFTWARE_KEYBOARD_ON_HOME_KEY = "open_software_keyboard_on_home"
+        const val PREFERRED_MESSAGING_PACKAGE_KEY = "preferred_messaging_package"
         const val GITHUB_UPDATE_CHECK_INTERVAL_MILLIS = 12 * 60 * 60 * 1_000L
         const val MAX_SEARCH_HISTORY = 5
         const val MAX_WIDGETS = 4

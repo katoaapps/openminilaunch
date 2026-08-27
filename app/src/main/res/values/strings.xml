@@ -62,7 +62,7 @@
     <string name="assistant_sms_restriction">To send directly, choose Mink Assistant first. Android and Google Play reserve direct SMS access for eligible default handlers.</string>
     <string name="send_sms_now">Send SMS now</string>
     <string name="choose_assistant">Choose assistant</string>
-    <string name="choose_messaging_app">Choose messaging app</string>
+    <string name="choose_messaging_app">Send via…</string>
     <string name="your_drawer">YOUR DRAWER</string>
     <string name="choose_drawer_apps">Choose up to eight apps in Settings.</string>
     <string name="empty_drawer">Your Top 8 is empty</string>
@@ -132,9 +132,9 @@
     <string name="theme_system">System</string>
     <string name="theme_light">Light</string>
     <string name="theme_dark">Dark</string>
-    <string name="message_mode_always_ask">Always ask</string>
-    <string name="message_mode_direct_sms">Always send as SMS</string>
-    <string name="message_mode_messaging_app">Always choose messaging app</string>
+    <string name="message_mode_direct_sms">Send as SMS immediately</string>
+    <string name="message_mode_preferred_app">Open draft in preferred app</string>
+    <string name="message_mode_system_chooser">Open Send via…</string>
     <string name="widget_grid_size">%1$d × %2$d</string>
 
     <!-- Home -->
@@ -207,7 +207,7 @@
     <string name="magic_send_note">Send text to a notes app</string>
     <string name="magic_create_event">Create an event, e.g. next Friday or in 4 weeks</string>
     <string name="magic_find_app">Find and launch an app</string>
-    <string name="message_behavior_onboarding">Message behavior applies only to one-time @ messages from the Magic Box, not replies in Conversations. Always ask lets you send carrier SMS or choose a compatible messaging app. Sending SMS here does not change that app’s RCS settings. Calls offer the same choice between calling now and choosing a calling app. Direct SMS requires Mink Assistant; Android may grant Send SMS access as part of that role.</string>
+    <string name="message_behavior_onboarding">Message behavior applies only to one-time @ messages from the Magic Box, not replies in Conversations. Mink can send carrier SMS immediately, open a draft in your preferred compatible app, or let Android show compatible messaging apps. Direct SMS requires Mink Assistant; drafts remain under the selected app’s control.</string>
     <string name="todo_onboarding_intro">Type - followed by your task to send it straight to the Home widget.</string>
     <string name="swipe_widget">Swipe the widget</string>
     <string name="swipe_widget_description">Each page shows up to five items, adapting to the available screen height.</string>
@@ -274,7 +274,7 @@
     <string name="permission_sequence_description">Android will show Contacts and Call prompts next. If Mink Assistant is active and your messaging choice includes direct SMS, Android may grant or request Send SMS access before the optional Conversations and Mink’s Day explanations. Media access appears only when you enable file search.</string>
     <string name="calls">Calls</string>
     <string name="calls_onboarding_description">Call access is used only when you choose Call now. Choose calling app hands the number to an Android-compatible dialer instead.</string>
-    <string name="direct_sms_onboarding_permission_description">Send SMS access is used only for one-time @ messages from the Magic Box, never Conversation replies. Always ask adds a separate confirmation; Always send treats the @ action as approval. Neither option changes your messaging app’s RCS settings.</string>
+    <string name="direct_sms_onboarding_permission_description">Send SMS access is used only for one-time @ messages when Send as SMS immediately is selected, never Conversation replies. Draft and app-chooser modes do not use this permission or change your messaging app’s RCS settings.</string>
     <string name="double_tap_lock">Double-tap lock</string>
     <string name="double_tap_lock_onboarding_description">Optional accessibility access performs only Android’s Lock screen action after your double-tap. It cannot read screen content or observe what you do.</string>
     <string name="media">Media</string>
@@ -340,7 +340,15 @@
     <string name="ai_app">AI app</string>
     <string name="ai_provider_privacy_description">Known AI assistants are shown first. Other compatible apps remain available. Your query is handled under the selected app’s privacy terms.</string>
     <string name="messaging">MESSAGING</string>
-    <string name="messaging_mode_description">This setting applies only to one-time @ messages from the Magic Box. Conversation replies continue through their source app. Send SMS now uses carrier SMS for that message without changing RCS settings; Choose messaging app lets that app decide how to deliver it.</string>
+    <string name="preferred_messaging_app">Preferred messaging app</string>
+    <string name="system_messages">System Messages</string>
+    <string name="choose_preferred_messaging_app">Choose preferred messaging app</string>
+    <string name="use_system_messages">Use System Messages</string>
+    <string name="no_contact_messaging_apps">No supported draft apps are installed. System Messages remains available as the fallback.</string>
+    <string name="preferred_messaging_picker_description">Mink shows apps with a known draft handoff. WhatsApp and Telegram preserve the selected phone contact. LINE opens its recipient picker. Compatible TextNow and TextFree versions appear when they accept a phone-addressed draft.</string>
+    <string name="messaging_mode_description">This applies only to one-time @ messages from the Magic Box. Immediate send uses carrier SMS. Preferred app uses a provider-specific draft handoff and falls back to System Messages if needed. Send via opens Android’s share sheet; you will usually choose the recipient again. Conversation replies still use their source app.</string>
+    <string name="choose_contact_in_preferred_app">Choose %1$s in the messaging app.</string>
+    <string name="preferred_messaging_fallback">Preferred app unavailable. Opened System Messages instead.</string>
     <string name="files_section">FILES</string>
     <string name="file_search">File Search</string>
     <plurals name="folder_count">

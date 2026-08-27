@@ -31,7 +31,23 @@ import android.provider.Telephony
 import android.telephony.PhoneNumberUtils
 import android.telephony.SmsManager
 import android.telephony.SubscriptionManager
+import android.telephony.TelephonyManager
 import android.util.LruCache
+import java.util.Locale
+
+private enum class MessagingDraftKind { WHATSAPP, TELEGRAM, LINE, SMS_URI }
+
+private data class MessagingDraftProvider(
+    val packageName: String,
+    val kind: MessagingDraftKind,
+)
+
+internal enum class PreferredMessageDraftResult {
+    OPENED,
+    OPENED_WITH_RECIPIENT_PICKER,
+    FALLBACK_OPENED,
+    FAILED,
+}
 
 internal enum class DirectSmsResult {
     QUEUED,
@@ -219,19 +235,126 @@ class DeviceActions(private val context: Context) {
         else start(Intent(Intent.ACTION_MAIN).addCategory(Intent.CATEGORY_APP_MESSAGING))
     }
 
-    fun chooseMessagingApp(contact: ContactResult, body: String): Boolean {
-        val contactAware = Intent(ContactsContract.Intents.ACTION_VOICE_SEND_MESSAGE_TO_CONTACTS)
+    /**
+     * Preferred providers are intentionally curated. Each entry has a handoff Mink knows how
+     * to build instead of relying on a generic Android share-intent query.
+     */
+    fun preferredMessagingApps(): List<LaunchableApp> = CURATED_MESSAGING_PROVIDERS
+        .asSequence()
+        .filter { provider -> isPackageInstalled(provider.packageName) }
+        .filter { provider ->
+            val probe = preferredMessageIntent(provider, "+15551234567", "MinkLauncher")
+            probe != null && canResolve(probe)
+        }
+        .map { provider -> LaunchableApp(appLabel(provider.packageName), provider.packageName) }
+        .sortedBy { it.label.lowercase() }
+        .toList()
+
+    /**
+     * Opens the chosen provider's documented draft handoff. A missing or incompatible
+     * preference falls back to the system SMS/RCS composer without sending anything.
+     */
+    internal fun openPreferredMessageDraft(
+        contact: ContactResult,
+        body: String,
+        preferredPackage: String?,
+    ): PreferredMessageDraftResult {
+        val provider = CURATED_MESSAGING_PROVIDERS.firstOrNull { it.packageName == preferredPackage }
+        if (provider != null) {
+            val intent = preferredMessageIntent(provider, contact.phone, body)
+            if (intent != null && canResolve(intent) && start(intent)) {
+                return if (provider.kind == MessagingDraftKind.LINE) {
+                    PreferredMessageDraftResult.OPENED_WITH_RECIPIENT_PICKER
+                } else {
+                    PreferredMessageDraftResult.OPENED
+                }
+            }
+        }
+        return if (openDefaultMessageDraft(contact, body)) {
+            PreferredMessageDraftResult.FALLBACK_OPENED
+        } else {
+            PreferredMessageDraftResult.FAILED
+        }
+    }
+
+    /** Opens Android's real share sheet. Shared-text apps choose their own recipient flow. */
+    fun chooseMessagingApp(body: String): Boolean {
+        val genericShare = Intent(Intent.ACTION_SEND)
             .setType("text/plain")
             .putExtra(Intent.EXTRA_TEXT, body.trim())
-            .putExtra(ContactsContract.Intents.EXTRA_RECIPIENT_CONTACT_URI, arrayOf(contact.contactUri))
-            .putExtra(ContactsContract.Intents.EXTRA_RECIPIENT_CONTACT_NAME, arrayOf(contact.name))
-        if (hasHandler(contactAware)) return start(contactAware, chooser = true)
+        return hasHandler(genericShare) && start(genericShare, chooser = true)
+    }
 
-        val smsOrRcs = Intent(
+    private fun preferredMessageIntent(
+        provider: MessagingDraftProvider,
+        phone: String,
+        body: String,
+    ): Intent? {
+        val cleanBody = body.trim()
+        val internationalPhone = internationalPhoneNumber(phone)
+        val uri = when (provider.kind) {
+            MessagingDraftKind.WHATSAPP -> {
+                val digits = internationalPhone?.filter(Char::isDigit) ?: return null
+                Uri.Builder()
+                    .scheme("https")
+                    .authority("wa.me")
+                    .appendPath(digits)
+                    .appendQueryParameter("text", cleanBody)
+                    .build()
+            }
+            MessagingDraftKind.TELEGRAM -> {
+                val number = internationalPhone ?: return null
+                Uri.Builder()
+                    .scheme("tg")
+                    .authority("resolve")
+                    .appendQueryParameter("phone", number)
+                    .appendQueryParameter("text", cleanBody)
+                    .build()
+            }
+            MessagingDraftKind.LINE -> Uri.Builder()
+                .scheme("https")
+                .authority("line.me")
+                .appendPath("R")
+                .appendPath("share")
+                .appendQueryParameter("text", cleanBody)
+                .build()
+            MessagingDraftKind.SMS_URI -> Uri.parse("smsto:${Uri.encode(phone)}")
+        }
+        val action = if (provider.kind == MessagingDraftKind.SMS_URI) Intent.ACTION_SENDTO else Intent.ACTION_VIEW
+        return Intent(action, uri)
+            .setPackage(provider.packageName)
+            .apply {
+                if (provider.kind == MessagingDraftKind.SMS_URI) putExtra("sms_body", cleanBody)
+            }
+    }
+
+    private fun internationalPhoneNumber(phone: String): String? {
+        val normalized = PhoneNumberUtils.normalizeNumber(phone)
+        if (normalized.startsWith("+") && normalized.drop(1).all(Char::isDigit)) return normalized
+        val telephony = context.getSystemService(TelephonyManager::class.java)
+        val countryIso = telephony?.networkCountryIso
+            ?.takeIf(String::isNotBlank)
+            ?: telephony?.simCountryIso?.takeIf(String::isNotBlank)
+            ?: Locale.getDefault().country.takeIf(String::isNotBlank)
+            ?: return null
+        return PhoneNumberUtils.formatNumberToE164(phone, countryIso.uppercase(Locale.US))
+    }
+
+    private fun isPackageInstalled(packageName: String): Boolean = runCatching {
+        context.packageManager.getApplicationInfo(packageName, 0)
+    }.isSuccess
+
+    private fun openDefaultMessageDraft(contact: ContactResult, body: String): Boolean {
+        val draft = Intent(
             Intent.ACTION_SENDTO,
             Uri.parse("smsto:${Uri.encode(contact.phone)}"),
         ).putExtra("sms_body", body.trim())
-        return hasHandler(smsOrRcs) && start(smsOrRcs, chooser = true)
+        val defaultPackage = Telephony.Sms.getDefaultSmsPackage(context)
+        if (!defaultPackage.isNullOrBlank()) {
+            val explicit = Intent(draft).setPackage(defaultPackage)
+            if (canResolve(explicit) && start(explicit)) return true
+        }
+        return canResolve(draft) && start(draft)
     }
 
     internal fun sendSmsDirect(phone: String, body: String): DirectSmsResult {
@@ -440,6 +563,15 @@ class DeviceActions(private val context: Context) {
             "com.deepseek.chat",
             "com.facebook.stella",
             "com.google.android.apps.bard",
+        )
+
+        val CURATED_MESSAGING_PROVIDERS = listOf(
+            MessagingDraftProvider("com.whatsapp", MessagingDraftKind.WHATSAPP),
+            MessagingDraftProvider("com.whatsapp.w4b", MessagingDraftKind.WHATSAPP),
+            MessagingDraftProvider("org.telegram.messenger", MessagingDraftKind.TELEGRAM),
+            MessagingDraftProvider("jp.naver.line.android", MessagingDraftKind.LINE),
+            MessagingDraftProvider("com.enflick.android.TextNow", MessagingDraftKind.SMS_URI),
+            MessagingDraftProvider("com.pinger.textfree", MessagingDraftKind.SMS_URI),
         )
     }
 }

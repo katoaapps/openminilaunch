@@ -25,6 +25,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.Chat
 import androidx.compose.material.icons.automirrored.filled.Send
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
@@ -282,6 +283,7 @@ internal fun MagicBoxSettingsPage(
     mediaGranted: Boolean,
     onPickWeb: () -> Unit,
     onPickAi: () -> Unit,
+    onPickMessagingApp: () -> Unit,
     onOpenFileSearch: () -> Unit,
     goBack: () -> Unit,
 ) {
@@ -315,6 +317,12 @@ internal fun MagicBoxSettingsPage(
         HorizontalDivider(color = Sage)
         SectionLabel(stringResource(R.string.messaging))
         MessageSendModeChooser(store.messageSendMode, store::updateMessageSendMode)
+        SettingsRow(
+            stringResource(R.string.preferred_messaging_app),
+            store.preferredMessagingPackage?.let(actions::appLabel) ?: stringResource(R.string.system_messages),
+            Icons.AutoMirrored.Filled.Chat,
+            onClick = onPickMessagingApp,
+        )
         Text(
             stringResource(R.string.messaging_mode_description),
             color = Muted,
