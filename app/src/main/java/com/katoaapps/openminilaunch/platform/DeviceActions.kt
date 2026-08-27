@@ -5,6 +5,10 @@ import com.katoaapps.openminilaunch.features.calendar.parseCalendarPhrase
 import com.katoaapps.openminilaunch.features.conversations.NotificationHub
 import com.katoaapps.openminilaunch.features.demo.DemoSearchData
 import com.katoaapps.openminilaunch.features.magic.normalizedWebUrl
+import com.katoaapps.openminilaunch.features.messaging.MessagingDraftKind
+import com.katoaapps.openminilaunch.features.messaging.MessagingDraftProvider
+import com.katoaapps.openminilaunch.features.messaging.MessagingProviderCatalog
+import com.katoaapps.openminilaunch.features.messaging.MessagingSupportTier
 import com.katoaapps.openminilaunch.features.updates.GITHUB_LATEST_APK_URL
 import com.katoaapps.openminilaunch.model.*
 import com.katoaapps.openminilaunch.ui.apps.AllAppsActivity
@@ -34,13 +38,6 @@ import android.telephony.SubscriptionManager
 import android.telephony.TelephonyManager
 import android.util.LruCache
 import java.util.Locale
-
-private enum class MessagingDraftKind { WHATSAPP, TELEGRAM, LINE, SMS_URI }
-
-private data class MessagingDraftProvider(
-    val packageName: String,
-    val kind: MessagingDraftKind,
-)
 
 internal enum class PreferredMessageDraftResult {
     OPENED,
@@ -263,7 +260,7 @@ class DeviceActions(private val context: Context) {
         if (provider != null) {
             val intent = preferredMessageIntent(provider, contact.phone, body)
             if (intent != null && canResolve(intent) && start(intent)) {
-                return if (provider.kind == MessagingDraftKind.LINE) {
+                return if (provider.supportTier == MessagingSupportTier.RECIPIENT_IN_APP) {
                     PreferredMessageDraftResult.OPENED_WITH_RECIPIENT_PICKER
                 } else {
                     PreferredMessageDraftResult.OPENED
@@ -319,6 +316,10 @@ class DeviceActions(private val context: Context) {
                 .appendQueryParameter("text", cleanBody)
                 .build()
             MessagingDraftKind.SMS_URI -> Uri.parse("smsto:${Uri.encode(phone)}")
+            MessagingDraftKind.GENERIC_SHARE -> return Intent(Intent.ACTION_SEND)
+                .setType("text/plain")
+                .putExtra(Intent.EXTRA_TEXT, cleanBody)
+                .setPackage(provider.packageName)
         }
         val action = if (provider.kind == MessagingDraftKind.SMS_URI) Intent.ACTION_SENDTO else Intent.ACTION_VIEW
         return Intent(action, uri)
@@ -565,13 +566,6 @@ class DeviceActions(private val context: Context) {
             "com.google.android.apps.bard",
         )
 
-        val CURATED_MESSAGING_PROVIDERS = listOf(
-            MessagingDraftProvider("com.whatsapp", MessagingDraftKind.WHATSAPP),
-            MessagingDraftProvider("com.whatsapp.w4b", MessagingDraftKind.WHATSAPP),
-            MessagingDraftProvider("org.telegram.messenger", MessagingDraftKind.TELEGRAM),
-            MessagingDraftProvider("jp.naver.line.android", MessagingDraftKind.LINE),
-            MessagingDraftProvider("com.enflick.android.TextNow", MessagingDraftKind.SMS_URI),
-            MessagingDraftProvider("com.pinger.textfree", MessagingDraftKind.SMS_URI),
-        )
+        val CURATED_MESSAGING_PROVIDERS = MessagingProviderCatalog.currentPickerProviders
     }
 }

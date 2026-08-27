@@ -349,6 +349,23 @@
     <string name="messaging_mode_description">This applies only to one-time @ messages from the Magic Box. Immediate send uses carrier SMS. Preferred app uses a provider-specific draft handoff and falls back to System Messages if needed. Send via opens Android’s share sheet; you will usually choose the recipient again. Conversation replies still use their source app.</string>
     <string name="choose_contact_in_preferred_app">Choose %1$s in the messaging app.</string>
     <string name="preferred_messaging_fallback">Preferred app unavailable. Opened System Messages instead.</string>
+    <string name="provider_whatsapp" translatable="false">WhatsApp</string>
+    <string name="provider_whatsapp_business" translatable="false">WhatsApp Business</string>
+    <string name="provider_telegram" translatable="false">Telegram</string>
+    <string name="provider_line" translatable="false">LINE</string>
+    <string name="provider_signal" translatable="false">Signal</string>
+    <string name="provider_kakaotalk" translatable="false">KakaoTalk</string>
+    <string name="provider_wechat" translatable="false">WeChat</string>
+    <string name="provider_viber" translatable="false">Viber</string>
+    <string name="provider_messenger" translatable="false">Messenger</string>
+    <string name="provider_slack" translatable="false">Slack</string>
+    <string name="provider_teams" translatable="false">Microsoft Teams</string>
+    <string name="provider_discord" translatable="false">Discord</string>
+    <string name="provider_snapchat" translatable="false">Snapchat</string>
+    <string name="provider_groupme" translatable="false">GroupMe</string>
+    <string name="provider_zalo" translatable="false">Zalo</string>
+    <string name="provider_textnow" translatable="false">TextNow</string>
+    <string name="provider_textfree" translatable="false">TextFree</string>
     <string name="files_section">FILES</string>
     <string name="file_search">File Search</string>
     <plurals name="folder_count">
