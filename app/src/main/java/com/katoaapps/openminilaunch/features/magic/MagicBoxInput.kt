@@ -22,6 +22,15 @@ internal fun parseMagicBoxInput(text: String, lockedPrefix: Char? = null): Magic
     return MagicBoxInput(prefix, searchTerm, plainQuery)
 }
 
+internal fun hasMagicBoxDraftText(text: String, lockedPrefix: Char? = null): Boolean {
+    val content = when {
+        lockedPrefix != null -> text
+        text.firstOrNull() in MAGIC_COMMAND_PREFIXES -> text.drop(1)
+        else -> text
+    }
+    return content.isNotBlank()
+}
+
 internal fun printableHardwareText(unicodeCodePoint: Int): String? {
     if (
         unicodeCodePoint == 0 ||

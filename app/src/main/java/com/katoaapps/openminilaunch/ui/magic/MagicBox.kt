@@ -36,6 +36,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.focusable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -191,6 +192,7 @@ internal fun MagicBox(
     var showSmsAssistantDisclosure by remember { mutableStateOf(false) }
     var showNoteDeleteConfirmation by remember { mutableStateOf(false) }
     var showMessageDiscardConfirmation by remember { mutableStateOf(false) }
+    var showCommandDiscardConfirmation by remember { mutableStateOf(false) }
     var fileResults by remember { mutableStateOf<List<FileSearchResult>>(emptyList()) }
     var fileSearchLoading by remember { mutableStateOf(false) }
     val fileSearchRequests = remember { FileSearchRequestTracker() }
@@ -242,6 +244,7 @@ internal fun MagicBox(
     }
     val focusRequester = remember { FocusRequester() }
     val armedFocusRequester = remember { FocusRequester() }
+    val inputSurfaceInteractionSource = remember { MutableInteractionSource() }
     val focusManager = LocalFocusManager.current
     val keyboard = LocalSoftwareKeyboardController.current
     var focusRequestSerial by remember { mutableIntStateOf(0) }
@@ -396,7 +399,8 @@ internal fun MagicBox(
     }
     val plainQuery = parsedInput.plainQuery
     val noteMode = expanded && prefix == MAGIC_NOTE_PREFIX
-    val hasNoteDraft = noteMode && text.text.drop(1).isNotBlank()
+    val hasTextDraft = expanded && hasMagicBoxDraftText(text.text, lockedPrefix)
+    val hasNoteDraft = noteMode && hasTextDraft
     val hasMessageDraft = expanded && lockedPrefix == '@' && selectedContact != null && text.text.isNotBlank()
     val indexedFolderUris = store.searchFolders.map { it.uri }
     LaunchedEffect(plainQuery, indexedFolderUris, hasMediaAccess, store.demoSearchDataEnabled) {
@@ -472,11 +476,16 @@ internal fun MagicBox(
     }
 
     fun requestDismiss() {
-        if (hasNoteDraft) {
-            keyboard?.hide()
-            showNoteDeleteConfirmation = true
-        } else {
-            dismiss()
+        when {
+            hasNoteDraft -> {
+                keyboard?.hide()
+                showNoteDeleteConfirmation = true
+            }
+            hasTextDraft -> {
+                keyboard?.hide()
+                showCommandDiscardConfirmation = true
+            }
+            else -> dismiss()
         }
     }
 
@@ -773,6 +782,10 @@ internal fun MagicBox(
                 modifier = Modifier.fillMaxWidth().then(
                     if (noteMode) Modifier.weight(1f) else Modifier.heightIn(min = magicBoxMinimumHeight),
                 )
+                    .clickable(
+                        interactionSource = inputSurfaceInteractionSource,
+                        indication = null,
+                    ) { refocus(showSoftwareKeyboard = !useDirectHardwareInput) }
                     .graphicsLayer { alpha = if (expanded) 1f else 0f },
                 shape = RoundedCornerShape(Dimens.dp24),
                 color = MaterialTheme.colorScheme.surface,
@@ -1001,6 +1014,37 @@ internal fun MagicBox(
                 TextButton(
                     onClick = {
                         showMessageDiscardConfirmation = false
+                        refocus()
+                    },
+                ) { Text(stringResource(R.string.cancel)) }
+            },
+        )
+    }
+    if (showCommandDiscardConfirmation) {
+        AlertDialog(
+            modifier = Modifier.minkDialogWidth(),
+            onDismissRequest = {
+                showCommandDiscardConfirmation = false
+                refocus()
+            },
+            properties = MinkDialogDefaults.properties,
+            icon = { Icon(Icons.Default.DeleteOutline, null) },
+            title = { Text(stringResource(R.string.discard_magic_input_title)) },
+            text = { Text(stringResource(R.string.discard_magic_input_description)) },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        showCommandDiscardConfirmation = false
+                        dismiss()
+                    },
+                ) {
+                    Text(stringResource(R.string.discard), color = MaterialTheme.colorScheme.error)
+                }
+            },
+            dismissButton = {
+                TextButton(
+                    onClick = {
+                        showCommandDiscardConfirmation = false
                         refocus()
                     },
                 ) { Text(stringResource(R.string.cancel)) }

@@ -100,6 +100,8 @@
     <string name="clear_message_draft">Clear message draft</string>
     <string name="discard_message_draft_title">Discard this message draft?</string>
     <string name="discard_message_draft_description">The selected contact and message will be cleared.</string>
+    <string name="discard_magic_input_title">Discard what you typed?</string>
+    <string name="discard_magic_input_description">Your current Magic Box text will be cleared.</string>
     <string name="discard">Discard</string>
     <string name="save">Save</string>
     <string name="apply">Apply</string>

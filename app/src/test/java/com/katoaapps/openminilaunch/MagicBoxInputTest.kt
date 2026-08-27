@@ -105,4 +105,24 @@ class MagicBoxInputTest {
         assertEquals("", input.searchTerm)
         assertEquals("", input.plainQuery)
     }
+
+    @Test
+    fun commandPrefixAloneIsNotConsideredADraft() {
+        MAGIC_COMMAND_PREFIXES.forEach { prefix ->
+            assertEquals(false, hasMagicBoxDraftText(prefix.toString()))
+        }
+    }
+
+    @Test
+    fun commandAndPlainTextAreConsideredDrafts() {
+        assertEquals(true, hasMagicBoxDraftText("-Book train tickets"))
+        assertEquals(true, hasMagicBoxDraftText("+Dinner Friday at 7"))
+        assertEquals(true, hasMagicBoxDraftText("quarterly budget"))
+    }
+
+    @Test
+    fun lockedContactRequiresMessageTextBeforeItIsADraft() {
+        assertEquals(false, hasMagicBoxDraftText("", lockedPrefix = '@'))
+        assertEquals(true, hasMagicBoxDraftText("On my way", lockedPrefix = '@'))
+    }
 }
