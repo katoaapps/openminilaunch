@@ -184,10 +184,10 @@ internal fun MagicBox(
     var pendingAiQuery by remember { mutableStateOf<String?>(null) }
     var callToConfirm by remember { mutableStateOf<ContactResult?>(null) }
     var pendingPermissionCall by remember { mutableStateOf<ContactResult?>(null) }
-    var smsToConfirm by remember { mutableStateOf<PendingSms?>(null) }
-    var pendingPermissionSms by remember { mutableStateOf<PendingSms?>(null) }
-    var pendingAssistantSms by remember { mutableStateOf<PendingSms?>(null) }
-    var pendingMessagingChoiceSms by remember { mutableStateOf<PendingSms?>(null) }
+    var directSmsToConfirm by remember { mutableStateOf<MessageDraft?>(null) }
+    var pendingDirectSmsPermission by remember { mutableStateOf<MessageDraft?>(null) }
+    var pendingDirectSmsAssistant by remember { mutableStateOf<MessageDraft?>(null) }
+    var pendingMessagingChoice by remember { mutableStateOf<MessageDraft?>(null) }
     var showSmsSentConfirmation by remember { mutableStateOf(false) }
     var smsSentConfirmationToken by remember { mutableIntStateOf(0) }
     var showSmsAssistantDisclosure by remember { mutableStateOf(false) }
@@ -208,9 +208,9 @@ internal fun MagicBox(
     }
     val messagingProviders by produceState(
         initialValue = MessagingOptionsLoadState(),
-        key1 = pendingMessagingChoiceSms,
+        key1 = pendingMessagingChoice,
     ) {
-        if (pendingMessagingChoiceSms != null) {
+        if (pendingMessagingChoice != null) {
             value = MessagingOptionsLoadState(
                 options = withContext(Dispatchers.IO) { actions.messagingProviderOptions() },
                 loaded = true,
@@ -256,7 +256,7 @@ internal fun MagicBox(
         focusRequestSerial += 1
     }
 
-    fun completeSmsAttempt(draft: PendingSms) {
+    fun completeSmsAttempt(draft: MessageDraft) {
         fun openComposerFallback(message: String) {
             val result = actions.openPreferredMessageDraft(draft.contact, draft.body, preferredPackage = null)
             val opened = result != PreferredMessageDraftResult.FAILED
@@ -290,8 +290,8 @@ internal fun MagicBox(
         }
     }
     val smsPermissionLauncher = rememberLauncherForActivityResult(ActivityResultContracts.RequestPermission()) { granted ->
-        val draft = pendingPermissionSms
-        pendingPermissionSms = null
+        val draft = pendingDirectSmsPermission
+        pendingDirectSmsPermission = null
         if (granted && draft != null) {
             completeSmsAttempt(draft)
         } else {
@@ -300,38 +300,38 @@ internal fun MagicBox(
         }
     }
     val assistantSettingsLauncher = rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) {
-        val draft = pendingAssistantSms
-        pendingAssistantSms = null
+        val draft = pendingDirectSmsAssistant
+        pendingDirectSmsAssistant = null
         if (draft != null && actions.isAssistantRoleHeld()) {
             if (ContextCompat.checkSelfPermission(context, Manifest.permission.SEND_SMS) == PackageManager.PERMISSION_GRANTED) {
                 completeSmsAttempt(draft)
             } else {
-                pendingPermissionSms = draft
+                pendingDirectSmsPermission = draft
                 smsPermissionLauncher.launch(Manifest.permission.SEND_SMS)
             }
         } else if (draft != null) {
-            smsToConfirm = draft
+            directSmsToConfirm = draft
             Toast.makeText(context, context.getString(R.string.choose_assistant_for_sms), Toast.LENGTH_LONG).show()
         }
     }
-    fun sendDirectOrRequestAccess(draft: PendingSms) {
+    fun sendDirectOrRequestAccess(draft: MessageDraft) {
         when {
             !supportsDirectSms(context) -> completeSmsAttempt(draft)
             !actions.isAssistantRoleHeld() -> {
-                pendingAssistantSms = draft
+                pendingDirectSmsAssistant = draft
                 showSmsAssistantDisclosure = true
             }
             ContextCompat.checkSelfPermission(context, Manifest.permission.SEND_SMS) == PackageManager.PERMISSION_GRANTED -> {
                 completeSmsAttempt(draft)
             }
             else -> {
-                pendingPermissionSms = draft
+                pendingDirectSmsPermission = draft
                 smsPermissionLauncher.launch(Manifest.permission.SEND_SMS)
             }
         }
     }
 
-    fun chooseMessagingApp(draft: PendingSms) {
+    fun chooseMessagingApp(draft: MessageDraft) {
         val opened = actions.chooseMessagingApp(draft.body)
         if (!opened) {
             Toast.makeText(
@@ -343,7 +343,7 @@ internal fun MagicBox(
         }
     }
 
-    fun openMessagingProvider(draft: PendingSms, providerPackage: String?) {
+    fun openMessagingProvider(draft: MessageDraft, providerPackage: String?) {
         val result = actions.openPreferredMessageDraft(
             draft.contact,
             draft.body,
@@ -515,7 +515,7 @@ internal fun MagicBox(
             '+' -> payload.isNotBlank() && actions.createEvent(payload)
             '@' -> (selectedContact != null && payload.isNotBlank()).also {
                 if (it) {
-                    val draft = PendingSms(selectedContact!!, payload)
+                    val draft = MessageDraft(selectedContact!!, payload)
                     val route = messagingSendRoute(
                         sendAutomatically = store.sendMessagesAutomatically,
                         preferredPackage = store.preferredMessagingPackage,
@@ -533,7 +533,7 @@ internal fun MagicBox(
                         }
                         MessagingSendRoute.PROVIDER_PICKER -> {
                             keyboard?.hide()
-                            pendingMessagingChoiceSms = draft
+                            pendingMessagingChoice = draft
                         }
                     }
                 }
@@ -1027,14 +1027,14 @@ internal fun MagicBox(
             },
             onDismiss = {
                 showSmsAssistantDisclosure = false
-                pendingAssistantSms?.let { draft ->
-                    pendingAssistantSms = null
-                    smsToConfirm = draft
+                pendingDirectSmsAssistant?.let { draft ->
+                    pendingDirectSmsAssistant = null
+                    directSmsToConfirm = draft
                 } ?: onSessionComplete()
             },
         )
     }
-    pendingMessagingChoiceSms?.let { draft ->
+    pendingMessagingChoice?.let { draft ->
         MessagingProviderPickerDialog(
             title = stringResource(R.string.send_with),
             options = messagingProviders.options,
@@ -1044,7 +1044,7 @@ internal fun MagicBox(
             )?.id ?: MessagingProviderCatalog.SYSTEM_DEFAULT_PROVIDER_ID,
             showUnavailable = false,
             onProvider = { option ->
-                pendingMessagingChoiceSms = null
+                pendingMessagingChoice = null
                 if (option.systemDefault) {
                     openMessagingProvider(draft, providerPackage = null)
                 } else {
@@ -1052,11 +1052,11 @@ internal fun MagicBox(
                 }
             },
             onSeeAllApps = {
-                pendingMessagingChoiceSms = null
+                pendingMessagingChoice = null
                 chooseMessagingApp(draft)
             },
             onDismiss = {
-                pendingMessagingChoiceSms = null
+                pendingMessagingChoice = null
                 refocus()
             },
         )
@@ -1150,11 +1150,11 @@ internal fun MagicBox(
             },
         )
     }
-    smsToConfirm?.let { draft ->
+    directSmsToConfirm?.let { draft ->
         val assistantActive = actions.isAssistantRoleHeld()
         AlertDialog(
             modifier = Modifier.minkDialogWidth(),
-            onDismissRequest = { smsToConfirm = null; onSessionComplete() },
+            onDismissRequest = { directSmsToConfirm = null; onSessionComplete() },
             properties = MinkDialogDefaults.properties,
             icon = { Icon(Icons.AutoMirrored.Filled.Send, null, tint = MagicTextColor) },
             title = { Text(stringResource(R.string.send_message_to_contact, draft.contact.name)) },
@@ -1174,7 +1174,7 @@ internal fun MagicBox(
             confirmButton = {
                 Button(
                     onClick = {
-                        smsToConfirm = null
+                        directSmsToConfirm = null
                         sendDirectOrRequestAccess(draft)
                     },
                     colors = ButtonDefaults.buttonColors(containerColor = MagicTextColor, contentColor = MinkWhite),
@@ -1182,11 +1182,11 @@ internal fun MagicBox(
             },
             dismissButton = {
                 Row {
-                    TextButton(onClick = { smsToConfirm = null; onSessionComplete() }) { Text(stringResource(R.string.cancel)) }
+                    TextButton(onClick = { directSmsToConfirm = null; onSessionComplete() }) { Text(stringResource(R.string.cancel)) }
                     TextButton(
                         onClick = {
-                            smsToConfirm = null
-                            pendingMessagingChoiceSms = draft
+                            directSmsToConfirm = null
+                            pendingMessagingChoice = draft
                         },
                     ) { Text(stringResource(R.string.choose_messaging_app)) }
                 }
@@ -1194,8 +1194,6 @@ internal fun MagicBox(
         )
     }
 }
-
-private data class PendingSms(val contact: ContactResult, val body: String)
 
 private data class MessagingOptionsLoadState(
     val options: List<MessagingProviderOption> = emptyList(),

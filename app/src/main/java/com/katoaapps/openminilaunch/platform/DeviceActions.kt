@@ -5,12 +5,9 @@ import com.katoaapps.openminilaunch.features.calendar.parseCalendarPhrase
 import com.katoaapps.openminilaunch.features.conversations.NotificationHub
 import com.katoaapps.openminilaunch.features.demo.DemoSearchData
 import com.katoaapps.openminilaunch.features.magic.normalizedWebUrl
-import com.katoaapps.openminilaunch.features.messaging.MessagingDraftKind
-import com.katoaapps.openminilaunch.features.messaging.MessagingDraftProvider
-import com.katoaapps.openminilaunch.features.messaging.MessagingProviderCatalog
+import com.katoaapps.openminilaunch.features.messaging.MessagingDeviceActions
 import com.katoaapps.openminilaunch.features.messaging.MessagingProviderOption
-import com.katoaapps.openminilaunch.features.messaging.MessagingSupportTier
-import com.katoaapps.openminilaunch.features.messaging.packageNames
+import com.katoaapps.openminilaunch.features.messaging.PreferredMessageDraftResult
 import com.katoaapps.openminilaunch.features.updates.GITHUB_LATEST_APK_URL
 import com.katoaapps.openminilaunch.model.*
 import com.katoaapps.openminilaunch.ui.apps.AllAppsActivity
@@ -37,25 +34,7 @@ import android.provider.Telephony
 import android.telephony.PhoneNumberUtils
 import android.telephony.SmsManager
 import android.telephony.SubscriptionManager
-import android.telephony.TelephonyManager
 import android.util.LruCache
-import java.util.Locale
-
-internal enum class PreferredMessageDraftResult {
-    OPENED,
-    OPENED_WITH_RECIPIENT_PICKER,
-    FALLBACK_OPENED,
-    FAILED,
-}
-
-internal fun defaultMessageDraftResult(
-    integratedPackage: String?,
-    opened: Boolean,
-): PreferredMessageDraftResult = when {
-    !opened -> PreferredMessageDraftResult.FAILED
-    integratedPackage.isNullOrBlank() -> PreferredMessageDraftResult.OPENED
-    else -> PreferredMessageDraftResult.FALLBACK_OPENED
-}
 
 internal enum class DirectSmsResult {
     QUEUED,
@@ -72,6 +51,13 @@ class DeviceActions(private val context: Context) {
         context.packageName,
         "${context.packageName}.LockDeviceAdminReceiver",
     )
+    private val messagingActions by lazy {
+        MessagingDeviceActions(
+            context = context,
+            appLabel = ::appLabel,
+            startActivity = ::start,
+        )
+    }
 
     fun isLockServiceEnabled(): Boolean {
         val component = ComponentName(context, LockScreenAccessibilityService::class.java)
@@ -243,166 +229,22 @@ class DeviceActions(private val context: Context) {
         else start(Intent(Intent.ACTION_MAIN).addCategory(Intent.CATEGORY_APP_MESSAGING))
     }
 
-    /** Resolves the complete curated catalog, including disabled ghost entries for missing apps. */
-    internal fun messagingProviderOptions(): List<MessagingProviderOption> {
-        val defaultPackage = Telephony.Sms.getDefaultSmsPackage(context)
-        val systemOption = MessagingProviderOption(
-            id = MessagingProviderCatalog.SYSTEM_DEFAULT_PROVIDER_ID,
-            label = defaultPackage?.let(::appLabel) ?: context.getString(R.string.system_messages),
-            preferencePackageName = null,
-            installedPackageName = defaultPackage,
-            supportTier = MessagingSupportTier.CONTACT_AND_DRAFT,
-            bundledIconRes = null,
-            installed = true,
-            selectable = true,
-            systemDefault = true,
-        )
-        val providerOptions = MessagingProviderCatalog.providers.map { provider ->
-            val installedPackage = provider.packageNames.firstOrNull(::isPackageInstalled)
-            val installed = installedPackage != null
-            val selectable = installedPackage != null && preferredMessageIntent(
-                provider,
-                "+15551234567",
-                "MinkLauncher",
-                installedPackage,
-            )?.let(::canResolve) == true
-            MessagingProviderOption(
-                id = provider.id,
-                label = installedPackage?.let(::appLabel) ?: context.getString(provider.labelRes),
-                preferencePackageName = installedPackage ?: provider.packageName,
-                installedPackageName = installedPackage,
-                supportTier = provider.supportTier,
-                bundledIconRes = provider.bundledIconRes,
-                installed = installed,
-                selectable = selectable,
-            )
-        }
-        return listOf(systemOption) + providerOptions.sortedWith(
-            compareBy<MessagingProviderOption> { it.supportTier != MessagingSupportTier.CONTACT_AND_DRAFT }
-                .thenBy { it.supportTier == MessagingSupportTier.RECIPIENT_IN_APP }
-                .thenBy { it.label.lowercase() },
-        )
-    }
+    internal fun messagingProviderOptions(): List<MessagingProviderOption> =
+        messagingActions.providerOptions()
 
-    fun defaultMessagingAppLabel(): String = Telephony.Sms.getDefaultSmsPackage(context)
-        ?.let(::appLabel)
-        ?: context.getString(R.string.system_messages)
+    fun defaultMessagingAppLabel(): String = messagingActions.defaultMessagingAppLabel()
 
-    /**
-     * Opens the chosen provider's documented draft handoff. A missing or incompatible
-     * preference falls back to the system SMS/RCS composer without sending anything.
-     */
     internal fun openPreferredMessageDraft(
         contact: ContactResult,
         body: String,
         preferredPackage: String?,
-    ): PreferredMessageDraftResult {
-        val provider = MessagingProviderCatalog.providerForPackage(preferredPackage)
-        if (provider != null) {
-            val intent = preferredMessageIntent(
-                provider,
-                contact.phone,
-                body,
-                preferredPackage ?: provider.packageName,
-            )
-            if (intent != null && canResolve(intent) && start(intent)) {
-                return if (provider.supportTier == MessagingSupportTier.RECIPIENT_IN_APP) {
-                    PreferredMessageDraftResult.OPENED_WITH_RECIPIENT_PICKER
-                } else {
-                    PreferredMessageDraftResult.OPENED
-                }
-            }
-        }
-        return defaultMessageDraftResult(
-            integratedPackage = preferredPackage,
-            opened = openDefaultMessageDraft(contact, body),
-        )
-    }
+    ): PreferredMessageDraftResult = messagingActions.openPreferredMessageDraft(
+        contact = contact,
+        body = body,
+        preferredPackage = preferredPackage,
+    )
 
-    /** Opens Android's real share sheet. Shared-text apps choose their own recipient flow. */
-    fun chooseMessagingApp(body: String): Boolean {
-        val genericShare = Intent(Intent.ACTION_SEND)
-            .setType("text/plain")
-            .putExtra(Intent.EXTRA_TEXT, body.trim())
-        return hasHandler(genericShare) && start(genericShare, chooser = true)
-    }
-
-    private fun preferredMessageIntent(
-        provider: MessagingDraftProvider,
-        phone: String,
-        body: String,
-        packageName: String = provider.packageName,
-    ): Intent? {
-        val cleanBody = body.trim()
-        val internationalPhone = internationalPhoneNumber(phone)
-        val uri = when (provider.kind) {
-            MessagingDraftKind.WHATSAPP -> {
-                val digits = internationalPhone?.filter(Char::isDigit) ?: return null
-                Uri.Builder()
-                    .scheme("https")
-                    .authority("wa.me")
-                    .appendPath(digits)
-                    .appendQueryParameter("text", cleanBody)
-                    .build()
-            }
-            MessagingDraftKind.TELEGRAM -> {
-                val number = internationalPhone ?: return null
-                Uri.Builder()
-                    .scheme("tg")
-                    .authority("resolve")
-                    .appendQueryParameter("phone", number)
-                    .appendQueryParameter("text", cleanBody)
-                    .build()
-            }
-            MessagingDraftKind.LINE -> Uri.Builder()
-                .scheme("https")
-                .authority("line.me")
-                .appendPath("R")
-                .appendPath("share")
-                .appendQueryParameter("text", cleanBody)
-                .build()
-            MessagingDraftKind.SMS_URI -> Uri.parse("smsto:${Uri.encode(phone)}")
-            MessagingDraftKind.GENERIC_SHARE -> return Intent(Intent.ACTION_SEND)
-                .setType("text/plain")
-                .putExtra(Intent.EXTRA_TEXT, cleanBody)
-                .setPackage(packageName)
-        }
-        val action = if (provider.kind == MessagingDraftKind.SMS_URI) Intent.ACTION_SENDTO else Intent.ACTION_VIEW
-        return Intent(action, uri)
-            .setPackage(packageName)
-            .apply {
-                if (provider.kind == MessagingDraftKind.SMS_URI) putExtra("sms_body", cleanBody)
-            }
-    }
-
-    private fun internationalPhoneNumber(phone: String): String? {
-        val normalized = PhoneNumberUtils.normalizeNumber(phone)
-        if (normalized.startsWith("+") && normalized.drop(1).all(Char::isDigit)) return normalized
-        val telephony = context.getSystemService(TelephonyManager::class.java)
-        val countryIso = telephony?.networkCountryIso
-            ?.takeIf(String::isNotBlank)
-            ?: telephony?.simCountryIso?.takeIf(String::isNotBlank)
-            ?: Locale.getDefault().country.takeIf(String::isNotBlank)
-            ?: return null
-        return PhoneNumberUtils.formatNumberToE164(phone, countryIso.uppercase(Locale.US))
-    }
-
-    private fun isPackageInstalled(packageName: String): Boolean = runCatching {
-        context.packageManager.getApplicationInfo(packageName, 0)
-    }.isSuccess
-
-    private fun openDefaultMessageDraft(contact: ContactResult, body: String): Boolean {
-        val draft = Intent(
-            Intent.ACTION_SENDTO,
-            Uri.parse("smsto:${Uri.encode(contact.phone)}"),
-        ).putExtra("sms_body", body.trim())
-        val defaultPackage = Telephony.Sms.getDefaultSmsPackage(context)
-        if (!defaultPackage.isNullOrBlank()) {
-            val explicit = Intent(draft).setPackage(defaultPackage)
-            if (canResolve(explicit) && start(explicit)) return true
-        }
-        return canResolve(draft) && start(draft)
-    }
+    fun chooseMessagingApp(body: String): Boolean = messagingActions.chooseMessagingApp(body)
 
     internal fun sendSmsDirect(phone: String, body: String): DirectSmsResult {
         if (!context.packageManager.hasSystemFeature(PackageManager.FEATURE_TELEPHONY_MESSAGING)) {

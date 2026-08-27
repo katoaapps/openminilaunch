@@ -1,12 +1,13 @@
 package com.katoaapps.openminilaunch
 
-import com.katoaapps.openminilaunch.data.restoredAutomaticMessageSend
 import com.katoaapps.openminilaunch.features.messaging.MessagingSendRoute
 import com.katoaapps.openminilaunch.features.messaging.MessagingProviderCatalog
+import com.katoaapps.openminilaunch.features.messaging.PreferredMessageDraftResult
+import com.katoaapps.openminilaunch.features.messaging.defaultMessageDraftResult
 import com.katoaapps.openminilaunch.features.messaging.packageNames
+import com.katoaapps.openminilaunch.features.messaging.resolveInstalledPackage
+import com.katoaapps.openminilaunch.features.messaging.restoredAutomaticMessageSend
 import com.katoaapps.openminilaunch.features.messaging.messagingSendRoute
-import com.katoaapps.openminilaunch.platform.PreferredMessageDraftResult
-import com.katoaapps.openminilaunch.platform.defaultMessageDraftResult
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
@@ -64,6 +65,19 @@ class MessagingBehaviorTest {
 
         assertEquals("telegram", playProvider?.id)
         assertEquals(playProvider, websiteProvider)
+    }
+
+    @Test fun providerPackageOrderSelectsTheFirstInstalledOfficialBuild() {
+        val telegram = MessagingProviderCatalog.providerForPackage("org.telegram.messenger.web")!!
+
+        assertEquals(
+            "org.telegram.messenger.web",
+            telegram.resolveInstalledPackage { it == "org.telegram.messenger.web" },
+        )
+        assertEquals(
+            "org.telegram.messenger",
+            telegram.resolveInstalledPackage { true },
+        )
     }
 
     @Test fun deliberatelySelectedSystemMessagesIsNotReportedAsAFallback() {

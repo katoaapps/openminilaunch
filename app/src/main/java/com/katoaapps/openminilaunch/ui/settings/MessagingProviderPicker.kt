@@ -26,7 +26,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Send
 import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Close
-import androidx.compose.material.icons.filled.MoreHoriz
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Sms
 import androidx.compose.material3.Button
@@ -71,10 +70,13 @@ internal fun MessagingProviderPickerDialog(
         }
     }
     val fullSupport = visibleOptions.filter {
-        it.supportTier != MessagingSupportTier.RECIPIENT_IN_APP
+        it.supportTier == MessagingSupportTier.CONTACT_AND_DRAFT
     }
     val chooseContact = visibleOptions.filter {
         it.supportTier == MessagingSupportTier.RECIPIENT_IN_APP
+    }
+    val conditionalSupport = visibleOptions.filter {
+        it.supportTier == MessagingSupportTier.CONDITIONAL
     }
 
     Dialog(onDismissRequest = onDismiss, properties = MinkDialogDefaults.properties) {
@@ -132,6 +134,12 @@ internal fun MessagingProviderPickerDialog(
                         providerSection(
                             title = R.string.messaging_reselect_contact,
                             options = chooseContact,
+                            selectedProviderId = selectedProviderId,
+                            onProvider = onProvider,
+                        )
+                        providerSection(
+                            title = R.string.messaging_conditional_support,
+                            options = conditionalSupport,
                             selectedProviderId = selectedProviderId,
                             onProvider = onProvider,
                         )
@@ -260,5 +268,7 @@ private fun providerSubtitle(option: MessagingProviderOption): String = when {
     !option.selectable -> stringResource(R.string.messaging_version_not_supported)
     option.supportTier == MessagingSupportTier.RECIPIENT_IN_APP ->
         stringResource(R.string.messaging_body_only_support)
+    option.supportTier == MessagingSupportTier.CONDITIONAL ->
+        stringResource(R.string.messaging_conditional_support_description)
     else -> stringResource(R.string.messaging_contact_and_body_support)
 }

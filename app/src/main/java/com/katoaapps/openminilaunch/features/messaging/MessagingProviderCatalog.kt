@@ -4,75 +4,12 @@ import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import com.katoaapps.openminilaunch.R
 
-/** Describes how far Mink can carry a Magic Box message into a provider. */
-internal enum class MessagingSupportTier {
-    CONTACT_AND_DRAFT,
-    RECIPIENT_IN_APP,
-    CONDITIONAL,
-}
-
-/** Decides what pressing Send does before Android or a provider is invoked. */
-internal enum class MessagingSendRoute {
-    DIRECT_SMS,
-    PREFERRED_DRAFT,
-    PROVIDER_PICKER,
-}
-
-internal fun messagingSendRoute(
-    sendAutomatically: Boolean,
-    preferredPackage: String?,
-): MessagingSendRoute = when {
-    !sendAutomatically -> MessagingSendRoute.PROVIDER_PICKER
-    preferredPackage.isNullOrBlank() -> MessagingSendRoute.DIRECT_SMS
-    else -> MessagingSendRoute.PREFERRED_DRAFT
-}
-
-/** The Android or provider-owned contract used to prepare a message draft. */
-internal enum class MessagingDraftKind {
-    WHATSAPP,
-    TELEGRAM,
-    LINE,
-    SMS_URI,
-    GENERIC_SHARE,
-}
-
-/**
- * Static provider metadata used even when an app is not installed.
- *
- * Installed apps still use their PackageManager label and icon. bundledIconRes is only the
- * provider-owned fallback that a future picker may show for an unavailable integration.
- */
-internal data class MessagingDraftProvider(
-    val id: String,
-    @param:StringRes val labelRes: Int,
-    val packageName: String,
-    val alternatePackageNames: List<String> = emptyList(),
-    val kind: MessagingDraftKind,
-    val supportTier: MessagingSupportTier,
-    @param:DrawableRes val bundledIconRes: Int? = null,
-    val storeUrl: String,
-    val documentationUrl: String,
-)
-
-internal val MessagingDraftProvider.packageNames: List<String>
-    get() = listOf(packageName) + alternatePackageNames
-
-/** Resolved provider state used by both Settings and the one-time send chooser. */
-internal data class MessagingProviderOption(
-    val id: String,
-    val label: String,
-    val preferencePackageName: String?,
-    val installedPackageName: String?,
-    val supportTier: MessagingSupportTier,
-    @param:DrawableRes val bundledIconRes: Int?,
-    val installed: Boolean,
-    val selectable: Boolean,
-    val systemDefault: Boolean = false,
-)
-
 /**
  * Curated integrations are deliberately package-based. Activities are resolved at launch time
- * because providers can rename exported activities between releases.
+ * because providers can rename exported activities between releases. Every primary and alternate
+ * package listed here must also be declared in AndroidManifest.xml's queries block so Android can
+ * report whether it is installed. New providers also need a bundled icon, attribution in NOTICE,
+ * and an entry in docs/messaging-provider-assets.md.
  */
 internal object MessagingProviderCatalog {
     const val SYSTEM_DEFAULT_PROVIDER_ID = "system_sms"

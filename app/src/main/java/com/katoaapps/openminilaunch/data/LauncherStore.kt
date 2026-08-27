@@ -2,6 +2,7 @@ package com.katoaapps.openminilaunch.data
 
 import com.katoaapps.openminilaunch.R
 import com.katoaapps.openminilaunch.features.demo.DemoHomeData
+import com.katoaapps.openminilaunch.features.messaging.restoredAutomaticMessageSend
 import com.katoaapps.openminilaunch.model.*
 
 import android.content.Context
@@ -20,12 +21,6 @@ internal fun unfinishedFirst(items: List<TodoItem>): List<TodoItem> {
     val (unfinished, completed) = items.partition { !it.completed }
     return unfinished + completed
 }
-
-internal fun restoredAutomaticMessageSend(saved: Boolean?, legacyMode: String?): Boolean =
-    saved ?: when (legacyMode) {
-        "DIRECT_SMS", "PREFERRED_APP", "DEFAULT_MESSENGER", "MESSAGING_APP" -> true
-        else -> false
-    }
 
 class LauncherStore(context: Context) {
     private val prefs = context.getSharedPreferences("mini_launch", Context.MODE_PRIVATE)
@@ -73,6 +68,8 @@ class LauncherStore(context: Context) {
         )
     )
         private set
+    // A null package represents System Messages. Integrated providers persist the exact installed
+    // package so every draft intent can remain explicit.
     var preferredMessagingPackage by mutableStateOf(prefs.getString(PREFERRED_MESSAGING_PACKAGE_KEY, null))
         private set
     var preferredAiPackage by mutableStateOf(prefs.getString("preferred_ai_package", null))

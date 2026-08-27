@@ -226,6 +226,9 @@ internal fun SettingsScreen(
             val installedVariant = messagingProviders.options.firstOrNull {
                 it.id == savedProviderId && it.selectable
             }
+            // Preferences store the concrete package so handoffs remain explicit. If an official
+            // alternate build replaces it, migrate to that installed package without changing the
+            // provider selected by the user.
             when {
                 installedVariant == null -> store.resetPreferredMessagingApp()
                 installedVariant.preferencePackageName != savedPackage -> {

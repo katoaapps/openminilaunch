@@ -358,12 +358,14 @@
     <string name="no_messaging_providers_found">No matching messaging apps</string>
     <string name="messaging_full_support">Contact and draft</string>
     <string name="messaging_reselect_contact">Must select contact in app</string>
+    <string name="messaging_conditional_support">Compatibility varies</string>
     <string name="messaging_choose_default_behavior">Select a default app in\nSettings > Messaging > Integrated messaging app</string>
     <string name="messaging_system_default_description">System default · carrier SMS when sent automatically</string>
     <string name="messaging_not_installed">Not installed</string>
     <string name="messaging_version_not_supported">This installed version does not accept Mink’s draft handoff</string>
     <string name="messaging_body_only_support">Message carried over · choose the contact again</string>
     <string name="messaging_contact_and_body_support">Contact and message carried over</string>
+    <string name="messaging_conditional_support_description">Contact and message support depends on the installed version</string>
     <string name="see_more_messaging_options">See more options…</string>
     <string name="send_with">Send with</string>
     <string name="selected">Selected</string>
