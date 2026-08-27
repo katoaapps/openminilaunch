@@ -8,7 +8,7 @@ Optional permissions are used as follows:
 
 - Contacts: searches contact names and phone numbers locally for `@` messaging and `#` calling commands.
 - Phone: places a call only after the user selects a contact and confirms the call in MinkLauncher OpenSource.
-- SMS: sends a carrier SMS only after the user selects a recipient and submits a message. Direct SMS is available only while MinkLauncher OpenSource is the active Android assistant handler. The alternative messaging-app action leaves the final send inside the selected provider.
+- Messaging: sends a carrier SMS only after the user selects a recipient and submits a message with System Messages and automatic sending enabled. Direct SMS is available only while MinkLauncher OpenSource is the active Android assistant handler. Integrated-app and Android share handoffs pass user-entered text, and a phone number when supported, to the selected provider; that provider handles the final send under its own terms.
 - Photos, videos, audio, and older shared-storage access: searches media filenames locally and displays local thumbnails.
 - Notification shade: permits the launcher’s swipe-down gesture to expand Android’s notification panel.
 - Notification access: reads active Android-standard message and email notifications in memory so they can be grouped and replied to through the originating app when it supplies a compatible reply action. Other notification categories are ignored, and conversation history is not stored by MinkLauncher OpenSource.

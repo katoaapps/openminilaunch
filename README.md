@@ -2,7 +2,7 @@
 
 A focused, keyboard-first Android home-screen launcher and digital assistant built with Kotlin and Jetpack Compose.
 
-Current version: **Open 1.2.4** (`1.2.4`). Feature releases show existing users a one-time in-app update notice covering new behavior, privacy impact, and any optional permissions; the onboarding tutorial is updated alongside each release.
+Current version: **Open 1.3.0** (`1.3.0`). Feature releases show existing users a one-time in-app update notice covering new behavior, privacy impact, and any optional permissions; the onboarding tutorial is updated alongside each release.
 
 ## Download
 
@@ -81,8 +81,10 @@ the existing app first and clears MinkLauncher OpenSource's local data.
   - `?app` — search and launch any installed app
 - **Mink Assistant** integration: invoke the same keyboard-first Magic Box over the current app using the phone's system assistant gesture
 - Direct SMS is available only while MinkLauncher OpenSource is the active assistant handler. Android may grant Send SMS access automatically as part of that role; MinkLauncher OpenSource uses it only after the user approves a specific recipient and message. If it is not role-granted, it is requested on first use or from Settings.
-- Message behavior applies only to one-time `@` messages from the Magic Box, not replies in Conversations. It defaults to **Always ask**, which offers **Send SMS now**, **Choose messaging app**, and **Cancel**. Settings can instead remember **Always send as SMS** or **Always choose messaging app**; remembered modes treat pressing the Magic Box action as the user's approval and skip MinkLauncher OpenSource's extra confirmation.
-- **Send SMS now** uses the carrier SMS stack for that message and may incur carrier charges, but it does not disable RCS or change any setting in the user's messaging app. Conversation replies continue through the reply action supplied by their source app. The provider chooser first uses Android’s contact-aware messaging contract, then falls back to the SMS/RCS composer contract; the selected provider controls the final send.
+- Message behavior applies only to one-time `@` messages from the Magic Box, not replies in Conversations. **Settings → Messaging** lets the user choose System Messages or an installed integrated app and decide whether Mink acts automatically or asks which app to use for each message.
+- With **Send automatically** enabled, System Messages sends carrier SMS directly; another integrated app receives the message through its supported deep link or Android handoff. With it disabled, Mink shows installed supported apps plus **See more options** for Android’s share sheet.
+- The integrated-app picker distinguishes providers that can receive both the contact and message from providers that require the recipient to be chosen again. Unsupported or uninstalled catalog entries stay visible but cannot be selected. The receiving app remains responsible for its own account, delivery method, and final send behavior.
+- Direct carrier SMS may incur carrier charges, but it does not disable RCS or change any setting in the user’s messaging app. Conversation replies continue through the reply action supplied by their source app. After an app handoff or dismissed picker, Mink keeps the selected contact and message until the user sends or clears it.
 - Mink Assistant deliberately ignores assist context and requests no microphone, call-log, screen-reading, or screen-context access; selecting it replaces the current default digital assistant until the user changes it back
 - The five most recent successful query handoffs and `?` app launches are stored locally, with controls to reuse, delete, or clear them; other hot-key actions are never added
 - Direct calling uses Android's Call permission; emergency numbers and failed direct-call attempts fall back to the system dialer. **Choose calling app** sends the number through Android’s dial intent, so only apps that publicly support telephone dialing appear.

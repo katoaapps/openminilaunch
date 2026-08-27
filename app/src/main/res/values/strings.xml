@@ -162,7 +162,7 @@
     <string name="defaults_are_always_there_description">Reset an individual slot in Settings to restore its original Note, Calendar, Weather, Call, Messenger, or Files action.</string>
     <string name="your_layout_stays_put">Your layout stays put</string>
     <string name="your_layout_stays_put_description">Existing app choices and your custom grid order are preserved automatically.</string>
-    <string name="your_app_library_has_a_new_home">Small improvements that stay out of your way</string>
+    <string name="your_app_library_has_a_new_home">Choose how each @ message leaves Mink</string>
     <string name="see_every_installed_app">See every installed app</string>
     <string name="see_every_installed_app_description">Open Top 8 and choose See all to browse your complete installed-app library.</string>
     <string name="swipe_one_app_at_a_time">Swipe one app at a time</string>
@@ -179,6 +179,12 @@
     <string name="update_notice_keyboard_description">Touch-only phones open the software keyboard on Home by default, with an off switch in Magic Box settings.</string>
     <string name="update_notice_github_title">Updates wait for you</string>
     <string name="update_notice_github_description">A small update icon appears in the Home header when GitHub has a newer release. Nothing downloads until you tap it and approve the browser handoff.</string>
+    <string name="update_notice_integrated_apps_title">Integrated messaging apps</string>
+    <string name="update_notice_integrated_apps_description">Choose System Messages or an installed supported app. Mink carries the contact and message when that app supports it.</string>
+    <string name="update_notice_message_choice_title">Automatic or ask each time</string>
+    <string name="update_notice_message_choice_description">Send automatically with your integrated app, or leave it off to choose from supported apps for each one-time @ message.</string>
+    <string name="update_notice_message_draft_title">Your message stays in place</string>
+    <string name="update_notice_message_draft_description">Returning to Mink keeps the selected contact and message until you send it or clear it yourself.</string>
     <string name="review_updated_tutorial">Review the updated tutorial</string>
     <string name="choose_your_shortcut_apps">Choose your shortcut apps</string>
     <string name="shortcut_setup_description">The six app slots keep their built-in defaults until you replace them. Choose any installed app for a slot, or explicitly keep the defaults you want.</string>
@@ -248,6 +254,8 @@
     <string name="assistant_active_description">Mink Assistant is active. Direct SMS can be enabled during the permission setup that follows.</string>
     <string name="assistant_inactive_description">You can skip this, but direct SMS stays unavailable until Mink Assistant is active.</string>
     <string name="choose_message_behavior">Choose message behavior</string>
+    <string name="integrated_messaging_app_onboarding">Integrated messaging app</string>
+    <string name="integrated_messaging_app_onboarding_description">System Messages is the default. You can choose an installed supported app now or change it later in Settings.</string>
     <string name="ai_app_selected">AI app: %1$s</string>
     <string name="choose_an_ai_app">Choose an AI app</string>
     <string name="mink_day_onboarding_intro">Swipe right from Home to visit Mink’s Day: a private view of time spent in the social apps you want to limit.</string>

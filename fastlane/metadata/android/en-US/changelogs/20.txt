@@ -1,0 +1,1 @@
+MinkLauncher OpenSource 1.3.0 adds integrated messaging for one-time @ messages. Choose System Messages or a supported installed app, send automatically or choose each time, and keep your contact and message when returning to Mink. The update also improves Home return behavior and protects Magic Box text from accidental dismissal.

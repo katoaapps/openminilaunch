@@ -6,7 +6,7 @@ On a physical-keyboard phone, just start typing from Home. The already-focused M
 
 Magic Box commands:
 
-• @ — choose a contact, then send carrier SMS or open a messaging provider
+• @ — choose a contact, then send carrier SMS or hand the message to an integrated messaging app
 • # — choose a contact, confirm, then call or choose a calling provider
 • - — add an internal to-do
 • / — create a multiline note through an installed notes app
@@ -21,6 +21,15 @@ Optional spaces remain one swipe away:
 • Conversations groups active Android message and email notifications into compact threads. Inline reply is offered only when the originating app supplies Android’s reply action, and content remains transient in memory.
 • Mink’s Day measures foreground time and opens only for the Android Social-category apps or custom apps the user chooses to limit. Other apps never enter its trail or totals.
 • Widgets hosts up to four Android widgets with grouped provider previews, correct responsive sizing, reordering, and removal.
+
+Integrated messaging:
+
+• Choose System Messages or an installed supported messaging app in Settings
+• Send automatically with that app, or choose an app for each one-time @ message
+• Supported deep links carry the contact and message when the receiving app allows it
+• Other integrations carry the message and let you choose the contact in the receiving app
+• Returning to Mink keeps your selected contact and message until you send or clear it
+• Conversation replies still use the reply action supplied by the notification’s source app
 
 Privacy is a core feature:
 

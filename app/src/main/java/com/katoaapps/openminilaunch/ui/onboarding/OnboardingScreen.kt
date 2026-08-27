@@ -6,6 +6,8 @@ import com.katoaapps.openminilaunch.data.*
 import com.katoaapps.openminilaunch.model.*
 import com.katoaapps.openminilaunch.platform.*
 import com.katoaapps.openminilaunch.features.magic.*
+import com.katoaapps.openminilaunch.features.messaging.MessagingProviderOption
+import com.katoaapps.openminilaunch.features.messaging.MessagingProviderCatalog
 import com.katoaapps.openminilaunch.features.wellbeing.*
 import com.katoaapps.openminilaunch.ui.components.*
 import com.katoaapps.openminilaunch.ui.launcher.ShortcutAssignmentRow
@@ -14,6 +16,7 @@ import com.katoaapps.openminilaunch.ui.launcher.displaySlotLabel
 import com.katoaapps.openminilaunch.ui.theme.*
 import com.katoaapps.openminilaunch.R
 import com.katoaapps.openminilaunch.ui.settings.AppPickerDialog
+import com.katoaapps.openminilaunch.ui.settings.MessagingProviderPickerDialog
 
 import android.os.Build
 import androidx.activity.ComponentActivity
@@ -29,6 +32,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.ArrowForward
+import androidx.compose.material.icons.automirrored.filled.Chat
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
@@ -65,10 +69,9 @@ internal fun FeatureUpdateDialog(
                 verticalArrangement = Arrangement.spacedBy(Dimens.dp14),
             ) {
                 Text(stringResource(R.string.your_app_library_has_a_new_home), fontSize = Dimens.sp18, fontWeight = FontWeight.Bold)
-                UpdatePoint(Icons.Default.EditNote, stringResource(R.string.update_notice_notes_title), stringResource(R.string.update_notice_notes_description))
-                UpdatePoint(Icons.Default.Widgets, stringResource(R.string.update_notice_widgets_title), stringResource(R.string.update_notice_widgets_description))
-                UpdatePoint(Icons.Default.Keyboard, stringResource(R.string.update_notice_keyboard_title), stringResource(R.string.update_notice_keyboard_description))
-                UpdatePoint(Icons.Default.SystemUpdateAlt, stringResource(R.string.update_notice_github_title), stringResource(R.string.update_notice_github_description))
+                UpdatePoint(Icons.AutoMirrored.Filled.Chat, stringResource(R.string.update_notice_integrated_apps_title), stringResource(R.string.update_notice_integrated_apps_description))
+                UpdatePoint(Icons.Default.Tune, stringResource(R.string.update_notice_message_choice_title), stringResource(R.string.update_notice_message_choice_description))
+                UpdatePoint(Icons.Default.EditNote, stringResource(R.string.update_notice_message_draft_title), stringResource(R.string.update_notice_message_draft_description))
                 TextButton(onClick = onReviewTutorial, contentPadding = PaddingValues(Dimens.dp0)) {
                     Text(stringResource(R.string.review_updated_tutorial))
                 }
@@ -157,6 +160,9 @@ internal fun OnboardingScreen(store: LauncherStore, actions: DeviceActions, onFi
     var page by rememberSaveable { mutableIntStateOf(0) }
     var pickingAi by remember { mutableStateOf(false) }
     var pickingAllAi by remember { mutableStateOf(false) }
+    var pickingMessaging by remember { mutableStateOf(false) }
+    var messagingOptions by remember { mutableStateOf<List<MessagingProviderOption>>(emptyList()) }
+    var messagingOptionsLoaded by remember { mutableStateOf(false) }
     var aiAppsLoaded by remember { mutableStateOf(false) }
     val curatedAiApps by produceState<List<LaunchableApp>>(initialValue = emptyList()) {
         value = withContext(Dispatchers.IO) { actions.curatedAiApps() }
@@ -170,6 +176,12 @@ internal fun OnboardingScreen(store: LauncherStore, actions: DeviceActions, onFi
     val allAiApps by produceState<List<LaunchableApp>>(initialValue = emptyList()) {
         value = withContext(Dispatchers.IO) { actions.textShareApps() }
         allAiAppsLoaded = true
+    }
+    LaunchedEffect(pickingMessaging) {
+        if (pickingMessaging && !messagingOptionsLoaded) {
+            messagingOptions = withContext(Dispatchers.IO) { actions.messagingProviderOptions() }
+            messagingOptionsLoaded = true
+        }
     }
     val titles = listOf(
         stringResource(R.string.onboarding_page_home),
@@ -322,6 +334,26 @@ internal fun OnboardingScreen(store: LauncherStore, actions: DeviceActions, onFi
                                 fontSize = Dimens.sp13,
                             )
                             Text(stringResource(R.string.choose_message_behavior), fontWeight = FontWeight.Bold)
+                            OutlinedButton(
+                                onClick = { pickingMessaging = true },
+                                modifier = Modifier.fillMaxWidth(),
+                            ) {
+                                Icon(Icons.AutoMirrored.Filled.Chat, null)
+                                Column(Modifier.padding(start = Dimens.dp8).weight(1f)) {
+                                    Text(stringResource(R.string.integrated_messaging_app_onboarding))
+                                    Text(
+                                        store.preferredMessagingPackage?.let(actions::appLabel)
+                                            ?: stringResource(R.string.system_messages),
+                                        color = Muted,
+                                        fontSize = Dimens.sp12,
+                                    )
+                                }
+                            }
+                            Text(
+                                stringResource(R.string.integrated_messaging_app_onboarding_description),
+                                color = Muted,
+                                fontSize = Dimens.sp12,
+                            )
                             SettingsSwitchRow(
                                 title = stringResource(R.string.send_messages_automatically),
                                 subtitle = stringResource(R.string.send_messages_automatically_onboarding_description),
@@ -420,6 +452,26 @@ internal fun OnboardingScreen(store: LauncherStore, actions: DeviceActions, onFi
             loading = !allAiAppsLoaded,
             onApp = { store.setPreferredAiApp(it.packageName); pickingAllAi = false },
             onDismiss = { pickingAllAi = false },
+        )
+    }
+    if (pickingMessaging) {
+        MessagingProviderPickerDialog(
+            title = stringResource(R.string.choose_preferred_messaging_app),
+            options = messagingOptions,
+            loading = !messagingOptionsLoaded,
+            selectedProviderId = MessagingProviderCatalog.providerForPackage(
+                store.preferredMessagingPackage,
+            )?.id ?: MessagingProviderCatalog.SYSTEM_DEFAULT_PROVIDER_ID,
+            showUnavailable = true,
+            onProvider = { option ->
+                if (option.systemDefault) {
+                    store.resetPreferredMessagingApp()
+                } else {
+                    option.preferencePackageName?.let(store::setPreferredMessagingApp)
+                }
+                pickingMessaging = false
+            },
+            onDismiss = { pickingMessaging = false },
         )
     }
 }
