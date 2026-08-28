@@ -317,12 +317,19 @@ class DeviceActions(private val context: Context) {
     }
 
     fun webSearchApps(): List<LaunchableApp> {
-        val browserIntent = Intent(Intent.ACTION_VIEW, Uri.parse("https://example.com"))
-        return context.packageManager.queryIntentActivities(
-            browserIntent,
-            PackageManager.MATCH_DEFAULT_ONLY,
+        val discoveryIntents = listOf(
+            Intent(Intent.ACTION_WEB_SEARCH).putExtra(SearchManager.QUERY, BROWSER_DISCOVERY_QUERY),
+            Intent(Intent.ACTION_VIEW, Uri.parse("https://example.com"))
+                .addCategory(Intent.CATEGORY_BROWSABLE),
+            Intent.makeMainSelectorActivity(Intent.ACTION_MAIN, Intent.CATEGORY_APP_BROWSER),
         )
-            .asSequence()
+        return discoveryIntents.asSequence()
+            .flatMap { intent ->
+                context.packageManager.queryIntentActivities(
+                    intent,
+                    PackageManager.MATCH_DEFAULT_ONLY,
+                ).asSequence()
+            }
             .filter { it.activityInfo.packageName != context.packageName }
             .map { LaunchableApp(it.loadLabel(context.packageManager).toString(), it.activityInfo.packageName) }
             .distinctBy { it.packageName }
@@ -440,6 +447,7 @@ class DeviceActions(private val context: Context) {
     }
 
     private companion object {
+        const val BROWSER_DISCOVERY_QUERY = "MinkLauncher"
         const val SAMSUNG_CLOCK_PACKAGE = "com.sec.android.app.clockpackage"
         val CLOCK_PACKAGES = listOf(
             SAMSUNG_CLOCK_PACKAGE,
