@@ -240,6 +240,12 @@ internal fun LauncherSettingsPage(
 internal fun AppearanceSettingsPage(store: LauncherStore, goBack: () -> Unit) {
     SettingsPage(stringResource(R.string.appearance), goBack) {
         ThemeChooser(store.themePreference, store::setTheme)
+        SettingsSwitchRow(
+            title = stringResource(R.string.hide_status_bar),
+            subtitle = stringResource(R.string.hide_status_bar_description),
+            checked = store.hideStatusBar,
+            onCheckedChange = store::updateHideStatusBar,
+        )
         HomePanelColorSetting(store.effectiveHomePanelColorArgb, store::setHomePanelColor)
         AppBackgroundColorSetting(
             selectedArgb = store.effectiveAppBackgroundColorArgb,

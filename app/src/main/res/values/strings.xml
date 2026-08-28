@@ -475,6 +475,8 @@
 
     <!-- Settings dialogs and pickers -->
     <string name="light_mode">Light Mode</string>
+    <string name="hide_status_bar">Hide Status Bar</string>
+    <string name="hide_status_bar_description">Swipe down on home screen to reveal notification shade.</string>
     <string name="reset_system_default">Reset to system default</string>
     <string name="no_apps_found">No apps found.</string>
     <string name="enable_double_tap_lock">Enable double-tap to lock?</string>

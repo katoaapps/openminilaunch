@@ -51,6 +51,7 @@ import androidx.compose.ui.platform.LocalView
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.core.view.WindowCompat
+import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import kotlinx.coroutines.launch
 
@@ -251,6 +252,7 @@ private fun MiniLaunchApp(
         }
     }
     val transparent = MinkTransparent
+    val hideHomeStatusBar = store.hideStatusBar && screen == Screen.HOME && !showTutorial
     SideEffect {
         val window = (context as Activity).window
         window.statusBarColor = transparent.toArgb()
@@ -258,6 +260,9 @@ private fun MiniLaunchApp(
         WindowInsetsControllerCompat(window, view).apply {
             isAppearanceLightStatusBars = !darkTheme
             isAppearanceLightNavigationBars = !darkTheme
+            systemBarsBehavior = WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+            if (hideHomeStatusBar) hide(WindowInsetsCompat.Type.statusBars())
+            else show(WindowInsetsCompat.Type.statusBars())
         }
     }
     MaterialTheme(

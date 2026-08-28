@@ -60,6 +60,8 @@ class LauncherStore(context: Context) {
         runCatching { ThemePreference.valueOf(prefs.getString("theme_preference", "SYSTEM") ?: "SYSTEM") }.getOrDefault(ThemePreference.SYSTEM)
     )
         private set
+    var hideStatusBar by mutableStateOf(prefs.getBoolean(HIDE_STATUS_BAR_KEY, true))
+        private set
     var homePanelColorArgb by mutableIntStateOf(
         prefs.getInt("home_panel_color", ContextCompat.getColor(context, R.color.mink_forest))
     )
@@ -371,6 +373,11 @@ class LauncherStore(context: Context) {
         prefs.edit().putString("theme_preference", preference.name).apply()
     }
 
+    fun updateHideStatusBar(enabled: Boolean) {
+        hideStatusBar = enabled
+        prefs.edit().putBoolean(HIDE_STATUS_BAR_KEY, enabled).apply()
+    }
+
     fun setHomePanelColor(argb: Int) {
         val opaqueArgb = argb or 0xFF000000.toInt()
         if (demoSearchDataEnabled) {
@@ -576,6 +583,7 @@ class LauncherStore(context: Context) {
         const val DEMO_HOME_PROFILE_KEY = "demo_home_profile"
         const val DEMO_SEARCH_DATA_KEY = "demo_search_data_enabled"
         const val GITHUB_UPDATE_CHECKS_ENABLED_KEY = "github_update_checks_enabled"
+        const val HIDE_STATUS_BAR_KEY = "hide_status_bar"
         const val LAST_GITHUB_RELEASE_CHECK_KEY = "last_github_release_check"
         const val LATEST_GITHUB_RELEASE_TAG_KEY = "latest_github_release_tag"
         const val MINK_APP_PAUSE_MODE_KEY = "mink_app_pause_mode"
