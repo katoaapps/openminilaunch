@@ -185,6 +185,13 @@
     <string name="update_notice_message_choice_description">Send automatically with your integrated app, or leave it off to choose from supported apps for each one-time @ message.</string>
     <string name="update_notice_message_draft_title">Your message stays in place</string>
     <string name="update_notice_message_draft_description">Returning to Mink keeps the selected contact and message until you send it or clear it yourself.</string>
+    <string name="mink_day_can_help_you_step_away">Mink’s Day can help you step away</string>
+    <string name="update_notice_daily_limit_title">A daily limit you choose</string>
+    <string name="update_notice_daily_limit_description">Set one collective limit from 0 to 23 whole hours for the apps included in Mink’s Day.</string>
+    <string name="update_notice_pause_apps_title">Pause selected apps</string>
+    <string name="update_notice_pause_apps_description">Hide them from Magic Box and the app drawers all the time or after the limit. Shortcut tiles stay visible with a reminder.</string>
+    <string name="update_notice_home_browser_title">More Home and browser control</string>
+    <string name="update_notice_home_browser_description">Hide the Home status bar and choose from more browsers that Android exposes for searches and web pages.</string>
     <string name="review_updated_tutorial">Review the updated tutorial</string>
     <string name="choose_your_shortcut_apps">Choose your shortcut apps</string>
     <string name="shortcut_setup_description">The six app slots keep their built-in defaults until you replace them. Choose any installed app for a slot, or explicitly keep the defaults you want.</string>
@@ -293,7 +300,7 @@
     <string name="github_updates_onboarding_description">By default, %1$s checks GitHub release metadata at most twice a day. GitHub receives normal connection metadata, but no launcher content. An update icon appears in the Home header when a newer release exists; the app never downloads or installs APKs. You can disable checks in About.</string>
     <string name="conversation_access">Conversation access</string>
     <string name="conversation_access_onboarding_description">Optional notification access powers message and email conversations. Other notification types are ignored, and you can revoke access whenever you want.</string>
-    <string name="mink_day_usage_onboarding_description">Optional Usage Access measures foreground time and opens for the social apps you choose, entirely on this device.</string>
+    <string name="mink_day_usage_onboarding_description">Optional Usage Access measures foreground time and launch counts for the apps you choose, entirely on this device.</string>
     <string name="next">Next</string>
     <string name="setup">Guided setup</string>
     <string name="finish_setup">Finish setup</string>
@@ -306,7 +313,7 @@
     <string name="choose_folder_description">%1$s searches only folders you approve through Android.</string>
     <string name="queries_files_stay_local">Search queries and filenames stay on your device and are never sent to us.</string>
     <string name="usage_disclosure_title">Let Mink reflect your day?</string>
-    <string name="usage_disclosure_body_one">Android’s Usage Access lets %1$s measure when your selected social apps are in the foreground and for how long.</string>
+    <string name="usage_disclosure_body_one">Android’s Usage Access lets %1$s measure when the apps selected for Mink’s Day are in the foreground and for how long.</string>
     <string name="usage_disclosure_body_two">%1$s uses this only to calculate today’s Mink state and insights on your device. It does not upload your activity, sell it, or keep a separate usage-history database.</string>
     <string name="usage_disclosure_body_three">This is optional. Mink’s page still works as a time-of-day companion if you skip it, and you can revoke access whenever you want.</string>
 
@@ -427,7 +434,7 @@
     <string name="hours_short">%1$dh</string>
     <string name="permissions_description">Access is optional and can be changed at any time. Device data stays local unless you explicitly hand it to another app.</string>
     <string name="mink_day_usage">Mink’s Day usage</string>
-    <string name="mink_day_usage_permission_description">Reads foreground activity for your selected social apps only to calculate private, on-device daily insights.</string>
+    <string name="mink_day_usage_permission_description">Reads foreground activity for the apps selected for Mink’s Day only to calculate private, on-device daily insights.</string>
     <string name="conversations_permission_description">Shows active message and email conversations locally and uses reply actions supplied by their apps.</string>
     <string name="contacts_permission_description">Used only for @ messages and # calls.</string>
     <string name="direct_calls">Direct calls</string>

@@ -2,7 +2,7 @@
 
 A focused, keyboard-first Android home-screen launcher and digital assistant built with Kotlin and Jetpack Compose.
 
-Current version: **Open 1.3.0** (`1.3.0`). Feature releases show existing users a one-time in-app update notice covering new behavior, privacy impact, and any optional permissions; the onboarding tutorial is updated alongside each release.
+Current version: **Open 1.3.5** (`1.3.5`). Feature releases show existing users a one-time in-app update notice covering new behavior, privacy impact, and any optional permissions; the onboarding tutorial is updated alongside each release.
 
 ## Download
 
@@ -38,7 +38,7 @@ the existing app first and clears MinkLauncher OpenSource's local data.
 - First-run onboarding for the launcher, Magic Box, to-dos, search, and permissions, followed by a dedicated shortcut-app setup step
 - Replayable onboarding from Settings, including permission setup
 - A responsive raised Home panel with a two-thirds to-do area and a one-third icon-only shortcut grid
-- Three-at-a-time, horizontally snapping to-do preview with unfinished tasks first
+- A responsive, horizontally snapping preview of up to five to-dos with unfinished tasks first
 - Eight home shortcuts: six generic app slots with built-in Note, Calendar, Weather, Call, Messenger, and Files defaults, plus To-do and Top 8
 - Long-press shortcut edit mode with persistent drag reordering and a reset control in Settings
 - An active-only **Conversations** space opened from Home:
@@ -52,9 +52,12 @@ the existing app first and clears MinkLauncher OpenSource's local data.
   - GitHub APK installs on Android 13 or newer may require **Allow restricted settings** on MinkLauncher OpenSource's Android App info page before Notification access can be enabled; see [How to install the GitHub APK](#how-to-install-the-github-apk)
 - A horizontally adjacent widget page for up to four Android app widgets, including an app-grouped visual picker, system binding/configuration, reordering, and removal
 - A dedicated **Mink’s Day** page to the left of Home:
-  - Six illustrated Mink states reflect the time of day and, when optional Usage Access is enabled, foreground time and opens only for the social apps the user chooses to include
+  - Six illustrated Mink states reflect the time of day and, when optional Usage Access is enabled, foreground time and launch counts only for the apps the user chooses to include
   - A compact Mink icon in the Home header opens the page and shows an attention dot only when something is actionable
-  - The daily social goal can be set to 30, 60, 90, or 120 minutes
+  - Set a collective daily limit from 0 to 23 whole hours for the selected apps
+  - Choose whether selected apps are paused in MinkLauncher all the time, only after their collective daily limit, or never
+  - Paused apps are hidden from Magic Box app search, the compact drawer, and See All; assigned shortcut tiles stay visible with a red block badge and an explanatory dialog
+  - This is a launcher barrier, not a system app suspension or parental-control feature; it does not prevent opening an app through Android Settings, a link, another launcher, or another route
   - Android’s Social category is the visible default; selecting custom apps replaces it, and Restore defaults returns to Android’s category
   - Selected apps stay pinned in a fixed section at the top of the picker for quick review and removal
   - Top-app activity and short, non-judgmental observations are calculated only while the app is open
@@ -71,7 +74,7 @@ the existing app first and clears MinkLauncher OpenSource's local data.
 - Real installed-app icons and an alphabetical jump rail in both app pickers
 - A searchable Magic Box:
   - Physical-keyboard instant typing — press any printable key from the home screen to reveal the already-focused Magic Box with the first character preserved
-  - Plain text — search locally accessible file names, then open valid web addresses directly or search other text with Android's system browser or a user-selected search app
+  - Plain text — search locally accessible file names, then open valid web addresses directly or search other text with Android's system browser or a user-selected browser discovered through Android's standard browser and web-search entry points
   - Plain text can also be handed to a user-selected app that accepts shared text, for review and submission there
   - `@name message` — choose a contact, then send carrier SMS now or hand the recipient and text to an Android-compatible messaging app
   - `#name` — choose a contact, then place the confirmed carrier call or open Android’s compatible calling-app chooser
@@ -95,6 +98,7 @@ the existing app first and clears MinkLauncher OpenSource's local data.
 - Delete confirmation to protect against accidental taps and back-swipe gestures
 - Animated Magic Box to-do delivery into the newest widget page
 - System, light, and dark appearance modes
+- A default-on **Hide Status Bar** option for Home; swipe down to reveal Android's notification shade
 - Swipe down anywhere on the home screen to expand notifications
 - Optionally enable the minimal **Double-tap screen lock** accessibility service, then double-tap empty home-screen space to lock like the power button. The service cannot read screen content, subscribe to accessibility events, perform gestures, or collect data.
 - Local persistence via SharedPreferences; no account is required. Network access is used only for the optional GitHub release-metadata check, which sends no launcher data.

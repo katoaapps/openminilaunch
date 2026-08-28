@@ -1,6 +1,6 @@
 MinkLauncher OpenSource is a focused Android home-screen launcher and keyboard-first assistant designed around fast input and low visual noise.
 
-The responsive Home panel combines a three-item to-do preview with eight configurable icon shortcuts. A compact drawer holds up to eight chosen apps, while every installed launcher app remains one keyboard search away.
+The responsive Home panel combines a preview of up to five to-dos with eight configurable icon shortcuts. A compact drawer holds up to eight chosen apps, while every installed launcher app remains one keyboard search away.
 
 On a physical-keyboard phone, just start typing from Home. The already-focused Magic Box appears with the first character preserved; no tap is required. It can also open over another app when MinkLauncher OpenSource is selected as Android’s assistant.
 
@@ -19,7 +19,7 @@ To-dos can be added, checked, edited, confirmed before deletion, and reordered b
 Optional spaces remain one swipe away:
 
 • Conversations groups active Android message and email notifications into compact threads. Inline reply is offered only when the originating app supplies Android’s reply action, and content remains transient in memory.
-• Mink’s Day measures foreground time and opens only for the Android Social-category apps or custom apps the user chooses to limit. Other apps never enter its trail or totals.
+• Mink’s Day measures foreground time and launch counts for the Android Social-category apps or custom apps the user chooses to include. Set a collective limit from 0 to 23 whole hours, then pause those apps in MinkLauncher all the time, only after the limit, or never. Paused apps are hidden from Magic Box and app drawers while shortcut tiles remain visible with a reminder. This is a launcher barrier, not a system app suspension or parental-control feature. Other apps never enter Mink’s Day totals.
 • Widgets hosts up to four Android widgets with grouped provider previews, correct responsive sizing, reordering, and removal.
 
 Integrated messaging:

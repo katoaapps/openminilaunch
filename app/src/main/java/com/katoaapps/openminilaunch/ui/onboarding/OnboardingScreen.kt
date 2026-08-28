@@ -68,10 +68,10 @@ internal fun FeatureUpdateDialog(
                 Modifier.heightIn(max = Dimens.dp560).verticalScroll(rememberScrollState()),
                 verticalArrangement = Arrangement.spacedBy(Dimens.dp14),
             ) {
-                Text(stringResource(R.string.your_app_library_has_a_new_home), fontSize = Dimens.sp18, fontWeight = FontWeight.Bold)
-                UpdatePoint(Icons.AutoMirrored.Filled.Chat, stringResource(R.string.update_notice_integrated_apps_title), stringResource(R.string.update_notice_integrated_apps_description))
-                UpdatePoint(Icons.Default.Tune, stringResource(R.string.update_notice_message_choice_title), stringResource(R.string.update_notice_message_choice_description))
-                UpdatePoint(Icons.Default.EditNote, stringResource(R.string.update_notice_message_draft_title), stringResource(R.string.update_notice_message_draft_description))
+                Text(stringResource(R.string.mink_day_can_help_you_step_away), fontSize = Dimens.sp18, fontWeight = FontWeight.Bold)
+                UpdatePoint(Icons.Default.Timer, stringResource(R.string.update_notice_daily_limit_title), stringResource(R.string.update_notice_daily_limit_description))
+                UpdatePoint(Icons.Default.Block, stringResource(R.string.update_notice_pause_apps_title), stringResource(R.string.update_notice_pause_apps_description))
+                UpdatePoint(Icons.Default.Tune, stringResource(R.string.update_notice_home_browser_title), stringResource(R.string.update_notice_home_browser_description))
                 TextButton(onClick = onReviewTutorial, contentPadding = PaddingValues(Dimens.dp0)) {
                     Text(stringResource(R.string.review_updated_tutorial))
                 }
