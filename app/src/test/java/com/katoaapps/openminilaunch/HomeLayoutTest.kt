@@ -9,7 +9,8 @@ import org.junit.Test
 class HomeLayoutTest {
     @Test fun todoPreviewStepsDownWithAvailableHeight() {
         assertEquals(1, visibleTodoItemsForHeight(220f))
-        assertEquals(2, visibleTodoItemsForHeight(280f))
+        assertEquals(2, visibleTodoItemsForHeight(270f))
+        assertEquals(3, visibleTodoItemsForHeight(280f))
         assertEquals(3, visibleTodoItemsForHeight(350f))
         assertEquals(4, visibleTodoItemsForHeight(410f))
         assertEquals(5, visibleTodoItemsForHeight(480f))

@@ -149,7 +149,7 @@ internal fun ShortcutGrid(
     openDrawer: () -> Unit,
 ) {
     var editing by remember { mutableStateOf(false) }
-    val draftOrder = remember { mutableStateListOf<Shortcut>().apply { addAll(store.shortcutOrder) } }
+    val draftOrder = remember { mutableStateListOf<Shortcut>().apply { addAll(store.effectiveShortcutOrder) } }
     val gridState = rememberLazyGridState()
     val hapticFeedback = LocalHapticFeedback.current
     val reorderableState = rememberReorderableLazyGridState(gridState) { from, to ->
@@ -160,14 +160,15 @@ internal fun ShortcutGrid(
     }
 
     fun beginEditing() {
+        if (store.demoSearchDataEnabled) return
         draftOrder.clear()
-        draftOrder.addAll(store.shortcutOrder)
+        draftOrder.addAll(store.effectiveShortcutOrder)
         editing = true
     }
 
     fun cancelEditing() {
         draftOrder.clear()
-        draftOrder.addAll(store.shortcutOrder)
+        draftOrder.addAll(store.effectiveShortcutOrder)
         editing = false
     }
 
@@ -189,7 +190,7 @@ internal fun ShortcutGrid(
                 IconButton(onClick = ::finishEditing) { Icon(Icons.Default.Check, stringResource(R.string.save_shortcut_order), tint = contentColor) }
             }
         }
-        val visibleOrder: List<Shortcut> = if (editing) draftOrder else store.shortcutOrder
+        val visibleOrder: List<Shortcut> = if (editing) draftOrder else store.effectiveShortcutOrder
         BoxWithConstraints(Modifier.fillMaxWidth().weight(1f)) {
             val shortcutSize = shortcutCellSizeDp(maxWidth.value, maxHeight.value).dp
             val dragShadowElevation = Dimens.dp14

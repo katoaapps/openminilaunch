@@ -2,6 +2,8 @@ package com.katoaapps.openminilaunch
 
 import com.katoaapps.openminilaunch.features.demo.DemoSearchData
 import com.katoaapps.openminilaunch.features.demo.DemoHomeData
+import com.katoaapps.openminilaunch.features.demo.DemoHomeProfile
+import com.katoaapps.openminilaunch.model.Shortcut
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Test
@@ -15,6 +17,20 @@ class DemoSearchDataTest {
         assertEquals(todos.size, todos.map { it.id }.distinct().size)
         assertEquals(1, todos.count { it.completed })
         assertEquals("Call Kara after work", todos.single { it.completed }.text)
+    }
+
+    @Test
+    fun everyDemoHomeProfileProvidesACompleteRepeatableScene() {
+        DemoHomeProfile.entries.forEach { profile ->
+            val todos = DemoHomeData.todos(profile)
+            val shortcuts = DemoHomeData.shortcutOrder(profile)
+
+            assertEquals(5, todos.size)
+            assertEquals(todos.size, todos.map { it.id }.distinct().size)
+            assertEquals(1, todos.count { it.completed })
+            assertEquals(Shortcut.entries.toSet(), shortcuts.toSet())
+            assertEquals(Shortcut.entries.size, shortcuts.size)
+        }
     }
 
     @Test

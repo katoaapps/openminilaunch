@@ -29,6 +29,7 @@ import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.staticCompositionLocalOf
@@ -575,6 +576,7 @@ internal fun AboutSettingsPage(
     val enabledMessage = stringResource(R.string.demo_search_data_enabled)
     val disabledMessage = stringResource(R.string.demo_search_data_disabled)
     var versionTapCount by remember { mutableIntStateOf(0) }
+    var showDemoProfilePicker by remember { mutableStateOf(false) }
     SettingsPage(stringResource(R.string.about), goBack) {
         SettingsSwitchRow(
             title = stringResource(R.string.github_update_checks),
@@ -592,6 +594,25 @@ internal fun AboutSettingsPage(
             Icons.Default.School,
             onClick = onRepeatTutorial,
         )
+        if (store.demoSearchDataEnabled) {
+            SettingsRow(
+                stringResource(R.string.demo_home_profile),
+                stringResource(store.demoHomeProfile.labelRes),
+                Icons.Default.Palette,
+                onClick = { showDemoProfilePicker = true },
+            )
+            SettingsRow(
+                stringResource(R.string.demo_mode_disable),
+                stringResource(R.string.demo_mode_disable_description),
+                Icons.Default.VisibilityOff,
+                onClick = {
+                    store.toggleDemoSearchData()
+                    DemoSearchData.clearFiles(context.applicationContext)
+                    NotificationHub.clearDemoReplies()
+                    Toast.makeText(context, disabledMessage, Toast.LENGTH_SHORT).show()
+                },
+            )
+        }
         Row(
             Modifier.fillMaxWidth().clickable {
                 versionTapCount++
@@ -609,6 +630,13 @@ internal fun AboutSettingsPage(
             Text(stringResource(R.string.version), Modifier.weight(1f), fontWeight = FontWeight.Medium)
             Text(BuildConfig.VERSION_NAME, color = Muted)
         }
+    }
+    if (showDemoProfilePicker) {
+        DemoHomeProfilePicker(
+            selected = store.demoHomeProfile,
+            onSelect = store::selectDemoHomeProfile,
+            onDismiss = { showDemoProfilePicker = false },
+        )
     }
 }
 

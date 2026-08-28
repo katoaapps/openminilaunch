@@ -2,6 +2,7 @@ package com.katoaapps.openminilaunch.data
 
 import com.katoaapps.openminilaunch.R
 import com.katoaapps.openminilaunch.features.demo.DemoHomeData
+import com.katoaapps.openminilaunch.features.demo.DemoHomeProfile
 import com.katoaapps.openminilaunch.features.messaging.restoredAutomaticMessageSend
 import com.katoaapps.openminilaunch.model.*
 
@@ -23,11 +24,18 @@ internal fun unfinishedFirst(items: List<TodoItem>): List<TodoItem> {
 }
 
 class LauncherStore(context: Context) {
-    private val prefs = context.getSharedPreferences("mini_launch", Context.MODE_PRIVATE)
-    private val defaultDemoHomePanelColorArgb = ContextCompat.getColor(context, R.color.mink_forest)
-    private val defaultDemoAppBackgroundColorArgb = ContextCompat.getColor(context, R.color.demo_app_background)
-    private var demoHomePanelColorArgb by mutableIntStateOf(defaultDemoHomePanelColorArgb)
-    private var demoAppBackgroundColorArgb by mutableStateOf<Int?>(defaultDemoAppBackgroundColorArgb)
+    private val appContext = context.applicationContext
+    private val prefs = appContext.getSharedPreferences("mini_launch", Context.MODE_PRIVATE)
+    internal var demoHomeProfile by mutableStateOf(
+        DemoHomeProfile.fromStoredName(prefs.getString(DEMO_HOME_PROFILE_KEY, null))
+    )
+        private set
+    private var demoHomePanelColorArgb by mutableIntStateOf(
+        ContextCompat.getColor(appContext, demoHomeProfile.panelColorRes)
+    )
+    private var demoAppBackgroundColorArgb by mutableStateOf<Int?>(
+        ContextCompat.getColor(appContext, demoHomeProfile.backgroundColorRes)
+    )
     val todos = mutableStateListOf<TodoItem>()
     val shortcutPackages = mutableStateMapOf<Shortcut, String>()
     val shortcutOrder = mutableStateListOf<Shortcut>()
@@ -94,6 +102,8 @@ class LauncherStore(context: Context) {
         get() = if (demoSearchDataEnabled) demoHomePanelColorArgb else homePanelColorArgb
     val effectiveAppBackgroundColorArgb: Int?
         get() = if (demoSearchDataEnabled) demoAppBackgroundColorArgb else appBackgroundColorArgb
+    val effectiveShortcutOrder: List<Shortcut>
+        get() = if (demoSearchDataEnabled) DemoHomeData.shortcutOrder(demoHomeProfile) else shortcutOrder
 
     init {
         prefs.edit()
@@ -157,7 +167,7 @@ class LauncherStore(context: Context) {
             }
             socialPackages += prefs.getStringSet("social_packages", emptySet()).orEmpty().sorted()
         }
-        if (demoSearchDataEnabled) showDemoTodos()
+        if (demoSearchDataEnabled) applyDemoHomeProfile(demoHomeProfile)
     }
 
     private fun restoreSavedTodos() {
@@ -176,12 +186,13 @@ class LauncherStore(context: Context) {
 
     private fun showDemoTodos() {
         todos.clear()
-        todos.addAll(DemoHomeData.todos())
+        todos.addAll(DemoHomeData.todos(demoHomeProfile))
     }
 
-    private fun resetDemoAppearance() {
-        demoHomePanelColorArgb = defaultDemoHomePanelColorArgb
-        demoAppBackgroundColorArgb = defaultDemoAppBackgroundColorArgb
+    private fun applyDemoHomeProfile(profile: DemoHomeProfile) {
+        demoHomePanelColorArgb = ContextCompat.getColor(appContext, profile.panelColorRes)
+        demoAppBackgroundColorArgb = ContextCompat.getColor(appContext, profile.backgroundColorRes)
+        showDemoTodos()
     }
 
     fun addTodo(text: String) {
@@ -320,13 +331,19 @@ class LauncherStore(context: Context) {
     fun toggleDemoSearchData(): Boolean {
         demoSearchDataEnabled = !demoSearchDataEnabled
         if (demoSearchDataEnabled) {
-            resetDemoAppearance()
-            showDemoTodos()
+            applyDemoHomeProfile(demoHomeProfile)
         } else {
             restoreSavedTodos()
         }
         prefs.edit().putBoolean(DEMO_SEARCH_DATA_KEY, demoSearchDataEnabled).apply()
         return demoSearchDataEnabled
+    }
+
+    internal fun selectDemoHomeProfile(profile: DemoHomeProfile) {
+        if (!demoSearchDataEnabled || profile == demoHomeProfile) return
+        demoHomeProfile = profile
+        applyDemoHomeProfile(profile)
+        prefs.edit().putString(DEMO_HOME_PROFILE_KEY, profile.name).apply()
     }
 
     fun hasSeenUpdate(updateId: String): Boolean = updateId in (prefs.getStringSet("seen_updates", emptySet()) ?: emptySet())
@@ -539,6 +556,7 @@ class LauncherStore(context: Context) {
     private companion object {
         const val APP_BACKGROUND_COLOR_KEY = "app_background_color"
         const val CLOCK_DATE_OPENED_KEY = "clock_date_opened"
+        const val DEMO_HOME_PROFILE_KEY = "demo_home_profile"
         const val DEMO_SEARCH_DATA_KEY = "demo_search_data_enabled"
         const val GITHUB_UPDATE_CHECKS_ENABLED_KEY = "github_update_checks_enabled"
         const val LAST_GITHUB_RELEASE_CHECK_KEY = "last_github_release_check"

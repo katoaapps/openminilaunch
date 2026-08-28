@@ -458,6 +458,20 @@
     <string name="version">Version</string>
     <string name="demo_search_data_enabled">Demo home, contacts, files, and conversations enabled</string>
     <string name="demo_search_data_disabled">Demo home, contacts, files, and conversations disabled</string>
+    <string name="demo_home_profile">Demo Home profile</string>
+    <string name="demo_home_profile_picker_description">Choose a repeatable Home scene for screenshots and recordings.</string>
+    <string name="demo_mode_disable">Turn off demo mode</string>
+    <string name="demo_mode_disable_description">Restore your real Home colors, shortcuts, todos, contacts, files, and conversations.</string>
+    <string name="demo_profile_classic">Mink Classic</string>
+    <string name="demo_profile_classic_description">Warm white background, forest panel, and launch-day tasks</string>
+    <string name="demo_profile_work">Work Mode</string>
+    <string name="demo_profile_work_description">Paper background, navy panel, and project tasks</string>
+    <string name="demo_profile_night">Night Mode</string>
+    <string name="demo_profile_night_description">Black background, plum panel, and evening tasks</string>
+    <string name="demo_profile_personal">Personal</string>
+    <string name="demo_profile_personal_description">Cream background, brown panel, and plans after work</string>
+    <string name="demo_profile_fresh">Fresh Build</string>
+    <string name="demo_profile_fresh_description">Sage background, charcoal panel, and release tasks</string>
 
     <!-- Settings dialogs and pickers -->
     <string name="light_mode">Light Mode</string>

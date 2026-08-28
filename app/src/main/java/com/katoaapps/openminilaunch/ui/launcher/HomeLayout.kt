@@ -2,7 +2,7 @@ package com.katoaapps.openminilaunch.ui.launcher
 
 internal fun visibleTodoItemsForHeight(availableHeightDp: Float): Int = when {
     availableHeightDp < 240f -> 1
-    availableHeightDp < 310f -> 2
+    availableHeightDp < 280f -> 2
     availableHeightDp < 380f -> 3
     availableHeightDp < 450f -> 4
     else -> 5
