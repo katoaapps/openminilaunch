@@ -27,6 +27,7 @@ internal val MagicTodoColor: Color @Composable get() = colorResource(R.color.mag
 internal val MagicNoteColor: Color @Composable get() = colorResource(R.color.magic_note)
 internal val MagicEventColor: Color @Composable get() = colorResource(R.color.magic_event)
 internal val MagicAppColor: Color @Composable get() = colorResource(R.color.magic_app)
+internal val AppBlockedRed: Color @Composable get() = colorResource(R.color.app_blocked_red)
 internal val MinkWhite: Color @Composable get() = colorResource(R.color.mink_white)
 internal val MinkBlack: Color @Composable get() = colorResource(R.color.mink_black)
 internal val MinkTransparent: Color @Composable get() = colorResource(R.color.transparent)

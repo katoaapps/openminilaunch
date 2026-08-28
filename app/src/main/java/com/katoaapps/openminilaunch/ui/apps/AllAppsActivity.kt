@@ -9,6 +9,8 @@ import com.katoaapps.openminilaunch.platform.*
 import com.katoaapps.openminilaunch.features.apps.*
 import com.katoaapps.openminilaunch.ui.components.*
 import com.katoaapps.openminilaunch.ui.theme.*
+import com.katoaapps.openminilaunch.features.wellbeing.*
+import com.katoaapps.openminilaunch.ui.wellbeing.rememberMinkAppAccessState
 
 import android.app.Activity
 import android.os.Build
@@ -143,7 +145,15 @@ internal fun AllAppsScreen(
     val appsState by produceState<List<LaunchableApp>?>(initialValue = null, actions) {
         value = withContext(Dispatchers.IO) { actions.installedApps() }
     }
-    val apps = appsState.orEmpty()
+    val appAccessState by rememberMinkAppAccessState(store)
+    val installedApps = appsState.orEmpty()
+    val apps = remember(installedApps, appAccessState) {
+        if (appAccessState.isResolved) {
+            installedApps.filterNot { appAccessState.isPaused(it.packageName) }
+        } else {
+            emptyList()
+        }
+    }
     val pagerState = rememberPagerState(pageCount = { apps.size })
     val scope = rememberCoroutineScope()
 
@@ -210,7 +220,7 @@ internal fun AllAppsScreen(
             }
 
             when {
-                appsState == null -> Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                appsState == null || !appAccessState.isResolved -> Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                     CircularProgressIndicator(color = Color.White)
                 }
                 apps.isEmpty() -> Column(

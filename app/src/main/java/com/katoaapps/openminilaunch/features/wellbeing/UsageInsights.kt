@@ -318,8 +318,13 @@ internal class UsageInsightsRepository(private val context: Context) {
     ): Pair<String, String> = when (state) {
         MinkState.SLEEPING -> context.getString(R.string.mink_made_it_home) to context.getString(R.string.mink_sleeping_detail)
         MinkState.PHONE -> context.getString(R.string.mink_stopped_to_scroll) to if (topSocial != null) {
-            context.getString(R.string.mink_top_app_goal_detail, topSocial.label, formatDuration(context, socialMillis), socialGoalMinutes)
-        } else context.getString(R.string.mink_goal_passed_detail, socialGoalMinutes)
+            context.getString(
+                R.string.mink_top_app_goal_detail,
+                topSocial.label,
+                formatDuration(context, socialMillis),
+                formatDuration(context, socialGoalMinutes * 60_000L),
+            )
+        } else context.getString(R.string.mink_goal_passed_detail, formatDuration(context, socialGoalMinutes * 60_000L))
         MinkState.DISTRACTED -> context.getString(R.string.mink_checking_headline) to
             context.resources.getQuantityString(
                 R.plurals.mink_opens_detail,

@@ -177,6 +177,13 @@ class DeviceActions(private val context: Context) {
         }
     }
 
+    fun shortcutTargetPackage(shortcut: Shortcut, assignedPackage: String?): String? {
+        if (!assignedPackage.isNullOrBlank() && shortcut !in listOf(Shortcut.TODO, Shortcut.DRAWER)) {
+            return assignedPackage
+        }
+        return if (shortcut == Shortcut.MESSAGE) Telephony.Sms.getDefaultSmsPackage(context) else null
+    }
+
     fun searchContacts(query: String, useDemoData: Boolean = false): List<ContactResult> {
         if (useDemoData) return DemoSearchData.searchContacts(query)
         if (query.isBlank()) return emptyList()

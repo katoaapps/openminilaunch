@@ -20,6 +20,7 @@
     <color name="magic_note">#7C3AED</color>
     <color name="magic_event">#8B5A2B</color>
     <color name="magic_app">#C62828</color>
+    <color name="app_blocked_red">#FF0000</color>
     <color name="home_panel_mink">#602C00</color>
     <color name="home_panel_navy">#183A5A</color>
     <color name="home_panel_plum">#512B58</color>

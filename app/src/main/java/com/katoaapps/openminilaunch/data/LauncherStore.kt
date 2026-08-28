@@ -85,7 +85,18 @@ class LauncherStore(context: Context) {
     var preferredWebPackage by mutableStateOf(prefs.getString("preferred_web_package", null))
         private set
     var socialGoalMinutes by mutableStateOf(
-        prefs.getInt("social_goal_minutes", 60).takeIf { it in SOCIAL_GOAL_OPTIONS } ?: 60
+        normalizedSocialGoalMinutes(prefs.getInt("social_goal_minutes", 60))
+    )
+        private set
+    val socialGoalHours: Int
+        get() = socialGoalMinutes / 60
+    var minkAppPauseMode by mutableStateOf(
+        runCatching {
+            MinkAppPauseMode.valueOf(
+                prefs.getString(MINK_APP_PAUSE_MODE_KEY, MinkAppPauseMode.NEVER.name)
+                    ?: MinkAppPauseMode.NEVER.name,
+            )
+        }.getOrDefault(MinkAppPauseMode.NEVER)
     )
         private set
     var demoSearchDataEnabled by mutableStateOf(prefs.getBoolean(DEMO_SEARCH_DATA_KEY, false))
@@ -113,6 +124,7 @@ class LauncherStore(context: Context) {
             .remove("weather_summary")
             .remove("weather_fetched_at")
             .putBoolean(SEND_MESSAGES_AUTOMATICALLY_KEY, sendMessagesAutomatically)
+            .putInt("social_goal_minutes", socialGoalMinutes)
             .remove(LEGACY_MESSAGE_SEND_MODE_KEY)
             .apply()
         load()
@@ -382,10 +394,15 @@ class LauncherStore(context: Context) {
         }.apply()
     }
 
-    fun updateSocialGoalMinutes(minutes: Int) {
-        if (minutes !in SOCIAL_GOAL_OPTIONS) return
-        socialGoalMinutes = minutes
-        prefs.edit().putInt("social_goal_minutes", minutes).apply()
+    fun updateSocialGoalHours(hours: Int) {
+        if (hours !in MIN_SOCIAL_GOAL_HOURS..MAX_SOCIAL_GOAL_HOURS) return
+        socialGoalMinutes = hours * 60
+        prefs.edit().putInt("social_goal_minutes", socialGoalMinutes).apply()
+    }
+
+    fun updateMinkAppPauseMode(mode: MinkAppPauseMode) {
+        minkAppPauseMode = mode
+        prefs.edit().putString(MINK_APP_PAUSE_MODE_KEY, mode.name).apply()
     }
 
     fun reconcileSocialApps(installedPackages: Set<String>) {
@@ -561,6 +578,7 @@ class LauncherStore(context: Context) {
         const val GITHUB_UPDATE_CHECKS_ENABLED_KEY = "github_update_checks_enabled"
         const val LAST_GITHUB_RELEASE_CHECK_KEY = "last_github_release_check"
         const val LATEST_GITHUB_RELEASE_TAG_KEY = "latest_github_release_tag"
+        const val MINK_APP_PAUSE_MODE_KEY = "mink_app_pause_mode"
         const val ONBOARDING_COMPLETE_KEY = "onboarding_complete_v2"
         const val OPEN_SOFTWARE_KEYBOARD_ON_HOME_KEY = "open_software_keyboard_on_home"
         const val PREFERRED_MESSAGING_PACKAGE_KEY = "preferred_messaging_package"
@@ -569,5 +587,12 @@ class LauncherStore(context: Context) {
         const val GITHUB_UPDATE_CHECK_INTERVAL_MILLIS = 12 * 60 * 60 * 1_000L
         const val MAX_SEARCH_HISTORY = 5
         const val MAX_WIDGETS = 4
+
     }
+}
+
+internal fun normalizedSocialGoalMinutes(savedMinutes: Int): Int {
+    val roundedHours = ((savedMinutes.coerceAtLeast(0) + 30) / 60)
+        .coerceIn(MIN_SOCIAL_GOAL_HOURS, MAX_SOCIAL_GOAL_HOURS)
+    return roundedHours * 60
 }

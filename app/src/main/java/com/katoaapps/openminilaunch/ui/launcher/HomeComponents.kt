@@ -12,6 +12,7 @@ import com.katoaapps.openminilaunch.features.todos.*
 import com.katoaapps.openminilaunch.features.wellbeing.*
 import com.katoaapps.openminilaunch.ui.components.*
 import com.katoaapps.openminilaunch.ui.theme.*
+import com.katoaapps.openminilaunch.ui.wellbeing.MinkPausedBadge
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.background
@@ -141,6 +142,8 @@ internal fun TodoPager(
 internal fun ShortcutGrid(
     store: LauncherStore,
     actions: DeviceActions,
+    appAccessState: MinkAppAccessState,
+    onPausedApp: (String) -> Unit,
     openTodos: () -> Unit,
     compact: Boolean = false,
     contentColor: Color = MaterialTheme.colorScheme.onSurface,
@@ -207,6 +210,8 @@ internal fun ShortcutGrid(
                     ReorderableItem(reorderableState, key = shortcut.name) { isDragging ->
                     val assignedPackage = store.shortcutPackages[shortcut]
                     val hasAssignedApp = shortcut in configurableShortcuts && assignedPackage != null
+                    val shortcutTargetPackage = actions.shortcutTargetPackage(shortcut, assignedPackage)
+                    val appPaused = shortcutTargetPackage?.let(appAccessState::isPaused) == true
                     val shortcutIndex = Shortcut.entries.indexOf(shortcut)
                     val jiggleAngle = if (editing) {
                         val jiggle = rememberInfiniteTransition(label = "${shortcut.name} jiggle")
@@ -236,7 +241,11 @@ internal fun ShortcutGrid(
                     } else {
                         Modifier.combinedClickable(
                             onClick = {
-                                actions.launchShortcut(shortcut, store.shortcutPackages[shortcut], openTodos, openDrawer)
+                                if (appPaused) {
+                                    onPausedApp(checkNotNull(shortcutTargetPackage))
+                                } else {
+                                    actions.launchShortcut(shortcut, assignedPackage, openTodos, openDrawer)
+                                }
                             },
                             onLongClick = ::beginEditing,
                         )
@@ -275,6 +284,9 @@ internal fun ShortcutGrid(
                                         themedTint = contentColor,
                                         contentDescription = actions.appLabel(assignedPackage),
                                     )
+                                    if (appPaused) {
+                                        MinkPausedBadge(Modifier.align(Alignment.Center))
+                                    }
                                 } else {
                                     Icon(
                                         shortcut.defaultIcon(),

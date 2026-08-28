@@ -18,6 +18,7 @@ import com.katoaapps.openminilaunch.ui.theme.*
 import com.katoaapps.openminilaunch.ui.magic.MagicBox
 import com.katoaapps.openminilaunch.ui.settings.LockAccessibilityDisclosureDialog
 import com.katoaapps.openminilaunch.ui.settings.SettingsDestination
+import com.katoaapps.openminilaunch.ui.wellbeing.*
 import com.katoaapps.openminilaunch.ui.wellbeing.MinkHomeIcon
 
 import android.widget.Toast
@@ -89,6 +90,8 @@ internal fun HomeScreen(
     var magicExpanded by remember { mutableStateOf(false) }
     var showLockDisclosure by remember { mutableStateOf(false) }
     var showUpdateConfirmation by remember { mutableStateOf(false) }
+    var pausedAppPackage by remember { mutableStateOf<String?>(null) }
+    val appAccessState by rememberMinkAppAccessState(store, minkStatusActive)
     val releaseChecker = remember { GitHubReleaseChecker() }
     val updateAvailable = store.githubUpdateChecksEnabled &&
         store.latestGitHubReleaseTag?.let { isNewerRelease(BuildConfig.VERSION_NAME, it) } == true
@@ -264,6 +267,8 @@ internal fun HomeScreen(
                         ShortcutGrid(
                             store = store,
                             actions = actions,
+                            appAccessState = appAccessState,
+                            onPausedApp = { pausedAppPackage = it },
                             openTodos = openTodos,
                             compact = qwertyHome,
                             contentColor = homePanelContentColor,
@@ -317,6 +322,7 @@ internal fun HomeScreen(
                 todoJumpToken++
             },
             onExpandedChange = { magicExpanded = it; onMagicExpandedChange(it) },
+            appAccessState = appAccessState,
         )
     }
 
@@ -377,19 +383,37 @@ internal fun HomeScreen(
                         Text(stringResource(R.string.choose_apps), Modifier.padding(start = Dimens.dp8))
                     }
                 }
+            } else if (!appAccessState.isResolved) {
+                Box(
+                    Modifier.fillMaxWidth().height(Dimens.dp84),
+                    contentAlignment = Alignment.Center,
+                ) {
+                    CircularProgressIndicator()
+                }
             } else {
-                val drawerRows = ceil(store.drawerPackages.size / 2f).toInt()
+                val visibleDrawerPackages = store.drawerPackages.filterNot(appAccessState::isPaused)
+                if (visibleDrawerPackages.isEmpty()) {
+                    Text(
+                        stringResource(R.string.drawer_apps_paused),
+                        Modifier.fillMaxWidth().padding(horizontal = Dimens.dp28, vertical = Dimens.dp24),
+                        color = Muted,
+                    )
+                }
+                val drawerRows = ceil(visibleDrawerPackages.size / 2f).toInt()
                 LazyVerticalGrid(
                     columns = GridCells.Fixed(2),
                     modifier = Modifier.fillMaxWidth().height(Dimens.dp72 * drawerRows),
                     contentPadding = PaddingValues(horizontal = Dimens.dp12, vertical = Dimens.dp8),
                 ) {
-                    items(store.drawerPackages, key = { it }) { packageName ->
+                    items(visibleDrawerPackages, key = { it }) { packageName ->
                         ListItem(
                             headlineContent = { Text(actions.appLabel(packageName), maxLines = 1, overflow = TextOverflow.Ellipsis) },
                             leadingContent = { AppIcon(packageName, actions, Dimens.dp36) },
                             modifier = Modifier.clip(RoundedCornerShape(Dimens.dp16))
-                                .clickable { actions.launchPackage(packageName); drawerOpen = false },
+                                .clickable {
+                                    actions.launchPackage(packageName)
+                                    drawerOpen = false
+                                },
                             colors = ListItemDefaults.colors(containerColor = MaterialTheme.colorScheme.background),
                         )
                     }
@@ -415,6 +439,10 @@ internal fun HomeScreen(
             }
             Spacer(Modifier.height(Dimens.dp28))
         }
+    }
+
+    pausedAppPackage?.let { packageName ->
+        MinkPausedAppDialog(actions.appLabel(packageName)) { pausedAppPackage = null }
     }
 }
 

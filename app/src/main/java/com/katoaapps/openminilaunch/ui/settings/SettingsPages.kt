@@ -12,6 +12,8 @@ import com.katoaapps.openminilaunch.ui.components.*
 import com.katoaapps.openminilaunch.ui.launcher.ShortcutAssignmentRow
 import com.katoaapps.openminilaunch.ui.launcher.displayLabel
 import com.katoaapps.openminilaunch.ui.theme.*
+import com.katoaapps.openminilaunch.ui.wellbeing.MinkDailyLimitControl
+import com.katoaapps.openminilaunch.ui.wellbeing.MinkPauseModeControl
 import com.katoaapps.openminilaunch.R
 
 import androidx.compose.foundation.background
@@ -181,7 +183,11 @@ internal fun SettingsOverviewPage(
         SettingsCategoryRow(
             title = stringResource(R.string.mink_day),
             subtitle = stringResource(R.string.settings_mink_day_summary),
-            status = socialGoalLabel(store.socialGoalMinutes),
+            status = stringResource(
+                R.string.two_part_label,
+                socialGoalLabel(store.socialGoalMinutes),
+                stringResource(store.minkAppPauseMode.labelRes),
+            ),
             icon = Icons.Default.Pets,
         ) { onNavigate(SettingsDestination.MINK_DAY) }
         SettingsCategoryRow(
@@ -456,18 +462,10 @@ internal fun MinkDaySettingsPage(
             onClick = onOpenPermissions,
         )
         SectionLabel(stringResource(R.string.daily_social_goal))
-        Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(Dimens.dp7)) {
-            SOCIAL_GOAL_OPTIONS.forEach { minutes ->
-                FilterChip(
-                    selected = store.socialGoalMinutes == minutes,
-                    onClick = { store.updateSocialGoalMinutes(minutes) },
-                    label = { Text(socialGoalLabel(minutes)) },
-                    modifier = Modifier.weight(1f),
-                )
-            }
-        }
+        MinkDailyLimitControl(store)
+        MinkPauseModeControl(store)
         SettingsRow(
-            stringResource(R.string.apps_you_want_to_limit),
+            stringResource(R.string.apps_for_mink_day),
             if (store.usesAutomaticSocialApps) stringResource(R.string.automatic_android_categories)
             else stringResource(R.string.selected_count, store.socialPackages.size),
             Icons.Default.Apps,

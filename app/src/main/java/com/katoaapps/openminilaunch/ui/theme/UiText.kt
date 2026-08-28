@@ -8,6 +8,7 @@ import androidx.compose.ui.res.stringResource
 
 @Composable
 internal fun socialGoalLabel(minutes: Int): String = when {
+    minutes == 0 -> stringResource(R.string.hours_short, 0)
     minutes < 60 -> stringResource(R.string.minutes_short, minutes)
     minutes % 60 == 0 -> stringResource(R.string.hours_short, minutes / 60)
     else -> stringResource(R.string.minutes_short, minutes)

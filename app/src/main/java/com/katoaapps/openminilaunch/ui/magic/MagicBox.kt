@@ -12,6 +12,7 @@ import com.katoaapps.openminilaunch.features.files.*
 import com.katoaapps.openminilaunch.features.magic.*
 import com.katoaapps.openminilaunch.features.messaging.*
 import com.katoaapps.openminilaunch.features.todos.*
+import com.katoaapps.openminilaunch.features.wellbeing.MinkAppAccessState
 import com.katoaapps.openminilaunch.ui.components.*
 import com.katoaapps.openminilaunch.ui.theme.*
 import com.katoaapps.openminilaunch.ui.launcher.hasMediaReadAccess
@@ -24,6 +25,7 @@ import com.katoaapps.openminilaunch.ui.onboarding.FileSearchScopeDialog
 import com.katoaapps.openminilaunch.ui.settings.AppPickerDialog
 import com.katoaapps.openminilaunch.ui.settings.AssistantDisclosureDialog
 import com.katoaapps.openminilaunch.ui.settings.MessagingProviderPickerDialog
+import com.katoaapps.openminilaunch.ui.wellbeing.rememberMinkAppAccessState
 
 import android.Manifest
 import android.content.Intent
@@ -152,6 +154,7 @@ internal fun MagicBox(
     onTodoAdded: (String) -> Unit = {},
     onExpandedChange: (Boolean) -> Unit = {},
     onSessionComplete: () -> Unit = {},
+    appAccessState: MinkAppAccessState? = null,
 ) {
     val magicBoxMinimumHeight = Dimens.dp64
     val context = LocalContext.current
@@ -166,6 +169,8 @@ internal fun MagicBox(
         configuration.hardKeyboardHidden,
     )
     val fileSearchRepository = remember { FileSearchRepository(context.applicationContext) }
+    val localAppAccessState = if (appAccessState == null) rememberMinkAppAccessState(store) else null
+    val effectiveAppAccessState = appAccessState ?: checkNotNull(localAppAccessState).value
     var text by remember { mutableStateOf(TextFieldValue()) }
     var selectedContact by remember { mutableStateOf<ContactResult?>(null) }
     var lockedPrefix by remember { mutableStateOf<Char?>(null) }
@@ -396,6 +401,13 @@ internal fun MagicBox(
         if (prefix == '?' && searchTerm.isNotBlank()) {
             actions.installedApps().filter { it.label.startsWith(searchTerm, true) }.take(5)
         } else emptyList()
+    }
+    val visibleAppResults = remember(appResults, effectiveAppAccessState) {
+        if (effectiveAppAccessState.isResolved) {
+            appResults.filterNot { effectiveAppAccessState.isPaused(it.packageName) }
+        } else {
+            emptyList()
+        }
     }
     val plainQuery = parsedInput.plainQuery
     val noteMode = expanded && prefix == MAGIC_NOTE_PREFIX
@@ -734,7 +746,7 @@ internal fun MagicBox(
                                 }
                             }
                         }
-                        appResults.forEach { app ->
+                        visibleAppResults.forEach { app ->
                             SuggestionRow(
                                 text = app.label,
                                 leadingContent = { AppIcon(app.packageName, actions, Dimens.dp26) },
