@@ -191,7 +191,10 @@ internal fun SettingsScreen(
     }
     val notificationAccessSettings = rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) {
         notificationAccessGranted = NotificationHub.hasAccess(context)
-        if (notificationAccessGranted) NotificationHub.requestReconnect(context)
+        if (notificationAccessGranted) {
+            showNotificationDisclosure = false
+            NotificationHub.requestReconnect(context)
+        }
     }
     val usageAccessSettings = rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) {
         usageAccessGranted = usageInsights.hasAccess()
@@ -400,7 +403,6 @@ internal fun SettingsScreen(
         NotificationAccessDisclosureDialog(
             onOpenAppInfo = actions::openAppSettings,
             onOpenNotificationAccess = {
-                showNotificationDisclosure = false
                 notificationAccessSettings.launch(NotificationHub.accessSettingsIntent())
             },
             onDismiss = { showNotificationDisclosure = false },

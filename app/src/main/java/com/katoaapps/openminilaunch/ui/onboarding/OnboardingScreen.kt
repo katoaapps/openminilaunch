@@ -396,6 +396,13 @@ internal fun OnboardingScreen(store: LauncherStore, actions: DeviceActions, onFi
                             OnboardingPoint(Icons.Default.PhotoLibrary, stringResource(R.string.media), stringResource(R.string.media_onboarding_description))
                             OnboardingPoint(Icons.Default.SystemUpdateAlt, stringResource(R.string.github_update_checks), stringResource(R.string.github_updates_onboarding_description, appName))
                             OnboardingPoint(Icons.Default.Forum, stringResource(R.string.conversation_access), stringResource(R.string.conversation_access_onboarding_description))
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
+                                OnboardingPoint(
+                                    Icons.Default.AdminPanelSettings,
+                                    stringResource(R.string.restricted_settings_onboarding_title),
+                                    stringResource(R.string.restricted_settings_onboarding_description),
+                                )
+                            }
                             OnboardingPoint(Icons.Default.Pets, stringResource(R.string.mink_day_usage), stringResource(R.string.mink_day_usage_onboarding_description))
                             Text(stringResource(R.string.document_folder_scope_description, appName), color = Muted, fontSize = Dimens.sp13)
                             Text(stringResource(R.string.permission_sequence_description), color = Muted)

@@ -217,8 +217,11 @@ private fun MiniLaunchApp(
         else showNotificationAccessPrompt = true
     }
     val onboardingNotificationAccess = rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) {
-        if (NotificationHub.hasAccess(context)) NotificationHub.requestReconnect(context)
-        finishSpecialAccessSetup()
+        if (NotificationHub.hasAccess(context)) {
+            showNotificationAccessPrompt = false
+            NotificationHub.requestReconnect(context)
+            finishSpecialAccessSetup()
+        }
     }
     val onboardingUsageAccess = rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) {
         finishOnboardingSetup()
@@ -361,7 +364,6 @@ private fun MiniLaunchApp(
             NotificationAccessDisclosureDialog(
                 onOpenAppInfo = actions::openAppSettings,
                 onOpenNotificationAccess = {
-                    showNotificationAccessPrompt = false
                     onboardingNotificationAccess.launch(NotificationHub.accessSettingsIntent())
                 },
                 onDismiss = {

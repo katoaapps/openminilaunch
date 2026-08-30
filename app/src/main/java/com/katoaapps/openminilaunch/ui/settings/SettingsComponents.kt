@@ -405,6 +405,20 @@ internal fun NotificationAccessDisclosureDialog(
                                 fontSize = Dimens.sp12,
                             )
                         }
+                        ConversationAccessStep(
+                            number = "1",
+                            title = stringResource(R.string.restricted_settings_step_one_title),
+                            body = stringResource(R.string.restricted_settings_step_one_body),
+                        )
+                        OutlinedButton(onClick = onOpenNotificationAccess, modifier = Modifier.fillMaxWidth()) {
+                            Icon(Icons.AutoMirrored.Filled.OpenInNew, null)
+                            Text(stringResource(R.string.try_notification_access), Modifier.padding(start = Dimens.dp8))
+                        }
+                        ConversationAccessStep(
+                            number = "2",
+                            title = stringResource(R.string.restricted_settings_step_two_title),
+                            body = stringResource(R.string.restricted_settings_step_two_body),
+                        )
                         Image(
                             painter = painterResource(R.drawable.restricted_settings_openmink_example),
                             contentDescription = stringResource(R.string.restricted_settings_example_description),
@@ -417,19 +431,14 @@ internal fun NotificationAccessDisclosureDialog(
                             color = Muted,
                             fontSize = Dimens.sp11,
                         )
-                        ConversationAccessStep(
-                            number = "1",
-                            title = stringResource(R.string.restricted_settings_step_one_title),
-                            body = stringResource(R.string.restricted_settings_step_one_body),
-                        )
                         OutlinedButton(onClick = onOpenAppInfo, modifier = Modifier.fillMaxWidth()) {
                             Icon(Icons.AutoMirrored.Filled.OpenInNew, null)
                             Text(stringResource(R.string.open_app_info), Modifier.padding(start = Dimens.dp8))
                         }
                         ConversationAccessStep(
-                            number = "2",
-                            title = stringResource(R.string.restricted_settings_step_two_title),
-                            body = stringResource(R.string.restricted_settings_step_two_body),
+                            number = "3",
+                            title = stringResource(R.string.restricted_settings_step_three_title),
+                            body = stringResource(R.string.restricted_settings_step_three_body),
                         )
                     }
                     Text(stringResource(R.string.conversations_disclosure_two, appName), color = Muted, fontSize = Dimens.sp12)
@@ -442,7 +451,12 @@ internal fun NotificationAccessDisclosureDialog(
                 ) {
                     TextButton(onClick = onDismiss) { Text(stringResource(R.string.not_now)) }
                     Button(onClick = onOpenNotificationAccess) {
-                        Text(stringResource(R.string.open_notification_access))
+                        Text(
+                            stringResource(
+                                if (showRestrictedSettingsStep) R.string.open_notification_access_again
+                                else R.string.open_notification_access,
+                            ),
+                        )
                     }
                 }
             }
