@@ -18,6 +18,7 @@ import com.katoaapps.openminilaunch.ui.theme.*
 import com.katoaapps.openminilaunch.ui.magic.MagicBox
 import com.katoaapps.openminilaunch.ui.settings.LockAccessibilityDisclosureDialog
 import com.katoaapps.openminilaunch.ui.settings.SettingsDestination
+import com.katoaapps.openminilaunch.ui.updates.GitHubUpdateDialog
 import com.katoaapps.openminilaunch.ui.wellbeing.*
 import com.katoaapps.openminilaunch.ui.wellbeing.MinkHomeIcon
 
@@ -131,6 +132,16 @@ internal fun HomeScreen(
             store.markGitHubReleaseCheckStarted()
             withContext(Dispatchers.IO) { releaseChecker.latestReleaseTag() }
                 ?.let(store::cacheLatestGitHubReleaseTag)
+        }
+    }
+
+    LaunchedEffect(updateAvailable, store.latestGitHubReleaseTag, homeRequestToken) {
+        val releaseTag = store.latestGitHubReleaseTag
+        if (
+            updateAvailable && releaseTag != null &&
+            store.shouldShowGitHubUpdateReminder(releaseTag)
+        ) {
+            showUpdateConfirmation = true
         }
     }
 
@@ -340,14 +351,20 @@ internal fun HomeScreen(
 
     if (showUpdateConfirmation) {
         GitHubUpdateDialog(
-            version = store.latestGitHubReleaseTag.orEmpty().removePrefix("v"),
+            currentVersion = BuildConfig.VERSION_NAME,
+            availableVersion = store.latestGitHubReleaseTag.orEmpty().removePrefix("v"),
             onOpenBrowser = {
-                showUpdateConfirmation = false
-                if (!actions.openLatestGitHubReleaseDownload()) {
+                if (actions.openLatestGitHubReleaseDownload()) {
+                    store.latestGitHubReleaseTag?.let(store::snoozeGitHubUpdateReminder)
+                    showUpdateConfirmation = false
+                } else {
                     Toast.makeText(context, R.string.no_browser_available, Toast.LENGTH_SHORT).show()
                 }
             },
-            onDismiss = { showUpdateConfirmation = false },
+            onDismiss = {
+                store.latestGitHubReleaseTag?.let(store::snoozeGitHubUpdateReminder)
+                showUpdateConfirmation = false
+            },
         )
     }
 
@@ -446,26 +463,4 @@ internal fun HomeScreen(
     pausedAppPackage?.let { packageName ->
         MinkPausedAppDialog(actions.appLabel(packageName)) { pausedAppPackage = null }
     }
-}
-
-@Composable
-private fun GitHubUpdateDialog(
-    version: String,
-    onOpenBrowser: () -> Unit,
-    onDismiss: () -> Unit,
-) {
-    AlertDialog(
-        modifier = Modifier.minkDialogWidth(),
-        onDismissRequest = onDismiss,
-        properties = MinkDialogDefaults.properties,
-        icon = { Icon(Icons.Default.SystemUpdateAlt, null) },
-        title = { Text(stringResource(R.string.github_update_title, version)) },
-        text = { Text(stringResource(R.string.github_update_description)) },
-        confirmButton = {
-            Button(onClick = onOpenBrowser) { Text(stringResource(R.string.open_download)) }
-        },
-        dismissButton = {
-            TextButton(onClick = onDismiss) { Text(stringResource(R.string.not_now)) }
-        },
-    )
 }

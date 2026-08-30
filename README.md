@@ -69,7 +69,7 @@ the existing app first and clears MinkLauncher OpenSource's local data.
 - Six generic app slots that accept any installed app and replace the default Home icon; Android monochrome icons follow the Home panel theme when available
 - One-tap reset restores each slot's original built-in action and icon
 - A compact drawer containing up to eight selected apps, with a **See all** handoff to a full installed-app browser
-- A passive update indicator checks GitHub release metadata at most twice a day and appears in the Home header only when a newer release exists. GitHub receives ordinary connection metadata but no launcher content. The check can be disabled in **Settings → About**; MinkLauncher OpenSource never downloads or installs an APK itself.
+- An update check reads GitHub release metadata at most twice a day. When a newer release exists, a focused update card shows the installed and available versions, while a persistent Home header icon lets the user reopen it. **Remind me later** snoozes the automatic card for 24 hours. GitHub receives ordinary connection metadata but no launcher content. The check can be disabled in **Settings → About**; MinkLauncher OpenSource never downloads or installs an APK itself.
 - The all-apps browser uses a three-app, one-at-a-time carousel and a draggable A–Z arc with M at its center; the focused app supplies the screen's gradient color
 - Real installed-app icons and an alphabetical jump rail in both app pickers
 - A searchable Magic Box:

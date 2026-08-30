@@ -344,6 +344,25 @@ class LauncherStore(context: Context) {
         prefs.edit().putString(LATEST_GITHUB_RELEASE_TAG_KEY, tag).apply()
     }
 
+    fun shouldShowGitHubUpdateReminder(
+        releaseTag: String,
+        nowMillis: Long = System.currentTimeMillis(),
+    ): Boolean {
+        val snoozedTag = prefs.getString(GITHUB_UPDATE_REMINDER_TAG_KEY, null)
+        val snoozedUntil = prefs.getLong(GITHUB_UPDATE_REMINDER_UNTIL_KEY, 0L)
+        return snoozedTag != releaseTag || nowMillis >= snoozedUntil
+    }
+
+    fun snoozeGitHubUpdateReminder(
+        releaseTag: String,
+        nowMillis: Long = System.currentTimeMillis(),
+    ) {
+        prefs.edit()
+            .putString(GITHUB_UPDATE_REMINDER_TAG_KEY, releaseTag)
+            .putLong(GITHUB_UPDATE_REMINDER_UNTIL_KEY, nowMillis + GITHUB_UPDATE_REMINDER_DELAY_MILLIS)
+            .apply()
+    }
+
     fun toggleDemoSearchData(): Boolean {
         demoSearchDataEnabled = !demoSearchDataEnabled
         if (demoSearchDataEnabled) {
@@ -591,6 +610,8 @@ class LauncherStore(context: Context) {
         const val DEMO_HOME_PROFILE_KEY = "demo_home_profile"
         const val DEMO_SEARCH_DATA_KEY = "demo_search_data_enabled"
         const val GITHUB_UPDATE_CHECKS_ENABLED_KEY = "github_update_checks_enabled"
+        const val GITHUB_UPDATE_REMINDER_TAG_KEY = "github_update_reminder_tag"
+        const val GITHUB_UPDATE_REMINDER_UNTIL_KEY = "github_update_reminder_until"
         const val HIDE_STATUS_BAR_KEY = "hide_status_bar"
         const val LAST_GITHUB_RELEASE_CHECK_KEY = "last_github_release_check"
         const val LATEST_GITHUB_RELEASE_TAG_KEY = "latest_github_release_tag"
@@ -601,6 +622,7 @@ class LauncherStore(context: Context) {
         const val SEND_MESSAGES_AUTOMATICALLY_KEY = "send_messages_automatically"
         const val LEGACY_MESSAGE_SEND_MODE_KEY = "message_send_mode"
         const val GITHUB_UPDATE_CHECK_INTERVAL_MILLIS = 12 * 60 * 60 * 1_000L
+        const val GITHUB_UPDATE_REMINDER_DELAY_MILLIS = 24 * 60 * 60 * 1_000L
         const val MAX_SEARCH_HISTORY = 5
         const val MAX_WIDGETS = 4
 

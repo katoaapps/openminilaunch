@@ -12,6 +12,8 @@ import com.katoaapps.openminilaunch.ui.components.*
 import com.katoaapps.openminilaunch.ui.launcher.ShortcutAssignmentRow
 import com.katoaapps.openminilaunch.ui.launcher.displayLabel
 import com.katoaapps.openminilaunch.ui.theme.*
+import com.katoaapps.openminilaunch.ui.updates.GitHubUpdateDialog
+import com.katoaapps.openminilaunch.ui.updates.previewUpdateVersion
 import com.katoaapps.openminilaunch.ui.wellbeing.MinkDailyLimitControl
 import com.katoaapps.openminilaunch.ui.wellbeing.MinkPauseModeControl
 import com.katoaapps.openminilaunch.R
@@ -587,6 +589,7 @@ internal fun AboutSettingsPage(
     val disabledMessage = stringResource(R.string.demo_search_data_disabled)
     var versionTapCount by remember { mutableIntStateOf(0) }
     var showDemoProfilePicker by remember { mutableStateOf(false) }
+    var showDemoUpdatePreview by remember { mutableStateOf(false) }
     SettingsPage(stringResource(R.string.about), goBack) {
         SettingsSwitchRow(
             title = stringResource(R.string.github_update_checks),
@@ -610,6 +613,12 @@ internal fun AboutSettingsPage(
                 stringResource(store.demoHomeProfile.labelRes),
                 Icons.Default.Palette,
                 onClick = { showDemoProfilePicker = true },
+            )
+            SettingsRow(
+                stringResource(R.string.preview_update_alert),
+                stringResource(R.string.preview_update_alert_description),
+                Icons.Default.SystemUpdateAlt,
+                onClick = { showDemoUpdatePreview = true },
             )
             SettingsRow(
                 stringResource(R.string.demo_mode_disable),
@@ -646,6 +655,20 @@ internal fun AboutSettingsPage(
             selected = store.demoHomeProfile,
             onSelect = store::selectDemoHomeProfile,
             onDismiss = { showDemoProfilePicker = false },
+        )
+    }
+    if (showDemoUpdatePreview) {
+        GitHubUpdateDialog(
+            currentVersion = BuildConfig.VERSION_NAME,
+            availableVersion = previewUpdateVersion(BuildConfig.VERSION_NAME),
+            onOpenBrowser = {
+                if (actions.openLatestGitHubReleaseDownload()) {
+                    showDemoUpdatePreview = false
+                } else {
+                    Toast.makeText(context, R.string.no_browser_available, Toast.LENGTH_SHORT).show()
+                }
+            },
+            onDismiss = { showDemoUpdatePreview = false },
         )
     }
 }
