@@ -1,0 +1,1 @@
+MinkLauncher OpenSource 1.3.6 adds an optional Align Pill to Bottom setting for tall slab phones. It keeps the Home panel within easier reach directly above the Magic Box while preserving the existing top layout by default. Square QWERTY layouts are unchanged. No new permission is required.

@@ -246,6 +246,12 @@ internal fun AppearanceSettingsPage(store: LauncherStore, goBack: () -> Unit) {
             checked = store.hideStatusBar,
             onCheckedChange = store::updateHideStatusBar,
         )
+        SettingsSwitchRow(
+            title = stringResource(R.string.align_pill_to_bottom),
+            subtitle = stringResource(R.string.align_pill_to_bottom_description),
+            checked = store.alignHomePanelBottom,
+            onCheckedChange = store::updateAlignHomePanelBottom,
+        )
         HomePanelColorSetting(store.effectiveHomePanelColorArgb, store::setHomePanelColor)
         AppBackgroundColorSetting(
             selectedArgb = store.effectiveAppBackgroundColorArgb,

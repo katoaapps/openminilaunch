@@ -235,10 +235,12 @@ internal fun HomeScreen(
                 val focusModifier = if (qwertyHome) {
                     Modifier.fillMaxSize()
                 } else {
-                    Modifier.fillMaxWidth().height(focusPanelHeight).align(Alignment.TopCenter)
+                    Modifier.fillMaxWidth().height(focusPanelHeight).align(
+                        if (store.alignHomePanelBottom) Alignment.BottomCenter else Alignment.TopCenter,
+                    )
                 }
                 Surface(
-                    modifier = focusModifier.widthIn(max = Dimens.dp620).align(if (qwertyHome) Alignment.Center else Alignment.TopCenter),
+                    modifier = focusModifier.widthIn(max = Dimens.dp620),
                     shape = RoundedCornerShape(if (qwertyHome) Dimens.dp26 else Dimens.dp34),
                     color = homePanelColor,
                     contentColor = homePanelContentColor,

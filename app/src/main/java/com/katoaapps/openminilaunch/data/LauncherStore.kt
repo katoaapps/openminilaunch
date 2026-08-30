@@ -62,6 +62,8 @@ class LauncherStore(context: Context) {
         private set
     var hideStatusBar by mutableStateOf(prefs.getBoolean(HIDE_STATUS_BAR_KEY, true))
         private set
+    var alignHomePanelBottom by mutableStateOf(prefs.getBoolean(ALIGN_HOME_PANEL_BOTTOM_KEY, false))
+        private set
     var homePanelColorArgb by mutableIntStateOf(
         prefs.getInt("home_panel_color", ContextCompat.getColor(context, R.color.mink_forest))
     )
@@ -378,6 +380,11 @@ class LauncherStore(context: Context) {
         prefs.edit().putBoolean(HIDE_STATUS_BAR_KEY, enabled).apply()
     }
 
+    fun updateAlignHomePanelBottom(enabled: Boolean) {
+        alignHomePanelBottom = enabled
+        prefs.edit().putBoolean(ALIGN_HOME_PANEL_BOTTOM_KEY, enabled).apply()
+    }
+
     fun setHomePanelColor(argb: Int) {
         val opaqueArgb = argb or 0xFF000000.toInt()
         if (demoSearchDataEnabled) {
@@ -578,6 +585,7 @@ class LauncherStore(context: Context) {
     }
 
     private companion object {
+        const val ALIGN_HOME_PANEL_BOTTOM_KEY = "align_home_panel_bottom"
         const val APP_BACKGROUND_COLOR_KEY = "app_background_color"
         const val CLOCK_DATE_OPENED_KEY = "clock_date_opened"
         const val DEMO_HOME_PROFILE_KEY = "demo_home_profile"

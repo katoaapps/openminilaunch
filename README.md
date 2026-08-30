@@ -2,7 +2,7 @@
 
 A focused, keyboard-first Android home-screen launcher and digital assistant built with Kotlin and Jetpack Compose.
 
-Current version: **Open 1.3.5** (`1.3.5`). Feature releases show existing users a one-time in-app update notice covering new behavior, privacy impact, and any optional permissions; the onboarding tutorial is updated alongside each release.
+Current version: **Open 1.3.6** (`1.3.6`). Feature releases show existing users a one-time in-app update notice covering new behavior, privacy impact, and any optional permissions; the onboarding tutorial is updated alongside each release.
 
 ## Download
 
@@ -99,6 +99,7 @@ the existing app first and clears MinkLauncher OpenSource's local data.
 - Animated Magic Box to-do delivery into the newest widget page
 - System, light, and dark appearance modes
 - A default-on **Hide Status Bar** option for Home; swipe down to reveal Android's notification shade
+- An optional **Align Pill to Bottom** setting keeps the Home panel within easier reach on tall slab phones, directly above the Magic Box
 - Swipe down anywhere on the home screen to expand notifications
 - Optionally enable the minimal **Double-tap screen lock** accessibility service, then double-tap empty home-screen space to lock like the power button. The service cannot read screen content, subscribe to accessibility events, perform gestures, or collect data.
 - Local persistence via SharedPreferences; no account is required. Network access is used only for the optional GitHub release-metadata check, which sends no launcher data.
