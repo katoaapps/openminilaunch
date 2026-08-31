@@ -21,10 +21,6 @@ import com.katoaapps.openminilaunch.ui.launcher.mediaPermissionPermanentlyDenied
 import com.katoaapps.openminilaunch.ui.launcher.mediaReadPermissions
 import com.katoaapps.openminilaunch.ui.launcher.supportsDirectCalls
 import com.katoaapps.openminilaunch.ui.launcher.supportsDirectSms
-import com.katoaapps.openminilaunch.ui.onboarding.FileSearchScopeDialog
-import com.katoaapps.openminilaunch.ui.settings.AppPickerDialog
-import com.katoaapps.openminilaunch.ui.settings.AssistantDisclosureDialog
-import com.katoaapps.openminilaunch.ui.settings.MessagingProviderPickerDialog
 import com.katoaapps.openminilaunch.ui.wellbeing.rememberMinkAppAccessState
 
 import android.Manifest
@@ -37,48 +33,22 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.focusable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.KeyboardActions
-import androidx.compose.foundation.text.KeyboardOptions
-import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.NoteAdd
 import androidx.compose.material.icons.automirrored.filled.Send
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
-import androidx.compose.animation.AnimatedVisibility
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
-import androidx.compose.animation.scaleIn
-import androidx.compose.animation.scaleOut
-import androidx.compose.animation.core.tween
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.focus.FocusRequester
-import androidx.compose.ui.focus.focusRequester
-import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.graphicsLayer
-import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.input.key.Key
-import androidx.compose.ui.input.key.KeyEventType
-import androidx.compose.ui.input.key.key
-import androidx.compose.ui.input.key.onPreviewKeyEvent
-import androidx.compose.ui.input.key.type
-import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.zIndex
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.TextRange
 import androidx.core.content.ContextCompat
@@ -87,58 +57,6 @@ import androidx.lifecycle.LifecycleEventObserver
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
-
-private data class MagicActionVisuals(
-    val color: Color,
-    val icon: ImageVector,
-)
-
-@Composable
-private fun MagicInputField(
-    value: TextFieldValue,
-    onValueChange: (TextFieldValue) -> Unit,
-    prefix: Char?,
-    focusRequester: FocusRequester,
-    onPlaced: () -> Unit,
-    onSubmit: () -> Unit,
-    modifier: Modifier = Modifier,
-    minLines: Int = 1,
-    maxLines: Int = 5,
-) {
-    TextField(
-        value = value,
-        onValueChange = onValueChange,
-        placeholder = { Text(stringResource(R.string.magic_box_hotkey_hint), color = Muted) },
-        modifier = modifier.focusRequester(focusRequester)
-            .onGloballyPositioned { onPlaced() }
-            .onPreviewKeyEvent { event ->
-                if (prefix == '-' && event.key == Key.Enter) {
-                    if (event.type == KeyEventType.KeyUp) onSubmit()
-                    true
-                } else false
-            },
-        colors = TextFieldDefaults.colors(
-            focusedContainerColor = MinkTransparent,
-            unfocusedContainerColor = MinkTransparent,
-            focusedIndicatorColor = MinkTransparent,
-            unfocusedIndicatorColor = MinkTransparent,
-        ),
-        minLines = minLines,
-        maxLines = maxLines,
-        keyboardOptions = KeyboardOptions(
-            showKeyboardOnFocus = false,
-            imeAction = when {
-                prefix == MAGIC_NOTE_PREFIX -> ImeAction.Default
-                prefix in listOf('@', '#', '-', '+', '?') -> ImeAction.Send
-                else -> ImeAction.Search
-            },
-        ),
-        keyboardActions = KeyboardActions(
-            onSearch = { onSubmit() },
-            onSend = { onSubmit() },
-        ),
-    )
-}
 
 @Composable
 internal fun MagicBox(
@@ -187,21 +105,15 @@ internal fun MagicBox(
     var showAiPicker by remember { mutableStateOf(false) }
     var showAllAiApps by remember { mutableStateOf(false) }
     var pendingAiQuery by remember { mutableStateOf<String?>(null) }
-    var callToConfirm by remember { mutableStateOf<ContactResult?>(null) }
-    var pendingPermissionCall by remember { mutableStateOf<ContactResult?>(null) }
-    var directSmsToConfirm by remember { mutableStateOf<MessageDraft?>(null) }
-    var pendingDirectSmsPermission by remember { mutableStateOf<MessageDraft?>(null) }
-    var pendingDirectSmsAssistant by remember { mutableStateOf<MessageDraft?>(null) }
     var pendingMessagingChoice by remember { mutableStateOf<MessageDraft?>(null) }
-    var showSmsSentConfirmation by remember { mutableStateOf(false) }
-    var smsSentConfirmationToken by remember { mutableIntStateOf(0) }
-    var showSmsAssistantDisclosure by remember { mutableStateOf(false) }
     var showNoteDeleteConfirmation by remember { mutableStateOf(false) }
     var showMessageDiscardConfirmation by remember { mutableStateOf(false) }
     var showCommandDiscardConfirmation by remember { mutableStateOf(false) }
     var fileResults by remember { mutableStateOf<List<FileSearchResult>>(emptyList()) }
     var fileSearchLoading by remember { mutableStateOf(false) }
     val fileSearchRequests = remember { FileSearchRequestTracker() }
+    val callFlow = rememberMagicCallFlow(actions, onSessionComplete)
+    val smsFlow = rememberMagicSmsFlow(actions, onSessionComplete)
     var aiAppsLoaded by remember { mutableStateOf(false) }
     val curatedAiApps by produceState<List<LaunchableApp>>(initialValue = emptyList()) {
         value = withContext(Dispatchers.IO) { actions.curatedAiApps() }
@@ -238,16 +150,6 @@ internal fun MagicBox(
         hasContacts = granted
         if (!granted && isPermanentlyDenied(context, Manifest.permission.READ_CONTACTS)) actions.openAppSettings()
     }
-    val callPermissionLauncher = rememberLauncherForActivityResult(ActivityResultContracts.RequestPermission()) { granted ->
-        val contact = pendingPermissionCall
-        pendingPermissionCall = null
-        if (granted && contact != null) {
-            actions.placeCall(contact.phone)
-        } else if (!granted && isPermanentlyDenied(context, Manifest.permission.CALL_PHONE)) {
-            actions.openAppSettings()
-        }
-        onSessionComplete()
-    }
     val focusRequester = remember { FocusRequester() }
     val armedFocusRequester = remember { FocusRequester() }
     val inputSurfaceInteractionSource = remember { MutableInteractionSource() }
@@ -261,81 +163,6 @@ internal fun MagicBox(
     fun refocus(showSoftwareKeyboard: Boolean = true) {
         focusRequestShowsKeyboard = showSoftwareKeyboard
         focusRequestSerial += 1
-    }
-
-    fun completeSmsAttempt(draft: MessageDraft) {
-        fun openComposerFallback(message: String) {
-            val result = actions.openPreferredMessageDraft(draft.contact, draft.body, preferredPackage = null)
-            val opened = result != PreferredMessageDraftResult.FAILED
-            Toast.makeText(
-                context,
-                if (opened) message else context.getString(R.string.sms_no_compatible_fallback),
-                Toast.LENGTH_LONG,
-            ).show()
-        }
-        when (actions.sendSmsDirect(draft.contact.phone, draft.body)) {
-            DirectSmsResult.QUEUED -> {
-                showSmsSentConfirmation = true
-                smsSentConfirmationToken++
-            }
-            DirectSmsResult.NO_DEFAULT_SUBSCRIPTION -> {
-                openComposerFallback(context.getString(R.string.choose_sim_in_messaging_app))
-                onSessionComplete()
-            }
-            DirectSmsResult.NOT_AUTHORIZED, DirectSmsResult.UNSUPPORTED, DirectSmsResult.FAILED -> {
-                openComposerFallback(context.getString(R.string.direct_sms_unavailable))
-                onSessionComplete()
-            }
-        }
-    }
-    LaunchedEffect(smsSentConfirmationToken) {
-        if (smsSentConfirmationToken > 0) {
-            delay(1_100)
-            showSmsSentConfirmation = false
-            delay(350)
-            onSessionComplete()
-        }
-    }
-    val smsPermissionLauncher = rememberLauncherForActivityResult(ActivityResultContracts.RequestPermission()) { granted ->
-        val draft = pendingDirectSmsPermission
-        pendingDirectSmsPermission = null
-        if (granted && draft != null) {
-            completeSmsAttempt(draft)
-        } else {
-            if (!granted && isPermanentlyDenied(context, Manifest.permission.SEND_SMS)) actions.openAppSettings()
-            onSessionComplete()
-        }
-    }
-    val assistantSettingsLauncher = rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) {
-        val draft = pendingDirectSmsAssistant
-        pendingDirectSmsAssistant = null
-        if (draft != null && actions.isAssistantRoleHeld()) {
-            if (ContextCompat.checkSelfPermission(context, Manifest.permission.SEND_SMS) == PackageManager.PERMISSION_GRANTED) {
-                completeSmsAttempt(draft)
-            } else {
-                pendingDirectSmsPermission = draft
-                smsPermissionLauncher.launch(Manifest.permission.SEND_SMS)
-            }
-        } else if (draft != null) {
-            directSmsToConfirm = draft
-            Toast.makeText(context, context.getString(R.string.choose_assistant_for_sms), Toast.LENGTH_LONG).show()
-        }
-    }
-    fun sendDirectOrRequestAccess(draft: MessageDraft) {
-        when {
-            !supportsDirectSms(context) -> completeSmsAttempt(draft)
-            !actions.isAssistantRoleHeld() -> {
-                pendingDirectSmsAssistant = draft
-                showSmsAssistantDisclosure = true
-            }
-            ContextCompat.checkSelfPermission(context, Manifest.permission.SEND_SMS) == PackageManager.PERMISSION_GRANTED -> {
-                completeSmsAttempt(draft)
-            }
-            else -> {
-                pendingDirectSmsPermission = draft
-                smsPermissionLauncher.launch(Manifest.permission.SEND_SMS)
-            }
-        }
     }
 
     fun chooseMessagingApp(draft: MessageDraft) {
@@ -525,52 +352,35 @@ internal fun MagicBox(
     }
 
     fun submit() {
-        val payload = if (lockedPrefix != null) text.text.trim() else text.text.drop(1).trim()
-        var keepDraftAfterExternalHandoff = false
-        val handled = when (prefix) {
-            '-' -> payload.isNotBlank().also { if (it) { store.addTodo(payload); onTodoAdded(payload) } }
-            MAGIC_NOTE_PREFIX -> payload.isNotBlank() && actions.createNote(payload).also { opened ->
-                keepDraftAfterExternalHandoff = opened
-            }
-            '+' -> payload.isNotBlank() && actions.createEvent(payload)
-            '@' -> (selectedContact != null && payload.isNotBlank()).also {
-                if (it) {
-                    val draft = MessageDraft(selectedContact!!, payload)
-                    val route = messagingSendRoute(
-                        sendAutomatically = store.sendMessagesAutomatically,
-                        preferredPackage = store.preferredMessagingPackage,
-                    )
-                    when (route) {
-                        MessagingSendRoute.DIRECT_SMS -> {
-                            collapseForDialog()
-                            sendDirectOrRequestAccess(draft)
-                        }
-                        // A composer can be dismissed without sending. Keep the contact and body
-                        // in Magic Mode just as note handoffs keep their unsaved text.
-                        MessagingSendRoute.PREFERRED_DRAFT -> {
-                            keyboard?.hide()
-                            openMessagingProvider(draft, store.preferredMessagingPackage)
-                        }
-                        MessagingSendRoute.PROVIDER_PICKER -> {
-                            keyboard?.hide()
-                            pendingMessagingChoice = draft
-                        }
+        dispatchMagicCommand(
+            prefix = prefix,
+            lockedPrefix = lockedPrefix,
+            rawText = text.text,
+            selectedContact = selectedContact,
+            store = store,
+            actions = actions,
+            onTodoAdded = onTodoAdded,
+            onExternalDraftOpened = { keyboard?.hide() },
+            onMessage = { draft, route ->
+                when (route) {
+                    MessagingSendRoute.DIRECT_SMS -> {
+                        collapseForDialog()
+                        smsFlow.requestDirect(draft)
+                    }
+                    // A composer can be dismissed without sending. Keep the contact and body
+                    // in Magic Mode just as note handoffs keep their unsaved text.
+                    MessagingSendRoute.PREFERRED_DRAFT -> {
+                        keyboard?.hide()
+                        openMessagingProvider(draft, store.preferredMessagingPackage)
+                    }
+                    MessagingSendRoute.PROVIDER_PICKER -> {
+                        keyboard?.hide()
+                        pendingMessagingChoice = draft
                     }
                 }
-            }
-            '#' -> false
-            '?' -> false
-            else -> text.text.isNotBlank() && actions.webSearch(text.text, store.preferredWebPackage).also {
-                if (it) store.addSearchQuery(text.text)
-            }
-        }
-        if (handled && prefix != '@') {
-            if (keepDraftAfterExternalHandoff) {
-                keyboard?.hide()
-            } else {
-                dismiss()
-            }
-        }
+            },
+            onDismiss = ::dismiss,
+        )
     }
 
     // Physical QWERTY phones keep the real text field focused so OEM long-press symbol
@@ -579,14 +389,14 @@ internal fun MagicBox(
     LaunchedEffect(
         keyboardInputEnabled,
         expanded,
-        showSmsSentConfirmation,
+        smsFlow.sentConfirmationVisible,
         useDirectHardwareInput,
         showKeyboardWhileCollapsed,
     ) {
         if (!keyboardInputEnabled) {
             keyboard?.hide()
             focusManager.clearFocus(force = true)
-        } else if (!expanded && !showSmsSentConfirmation) {
+        } else if (!expanded && !smsFlow.sentConfirmationVisible) {
             if (useDirectHardwareInput) {
                 while (!textFieldPlaced) withFrameNanos { }
                 withFrameNanos { }
@@ -661,131 +471,67 @@ internal fun MagicBox(
             verticalArrangement = Arrangement.spacedBy(Dimens.dp8),
         ) {
             if (!noteMode) {
-                Box(
-                    modifier = Modifier.fillMaxWidth().weight(1f),
-                    contentAlignment = Alignment.BottomCenter,
-                ) {
-                    if (expanded) {
-                    Column(
-                        Modifier.fillMaxWidth().verticalScroll(magicResultsScroll),
-                        verticalArrangement = Arrangement.spacedBy(Dimens.dp8),
-                    ) {
-                        if (text.text.isBlank() && lockedPrefix == null && store.searchHistory.isNotEmpty()) {
-                            SearchHistoryList(
-                                queries = store.searchHistory,
-                                onSelect = { query ->
-                                    text = TextFieldValue(query, selection = TextRange(query.length))
-                                    refocus()
-                                },
-                                onDelete = store::removeSearchQuery,
-                                onClearAll = store::clearSearchHistory,
-                            )
-                        }
-                        if (plainQuery.isNotBlank() && fileSearchLoading) {
-                            LinearProgressIndicator(Modifier.fillMaxWidth())
-                        }
-                        if (fileResults.isNotEmpty()) {
-                            FileResultsGrid(fileResults, fileSearchRepository) { file ->
-                                store.addSearchQuery(plainQuery)
-                                actions.openFile(file)
+                if (expanded) {
+                    MagicResultsPanel(
+                        store = store,
+                        actions = actions,
+                        rawText = text.text,
+                        lockedPrefix = lockedPrefix,
+                        prefix = prefix,
+                        plainQuery = plainQuery,
+                        fileSearchLoading = fileSearchLoading,
+                        fileResults = fileResults,
+                        fileSearchRepository = fileSearchRepository,
+                        hasMediaAccess = hasMediaAccess,
+                        canSearchContacts = canSearchContacts,
+                        contactResults = contactResults,
+                        appResults = visibleAppResults,
+                        showClearMessage = hasMessageDraft,
+                        scrollState = magicResultsScroll,
+                        onSelectHistory = { query ->
+                            text = TextFieldValue(query, selection = TextRange(query.length))
+                            refocus()
+                        },
+                        onOpenFile = { file ->
+                            store.addSearchQuery(plainQuery)
+                            actions.openFile(file)
+                            dismiss()
+                        },
+                        onRequestMedia = { mediaPermissionLauncher.launch(mediaReadPermissions()) },
+                        onRequestFolder = { showFileScopeChoice = true },
+                        onSubmitWeb = ::submit,
+                        onSubmitAi = ::submitAi,
+                        onSelectContact = { contact ->
+                            if (prefix == '#') {
+                                callFlow.requestConfirmation(contact)
+                                collapseForDialog()
+                            } else {
+                                lockedPrefix = prefix
+                                selectedContact = contact
+                                text = TextFieldValue()
+                                refocus()
+                            }
+                        },
+                        onSelectApp = { app ->
+                            if (actions.launchLauncherTarget(app)) {
+                                store.addSearchQuery("?${app.label}")
                                 dismiss()
+                            } else {
+                                Toast.makeText(
+                                    context,
+                                    context.getString(R.string.launcher_app_unavailable, app.label),
+                                    Toast.LENGTH_LONG,
+                                ).show()
                             }
-                        }
-                        if (plainQuery.length >= 2 && !hasMediaAccess && !store.demoSearchDataEnabled) {
-                            FilledTonalButton(onClick = { mediaPermissionLauncher.launch(mediaReadPermissions()) }) {
-                                Icon(Icons.Default.PhotoLibrary, null, Modifier.size(Dimens.dp18))
-                                Text(stringResource(R.string.search_media_filenames), Modifier.padding(start = Dimens.dp8))
-                            }
-                        }
-                        if (plainQuery.isNotBlank() && store.searchFolders.isEmpty() && !store.demoSearchDataEnabled) {
-                            Surface(
-                                onClick = { showFileScopeChoice = true },
-                                shape = RoundedCornerShape(Dimens.dp14),
-                                color = MagicTodoColor.copy(alpha = .18f),
-                            ) {
-                                Row(Modifier.fillMaxWidth().padding(Dimens.dp12), verticalAlignment = Alignment.CenterVertically) {
-                                    Icon(Icons.Default.FolderOff, null, tint = MagicTodoColor)
-                                    Column(Modifier.weight(1f).padding(start = Dimens.dp10)) {
-                                        Text(stringResource(R.string.document_search_not_set_up), fontWeight = FontWeight.SemiBold)
-                                        Text(stringResource(R.string.choose_document_search_folder), color = Muted, fontSize = Dimens.sp12)
-                                    }
-                                    Icon(Icons.Default.ChevronRight, null)
-                                }
-                            }
-                        }
-                        if (prefix !in MAGIC_COMMAND_PREFIXES && text.text.isNotBlank()) {
-                            Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(Dimens.dp8)) {
-                                SearchDestinationButton(
-                                    label = stringResource(R.string.web),
-                                    detail = stringResource(R.string.search_browser),
-                                    icon = Icons.Default.Public,
-                                    modifier = Modifier.weight(1f),
-                                    onClick = { submit() },
-                                )
-                                SearchDestinationButton(
-                                    label = stringResource(R.string.ai),
-                                    detail = store.preferredAiPackage?.let(actions::appLabel) ?: stringResource(R.string.choose_an_app),
-                                    icon = Icons.Default.AutoAwesome,
-                                    modifier = Modifier.weight(1f),
-                                    onClick = { submitAi() },
-                                )
-                            }
-                        }
-                        contactResults.forEach { contact ->
-                            SuggestionRow(
-                                stringResource(R.string.two_part_label, contact.name, contact.phoneLabel),
-                                Icons.Default.Person,
-                            ) {
-                                if (prefix == '#') {
-                                    callToConfirm = contact
-                                    collapseForDialog()
-                                } else {
-                                    lockedPrefix = prefix
-                                    selectedContact = contact
-                                    text = TextFieldValue()
-                                    refocus()
-                                }
-                            }
-                        }
-                        visibleAppResults.forEach { app ->
-                            SuggestionRow(
-                                text = app.label,
-                                leadingContent = { LauncherAppIcon(app, actions, Dimens.dp26) },
-                            ) {
-                                if (actions.launchLauncherTarget(app)) {
-                                    store.addSearchQuery("?${app.label}")
-                                    dismiss()
-                                } else {
-                                    Toast.makeText(
-                                        context,
-                                        context.getString(R.string.launcher_app_unavailable, app.label),
-                                        Toast.LENGTH_LONG,
-                                    ).show()
-                                }
-                            }
-                        }
-                        if (prefix in listOf('@', '#') && !canSearchContacts) {
-                            FilledTonalButton(onClick = { permissionLauncher.launch(Manifest.permission.READ_CONTACTS) }) {
-                                Text(stringResource(R.string.allow_contacts_to_search_people))
-                            }
-                        }
-                    }
-                    if (hasMessageDraft) {
-                        FilledTonalIconButton(
-                            onClick = ::requestClearMessageDraft,
-                            modifier = Modifier.align(Alignment.TopEnd),
-                            colors = IconButtonDefaults.filledTonalIconButtonColors(
-                                containerColor = MaterialTheme.colorScheme.errorContainer,
-                                contentColor = MaterialTheme.colorScheme.onErrorContainer,
-                            ),
-                        ) {
-                            Icon(
-                                Icons.Default.DeleteOutline,
-                                stringResource(R.string.clear_message_draft),
-                            )
-                        }
-                    }
-                    }
+                        },
+                        onRequestContacts = {
+                            permissionLauncher.launch(Manifest.permission.READ_CONTACTS)
+                        },
+                        onClearMessage = ::requestClearMessageDraft,
+                        modifier = Modifier.fillMaxWidth().weight(1f),
+                    )
+                } else {
+                    Spacer(Modifier.fillMaxWidth().weight(1f))
                 }
             }
 
@@ -797,466 +543,185 @@ internal fun MagicBox(
                 }
             }
 
-            Surface(
+            MagicEditorSurface(
+                noteMode = noteMode,
+                text = text,
+                selectedContact = selectedContact,
+                prefix = prefix,
+                actionVisuals = actionVisuals,
+                actionContentColor = actionContentColor,
+                focusRequester = focusRequester,
+                interactionSource = inputSurfaceInteractionSource,
+                onRefocus = { refocus(showSoftwareKeyboard = !useDirectHardwareInput) },
+                onTextChange = { value ->
+                    text = value
+                    if (!expanded && value.text.isNotEmpty()) {
+                        expanded = true
+                        onExpandedChange(true)
+                    }
+                    if (!noteMode && lockedPrefix == null && value.text.firstOrNull() != prefix) {
+                        selectedContact = null
+                    }
+                },
+                onPlaced = { textFieldPlaced = true },
+                onSubmit = ::submit,
+                onClearMessage = ::requestClearMessageDraft,
+                onDeleteNote = {
+                    keyboard?.hide()
+                    showNoteDeleteConfirmation = true
+                },
+                visible = expanded,
                 modifier = Modifier.fillMaxWidth().then(
                     if (noteMode) Modifier.weight(1f) else Modifier.heightIn(min = magicBoxMinimumHeight),
-                )
-                    .clickable(
-                        interactionSource = inputSurfaceInteractionSource,
-                        indication = null,
-                    ) { refocus(showSoftwareKeyboard = !useDirectHardwareInput) }
-                    .graphicsLayer { alpha = if (expanded) 1f else 0f },
-                shape = RoundedCornerShape(Dimens.dp24),
-                color = MaterialTheme.colorScheme.surface,
-                shadowElevation = Dimens.dp12,
-            ) {
-                Box(if (noteMode) Modifier.fillMaxSize() else Modifier.fillMaxWidth()) {
-                    Row(
-                        modifier = if (noteMode) {
-                            Modifier.fillMaxSize()
-                        } else {
-                            Modifier.fillMaxWidth().padding(start = Dimens.dp12, end = Dimens.dp6)
-                        },
-                        verticalAlignment = Alignment.CenterVertically,
-                    ) {
-                        if (!noteMode) {
-                            selectedContact?.let { contact ->
-                                CommandChip(
-                                    stringResource(R.string.two_part_label, contact.name, contact.phoneLabel),
-                                    actionVisuals.color,
-                                    actionContentColor,
-                                    onClear = ::requestClearMessageDraft,
-                                )
-                            }
-                        }
-                        MagicInputField(
-                            value = text,
-                            onValueChange = { value ->
-                                text = value
-                                if (!expanded && value.text.isNotEmpty()) {
-                                    expanded = true
-                                    onExpandedChange(true)
-                                }
-                                if (!noteMode && lockedPrefix == null && value.text.firstOrNull() != prefix) {
-                                    selectedContact = null
-                                }
-                            },
-                            prefix = prefix,
-                            focusRequester = focusRequester,
-                            onPlaced = { textFieldPlaced = true },
-                            onSubmit = { submit() },
-                            modifier = Modifier.weight(1f).then(
-                                if (noteMode) {
-                                    Modifier.fillMaxHeight().padding(end = Dimens.dp48, bottom = Dimens.dp54)
-                                } else {
-                                    Modifier
-                                },
-                            ),
-                            maxLines = if (noteMode) Int.MAX_VALUE else 5,
-                        )
-                        if (!noteMode) {
-                            FilledIconButton(
-                                onClick = { submit() },
-                                colors = IconButtonDefaults.filledIconButtonColors(
-                                    containerColor = actionVisuals.color,
-                                    contentColor = actionContentColor,
-                                ),
-                            ) { Icon(actionVisuals.icon, stringResource(R.string.run_command)) }
-                        }
-                    }
-                    if (noteMode) {
-                        IconButton(
-                            onClick = {
-                                keyboard?.hide()
-                                showNoteDeleteConfirmation = true
-                            },
-                            modifier = Modifier.align(Alignment.TopEnd).padding(Dimens.dp6),
-                        ) {
-                            Icon(
-                                Icons.Default.DeleteOutline,
-                                stringResource(R.string.delete_note_draft),
-                                tint = MaterialTheme.colorScheme.error,
-                            )
-                        }
-                        FilledIconButton(
-                            onClick = { submit() },
-                            modifier = Modifier.align(Alignment.BottomEnd).padding(Dimens.dp10),
-                            colors = IconButtonDefaults.filledIconButtonColors(
-                                containerColor = actionVisuals.color,
-                                contentColor = actionContentColor,
-                            ),
-                        ) { Icon(actionVisuals.icon, stringResource(R.string.run_command)) }
-                    }
-                }
-            }
+                ),
+            )
         }
 
-        if (!expanded && !showSmsSentConfirmation) {
-            Row(
-                collapsedModifier.align(Alignment.BottomCenter)
-                    .then(
-                        if (useDirectHardwareInput) {
-                            Modifier
-                        } else {
-                            Modifier.focusRequester(armedFocusRequester)
-                                .onGloballyPositioned { armedTargetPlaced = true }
-                                .onPreviewKeyEvent { event ->
-                                    val typedText = printableHardwareText(event.nativeKeyEvent.unicodeChar)
-                                    if (typedText == null) {
-                                        false
-                                    } else {
-                                        if (event.type == KeyEventType.KeyDown) {
-                                            if (!expanded) {
-                                                clearCommand()
-                                                text = TextFieldValue(typedText, selection = TextRange(typedText.length))
-                                                expanded = true
-                                                onExpandedChange(true)
-                                                refocus(showSoftwareKeyboard = false)
-                                            } else {
-                                                val updatedText = text.text + typedText
-                                                text = TextFieldValue(updatedText, selection = TextRange(updatedText.length))
-                                            }
-                                        }
-                                        true
-                                    }
-                                }
-                                .focusable()
-                        }
-                    )
-                    .clip(RoundedCornerShape(Dimens.dp22))
-                    .background(MaterialTheme.colorScheme.surfaceContainerLow)
-                    .clickable {
+        if (!expanded && !smsFlow.sentConfirmationVisible) {
+            CollapsedMagicBar(
+                modifier = collapsedModifier.align(Alignment.BottomCenter),
+                minimumHeight = magicBoxMinimumHeight,
+                useDirectHardwareInput = useDirectHardwareInput,
+                armedFocusRequester = armedFocusRequester,
+                onArmedPlaced = { armedTargetPlaced = true },
+                onPrintableKeyDown = { typedText ->
+                    if (!expanded) {
                         clearCommand()
+                        text = TextFieldValue(typedText, selection = TextRange(typedText.length))
                         expanded = true
                         onExpandedChange(true)
-                        refocus(showSoftwareKeyboard = true)
+                        refocus(showSoftwareKeyboard = false)
+                    } else {
+                        val updatedText = text.text + typedText
+                        text = TextFieldValue(updatedText, selection = TextRange(updatedText.length))
                     }
-                    .heightIn(min = magicBoxMinimumHeight)
-                    .padding(start = Dimens.dp18, end = Dimens.dp6),
-                verticalAlignment = Alignment.CenterVertically,
-            ) {
-                Text(stringResource(R.string.magic_box_collapsed_hint), Modifier.weight(1f), color = Muted, fontSize = Dimens.sp14)
-                FilledIconButton(
-                    onClick = {
-                        clearCommand()
-                        expanded = true
-                        onExpandedChange(true)
-                        refocus(showSoftwareKeyboard = true)
-                    },
-                    colors = IconButtonDefaults.filledIconButtonColors(containerColor = MaterialTheme.colorScheme.primary),
-                ) {
-                    Icon(Icons.Default.Keyboard, stringResource(R.string.open_magic_box))
-                }
-            }
+                },
+                onOpen = {
+                    clearCommand()
+                    expanded = true
+                    onExpandedChange(true)
+                    refocus(showSoftwareKeyboard = true)
+                },
+            )
         }
 
-        AnimatedVisibility(
-            visible = showSmsSentConfirmation,
-            modifier = Modifier.align(Alignment.Center).zIndex(30f),
-            enter = fadeIn(tween(220)) + scaleIn(tween(260), initialScale = .88f),
-            exit = fadeOut(tween(350)) + scaleOut(tween(350), targetScale = .94f),
-        ) {
-            Surface(
-                shape = RoundedCornerShape(Dimens.dp28),
-                color = MaterialTheme.colorScheme.primaryContainer,
-                contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
-                shadowElevation = Dimens.dp16,
-            ) {
-                Row(
-                    Modifier.padding(horizontal = Dimens.dp28, vertical = Dimens.dp20),
-                    verticalAlignment = Alignment.CenterVertically,
-                    horizontalArrangement = Arrangement.spacedBy(Dimens.dp12),
-                ) {
-                    Icon(Icons.Default.CheckCircle, null, Modifier.size(Dimens.dp30))
-                    Column {
-                        Text(stringResource(R.string.message_sent), fontSize = Dimens.sp19, fontWeight = FontWeight.Bold)
-                        Text(stringResource(R.string.sent_as_sms), color = MaterialTheme.colorScheme.onPrimaryContainer.copy(alpha = .72f), fontSize = Dimens.sp13)
-                    }
-                }
-            }
-        }
-    }
-    if (showNoteDeleteConfirmation) {
-        AlertDialog(
-            modifier = Modifier.minkDialogWidth(),
-            onDismissRequest = {
-                showNoteDeleteConfirmation = false
-                refocus()
-            },
-            properties = MinkDialogDefaults.properties,
-            icon = { Icon(Icons.Default.DeleteOutline, null) },
-            title = { Text(stringResource(R.string.delete_note_draft_title)) },
-            text = { Text(stringResource(R.string.delete_note_draft_description)) },
-            confirmButton = {
-                TextButton(
-                    onClick = {
-                        showNoteDeleteConfirmation = false
-                        dismiss()
-                    },
-                ) {
-                    Text(stringResource(R.string.delete), color = MaterialTheme.colorScheme.error)
-                }
-            },
-            dismissButton = {
-                TextButton(
-                    onClick = {
-                        showNoteDeleteConfirmation = false
-                        refocus()
-                    },
-                ) { Text(stringResource(R.string.cancel)) }
-            },
+        SmsSentConfirmation(
+            visible = smsFlow.sentConfirmationVisible,
+            modifier = Modifier.align(Alignment.Center),
         )
     }
-    if (showMessageDiscardConfirmation) {
-        AlertDialog(
-            modifier = Modifier.minkDialogWidth(),
-            onDismissRequest = {
-                showMessageDiscardConfirmation = false
-                refocus()
-            },
-            properties = MinkDialogDefaults.properties,
-            icon = { Icon(Icons.Default.DeleteOutline, null) },
-            title = { Text(stringResource(R.string.discard_message_draft_title)) },
-            text = { Text(stringResource(R.string.discard_message_draft_description)) },
-            confirmButton = {
-                TextButton(
-                    onClick = {
-                        showMessageDiscardConfirmation = false
-                        clearCommand()
-                        refocus()
-                    },
-                ) {
-                    Text(stringResource(R.string.discard), color = MaterialTheme.colorScheme.error)
-                }
-            },
-            dismissButton = {
-                TextButton(
-                    onClick = {
-                        showMessageDiscardConfirmation = false
-                        refocus()
-                    },
-                ) { Text(stringResource(R.string.cancel)) }
-            },
-        )
-    }
-    if (showCommandDiscardConfirmation) {
-        AlertDialog(
-            modifier = Modifier.minkDialogWidth(),
-            onDismissRequest = {
-                showCommandDiscardConfirmation = false
-                refocus()
-            },
-            properties = MinkDialogDefaults.properties,
-            icon = { Icon(Icons.Default.DeleteOutline, null) },
-            title = { Text(stringResource(R.string.discard_magic_input_title)) },
-            text = { Text(stringResource(R.string.discard_magic_input_description)) },
-            confirmButton = {
-                TextButton(
-                    onClick = {
-                        showCommandDiscardConfirmation = false
-                        dismiss()
-                    },
-                ) {
-                    Text(stringResource(R.string.discard), color = MaterialTheme.colorScheme.error)
-                }
-            },
-            dismissButton = {
-                TextButton(
-                    onClick = {
-                        showCommandDiscardConfirmation = false
-                        refocus()
-                    },
-                ) { Text(stringResource(R.string.cancel)) }
-            },
-        )
-    }
-    if (showFileScopeChoice) {
-        FileSearchScopeDialog(
-            onChooseFolder = {
-                showFileScopeChoice = false
-                folderPicker.launch(null)
-            },
-            onSkip = { showFileScopeChoice = false },
-        )
-    }
-    if (showSmsAssistantDisclosure) {
-        AssistantDisclosureDialog(
-            active = false,
-            onContinue = {
-                showSmsAssistantDisclosure = false
-                assistantSettingsLauncher.launch(actions.assistantRoleSelectionIntent())
-            },
-            onDismiss = {
-                showSmsAssistantDisclosure = false
-                pendingDirectSmsAssistant?.let { draft ->
-                    pendingDirectSmsAssistant = null
-                    directSmsToConfirm = draft
-                } ?: onSessionComplete()
-            },
-        )
-    }
-    pendingMessagingChoice?.let { draft ->
-        MessagingProviderPickerDialog(
-            title = stringResource(R.string.send_with),
-            options = messagingProviders.options,
-            loading = !messagingProviders.loaded,
-            selectedProviderId = MessagingProviderCatalog.providerForPackage(
-                store.preferredMessagingPackage,
-            )?.id ?: MessagingProviderCatalog.SYSTEM_DEFAULT_PROVIDER_ID,
-            showUnavailable = false,
-            onProvider = { option ->
-                pendingMessagingChoice = null
-                if (option.systemDefault) {
-                    openMessagingProvider(draft, providerPackage = null)
-                } else {
-                    openMessagingProvider(draft, option.preferencePackageName)
-                }
-            },
-            onSeeAllApps = {
-                pendingMessagingChoice = null
-                chooseMessagingApp(draft)
-            },
-            onDismiss = {
-                pendingMessagingChoice = null
-                refocus()
-            },
-        )
-    }
-    if (showAiPicker) {
-        AppPickerDialog(
-            title = stringResource(R.string.choose_ai_app),
-            apps = curatedAiApps,
-            selected = setOfNotNull(store.preferredAiPackage),
-            loading = !aiAppsLoaded,
-            emptyMessage = stringResource(R.string.no_curated_ai_apps),
-            extraActionLabel = stringResource(R.string.other_compatible_app),
-            onExtraAction = { showAiPicker = false; showAllAiApps = true },
-            onApp = { app ->
-                val query = pendingAiQuery
-                if (query != null && actions.shareQueryWithApp(query, app.packageName)) {
-                    store.setPreferredAiApp(app.packageName)
-                    store.addSearchQuery(query)
-                    showAiPicker = false
-                    pendingAiQuery = null
-                    dismiss()
-                }
-            },
-            onDismiss = {
+    MagicDraftDialogHost(
+        showNoteDelete = showNoteDeleteConfirmation,
+        showMessageDiscard = showMessageDiscardConfirmation,
+        showCommandDiscard = showCommandDiscardConfirmation,
+        showFileScopeChoice = showFileScopeChoice,
+        showSmsAssistantDisclosure = smsFlow.assistantDisclosureVisible,
+        onDeleteNote = {
+            showNoteDeleteConfirmation = false
+            dismiss()
+        },
+        onKeepNote = {
+            showNoteDeleteConfirmation = false
+            refocus()
+        },
+        onDiscardMessage = {
+            showMessageDiscardConfirmation = false
+            clearCommand()
+            refocus()
+        },
+        onKeepMessage = {
+            showMessageDiscardConfirmation = false
+            refocus()
+        },
+        onDiscardCommand = {
+            showCommandDiscardConfirmation = false
+            dismiss()
+        },
+        onKeepCommand = {
+            showCommandDiscardConfirmation = false
+            refocus()
+        },
+        onChooseFolder = {
+            showFileScopeChoice = false
+            folderPicker.launch(null)
+        },
+        onSkipFolder = { showFileScopeChoice = false },
+        onAssistantContinue = smsFlow::continueAssistantSelection,
+        onAssistantDismiss = smsFlow::dismissAssistantDisclosure,
+    )
+
+    MagicPickerDialogHost(
+        messageDraft = pendingMessagingChoice,
+        messagingOptions = messagingProviders.options,
+        messagingOptionsLoaded = messagingProviders.loaded,
+        preferredMessagingPackage = store.preferredMessagingPackage,
+        showAiPicker = showAiPicker,
+        showAllAiApps = showAllAiApps,
+        curatedAiApps = curatedAiApps,
+        curatedAiAppsLoaded = aiAppsLoaded,
+        allAiApps = allAiApps,
+        allAiAppsLoaded = allAiAppsLoaded,
+        preferredAiPackage = store.preferredAiPackage,
+        onMessagingProvider = { draft, option ->
+            pendingMessagingChoice = null
+            openMessagingProvider(
+                draft,
+                providerPackage = if (option.systemDefault) null else option.preferencePackageName,
+            )
+        },
+        onSeeAllMessagingApps = { draft ->
+            pendingMessagingChoice = null
+            chooseMessagingApp(draft)
+        },
+        onDismissMessaging = {
+            pendingMessagingChoice = null
+            refocus()
+        },
+        onSeeAllAiApps = {
+            showAiPicker = false
+            showAllAiApps = true
+        },
+        onCuratedAiApp = { app ->
+            val query = pendingAiQuery
+            if (query != null && actions.shareQueryWithApp(query, app.packageName)) {
+                store.setPreferredAiApp(app.packageName)
+                store.addSearchQuery(query)
                 showAiPicker = false
                 pendingAiQuery = null
-                refocus()
-            },
-        )
-    }
-    if (showAllAiApps) {
-        AppPickerDialog(
-            title = stringResource(R.string.other_compatible_apps),
-            apps = allAiApps,
-            selected = setOfNotNull(store.preferredAiPackage),
-            loading = !allAiAppsLoaded,
-            emptyMessage = stringResource(R.string.no_other_text_apps),
-            onApp = { app ->
-                val query = pendingAiQuery
-                if (query != null && actions.shareQueryWithApp(query, app.packageName)) {
-                    store.setPreferredAiApp(app.packageName)
-                    store.addSearchQuery(query)
-                    showAllAiApps = false
-                    pendingAiQuery = null
-                    dismiss()
-                }
-            },
-            onDismiss = {
+                dismiss()
+            }
+        },
+        onDismissCuratedAi = {
+            showAiPicker = false
+            pendingAiQuery = null
+            refocus()
+        },
+        onAllAiApp = { app ->
+            val query = pendingAiQuery
+            if (query != null && actions.shareQueryWithApp(query, app.packageName)) {
+                store.setPreferredAiApp(app.packageName)
+                store.addSearchQuery(query)
                 showAllAiApps = false
                 pendingAiQuery = null
-                refocus()
-            },
-        )
-    }
-    callToConfirm?.let { contact ->
-        AlertDialog(
-            modifier = Modifier.minkDialogWidth(),
-            onDismissRequest = { callToConfirm = null; onSessionComplete() },
-            properties = MinkDialogDefaults.properties,
-            icon = { Icon(Icons.Default.Phone, null, tint = MagicCallColor) },
-            title = { Text(stringResource(R.string.call_contact, contact.name)) },
-            text = { Text(stringResource(R.string.phone_type_and_number, contact.phoneLabel, contact.phone)) },
-            confirmButton = {
-                Button(
-                    onClick = {
-                        callToConfirm = null
-                        if (!supportsDirectCalls(context) || ContextCompat.checkSelfPermission(context, Manifest.permission.CALL_PHONE) == PackageManager.PERMISSION_GRANTED) {
-                            actions.placeCall(contact.phone)
-                            onSessionComplete()
-                        } else {
-                            pendingPermissionCall = contact
-                            callPermissionLauncher.launch(Manifest.permission.CALL_PHONE)
-                        }
-                    },
-                    colors = ButtonDefaults.buttonColors(containerColor = MagicCallColor, contentColor = MinkWhite),
-                ) { Text(stringResource(R.string.call_now)) }
-            },
-            dismissButton = {
-                Row {
-                    TextButton(onClick = { callToConfirm = null; onSessionComplete() }) { Text(stringResource(R.string.cancel)) }
-                    TextButton(
-                        onClick = {
-                            callToConfirm = null
-                            if (!actions.chooseCallingApp(contact.phone)) {
-                                Toast.makeText(context, context.getString(R.string.no_compatible_calling_app), Toast.LENGTH_LONG).show()
-                            }
-                            onSessionComplete()
-                        },
-                    ) { Text(stringResource(R.string.choose_calling_app)) }
-                }
-            },
-        )
-    }
-    directSmsToConfirm?.let { draft ->
-        val assistantActive = actions.isAssistantRoleHeld()
-        AlertDialog(
-            modifier = Modifier.minkDialogWidth(),
-            onDismissRequest = { directSmsToConfirm = null; onSessionComplete() },
-            properties = MinkDialogDefaults.properties,
-            icon = { Icon(Icons.AutoMirrored.Filled.Send, null, tint = MagicTextColor) },
-            title = { Text(stringResource(R.string.send_message_to_contact, draft.contact.name)) },
-            text = {
-                Column(verticalArrangement = Arrangement.spacedBy(Dimens.dp10)) {
-                    Text(stringResource(R.string.phone_type_and_number, draft.contact.phoneLabel, draft.contact.phone))
-                    Text(
-                        draft.body,
-                        Modifier.heightIn(max = Dimens.dp180).verticalScroll(rememberScrollState()),
-                    )
-                    Text(stringResource(R.string.sms_carrier_notice), color = Muted, fontSize = Dimens.sp12)
-                    if (!assistantActive) {
-                        Text(stringResource(R.string.assistant_sms_restriction), color = Muted, fontSize = Dimens.sp12)
-                    }
-                }
-            },
-            confirmButton = {
-                Button(
-                    onClick = {
-                        directSmsToConfirm = null
-                        sendDirectOrRequestAccess(draft)
-                    },
-                    colors = ButtonDefaults.buttonColors(containerColor = MagicTextColor, contentColor = MinkWhite),
-                ) { Text(stringResource(if (assistantActive) R.string.send_sms_now else R.string.choose_assistant)) }
-            },
-            dismissButton = {
-                Row {
-                    TextButton(onClick = { directSmsToConfirm = null; onSessionComplete() }) { Text(stringResource(R.string.cancel)) }
-                    TextButton(
-                        onClick = {
-                            directSmsToConfirm = null
-                            pendingMessagingChoice = draft
-                        },
-                    ) { Text(stringResource(R.string.choose_messaging_app)) }
-                }
-            },
-        )
-    }
-}
+                dismiss()
+            }
+        },
+        onDismissAllAi = {
+            showAllAiApps = false
+            pendingAiQuery = null
+            refocus()
+        },
+    )
 
-private data class MessagingOptionsLoadState(
-    val options: List<MessagingProviderOption> = emptyList(),
-    val loaded: Boolean = false,
-)
+    MagicContactDialogHost(
+        callContact = callFlow.contactToConfirm,
+        smsDraft = smsFlow.draftToConfirm,
+        assistantActive = actions.isAssistantRoleHeld(),
+        onCallNow = { callFlow.callNow() },
+        onChooseCallingApp = { callFlow.chooseCallingApp() },
+        onDismissCall = callFlow::dismiss,
+        onSendSms = { smsFlow.confirmDraft() },
+        onChooseMessagingApp = { smsFlow.chooseMessagingApp { pendingMessagingChoice = it } },
+        onDismissSms = { smsFlow.dismissDraft(onSessionComplete) },
+    )
+}

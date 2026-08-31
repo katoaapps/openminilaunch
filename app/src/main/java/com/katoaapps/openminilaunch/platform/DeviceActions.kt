@@ -4,7 +4,6 @@ import com.katoaapps.openminilaunch.R
 import com.katoaapps.openminilaunch.features.calendar.parseCalendarPhrase
 import com.katoaapps.openminilaunch.features.apps.LauncherAppRepository
 import com.katoaapps.openminilaunch.features.conversations.NotificationHub
-import com.katoaapps.openminilaunch.features.demo.DemoSearchData
 import com.katoaapps.openminilaunch.features.magic.normalizedWebUrl
 import com.katoaapps.openminilaunch.features.messaging.MessagingDeviceActions
 import com.katoaapps.openminilaunch.features.messaging.MessagingProviderOption
@@ -15,7 +14,6 @@ import com.katoaapps.openminilaunch.ui.apps.AllAppsActivity
 
 import android.Manifest
 import android.provider.AlarmClock
-import android.content.ContentUris
 import android.content.Context
 import android.content.ComponentName
 import android.content.Intent
@@ -30,26 +28,18 @@ import android.os.Build
 import android.app.SearchManager
 import android.provider.Settings
 import android.provider.CalendarContract
-import android.provider.ContactsContract
 import android.provider.Telephony
 import android.telephony.PhoneNumberUtils
-import android.telephony.SmsManager
-import android.telephony.SubscriptionManager
 import android.util.LruCache
 import kotlinx.coroutines.flow.StateFlow
-
-internal enum class DirectSmsResult {
-    QUEUED,
-    NO_DEFAULT_SUBSCRIPTION,
-    NOT_AUTHORIZED,
-    UNSUPPORTED,
-    FAILED,
-}
 
 class DeviceActions(private val context: Context) {
     private val launcherAppRepository = LauncherAppRepository.get(context)
     val launcherAppsRevision: StateFlow<Long> = launcherAppRepository.revision
     private val labelCache = mutableMapOf<String, String>()
+    private val contactSearch = ContactSearch(context)
+    private val shareTargetDiscovery = ShareTargetDiscovery(context)
+    private val directSmsSender = DirectSmsSender(context, ::isAssistantRoleHeld)
     private val legacyLockAdminComponent = ComponentName(
         context.packageName,
         "${context.packageName}.LockDeviceAdminReceiver",
@@ -192,49 +182,7 @@ class DeviceActions(private val context: Context) {
     }
 
     fun searchContacts(query: String, useDemoData: Boolean = false): List<ContactResult> {
-        if (useDemoData) return DemoSearchData.searchContacts(query)
-        if (query.isBlank()) return emptyList()
-        val results = mutableListOf<ContactResult>()
-        val seenNumbers = mutableSetOf<String>()
-        val projection = arrayOf(
-            ContactsContract.CommonDataKinds.Phone.CONTACT_ID,
-            ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME_PRIMARY,
-            ContactsContract.CommonDataKinds.Phone.NUMBER,
-            ContactsContract.CommonDataKinds.Phone.TYPE,
-            ContactsContract.CommonDataKinds.Phone.LABEL,
-        )
-        val selection = "${ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME_PRIMARY} LIKE ?"
-        context.contentResolver.query(
-            ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
-            projection,
-            selection,
-            arrayOf("$query%"),
-            "${ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME_PRIMARY} ASC",
-        )?.use { cursor ->
-            val contactIdIndex = cursor.getColumnIndexOrThrow(projection[0])
-            val nameIndex = cursor.getColumnIndexOrThrow(projection[1])
-            val phoneIndex = cursor.getColumnIndexOrThrow(projection[2])
-            val typeIndex = cursor.getColumnIndexOrThrow(projection[3])
-            val labelIndex = cursor.getColumnIndexOrThrow(projection[4])
-            while (cursor.moveToNext() && results.size < 8) {
-                val phone = cursor.getString(phoneIndex)
-                val normalizedPhone = PhoneNumberUtils.normalizeNumber(phone).ifBlank { phone }
-                val uniqueNumber = "${cursor.getLong(contactIdIndex)}:$normalizedPhone"
-                if (seenNumbers.add(uniqueNumber)) {
-                    val phoneLabel = ContactsContract.CommonDataKinds.Phone.getTypeLabel(
-                        context.resources,
-                        cursor.getInt(typeIndex),
-                        cursor.getString(labelIndex),
-                    ).toString().ifBlank { context.getString(R.string.phone) }
-                    val contactUri = ContentUris.withAppendedId(
-                        ContactsContract.Contacts.CONTENT_URI,
-                        cursor.getLong(contactIdIndex),
-                    ).toString()
-                    results += ContactResult(contactUri, cursor.getString(nameIndex), phone, phoneLabel)
-                }
-            }
-        }
-        return results
+        return contactSearch.search(query, useDemoData)
     }
 
     private fun launchDefaultMessagesApp() {
@@ -261,35 +209,10 @@ class DeviceActions(private val context: Context) {
     fun chooseMessagingApp(body: String): Boolean = messagingActions.chooseMessagingApp(body)
 
     internal fun sendSmsDirect(phone: String, body: String): DirectSmsResult {
-        if (!context.packageManager.hasSystemFeature(PackageManager.FEATURE_TELEPHONY_MESSAGING)) {
-            return DirectSmsResult.UNSUPPORTED
-        }
-        if (!isAssistantRoleHeld() || context.checkSelfPermission(Manifest.permission.SEND_SMS) != PackageManager.PERMISSION_GRANTED) {
-            return DirectSmsResult.NOT_AUTHORIZED
-        }
-        val cleanBody = body.trim()
-        if (phone.isBlank() || cleanBody.isBlank()) return DirectSmsResult.FAILED
-        val subscriptionId = SubscriptionManager.getDefaultSmsSubscriptionId()
-        if (subscriptionId == SubscriptionManager.INVALID_SUBSCRIPTION_ID) {
-            return DirectSmsResult.NO_DEFAULT_SUBSCRIPTION
-        }
-        return runCatching {
-            @Suppress("DEPRECATION")
-            val manager = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                context.getSystemService(SmsManager::class.java).createForSubscriptionId(subscriptionId)
-            } else {
-                SmsManager.getSmsManagerForSubscriptionId(subscriptionId)
-            }
-            val parts = manager.divideMessage(cleanBody)
-            if (parts.size == 1) {
-                manager.sendTextMessage(phone, null, cleanBody, null, null)
-            } else {
-                manager.sendMultipartTextMessage(phone, null, parts, null, null)
-            }
-            DirectSmsResult.QUEUED
-        }.getOrDefault(DirectSmsResult.FAILED)
+        return directSmsSender.send(phone, body)
     }
 
+    @Suppress("DEPRECATION")
     fun placeCall(phone: String): Boolean {
         if (!context.packageManager.hasSystemFeature(PackageManager.FEATURE_TELEPHONY) ||
             runCatching { PhoneNumberUtils.isEmergencyNumber(phone) }.getOrDefault(false)
@@ -308,40 +231,15 @@ class DeviceActions(private val context: Context) {
     }
 
     fun textShareApps(): List<LaunchableApp> {
-        val intent = Intent(Intent.ACTION_SEND).setType("text/plain")
-        return context.packageManager.queryIntentActivities(intent, PackageManager.MATCH_DEFAULT_ONLY)
-            .asSequence()
-            .filter { it.activityInfo.packageName != context.packageName }
-            .map { LaunchableApp(it.loadLabel(context.packageManager).toString(), it.activityInfo.packageName) }
-            .distinctBy { it.packageName }
-            .sortedBy { it.label.lowercase() }
-            .toList()
+        return shareTargetDiscovery.textShareApps()
     }
 
     fun curatedAiApps(): List<LaunchableApp> {
-        val compatible = textShareApps().associateBy { it.packageName }
-        return CURATED_AI_PACKAGES.mapNotNull(compatible::get).sortedBy { it.label.lowercase() }
+        return shareTargetDiscovery.curatedAiApps()
     }
 
     fun webSearchApps(): List<LaunchableApp> {
-        val discoveryIntents = listOf(
-            Intent(Intent.ACTION_WEB_SEARCH).putExtra(SearchManager.QUERY, BROWSER_DISCOVERY_QUERY),
-            Intent(Intent.ACTION_VIEW, Uri.parse("https://example.com"))
-                .addCategory(Intent.CATEGORY_BROWSABLE),
-            Intent.makeMainSelectorActivity(Intent.ACTION_MAIN, Intent.CATEGORY_APP_BROWSER),
-        )
-        return discoveryIntents.asSequence()
-            .flatMap { intent ->
-                context.packageManager.queryIntentActivities(
-                    intent,
-                    PackageManager.MATCH_DEFAULT_ONLY,
-                ).asSequence()
-            }
-            .filter { it.activityInfo.packageName != context.packageName }
-            .map { LaunchableApp(it.loadLabel(context.packageManager).toString(), it.activityInfo.packageName) }
-            .distinctBy { it.packageName }
-            .sortedBy { it.label.lowercase() }
-            .toList()
+        return shareTargetDiscovery.webSearchApps()
     }
 
     fun shareQueryWithApp(query: String, packageName: String): Boolean {
@@ -454,7 +352,6 @@ class DeviceActions(private val context: Context) {
     }
 
     private companion object {
-        const val BROWSER_DISCOVERY_QUERY = "MinkLauncher"
         const val SAMSUNG_CLOCK_PACKAGE = "com.sec.android.app.clockpackage"
         val CLOCK_PACKAGES = listOf(
             SAMSUNG_CLOCK_PACKAGE,
@@ -465,16 +362,6 @@ class DeviceActions(private val context: Context) {
         // Package icons are reused by search, shortcuts, setup, and Settings.
         // ConstantState gives each caller a fresh Drawable while keeping decoded icon data cached.
         val iconStateCache = LruCache<String, Drawable.ConstantState>(96)
-
-        val CURATED_AI_PACKAGES = setOf(
-            "com.openai.chatgpt",
-            "com.anthropic.claude",
-            "ai.perplexity.app.android",
-            "com.microsoft.copilot",
-            "com.deepseek.chat",
-            "com.facebook.stella",
-            "com.google.android.apps.bard",
-        )
 
     }
 }

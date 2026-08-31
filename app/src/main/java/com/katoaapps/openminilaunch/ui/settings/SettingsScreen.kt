@@ -7,29 +7,9 @@ import com.katoaapps.openminilaunch.model.*
 import com.katoaapps.openminilaunch.platform.*
 import com.katoaapps.openminilaunch.features.files.*
 import com.katoaapps.openminilaunch.features.messaging.MessagingProviderCatalog
-import com.katoaapps.openminilaunch.features.messaging.MessagingProviderOption
-import com.katoaapps.openminilaunch.features.conversations.NotificationHub
-import com.katoaapps.openminilaunch.features.wellbeing.*
-import com.katoaapps.openminilaunch.ui.components.*
-import com.katoaapps.openminilaunch.ui.launcher.displayLabel
-import com.katoaapps.openminilaunch.ui.launcher.displaySlotLabel
-import com.katoaapps.openminilaunch.ui.theme.*
-import com.katoaapps.openminilaunch.R
-import com.katoaapps.openminilaunch.ui.launcher.hasMediaReadAccess
-import com.katoaapps.openminilaunch.ui.launcher.isPermanentlyDenied
-import com.katoaapps.openminilaunch.ui.launcher.mediaPermissionPermanentlyDenied
-import com.katoaapps.openminilaunch.ui.launcher.mediaReadPermissions
-import com.katoaapps.openminilaunch.ui.launcher.supportsDirectCalls
-import com.katoaapps.openminilaunch.ui.launcher.supportsDirectSms
 import com.katoaapps.openminilaunch.ui.onboarding.FileSearchScopeDialog
-import com.katoaapps.openminilaunch.ui.onboarding.UsageAccessDisclosureDialog
-import com.katoaapps.openminilaunch.ui.wellbeing.SocialAppsDialog
 
-import android.Manifest
 import android.content.Intent
-import android.content.pm.PackageManager
-import android.os.Build
-import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.BackHandler
 import androidx.activity.compose.rememberLauncherForActivityResult
@@ -44,28 +24,10 @@ import androidx.compose.animation.core.tween
 import androidx.compose.foundation.ScrollState
 import androidx.compose.runtime.*
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.res.pluralStringResource
-import androidx.core.content.ContextCompat
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
-
-private data class AppListLoadState(
-    val apps: List<LaunchableApp> = emptyList(),
-    val loaded: Boolean = false,
-)
-
-private data class LauncherAppListLoadState(
-    val apps: List<LauncherAppTarget> = emptyList(),
-    val loaded: Boolean = false,
-)
-
-private data class MessagingProviderLoadState(
-    val options: List<MessagingProviderOption> = emptyList(),
-    val loaded: Boolean = false,
-)
 
 @Composable
 internal fun SettingsScreen(
@@ -78,16 +40,10 @@ internal fun SettingsScreen(
 ) {
     val context = LocalContext.current
     val fileSearchRepository = remember { FileSearchRepository(context.applicationContext) }
-    var pickingShortcut by remember { mutableStateOf<Shortcut?>(null) }
-    var pickingDrawer by remember { mutableStateOf(false) }
-    var pickingAi by remember { mutableStateOf(false) }
-    var pickingAllAi by remember { mutableStateOf(false) }
-    var pickingWeb by remember { mutableStateOf(false) }
-    var pickingMessagingApp by remember { mutableStateOf(false) }
-    var pickingSocialApps by remember { mutableStateOf(false) }
+    var picker by remember { mutableStateOf<SettingsPicker?>(null) }
     var appListRefresh by remember { mutableIntStateOf(0) }
     val launcherAppsRevision by actions.launcherAppsRevision.collectAsState()
-    val loadInstalledApps = pickingShortcut != null || pickingDrawer
+    val loadInstalledApps = picker is SettingsPicker.ShortcutApp || picker == SettingsPicker.DrawerApps
     val installedApps by produceState(
         LauncherAppListLoadState(),
         loadInstalledApps,
@@ -101,24 +57,24 @@ internal fun SettingsScreen(
             )
         }
     }
-    val curatedAiApps by produceState(AppListLoadState(), pickingAi, appListRefresh) {
-        if (pickingAi) {
+    val curatedAiApps by produceState(AppListLoadState(), picker, appListRefresh) {
+        if (picker == SettingsPicker.CuratedAiApp) {
             value = AppListLoadState(
                 apps = withContext(Dispatchers.IO) { actions.curatedAiApps() },
                 loaded = true,
             )
         }
     }
-    val allAiApps by produceState(AppListLoadState(), pickingAllAi, appListRefresh) {
-        if (pickingAllAi) {
+    val allAiApps by produceState(AppListLoadState(), picker, appListRefresh) {
+        if (picker == SettingsPicker.CompatibleAiApp) {
             value = AppListLoadState(
                 apps = withContext(Dispatchers.IO) { actions.textShareApps() },
                 loaded = true,
             )
         }
     }
-    val webApps by produceState(AppListLoadState(), pickingWeb, appListRefresh) {
-        if (pickingWeb) {
+    val webApps by produceState(AppListLoadState(), picker, appListRefresh) {
+        if (picker == SettingsPicker.WebApp) {
             value = AppListLoadState(
                 apps = withContext(Dispatchers.IO) { actions.webSearchApps() },
                 loaded = true,
@@ -127,88 +83,30 @@ internal fun SettingsScreen(
     }
     val messagingProviders by produceState(
         MessagingProviderLoadState(),
-        pickingMessagingApp,
+        picker,
         appListRefresh,
     ) {
-        if (pickingMessagingApp) {
+        if (picker == SettingsPicker.MessagingApp) {
             value = MessagingProviderLoadState(
                 options = withContext(Dispatchers.IO) { actions.messagingProviderOptions() },
                 loaded = true,
             )
         }
     }
-    var contactsGranted by remember {
-        mutableStateOf(ContextCompat.checkSelfPermission(context, Manifest.permission.READ_CONTACTS) == PackageManager.PERMISSION_GRANTED)
-    }
-    var mediaGranted by remember { mutableStateOf(hasMediaReadAccess(context)) }
-    var callsGranted by remember {
-        mutableStateOf(ContextCompat.checkSelfPermission(context, Manifest.permission.CALL_PHONE) == PackageManager.PERMISSION_GRANTED)
-    }
-    var smsGranted by remember {
-        mutableStateOf(ContextCompat.checkSelfPermission(context, Manifest.permission.SEND_SMS) == PackageManager.PERMISSION_GRANTED)
-    }
-    var lockServiceEnabled by remember { mutableStateOf(actions.isLockServiceEnabled()) }
-    var showLockDisclosure by remember { mutableStateOf(false) }
-    var assistantRoleHeld by remember { mutableStateOf(actions.isAssistantRoleHeld()) }
-    var showAssistantDisclosure by remember { mutableStateOf(false) }
-    var notificationAccessGranted by remember { mutableStateOf(NotificationHub.hasAccess(context)) }
-    var showNotificationDisclosure by remember { mutableStateOf(false) }
-    val usageInsights = remember { UsageInsightsRepository(context.applicationContext) }
-    var usageAccessGranted by remember { mutableStateOf(usageInsights.hasAccess()) }
-    var showUsageDisclosure by remember { mutableStateOf(false) }
-    val directCallsSupported = remember(context) { supportsDirectCalls(context) }
     var showFileScopeChoice by remember { mutableStateOf(false) }
-    DisposableEffect(context) {
+    val permissionHost = rememberSettingsPermissionHost(actions) {
+        showFileScopeChoice = true
+    }
+    DisposableEffect(context, actions) {
         val lifecycle = (context as? ComponentActivity)?.lifecycle
         val observer = LifecycleEventObserver { _, event ->
             if (event == Lifecycle.Event.ON_RESUME) {
                 actions.invalidateInstalledApps()
                 appListRefresh++
-                contactsGranted = ContextCompat.checkSelfPermission(context, Manifest.permission.READ_CONTACTS) == PackageManager.PERMISSION_GRANTED
-                mediaGranted = hasMediaReadAccess(context)
-                callsGranted = ContextCompat.checkSelfPermission(context, Manifest.permission.CALL_PHONE) == PackageManager.PERMISSION_GRANTED
-                smsGranted = ContextCompat.checkSelfPermission(context, Manifest.permission.SEND_SMS) == PackageManager.PERMISSION_GRANTED
-                lockServiceEnabled = actions.isLockServiceEnabled()
-                assistantRoleHeld = actions.isAssistantRoleHeld()
-                notificationAccessGranted = NotificationHub.hasAccess(context)
-                usageAccessGranted = usageInsights.hasAccess()
             }
         }
         lifecycle?.addObserver(observer)
         onDispose { lifecycle?.removeObserver(observer) }
-    }
-    val contactsPermission = rememberLauncherForActivityResult(ActivityResultContracts.RequestPermission()) { granted ->
-        contactsGranted = granted
-        if (!granted && isPermanentlyDenied(context, Manifest.permission.READ_CONTACTS)) actions.openAppSettings()
-    }
-    val callPermission = rememberLauncherForActivityResult(ActivityResultContracts.RequestPermission()) { granted ->
-        callsGranted = granted
-        if (!granted && isPermanentlyDenied(context, Manifest.permission.CALL_PHONE)) actions.openAppSettings()
-    }
-    val smsPermission = rememberLauncherForActivityResult(ActivityResultContracts.RequestPermission()) { granted ->
-        smsGranted = granted
-        if (!granted && isPermanentlyDenied(context, Manifest.permission.SEND_SMS)) actions.openAppSettings()
-    }
-    val mediaPermission = rememberLauncherForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) {
-        mediaGranted = hasMediaReadAccess(context)
-        if (!mediaGranted && mediaPermissionPermanentlyDenied(context)) actions.openAppSettings()
-        showFileScopeChoice = true
-    }
-    val lockServiceSettings = rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) {
-        lockServiceEnabled = actions.isLockServiceEnabled()
-    }
-    val assistantRoleSettings = rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) {
-        assistantRoleHeld = actions.isAssistantRoleHeld()
-    }
-    val notificationAccessSettings = rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) {
-        notificationAccessGranted = NotificationHub.hasAccess(context)
-        if (notificationAccessGranted) {
-            showNotificationDisclosure = false
-            NotificationHub.requestReconnect(context)
-        }
-    }
-    val usageAccessSettings = rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) {
-        usageAccessGranted = usageInsights.hasAccess()
     }
     val folderPicker = rememberLauncherForActivityResult(ActivityResultContracts.OpenDocumentTree()) { uri ->
         uri?.let {
@@ -251,33 +149,6 @@ internal fun SettingsScreen(
             }
         }
     }
-    val permissionState = SettingsPermissionState(
-        usageAccessGranted = usageAccessGranted,
-        notificationAccessGranted = notificationAccessGranted,
-        contactsGranted = contactsGranted,
-        directCallsSupported = directCallsSupported,
-        callsGranted = callsGranted,
-        directSmsSupported = supportsDirectSms(context),
-        assistantRoleHeld = assistantRoleHeld,
-        smsGranted = smsGranted,
-        mediaGranted = mediaGranted,
-        lockSupported = actions.supportsLockScreenAction(),
-        lockServiceEnabled = lockServiceEnabled,
-    )
-    val permissionActions = SettingsPermissionActions(
-        requestUsageAccess = { showUsageDisclosure = true },
-        manageUsageAccess = { usageAccessSettings.launch(usageInsights.accessSettingsIntent()) },
-        requestNotificationAccess = { showNotificationDisclosure = true },
-        manageNotificationAccess = { notificationAccessSettings.launch(NotificationHub.accessSettingsIntent()) },
-        requestContacts = { contactsPermission.launch(Manifest.permission.READ_CONTACTS) },
-        requestCalls = { callPermission.launch(Manifest.permission.CALL_PHONE) },
-        requestSms = { smsPermission.launch(Manifest.permission.SEND_SMS) },
-        requestMedia = { mediaPermission.launch(mediaReadPermissions()) },
-        manageAppPermissions = actions::openAppSettings,
-        requestLockService = { showLockDisclosure = true },
-        manageLockService = actions::openLockAccessibilitySettings,
-        showAssistantSetup = { showAssistantDisclosure = true },
-    )
     var settingsStack by remember(initialDestination) { mutableStateOf(settingsPathTo(initialDestination)) }
     var navigatingBack by remember { mutableStateOf(false) }
     val settingsScrollStates = remember {
@@ -313,52 +184,23 @@ internal fun SettingsScreen(
         label = "settings-page",
     ) { page ->
         CompositionLocalProvider(LocalSettingsScrollState provides settingsScrollStates.getValue(page)) {
-            when (page) {
-            SettingsDestination.OVERVIEW -> SettingsOverviewPage(
+            SettingsDestinationContent(
+                destination = page,
                 store = store,
                 actions = actions,
-                permissionState = permissionState,
-                onNavigate = ::navigateTo,
-                goBack = goBack,
-            )
-            SettingsDestination.LAUNCHER -> LauncherSettingsPage(
-                store = store,
+                permissionState = permissionHost.state,
+                permissionActions = permissionHost.actions,
                 requestHomeRole = requestHomeRole,
+                onRepeatTutorial = onRepeatTutorial,
                 onNavigate = ::navigateTo,
-                goBack = ::navigateBack,
-            )
-            SettingsDestination.APPEARANCE -> AppearanceSettingsPage(store, ::navigateBack)
-            SettingsDestination.SHORTCUTS -> ShortcutsSettingsPage(
-                store = store,
-                actions = actions,
-                onPickShortcut = { pickingShortcut = it },
-                onPickDrawer = { pickingDrawer = true },
-                goBack = ::navigateBack,
-            )
-            SettingsDestination.MAGIC_BOX -> MagicBoxSettingsPage(
-                store = store,
-                actions = actions,
-                mediaGranted = mediaGranted,
-                onPickWeb = { pickingWeb = true },
-                onPickAi = { pickingAi = true },
-                onOpenFileSearch = { navigateTo(SettingsDestination.FILE_SEARCH) },
-                goBack = ::navigateBack,
-            )
-            SettingsDestination.MINK_ASSISTANT -> MinkAssistantSettingsPage(
-                assistantRoleHeld = assistantRoleHeld,
-                showAssistantDisclosure = { showAssistantDisclosure = true },
-                goBack = ::navigateBack,
-            )
-            SettingsDestination.MESSAGING -> MessagingSettingsPage(
-                store = store,
-                actions = actions,
-                onPickMessagingApp = { pickingMessagingApp = true },
-                goBack = ::navigateBack,
-            )
-            SettingsDestination.FILE_SEARCH -> FileSearchSettingsPage(
-                store = store,
-                mediaGranted = mediaGranted,
-                onOpenPermissions = { navigateTo(SettingsDestination.PERMISSIONS) },
+                onNavigateBack = ::navigateBack,
+                onExitSettings = goBack,
+                onPickShortcut = { picker = SettingsPicker.ShortcutApp(it) },
+                onPickDrawer = { picker = SettingsPicker.DrawerApps },
+                onPickWeb = { picker = SettingsPicker.WebApp },
+                onPickAi = { picker = SettingsPicker.CuratedAiApp },
+                onPickMessagingApp = { picker = SettingsPicker.MessagingApp },
+                onPickSocialApps = { picker = SettingsPicker.MinkDayApps },
                 onAddFolder = { folderPicker.launch(null) },
                 onRemoveFolder = { folder ->
                     runCatching {
@@ -370,185 +212,23 @@ internal fun SettingsScreen(
                     store.removeSearchFolder(folder.uri)
                     fileSearchRepository.invalidateFolders()
                 },
-                goBack = ::navigateBack,
             )
-            SettingsDestination.MINK_DAY -> MinkDaySettingsPage(
-                store = store,
-                usageAccessGranted = usageAccessGranted,
-                onPickSocialApps = { pickingSocialApps = true },
-                onOpenPermissions = { navigateTo(SettingsDestination.PERMISSIONS) },
-                goBack = ::navigateBack,
-            )
-            SettingsDestination.PERMISSIONS -> PermissionsSettingsPage(
-                state = permissionState,
-                actions = permissionActions,
-                goBack = ::navigateBack,
-            )
-            SettingsDestination.ABOUT -> AboutSettingsPage(store, actions, onRepeatTutorial, ::navigateBack)
-            }
         }
     }
 
-    if (showLockDisclosure) {
-        LockAccessibilityDisclosureDialog(
-            onContinue = {
-                showLockDisclosure = false
-                lockServiceSettings.launch(actions.lockAccessibilitySettingsIntent())
-            },
-            onDismiss = { showLockDisclosure = false },
-        )
-    }
-
-    if (showAssistantDisclosure) {
-        AssistantDisclosureDialog(
-            active = assistantRoleHeld,
-            onContinue = {
-                showAssistantDisclosure = false
-                assistantRoleSettings.launch(actions.assistantRoleSelectionIntent())
-            },
-            onDismiss = { showAssistantDisclosure = false },
-        )
-    }
-
-    if (showNotificationDisclosure) {
-        NotificationAccessDisclosureDialog(
-            onOpenAppInfo = actions::openAppSettings,
-            onOpenNotificationAccess = {
-                notificationAccessSettings.launch(NotificationHub.accessSettingsIntent())
-            },
-            onDismiss = { showNotificationDisclosure = false },
-        )
-    }
-    if (showUsageDisclosure) {
-        UsageAccessDisclosureDialog(
-            onContinue = {
-                showUsageDisclosure = false
-                usageAccessSettings.launch(usageInsights.accessSettingsIntent())
-            },
-            onDismiss = { showUsageDisclosure = false },
-        )
-    }
-
-    pickingShortcut?.let { shortcut ->
-        val showSamsungWeatherGuide = Build.MANUFACTURER.equals("samsung", ignoreCase = true)
-        LauncherAppPickerDialog(
-            title = stringResource(R.string.choose_app_for_shortcut, shortcut.displaySlotLabel()),
-            apps = installedApps.apps,
-            selected = setOfNotNull(store.shortcutTargets[shortcut]),
-            actions = actions,
-            loading = !installedApps.loaded,
-            supportingText = if (showSamsungWeatherGuide) stringResource(R.string.samsung_weather_guide) else null,
-            supportingActionLabel = if (showSamsungWeatherGuide) stringResource(R.string.open_apps_settings) else null,
-            onSupportingAction = actions::openInstalledAppsSettings,
-            onApp = { store.assignShortcut(shortcut, it.selectionKey); pickingShortcut = null },
-            onReset = { store.resetShortcut(shortcut); pickingShortcut = null },
-            resetLabel = stringResource(R.string.restore_shortcut_default, shortcut.displayLabel()),
-            onDismiss = { pickingShortcut = null },
-        )
-    }
-    if (pickingDrawer) {
-        LauncherAppPickerDialog(
-            title = pluralStringResource(
-                R.plurals.drawer_apps_title,
-                store.drawerTargets.size,
-                store.drawerTargets.size,
-                MAX_DRAWER_APPS,
-            ),
-            apps = installedApps.apps,
-            selected = store.drawerTargets.toSet(),
-            actions = actions,
-            loading = !installedApps.loaded,
-            onApp = { app ->
-                val fillingDrawer = app.selectionKey !in store.drawerTargets && store.drawerTargets.size == MAX_DRAWER_APPS - 1
-                store.toggleDrawerApp(app.selectionKey)
-                if (fillingDrawer) {
-                    Toast.makeText(
-                        context,
-                        context.resources.getQuantityString(
-                            R.plurals.apps_selected,
-                            MAX_DRAWER_APPS,
-                            MAX_DRAWER_APPS,
-                        ),
-                        Toast.LENGTH_SHORT,
-                    ).show()
-                }
-            },
-            onSelectionLimit = {
-                Toast.makeText(
-                    context,
-                    context.resources.getQuantityString(
-                        R.plurals.maximum_apps_selected,
-                        MAX_DRAWER_APPS,
-                        MAX_DRAWER_APPS,
-                    ),
-                    Toast.LENGTH_SHORT,
-                ).show()
-            },
-            onDismiss = { pickingDrawer = false },
-            multiSelect = true,
-            selectionLimit = MAX_DRAWER_APPS,
-        )
-    }
-    if (pickingAi) {
-        AppPickerDialog(
-            title = stringResource(R.string.choose_ai_app_title),
-            apps = curatedAiApps.apps,
-            selected = setOfNotNull(store.preferredAiPackage),
-            loading = !curatedAiApps.loaded,
-            emptyMessage = stringResource(R.string.no_curated_ai_apps_short),
-            extraActionLabel = stringResource(R.string.other_compatible_app),
-            onExtraAction = { pickingAi = false; pickingAllAi = true },
-            onApp = { store.setPreferredAiApp(it.packageName); pickingAi = false },
-            onReset = { store.resetPreferredAiApp(); pickingAi = false },
-            resetLabel = stringResource(R.string.reset_to_chooser),
-            onDismiss = { pickingAi = false },
-        )
-    }
-    if (pickingAllAi) {
-        AppPickerDialog(
-            title = stringResource(R.string.other_compatible_apps),
-            apps = allAiApps.apps,
-            selected = setOfNotNull(store.preferredAiPackage),
-            loading = !allAiApps.loaded,
-            onApp = { store.setPreferredAiApp(it.packageName); pickingAllAi = false },
-            onReset = { store.resetPreferredAiApp(); pickingAllAi = false },
-            resetLabel = stringResource(R.string.reset_to_chooser),
-            onDismiss = { pickingAllAi = false },
-        )
-    }
-    if (pickingWeb) {
-        AppPickerDialog(
-            title = stringResource(R.string.choose_web_search_app),
-            apps = webApps.apps,
-            selected = setOfNotNull(store.preferredWebPackage),
-            loading = !webApps.loaded,
-            emptyMessage = stringResource(R.string.no_web_search_apps),
-            onApp = { store.setPreferredWebApp(it.packageName); pickingWeb = false },
-            onReset = { store.resetPreferredWebApp(); pickingWeb = false },
-            resetLabel = stringResource(R.string.use_system_browser),
-            onDismiss = { pickingWeb = false },
-        )
-    }
-    if (pickingMessagingApp) {
-        MessagingProviderPickerDialog(
-            title = stringResource(R.string.choose_preferred_messaging_app),
-            options = messagingProviders.options,
-            selectedProviderId = MessagingProviderCatalog.providerForPackage(
-                store.preferredMessagingPackage,
-            )?.id ?: MessagingProviderCatalog.SYSTEM_DEFAULT_PROVIDER_ID,
-            loading = !messagingProviders.loaded,
-            showUnavailable = true,
-            onProvider = { option ->
-                option.preferencePackageName?.let(store::setPreferredMessagingApp)
-                    ?: store.resetPreferredMessagingApp()
-                pickingMessagingApp = false
-            },
-            onDismiss = { pickingMessagingApp = false },
-        )
-    }
-    if (pickingSocialApps) {
-        SocialAppsDialog(store, usageInsights) { pickingSocialApps = false }
-    }
+    SettingsPickerDialogs(
+        picker = picker,
+        store = store,
+        actions = actions,
+        context = context,
+        installedApps = installedApps,
+        curatedAiApps = curatedAiApps,
+        allAiApps = allAiApps,
+        webApps = webApps,
+        messagingProviders = messagingProviders,
+        usageInsights = permissionHost.usageInsights,
+        onPickerChange = { picker = it },
+    )
     if (showFileScopeChoice) {
         FileSearchScopeDialog(
             onChooseFolder = {
