@@ -114,7 +114,7 @@ internal fun ShortcutsSettingsPage(
                 shortcut = shortcut,
                 targetKey = targetKey,
                 actions = actions,
-                subtitle = targetKey?.let(actions::launcherAppLabel)
+                subtitle = targetKey?.let(actions::launcherTargetLabel)
                     ?: stringResource(R.string.shortcut_default, shortcut.displayLabel()),
             ) { onPickShortcut(shortcut) }
         }

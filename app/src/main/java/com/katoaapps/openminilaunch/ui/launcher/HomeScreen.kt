@@ -54,6 +54,7 @@ internal fun HomeScreen(
 ) {
     val context = LocalContext.current
     val launcherAppsRevision by actions.launcherAppsRevision.collectAsState()
+    val launcherShortcutsRevision by actions.launcherShortcutsRevision.collectAsState()
     var drawerOpen by remember { mutableStateOf(false) }
     var todoJumpToken by remember { mutableIntStateOf(0) }
     var flyingTodo by remember { mutableStateOf<String?>(null) }
@@ -236,6 +237,7 @@ internal fun HomeScreen(
             actions = actions,
             appAccessState = appAccessState,
             launcherAppsRevision = launcherAppsRevision,
+            launcherShortcutsRevision = launcherShortcutsRevision,
             onDismiss = { drawerOpen = false },
             openSettings = openSettings,
         )

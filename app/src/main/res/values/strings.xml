@@ -64,7 +64,7 @@
     <string name="choose_assistant">Choose assistant</string>
     <string name="choose_messaging_app">Send via…</string>
     <string name="your_drawer">YOUR DRAWER</string>
-    <string name="choose_drawer_apps">Choose up to eight apps in Settings.</string>
+    <string name="choose_drawer_apps">Choose up to eight apps or app shortcuts in Settings.</string>
     <string name="empty_drawer">Your Top 8 is empty</string>
     <string name="see_all_apps">See all</string>
     <string name="all_apps">All apps</string>
@@ -133,8 +133,8 @@
     <string name="shortcut_top_eight">Top 8</string>
     <string name="shortcut_slot">Shortcut %1$d</string>
     <string name="shortcut_default">Default · %1$s</string>
-    <string name="choose_app_or_keep_default">Choose an app or keep %1$s</string>
-    <string name="choose_app_for_shortcut">Choose app for %1$s</string>
+    <string name="choose_app_or_keep_default">Choose an app or app shortcut, or keep %1$s</string>
+    <string name="choose_app_for_shortcut">Choose target for %1$s</string>
     <string name="restore_shortcut_default">Restore %1$s default</string>
     <string name="theme_system">System</string>
     <string name="theme_light">Light</string>
@@ -194,8 +194,8 @@
     <string name="update_notice_home_browser_title">More Home and browser control</string>
     <string name="update_notice_home_browser_description">Hide the Home status bar and choose from more browsers that Android exposes for searches and web pages.</string>
     <string name="review_updated_tutorial">Review the updated tutorial</string>
-    <string name="choose_your_shortcut_apps">Choose your shortcut apps</string>
-    <string name="shortcut_setup_description">The six app slots keep their built-in defaults until you replace them. Choose any installed app for a slot, or explicitly keep the defaults you want.</string>
+    <string name="choose_your_shortcut_apps">Choose your shortcuts</string>
+    <string name="shortcut_setup_description">The six slots keep their built-in defaults until you replace them. Choose an installed app or an action published by an app, or explicitly keep the defaults you want.</string>
     <string name="keep_built_in_defaults_remaining">Keep built-in defaults for remaining</string>
     <string name="finish_launcher_setup">Finish launcher setup</string>
 
@@ -496,6 +496,10 @@
     <string name="align_pill_to_bottom_description">Keep the Home pill within easier reach above the Magic Box.</string>
     <string name="reset_system_default">Reset to system default</string>
     <string name="no_apps_found">No apps found.</string>
+    <string name="apps">Apps</string>
+    <string name="app_shortcuts">Shortcuts</string>
+    <string name="work_profile">Work profile</string>
+    <string name="no_app_shortcuts_found">No app shortcuts found. MinkLauncher must be selected as your Home app, and apps must publish shortcuts before they can appear here.</string>
     <string name="enable_double_tap_lock">Enable double-tap to lock?</string>
     <string name="double_tap_disclosure_one">To make double-tap behave like the power button, %1$s uses Android’s accessibility Lock screen action.</string>
     <string name="double_tap_disclosure_two">The service runs only when you double-tap empty Home space. It does not observe accessibility events, read screen content, perform gestures, or collect data.</string>
@@ -527,16 +531,16 @@
     <string name="choose_web_search_app">Choose web search app</string>
     <string name="no_web_search_apps">No web search apps found.</string>
     <plurals name="drawer_apps_title">
-        <item quantity="one">Drawer apps · %1$d/%2$d</item>
-        <item quantity="other">Drawer apps · %1$d/%2$d</item>
+        <item quantity="one">Drawer items · %1$d/%2$d</item>
+        <item quantity="other">Drawer items · %1$d/%2$d</item>
     </plurals>
     <plurals name="apps_selected">
-        <item quantity="one">%1$d app selected</item>
-        <item quantity="other">%1$d apps selected</item>
+        <item quantity="one">%1$d item selected</item>
+        <item quantity="other">%1$d items selected</item>
     </plurals>
     <plurals name="maximum_apps_selected">
-        <item quantity="one">Maximum of %1$d app selected</item>
-        <item quantity="other">Maximum of %1$d apps selected</item>
+        <item quantity="one">Maximum of %1$d item selected</item>
+        <item quantity="other">Maximum of %1$d items selected</item>
     </plurals>
 
     <!-- Home panel color -->

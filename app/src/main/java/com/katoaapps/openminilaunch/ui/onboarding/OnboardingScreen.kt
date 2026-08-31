@@ -16,7 +16,6 @@ import com.katoaapps.openminilaunch.ui.launcher.displaySlotLabel
 import com.katoaapps.openminilaunch.ui.theme.*
 import com.katoaapps.openminilaunch.R
 import com.katoaapps.openminilaunch.ui.settings.AppPickerDialog
-import com.katoaapps.openminilaunch.ui.settings.LauncherAppPickerDialog
 import com.katoaapps.openminilaunch.ui.settings.MessagingProviderPickerDialog
 
 import android.os.Build

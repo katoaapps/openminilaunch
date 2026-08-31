@@ -14,7 +14,6 @@ import com.katoaapps.openminilaunch.ui.theme.*
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.Image
-import androidx.compose.foundation.gestures.detectVerticalDragGestures
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -30,19 +29,14 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.OpenInNew
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
-import androidx.compose.animation.core.animateFloatAsState
-import androidx.compose.animation.core.spring
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
-import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.input.pointer.pointerInput
-import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.res.painterResource
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
@@ -118,17 +112,17 @@ private fun <T> AppPickerDialogContent(
     supportingText: String? = null,
     supportingActionLabel: String? = null,
     onSupportingAction: () -> Unit = {},
+    selectedItems: List<T> = apps,
+    categoryContent: (@Composable () -> Unit)? = null,
+    customListContent: (@Composable () -> Unit)? = null,
 ) {
     val gridState = rememberLazyGridState()
-    val letters = remember { ('A'..'Z').toList() }
-    var railHeight by remember { mutableIntStateOf(1) }
-    var railLetterIndex by remember { mutableIntStateOf(0) }
-    var railDragging by remember { mutableStateOf(false) }
-    val fontScale = LocalDensity.current.fontScale
-    LaunchedEffect(railLetterIndex, apps) {
+    var requestedLetter by remember { mutableStateOf('A') }
+    LaunchedEffect(requestedLetter, apps) {
         if (apps.isNotEmpty()) {
-            val letter = letters[railLetterIndex]
-            val index = apps.indexOfFirst { (appLabel(it).firstOrNull()?.uppercaseChar() ?: 'Z') >= letter }
+            val index = apps.indexOfFirst {
+                (appLabel(it).firstOrNull()?.uppercaseChar() ?: 'Z') >= requestedLetter
+            }
                 .let { if (it < 0) apps.lastIndex else it }
             if (index >= 0) gridState.scrollToItem(index)
         }
@@ -147,6 +141,7 @@ private fun <T> AppPickerDialogContent(
                     Text(title, Modifier.weight(1f), fontWeight = FontWeight.Black, fontSize = Dimens.sp18)
                     IconButton(onClick = onDismiss) { Icon(Icons.Default.Close, stringResource(R.string.close)) }
                 }
+                categoryContent?.invoke()
                 supportingText?.let { guide ->
                     Surface(
                         color = MaterialTheme.colorScheme.secondaryContainer,
@@ -194,7 +189,7 @@ private fun <T> AppPickerDialogContent(
                         letterSpacing = Dimens.sp1,
                         modifier = Modifier.padding(top = Dimens.dp4, bottom = Dimens.dp6),
                     )
-                    val selectedApps = apps.filter { appKey(it) in selected }.take(selectionLimit)
+                    val selectedApps = selectedItems.filter { appKey(it) in selected }.take(selectionLimit)
                     LazyRow(
                         Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.spacedBy(Dimens.dp6),
@@ -227,6 +222,8 @@ private fun <T> AppPickerDialogContent(
                         CircularProgressIndicator(Modifier.align(Alignment.Center), color = MaterialTheme.colorScheme.onSurface)
                     } else if (apps.isEmpty()) {
                         Text(emptyMessage ?: stringResource(R.string.no_apps_found), Modifier.align(Alignment.Center).padding(Dimens.dp24), textAlign = TextAlign.Center, color = Muted)
+                    } else if (customListContent != null) {
+                        customListContent()
                     } else {
                         LazyVerticalGrid(
                             columns = GridCells.Fixed(3),
@@ -251,64 +248,10 @@ private fun <T> AppPickerDialogContent(
                                 }
                             }
                         }
-                        BoxWithConstraints(
-                            Modifier.align(Alignment.CenterEnd).fillMaxHeight().width(Dimens.dp28)
-                                .onSizeChanged { railHeight = it.height }
-                                .clip(RoundedCornerShape(Dimens.dp12)).background(MaterialTheme.colorScheme.background.copy(alpha = .94f))
-                                .pointerInput(apps, railHeight) {
-                                    fun selectAt(y: Float) {
-                                        railLetterIndex = ((y / railHeight) * letters.size).toInt().coerceIn(0, letters.lastIndex)
-                                    }
-                                    detectVerticalDragGestures(
-                                        onDragStart = { railDragging = true; selectAt(it.y) },
-                                        onVerticalDrag = { change, _ -> selectAt(change.position.y) },
-                                        onDragEnd = { railDragging = false },
-                                        onDragCancel = { railDragging = false },
-                                    )
-                                },
-                        ) {
-                            val compactRail = maxHeight < Dimens.dp310 * fontScale
-                            val visibleLetters = remember(compactRail) {
-                                if (compactRail) letters.filterIndexed { index, _ -> index % 2 == 0 || index == letters.lastIndex }
-                                else letters
-                            }
-                            Column(
-                                Modifier.fillMaxSize().padding(vertical = Dimens.dp4),
-                                horizontalAlignment = Alignment.CenterHorizontally,
-                                verticalArrangement = Arrangement.SpaceEvenly,
-                            ) {
-                                visibleLetters.forEach { letter ->
-                                    val isFocused = letters.indexOf(letter) == railLetterIndex
-                                    val scale by animateFloatAsState(
-                                        targetValue = if (isFocused) (if (compactRail) 1.35f else 1.55f) else .9f,
-                                        animationSpec = spring(dampingRatio = .7f, stiffness = 500f),
-                                        label = "rail-letter-scale",
-                                    )
-                                    Text(
-                                        letter.toString(),
-                                        fontSize = if (compactRail) Dimens.sp8 else Dimens.sp9,
-                                        fontWeight = FontWeight.Bold,
-                                        color = if (isFocused) MaterialTheme.colorScheme.onSurface else Rust.copy(alpha = .72f),
-                                        modifier = Modifier.clickable {
-                                            railLetterIndex = letters.indexOf(letter)
-                                        }.graphicsLayer { scaleX = scale; scaleY = scale }
-                                            .padding(horizontal = Dimens.dp6),
-                                    )
-                                }
-                            }
-                        }
-                        if (railDragging) {
-                            Surface(
-                                modifier = Modifier.align(Alignment.CenterEnd).padding(end = Dimens.dp38),
-                                shape = CircleShape,
-                                color = Rust,
-                                shadowElevation = Dimens.dp8,
-                            ) {
-                                Box(Modifier.size(Dimens.dp48), contentAlignment = Alignment.Center) {
-                                    Text(letters[railLetterIndex].toString(), color = MinkWhite, fontSize = Dimens.sp22, fontWeight = FontWeight.Black)
-                                }
-                            }
-                        }
+                        AlphabetRail(
+                            onLetterSelected = { requestedLetter = it },
+                            modifier = Modifier.align(Alignment.CenterEnd),
+                        )
                     }
                 }
             }
@@ -317,50 +260,115 @@ private fun <T> AppPickerDialogContent(
 }
 
 @Composable
-internal fun LauncherAppPickerDialog(
+internal fun LauncherTargetPickerDialog(
     title: String,
     apps: List<LauncherAppTarget>,
+    shortcuts: List<LauncherShortcutTarget>,
     selected: Set<String>,
     actions: DeviceActions,
-    onApp: (LauncherAppTarget) -> Unit,
+    onTarget: (LauncherTarget) -> Unit,
     onReset: (() -> Unit)? = null,
     resetLabel: String? = null,
     onDismiss: () -> Unit,
     multiSelect: Boolean = false,
     selectionLimit: Int = 5,
-    loading: Boolean = true,
-    emptyMessage: String? = null,
+    appsLoading: Boolean = true,
+    shortcutsLoading: Boolean = true,
     onSelectionLimit: () -> Unit = {},
     supportingText: String? = null,
     supportingActionLabel: String? = null,
     onSupportingAction: () -> Unit = {},
 ) {
-    val visibleTargets = remember(apps, selected) {
-        (apps + selected.map(actions::resolveLauncherTarget))
-            .distinctBy(LauncherAppTarget::selectionKey)
+    var selectedCategory by rememberSaveable { mutableStateOf(LauncherTargetCategory.APPS) }
+    val allTargets = remember(apps, shortcuts, selected) {
+        (apps + shortcuts + selected.map(actions::resolveLauncherSelection))
+            .distinctBy(LauncherTarget::selectionKey)
             .sortedBy { it.label.lowercase() }
+    }
+    val visibleTargets = remember(allTargets, selectedCategory) {
+        allTargets.filter { target ->
+            when (selectedCategory) {
+                LauncherTargetCategory.APPS -> target is LauncherAppTarget
+                LauncherTargetCategory.SHORTCUTS -> target is LauncherShortcutTarget
+            }
+        }
     }
     AppPickerDialogContent(
         title = title,
         apps = visibleTargets,
         selected = selected,
-        appKey = LauncherAppTarget::selectionKey,
-        appLabel = LauncherAppTarget::label,
-        appIcon = { app, size -> LauncherAppIcon(app, actions, size) },
-        onApp = onApp,
+        appKey = LauncherTarget::selectionKey,
+        appLabel = LauncherTarget::label,
+        appIcon = { target, size -> LauncherTargetIcon(target, actions, size) },
+        onApp = onTarget,
         onReset = onReset,
         resetLabel = resetLabel,
         onDismiss = onDismiss,
         multiSelect = multiSelect,
         selectionLimit = selectionLimit,
-        loading = loading,
-        emptyMessage = emptyMessage,
+        loading = when (selectedCategory) {
+            LauncherTargetCategory.APPS -> appsLoading
+            LauncherTargetCategory.SHORTCUTS -> shortcutsLoading
+        },
+        emptyMessage = when (selectedCategory) {
+            LauncherTargetCategory.APPS -> stringResource(R.string.no_apps_found)
+            LauncherTargetCategory.SHORTCUTS -> stringResource(R.string.no_app_shortcuts_found)
+        },
         onSelectionLimit = onSelectionLimit,
         supportingText = supportingText,
         supportingActionLabel = supportingActionLabel,
         onSupportingAction = onSupportingAction,
+        selectedItems = allTargets,
+        categoryContent = {
+            Row(
+                Modifier.fillMaxWidth().padding(bottom = Dimens.dp8),
+                horizontalArrangement = Arrangement.spacedBy(Dimens.dp8),
+            ) {
+                LauncherTargetCategory.entries.forEach { category ->
+                    FilterChip(
+                        selected = selectedCategory == category,
+                        onClick = { selectedCategory = category },
+                        label = {
+                            Text(
+                                stringResource(
+                                    if (category == LauncherTargetCategory.APPS) R.string.apps
+                                    else R.string.app_shortcuts,
+                                ),
+                            )
+                        },
+                        leadingIcon = {
+                            Icon(
+                                if (category == LauncherTargetCategory.APPS) Icons.Default.Apps
+                                else Icons.Default.Bolt,
+                                null,
+                                Modifier.size(Dimens.dp18),
+                            )
+                        },
+                        modifier = Modifier.weight(1f),
+                    )
+                }
+            }
+        },
+        customListContent = if (selectedCategory == LauncherTargetCategory.SHORTCUTS) {
+            {
+                LauncherShortcutGroupList(
+                    shortcuts = visibleTargets.filterIsInstance<LauncherShortcutTarget>(),
+                    apps = apps,
+                    selected = selected,
+                    actions = actions,
+                    multiSelect = multiSelect,
+                    selectionLimit = selectionLimit,
+                    onSelectionLimit = onSelectionLimit,
+                    onShortcut = onTarget,
+                )
+            }
+        } else {
+            null
+        },
     )
 }
+
+private enum class LauncherTargetCategory { APPS, SHORTCUTS }
 
 @Composable
 internal fun ThemeChooser(selected: ThemePreference, onSelect: (ThemePreference) -> Unit) {

@@ -23,6 +23,7 @@ internal fun SettingsPickerDialogs(
     actions: DeviceActions,
     context: Context,
     installedApps: LauncherAppListLoadState,
+    installedShortcuts: LauncherShortcutListLoadState,
     curatedAiApps: AppListLoadState,
     allAiApps: AppListLoadState,
     webApps: AppListLoadState,
@@ -36,6 +37,7 @@ internal fun SettingsPickerDialogs(
             store = store,
             actions = actions,
             installedApps = installedApps,
+            installedShortcuts = installedShortcuts,
             onDismiss = { onPickerChange(null) },
         )
         SettingsPicker.DrawerApps -> DrawerAppsPicker(
@@ -43,6 +45,7 @@ internal fun SettingsPickerDialogs(
             actions = actions,
             context = context,
             installedApps = installedApps,
+            installedShortcuts = installedShortcuts,
             onDismiss = { onPickerChange(null) },
         )
         SettingsPicker.CuratedAiApp -> AppPickerDialog(
@@ -107,21 +110,32 @@ private fun ShortcutAppPicker(
     store: LauncherStore,
     actions: DeviceActions,
     installedApps: LauncherAppListLoadState,
+    installedShortcuts: LauncherShortcutListLoadState,
     onDismiss: () -> Unit,
 ) {
     val shortcut = picker.shortcut
     val showSamsungWeatherGuide = Build.MANUFACTURER.equals("samsung", ignoreCase = true)
-    LauncherAppPickerDialog(
+    LauncherTargetPickerDialog(
         title = stringResource(R.string.choose_app_for_shortcut, shortcut.displaySlotLabel()),
         apps = installedApps.apps,
+        shortcuts = installedShortcuts.shortcuts,
         selected = setOfNotNull(store.shortcutTargets[shortcut]),
         actions = actions,
-        loading = !installedApps.loaded,
+        appsLoading = !installedApps.loaded,
+        shortcutsLoading = !installedShortcuts.loaded,
         supportingText = if (showSamsungWeatherGuide) stringResource(R.string.samsung_weather_guide) else null,
         supportingActionLabel = if (showSamsungWeatherGuide) stringResource(R.string.open_apps_settings) else null,
         onSupportingAction = actions::openInstalledAppsSettings,
-        onApp = { store.assignShortcut(shortcut, it.selectionKey); onDismiss() },
-        onReset = { store.resetShortcut(shortcut); onDismiss() },
+        onTarget = {
+            store.assignShortcut(shortcut, it.selectionKey)
+            actions.syncPinnedSelectionsFrom(store)
+            onDismiss()
+        },
+        onReset = {
+            store.resetShortcut(shortcut)
+            actions.syncPinnedSelectionsFrom(store)
+            onDismiss()
+        },
         resetLabel = stringResource(R.string.restore_shortcut_default, shortcut.displayLabel()),
         onDismiss = onDismiss,
     )
@@ -133,9 +147,10 @@ private fun DrawerAppsPicker(
     actions: DeviceActions,
     context: Context,
     installedApps: LauncherAppListLoadState,
+    installedShortcuts: LauncherShortcutListLoadState,
     onDismiss: () -> Unit,
 ) {
-    LauncherAppPickerDialog(
+    LauncherTargetPickerDialog(
         title = pluralStringResource(
             R.plurals.drawer_apps_title,
             store.drawerTargets.size,
@@ -143,13 +158,16 @@ private fun DrawerAppsPicker(
             MAX_DRAWER_APPS,
         ),
         apps = installedApps.apps,
+        shortcuts = installedShortcuts.shortcuts,
         selected = store.drawerTargets.toSet(),
         actions = actions,
-        loading = !installedApps.loaded,
-        onApp = { app ->
-            val fillingDrawer = app.selectionKey !in store.drawerTargets &&
+        appsLoading = !installedApps.loaded,
+        shortcutsLoading = !installedShortcuts.loaded,
+        onTarget = { target ->
+            val fillingDrawer = target.selectionKey !in store.drawerTargets &&
                 store.drawerTargets.size == MAX_DRAWER_APPS - 1
-            store.toggleDrawerApp(app.selectionKey)
+            store.toggleDrawerApp(target.selectionKey)
+            actions.syncPinnedSelectionsFrom(store)
             if (fillingDrawer) {
                 Toast.makeText(
                     context,
@@ -177,4 +195,8 @@ private fun DrawerAppsPicker(
         multiSelect = true,
         selectionLimit = MAX_DRAWER_APPS,
     )
+}
+
+private fun DeviceActions.syncPinnedSelectionsFrom(store: LauncherStore) {
+    syncPinnedLauncherShortcuts(store.shortcutTargets.values + store.drawerTargets)
 }

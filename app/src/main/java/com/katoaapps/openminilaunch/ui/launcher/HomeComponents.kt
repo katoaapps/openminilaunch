@@ -153,6 +153,7 @@ internal fun ShortcutGrid(
     openDrawer: () -> Unit,
 ) {
     val launcherAppsRevision by actions.launcherAppsRevision.collectAsState()
+    val launcherShortcutsRevision by actions.launcherShortcutsRevision.collectAsState()
     var editing by remember { mutableStateOf(false) }
     val draftOrder = remember { mutableStateListOf<Shortcut>().apply { addAll(store.effectiveShortcutOrder) } }
     val gridState = rememberLazyGridState()
@@ -211,12 +212,18 @@ internal fun ShortcutGrid(
                 items(visibleOrder, key = Shortcut::name) { shortcut ->
                     ReorderableItem(reorderableState, key = shortcut.name) { isDragging ->
                     val assignedTargetKey = store.shortcutTargets[shortcut]
-                    val assignedTarget = remember(assignedTargetKey, launcherAppsRevision) {
-                        assignedTargetKey?.let(actions::resolveLauncherTarget)
+                    val assignedTarget = remember(
+                        assignedTargetKey,
+                        launcherAppsRevision,
+                        launcherShortcutsRevision,
+                    ) {
+                        assignedTargetKey?.let(actions::resolveLauncherSelection)
                     }
-                    val hasAssignedApp = shortcut in configurableShortcuts && assignedTargetKey != null
-                    val shortcutTargetPackage = actions.shortcutTargetPackage(shortcut, assignedTargetKey)
-                    val appPaused = shortcutTargetPackage?.let(appAccessState::isPaused) == true
+                    val hasAssignedTarget = shortcut in configurableShortcuts && assignedTargetKey != null
+                    val defaultTargetPackage = actions.shortcutTargetPackage(shortcut, null)
+                    val pausedTargetPackage = assignedTarget?.packageName ?: defaultTargetPackage
+                    val appPaused = assignedTarget?.let(appAccessState::isPaused)
+                        ?: (defaultTargetPackage?.let(appAccessState::isPaused) == true)
                     val appUnavailable = assignedTarget?.isAvailable == false
                     val shortcutIndex = Shortcut.entries.indexOf(shortcut)
                     val jiggleAngle = if (editing) {
@@ -248,7 +255,7 @@ internal fun ShortcutGrid(
                         Modifier.combinedClickable(
                             onClick = {
                                 if (appPaused) {
-                                    onPausedApp(checkNotNull(shortcutTargetPackage))
+                                    onPausedApp(checkNotNull(pausedTargetPackage))
                                 } else if (appUnavailable) {
                                     onUnavailableApp(checkNotNull(assignedTarget).label)
                                 } else {
@@ -278,11 +285,11 @@ internal fun ShortcutGrid(
                                         else itemContainerColor
                                     )
                                     .then(interactionModifier)
-                                    .padding(if (hasAssignedApp) Dimens.dp0 else Dimens.dp6),
+                                    .padding(if (hasAssignedTarget) Dimens.dp0 else Dimens.dp6),
                                 contentAlignment = Alignment.Center,
                             ) {
-                                if (hasAssignedApp) {
-                                    LauncherAppIcon(
+                                if (hasAssignedTarget) {
+                                    LauncherTargetIcon(
                                         target = checkNotNull(assignedTarget),
                                         actions = actions,
                                         size = (shortcutSize * .56f).coerceIn(

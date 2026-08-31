@@ -44,9 +44,9 @@ import androidx.compose.ui.text.style.TextOverflow
 import com.katoaapps.openminilaunch.R
 import com.katoaapps.openminilaunch.data.LauncherStore
 import com.katoaapps.openminilaunch.features.wellbeing.MinkAppAccessState
-import com.katoaapps.openminilaunch.model.LauncherAppTarget
+import com.katoaapps.openminilaunch.model.LauncherTarget
 import com.katoaapps.openminilaunch.platform.DeviceActions
-import com.katoaapps.openminilaunch.ui.components.LauncherAppIcon
+import com.katoaapps.openminilaunch.ui.components.LauncherTargetIcon
 import com.katoaapps.openminilaunch.ui.settings.SettingsDestination
 import com.katoaapps.openminilaunch.ui.theme.Dimens
 import com.katoaapps.openminilaunch.ui.theme.Muted
@@ -59,6 +59,7 @@ internal fun HomeDrawerSheet(
     actions: DeviceActions,
     appAccessState: MinkAppAccessState,
     launcherAppsRevision: Long,
+    launcherShortcutsRevision: Long,
     onDismiss: () -> Unit,
     openSettings: (SettingsDestination) -> Unit,
 ) {
@@ -90,6 +91,7 @@ internal fun HomeDrawerSheet(
                 actions = actions,
                 appAccessState = appAccessState,
                 launcherAppsRevision = launcherAppsRevision,
+                launcherShortcutsRevision = launcherShortcutsRevision,
                 onLaunched = onDismiss,
             )
         }
@@ -146,12 +148,13 @@ private fun DrawerApps(
     actions: DeviceActions,
     appAccessState: MinkAppAccessState,
     launcherAppsRevision: Long,
+    launcherShortcutsRevision: Long,
     onLaunched: () -> Unit,
 ) {
     val context = LocalContext.current
     val savedDrawerTargets = store.drawerTargets.toList()
-    val drawerTargets = remember(savedDrawerTargets, launcherAppsRevision) {
-        savedDrawerTargets.map(actions::resolveLauncherTarget)
+    val drawerTargets = remember(savedDrawerTargets, launcherAppsRevision, launcherShortcutsRevision) {
+        savedDrawerTargets.map(actions::resolveLauncherSelection)
     }
     val visibleDrawerTargets = drawerTargets.filterNot(appAccessState::isPaused)
     if (visibleDrawerTargets.isEmpty()) {
@@ -167,12 +170,12 @@ private fun DrawerApps(
         modifier = Modifier.fillMaxWidth().height(Dimens.dp72 * drawerRows),
         contentPadding = PaddingValues(horizontal = Dimens.dp12, vertical = Dimens.dp8),
     ) {
-        items(visibleDrawerTargets, key = LauncherAppTarget::selectionKey) { target ->
+        items(visibleDrawerTargets, key = LauncherTarget::selectionKey) { target ->
             ListItem(
                 headlineContent = {
                     Text(target.label, maxLines = 1, overflow = TextOverflow.Ellipsis)
                 },
-                leadingContent = { LauncherAppIcon(target, actions, Dimens.dp36) },
+                leadingContent = { LauncherTargetIcon(target, actions, Dimens.dp36) },
                 modifier = Modifier.clip(RoundedCornerShape(Dimens.dp16)).clickable {
                     if (actions.launchLauncherTarget(target)) {
                         onLaunched()

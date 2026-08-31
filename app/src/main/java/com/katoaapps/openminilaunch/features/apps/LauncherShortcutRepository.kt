@@ -4,6 +4,7 @@ import android.content.Context
 import android.content.pm.LauncherApps
 import android.content.pm.ShortcutInfo
 import android.graphics.drawable.Drawable
+import android.os.Build
 import android.os.Process
 import android.os.UserHandle
 import android.os.UserManager
@@ -28,6 +29,7 @@ internal class LauncherShortcutRepository private constructor(context: Context) 
     private val cacheLock = Any()
     @Volatile private var targetsCache: List<LauncherShortcutTarget>? = null
     private val shortcutCache = mutableMapOf<String, ShortcutInfo>()
+    private val pinnedScopes = mutableSetOf<ShortcutScope>()
 
     private val callback = object : LauncherApps.Callback() {
         override fun onPackageRemoved(packageName: String, user: UserHandle) = invalidate()
@@ -54,6 +56,7 @@ internal class LauncherShortcutRepository private constructor(context: Context) 
             if (!hasHostPermission()) return@synchronized emptyList()
 
             shortcutCache.clear()
+            pinnedScopes.clear()
             val query = LauncherApps.ShortcutQuery().setQueryFlags(
                 LauncherApps.ShortcutQuery.FLAG_MATCH_DYNAMIC or
                     LauncherApps.ShortcutQuery.FLAG_MATCH_MANIFEST or
@@ -65,7 +68,14 @@ internal class LauncherShortcutRepository private constructor(context: Context) 
                     ?: return@flatMap emptyList()
                 val workProfile = serial != personalSerial
                 val quiet = runCatching { userManager?.isQuietModeEnabled(user) == true }.getOrDefault(false)
-                runCatching { service.getShortcuts(query, user) }.getOrNull().orEmpty().map { info ->
+                runCatching { service.getShortcuts(query, user) }.getOrNull().orEmpty()
+                    .filter { info ->
+                        info.isEnabled && !(
+                            Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU &&
+                                info.isExcludedFromSurfaces(ShortcutInfo.SURFACE_LAUNCHER)
+                            )
+                    }
+                    .map { info ->
                     LauncherShortcutTarget(
                         label = info.shortLabel?.toString()
                             ?: info.longLabel?.toString()
@@ -74,8 +84,11 @@ internal class LauncherShortcutRepository private constructor(context: Context) 
                         shortcutId = info.id,
                         userSerial = serial,
                         isWorkProfile = workProfile,
-                        isAvailable = info.isEnabled && !quiet,
-                    ).also { target -> shortcutCache[target.selectionKey] = info }
+                        isAvailable = !quiet,
+                    ).also { target ->
+                        shortcutCache[target.selectionKey] = info
+                        if (info.isPinned) pinnedScopes += ShortcutScope(serial, info.`package`)
+                    }
                 }
             }.filterNot { it.packageName == appContext.packageName }
                 .distinctBy(LauncherShortcutTarget::selectionKey)
@@ -117,10 +130,27 @@ internal class LauncherShortcutRepository private constructor(context: Context) 
         }.getOrDefault(false)
     }
 
+    /** Keeps app-published dynamic shortcuts alive while they occupy a Mink slot. */
+    fun syncPinnedSelections(selectionKeys: Collection<String>) {
+        val service = launcherApps ?: return
+        if (!hasHostPermission()) return
+        targets()
+        val selected = selectionKeys.mapNotNull(::launcherShortcutIdentity)
+            .groupBy { ShortcutScope(it.userSerial, it.packageName) }
+        val scopes = synchronized(cacheLock) { pinnedScopes.toSet() } + selected.keys
+        scopes.forEach { scope ->
+            val user = userManager?.getUserForSerialNumber(scope.userSerial) ?: return@forEach
+            val ids = selected[scope].orEmpty().map { it.shortcutId }.distinct()
+            runCatching { service.pinShortcuts(scope.packageName, ids, user) }
+        }
+        invalidate()
+    }
+
     fun invalidate() {
         synchronized(cacheLock) {
             targetsCache = null
             shortcutCache.clear()
+            pinnedScopes.clear()
         }
         revisionState.update { it + 1 }
     }
@@ -139,6 +169,8 @@ internal class LauncherShortcutRepository private constructor(context: Context) 
         val info = appContext.packageManager.getApplicationInfo(packageName, 0)
         appContext.packageManager.getApplicationLabel(info).toString()
     }.getOrDefault(packageName)
+
+    private data class ShortcutScope(val userSerial: Long, val packageName: String)
 
     companion object {
         @Volatile private var instance: LauncherShortcutRepository? = null

@@ -50,6 +50,7 @@ import androidx.lifecycle.LifecycleEventObserver
 import com.katoaapps.openminilaunch.R
 import com.katoaapps.openminilaunch.data.LauncherStore
 import com.katoaapps.openminilaunch.model.LauncherAppTarget
+import com.katoaapps.openminilaunch.model.LauncherShortcutTarget
 import com.katoaapps.openminilaunch.model.Shortcut
 import com.katoaapps.openminilaunch.model.configurableShortcuts
 import com.katoaapps.openminilaunch.platform.DeviceActions
@@ -57,7 +58,7 @@ import com.katoaapps.openminilaunch.ui.components.minkDialogWidth
 import com.katoaapps.openminilaunch.ui.launcher.ShortcutAssignmentRow
 import com.katoaapps.openminilaunch.ui.launcher.displayLabel
 import com.katoaapps.openminilaunch.ui.launcher.displaySlotLabel
-import com.katoaapps.openminilaunch.ui.settings.LauncherAppPickerDialog
+import com.katoaapps.openminilaunch.ui.settings.LauncherTargetPickerDialog
 import com.katoaapps.openminilaunch.ui.theme.Dimens
 import com.katoaapps.openminilaunch.ui.theme.LightInk
 import com.katoaapps.openminilaunch.ui.theme.LightPaper
@@ -71,8 +72,10 @@ internal fun ShortcutSetupDialog(store: LauncherStore, actions: DeviceActions, o
     val context = LocalContext.current
     var pickingShortcut by remember { mutableStateOf<Shortcut?>(null) }
     var installedAppsLoaded by remember { mutableStateOf(false) }
+    var installedShortcutsLoaded by remember { mutableStateOf(false) }
     var appListRefresh by remember { mutableIntStateOf(0) }
     val launcherAppsRevision by actions.launcherAppsRevision.collectAsState()
+    val launcherShortcutsRevision by actions.launcherShortcutsRevision.collectAsState()
     val installedApps by produceState<List<LauncherAppTarget>>(
         initialValue = emptyList(),
         appListRefresh,
@@ -80,6 +83,14 @@ internal fun ShortcutSetupDialog(store: LauncherStore, actions: DeviceActions, o
     ) {
         value = withContext(Dispatchers.IO) { actions.installedApps() }
         installedAppsLoaded = true
+    }
+    val installedShortcuts by produceState<List<LauncherShortcutTarget>>(
+        initialValue = emptyList(),
+        appListRefresh,
+        launcherShortcutsRevision,
+    ) {
+        value = withContext(Dispatchers.IO) { actions.installedShortcuts() }
+        installedShortcutsLoaded = true
     }
     DisposableEffect(context) {
         val lifecycle = (context as? ComponentActivity)?.lifecycle
@@ -130,7 +141,7 @@ internal fun ShortcutSetupDialog(store: LauncherStore, actions: DeviceActions, o
                             targetKey = targetKey,
                             actions = actions,
                             subtitle = when {
-                                targetKey != null -> actions.launcherAppLabel(targetKey)
+                                targetKey != null -> actions.launcherTargetLabel(targetKey)
                                 shortcut in store.confirmedShortcutChoices -> stringResource(
                                     R.string.shortcut_default,
                                     shortcut.displayLabel(),
@@ -165,21 +176,25 @@ internal fun ShortcutSetupDialog(store: LauncherStore, actions: DeviceActions, o
 
     pickingShortcut?.let { shortcut ->
         val showSamsungWeatherGuide = Build.MANUFACTURER.equals("samsung", ignoreCase = true)
-        LauncherAppPickerDialog(
+        LauncherTargetPickerDialog(
             title = stringResource(R.string.choose_app_for_shortcut, shortcut.displaySlotLabel()),
             apps = installedApps,
+            shortcuts = installedShortcuts,
             selected = setOfNotNull(store.shortcutTargets[shortcut]),
             actions = actions,
-            loading = !installedAppsLoaded,
+            appsLoading = !installedAppsLoaded,
+            shortcutsLoading = !installedShortcutsLoaded,
             supportingText = if (showSamsungWeatherGuide) stringResource(R.string.samsung_weather_guide) else null,
             supportingActionLabel = if (showSamsungWeatherGuide) stringResource(R.string.open_apps_settings) else null,
             onSupportingAction = actions::openInstalledAppsSettings,
-            onApp = {
+            onTarget = {
                 store.assignShortcut(shortcut, it.selectionKey)
+                actions.syncPinnedLauncherShortcuts(store.shortcutTargets.values + store.drawerTargets)
                 pickingShortcut = null
             },
             onReset = {
                 store.resetShortcut(shortcut)
+                actions.syncPinnedLauncherShortcuts(store.shortcutTargets.values + store.drawerTargets)
                 pickingShortcut = null
             },
             resetLabel = stringResource(R.string.restore_shortcut_default, shortcut.displayLabel()),

@@ -3,6 +3,7 @@ package com.katoaapps.openminilaunch.platform
 import com.katoaapps.openminilaunch.R
 import com.katoaapps.openminilaunch.features.calendar.parseCalendarPhrase
 import com.katoaapps.openminilaunch.features.apps.LauncherAppRepository
+import com.katoaapps.openminilaunch.features.apps.LauncherShortcutRepository
 import com.katoaapps.openminilaunch.features.conversations.NotificationHub
 import com.katoaapps.openminilaunch.features.magic.normalizedWebUrl
 import com.katoaapps.openminilaunch.features.messaging.MessagingDeviceActions
@@ -35,7 +36,9 @@ import kotlinx.coroutines.flow.StateFlow
 
 class DeviceActions(private val context: Context) {
     private val launcherAppRepository = LauncherAppRepository.get(context)
+    private val launcherShortcutRepository = LauncherShortcutRepository.get(context)
     val launcherAppsRevision: StateFlow<Long> = launcherAppRepository.revision
+    val launcherShortcutsRevision: StateFlow<Long> = launcherShortcutRepository.revision
     private val labelCache = mutableMapOf<String, String>()
     private val contactSearch = ContactSearch(context)
     private val shareTargetDiscovery = ShareTargetDiscovery(context)
@@ -97,27 +100,44 @@ class DeviceActions(private val context: Context) {
 
     fun installedApps(): List<LauncherAppTarget> = launcherAppRepository.targets()
 
+    fun installedShortcuts(): List<LauncherShortcutTarget> = launcherShortcutRepository.targets()
+
+    fun syncPinnedLauncherShortcuts(selectionKeys: Collection<String>) =
+        launcherShortcutRepository.syncPinnedSelections(selectionKeys)
+
     fun invalidateInstalledApps() {
         launcherAppRepository.invalidate()
+        launcherShortcutRepository.invalidate()
     }
 
     fun resolveLauncherTarget(selectionKey: String): LauncherAppTarget =
         launcherAppRepository.resolve(selectionKey)
 
+    fun resolveLauncherSelection(selectionKey: String): LauncherTarget =
+        launcherShortcutRepository.resolve(selectionKey) ?: launcherAppRepository.resolve(selectionKey)
+
     fun normalizedLauncherSelectionKey(selectionKey: String): String? =
         launcherAppRepository.normalizedSelectionKey(selectionKey)
 
-    fun launcherAppLabel(selectionKey: String): String = resolveLauncherTarget(selectionKey).label
+    fun launcherTargetLabel(selectionKey: String): String = resolveLauncherSelection(selectionKey).label
 
     fun launcherAppIcon(selectionKey: String): Drawable? =
         launcherAppRepository.icon(resolveLauncherTarget(selectionKey))
 
     fun launcherAppIcon(target: LauncherAppTarget): Drawable? = launcherAppRepository.icon(target)
 
-    fun launchLauncherTarget(target: LauncherAppTarget): Boolean = launcherAppRepository.launch(target)
+    fun launcherTargetIcon(target: LauncherTarget): Drawable? = when (target) {
+        is LauncherAppTarget -> launcherAppRepository.icon(target)
+        is LauncherShortcutTarget -> launcherShortcutRepository.icon(target)
+    }
+
+    fun launchLauncherTarget(target: LauncherTarget): Boolean = when (target) {
+        is LauncherAppTarget -> launcherAppRepository.launch(target)
+        is LauncherShortcutTarget -> launcherShortcutRepository.launch(target)
+    }
 
     fun launchLauncherSelection(selectionKey: String): Boolean =
-        launcherAppRepository.launch(resolveLauncherTarget(selectionKey))
+        launchLauncherTarget(resolveLauncherSelection(selectionKey))
 
     fun openInstalledAppsSettings() = start(Intent(Settings.ACTION_APPLICATION_SETTINGS))
 
@@ -176,7 +196,7 @@ class DeviceActions(private val context: Context) {
 
     fun shortcutTargetPackage(shortcut: Shortcut, assignedTarget: String?): String? {
         if (!assignedTarget.isNullOrBlank() && shortcut !in listOf(Shortcut.TODO, Shortcut.DRAWER)) {
-            return resolveLauncherTarget(assignedTarget).takeUnless(LauncherAppTarget::isWorkProfile)?.packageName
+            return resolveLauncherSelection(assignedTarget).takeUnless(LauncherTarget::isWorkProfile)?.packageName
         }
         return if (shortcut == Shortcut.MESSAGE) Telephony.Sms.getDefaultSmsPackage(context) else null
     }

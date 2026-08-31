@@ -2,6 +2,7 @@ package com.katoaapps.openminilaunch.ui.components
 
 import com.katoaapps.openminilaunch.platform.DeviceActions
 import com.katoaapps.openminilaunch.model.LauncherAppTarget
+import com.katoaapps.openminilaunch.model.LauncherTarget
 import com.katoaapps.openminilaunch.ui.theme.MinkBlack
 import com.katoaapps.openminilaunch.ui.theme.MinkWhite
 
@@ -68,6 +69,26 @@ internal fun LauncherAppIcon(
     RenderedAppIcon(
         iconKey = "${target.selectionKey}:$launcherAppsRevision",
         drawable = { actions.launcherAppIcon(target) },
+        size = size,
+        themedTint = themedTint,
+        contentDescription = contentDescription,
+    )
+}
+
+/** Renders either a launcher activity icon or an icon published for an app shortcut. */
+@Composable
+internal fun LauncherTargetIcon(
+    target: LauncherTarget,
+    actions: DeviceActions,
+    size: Dp,
+    themedTint: Color? = null,
+    contentDescription: String? = null,
+) {
+    val appsRevision by actions.launcherAppsRevision.collectAsState()
+    val shortcutsRevision by actions.launcherShortcutsRevision.collectAsState()
+    RenderedAppIcon(
+        iconKey = "${target.selectionKey}:$appsRevision:$shortcutsRevision",
+        drawable = { actions.launcherTargetIcon(target) },
         size = size,
         themedTint = themedTint,
         contentDescription = contentDescription,

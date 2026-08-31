@@ -3,6 +3,7 @@ package com.katoaapps.openminilaunch.ui.settings
 import com.katoaapps.openminilaunch.features.messaging.MessagingProviderOption
 import com.katoaapps.openminilaunch.model.LaunchableApp
 import com.katoaapps.openminilaunch.model.LauncherAppTarget
+import com.katoaapps.openminilaunch.model.LauncherShortcutTarget
 import com.katoaapps.openminilaunch.model.Shortcut
 
 internal sealed interface SettingsPicker {
@@ -22,6 +23,11 @@ internal data class AppListLoadState(
 
 internal data class LauncherAppListLoadState(
     val apps: List<LauncherAppTarget> = emptyList(),
+    val loaded: Boolean = false,
+)
+
+internal data class LauncherShortcutListLoadState(
+    val shortcuts: List<LauncherShortcutTarget> = emptyList(),
     val loaded: Boolean = false,
 )
 

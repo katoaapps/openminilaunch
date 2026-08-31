@@ -43,16 +43,30 @@ internal fun SettingsScreen(
     var picker by remember { mutableStateOf<SettingsPicker?>(null) }
     var appListRefresh by remember { mutableIntStateOf(0) }
     val launcherAppsRevision by actions.launcherAppsRevision.collectAsState()
-    val loadInstalledApps = picker is SettingsPicker.ShortcutApp || picker == SettingsPicker.DrawerApps
+    val launcherShortcutsRevision by actions.launcherShortcutsRevision.collectAsState()
+    val loadLauncherTargets = picker is SettingsPicker.ShortcutApp || picker == SettingsPicker.DrawerApps
     val installedApps by produceState(
         LauncherAppListLoadState(),
-        loadInstalledApps,
+        loadLauncherTargets,
         appListRefresh,
         launcherAppsRevision,
     ) {
-        if (loadInstalledApps) {
+        if (loadLauncherTargets) {
             value = LauncherAppListLoadState(
                 apps = withContext(Dispatchers.IO) { actions.installedApps() },
+                loaded = true,
+            )
+        }
+    }
+    val installedShortcuts by produceState(
+        LauncherShortcutListLoadState(),
+        loadLauncherTargets,
+        appListRefresh,
+        launcherShortcutsRevision,
+    ) {
+        if (loadLauncherTargets) {
+            value = LauncherShortcutListLoadState(
+                shortcuts = withContext(Dispatchers.IO) { actions.installedShortcuts() },
                 loaded = true,
             )
         }
@@ -222,6 +236,7 @@ internal fun SettingsScreen(
         actions = actions,
         context = context,
         installedApps = installedApps,
+        installedShortcuts = installedShortcuts,
         curatedAiApps = curatedAiApps,
         allAiApps = allAiApps,
         webApps = webApps,

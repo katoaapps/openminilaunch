@@ -4,7 +4,7 @@ import com.katoaapps.openminilaunch.R
 import com.katoaapps.openminilaunch.model.Shortcut
 import com.katoaapps.openminilaunch.model.configurableShortcuts
 import com.katoaapps.openminilaunch.platform.DeviceActions
-import com.katoaapps.openminilaunch.ui.components.LauncherAppIcon
+import com.katoaapps.openminilaunch.ui.components.LauncherTargetIcon
 import com.katoaapps.openminilaunch.ui.theme.*
 
 import androidx.compose.foundation.background
@@ -78,8 +78,8 @@ internal fun ShortcutAssignmentRow(
             contentAlignment = Alignment.Center,
         ) {
             if (targetKey != null) {
-                val target = actions.resolveLauncherTarget(targetKey)
-                LauncherAppIcon(target, actions, Dimens.dp32, contentDescription = target.label)
+                val target = actions.resolveLauncherSelection(targetKey)
+                LauncherTargetIcon(target, actions, Dimens.dp32, contentDescription = target.label)
             } else {
                 Icon(shortcut.defaultIcon(), null, Modifier.size(Dimens.dp25), tint = MaterialTheme.colorScheme.onSurface)
             }
