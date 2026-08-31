@@ -16,6 +16,7 @@ import com.katoaapps.openminilaunch.ui.launcher.displaySlotLabel
 import com.katoaapps.openminilaunch.ui.theme.*
 import com.katoaapps.openminilaunch.R
 import com.katoaapps.openminilaunch.ui.settings.AppPickerDialog
+import com.katoaapps.openminilaunch.ui.settings.LauncherAppPickerDialog
 import com.katoaapps.openminilaunch.ui.settings.MessagingProviderPickerDialog
 
 import android.os.Build
@@ -489,7 +490,12 @@ internal fun ShortcutSetupDialog(store: LauncherStore, actions: DeviceActions, o
     var pickingShortcut by remember { mutableStateOf<Shortcut?>(null) }
     var installedAppsLoaded by remember { mutableStateOf(false) }
     var appListRefresh by remember { mutableIntStateOf(0) }
-    val installedApps by produceState<List<LaunchableApp>>(initialValue = emptyList(), appListRefresh) {
+    val launcherAppsRevision by actions.launcherAppsRevision.collectAsState()
+    val installedApps by produceState<List<LauncherAppTarget>>(
+        initialValue = emptyList(),
+        appListRefresh,
+        launcherAppsRevision,
+    ) {
         value = withContext(Dispatchers.IO) { actions.installedApps() }
         installedAppsLoaded = true
     }
@@ -536,13 +542,13 @@ internal fun ShortcutSetupDialog(store: LauncherStore, actions: DeviceActions, o
                     verticalArrangement = Arrangement.spacedBy(Dimens.dp12),
                 ) {
                     configurableShortcuts.forEach { shortcut ->
-                        val packageName = store.shortcutPackages[shortcut]
+                        val targetKey = store.shortcutTargets[shortcut]
                         ShortcutAssignmentRow(
                             shortcut = shortcut,
-                            packageName = packageName,
+                            targetKey = targetKey,
                             actions = actions,
                             subtitle = when {
-                                packageName != null -> actions.appLabel(packageName)
+                                targetKey != null -> actions.launcherAppLabel(targetKey)
                                 shortcut in store.confirmedShortcutChoices -> stringResource(
                                     R.string.shortcut_default,
                                     shortcut.displayLabel(),
@@ -577,16 +583,17 @@ internal fun ShortcutSetupDialog(store: LauncherStore, actions: DeviceActions, o
 
     pickingShortcut?.let { shortcut ->
         val showSamsungWeatherGuide = Build.MANUFACTURER.equals("samsung", ignoreCase = true)
-        AppPickerDialog(
+        LauncherAppPickerDialog(
             title = stringResource(R.string.choose_app_for_shortcut, shortcut.displaySlotLabel()),
             apps = installedApps,
-            selected = setOfNotNull(store.shortcutPackages[shortcut]),
+            selected = setOfNotNull(store.shortcutTargets[shortcut]),
+            actions = actions,
             loading = !installedAppsLoaded,
             supportingText = if (showSamsungWeatherGuide) stringResource(R.string.samsung_weather_guide) else null,
             supportingActionLabel = if (showSamsungWeatherGuide) stringResource(R.string.open_apps_settings) else null,
             onSupportingAction = actions::openInstalledAppsSettings,
             onApp = {
-                store.assignShortcut(shortcut, it.packageName)
+                store.assignShortcut(shortcut, it.selectionKey)
                 pickingShortcut = null
             },
             onReset = {

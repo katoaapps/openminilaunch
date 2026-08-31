@@ -144,6 +144,7 @@ internal fun ShortcutGrid(
     actions: DeviceActions,
     appAccessState: MinkAppAccessState,
     onPausedApp: (String) -> Unit,
+    onUnavailableApp: (String) -> Unit,
     openTodos: () -> Unit,
     compact: Boolean = false,
     contentColor: Color = MaterialTheme.colorScheme.onSurface,
@@ -151,6 +152,7 @@ internal fun ShortcutGrid(
     modifier: Modifier = Modifier,
     openDrawer: () -> Unit,
 ) {
+    val launcherAppsRevision by actions.launcherAppsRevision.collectAsState()
     var editing by remember { mutableStateOf(false) }
     val draftOrder = remember { mutableStateListOf<Shortcut>().apply { addAll(store.effectiveShortcutOrder) } }
     val gridState = rememberLazyGridState()
@@ -208,10 +210,14 @@ internal fun ShortcutGrid(
             ) {
                 items(visibleOrder, key = Shortcut::name) { shortcut ->
                     ReorderableItem(reorderableState, key = shortcut.name) { isDragging ->
-                    val assignedPackage = store.shortcutPackages[shortcut]
-                    val hasAssignedApp = shortcut in configurableShortcuts && assignedPackage != null
-                    val shortcutTargetPackage = actions.shortcutTargetPackage(shortcut, assignedPackage)
+                    val assignedTargetKey = store.shortcutTargets[shortcut]
+                    val assignedTarget = remember(assignedTargetKey, launcherAppsRevision) {
+                        assignedTargetKey?.let(actions::resolveLauncherTarget)
+                    }
+                    val hasAssignedApp = shortcut in configurableShortcuts && assignedTargetKey != null
+                    val shortcutTargetPackage = actions.shortcutTargetPackage(shortcut, assignedTargetKey)
                     val appPaused = shortcutTargetPackage?.let(appAccessState::isPaused) == true
+                    val appUnavailable = assignedTarget?.isAvailable == false
                     val shortcutIndex = Shortcut.entries.indexOf(shortcut)
                     val jiggleAngle = if (editing) {
                         val jiggle = rememberInfiniteTransition(label = "${shortcut.name} jiggle")
@@ -243,8 +249,10 @@ internal fun ShortcutGrid(
                             onClick = {
                                 if (appPaused) {
                                     onPausedApp(checkNotNull(shortcutTargetPackage))
+                                } else if (appUnavailable) {
+                                    onUnavailableApp(checkNotNull(assignedTarget).label)
                                 } else {
-                                    actions.launchShortcut(shortcut, assignedPackage, openTodos, openDrawer)
+                                    actions.launchShortcut(shortcut, assignedTargetKey, openTodos, openDrawer)
                                 }
                             },
                             onLongClick = ::beginEditing,
@@ -274,15 +282,15 @@ internal fun ShortcutGrid(
                                 contentAlignment = Alignment.Center,
                             ) {
                                 if (hasAssignedApp) {
-                                    AppIcon(
-                                        packageName = checkNotNull(assignedPackage),
+                                    LauncherAppIcon(
+                                        target = checkNotNull(assignedTarget),
                                         actions = actions,
                                         size = (shortcutSize * .56f).coerceIn(
                                             if (compact) Dimens.dp28 else Dimens.dp32,
                                             if (compact) Dimens.dp42 else Dimens.dp48,
                                         ),
                                         themedTint = contentColor,
-                                        contentDescription = actions.appLabel(assignedPackage),
+                                        contentDescription = assignedTarget.label,
                                     )
                                     if (appPaused) {
                                         MinkPausedBadge(Modifier.align(Alignment.Center))

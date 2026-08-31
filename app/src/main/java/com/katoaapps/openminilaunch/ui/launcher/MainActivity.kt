@@ -53,7 +53,10 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
+import androidx.lifecycle.lifecycleScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 private const val FEATURE_UPDATE_ID = "open_1_3_5"
 private const val REQUEST_CONFIGURE_APP_WIDGET = 0x4D4B
@@ -105,7 +108,10 @@ class MainActivity : ComponentActivity() {
         val store = LauncherStore(this)
         val actions = DeviceActions(this)
         actions.removeLegacyLockAdmin()
-        Thread({ actions.installedApps() }, "minilaunch-app-index").start()
+        lifecycleScope.launch {
+            withContext(Dispatchers.IO) { actions.installedApps() }
+            store.migrateLauncherSelections(actions::normalizedLauncherSelectionKey)
+        }
         setContent { MiniLaunchApp(store, actions, ::requestHomeRole, homeRequestToken) }
     }
 

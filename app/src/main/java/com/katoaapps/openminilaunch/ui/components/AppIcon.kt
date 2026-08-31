@@ -1,6 +1,7 @@
 package com.katoaapps.openminilaunch.ui.components
 
 import com.katoaapps.openminilaunch.platform.DeviceActions
+import com.katoaapps.openminilaunch.model.LauncherAppTarget
 import com.katoaapps.openminilaunch.ui.theme.MinkBlack
 import com.katoaapps.openminilaunch.ui.theme.MinkWhite
 
@@ -16,6 +17,8 @@ import androidx.compose.material.icons.filled.Apps
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -43,13 +46,48 @@ internal fun AppIcon(
     contentDescription: String? = null,
 ) {
     val context = LocalContext.current
+    RenderedAppIcon(
+        iconKey = packageName,
+        drawable = { actions?.appIcon(packageName) ?: runCatching { context.packageManager.getApplicationIcon(packageName) }.getOrNull() },
+        size = size,
+        themedTint = themedTint,
+        contentDescription = contentDescription,
+    )
+}
+
+/** Uses LauncherActivityInfo's badged icon so Android supplies the correct work-profile badge. */
+@Composable
+internal fun LauncherAppIcon(
+    target: LauncherAppTarget,
+    actions: DeviceActions,
+    size: Dp,
+    themedTint: Color? = null,
+    contentDescription: String? = null,
+) {
+    val launcherAppsRevision by actions.launcherAppsRevision.collectAsState()
+    RenderedAppIcon(
+        iconKey = "${target.selectionKey}:$launcherAppsRevision",
+        drawable = { actions.launcherAppIcon(target) },
+        size = size,
+        themedTint = themedTint,
+        contentDescription = contentDescription,
+    )
+}
+
+@Composable
+private fun RenderedAppIcon(
+    iconKey: String,
+    drawable: () -> android.graphics.drawable.Drawable?,
+    size: Dp,
+    themedTint: Color?,
+    contentDescription: String?,
+) {
     val density = LocalDensity.current
     val targetBitmapSize = with(density) {
         (size * MONOCHROME_ICON_SCALE).roundToPx()
     }.coerceAtLeast(MIN_ICON_BITMAP_SIZE_PX)
-    val rendered = remember(packageName, actions, themedTint != null, targetBitmapSize) {
-        val drawable = actions?.appIcon(packageName)
-            ?: runCatching { context.packageManager.getApplicationIcon(packageName) }.getOrNull()
+    val rendered = remember(iconKey, themedTint != null, targetBitmapSize) {
+        val drawable = drawable()
         val monochrome = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             (drawable as? AdaptiveIconDrawable)?.monochrome
         } else {
@@ -57,7 +95,7 @@ internal fun AppIcon(
         }
         val source = if (themedTint != null) monochrome ?: drawable else drawable
         source?.toBitmap(width = targetBitmapSize, height = targetBitmapSize)?.asImageBitmap()?.let {
-            RenderedAppIcon(it, monochrome != null && source === monochrome)
+            RenderedIconBitmap(it, monochrome != null && source === monochrome)
         }
     }
     if (rendered != null) {
@@ -92,4 +130,4 @@ internal fun AppIcon(
     }
 }
 
-private data class RenderedAppIcon(val bitmap: ImageBitmap, val isMonochrome: Boolean)
+private data class RenderedIconBitmap(val bitmap: ImageBitmap, val isMonochrome: Boolean)

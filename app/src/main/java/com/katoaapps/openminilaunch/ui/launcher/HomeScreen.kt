@@ -82,6 +82,7 @@ internal fun HomeScreen(
     homeRequestToken: Int,
 ) {
     val context = LocalContext.current
+    val launcherAppsRevision by actions.launcherAppsRevision.collectAsState()
     var drawerOpen by remember { mutableStateOf(false) }
     var todoJumpToken by remember { mutableIntStateOf(0) }
     var flyingTodo by remember { mutableStateOf<String?>(null) }
@@ -282,6 +283,13 @@ internal fun HomeScreen(
                             actions = actions,
                             appAccessState = appAccessState,
                             onPausedApp = { pausedAppPackage = it },
+                            onUnavailableApp = { label ->
+                                Toast.makeText(
+                                    context,
+                                    context.getString(R.string.launcher_app_unavailable, label),
+                                    Toast.LENGTH_LONG,
+                                ).show()
+                            },
                             openTodos = openTodos,
                             compact = qwertyHome,
                             contentColor = homePanelContentColor,
@@ -375,7 +383,7 @@ internal fun HomeScreen(
             containerColor = MaterialTheme.colorScheme.background,
         ) {
             Text(stringResource(R.string.your_drawer), Modifier.padding(horizontal = Dimens.dp24), fontWeight = FontWeight.Black, letterSpacing = Dimens.sp1)
-            if (store.drawerPackages.isEmpty()) {
+            if (store.drawerTargets.isEmpty()) {
                 Column(
                     Modifier.fillMaxWidth().padding(horizontal = Dimens.dp28, vertical = Dimens.dp24),
                     horizontalAlignment = Alignment.CenterHorizontally,
@@ -410,28 +418,39 @@ internal fun HomeScreen(
                     CircularProgressIndicator()
                 }
             } else {
-                val visibleDrawerPackages = store.drawerPackages.filterNot(appAccessState::isPaused)
-                if (visibleDrawerPackages.isEmpty()) {
+                val savedDrawerTargets = store.drawerTargets.toList()
+                val drawerTargets = remember(savedDrawerTargets, launcherAppsRevision) {
+                    savedDrawerTargets.map(actions::resolveLauncherTarget)
+                }
+                val visibleDrawerTargets = drawerTargets.filterNot(appAccessState::isPaused)
+                if (visibleDrawerTargets.isEmpty()) {
                     Text(
                         stringResource(R.string.drawer_apps_paused),
                         Modifier.fillMaxWidth().padding(horizontal = Dimens.dp28, vertical = Dimens.dp24),
                         color = Muted,
                     )
                 }
-                val drawerRows = ceil(visibleDrawerPackages.size / 2f).toInt()
+                val drawerRows = ceil(visibleDrawerTargets.size / 2f).toInt()
                 LazyVerticalGrid(
                     columns = GridCells.Fixed(2),
                     modifier = Modifier.fillMaxWidth().height(Dimens.dp72 * drawerRows),
                     contentPadding = PaddingValues(horizontal = Dimens.dp12, vertical = Dimens.dp8),
                 ) {
-                    items(visibleDrawerPackages, key = { it }) { packageName ->
+                    items(visibleDrawerTargets, key = LauncherAppTarget::selectionKey) { target ->
                         ListItem(
-                            headlineContent = { Text(actions.appLabel(packageName), maxLines = 1, overflow = TextOverflow.Ellipsis) },
-                            leadingContent = { AppIcon(packageName, actions, Dimens.dp36) },
+                            headlineContent = { Text(target.label, maxLines = 1, overflow = TextOverflow.Ellipsis) },
+                            leadingContent = { LauncherAppIcon(target, actions, Dimens.dp36) },
                             modifier = Modifier.clip(RoundedCornerShape(Dimens.dp16))
                                 .clickable {
-                                    actions.launchPackage(packageName)
-                                    drawerOpen = false
+                                    if (actions.launchLauncherTarget(target)) {
+                                        drawerOpen = false
+                                    } else {
+                                        Toast.makeText(
+                                            context,
+                                            context.getString(R.string.launcher_app_unavailable, target.label),
+                                            Toast.LENGTH_LONG,
+                                        ).show()
+                                    }
                                 },
                             colors = ListItemDefaults.colors(containerColor = MaterialTheme.colorScheme.background),
                         )

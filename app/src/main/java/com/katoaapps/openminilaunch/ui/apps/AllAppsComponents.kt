@@ -41,7 +41,7 @@ import androidx.core.graphics.drawable.toBitmap
 
 @Composable
 internal fun AppCarouselItem(
-    app: LaunchableApp,
+    app: LauncherAppTarget,
     actions: DeviceActions,
     iconSize: androidx.compose.ui.unit.Dp,
     scale: Float,
@@ -61,8 +61,8 @@ internal fun AppCarouselItem(
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        AppIcon(
-            packageName = app.packageName,
+        LauncherAppIcon(
+            target = app,
             actions = actions,
             size = iconSize,
             contentDescription = stringResource(R.string.open_app, app.label),

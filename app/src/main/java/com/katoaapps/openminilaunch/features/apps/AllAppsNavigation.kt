@@ -1,6 +1,7 @@
 package com.katoaapps.openminilaunch.features.apps
 
 import com.katoaapps.openminilaunch.model.LaunchableApp
+import com.katoaapps.openminilaunch.model.LauncherAppTarget
 
 import kotlin.math.PI
 import kotlin.math.cos
@@ -15,14 +16,29 @@ internal data class LetterArcPosition(
 )
 
 internal fun appIndexForLetter(apps: List<LaunchableApp>, letter: Char): Int? =
-    apps.indexOfFirst { app -> app.label.firstOrNull()?.uppercaseChar() == letter.uppercaseChar() }
-        .takeIf { it >= 0 }
+    indexForLetter(apps, letter, LaunchableApp::label)
 
 internal fun initialAllAppsIndex(apps: List<LaunchableApp>): Int =
     appIndexForLetter(apps, 'M') ?: 0
 
 internal fun letterForApp(app: LaunchableApp?): Char? =
-    app?.label?.firstOrNull()?.uppercaseChar()?.takeIf { it in 'A'..'Z' }
+    app?.let { initialLetter(it, LaunchableApp::label) }
+
+internal fun launcherAppIndexForLetter(apps: List<LauncherAppTarget>, letter: Char): Int? =
+    indexForLetter(apps, letter, LauncherAppTarget::label)
+
+internal fun initialLauncherAppsIndex(apps: List<LauncherAppTarget>): Int =
+    launcherAppIndexForLetter(apps, 'M') ?: 0
+
+internal fun letterForLauncherApp(app: LauncherAppTarget?): Char? =
+    app?.let { initialLetter(it, LauncherAppTarget::label) }
+
+private fun <T> indexForLetter(apps: List<T>, letter: Char, label: (T) -> String): Int? =
+    apps.indexOfFirst { app -> label(app).firstOrNull()?.uppercaseChar() == letter.uppercaseChar() }
+        .takeIf { it >= 0 }
+
+private fun <T> initialLetter(app: T, label: (T) -> String): Char? =
+    label(app).firstOrNull()?.uppercaseChar()?.takeIf { it in 'A'..'Z' }
 
 internal fun letterArcPosition(index: Int, width: Float, height: Float): LetterArcPosition {
     require(index in ALL_APP_LETTERS.indices)

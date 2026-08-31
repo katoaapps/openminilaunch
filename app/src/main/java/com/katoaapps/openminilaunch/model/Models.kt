@@ -2,6 +2,7 @@ package com.katoaapps.openminilaunch.model
 
 import com.katoaapps.openminilaunch.R
 
+import android.content.ComponentName
 import android.net.Uri
 import androidx.annotation.StringRes
 
@@ -15,6 +16,47 @@ data class LaunchableApp(
     val label: String,
     val packageName: String,
 )
+
+/** A launcher activity in one Android user profile. Package name alone is not a unique app ID. */
+data class LauncherAppTarget(
+    val label: String,
+    val packageName: String,
+    val componentName: ComponentName,
+    val userSerial: Long,
+    val isWorkProfile: Boolean,
+    val isAvailable: Boolean = true,
+    val selectionKey: String = launcherAppSelectionKey(userSerial, componentName),
+)
+
+data class LauncherAppIdentity(
+    val userSerial: Long,
+    val componentName: ComponentName,
+)
+
+data class LauncherAppKeyParts(
+    val userSerial: Long,
+    val flattenedComponent: String,
+)
+
+private const val LAUNCHER_APP_KEY_PREFIX = "launcher:"
+
+fun launcherAppSelectionKey(userSerial: Long, componentName: ComponentName): String =
+    "$LAUNCHER_APP_KEY_PREFIX$userSerial:${componentName.flattenToString()}"
+
+fun launcherAppIdentity(selectionKey: String): LauncherAppIdentity? {
+    val parts = launcherAppKeyParts(selectionKey) ?: return null
+    val component = ComponentName.unflattenFromString(parts.flattenedComponent) ?: return null
+    return LauncherAppIdentity(parts.userSerial, component)
+}
+
+fun launcherAppKeyParts(selectionKey: String): LauncherAppKeyParts? {
+    if (!selectionKey.startsWith(LAUNCHER_APP_KEY_PREFIX)) return null
+    val parts = selectionKey.split(':', limit = 3)
+    if (parts.size != 3) return null
+    val serial = parts[1].toLongOrNull()?.takeIf { it >= 0 } ?: return null
+    if (parts[2].isBlank()) return null
+    return LauncherAppKeyParts(serial, parts[2])
+}
 
 data class ContactResult(
     val contactUri: String,

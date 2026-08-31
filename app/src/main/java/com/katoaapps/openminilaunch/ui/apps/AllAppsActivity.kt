@@ -15,6 +15,7 @@ import com.katoaapps.openminilaunch.ui.wellbeing.rememberMinkAppAccessState
 import android.app.Activity
 import android.os.Build
 import android.os.Bundle
+import android.widget.Toast
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.compose.animation.animateColorAsState
@@ -39,6 +40,7 @@ import androidx.compose.material3.dynamicDarkColorScheme
 import androidx.compose.material3.dynamicLightColorScheme
 import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
@@ -142,14 +144,16 @@ internal fun AllAppsScreen(
     actions: DeviceActions,
     onClose: () -> Unit,
 ) {
-    val appsState by produceState<List<LaunchableApp>?>(initialValue = null, actions) {
+    val context = LocalContext.current
+    val launcherAppsRevision by actions.launcherAppsRevision.collectAsState()
+    val appsState by produceState<List<LauncherAppTarget>?>(initialValue = null, actions, launcherAppsRevision) {
         value = withContext(Dispatchers.IO) { actions.installedApps() }
     }
     val appAccessState by rememberMinkAppAccessState(store)
     val installedApps = appsState.orEmpty()
     val apps = remember(installedApps, appAccessState) {
         if (appAccessState.isResolved) {
-            installedApps.filterNot { appAccessState.isPaused(it.packageName) }
+            installedApps.filterNot(appAccessState::isPaused)
         } else {
             emptyList()
         }
@@ -158,13 +162,13 @@ internal fun AllAppsScreen(
     val scope = rememberCoroutineScope()
 
     LaunchedEffect(apps) {
-        if (apps.isNotEmpty()) pagerState.scrollToPage(initialAllAppsIndex(apps))
+        if (apps.isNotEmpty()) pagerState.scrollToPage(initialLauncherAppsIndex(apps))
     }
 
     val focusedApp = apps.getOrNull(pagerState.currentPage)
     val fallbackAccent = Color(store.effectiveHomePanelColorArgb)
-    val targetAccent = remember(focusedApp?.packageName, fallbackAccent) {
-        focusedApp?.let { dominantAppColor(actions.appIcon(it.packageName)) } ?: fallbackAccent
+    val targetAccent = remember(focusedApp?.selectionKey, fallbackAccent) {
+        focusedApp?.let { dominantAppColor(actions.launcherAppIcon(it)) } ?: fallbackAccent
     }
     val accent by animateColorAsState(
         targetValue = targetAccent,
@@ -260,7 +264,13 @@ internal fun AllAppsScreen(
                             focused = page == pagerState.currentPage,
                             onClick = {
                                 if (page == pagerState.currentPage) {
-                                    actions.launchPackage(app.packageName)
+                                    if (!actions.launchLauncherTarget(app)) {
+                                        Toast.makeText(
+                                            context,
+                                            context.getString(R.string.launcher_app_unavailable, app.label),
+                                            Toast.LENGTH_LONG,
+                                        ).show()
+                                    }
                                 } else {
                                     scope.launch { pagerState.animateScrollToPage(page) }
                                 }
@@ -269,13 +279,13 @@ internal fun AllAppsScreen(
                     }
                     LetterArc(
                         availableLetters = remember(apps) {
-                            apps.mapNotNull { letterForApp(it) }.toSet()
+                            apps.mapNotNull { letterForLauncherApp(it) }.toSet()
                         },
-                        selectedLetter = letterForApp(focusedApp),
+                        selectedLetter = letterForLauncherApp(focusedApp),
                         selectedContentColor = edgeColor,
                         compact = compact,
                         onLetter = { letter ->
-                            appIndexForLetter(apps, letter)?.let { index ->
+                            launcherAppIndexForLetter(apps, letter)?.let { index ->
                                 scope.launch { pagerState.scrollToPage(index) }
                             }
                         },

@@ -169,6 +169,7 @@ internal fun MagicBox(
         configuration.hardKeyboardHidden,
     )
     val fileSearchRepository = remember { FileSearchRepository(context.applicationContext) }
+    val launcherAppsRevision by actions.launcherAppsRevision.collectAsState()
     val localAppAccessState = if (appAccessState == null) rememberMinkAppAccessState(store) else null
     val effectiveAppAccessState = appAccessState ?: checkNotNull(localAppAccessState).value
     var text by remember { mutableStateOf(TextFieldValue()) }
@@ -397,14 +398,14 @@ internal fun MagicBox(
             actions.searchContacts(searchTerm, useDemoData = store.demoSearchDataEnabled).take(5)
         } else emptyList()
     }
-    val appResults = remember(prefix, searchTerm) {
+    val appResults = remember(prefix, searchTerm, launcherAppsRevision) {
         if (prefix == '?' && searchTerm.isNotBlank()) {
             actions.installedApps().filter { it.label.startsWith(searchTerm, true) }.take(5)
         } else emptyList()
     }
     val visibleAppResults = remember(appResults, effectiveAppAccessState) {
         if (effectiveAppAccessState.isResolved) {
-            appResults.filterNot { effectiveAppAccessState.isPaused(it.packageName) }
+            appResults.filterNot(effectiveAppAccessState::isPaused)
         } else {
             emptyList()
         }
@@ -749,11 +750,17 @@ internal fun MagicBox(
                         visibleAppResults.forEach { app ->
                             SuggestionRow(
                                 text = app.label,
-                                leadingContent = { AppIcon(app.packageName, actions, Dimens.dp26) },
+                                leadingContent = { LauncherAppIcon(app, actions, Dimens.dp26) },
                             ) {
-                                if (actions.launchPackage(app.packageName)) {
+                                if (actions.launchLauncherTarget(app)) {
                                     store.addSearchQuery("?${app.label}")
                                     dismiss()
+                                } else {
+                                    Toast.makeText(
+                                        context,
+                                        context.getString(R.string.launcher_app_unavailable, app.label),
+                                        Toast.LENGTH_LONG,
+                                    ).show()
                                 }
                             }
                         }

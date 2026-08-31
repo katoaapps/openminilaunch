@@ -57,6 +57,11 @@ private data class AppListLoadState(
     val loaded: Boolean = false,
 )
 
+private data class LauncherAppListLoadState(
+    val apps: List<LauncherAppTarget> = emptyList(),
+    val loaded: Boolean = false,
+)
+
 private data class MessagingProviderLoadState(
     val options: List<MessagingProviderOption> = emptyList(),
     val loaded: Boolean = false,
@@ -81,10 +86,16 @@ internal fun SettingsScreen(
     var pickingMessagingApp by remember { mutableStateOf(false) }
     var pickingSocialApps by remember { mutableStateOf(false) }
     var appListRefresh by remember { mutableIntStateOf(0) }
+    val launcherAppsRevision by actions.launcherAppsRevision.collectAsState()
     val loadInstalledApps = pickingShortcut != null || pickingDrawer
-    val installedApps by produceState(AppListLoadState(), loadInstalledApps, appListRefresh) {
+    val installedApps by produceState(
+        LauncherAppListLoadState(),
+        loadInstalledApps,
+        appListRefresh,
+        launcherAppsRevision,
+    ) {
         if (loadInstalledApps) {
-            value = AppListLoadState(
+            value = LauncherAppListLoadState(
                 apps = withContext(Dispatchers.IO) { actions.installedApps() },
                 loaded = true,
             )
@@ -420,34 +431,36 @@ internal fun SettingsScreen(
 
     pickingShortcut?.let { shortcut ->
         val showSamsungWeatherGuide = Build.MANUFACTURER.equals("samsung", ignoreCase = true)
-        AppPickerDialog(
+        LauncherAppPickerDialog(
             title = stringResource(R.string.choose_app_for_shortcut, shortcut.displaySlotLabel()),
             apps = installedApps.apps,
-            selected = setOfNotNull(store.shortcutPackages[shortcut]),
+            selected = setOfNotNull(store.shortcutTargets[shortcut]),
+            actions = actions,
             loading = !installedApps.loaded,
             supportingText = if (showSamsungWeatherGuide) stringResource(R.string.samsung_weather_guide) else null,
             supportingActionLabel = if (showSamsungWeatherGuide) stringResource(R.string.open_apps_settings) else null,
             onSupportingAction = actions::openInstalledAppsSettings,
-            onApp = { store.assignShortcut(shortcut, it.packageName); pickingShortcut = null },
+            onApp = { store.assignShortcut(shortcut, it.selectionKey); pickingShortcut = null },
             onReset = { store.resetShortcut(shortcut); pickingShortcut = null },
             resetLabel = stringResource(R.string.restore_shortcut_default, shortcut.displayLabel()),
             onDismiss = { pickingShortcut = null },
         )
     }
     if (pickingDrawer) {
-        AppPickerDialog(
+        LauncherAppPickerDialog(
             title = pluralStringResource(
                 R.plurals.drawer_apps_title,
-                store.drawerPackages.size,
-                store.drawerPackages.size,
+                store.drawerTargets.size,
+                store.drawerTargets.size,
                 MAX_DRAWER_APPS,
             ),
             apps = installedApps.apps,
-            selected = store.drawerPackages.toSet(),
+            selected = store.drawerTargets.toSet(),
+            actions = actions,
             loading = !installedApps.loaded,
             onApp = { app ->
-                val fillingDrawer = app.packageName !in store.drawerPackages && store.drawerPackages.size == MAX_DRAWER_APPS - 1
-                store.toggleDrawerApp(app.packageName)
+                val fillingDrawer = app.selectionKey !in store.drawerTargets && store.drawerTargets.size == MAX_DRAWER_APPS - 1
+                store.toggleDrawerApp(app.selectionKey)
                 if (fillingDrawer) {
                     Toast.makeText(
                         context,

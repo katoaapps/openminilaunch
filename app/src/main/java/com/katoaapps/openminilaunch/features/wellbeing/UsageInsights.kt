@@ -1,7 +1,9 @@
 package com.katoaapps.openminilaunch.features.wellbeing
 
 import com.katoaapps.openminilaunch.R
+import com.katoaapps.openminilaunch.features.apps.LauncherAppRepository
 import com.katoaapps.openminilaunch.model.LaunchableApp
+import com.katoaapps.openminilaunch.model.LauncherAppTarget
 
 import android.app.AppOpsManager
 import android.app.usage.UsageEvents
@@ -188,6 +190,7 @@ internal class UsageInsightsRepository(private val context: Context) {
     private val packageManager = context.packageManager
     private val labelCache = ConcurrentHashMap<String, String>()
     private val socialCategoryCache = ConcurrentHashMap<String, Boolean>()
+    private val launcherApps = LauncherAppRepository.get(context)
     private val homePackages: Set<String> by lazy {
         val homeIntent = Intent(Intent.ACTION_MAIN).addCategory(Intent.CATEGORY_HOME)
         packageManager.queryIntentActivities(homeIntent, 0).mapTo(mutableSetOf()) { it.activityInfo.packageName }
@@ -222,8 +225,21 @@ internal class UsageInsightsRepository(private val context: Context) {
             .atStartOfDay(zone).toInstant().toEpochMilli()
         val events = readTimelineEvents(dayStart - EVENT_LOOKBACK_MILLIS, nowMillis)
         val observedPackages = events.mapNotNull(UsageTimelineEvent::packageName).toSet()
-        val automaticPackages = observedPackages.filterTo(mutableSetOf()) { isSocial(it, emptySet()) }
-        val trackedPackages = effectiveTrackedPackages(socialPackages, automaticPackages, usesAutomaticSocialApps)
+        val personalPackages = personalLauncherPackages()
+        val automaticCandidates = if (personalPackages.isEmpty()) {
+            observedPackages
+        } else {
+            observedPackages.intersect(personalPackages)
+        }
+        val automaticPackages = automaticCandidates.filterTo(mutableSetOf()) { isSocial(it, emptySet()) }
+        val requestedPackages = effectiveTrackedPackages(socialPackages, automaticPackages, usesAutomaticSocialApps)
+        // Usage events are already scoped to the current user. Only intersect when LauncherApps
+        // returned a personal inventory, so a transient profile-query failure does not erase a day.
+        val trackedPackages = if (personalPackages.isEmpty()) {
+            requestedPackages
+        } else {
+            requestedPackages.intersect(personalPackages)
+        }
         val ignored = observedPackages.filterTo(mutableSetOf(), ::isIgnoredPackage)
         val analysis = analyzeUsageTimeline(
             dayStart = dayStart,
@@ -267,8 +283,18 @@ internal class UsageInsightsRepository(private val context: Context) {
     }
 
     fun launchableApps(): List<LaunchableApp> {
-        val intent = Intent(Intent.ACTION_MAIN).addCategory(Intent.CATEGORY_LAUNCHER)
-        return packageManager.queryIntentActivities(intent, 0)
+        val profileAwareApps = launcherApps.targets().asSequence()
+            .filterNot { it.isWorkProfile }
+            .map { LaunchableApp(it.label, it.packageName) }
+            .distinctBy(LaunchableApp::packageName)
+            .sortedBy { it.label.lowercase() }
+            .toList()
+        if (profileAwareApps.isNotEmpty()) return profileAwareApps
+
+        // Mink's Day is deliberately personal-profile only. This fallback preserves its picker
+        // if LauncherApps is temporarily unavailable without broadening it to managed profiles.
+        val launcherIntent = Intent(Intent.ACTION_MAIN).addCategory(Intent.CATEGORY_LAUNCHER)
+        return packageManager.queryIntentActivities(launcherIntent, 0)
             .map { LaunchableApp(it.loadLabel(packageManager).toString(), it.activityInfo.packageName) }
             .distinctBy(LaunchableApp::packageName)
             .sortedBy { it.label.lowercase() }
@@ -306,6 +332,11 @@ internal class UsageInsightsRepository(private val context: Context) {
         headline = context.getString(if (hour >= 22 || hour < 5) R.string.mink_made_it_home else R.string.mink_ready_for_day),
         detail = context.getString(R.string.mink_enable_usage_detail),
     )
+
+    private fun personalLauncherPackages(): Set<String> = launcherApps.targets().asSequence()
+        .filterNot { it.isWorkProfile }
+        .map(LauncherAppTarget::packageName)
+        .toSet()
 
     private fun stateCopy(
         state: MinkState,

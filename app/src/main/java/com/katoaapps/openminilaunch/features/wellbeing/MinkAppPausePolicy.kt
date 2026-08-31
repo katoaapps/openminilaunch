@@ -1,6 +1,7 @@
 package com.katoaapps.openminilaunch.features.wellbeing
 
 import com.katoaapps.openminilaunch.model.MinkAppPauseMode
+import com.katoaapps.openminilaunch.model.LauncherAppTarget
 
 internal data class MinkAppAccessState(
     val mode: MinkAppPauseMode,
@@ -18,7 +19,34 @@ internal data class MinkAppAccessState(
         dailyLimitMinutes = dailyLimitMinutes,
         usageAccessGranted = usageAccessGranted,
     )
+
+    fun isPaused(target: LauncherAppTarget): Boolean = shouldPauseLauncherApp(
+        packageName = target.packageName,
+        isWorkProfile = target.isWorkProfile,
+        trackedPackages = trackedPackages,
+        mode = mode,
+        collectiveUsageMillis = collectiveUsageMillis,
+        dailyLimitMinutes = dailyLimitMinutes,
+        usageAccessGranted = usageAccessGranted,
+    )
 }
+
+internal fun shouldPauseLauncherApp(
+    packageName: String,
+    isWorkProfile: Boolean,
+    trackedPackages: Set<String>,
+    mode: MinkAppPauseMode,
+    collectiveUsageMillis: Long,
+    dailyLimitMinutes: Int,
+    usageAccessGranted: Boolean,
+): Boolean = !isWorkProfile && shouldPauseMinkApp(
+    packageName = packageName,
+    trackedPackages = trackedPackages,
+    mode = mode,
+    collectiveUsageMillis = collectiveUsageMillis,
+    dailyLimitMinutes = dailyLimitMinutes,
+    usageAccessGranted = usageAccessGranted,
+)
 
 internal fun shouldPauseMinkApp(
     packageName: String,

@@ -229,8 +229,8 @@ internal fun LauncherSettingsPage(
             stringResource(R.string.shortcuts_and_drawer),
             pluralStringResource(
                 R.plurals.shortcuts_drawer_summary,
-                store.drawerPackages.size,
-                store.drawerPackages.size,
+                store.drawerTargets.size,
+                store.drawerTargets.size,
                 MAX_DRAWER_APPS,
             ),
             Icons.Default.GridView,
@@ -280,12 +280,12 @@ internal fun ShortcutsSettingsPage(
             fontSize = Dimens.sp13,
         )
         configurableShortcuts.forEach { shortcut ->
-            val packageName = store.shortcutPackages[shortcut]
+            val targetKey = store.shortcutTargets[shortcut]
             ShortcutAssignmentRow(
                 shortcut = shortcut,
-                packageName = packageName,
+                targetKey = targetKey,
                 actions = actions,
-                subtitle = packageName?.let(actions::appLabel)
+                subtitle = targetKey?.let(actions::launcherAppLabel)
                     ?: stringResource(R.string.shortcut_default, shortcut.displayLabel()),
             ) { onPickShortcut(shortcut) }
         }
@@ -299,7 +299,7 @@ internal fun ShortcutsSettingsPage(
         }
         HorizontalDivider(color = Sage)
         SectionLabel(stringResource(R.string.app_drawer))
-        SettingsRow(stringResource(R.string.selected_apps), stringResource(R.string.count_of_max, store.drawerPackages.size, MAX_DRAWER_APPS), Icons.Default.Apps, onClick = onPickDrawer)
+        SettingsRow(stringResource(R.string.selected_apps), stringResource(R.string.count_of_max, store.drawerTargets.size, MAX_DRAWER_APPS), Icons.Default.Apps, onClick = onPickDrawer)
         Text(stringResource(R.string.magic_box_find_other_apps), color = Muted, fontSize = Dimens.sp13)
     }
 }

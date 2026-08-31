@@ -2,6 +2,7 @@ package com.katoaapps.openminilaunch.platform
 
 import com.katoaapps.openminilaunch.R
 import com.katoaapps.openminilaunch.features.calendar.parseCalendarPhrase
+import com.katoaapps.openminilaunch.features.apps.LauncherAppRepository
 import com.katoaapps.openminilaunch.features.conversations.NotificationHub
 import com.katoaapps.openminilaunch.features.demo.DemoSearchData
 import com.katoaapps.openminilaunch.features.magic.normalizedWebUrl
@@ -35,6 +36,7 @@ import android.telephony.PhoneNumberUtils
 import android.telephony.SmsManager
 import android.telephony.SubscriptionManager
 import android.util.LruCache
+import kotlinx.coroutines.flow.StateFlow
 
 internal enum class DirectSmsResult {
     QUEUED,
@@ -45,7 +47,8 @@ internal enum class DirectSmsResult {
 }
 
 class DeviceActions(private val context: Context) {
-    @Volatile private var appsCache: List<LaunchableApp>? = null
+    private val launcherAppRepository = LauncherAppRepository.get(context)
+    val launcherAppsRevision: StateFlow<Long> = launcherAppRepository.revision
     private val labelCache = mutableMapOf<String, String>()
     private val legacyLockAdminComponent = ComponentName(
         context.packageName,
@@ -102,25 +105,29 @@ class DeviceActions(private val context: Context) {
         if (manager.isAdminActive(legacyLockAdminComponent)) manager.removeActiveAdmin(legacyLockAdminComponent)
     }
 
-    fun installedApps(): List<LaunchableApp> {
-        appsCache?.let { return it }
-        val intent = Intent(Intent.ACTION_MAIN).addCategory(Intent.CATEGORY_LAUNCHER)
-        return context.packageManager.queryIntentActivities(intent, PackageManager.MATCH_ALL)
-            .asSequence()
-            .filter { it.activityInfo.packageName != context.packageName }
-            .map { LaunchableApp(it.loadLabel(context.packageManager).toString(), it.activityInfo.packageName) }
-            .distinctBy { it.packageName }
-            .sortedBy { it.label.lowercase() }
-            .toList()
-            .also { apps ->
-                synchronized(labelCache) { apps.forEach { labelCache[it.packageName] = it.label } }
-                appsCache = apps
-            }
-    }
+    fun installedApps(): List<LauncherAppTarget> = launcherAppRepository.targets()
 
     fun invalidateInstalledApps() {
-        appsCache = null
+        launcherAppRepository.invalidate()
     }
+
+    fun resolveLauncherTarget(selectionKey: String): LauncherAppTarget =
+        launcherAppRepository.resolve(selectionKey)
+
+    fun normalizedLauncherSelectionKey(selectionKey: String): String? =
+        launcherAppRepository.normalizedSelectionKey(selectionKey)
+
+    fun launcherAppLabel(selectionKey: String): String = resolveLauncherTarget(selectionKey).label
+
+    fun launcherAppIcon(selectionKey: String): Drawable? =
+        launcherAppRepository.icon(resolveLauncherTarget(selectionKey))
+
+    fun launcherAppIcon(target: LauncherAppTarget): Drawable? = launcherAppRepository.icon(target)
+
+    fun launchLauncherTarget(target: LauncherAppTarget): Boolean = launcherAppRepository.launch(target)
+
+    fun launchLauncherSelection(selectionKey: String): Boolean =
+        launcherAppRepository.launch(resolveLauncherTarget(selectionKey))
 
     fun openInstalledAppsSettings() = start(Intent(Settings.ACTION_APPLICATION_SETTINGS))
 
@@ -157,12 +164,12 @@ class DeviceActions(private val context: Context) {
             app.packageName.contains("clock", ignoreCase = true) ||
                 app.label.equals("Clock", ignoreCase = true)
         }
-        return discoveredClock?.let { launchPackage(it.packageName) } == true
+        return discoveredClock?.let(::launchLauncherTarget) == true
     }
 
-    fun launchShortcut(shortcut: Shortcut, assignedPackage: String?, openTodos: () -> Unit, openDrawer: () -> Unit) {
-        if (!assignedPackage.isNullOrBlank() && shortcut !in listOf(Shortcut.TODO, Shortcut.DRAWER)) {
-            launchPackage(assignedPackage)
+    fun launchShortcut(shortcut: Shortcut, assignedTarget: String?, openTodos: () -> Unit, openDrawer: () -> Unit) {
+        if (!assignedTarget.isNullOrBlank() && shortcut !in listOf(Shortcut.TODO, Shortcut.DRAWER)) {
+            launchLauncherSelection(assignedTarget)
             return
         }
         when (shortcut) {
@@ -177,9 +184,9 @@ class DeviceActions(private val context: Context) {
         }
     }
 
-    fun shortcutTargetPackage(shortcut: Shortcut, assignedPackage: String?): String? {
-        if (!assignedPackage.isNullOrBlank() && shortcut !in listOf(Shortcut.TODO, Shortcut.DRAWER)) {
-            return assignedPackage
+    fun shortcutTargetPackage(shortcut: Shortcut, assignedTarget: String?): String? {
+        if (!assignedTarget.isNullOrBlank() && shortcut !in listOf(Shortcut.TODO, Shortcut.DRAWER)) {
+            return resolveLauncherTarget(assignedTarget).takeUnless(LauncherAppTarget::isWorkProfile)?.packageName
         }
         return if (shortcut == Shortcut.MESSAGE) Telephony.Sms.getDefaultSmsPackage(context) else null
     }

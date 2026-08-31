@@ -46,6 +46,7 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.window.Dialog
 
 @Composable
@@ -53,7 +54,57 @@ internal fun AppPickerDialog(
     title: String,
     apps: List<LaunchableApp>,
     selected: Set<String>,
+    appIcon: @Composable (LaunchableApp, Dp) -> Unit = { app, size ->
+        AppIcon(app.packageName, actions = null, size = size)
+    },
     onApp: (LaunchableApp) -> Unit,
+    onReset: (() -> Unit)? = null,
+    resetLabel: String? = null,
+    onDismiss: () -> Unit,
+    multiSelect: Boolean = false,
+    selectionLimit: Int = 5,
+    loading: Boolean = true,
+    emptyMessage: String? = null,
+    onSelectionLimit: () -> Unit = {},
+    extraActionLabel: String? = null,
+    onExtraAction: () -> Unit = {},
+    supportingText: String? = null,
+    supportingActionLabel: String? = null,
+    onSupportingAction: () -> Unit = {},
+) {
+    AppPickerDialogContent(
+        title = title,
+        apps = apps,
+        selected = selected,
+        appKey = LaunchableApp::packageName,
+        appLabel = LaunchableApp::label,
+        appIcon = appIcon,
+        onApp = onApp,
+        onReset = onReset,
+        resetLabel = resetLabel,
+        onDismiss = onDismiss,
+        multiSelect = multiSelect,
+        selectionLimit = selectionLimit,
+        loading = loading,
+        emptyMessage = emptyMessage,
+        onSelectionLimit = onSelectionLimit,
+        extraActionLabel = extraActionLabel,
+        onExtraAction = onExtraAction,
+        supportingText = supportingText,
+        supportingActionLabel = supportingActionLabel,
+        onSupportingAction = onSupportingAction,
+    )
+}
+
+@Composable
+private fun <T> AppPickerDialogContent(
+    title: String,
+    apps: List<T>,
+    selected: Set<String>,
+    appKey: (T) -> String,
+    appLabel: (T) -> String,
+    appIcon: @Composable (T, Dp) -> Unit,
+    onApp: (T) -> Unit,
     onReset: (() -> Unit)? = null,
     resetLabel: String? = null,
     onDismiss: () -> Unit,
@@ -77,7 +128,7 @@ internal fun AppPickerDialog(
     LaunchedEffect(railLetterIndex, apps) {
         if (apps.isNotEmpty()) {
             val letter = letters[railLetterIndex]
-            val index = apps.indexOfFirst { (it.label.firstOrNull()?.uppercaseChar() ?: 'Z') >= letter }
+            val index = apps.indexOfFirst { (appLabel(it).firstOrNull()?.uppercaseChar() ?: 'Z') >= letter }
                 .let { if (it < 0) apps.lastIndex else it }
             if (index >= 0) gridState.scrollToItem(index)
         }
@@ -143,12 +194,12 @@ internal fun AppPickerDialog(
                         letterSpacing = Dimens.sp1,
                         modifier = Modifier.padding(top = Dimens.dp4, bottom = Dimens.dp6),
                     )
-                    val selectedApps = apps.filter { it.packageName in selected }.take(selectionLimit)
+                    val selectedApps = apps.filter { appKey(it) in selected }.take(selectionLimit)
                     LazyRow(
                         Modifier.fillMaxWidth(),
                         horizontalArrangement = Arrangement.spacedBy(Dimens.dp6),
                     ) {
-                        lazyRowItems(selectedApps, key = { it.packageName }) { app ->
+                        lazyRowItems(selectedApps, key = appKey) { app ->
                             Column(
                                 Modifier.width(Dimens.dp64).clip(RoundedCornerShape(Dimens.dp12))
                                     .background(MaterialTheme.colorScheme.surfaceContainerLow)
@@ -156,16 +207,16 @@ internal fun AppPickerDialog(
                                 horizontalAlignment = Alignment.CenterHorizontally,
                             ) {
                                 Box {
-                                    AppIcon(app.packageName, actions = null, size = Dimens.dp30)
+                                    appIcon(app, Dimens.dp30)
                                     Surface(
                                         modifier = Modifier.align(Alignment.TopEnd).offset(x = Dimens.dp5, y = -Dimens.dp5),
                                         shape = CircleShape,
                                         color = MaterialTheme.colorScheme.error,
                                     ) {
-                                        Icon(Icons.Default.Close, stringResource(R.string.remove_app, app.label), Modifier.size(Dimens.dp14), tint = MaterialTheme.colorScheme.onError)
+                                        Icon(Icons.Default.Close, stringResource(R.string.remove_app, appLabel(app)), Modifier.size(Dimens.dp14), tint = MaterialTheme.colorScheme.onError)
                                     }
                                 }
-                                Text(app.label, fontSize = Dimens.sp9, maxLines = 1, textAlign = TextAlign.Center, modifier = Modifier.padding(top = Dimens.dp3))
+                                Text(appLabel(app), fontSize = Dimens.sp9, maxLines = 1, textAlign = TextAlign.Center, modifier = Modifier.padding(top = Dimens.dp3))
                             }
                         }
                     }
@@ -183,8 +234,8 @@ internal fun AppPickerDialog(
                             contentPadding = PaddingValues(top = Dimens.dp8, bottom = Dimens.dp8, end = Dimens.dp34),
                             modifier = Modifier.fillMaxSize(),
                         ) {
-                            items(apps, key = { it.packageName }) { app ->
-                                val isSelected = app.packageName in selected
+                            items(apps, key = appKey) { app ->
+                                val isSelected = appKey(app) in selected
                                 Column(
                                     Modifier.padding(Dimens.dp4).clip(RoundedCornerShape(Dimens.dp16))
                                         .background(if (isSelected) Sage else MaterialTheme.colorScheme.surfaceContainerLow)
@@ -195,8 +246,8 @@ internal fun AppPickerDialog(
                                         .padding(Dimens.dp8),
                                     horizontalAlignment = Alignment.CenterHorizontally,
                                 ) {
-                                    AppIcon(app.packageName, actions = null, size = Dimens.dp48)
-                                    Text(app.label, textAlign = TextAlign.Center, fontSize = Dimens.sp11, maxLines = 2, modifier = Modifier.padding(top = Dimens.dp6))
+                                    appIcon(app, Dimens.dp48)
+                                    Text(appLabel(app), textAlign = TextAlign.Center, fontSize = Dimens.sp11, maxLines = 2, modifier = Modifier.padding(top = Dimens.dp6))
                                 }
                             }
                         }
@@ -263,6 +314,52 @@ internal fun AppPickerDialog(
             }
         }
     }
+}
+
+@Composable
+internal fun LauncherAppPickerDialog(
+    title: String,
+    apps: List<LauncherAppTarget>,
+    selected: Set<String>,
+    actions: DeviceActions,
+    onApp: (LauncherAppTarget) -> Unit,
+    onReset: (() -> Unit)? = null,
+    resetLabel: String? = null,
+    onDismiss: () -> Unit,
+    multiSelect: Boolean = false,
+    selectionLimit: Int = 5,
+    loading: Boolean = true,
+    emptyMessage: String? = null,
+    onSelectionLimit: () -> Unit = {},
+    supportingText: String? = null,
+    supportingActionLabel: String? = null,
+    onSupportingAction: () -> Unit = {},
+) {
+    val visibleTargets = remember(apps, selected) {
+        (apps + selected.map(actions::resolveLauncherTarget))
+            .distinctBy(LauncherAppTarget::selectionKey)
+            .sortedBy { it.label.lowercase() }
+    }
+    AppPickerDialogContent(
+        title = title,
+        apps = visibleTargets,
+        selected = selected,
+        appKey = LauncherAppTarget::selectionKey,
+        appLabel = LauncherAppTarget::label,
+        appIcon = { app, size -> LauncherAppIcon(app, actions, size) },
+        onApp = onApp,
+        onReset = onReset,
+        resetLabel = resetLabel,
+        onDismiss = onDismiss,
+        multiSelect = multiSelect,
+        selectionLimit = selectionLimit,
+        loading = loading,
+        emptyMessage = emptyMessage,
+        onSelectionLimit = onSelectionLimit,
+        supportingText = supportingText,
+        supportingActionLabel = supportingActionLabel,
+        onSupportingAction = onSupportingAction,
+    )
 }
 
 @Composable

@@ -4,7 +4,7 @@ import com.katoaapps.openminilaunch.R
 import com.katoaapps.openminilaunch.model.Shortcut
 import com.katoaapps.openminilaunch.model.configurableShortcuts
 import com.katoaapps.openminilaunch.platform.DeviceActions
-import com.katoaapps.openminilaunch.ui.components.AppIcon
+import com.katoaapps.openminilaunch.ui.components.LauncherAppIcon
 import com.katoaapps.openminilaunch.ui.theme.*
 
 import androidx.compose.foundation.background
@@ -61,7 +61,7 @@ internal fun Shortcut.displaySlotLabel(): String {
 @Composable
 internal fun ShortcutAssignmentRow(
     shortcut: Shortcut,
-    packageName: String?,
+    targetKey: String?,
     actions: DeviceActions,
     subtitle: String,
     onClick: () -> Unit,
@@ -77,8 +77,9 @@ internal fun ShortcutAssignmentRow(
                 .background(MaterialTheme.colorScheme.surfaceContainerHigh),
             contentAlignment = Alignment.Center,
         ) {
-            if (packageName != null) {
-                AppIcon(packageName, actions, Dimens.dp32, contentDescription = actions.appLabel(packageName))
+            if (targetKey != null) {
+                val target = actions.resolveLauncherTarget(targetKey)
+                LauncherAppIcon(target, actions, Dimens.dp32, contentDescription = target.label)
             } else {
                 Icon(shortcut.defaultIcon(), null, Modifier.size(Dimens.dp25), tint = MaterialTheme.colorScheme.onSurface)
             }

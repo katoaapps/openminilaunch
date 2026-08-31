@@ -2,6 +2,7 @@ package com.katoaapps.openminilaunch
 
 import com.katoaapps.openminilaunch.data.normalizedSocialGoalMinutes
 import com.katoaapps.openminilaunch.features.wellbeing.shouldPauseMinkApp
+import com.katoaapps.openminilaunch.features.wellbeing.shouldPauseLauncherApp
 import com.katoaapps.openminilaunch.model.MinkAppPauseMode
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
@@ -64,6 +65,21 @@ class MinkAppPausePolicyTest {
     @Test
     fun neverModeDoesNotPauseTrackedApps() {
         assertFalse(paused("example.social", MinkAppPauseMode.NEVER))
+    }
+
+    @Test
+    fun workProfileCopyIsNeverPausedByMinkDay() {
+        assertFalse(
+            shouldPauseLauncherApp(
+                packageName = "example.social",
+                isWorkProfile = true,
+                trackedPackages = tracked,
+                mode = MinkAppPauseMode.ALWAYS,
+                collectiveUsageMillis = 0,
+                dailyLimitMinutes = 0,
+                usageAccessGranted = true,
+            ),
+        )
     }
 
     @Test

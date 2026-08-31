@@ -37,10 +37,12 @@ class LauncherStore(context: Context) {
         ContextCompat.getColor(appContext, demoHomeProfile.backgroundColorRes)
     )
     val todos = mutableStateListOf<TodoItem>()
-    val shortcutPackages = mutableStateMapOf<Shortcut, String>()
+    /** Stable launcher target keys. Legacy package-only values are migrated after discovery. */
+    val shortcutTargets = mutableStateMapOf<Shortcut, String>()
     val shortcutOrder = mutableStateListOf<Shortcut>()
     val confirmedShortcutChoices = mutableStateListOf<Shortcut>()
-    val drawerPackages = mutableStateListOf<String>()
+    /** Stable launcher target keys, allowing personal and work copies of one package to coexist. */
+    val drawerTargets = mutableStateListOf<String>()
     val searchFolders = mutableStateListOf<SearchFolder>()
     val searchHistory = mutableStateListOf<String>()
     val widgetIds = mutableStateListOf<Int>()
@@ -140,7 +142,7 @@ class LauncherStore(context: Context) {
             val shortcuts = JSONObject(prefs.getString("shortcuts", "{}") ?: "{}")
             Shortcut.entries.forEach { shortcut ->
                 shortcuts.optString(shortcut.name).takeIf(String::isNotBlank)?.let {
-                    shortcutPackages[shortcut] = it
+                    shortcutTargets[shortcut] = it
                     if (shortcut !in confirmedShortcutChoices) confirmedShortcutChoices += shortcut
                 }
             }
@@ -159,7 +161,7 @@ class LauncherStore(context: Context) {
                     ?.let { if (it !in confirmedShortcutChoices) confirmedShortcutChoices += it }
             }
             val drawer = JSONArray(prefs.getString("drawer", "[]") ?: "[]")
-            repeat(minOf(drawer.length(), MAX_DRAWER_APPS)) { drawerPackages += drawer.getString(it) }
+            repeat(minOf(drawer.length(), MAX_DRAWER_APPS)) { drawerTargets += drawer.getString(it) }
             val folders = JSONArray(prefs.getString("search_folders", "[]") ?: "[]")
             repeat(folders.length()) { index ->
                 val folder = folders.getJSONObject(index)
@@ -256,14 +258,14 @@ class LauncherStore(context: Context) {
         todos.addAll(ordered)
     }
 
-    fun assignShortcut(shortcut: Shortcut, packageName: String) {
-        shortcutPackages[shortcut] = packageName
+    fun assignShortcut(shortcut: Shortcut, targetKey: String) {
+        shortcutTargets[shortcut] = targetKey
         if (shortcut !in confirmedShortcutChoices) confirmedShortcutChoices += shortcut
         saveSettings()
     }
 
     fun resetShortcut(shortcut: Shortcut) {
-        shortcutPackages.remove(shortcut)
+        shortcutTargets.remove(shortcut)
         if (shortcut !in confirmedShortcutChoices) confirmedShortcutChoices += shortcut
         saveSettings()
     }
@@ -271,7 +273,7 @@ class LauncherStore(context: Context) {
     fun confirmSystemDefaultsForUnselectedShortcuts() {
         configurableShortcuts.forEach { shortcut ->
             if (shortcut !in confirmedShortcutChoices) {
-                shortcutPackages.remove(shortcut)
+                shortcutTargets.remove(shortcut)
                 confirmedShortcutChoices += shortcut
             }
         }
@@ -301,10 +303,33 @@ class LauncherStore(context: Context) {
         saveShortcutOrder()
     }
 
-    fun toggleDrawerApp(packageName: String) {
-        if (packageName in drawerPackages) drawerPackages.remove(packageName)
-        else if (drawerPackages.size < MAX_DRAWER_APPS) drawerPackages += packageName
+    fun toggleDrawerApp(targetKey: String) {
+        if (targetKey in drawerTargets) drawerTargets.remove(targetKey)
+        else if (drawerTargets.size < MAX_DRAWER_APPS) drawerTargets += targetKey
         saveSettings()
+    }
+
+    /** Converts package-only settings to personal-profile activity keys without assigning work copies. */
+    fun migrateLauncherSelections(normalize: (String) -> String?) {
+        var changed = false
+        shortcutTargets.keys.toList().forEach { shortcut ->
+            val saved = shortcutTargets[shortcut] ?: return@forEach
+            val migrated = normalize(saved) ?: return@forEach
+            if (migrated != saved) {
+                shortcutTargets[shortcut] = migrated
+                changed = true
+            }
+        }
+        val migratedDrawer = drawerTargets
+            .map { saved -> normalize(saved) ?: saved }
+            .distinct()
+            .take(MAX_DRAWER_APPS)
+        if (migratedDrawer != drawerTargets.toList()) {
+            drawerTargets.clear()
+            drawerTargets.addAll(migratedDrawer)
+            changed = true
+        }
+        if (changed) saveSettings()
     }
 
     fun completeOnboarding() {
@@ -561,8 +586,8 @@ class LauncherStore(context: Context) {
     }
 
     private fun saveSettings() {
-        val shortcuts = JSONObject().apply { shortcutPackages.forEach { (key, value) -> put(key.name, value) } }
-        val drawer = JSONArray().apply { drawerPackages.forEach(::put) }
+        val shortcuts = JSONObject().apply { shortcutTargets.forEach { (key, value) -> put(key.name, value) } }
+        val drawer = JSONArray().apply { drawerTargets.forEach(::put) }
         val confirmed = JSONArray().apply { confirmedShortcutChoices.forEach { put(it.name) } }
         prefs.edit()
             .putString("shortcuts", shortcuts.toString())
