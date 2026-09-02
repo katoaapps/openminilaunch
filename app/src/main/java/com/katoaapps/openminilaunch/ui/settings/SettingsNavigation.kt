@@ -8,6 +8,7 @@ internal enum class SettingsDestination {
     LAUNCHER,
     APPEARANCE,
     SHORTCUTS,
+    PIN_SHORTCUT_REQUESTS,
     MAGIC_BOX,
     MINK_ASSISTANT,
     MESSAGING,
@@ -34,6 +35,12 @@ internal fun settingsPathTo(destination: SettingsDestination): List<SettingsDest
     SettingsDestination.SHORTCUTS -> listOf(
         SettingsDestination.OVERVIEW,
         SettingsDestination.LAUNCHER,
+        destination,
+    )
+    SettingsDestination.PIN_SHORTCUT_REQUESTS -> listOf(
+        SettingsDestination.OVERVIEW,
+        SettingsDestination.LAUNCHER,
+        SettingsDestination.SHORTCUTS,
         destination,
     )
     SettingsDestination.MAGIC_BOX -> listOf(SettingsDestination.OVERVIEW, SettingsDestination.MAGIC_BOX)

@@ -48,6 +48,11 @@ internal fun SettingsDestinationContent(
             actions = actions,
             onPickShortcut = onPickShortcut,
             onPickDrawer = onPickDrawer,
+            onNavigate = onNavigate,
+            goBack = onNavigateBack,
+        )
+        SettingsDestination.PIN_SHORTCUT_REQUESTS -> PinShortcutRequestsSettingsPage(
+            store = store,
             goBack = onNavigateBack,
         )
         SettingsDestination.MAGIC_BOX -> MagicBoxSettingsPage(

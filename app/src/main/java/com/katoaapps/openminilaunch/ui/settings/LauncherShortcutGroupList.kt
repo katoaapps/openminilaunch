@@ -50,7 +50,7 @@ internal fun LauncherShortcutGroupList(
     actions: DeviceActions,
     multiSelect: Boolean,
     selectionLimit: Int,
-    onSelectionLimit: () -> Unit,
+    onSelectionLimit: (LauncherTarget) -> Unit,
     onShortcut: (LauncherTarget) -> Unit,
 ) {
     val groups = remember(shortcuts, apps) {
@@ -121,7 +121,7 @@ internal fun LauncherShortcutGroupList(
                                 modifier = Modifier.weight(1f),
                                 onClick = {
                                     if (multiSelect && !isSelected && selected.size >= selectionLimit) {
-                                        onSelectionLimit()
+                                        onSelectionLimit(shortcut)
                                     } else {
                                         onShortcut(shortcut)
                                     }

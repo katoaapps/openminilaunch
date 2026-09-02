@@ -81,7 +81,7 @@ internal fun AppPickerDialog(
         selectionLimit = selectionLimit,
         loading = loading,
         emptyMessage = emptyMessage,
-        onSelectionLimit = onSelectionLimit,
+        onSelectionLimit = { onSelectionLimit() },
         extraActionLabel = extraActionLabel,
         onExtraAction = onExtraAction,
         supportingText = supportingText,
@@ -106,7 +106,7 @@ private fun <T> AppPickerDialogContent(
     selectionLimit: Int = 5,
     loading: Boolean = true,
     emptyMessage: String? = null,
-    onSelectionLimit: () -> Unit = {},
+    onSelectionLimit: (T) -> Unit = {},
     extraActionLabel: String? = null,
     onExtraAction: () -> Unit = {},
     supportingText: String? = null,
@@ -237,8 +237,11 @@ private fun <T> AppPickerDialogContent(
                                     Modifier.padding(Dimens.dp4).clip(RoundedCornerShape(Dimens.dp16))
                                         .background(if (isSelected) Sage else MaterialTheme.colorScheme.surfaceContainerLow)
                                         .clickable {
-                                            if (multiSelect && !isSelected && selected.size >= selectionLimit) onSelectionLimit()
-                                            else onApp(app)
+                                            if (multiSelect && !isSelected && selected.size >= selectionLimit) {
+                                                onSelectionLimit(app)
+                                            } else {
+                                                onApp(app)
+                                            }
                                         }
                                         .padding(Dimens.dp8),
                                     horizontalAlignment = Alignment.CenterHorizontally,
@@ -274,7 +277,7 @@ internal fun LauncherTargetPickerDialog(
     selectionLimit: Int = 5,
     appsLoading: Boolean = true,
     shortcutsLoading: Boolean = true,
-    onSelectionLimit: () -> Unit = {},
+    onSelectionLimit: (LauncherTarget) -> Unit = {},
     supportingText: String? = null,
     supportingActionLabel: String? = null,
     onSupportingAction: () -> Unit = {},

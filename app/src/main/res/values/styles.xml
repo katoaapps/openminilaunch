@@ -13,4 +13,13 @@
         <item name="android:backgroundDimEnabled">false</item>
         <item name="android:colorAccent">#B85C3C</item>
     </style>
+    <style name="Theme.MiniLaunch.ShortcutConfirmation" parent="Theme.MiniLaunch">
+        <item name="android:windowIsTranslucent">true</item>
+        <item name="android:windowBackground">@android:color/transparent</item>
+        <item name="android:statusBarColor">@android:color/transparent</item>
+        <item name="android:navigationBarColor">@android:color/transparent</item>
+        <item name="android:windowNoTitle">true</item>
+        <item name="android:backgroundDimEnabled">false</item>
+        <item name="android:colorAccent">#B85C3C</item>
+    </style>
 </resources>

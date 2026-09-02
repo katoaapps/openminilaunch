@@ -58,8 +58,6 @@ internal fun HomeDrawerSheet(
     store: LauncherStore,
     actions: DeviceActions,
     appAccessState: MinkAppAccessState,
-    launcherAppsRevision: Long,
-    launcherShortcutsRevision: Long,
     onDismiss: () -> Unit,
     openSettings: (SettingsDestination) -> Unit,
 ) {
@@ -90,8 +88,6 @@ internal fun HomeDrawerSheet(
                 store = store,
                 actions = actions,
                 appAccessState = appAccessState,
-                launcherAppsRevision = launcherAppsRevision,
-                launcherShortcutsRevision = launcherShortcutsRevision,
                 onLaunched = onDismiss,
             )
         }
@@ -147,15 +143,13 @@ private fun DrawerApps(
     store: LauncherStore,
     actions: DeviceActions,
     appAccessState: MinkAppAccessState,
-    launcherAppsRevision: Long,
-    launcherShortcutsRevision: Long,
     onLaunched: () -> Unit,
 ) {
     val context = LocalContext.current
     val savedDrawerTargets = store.drawerTargets.toList()
-    val drawerTargets = remember(savedDrawerTargets, launcherAppsRevision, launcherShortcutsRevision) {
-        savedDrawerTargets.map(actions::resolveLauncherSelection)
-    }
+    // There are at most eight entries. Resolve them on recomposition so a Settings change is
+    // visible the next time the drawer opens instead of retaining the sheet's previous snapshot.
+    val drawerTargets = savedDrawerTargets.map(actions::resolveLauncherSelection)
     val visibleDrawerTargets = drawerTargets.filterNot(appAccessState::isPaused)
     if (visibleDrawerTargets.isEmpty()) {
         Text(

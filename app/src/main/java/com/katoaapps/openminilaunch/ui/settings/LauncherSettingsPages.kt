@@ -3,6 +3,7 @@ package com.katoaapps.openminilaunch.ui.settings
 import com.katoaapps.openminilaunch.R
 import com.katoaapps.openminilaunch.data.LauncherStore
 import com.katoaapps.openminilaunch.model.MAX_DRAWER_APPS
+import com.katoaapps.openminilaunch.model.PinShortcutRequestPresentation
 import com.katoaapps.openminilaunch.model.Shortcut
 import com.katoaapps.openminilaunch.model.configurableShortcuts
 import com.katoaapps.openminilaunch.platform.DeviceActions
@@ -18,6 +19,7 @@ import com.katoaapps.openminilaunch.ui.theme.Sage
 import android.widget.Toast
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.AddToHomeScreen
 import androidx.compose.material.icons.filled.Apps
 import androidx.compose.material.icons.filled.GridView
 import androidx.compose.material.icons.filled.Home
@@ -98,6 +100,7 @@ internal fun ShortcutsSettingsPage(
     actions: DeviceActions,
     onPickShortcut: (Shortcut) -> Unit,
     onPickDrawer: () -> Unit,
+    onNavigate: (SettingsDestination) -> Unit,
     goBack: () -> Unit,
 ) {
     val context = LocalContext.current
@@ -139,5 +142,17 @@ internal fun ShortcutsSettingsPage(
             onClick = onPickDrawer,
         )
         Text(stringResource(R.string.magic_box_find_other_apps), color = Muted, fontSize = Dimens.sp13)
+        HorizontalDivider(color = Sage)
+        SectionLabel(stringResource(R.string.add_to_home_requests))
+        SettingsRow(
+            stringResource(R.string.add_to_home_confirmation),
+            stringResource(
+                when (store.pinShortcutRequestPresentation) {
+                    PinShortcutRequestPresentation.FULL_PAGE -> R.string.pin_shortcut_full_page
+                    PinShortcutRequestPresentation.CONFIRMATION_SHEET -> R.string.pin_shortcut_confirmation_sheet
+                },
+            ),
+            Icons.AutoMirrored.Filled.AddToHomeScreen,
+        ) { onNavigate(SettingsDestination.PIN_SHORTCUT_REQUESTS) }
     }
 }

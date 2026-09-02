@@ -4,6 +4,10 @@ import android.content.Context
 import android.os.Build
 import android.widget.Toast
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import com.katoaapps.openminilaunch.R
@@ -11,6 +15,7 @@ import com.katoaapps.openminilaunch.data.LauncherStore
 import com.katoaapps.openminilaunch.features.messaging.MessagingProviderCatalog
 import com.katoaapps.openminilaunch.features.wellbeing.UsageInsightsRepository
 import com.katoaapps.openminilaunch.model.MAX_DRAWER_APPS
+import com.katoaapps.openminilaunch.model.LauncherTarget
 import com.katoaapps.openminilaunch.platform.DeviceActions
 import com.katoaapps.openminilaunch.ui.launcher.displayLabel
 import com.katoaapps.openminilaunch.ui.launcher.displaySlotLabel
@@ -150,6 +155,7 @@ private fun DrawerAppsPicker(
     installedShortcuts: LauncherShortcutListLoadState,
     onDismiss: () -> Unit,
 ) {
+    var pendingReplacement by remember { mutableStateOf<LauncherTarget?>(null) }
     LauncherTargetPickerDialog(
         title = pluralStringResource(
             R.plurals.drawer_apps_title,
@@ -180,21 +186,25 @@ private fun DrawerAppsPicker(
                 ).show()
             }
         },
-        onSelectionLimit = {
-            Toast.makeText(
-                context,
-                context.resources.getQuantityString(
-                    R.plurals.maximum_apps_selected,
-                    MAX_DRAWER_APPS,
-                    MAX_DRAWER_APPS,
-                ),
-                Toast.LENGTH_SHORT,
-            ).show()
-        },
+        onSelectionLimit = { pendingReplacement = it },
         onDismiss = onDismiss,
         multiSelect = true,
         selectionLimit = MAX_DRAWER_APPS,
     )
+    pendingReplacement?.let { replacement ->
+        DrawerReplacementDialog(
+            replacement = replacement,
+            currentSelectionKeys = store.drawerTargets.toList(),
+            actions = actions,
+            onReplace = { index ->
+                if (store.replaceDrawerTarget(index, replacement.selectionKey)) {
+                    actions.syncPinnedSelectionsFrom(store)
+                }
+                pendingReplacement = null
+            },
+            onDismiss = { pendingReplacement = null },
+        )
+    }
 }
 
 private fun DeviceActions.syncPinnedSelectionsFrom(store: LauncherStore) {

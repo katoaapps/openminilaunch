@@ -45,6 +45,18 @@ class SettingsNavigationTest {
         )
     }
 
+    @Test fun pinShortcutRequestsNestUnderShortcuts() {
+        assertEquals(
+            listOf(
+                SettingsDestination.OVERVIEW,
+                SettingsDestination.LAUNCHER,
+                SettingsDestination.SHORTCUTS,
+                SettingsDestination.PIN_SHORTCUT_REQUESTS,
+            ),
+            settingsPathTo(SettingsDestination.PIN_SHORTCUT_REQUESTS),
+        )
+    }
+
     @Test fun assistantAndMessagingAreTopLevelDestinations() {
         assertEquals(
             listOf(SettingsDestination.OVERVIEW, SettingsDestination.MINK_ASSISTANT),

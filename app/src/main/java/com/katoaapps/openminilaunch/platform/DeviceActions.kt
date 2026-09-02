@@ -4,6 +4,7 @@ import com.katoaapps.openminilaunch.R
 import com.katoaapps.openminilaunch.features.calendar.parseCalendarPhrase
 import com.katoaapps.openminilaunch.features.apps.LauncherAppRepository
 import com.katoaapps.openminilaunch.features.apps.LauncherShortcutRepository
+import com.katoaapps.openminilaunch.features.apps.LegacyLauncherShortcutRepository
 import com.katoaapps.openminilaunch.features.conversations.NotificationHub
 import com.katoaapps.openminilaunch.features.magic.normalizedWebUrl
 import com.katoaapps.openminilaunch.features.messaging.MessagingDeviceActions
@@ -37,6 +38,7 @@ import kotlinx.coroutines.flow.StateFlow
 class DeviceActions(private val context: Context) {
     private val launcherAppRepository = LauncherAppRepository.get(context)
     private val launcherShortcutRepository = LauncherShortcutRepository.get(context)
+    private val legacyShortcutRepository = LegacyLauncherShortcutRepository.get(context)
     val launcherAppsRevision: StateFlow<Long> = launcherAppRepository.revision
     val launcherShortcutsRevision: StateFlow<Long> = launcherShortcutRepository.revision
     private val labelCache = mutableMapOf<String, String>()
@@ -102,8 +104,13 @@ class DeviceActions(private val context: Context) {
 
     fun installedShortcuts(): List<LauncherShortcutTarget> = launcherShortcutRepository.targets()
 
-    fun syncPinnedLauncherShortcuts(selectionKeys: Collection<String>) =
+    fun syncPinnedLauncherShortcuts(selectionKeys: Collection<String>) {
+        // A picker can change a saved target while the launcher shortcut query is cached.
+        // Clear that snapshot first so Home resolves the new drawer or tile target immediately.
+        launcherShortcutRepository.invalidate()
         launcherShortcutRepository.syncPinnedSelections(selectionKeys)
+        legacyShortcutRepository.retainSelections(selectionKeys)
+    }
 
     fun invalidateInstalledApps() {
         launcherAppRepository.invalidate()
@@ -114,7 +121,9 @@ class DeviceActions(private val context: Context) {
         launcherAppRepository.resolve(selectionKey)
 
     fun resolveLauncherSelection(selectionKey: String): LauncherTarget =
-        launcherShortcutRepository.resolve(selectionKey) ?: launcherAppRepository.resolve(selectionKey)
+        launcherShortcutRepository.resolve(selectionKey)
+            ?: legacyShortcutRepository.resolve(selectionKey)
+            ?: launcherAppRepository.resolve(selectionKey)
 
     fun normalizedLauncherSelectionKey(selectionKey: String): String? =
         launcherAppRepository.normalizedSelectionKey(selectionKey)
@@ -129,11 +138,13 @@ class DeviceActions(private val context: Context) {
     fun launcherTargetIcon(target: LauncherTarget): Drawable? = when (target) {
         is LauncherAppTarget -> launcherAppRepository.icon(target)
         is LauncherShortcutTarget -> launcherShortcutRepository.icon(target)
+        is LegacyLauncherShortcutTarget -> legacyShortcutRepository.icon(target)
     }
 
     fun launchLauncherTarget(target: LauncherTarget): Boolean = when (target) {
         is LauncherAppTarget -> launcherAppRepository.launch(target)
         is LauncherShortcutTarget -> launcherShortcutRepository.launch(target)
+        is LegacyLauncherShortcutTarget -> legacyShortcutRepository.launch(target)
     }
 
     fun launchLauncherSelection(selectionKey: String): Boolean =

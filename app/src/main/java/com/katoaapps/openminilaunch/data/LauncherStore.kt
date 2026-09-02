@@ -18,6 +18,7 @@ class LauncherStore(context: Context) {
     private val messagingPreferences = MessagingPreferenceStore(prefs)
     private val minkDayPreferences = MinkDayPreferenceStore(prefs)
     private val updatePreferences = UpdatePreferenceStore(prefs)
+    private val pinShortcutPreferences = PinShortcutPreferenceStore(prefs)
     private val demoPreferences: DemoPreferenceStore = DemoPreferenceStore(appContext, prefs, todoStore)
     internal val demoHomeProfile get() = demoPreferences.profile
     val todos get() = todoStore.items
@@ -51,6 +52,7 @@ class LauncherStore(context: Context) {
     val demoSearchDataEnabled get() = demoPreferences.enabled
     val githubUpdateChecksEnabled get() = updatePreferences.checksEnabled
     val latestGitHubReleaseTag get() = updatePreferences.latestReleaseTag
+    val pinShortcutRequestPresentation get() = pinShortcutPreferences.requestPresentation
     val effectiveHomePanelColorArgb: Int
         get() = demoPreferences.effectivePanelColor(homePanelColorArgb)
     val effectiveAppBackgroundColorArgb: Int?
@@ -117,6 +119,15 @@ class LauncherStore(context: Context) {
 
     fun toggleDrawerApp(targetKey: String) {
         launcherSelections.toggleDrawerApp(targetKey)
+    }
+
+    fun addDrawerTarget(targetKey: String): Boolean = launcherSelections.addDrawerTarget(targetKey)
+
+    fun replaceDrawerTarget(index: Int, targetKey: String): Boolean =
+        launcherSelections.replaceDrawerTarget(index, targetKey)
+
+    fun setPinShortcutRequestPresentation(presentation: PinShortcutRequestPresentation) {
+        pinShortcutPreferences.updateRequestPresentation(presentation)
     }
 
     /** Converts package-only settings to personal-profile activity keys without assigning work copies. */

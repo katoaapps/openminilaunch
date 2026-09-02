@@ -139,6 +139,26 @@
             android:screenOrientation="portrait"
             android:theme="@style/Theme.MiniLaunch" />
         <activity
+            android:name=".ui.shortcuts.PinShortcutActivity"
+            android:excludeFromRecents="true"
+            android:exported="true"
+            android:launchMode="singleTop"
+            android:screenOrientation="portrait"
+            android:taskAffinity=""
+            android:theme="@style/Theme.MiniLaunch.ShortcutConfirmation">
+            <intent-filter>
+                <action android:name="android.content.pm.action.CONFIRM_PIN_SHORTCUT" />
+                <category android:name="android.intent.category.DEFAULT" />
+            </intent-filter>
+        </activity>
+        <receiver
+            android:name=".features.apps.LegacyInstallShortcutReceiver"
+            android:exported="true">
+            <intent-filter>
+                <action android:name="com.android.launcher.action.INSTALL_SHORTCUT" />
+            </intent-filter>
+        </receiver>
+        <activity
             android:name=".ui.launcher.MainActivity"
             android:clearTaskOnLaunch="true"
             android:excludeFromRecents="true"

@@ -70,6 +70,20 @@ internal class LauncherSelectionStore(private val persistence: LauncherStorePers
         saveSelections()
     }
 
+    fun addDrawerTarget(targetKey: String): Boolean {
+        if (drawerTargets.size >= MAX_DRAWER_APPS) return false
+        drawerTargets += targetKey
+        saveSelections()
+        return true
+    }
+
+    fun replaceDrawerTarget(index: Int, targetKey: String): Boolean {
+        if (index !in drawerTargets.indices) return false
+        drawerTargets[index] = targetKey
+        saveSelections()
+        return true
+    }
+
     /** Converts package-only settings to personal-profile activity keys without assigning work copies. */
     fun migrateSelections(normalize: (String) -> String?) {
         var changed = false
