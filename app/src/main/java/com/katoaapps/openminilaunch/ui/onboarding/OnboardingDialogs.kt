@@ -12,12 +12,13 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Block
+import androidx.compose.material.icons.automirrored.filled.AddToHomeScreen
+import androidx.compose.material.icons.filled.Bolt
 import androidx.compose.material.icons.filled.Folder
 import androidx.compose.material.icons.filled.FolderOpen
 import androidx.compose.material.icons.filled.Pets
-import androidx.compose.material.icons.filled.Timer
 import androidx.compose.material.icons.filled.Tune
+import androidx.compose.material.icons.filled.Work
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
@@ -56,13 +57,14 @@ internal fun FeatureUpdateDialog(
                 verticalArrangement = Arrangement.spacedBy(Dimens.dp14),
             ) {
                 Text(
-                    stringResource(R.string.mink_day_can_help_you_step_away),
+                    stringResource(R.string.update_notice_136_title),
                     fontSize = Dimens.sp18,
                     fontWeight = FontWeight.Bold,
                 )
-                UpdatePoint(Icons.Default.Timer, stringResource(R.string.update_notice_daily_limit_title), stringResource(R.string.update_notice_daily_limit_description))
-                UpdatePoint(Icons.Default.Block, stringResource(R.string.update_notice_pause_apps_title), stringResource(R.string.update_notice_pause_apps_description))
-                UpdatePoint(Icons.Default.Tune, stringResource(R.string.update_notice_home_browser_title), stringResource(R.string.update_notice_home_browser_description))
+                UpdatePoint(Icons.Default.Work, stringResource(R.string.update_notice_work_profiles_title), stringResource(R.string.update_notice_work_profiles_description))
+                UpdatePoint(Icons.Default.Bolt, stringResource(R.string.update_notice_app_shortcuts_title), stringResource(R.string.update_notice_app_shortcuts_description))
+                UpdatePoint(Icons.AutoMirrored.Filled.AddToHomeScreen, stringResource(R.string.update_notice_pin_shortcuts_title), stringResource(R.string.update_notice_pin_shortcuts_description))
+                UpdatePoint(Icons.Default.Tune, stringResource(R.string.update_notice_reachability_title), stringResource(R.string.update_notice_reachability_description))
                 TextButton(onClick = onReviewTutorial, contentPadding = PaddingValues(Dimens.dp0)) {
                     Text(stringResource(R.string.review_updated_tutorial))
                 }

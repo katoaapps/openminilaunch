@@ -154,6 +154,15 @@
 
     <!-- Generic shortcut update and setup -->
     <string name="whats_new">What’s new</string>
+    <string name="update_notice_136_title">More ways to reach what you need</string>
+    <string name="update_notice_work_profiles_title">Work profile support</string>
+    <string name="update_notice_work_profiles_description">Work apps and their published shortcuts can appear beside personal apps with a work badge. Mink’s Day pause rules remain limited to personal apps.</string>
+    <string name="update_notice_app_shortcuts_title">App actions in your shortcuts</string>
+    <string name="update_notice_app_shortcuts_description">Home slots and Top 8 can open actions published by apps, such as a specific conversation or list.</string>
+    <string name="update_notice_pin_shortcuts_title">Choose where new shortcuts go</string>
+    <string name="update_notice_pin_shortcuts_description">When another app requests Add to Home screen, place its shortcut in a Home slot or Top 8.</string>
+    <string name="update_notice_reachability_title">A more reachable Home</string>
+    <string name="update_notice_reachability_description">Tall phones can align the Home panel above the Magic Box. Update alerts are also clearer and can be snoozed for 24 hours.</string>
     <string name="your_shortcuts_are_yours">Your shortcuts are now yours</string>
     <string name="six_generic_app_slots">Six generic app slots</string>
     <string name="six_generic_app_slots_description">Keep %1$s’s useful built-in defaults or assign any installed app to any of the six configurable slots.</string>

@@ -74,7 +74,7 @@ import com.katoaapps.openminilaunch.ui.wellbeing.MinkDayScreen
 import com.katoaapps.openminilaunch.ui.widgets.WidgetPage
 import kotlinx.coroutines.launch
 
-private const val FEATURE_UPDATE_ID = "open_1_3_5"
+private const val FEATURE_UPDATE_ID = "open_1_3_6"
 private const val MINK_DAY_PAGE = 0
 private const val HOME_PAGE = 1
 private const val WIDGET_PAGE = 2

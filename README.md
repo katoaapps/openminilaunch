@@ -39,8 +39,10 @@ the existing app first and clears MinkLauncher OpenSource's local data.
 - Replayable onboarding from Settings, including permission setup
 - A responsive raised Home panel with a two-thirds to-do area and a one-third icon-only shortcut grid
 - A responsive, horizontally snapping preview of up to five to-dos with unfinished tasks first
-- Eight home shortcuts: six generic app slots with built-in Note, Calendar, Weather, Call, Messenger, and Files defaults, plus To-do and Top 8
+- Eight home shortcuts: six generic slots that accept apps or app-published shortcuts, with built-in Note, Calendar, Weather, Call, Messenger, and Files defaults, plus To-do and Top 8
 - Long-press shortcut edit mode with persistent drag reordering and a reset control in Settings
+- Profile-aware app and shortcut discovery shows accessible work-profile targets with a work badge; Mink’s Day measurements and launcher barriers remain limited to personal-profile apps
+- Android Add to Home screen requests can be placed in a Home slot or Top 8 using a full page or confirmation sheet, with legacy shortcut requests supported for older apps and devices
 - An active-only **Conversations** space opened from Home:
   - Android-standard message and email notifications are included; other notification categories are ignored
   - Messages and email updates are grouped into conversation timelines and ordered newest first
@@ -68,7 +70,7 @@ the existing app first and clears MinkLauncher OpenSource's local data.
 - Weather opens a user-selected app, with Weather.com as the browser fallback
 - Six generic app slots that accept any installed app and replace the default Home icon; Android monochrome icons follow the Home panel theme when available
 - One-tap reset restores each slot's original built-in action and icon
-- A compact drawer containing up to eight selected apps, with a **See all** handoff to a full installed-app browser
+- A compact drawer containing up to eight selected apps or app-published shortcuts, with exact-slot replacement when full and a **See all** handoff to the full installed-app browser
 - An update check reads GitHub release metadata at most twice a day. When a newer release exists, a focused update card shows the installed and available versions, while a persistent Home header icon lets the user reopen it. **Remind me later** snoozes the automatic card for 24 hours. GitHub receives ordinary connection metadata but no launcher content. The check can be disabled in **Settings → About**; MinkLauncher OpenSource never downloads or installs an APK itself.
 - The all-apps browser uses a three-app, one-at-a-time carousel and a draggable A–Z arc with M at its center; the focused app supplies the screen's gradient color
 - Real installed-app icons and an alphabetical jump rail in both app pickers
