@@ -5,7 +5,7 @@ import com.katoaapps.openminilaunch.model.*
 
 import android.content.Context
 
-class LauncherStore(context: Context) {
+class LauncherStore private constructor(context: Context) {
     private val appContext = context.applicationContext
     private val prefs = appContext.getSharedPreferences("mini_launch", Context.MODE_PRIVATE)
     private val persistence = LauncherStorePersistence(prefs)
@@ -299,8 +299,16 @@ class LauncherStore(context: Context) {
         widgetStore.move(appWidgetId, direction)
     }
 
-    private companion object {
-        const val MAX_SEARCH_HISTORY = 5
-        const val MAX_WIDGETS = 4
+    companion object {
+        private const val MAX_SEARCH_HISTORY = 5
+        private const val MAX_WIDGETS = 4
+
+        @Volatile
+        private var instance: LauncherStore? = null
+
+        /** Shares Compose-backed launcher state across Home, Assistant, See All, and pin requests. */
+        fun get(context: Context): LauncherStore = instance ?: synchronized(this) {
+            instance ?: LauncherStore(context.applicationContext).also { instance = it }
+        }
     }
 }

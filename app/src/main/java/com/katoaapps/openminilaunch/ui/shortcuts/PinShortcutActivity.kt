@@ -27,7 +27,7 @@ class PinShortcutActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         WindowCompat.setDecorFitsSystemWindows(window, false)
-        store = LauncherStore(this)
+        store = LauncherStore.get(this)
         actions = DeviceActions(this)
         requestHandler = PinShortcutRequestHandler(this)
         val pending = requestHandler.read(intent)

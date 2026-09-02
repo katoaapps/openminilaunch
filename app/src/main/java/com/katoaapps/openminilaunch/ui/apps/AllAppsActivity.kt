@@ -71,7 +71,7 @@ class AllAppsActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         WindowCompat.setDecorFitsSystemWindows(window, false)
-        val store = LauncherStore(this)
+        val store = LauncherStore.get(this)
         val actions = DeviceActions(this)
         setContent {
             AllAppsTheme(store) {

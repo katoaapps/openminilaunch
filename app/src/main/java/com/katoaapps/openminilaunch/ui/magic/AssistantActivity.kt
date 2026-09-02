@@ -43,7 +43,7 @@ class AssistantActivity : ComponentActivity() {
             WindowManager.LayoutParams.SOFT_INPUT_ADJUST_RESIZE or
                 WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE,
         )
-        val store = LauncherStore(this)
+        val store = LauncherStore.get(this)
         val actions = DeviceActions(this)
 
         setContent {
