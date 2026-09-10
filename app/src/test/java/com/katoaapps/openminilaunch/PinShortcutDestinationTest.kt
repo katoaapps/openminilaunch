@@ -11,6 +11,7 @@ class PinShortcutDestinationTest {
         val destinations = listOf(
             PinShortcutDestination.HomeSlot(Shortcut.NOTE),
             PinShortcutDestination.AddToDrawer,
+            PinShortcutDestination.AddToLibrary,
             PinShortcutDestination.ReplaceDrawerSlot(4),
         )
 

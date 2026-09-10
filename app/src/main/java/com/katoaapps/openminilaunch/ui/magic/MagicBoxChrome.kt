@@ -68,6 +68,7 @@ internal fun MagicEditorSurface(
     onTextChange: (TextFieldValue) -> Unit,
     onPlaced: () -> Unit,
     onSubmit: () -> Unit,
+    onHardwareKeyUp: (Int) -> Unit,
     onClearMessage: () -> Unit,
     onDeleteNote: () -> Unit,
     visible: Boolean,
@@ -107,6 +108,7 @@ internal fun MagicEditorSurface(
                     focusRequester = focusRequester,
                     onPlaced = onPlaced,
                     onSubmit = onSubmit,
+                    onHardwareKeyUp = onHardwareKeyUp,
                     modifier = Modifier.weight(1f).then(
                         if (noteMode) {
                             Modifier.fillMaxHeight().padding(end = Dimens.dp48, bottom = Dimens.dp54)
@@ -154,32 +156,27 @@ internal fun MagicEditorSurface(
 internal fun CollapsedMagicBar(
     modifier: Modifier,
     minimumHeight: androidx.compose.ui.unit.Dp,
-    useDirectHardwareInput: Boolean,
     armedFocusRequester: FocusRequester,
     onArmedPlaced: () -> Unit,
-    onPrintableKeyDown: (String) -> Unit,
+    onPrintableKeyDown: (String, Int) -> Unit,
     onOpen: () -> Unit,
 ) {
     Row(
         modifier
-            .then(
-                if (useDirectHardwareInput) {
-                    Modifier
+            .focusRequester(armedFocusRequester)
+            .onGloballyPositioned { onArmedPlaced() }
+            .onPreviewKeyEvent { event ->
+                val typedText = printableHardwareText(event.nativeKeyEvent.unicodeChar)
+                if (typedText == null) {
+                    false
                 } else {
-                    Modifier.focusRequester(armedFocusRequester)
-                        .onGloballyPositioned { onArmedPlaced() }
-                        .onPreviewKeyEvent { event ->
-                            val typedText = printableHardwareText(event.nativeKeyEvent.unicodeChar)
-                            if (typedText == null) {
-                                false
-                            } else {
-                                if (event.type == KeyEventType.KeyDown) onPrintableKeyDown(typedText)
-                                true
-                            }
-                        }
-                        .focusable()
-                },
-            )
+                    if (event.type == KeyEventType.KeyDown) {
+                        onPrintableKeyDown(typedText, event.nativeKeyEvent.keyCode)
+                    }
+                    true
+                }
+            }
+            .focusable()
             .clip(RoundedCornerShape(Dimens.dp22))
             .background(MaterialTheme.colorScheme.surfaceContainerLow)
             .clickable(onClick = onOpen)

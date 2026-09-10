@@ -25,6 +25,7 @@ import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.IconButtonDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
+import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -34,12 +35,13 @@ import androidx.compose.ui.text.font.FontWeight
 import com.katoaapps.openminilaunch.R
 import com.katoaapps.openminilaunch.data.LauncherStore
 import com.katoaapps.openminilaunch.features.files.FileSearchRepository
+import com.katoaapps.openminilaunch.features.apps.launcherDiscoveryLabel
 import com.katoaapps.openminilaunch.features.magic.MAGIC_COMMAND_PREFIXES
 import com.katoaapps.openminilaunch.model.ContactResult
 import com.katoaapps.openminilaunch.model.FileSearchResult
-import com.katoaapps.openminilaunch.model.LauncherAppTarget
+import com.katoaapps.openminilaunch.model.LauncherTarget
 import com.katoaapps.openminilaunch.platform.DeviceActions
-import com.katoaapps.openminilaunch.ui.components.LauncherAppIcon
+import com.katoaapps.openminilaunch.ui.components.LauncherTargetIcon
 import com.katoaapps.openminilaunch.ui.theme.Dimens
 import com.katoaapps.openminilaunch.ui.theme.MagicTodoColor
 import com.katoaapps.openminilaunch.ui.theme.Muted
@@ -58,7 +60,8 @@ internal fun MagicResultsPanel(
     hasMediaAccess: Boolean,
     canSearchContacts: Boolean,
     contactResults: List<ContactResult>,
-    appResults: List<LauncherAppTarget>,
+    appResults: List<LauncherTarget>,
+    includeAppShortcuts: Boolean,
     showClearMessage: Boolean,
     scrollState: ScrollState,
     onSelectHistory: (String) -> Unit,
@@ -68,7 +71,8 @@ internal fun MagicResultsPanel(
     onSubmitWeb: () -> Unit,
     onSubmitAi: () -> Unit,
     onSelectContact: (ContactResult) -> Unit,
-    onSelectApp: (LauncherAppTarget) -> Unit,
+    onSelectApp: (LauncherTarget) -> Unit,
+    onIncludeAppShortcutsChange: (Boolean) -> Unit,
     onRequestContacts: () -> Unit,
     onClearMessage: () -> Unit,
     modifier: Modifier = Modifier,
@@ -92,6 +96,7 @@ internal fun MagicResultsPanel(
                 canSearchContacts = canSearchContacts,
                 contactResults = contactResults,
                 appResults = appResults,
+                includeAppShortcuts = includeAppShortcuts,
                 onSelectHistory = onSelectHistory,
                 onOpenFile = onOpenFile,
                 onRequestMedia = onRequestMedia,
@@ -100,6 +105,7 @@ internal fun MagicResultsPanel(
                 onSubmitAi = onSubmitAi,
                 onSelectContact = onSelectContact,
                 onSelectApp = onSelectApp,
+                onIncludeAppShortcutsChange = onIncludeAppShortcutsChange,
                 onRequestContacts = onRequestContacts,
             )
         }
@@ -133,7 +139,8 @@ internal fun MagicResultsContent(
     hasMediaAccess: Boolean,
     canSearchContacts: Boolean,
     contactResults: List<ContactResult>,
-    appResults: List<LauncherAppTarget>,
+    appResults: List<LauncherTarget>,
+    includeAppShortcuts: Boolean,
     onSelectHistory: (String) -> Unit,
     onOpenFile: (FileSearchResult) -> Unit,
     onRequestMedia: () -> Unit,
@@ -141,7 +148,8 @@ internal fun MagicResultsContent(
     onSubmitWeb: () -> Unit,
     onSubmitAi: () -> Unit,
     onSelectContact: (ContactResult) -> Unit,
-    onSelectApp: (LauncherAppTarget) -> Unit,
+    onSelectApp: (LauncherTarget) -> Unit,
+    onIncludeAppShortcutsChange: (Boolean) -> Unit,
     onRequestContacts: () -> Unit,
 ) {
     if (rawText.isBlank() && lockedPrefix == null && store.searchHistory.isNotEmpty()) {
@@ -153,7 +161,14 @@ internal fun MagicResultsContent(
         )
     }
     if (plainQuery.isNotBlank() && fileSearchLoading) {
-        LinearProgressIndicator(Modifier.fillMaxWidth())
+        Column(verticalArrangement = Arrangement.spacedBy(Dimens.dp6)) {
+            Text(
+                text = stringResource(R.string.searching_this_device),
+                style = MaterialTheme.typography.labelMedium,
+                color = Muted,
+            )
+            LinearProgressIndicator(Modifier.fillMaxWidth())
+        }
     }
     if (fileResults.isNotEmpty()) {
         FileResultsGrid(fileResults, fileSearchRepository, onOpenFile)
@@ -207,10 +222,26 @@ internal fun MagicResultsContent(
             Icons.Default.Person,
         ) { onSelectContact(contact) }
     }
+    if (prefix == '?') {
+        Row(
+            Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.End,
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            Text(
+                stringResource(R.string.include_app_shortcuts),
+                modifier = Modifier.padding(end = Dimens.dp10),
+            )
+            Switch(
+                checked = includeAppShortcuts,
+                onCheckedChange = onIncludeAppShortcutsChange,
+            )
+        }
+    }
     appResults.forEach { app ->
         SuggestionRow(
-            text = app.label,
-            leadingContent = { LauncherAppIcon(app, actions, Dimens.dp26) },
+            text = launcherDiscoveryLabel(app, actions::appLabel),
+            leadingContent = { LauncherTargetIcon(app, actions, Dimens.dp26) },
         ) { onSelectApp(app) }
     }
     if (prefix in listOf('@', '#') && !canSearchContacts) {

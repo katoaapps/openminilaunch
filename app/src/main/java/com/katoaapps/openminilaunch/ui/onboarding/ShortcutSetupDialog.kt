@@ -189,12 +189,12 @@ internal fun ShortcutSetupDialog(store: LauncherStore, actions: DeviceActions, o
             onSupportingAction = actions::openInstalledAppsSettings,
             onTarget = {
                 store.assignShortcut(shortcut, it.selectionKey)
-                actions.syncPinnedLauncherShortcuts(store.shortcutTargets.values + store.drawerTargets)
+                actions.syncPinnedLauncherShortcuts(store.pinnedLauncherSelectionKeys)
                 pickingShortcut = null
             },
             onReset = {
                 store.resetShortcut(shortcut)
-                actions.syncPinnedLauncherShortcuts(store.shortcutTargets.values + store.drawerTargets)
+                actions.syncPinnedLauncherShortcuts(store.pinnedLauncherSelectionKeys)
                 pickingShortcut = null
             },
             resetLabel = stringResource(R.string.restore_shortcut_default, shortcut.displayLabel()),

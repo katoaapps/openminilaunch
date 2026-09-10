@@ -56,6 +56,13 @@ internal class LauncherStorePersistence(private val prefs: SharedPreferences) {
             repeat(minOf(drawer.length(), MAX_DRAWER_APPS)) { add(drawer.getString(it)) }
         }
 
+        val libraryShortcuts = JSONArray(prefs.getString(LIBRARY_SHORTCUTS_KEY, "[]") ?: "[]")
+        val libraryShortcutTargets = buildList {
+            repeat(libraryShortcuts.length()) { index ->
+                libraryShortcuts.optString(index).takeIf(String::isNotBlank)?.let { if (it !in this) add(it) }
+            }
+        }
+
         val folders = JSONArray(prefs.getString(SEARCH_FOLDERS_KEY, "[]") ?: "[]")
         val searchFolders = buildList {
             repeat(folders.length()) { index ->
@@ -93,6 +100,7 @@ internal class LauncherStorePersistence(private val prefs: SharedPreferences) {
             shortcutOrder = shortcutOrder,
             confirmedShortcutChoices = confirmedChoices,
             drawerTargets = drawerTargets,
+            libraryShortcutTargets = libraryShortcutTargets,
             searchFolders = searchFolders,
             searchHistory = searchHistory,
             widgetIds = widgetIds,
@@ -112,14 +120,17 @@ internal class LauncherStorePersistence(private val prefs: SharedPreferences) {
         shortcutTargets: Map<Shortcut, String>,
         confirmedShortcutChoices: List<Shortcut>,
         drawerTargets: List<String>,
+        libraryShortcutTargets: List<String>,
     ) {
         val shortcuts = JSONObject().apply { shortcutTargets.forEach { (key, value) -> put(key.name, value) } }
         val drawer = JSONArray().apply { drawerTargets.forEach(::put) }
         val confirmed = JSONArray().apply { confirmedShortcutChoices.forEach { put(it.name) } }
+        val libraryShortcuts = JSONArray().apply { libraryShortcutTargets.forEach(::put) }
         prefs.edit()
             .putString(SHORTCUTS_KEY, shortcuts.toString())
             .putString(CONFIRMED_SHORTCUTS_KEY, confirmed.toString())
             .putString(DRAWER_KEY, drawer.toString())
+            .putString(LIBRARY_SHORTCUTS_KEY, libraryShortcuts.toString())
             .apply()
     }
 
@@ -159,6 +170,7 @@ internal class LauncherStorePersistence(private val prefs: SharedPreferences) {
     private companion object {
         const val CONFIRMED_SHORTCUTS_KEY = "confirmed_shortcut_choices"
         const val DRAWER_KEY = "drawer"
+        const val LIBRARY_SHORTCUTS_KEY = "library_shortcuts"
         const val SEARCH_FOLDERS_KEY = "search_folders"
         const val SEARCH_HISTORY_KEY = "search_history"
         const val SHORTCUT_ORDER_KEY = "shortcut_order"
@@ -175,6 +187,7 @@ internal data class LauncherStoreSnapshot(
     val shortcutOrder: List<Shortcut> = Shortcut.entries,
     val confirmedShortcutChoices: List<Shortcut> = emptyList(),
     val drawerTargets: List<String> = emptyList(),
+    val libraryShortcutTargets: List<String> = emptyList(),
     val searchFolders: List<SearchFolder> = emptyList(),
     val searchHistory: List<String> = emptyList(),
     val widgetIds: List<Int> = emptyList(),

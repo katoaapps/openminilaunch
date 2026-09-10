@@ -28,6 +28,7 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -161,7 +162,7 @@ private fun WidgetProviderList(
             ) { rowProviders ->
                 Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(Dimens.dp10)) {
                     rowProviders.forEach { info ->
-                        WidgetPreviewCard(info, Modifier.weight(1f)) { onSelect(info) }
+                        WidgetPreviewCard(info, actions, Modifier.weight(1f)) { onSelect(info) }
                     }
                     if (rowProviders.size == 1) Spacer(Modifier.weight(1f))
                 }
@@ -182,17 +183,20 @@ private fun WidgetProviderList(
 @Composable
 internal fun WidgetPreviewCard(
     info: AppWidgetProviderInfo,
+    actions: DeviceActions,
     modifier: Modifier = Modifier,
     onClick: () -> Unit,
 ) {
     val context = LocalContext.current
     val density = context.resources.displayMetrics.densityDpi
+    val launcherAppsRevision by actions.launcherAppsRevision.collectAsState()
     val sizeRange = remember(info.provider, info.minWidth, info.minHeight) {
         widgetSizeRange(info, context.resources.displayMetrics.density)
     }
-    val bitmap = remember(info.provider, info.previewImage, density) {
+    val bitmap = remember(info.provider, info.previewImage, density, launcherAppsRevision) {
         val drawable = runCatching { info.loadPreviewImage(context, density) }.getOrNull()
             ?: runCatching { info.loadIcon(context, density) }.getOrNull()
+            ?: actions.appIcon(info.provider.packageName)
         drawable?.let {
             runCatching {
                 val sourceWidth = it.intrinsicWidth.coerceAtLeast(1)

@@ -1,6 +1,7 @@
 package com.katoaapps.openminilaunch.features.apps
 
 import com.katoaapps.openminilaunch.model.LauncherAppTarget
+import com.katoaapps.openminilaunch.model.LauncherTarget
 import com.katoaapps.openminilaunch.model.launcherAppIdentity
 
 import android.content.ComponentName
@@ -24,12 +25,14 @@ internal class LauncherAppRepository private constructor(context: Context) {
     private val personalUser = Process.myUserHandle()
     private val personalSerial = userManager?.getSerialNumberForUser(personalUser) ?: 0L
     private val densityDpi = appContext.resources.displayMetrics.densityDpi
+    private val dynamicCalendarIcons = DynamicCalendarIconResolver(appContext, densityDpi)
     private val revisionState = MutableStateFlow(0L)
     val revision: StateFlow<Long> = revisionState.asStateFlow()
 
     private val cacheLock = Any()
     @Volatile private var targetsCache: List<LauncherAppTarget>? = null
     private val activityCache = mutableMapOf<String, LauncherActivityInfo>()
+    private val dynamicIconMonitor = DynamicLauncherIconMonitor(appContext, ::invalidate)
 
     private val callback = object : LauncherApps.Callback() {
         override fun onPackageRemoved(packageName: String, user: UserHandle) = invalidate()
@@ -109,6 +112,7 @@ internal class LauncherAppRepository private constructor(context: Context) {
     }
 
     fun icon(target: LauncherAppTarget): Drawable? {
+        dynamicCalendarIcons.iconFor(target)?.let { return it }
         val info = activityInfo(target.selectionKey)
         if (info != null) return runCatching { info.getBadgedIcon(densityDpi) }.getOrNull()
         if (target.isWorkProfile) return null
@@ -125,12 +129,26 @@ internal class LauncherAppRepository private constructor(context: Context) {
         }.getOrDefault(false)
     }
 
+    fun openAppDetails(target: LauncherTarget): Boolean {
+        val service = launcherApps ?: return false
+        val user = userManager?.getUserForSerialNumber(target.userSerial) ?: return false
+        val component = appDetailsComponent(target, targets()) ?: return false
+        return runCatching {
+            service.startAppDetailsActivity(component, user, null, null)
+            true
+        }.getOrDefault(false)
+    }
+
     fun invalidate() {
         synchronized(cacheLock) {
             targetsCache = null
             activityCache.clear()
         }
         revisionState.update { it + 1 }
+    }
+
+    fun refreshDynamicIconsIfDateChanged() {
+        dynamicIconMonitor.refreshIfDateChanged()
     }
 
     private fun accessibleProfiles(service: LauncherApps): List<UserHandle> = runCatching {

@@ -11,12 +11,14 @@ internal class LauncherSelectionStore(private val persistence: LauncherStorePers
     val shortcutOrder = mutableStateListOf<Shortcut>()
     val confirmedShortcutChoices = mutableStateListOf<Shortcut>()
     val drawerTargets = mutableStateListOf<String>()
+    val libraryShortcutTargets = mutableStateListOf<String>()
 
     fun restore(snapshot: LauncherStoreSnapshot) {
         shortcutTargets.putAll(snapshot.shortcutTargets)
         shortcutOrder.addAll(snapshot.shortcutOrder)
         confirmedShortcutChoices.addAll(snapshot.confirmedShortcutChoices)
         drawerTargets.addAll(snapshot.drawerTargets)
+        libraryShortcutTargets.addAll(snapshot.libraryShortcutTargets)
     }
 
     fun assignShortcut(shortcut: Shortcut, targetKey: String) {
@@ -84,6 +86,13 @@ internal class LauncherSelectionStore(private val persistence: LauncherStorePers
         return true
     }
 
+    fun addLibraryShortcut(targetKey: String) {
+        if (targetKey !in libraryShortcutTargets) {
+            libraryShortcutTargets += targetKey
+            saveSelections()
+        }
+    }
+
     /** Converts package-only settings to personal-profile activity keys without assigning work copies. */
     fun migrateSelections(normalize: (String) -> String?) {
         var changed = false
@@ -112,6 +121,11 @@ internal class LauncherSelectionStore(private val persistence: LauncherStorePers
     }
 
     private fun saveSelections() {
-        persistence.saveLauncherSelections(shortcutTargets, confirmedShortcutChoices, drawerTargets)
+        persistence.saveLauncherSelections(
+            shortcutTargets,
+            confirmedShortcutChoices,
+            drawerTargets,
+            libraryShortcutTargets,
+        )
     }
 }

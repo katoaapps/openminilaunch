@@ -4,6 +4,35 @@
     <string name="lock_accessibility_label">MinkLauncher OpenSource - Double-tap screen lock</string>
     <string name="lock_accessibility_description">Allows MinkLauncher OpenSource to perform Android’s Lock screen action only after you double-tap empty Home space. It cannot read or interact with screen content.</string>
     <string name="home_date_pattern">EEE, MMM d</string>
+    <string name="date_and_time">Date &amp; time</string>
+    <string name="show_clock">Show clock</string>
+    <string name="show_clock_description">Add the current time to the date on Home.</string>
+    <string name="use_24_hour_clock">Use 24-hour time</string>
+    <string name="use_24_hour_clock_description">Show 18:30 instead of 6:30 PM.</string>
+    <string name="icons">Icons</string>
+    <string name="visual_style">Icons &amp; colors</string>
+    <string name="icon_style">Icon style</string>
+    <string name="icon_style_description">Choose Mink’s treatment, original app icons, or an installed icon pack.</string>
+    <string name="choose_icon_style">Choose icon style</string>
+    <string name="applying_icon_style">Applying…</string>
+    <string name="applying_icon_style_description">Updating icons across MinkLauncher</string>
+    <string name="mink_icons">Mink Icons</string>
+    <string name="mink_icons_description">Use monochrome Android icons with Mink’s shortcut colors when available.</string>
+    <string name="mink_icon_color">Mink icon color</string>
+    <string name="mink_icon_color_description">Choose a color for available monochrome app icons. Automatic keeps each screen’s existing icon treatment.</string>
+    <string name="custom_mink_icon_color">Custom Mink icon color</string>
+    <string name="custom_mink_icon_color_description">Choose any color or enter its six-digit hex value.</string>
+    <string name="automatic">Automatic</string>
+    <string name="use_automatic_icon_color">Use automatic icon color</string>
+    <string name="system_icons">System Icons</string>
+    <string name="system_icons_description">Use the original icons supplied by your apps.</string>
+    <string name="installed_icon_packs">Installed icon packs</string>
+    <string name="compatible_icon_pack_description">Compatible icon packs are Android icon-pack apps made for launchers such as Nova or ADW. Install one from an app store, then return here to select it.</string>
+    <string name="no_icon_packs_installed">No compatible icon packs installed</string>
+    <string name="icon_pack_unavailable">Selected icon pack is not installed</string>
+    <string name="icon_pack_could_not_be_read">This pack’s automatic icon mappings could not be read.</string>
+    <string name="choose_your_icons">Choose your icons</string>
+    <string name="choose_your_icons_description">Appearance settings can use Mink Icons, original System Icons, or an installed Nova-compatible icon pack.</string>
     <string name="notification_count_overflow">99+</string>
     <string name="middle_dot_separator">\u0020·\u0020</string>
     <string name="two_part_label">%1$s · %2$s</string>
@@ -68,7 +97,10 @@
     <string name="empty_drawer">Your Top 8 is empty</string>
     <string name="see_all_apps">See all</string>
     <string name="all_apps">All apps</string>
-    <string name="all_apps_hint">Swipe apps or trace the letters</string>
+    <string name="app_info">App info</string>
+    <string name="app_info_unavailable">Couldn’t open App info for this item</string>
+    <string name="all_apps_hint">Swipe apps or trace letters · Hold for App info</string>
+    <string name="include_app_shortcuts">Include app shortcuts</string>
     <string name="app_position">%1$d / %2$d</string>
     <string name="no_apps_available">No launchable apps found</string>
     <string name="launcher_app_unavailable">%1$s is unavailable. If it is a work app, turn Work Mode on and unlock the profile.</string>
@@ -160,7 +192,7 @@
     <string name="update_notice_app_shortcuts_title">App actions in your shortcuts</string>
     <string name="update_notice_app_shortcuts_description">Home slots and Top 8 can open actions published by apps, such as a specific conversation or list.</string>
     <string name="update_notice_pin_shortcuts_title">Choose where new shortcuts go</string>
-    <string name="update_notice_pin_shortcuts_description">When another app requests Add to Home screen, place its shortcut in a Home slot or Top 8.</string>
+    <string name="update_notice_pin_shortcuts_description">When another app requests Add to Home screen, make its shortcut searchable, place it in a Home slot, or add it to Top 8.</string>
     <string name="update_notice_reachability_title">A more reachable Home</string>
     <string name="update_notice_reachability_description">Tall phones can align the Home panel above the Magic Box. Update alerts are also clearer and can be snoozed for 24 hours.</string>
     <string name="your_shortcuts_are_yours">Your shortcuts are now yours</string>
@@ -174,7 +206,7 @@
     <string name="your_layout_stays_put_description">Existing app choices and your custom grid order are preserved automatically.</string>
     <string name="your_app_library_has_a_new_home">Choose how each @ message leaves Mink</string>
     <string name="see_every_installed_app">See every installed app</string>
-    <string name="see_every_installed_app_description">Open Top 8 and choose See all to browse your complete installed-app library.</string>
+    <string name="see_every_installed_app_description">Open Top 8 and choose See all to browse installed apps and saved shortcuts. Turn on Include app shortcuts when you also want actions published by apps.</string>
     <string name="swipe_one_app_at_a_time">Swipe one app at a time</string>
     <string name="swipe_one_app_at_a_time_description">The focused app stays large and clear while its neighbors remain close enough for quick movement.</string>
     <string name="jump_by_letter">Jump by letter</string>
@@ -225,7 +257,7 @@
     <string name="just_start_typing">Just start typing</string>
     <string name="just_start_typing_description">On a physical-keyboard phone, press any text key from Home. The Magic Box appears with that first character already entered.</string>
     <string name="everything_reachable">Everything is still reachable</string>
-    <string name="everything_reachable_description">Use ? to find any installed app, or open Top 8 and choose See all to browse every app one at a time.</string>
+    <string name="everything_reachable_description">Use ? to find installed apps and saved shortcuts, or open Top 8 and choose See all. Include app shortcuts is optional and remembers your choice.</string>
     <string name="magic_box_ready_description">The Magic Box is ready from the moment Home opens. No tap is required on a physical keyboard.</string>
     <string name="magic_text_contact">Text a contact</string>
     <string name="magic_call_contact">Call a contact</string>
@@ -324,6 +356,7 @@
     <string name="choose_folder">Choose folder</string>
     <string name="choose_folder_description">%1$s searches only folders you approve through Android.</string>
     <string name="queries_files_stay_local">Search queries and filenames stay on your device and are never sent to us.</string>
+    <string name="searching_this_device">Searching this device…</string>
     <string name="usage_disclosure_title">Let Mink reflect your day?</string>
     <string name="usage_disclosure_body_one">Android’s Usage Access lets %1$s measure when the apps selected for Mink’s Day are in the foreground and for how long.</string>
     <string name="usage_disclosure_body_two">%1$s uses this only to calculate today’s Mink state and insights on your device. It does not upload your activity, sell it, or keep a separate usage-history database.</string>
@@ -404,6 +437,8 @@
     <string name="provider_whatsapp_business" translatable="false">WhatsApp Business</string>
     <string name="provider_telegram" translatable="false">Telegram</string>
     <string name="provider_line" translatable="false">LINE</string>
+    <string name="provider_beeper" translatable="false">Beeper</string>
+    <string name="provider_molly" translatable="false">Molly</string>
     <string name="provider_signal" translatable="false">Signal</string>
     <string name="provider_kakaotalk" translatable="false">KakaoTalk</string>
     <string name="provider_wechat" translatable="false">WeChat</string>
@@ -520,7 +555,9 @@
     <string name="pin_shortcut_test_instructions">To compare them, select a presentation and use Add to Home screen inside an app that supports Android pinned shortcuts.</string>
     <string name="add_shortcut">Add shortcut</string>
     <string name="choose_shortcut_destination">Where should this shortcut go?</string>
-    <string name="choose_shortcut_destination_description">Choose a Home slot or place it in Top 8. Selecting an occupied position replaces its current item.</string>
+    <string name="choose_shortcut_destination_description">Make it searchable, choose a Home slot, or place it in Top 8. Selecting an occupied position replaces its current item.</string>
+    <string name="add_to_search_and_all_apps">Search &amp; All Apps</string>
+    <string name="add_to_search_and_all_apps_description">Find this shortcut with ? or browse to it in All Apps</string>
     <string name="add_to_top_eight">Add to Top 8</string>
     <string name="replace_top_eight_item">Replace Top 8 item %1$d</string>
     <string name="replace_drawer_item_title">Replace a Top 8 item</string>
@@ -571,18 +608,19 @@
     </plurals>
 
     <!-- Home panel color -->
-    <string name="home_panel_color">Home panel color</string>
+    <string name="home_panel_color">Pill color</string>
     <string name="home_panel_color_description">Changes the large To-do and shortcuts pill.</string>
     <string name="color_forest">Forest</string>
     <string name="color_mink">Mink</string>
     <string name="color_navy">Navy</string>
     <string name="color_plum">Plum</string>
     <string name="color_charcoal">Charcoal</string>
+    <string name="color_rust">Rust</string>
     <string name="edit_custom_color">Edit custom color</string>
     <string name="choose_custom_color">Choose a custom color</string>
     <string name="custom_panel_color">Custom panel color</string>
     <string name="custom_panel_color_description">Swipe the field and hue strip, or enter a hex color.</string>
-    <string name="app_background_color">App background color</string>
+    <string name="app_background_color">Background color</string>
     <string name="app_background_color_description">Changes the background and matching surfaces throughout MinkLauncher.</string>
     <string name="theme_background">Theme</string>
     <string name="use_theme_background">Use theme background</string>

@@ -66,12 +66,13 @@ class PinShortcutActivity : ComponentActivity() {
         when (destination) {
             is PinShortcutDestination.HomeSlot -> store.assignShortcut(destination.shortcut, targetKey)
             PinShortcutDestination.AddToDrawer -> store.addDrawerTarget(targetKey)
+            PinShortcutDestination.AddToLibrary -> store.addLibraryShortcut(targetKey)
             is PinShortcutDestination.ReplaceDrawerSlot -> {
                 store.replaceDrawerTarget(destination.index, targetKey)
             }
         }
         actions.invalidateInstalledApps()
-        actions.syncPinnedLauncherShortcuts(store.shortcutTargets.values + store.drawerTargets)
+        actions.syncPinnedLauncherShortcuts(store.pinnedLauncherSelectionKeys)
         setResult(Activity.RESULT_OK)
         finish()
         return true
@@ -80,6 +81,7 @@ class PinShortcutActivity : ComponentActivity() {
     private fun destinationIsAvailable(destination: PinShortcutDestination): Boolean = when (destination) {
         is PinShortcutDestination.HomeSlot -> true
         PinShortcutDestination.AddToDrawer -> store.drawerTargets.size < MAX_DRAWER_APPS
+        PinShortcutDestination.AddToLibrary -> true
         is PinShortcutDestination.ReplaceDrawerSlot -> destination.index in store.drawerTargets.indices
     }
 }

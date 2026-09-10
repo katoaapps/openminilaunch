@@ -2,6 +2,8 @@ MinkLauncher OpenSource is a focused Android home-screen launcher and keyboard-f
 
 The responsive Home panel combines a preview of up to five to-dos with eight configurable icon shortcuts. Home slots and the compact drawer can open apps or actions published by apps, while every installed launcher app remains one keyboard search away. Accessible work-profile apps and shortcuts appear with a work badge and stay outside Mink’s Day limits.
 
+Appearance settings can use Mink’s monochrome treatment, original app icons, or an installed Nova/ADW-compatible icon pack. Icon-pack mappings and previews are read locally, and apps not covered by the selected pack retain their original icon.
+
 On a physical-keyboard phone, just start typing from Home. The already-focused Magic Box appears with the first character preserved; no tap is required. It can also open over another app when MinkLauncher OpenSource is selected as Android’s assistant.
 
 Magic Box commands:
@@ -20,7 +22,7 @@ Optional spaces remain one swipe away:
 
 • Conversations groups active Android message and email notifications into compact threads. Inline reply is offered only when the originating app supplies Android’s reply action, and content remains transient in memory.
 • Mink’s Day measures foreground time and launch counts for the Android Social-category apps or custom apps the user chooses to include. Set a collective limit from 0 to 23 whole hours, then pause those apps in MinkLauncher all the time, only after the limit, or never. Paused apps are hidden from Magic Box and app drawers while shortcut tiles remain visible with a reminder. This is a launcher barrier, not a system app suspension or parental-control feature. Other apps never enter Mink’s Day totals.
-• Widgets hosts up to four Android widgets with grouped provider previews, correct responsive sizing, reordering, and removal.
+• Widgets hosts up to eight Android widgets with grouped provider previews, correct responsive sizing, reordering, and removal.
 
 When another app requests Add to Home screen, MinkLauncher can place its shortcut in a Home slot or Top 8. Choose a stable full page or a faster confirmation sheet in Settings. Legacy shortcut requests are also supported for older apps and devices.
 

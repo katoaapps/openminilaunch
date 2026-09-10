@@ -169,6 +169,7 @@ internal fun OnboardingScreen(store: LauncherStore, actions: DeviceActions, onFi
                             Text(stringResource(R.string.onboarding_intro_description, appName), fontSize = Dimens.sp18)
                             OnboardingPoint(Icons.Default.FilterAlt, stringResource(R.string.less_visual_noise), stringResource(R.string.less_visual_noise_description))
                             OnboardingPoint(Icons.Default.Palette, stringResource(R.string.choose_panel_color), stringResource(R.string.choose_panel_color_description))
+                            OnboardingPoint(Icons.Default.Apps, stringResource(R.string.choose_your_icons), stringResource(R.string.choose_your_icons_description))
                             OnboardingPoint(Icons.Default.Keyboard, stringResource(R.string.just_start_typing), stringResource(R.string.just_start_typing_description))
                             OnboardingPoint(Icons.Default.Search, stringResource(R.string.everything_reachable), stringResource(R.string.everything_reachable_description))
                         }

@@ -1,7 +1,9 @@
 package com.katoaapps.openminilaunch
 
-import com.katoaapps.openminilaunch.features.messaging.MessagingSendRoute
+import com.katoaapps.openminilaunch.features.messaging.MessagingDraftKind
 import com.katoaapps.openminilaunch.features.messaging.MessagingProviderCatalog
+import com.katoaapps.openminilaunch.features.messaging.MessagingSendRoute
+import com.katoaapps.openminilaunch.features.messaging.MessagingSupportTier
 import com.katoaapps.openminilaunch.features.messaging.PreferredMessageDraftResult
 import com.katoaapps.openminilaunch.features.messaging.defaultMessageDraftResult
 import com.katoaapps.openminilaunch.features.messaging.packageNames
@@ -65,6 +67,19 @@ class MessagingBehaviorTest {
 
         assertEquals("telegram", playProvider?.id)
         assertEquals(playProvider, websiteProvider)
+    }
+
+    @Test fun beeperAndMollyUseRecipientInAppShareHandoffs() {
+        val beeper = MessagingProviderCatalog.providerForPackage("com.beeper.android")!!
+        val molly = MessagingProviderCatalog.providerForPackage("im.molly.app")!!
+
+        listOf(beeper, molly).forEach { provider ->
+            assertEquals(MessagingDraftKind.GENERIC_SHARE, provider.kind)
+            assertEquals(MessagingSupportTier.RECIPIENT_IN_APP, provider.supportTier)
+        }
+        assertEquals("beeper", beeper.id)
+        assertEquals("molly", molly.id)
+        assertEquals("https://molly.im/", molly.storeUrl)
     }
 
     @Test fun providerPackageOrderSelectsTheFirstInstalledOfficialBuild() {

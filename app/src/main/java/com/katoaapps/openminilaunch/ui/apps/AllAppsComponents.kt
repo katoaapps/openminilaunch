@@ -12,6 +12,7 @@ import com.katoaapps.openminilaunch.ui.theme.*
 import android.graphics.Color as AndroidColor
 import android.graphics.drawable.Drawable
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.gestures.awaitEachGesture
 import androidx.compose.foundation.gestures.awaitFirstDown
 import androidx.compose.foundation.interaction.MutableInteractionSource
@@ -20,6 +21,8 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
+import androidx.compose.material3.AlertDialog
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
@@ -41,31 +44,34 @@ import androidx.core.graphics.drawable.toBitmap
 
 @Composable
 internal fun AppCarouselItem(
-    app: LauncherAppTarget,
+    app: LauncherTarget,
+    displayLabel: String,
     actions: DeviceActions,
     iconSize: androidx.compose.ui.unit.Dp,
     scale: Float,
     focused: Boolean,
     onClick: () -> Unit,
+    onLongClick: () -> Unit,
 ) {
     Column(
         Modifier.fillMaxSize().graphicsLayer {
             scaleX = scale
             scaleY = scale
             alpha = .52f + .48f * scale
-        }.clickable(
+        }.combinedClickable(
             interactionSource = remember { MutableInteractionSource() },
             indication = null,
             onClick = onClick,
+            onLongClick = onLongClick,
         ),
         verticalArrangement = Arrangement.Center,
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
-        LauncherAppIcon(
+        LauncherTargetIcon(
             target = app,
             actions = actions,
             size = iconSize,
-            contentDescription = stringResource(R.string.open_app, app.label),
+            contentDescription = stringResource(R.string.open_app, displayLabel),
         )
         Surface(
             color = Color.Black.copy(alpha = if (focused) .52f else .34f),
@@ -74,7 +80,7 @@ internal fun AppCarouselItem(
             modifier = Modifier.padding(top = Dimens.dp14),
         ) {
             Text(
-                app.label,
+                displayLabel,
                 modifier = Modifier.padding(horizontal = Dimens.dp14, vertical = Dimens.dp7),
                 fontSize = if (focused) Dimens.sp18 else Dimens.sp14,
                 fontWeight = if (focused) FontWeight.Black else FontWeight.SemiBold,
@@ -84,6 +90,38 @@ internal fun AppCarouselItem(
             )
         }
     }
+}
+
+@Composable
+internal fun AppManagementDialog(
+    target: LauncherTarget,
+    displayLabel: String,
+    actions: DeviceActions,
+    onDismiss: () -> Unit,
+    onAppInfo: () -> Unit,
+) {
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        icon = {
+            LauncherTargetIcon(
+                target = target,
+                actions = actions,
+                size = Dimens.dp42,
+                contentDescription = null,
+            )
+        },
+        title = { Text(displayLabel, maxLines = 2, overflow = TextOverflow.Ellipsis) },
+        confirmButton = {
+            TextButton(onClick = onAppInfo) {
+                Text(stringResource(R.string.app_info))
+            }
+        },
+        dismissButton = {
+            TextButton(onClick = onDismiss) {
+                Text(stringResource(R.string.cancel))
+            }
+        },
+    )
 }
 
 @Composable

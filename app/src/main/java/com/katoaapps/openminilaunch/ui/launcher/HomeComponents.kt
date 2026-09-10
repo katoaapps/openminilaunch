@@ -154,6 +154,7 @@ internal fun ShortcutGrid(
 ) {
     val launcherAppsRevision by actions.launcherAppsRevision.collectAsState()
     val launcherShortcutsRevision by actions.launcherShortcutsRevision.collectAsState()
+    val builtInIconColor = store.iconAppearance.minkBuiltInIconTint(contentColor)
     var editing by remember { mutableStateOf(false) }
     val draftOrder = remember { mutableStateListOf<Shortcut>().apply { addAll(store.effectiveShortcutOrder) } }
     val gridState = rememberLazyGridState()
@@ -307,7 +308,7 @@ internal fun ShortcutGrid(
                                         shortcut.defaultIcon(),
                                         shortcut.displayLabel(),
                                         Modifier.size(if (compact) Dimens.dp24 else Dimens.dp28),
-                                        tint = contentColor,
+                                        tint = builtInIconColor,
                                     )
                                 }
                             }

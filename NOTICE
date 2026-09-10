@@ -8,6 +8,6 @@ Third-party messaging provider names and app icons are used only to identify com
 do not imply endorsement, sponsorship, or partnership. The marks remain the property of their
 respective owners.
 
-Bundled messaging provider icons were obtained from the developer-supplied artwork on each app's
-official Google Play listing. Package IDs and source links are recorded in
-docs/messaging-provider-assets.md.
+Bundled messaging provider icons were obtained from developer-supplied artwork on official Google
+Play listings or, for providers not distributed there, their official source repository. Package
+IDs and source links are recorded in docs/messaging-provider-assets.md.

@@ -34,8 +34,6 @@ import com.katoaapps.openminilaunch.platform.DeviceActions
 import com.katoaapps.openminilaunch.ui.settings.SettingsDestination
 import com.katoaapps.openminilaunch.ui.theme.Dimens
 import com.katoaapps.openminilaunch.ui.wellbeing.MinkHomeIcon
-import java.time.LocalDate
-import java.time.format.DateTimeFormatter
 
 @Composable
 internal fun HomeHeader(
@@ -76,9 +74,11 @@ internal fun HomeHeader(
                 },
             ) {
                 Text(
-                    LocalDate.now().format(
-                        DateTimeFormatter.ofPattern(stringResource(R.string.home_date_pattern)),
-                    ).uppercase(),
+                    rememberHomeDateTimeText(
+                        datePattern = stringResource(R.string.home_date_pattern),
+                        showClock = store.showClock,
+                        use24HourClock = store.use24HourClock,
+                    ),
                     color = MaterialTheme.colorScheme.onBackground,
                     letterSpacing = Dimens.sp1_5,
                     fontSize = Dimens.sp13,

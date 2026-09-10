@@ -70,9 +70,14 @@ internal fun LauncherSettingsPage(
 }
 
 @Composable
-internal fun AppearanceSettingsPage(store: LauncherStore, goBack: () -> Unit) {
+internal fun AppearanceSettingsPage(
+    store: LauncherStore,
+    goBack: () -> Unit,
+    onIconStyleApplied: () -> Unit,
+) {
     SettingsPage(stringResource(R.string.appearance), goBack) {
         ThemeChooser(store.themePreference, store::setTheme)
+        ClockAppearanceSettings(store)
         SettingsSwitchRow(
             title = stringResource(R.string.hide_status_bar),
             subtitle = stringResource(R.string.hide_status_bar_description),
@@ -85,6 +90,8 @@ internal fun AppearanceSettingsPage(store: LauncherStore, goBack: () -> Unit) {
             checked = store.alignHomePanelBottom,
             onCheckedChange = store::updateAlignHomePanelBottom,
         )
+        SectionLabel(stringResource(R.string.visual_style))
+        IconPackAppearanceSettings(store, onApplied = onIconStyleApplied)
         HomePanelColorSetting(store.effectiveHomePanelColorArgb, store::setHomePanelColor)
         AppBackgroundColorSetting(
             selectedArgb = store.effectiveAppBackgroundColorArgb,

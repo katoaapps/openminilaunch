@@ -19,6 +19,7 @@ internal fun SettingsDestinationContent(
     onNavigate: (SettingsDestination) -> Unit,
     onNavigateBack: () -> Unit,
     onExitSettings: () -> Unit,
+    onIconStyleApplied: () -> Unit,
     onPickShortcut: (Shortcut) -> Unit,
     onPickDrawer: () -> Unit,
     onPickWeb: () -> Unit,
@@ -42,7 +43,11 @@ internal fun SettingsDestinationContent(
             onNavigate = onNavigate,
             goBack = onNavigateBack,
         )
-        SettingsDestination.APPEARANCE -> AppearanceSettingsPage(store, onNavigateBack)
+        SettingsDestination.APPEARANCE -> AppearanceSettingsPage(
+            store = store,
+            goBack = onNavigateBack,
+            onIconStyleApplied = onIconStyleApplied,
+        )
         SettingsDestination.SHORTCUTS -> ShortcutsSettingsPage(
             store = store,
             actions = actions,

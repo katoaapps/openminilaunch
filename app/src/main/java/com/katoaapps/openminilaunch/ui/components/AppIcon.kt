@@ -1,6 +1,9 @@
 package com.katoaapps.openminilaunch.ui.components
 
 import com.katoaapps.openminilaunch.platform.DeviceActions
+import com.katoaapps.openminilaunch.data.LauncherStore
+import com.katoaapps.openminilaunch.features.iconpacks.IconPackRepository
+import com.katoaapps.openminilaunch.model.IconSource
 import com.katoaapps.openminilaunch.model.LauncherAppTarget
 import com.katoaapps.openminilaunch.model.LauncherTarget
 import com.katoaapps.openminilaunch.ui.theme.MinkBlack
@@ -47,11 +50,24 @@ internal fun AppIcon(
     contentDescription: String? = null,
 ) {
     val context = LocalContext.current
+    val appearance = LauncherStore.get(context).iconAppearance
+    val iconPacks = remember(context) { IconPackRepository.get(context) }
+    val iconPacksRevision by iconPacks.revision.collectAsState()
+    val launcherAppsRevision = actions?.launcherAppsRevision?.collectAsState()?.value ?: 0L
+    val originalIcon = {
+        actions?.appIcon(packageName)
+            ?: runCatching { context.packageManager.getApplicationIcon(packageName) }.getOrNull()
+    }
     RenderedAppIcon(
-        iconKey = packageName,
-        drawable = { actions?.appIcon(packageName) ?: runCatching { context.packageManager.getApplicationIcon(packageName) }.getOrNull() },
+        iconKey = "$packageName:$launcherAppsRevision:$iconPacksRevision:$appearance",
+        drawable = {
+            appearance.iconPackPackage
+                ?.takeIf { appearance.source == IconSource.ICON_PACK }
+                ?.let { iconPacks.iconForPackage(packageName, it) }
+                ?: originalIcon()
+        },
         size = size,
-        themedTint = themedTint,
+        themedTint = appearance.minkAppIconTint(themedTint),
         contentDescription = contentDescription,
     )
 }
@@ -65,12 +81,21 @@ internal fun LauncherAppIcon(
     themedTint: Color? = null,
     contentDescription: String? = null,
 ) {
+    val context = LocalContext.current
+    val appearance = LauncherStore.get(context).iconAppearance
+    val iconPacks = remember(context) { IconPackRepository.get(context) }
+    val iconPacksRevision by iconPacks.revision.collectAsState()
     val launcherAppsRevision by actions.launcherAppsRevision.collectAsState()
     RenderedAppIcon(
-        iconKey = "${target.selectionKey}:$launcherAppsRevision",
-        drawable = { actions.launcherAppIcon(target) },
+        iconKey = "${target.selectionKey}:$launcherAppsRevision:$iconPacksRevision:$appearance",
+        drawable = {
+            appearance.iconPackPackage
+                ?.takeIf { appearance.source == IconSource.ICON_PACK }
+                ?.let { iconPacks.iconFor(target, it) }
+                ?: actions.launcherAppIcon(target)
+        },
         size = size,
-        themedTint = themedTint,
+        themedTint = appearance.minkAppIconTint(themedTint),
         contentDescription = contentDescription,
     )
 }
@@ -84,13 +109,38 @@ internal fun LauncherTargetIcon(
     themedTint: Color? = null,
     contentDescription: String? = null,
 ) {
+    val context = LocalContext.current
+    val appearance = LauncherStore.get(context).iconAppearance
+    val iconPacks = remember(context) { IconPackRepository.get(context) }
+    val iconPacksRevision by iconPacks.revision.collectAsState()
     val appsRevision by actions.launcherAppsRevision.collectAsState()
     val shortcutsRevision by actions.launcherShortcutsRevision.collectAsState()
     RenderedAppIcon(
-        iconKey = "${target.selectionKey}:$appsRevision:$shortcutsRevision",
-        drawable = { actions.launcherTargetIcon(target) },
+        iconKey = "${target.selectionKey}:$appsRevision:$shortcutsRevision:$iconPacksRevision:$appearance",
+        drawable = {
+            appearance.iconPackPackage
+                ?.takeIf { appearance.source == IconSource.ICON_PACK }
+                ?.let { iconPacks.iconFor(target, it) }
+                ?: actions.launcherTargetIcon(target)
+        },
         size = size,
-        themedTint = themedTint,
+        themedTint = appearance.minkAppIconTint(themedTint),
+        contentDescription = contentDescription,
+    )
+}
+
+@Composable
+internal fun DrawableIcon(
+    drawable: android.graphics.drawable.Drawable?,
+    iconKey: String,
+    size: Dp,
+    contentDescription: String? = null,
+) {
+    RenderedAppIcon(
+        iconKey = iconKey,
+        drawable = { drawable },
+        size = size,
+        themedTint = null,
         contentDescription = contentDescription,
     )
 }

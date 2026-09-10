@@ -57,6 +57,21 @@ internal object MessagingProviderCatalog {
             documentationUrl = "https://developers.line.biz/en/docs/messaging-api/using-line-url-scheme/#sending-text-messages",
         ),
         genericShareProvider(
+            id = "beeper",
+            labelRes = R.string.provider_beeper,
+            packageName = "com.beeper.android",
+            bundledIconRes = R.drawable.messaging_provider_beeper,
+            documentationUrl = "https://help.beeper.com/en_US/beeper-plus/merge-chats-getting-started-guide",
+        ),
+        genericShareProvider(
+            id = "molly",
+            labelRes = R.string.provider_molly,
+            packageName = "im.molly.app",
+            bundledIconRes = R.drawable.messaging_provider_molly,
+            storeUrl = "https://molly.im/",
+            documentationUrl = "https://github.com/mollyim/mollyim-android/blob/main/app/src/main/AndroidManifest.xml",
+        ),
+        genericShareProvider(
             id = "signal",
             labelRes = R.string.provider_signal,
             packageName = "org.thoughtcrime.securesms",
@@ -163,6 +178,7 @@ internal object MessagingProviderCatalog {
         @StringRes labelRes: Int,
         packageName: String,
         @DrawableRes bundledIconRes: Int,
+        storeUrl: String = "https://play.google.com/store/apps/details?id=$packageName",
         documentationUrl: String,
     ) = MessagingDraftProvider(
         id = id,
@@ -171,7 +187,7 @@ internal object MessagingProviderCatalog {
         kind = MessagingDraftKind.GENERIC_SHARE,
         supportTier = MessagingSupportTier.RECIPIENT_IN_APP,
         bundledIconRes = bundledIconRes,
-        storeUrl = "https://play.google.com/store/apps/details?id=$packageName",
+        storeUrl = storeUrl,
         documentationUrl = documentationUrl,
     )
 }

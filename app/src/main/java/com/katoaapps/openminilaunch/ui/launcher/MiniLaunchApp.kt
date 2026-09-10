@@ -97,6 +97,7 @@ internal fun MiniLaunchApp(
     var showUsageAccessPrompt by rememberSaveable { mutableStateOf(false) }
     var tutorialRun by rememberSaveable { mutableIntStateOf(0) }
     var homeMagicExpanded by remember { mutableStateOf(false) }
+    var animateHomeEntrance by remember { mutableStateOf(false) }
     val launcherPagerState = rememberPagerState(initialPage = HOME_PAGE, pageCount = { WIDGET_PAGE + 1 })
     val launcherScope = rememberCoroutineScope()
     LaunchedEffect(homeRequestToken) {
@@ -275,56 +276,68 @@ internal fun MiniLaunchApp(
                 }
             } else {
                 when (screen) {
-                    Screen.HOME -> HorizontalPager(
-                        state = launcherPagerState,
+                    Screen.HOME -> HomeEntranceTransition(
+                        animate = animateHomeEntrance,
+                        onAnimationFinished = { animateHomeEntrance = false },
                         modifier = Modifier.fillMaxSize(),
-                        userScrollEnabled = !homeMagicExpanded,
-                    ) { page ->
-                        when (page) {
-                            MINK_DAY_PAGE -> MinkDayScreen(
-                                store = store,
-                                isActive = launcherPagerState.currentPage == MINK_DAY_PAGE,
-                                goHome = {
-                                    launcherScope.launch { launcherPagerState.animateScrollToPage(HOME_PAGE) }
-                                },
-                            )
-                            HOME_PAGE -> HomeScreen(
-                                store = store,
-                                actions = actions,
-                                openSettings = { destination ->
-                                    settingsDestination = destination
-                                    screen = Screen.SETTINGS
-                                },
-                                openTodos = { screen = Screen.TODOS },
-                                openHub = { screen = Screen.HUB },
-                                openMinkDay = {
-                                    launcherScope.launch { launcherPagerState.animateScrollToPage(MINK_DAY_PAGE) }
-                                },
-                                minkStatusActive = launcherPagerState.currentPage == HOME_PAGE,
-                                onMagicExpandedChange = { homeMagicExpanded = it },
-                                keyboardInputEnabled = launcherPagerState.currentPage == HOME_PAGE &&
-                                    !showTutorial && !showUpdateNotice && !showShortcutSetup,
-                                homeRequestToken = homeRequestToken,
-                            )
-                            else -> WidgetPage(
-                                store = store,
-                                actions = actions,
-                                goHome = {
-                                    launcherScope.launch { launcherPagerState.animateScrollToPage(HOME_PAGE) }
-                                },
-                            )
+                    ) {
+                        HorizontalPager(
+                            state = launcherPagerState,
+                            modifier = Modifier.fillMaxSize(),
+                            userScrollEnabled = !homeMagicExpanded,
+                        ) { page ->
+                            when (page) {
+                                MINK_DAY_PAGE -> MinkDayScreen(
+                                    store = store,
+                                    isActive = launcherPagerState.currentPage == MINK_DAY_PAGE,
+                                    goHome = {
+                                        launcherScope.launch { launcherPagerState.animateScrollToPage(HOME_PAGE) }
+                                    },
+                                )
+                                HOME_PAGE -> HomeScreen(
+                                    store = store,
+                                    actions = actions,
+                                    openSettings = { destination ->
+                                        settingsDestination = destination
+                                        screen = Screen.SETTINGS
+                                    },
+                                    openTodos = { screen = Screen.TODOS },
+                                    openHub = { screen = Screen.HUB },
+                                    openMinkDay = {
+                                        launcherScope.launch { launcherPagerState.animateScrollToPage(MINK_DAY_PAGE) }
+                                    },
+                                    minkStatusActive = launcherPagerState.currentPage == HOME_PAGE,
+                                    onMagicExpandedChange = { homeMagicExpanded = it },
+                                    keyboardInputEnabled = launcherPagerState.currentPage == HOME_PAGE &&
+                                        !showTutorial && !showUpdateNotice && !showShortcutSetup,
+                                    homeRequestToken = homeRequestToken,
+                                )
+                                else -> WidgetPage(
+                                    store = store,
+                                    actions = actions,
+                                    goHome = {
+                                        launcherScope.launch { launcherPagerState.animateScrollToPage(HOME_PAGE) }
+                                    },
+                                )
+                            }
                         }
                     }
                     Screen.SETTINGS -> SettingsScreen(
-                        store,
-                        actions,
-                        requestHomeRole,
+                        store = store,
+                        actions = actions,
+                        requestHomeRole = requestHomeRole,
                         onRepeatTutorial = { tutorialRun++; showTutorial = true },
                         initialDestination = settingsDestination,
-                    ) {
-                        settingsDestination = SettingsDestination.OVERVIEW
-                        screen = Screen.HOME
-                    }
+                        onIconStyleApplied = {
+                            settingsDestination = SettingsDestination.OVERVIEW
+                            animateHomeEntrance = true
+                            screen = Screen.HOME
+                        },
+                        goBack = {
+                            settingsDestination = SettingsDestination.OVERVIEW
+                            screen = Screen.HOME
+                        },
+                    )
                     Screen.TODOS -> TodosScreen(store, actions) { screen = Screen.HOME }
                     Screen.HUB -> NotificationHubScreen(store, actions) { screen = Screen.HOME }
                 }

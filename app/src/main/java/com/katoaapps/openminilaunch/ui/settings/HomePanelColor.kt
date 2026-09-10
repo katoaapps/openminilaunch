@@ -121,7 +121,7 @@ internal fun AppBackgroundColorSetting(
 }
 
 @Composable
-private fun AppearanceColorSetting(
+internal fun AppearanceColorSetting(
     selectedArgb: Int?,
     pickerArgb: Int,
     @androidx.annotation.StringRes titleRes: Int,
@@ -131,6 +131,8 @@ private fun AppearanceColorSetting(
     presets: List<HomePanelColorPreset>,
     onColorSelected: (Int) -> Unit,
     onUseThemeDefault: (() -> Unit)? = null,
+    @androidx.annotation.StringRes defaultValueLabelRes: Int = R.string.theme_background,
+    @androidx.annotation.StringRes useDefaultLabelRes: Int = R.string.use_theme_background,
 ) {
     var showCustomPicker by remember { mutableStateOf(false) }
     val selectedPreset = presets.firstOrNull { it.argb == selectedArgb }
@@ -152,7 +154,7 @@ private fun AppearanceColorSetting(
                     )
                 }
                 Text(
-                    selectedArgb?.let(::formatHomePanelHex) ?: stringResource(R.string.theme_background),
+                    selectedArgb?.let(::formatHomePanelHex) ?: stringResource(defaultValueLabelRes),
                     color = Muted,
                     fontSize = Dimens.sp12,
                 )
@@ -189,7 +191,10 @@ private fun AppearanceColorSetting(
             OutlinedButton(onClick = { showCustomPicker = true }, modifier = Modifier.fillMaxWidth()) {
                 Icon(Icons.Default.Palette, null, Modifier.size(Dimens.dp18))
                 Text(
-                    stringResource(if (selectedPreset == null) R.string.edit_custom_color else R.string.choose_custom_color),
+                    stringResource(
+                        if (selectedArgb != null && selectedPreset == null) R.string.edit_custom_color
+                        else R.string.choose_custom_color,
+                    ),
                     Modifier.padding(start = Dimens.dp8),
                 )
             }
@@ -199,7 +204,7 @@ private fun AppearanceColorSetting(
                     enabled = selectedArgb != null,
                     modifier = Modifier.fillMaxWidth(),
                 ) {
-                    Text(stringResource(R.string.use_theme_background))
+                    Text(stringResource(useDefaultLabelRes))
                 }
             }
         }

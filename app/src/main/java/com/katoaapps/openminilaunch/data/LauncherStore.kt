@@ -15,10 +15,12 @@ class LauncherStore private constructor(context: Context) {
     private val widgetStore = WidgetStore(persistence, MAX_WIDGETS)
     private val generalPreferences = GeneralPreferenceStore(prefs)
     private val appearancePreferences = AppearancePreferenceStore(appContext, prefs)
+    private val iconAppearancePreferences = IconAppearancePreferenceStore(prefs)
     private val messagingPreferences = MessagingPreferenceStore(prefs)
     private val minkDayPreferences = MinkDayPreferenceStore(prefs)
     private val updatePreferences = UpdatePreferenceStore(prefs)
     private val pinShortcutPreferences = PinShortcutPreferenceStore(prefs)
+    private val appDiscoveryPreferences = AppDiscoveryPreferenceStore(prefs)
     private val demoPreferences: DemoPreferenceStore = DemoPreferenceStore(appContext, prefs, todoStore)
     internal val demoHomeProfile get() = demoPreferences.profile
     val todos get() = todoStore.items
@@ -28,6 +30,10 @@ class LauncherStore private constructor(context: Context) {
     val confirmedShortcutChoices get() = launcherSelections.confirmedShortcutChoices
     /** Stable launcher target keys, allowing personal and work copies of one package to coexist. */
     val drawerTargets get() = launcherSelections.drawerTargets
+    /** App-published shortcuts shown in Magic Box search and the All Apps carousel. */
+    val libraryShortcutTargets get() = launcherSelections.libraryShortcutTargets
+    val pinnedLauncherSelectionKeys: List<String>
+        get() = (shortcutTargets.values + drawerTargets + libraryShortcutTargets).distinct()
     val searchFolders get() = searchStore.folders
     val searchHistory get() = searchStore.history
     val widgetIds get() = widgetStore.ids
@@ -40,8 +46,11 @@ class LauncherStore private constructor(context: Context) {
     val themePreference get() = appearancePreferences.themePreference
     val hideStatusBar get() = appearancePreferences.hideStatusBar
     val alignHomePanelBottom get() = appearancePreferences.alignHomePanelBottom
+    val showClock get() = appearancePreferences.showClock
+    val use24HourClock get() = appearancePreferences.use24HourClock
     val homePanelColorArgb get() = appearancePreferences.homePanelColorArgb
     val appBackgroundColorArgb get() = appearancePreferences.appBackgroundColorArgb
+    val iconAppearance get() = iconAppearancePreferences.appearance
     val sendMessagesAutomatically get() = messagingPreferences.sendMessagesAutomatically
     val preferredMessagingPackage get() = messagingPreferences.preferredMessagingPackage
     val preferredAiPackage get() = messagingPreferences.preferredAiPackage
@@ -53,6 +62,7 @@ class LauncherStore private constructor(context: Context) {
     val githubUpdateChecksEnabled get() = updatePreferences.checksEnabled
     val latestGitHubReleaseTag get() = updatePreferences.latestReleaseTag
     val pinShortcutRequestPresentation get() = pinShortcutPreferences.requestPresentation
+    val includeAppShortcutsInDiscovery get() = appDiscoveryPreferences.includeAppShortcuts
     val effectiveHomePanelColorArgb: Int
         get() = demoPreferences.effectivePanelColor(homePanelColorArgb)
     val effectiveAppBackgroundColorArgb: Int?
@@ -126,8 +136,16 @@ class LauncherStore private constructor(context: Context) {
     fun replaceDrawerTarget(index: Int, targetKey: String): Boolean =
         launcherSelections.replaceDrawerTarget(index, targetKey)
 
+    fun addLibraryShortcut(targetKey: String) {
+        launcherSelections.addLibraryShortcut(targetKey)
+    }
+
     fun setPinShortcutRequestPresentation(presentation: PinShortcutRequestPresentation) {
         pinShortcutPreferences.updateRequestPresentation(presentation)
+    }
+
+    fun updateIncludeAppShortcutsInDiscovery(enabled: Boolean) {
+        appDiscoveryPreferences.updateIncludeAppShortcuts(enabled)
     }
 
     /** Converts package-only settings to personal-profile activity keys without assigning work copies. */
@@ -203,6 +221,14 @@ class LauncherStore private constructor(context: Context) {
         appearancePreferences.updateAlignHomePanelBottom(enabled)
     }
 
+    fun updateShowClock(enabled: Boolean) {
+        appearancePreferences.updateShowClock(enabled)
+    }
+
+    fun updateUse24HourClock(enabled: Boolean) {
+        appearancePreferences.updateUse24HourClock(enabled)
+    }
+
     fun setHomePanelColor(argb: Int) {
         val opaqueArgb = argb or 0xFF000000.toInt()
         if (demoPreferences.setPanelColor(opaqueArgb)) return
@@ -213,6 +239,22 @@ class LauncherStore private constructor(context: Context) {
         val opaqueArgb = argb?.or(0xFF000000.toInt())
         if (demoPreferences.setBackgroundColor(opaqueArgb)) return
         appearancePreferences.setAppBackgroundColor(opaqueArgb)
+    }
+
+    fun useMinkIcons() {
+        iconAppearancePreferences.useMinkIcons()
+    }
+
+    fun useSystemIcons() {
+        iconAppearancePreferences.useSystemIcons()
+    }
+
+    fun useIconPack(packageName: String) {
+        iconAppearancePreferences.useIconPack(packageName)
+    }
+
+    fun setMinkIconColor(argb: Int?) {
+        iconAppearancePreferences.setMinkIconColor(argb)
     }
 
     fun updateSocialGoalHours(hours: Int) {
@@ -301,7 +343,7 @@ class LauncherStore private constructor(context: Context) {
 
     companion object {
         private const val MAX_SEARCH_HISTORY = 5
-        private const val MAX_WIDGETS = 4
+        private const val MAX_WIDGETS = 8
 
         @Volatile
         private var instance: LauncherStore? = null

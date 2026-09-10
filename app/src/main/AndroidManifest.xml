@@ -18,6 +18,8 @@
     <uses-feature android:name="android.hardware.telephony" android:required="false" />
 
     <queries>
+        <intent><action android:name="com.novalauncher.THEME" /></intent>
+        <intent><action android:name="org.adw.ActivityStarter.THEMES" /></intent>
         <intent>
             <action android:name="android.intent.action.MAIN" />
             <category android:name="android.intent.category.LAUNCHER" />
@@ -51,6 +53,8 @@
         <package android:name="com.deepseek.chat" />
         <package android:name="com.facebook.stella" />
         <package android:name="com.google.android.apps.bard" />
+        <package android:name="com.beeper.android" />
+        <package android:name="im.molly.app" />
         <package android:name="com.samsung.android.app.notes" />
         <package android:name="com.sec.android.app.clockpackage" />
         <package android:name="com.google.android.deskclock" />

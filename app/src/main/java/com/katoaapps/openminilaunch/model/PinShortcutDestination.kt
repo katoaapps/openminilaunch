@@ -12,6 +12,10 @@ internal sealed interface PinShortcutDestination {
         override val key: String = "drawer:add"
     }
 
+    data object AddToLibrary : PinShortcutDestination {
+        override val key: String = "library:add"
+    }
+
     data class ReplaceDrawerSlot(val index: Int) : PinShortcutDestination {
         override val key: String = "drawer:replace:$index"
     }
@@ -19,6 +23,7 @@ internal sealed interface PinShortcutDestination {
     companion object {
         fun fromKey(key: String?): PinShortcutDestination? {
             if (key == AddToDrawer.key) return AddToDrawer
+            if (key == AddToLibrary.key) return AddToLibrary
             val parts = key?.split(':') ?: return null
             return when {
                 parts.size == 2 && parts[0] == "home" ->

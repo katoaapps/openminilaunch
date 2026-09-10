@@ -2,6 +2,7 @@ package com.katoaapps.openminilaunch.data
 
 import android.content.Context
 import android.content.SharedPreferences
+import android.text.format.DateFormat
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
@@ -27,6 +28,12 @@ internal class AppearancePreferenceStore(
         private set
     var alignHomePanelBottom by mutableStateOf(prefs.getBoolean(ALIGN_HOME_PANEL_BOTTOM_KEY, false))
         private set
+    var showClock by mutableStateOf(prefs.getBoolean(SHOW_CLOCK_KEY, false))
+        private set
+    var use24HourClock by mutableStateOf(
+        prefs.getBoolean(USE_24_HOUR_CLOCK_KEY, DateFormat.is24HourFormat(context)),
+    )
+        private set
     var homePanelColorArgb by mutableIntStateOf(
         prefs.getInt(HOME_PANEL_COLOR_KEY, ContextCompat.getColor(context, R.color.mink_forest)),
     )
@@ -51,6 +58,16 @@ internal class AppearancePreferenceStore(
         prefs.edit().putBoolean(ALIGN_HOME_PANEL_BOTTOM_KEY, enabled).apply()
     }
 
+    fun updateShowClock(enabled: Boolean) {
+        showClock = enabled
+        prefs.edit().putBoolean(SHOW_CLOCK_KEY, enabled).apply()
+    }
+
+    fun updateUse24HourClock(enabled: Boolean) {
+        use24HourClock = enabled
+        prefs.edit().putBoolean(USE_24_HOUR_CLOCK_KEY, enabled).apply()
+    }
+
     fun setHomePanelColor(argb: Int) {
         homePanelColorArgb = argb or 0xFF000000.toInt()
         prefs.edit().putInt(HOME_PANEL_COLOR_KEY, homePanelColorArgb).apply()
@@ -69,6 +86,8 @@ internal class AppearancePreferenceStore(
         const val APP_BACKGROUND_COLOR_KEY = "app_background_color"
         const val HIDE_STATUS_BAR_KEY = "hide_status_bar"
         const val HOME_PANEL_COLOR_KEY = "home_panel_color"
+        const val SHOW_CLOCK_KEY = "show_clock"
         const val THEME_PREFERENCE_KEY = "theme_preference"
+        const val USE_24_HOUR_CLOCK_KEY = "use_24_hour_clock"
     }
 }

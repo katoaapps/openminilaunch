@@ -201,15 +201,15 @@ internal fun WidgetPage(store: LauncherStore, actions: DeviceActions, goHome: ()
             Column(Modifier.weight(1f).clickable(onClick = goHome)) {
                 Text(stringResource(R.string.widgets), fontSize = Dimens.sp26, fontWeight = FontWeight.Black)
                 if (store.widgetIds.isNotEmpty()) {
-                    Text(stringResource(R.string.widget_count, store.widgetIds.size, 4), color = Muted, fontSize = Dimens.sp12)
+                    Text(stringResource(R.string.widget_count, store.widgetIds.size, 8), color = Muted, fontSize = Dimens.sp12)
                 }
             }
             FilledTonalIconButton(
                 onClick = {
-                    if (store.widgetIds.size >= 4) {
+                    if (store.widgetIds.size >= 8) {
                         Toast.makeText(
                             context,
-                            context.resources.getQuantityString(R.plurals.maximum_widgets, 4, 4),
+                            context.resources.getQuantityString(R.plurals.maximum_widgets, 8, 8),
                             Toast.LENGTH_SHORT,
                         ).show()
                     }

@@ -1,7 +1,7 @@
 package com.katoaapps.openminilaunch.features.apps
 
 import com.katoaapps.openminilaunch.model.LaunchableApp
-import com.katoaapps.openminilaunch.model.LauncherAppTarget
+import com.katoaapps.openminilaunch.model.LauncherTarget
 
 import kotlin.math.PI
 import kotlin.math.cos
@@ -24,14 +24,14 @@ internal fun initialAllAppsIndex(apps: List<LaunchableApp>): Int =
 internal fun letterForApp(app: LaunchableApp?): Char? =
     app?.let { initialLetter(it, LaunchableApp::label) }
 
-internal fun launcherAppIndexForLetter(apps: List<LauncherAppTarget>, letter: Char): Int? =
-    indexForLetter(apps, letter, LauncherAppTarget::label)
+internal fun launcherTargetIndexForLetter(targets: List<LauncherTarget>, letter: Char): Int? =
+    indexForLetter(targets, letter, LauncherTarget::label)
 
-internal fun initialLauncherAppsIndex(apps: List<LauncherAppTarget>): Int =
-    launcherAppIndexForLetter(apps, 'M') ?: 0
+internal fun initialLauncherTargetsIndex(targets: List<LauncherTarget>): Int =
+    launcherTargetIndexForLetter(targets, 'M') ?: 0
 
-internal fun letterForLauncherApp(app: LauncherAppTarget?): Char? =
-    app?.let { initialLetter(it, LauncherAppTarget::label) }
+internal fun letterForLauncherTarget(target: LauncherTarget?): Char? =
+    target?.let { initialLetter(it, LauncherTarget::label) }
 
 private fun <T> indexForLetter(apps: List<T>, letter: Char, label: (T) -> String): Int? =
     apps.indexOfFirst { app -> label(app).firstOrNull()?.uppercaseChar() == letter.uppercaseChar() }

@@ -36,6 +36,7 @@ internal fun SettingsScreen(
     requestHomeRole: () -> Unit,
     onRepeatTutorial: () -> Unit,
     initialDestination: SettingsDestination = SettingsDestination.OVERVIEW,
+    onIconStyleApplied: () -> Unit,
     goBack: () -> Unit,
 ) {
     val context = LocalContext.current
@@ -209,6 +210,7 @@ internal fun SettingsScreen(
                 onNavigate = ::navigateTo,
                 onNavigateBack = ::navigateBack,
                 onExitSettings = goBack,
+                onIconStyleApplied = onIconStyleApplied,
                 onPickShortcut = { picker = SettingsPicker.ShortcutApp(it) },
                 onPickDrawer = { picker = SettingsPicker.DrawerApps },
                 onPickWeb = { picker = SettingsPicker.WebApp },

@@ -100,6 +100,7 @@ the existing app first and clears MinkLauncher OpenSource's local data.
 - Delete confirmation to protect against accidental taps and back-swipe gestures
 - Animated Magic Box to-do delivery into the newest widget page
 - System, light, and dark appearance modes
+- Mink-themed icons, original system icons, or an installed Nova/ADW-compatible icon pack selected from a visual preview in Appearance settings. Icon-pack mappings are read locally; unsupported apps fall back to their original icon.
 - A default-on **Hide Status Bar** option for Home; swipe down to reveal Android's notification shade
 - An optional **Align Pill to Bottom** setting keeps the Home panel within easier reach on tall slab phones, directly above the Magic Box
 - Swipe down anywhere on the home screen to expand notifications

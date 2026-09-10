@@ -33,6 +33,7 @@ import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
 import androidx.compose.material3.Typography
 import androidx.compose.material3.darkColorScheme
@@ -47,6 +48,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.produceState
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -146,29 +148,47 @@ internal fun AllAppsScreen(
 ) {
     val context = LocalContext.current
     val launcherAppsRevision by actions.launcherAppsRevision.collectAsState()
-    val appsState by produceState<List<LauncherAppTarget>?>(initialValue = null, actions, launcherAppsRevision) {
-        value = withContext(Dispatchers.IO) { actions.installedApps() }
+    val launcherShortcutsRevision by actions.launcherShortcutsRevision.collectAsState()
+    val alwaysVisibleTargetKeys = store.pinnedLauncherSelectionKeys
+    val targetsState by produceState<List<LauncherTarget>?>(
+        initialValue = null,
+        actions,
+        launcherAppsRevision,
+        launcherShortcutsRevision,
+        alwaysVisibleTargetKeys,
+        store.includeAppShortcutsInDiscovery,
+    ) {
+        value = withContext(Dispatchers.IO) {
+            launcherLibraryTargets(
+                apps = actions.installedApps(),
+                alwaysVisibleTargetKeys = alwaysVisibleTargetKeys,
+                appShortcuts = actions.installedShortcuts(),
+                includeAppShortcuts = store.includeAppShortcutsInDiscovery,
+                resolveTarget = actions::resolveLauncherSelection,
+            )
+        }
     }
     val appAccessState by rememberMinkAppAccessState(store)
-    val installedApps = appsState.orEmpty()
-    val apps = remember(installedApps, appAccessState) {
+    val installedTargets = targetsState.orEmpty()
+    val apps = remember(installedTargets, appAccessState) {
         if (appAccessState.isResolved) {
-            installedApps.filterNot(appAccessState::isPaused)
+            installedTargets.filterNot(appAccessState::isPaused)
         } else {
             emptyList()
         }
     }
     val pagerState = rememberPagerState(pageCount = { apps.size })
     val scope = rememberCoroutineScope()
+    var managementTarget by remember { mutableStateOf<LauncherTarget?>(null) }
 
     LaunchedEffect(apps) {
-        if (apps.isNotEmpty()) pagerState.scrollToPage(initialLauncherAppsIndex(apps))
+        if (apps.isNotEmpty()) pagerState.scrollToPage(initialLauncherTargetsIndex(apps))
     }
 
     val focusedApp = apps.getOrNull(pagerState.currentPage)
     val fallbackAccent = Color(store.effectiveHomePanelColorArgb)
     val targetAccent = remember(focusedApp?.selectionKey, fallbackAccent) {
-        focusedApp?.let { dominantAppColor(actions.launcherAppIcon(it)) } ?: fallbackAccent
+        focusedApp?.let { dominantAppColor(actions.launcherTargetIcon(it)) } ?: fallbackAccent
     }
     val accent by animateColorAsState(
         targetValue = targetAccent,
@@ -222,9 +242,26 @@ internal fun AllAppsScreen(
                     )
                 }
             }
+            Row(
+                Modifier.fillMaxWidth().padding(horizontal = Dimens.dp16),
+                horizontalArrangement = Arrangement.End,
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                Text(
+                    stringResource(R.string.include_app_shortcuts),
+                    modifier = Modifier.padding(end = Dimens.dp10),
+                    color = Color.White,
+                    fontSize = Dimens.sp12,
+                    fontWeight = FontWeight.SemiBold,
+                )
+                Switch(
+                    checked = store.includeAppShortcutsInDiscovery,
+                    onCheckedChange = store::updateIncludeAppShortcutsInDiscovery,
+                )
+            }
 
             when {
-                appsState == null || !appAccessState.isResolved -> Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+                targetsState == null || !appAccessState.isResolved -> Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
                     CircularProgressIndicator(color = Color.White)
                 }
                 apps.isEmpty() -> Column(
@@ -256,8 +293,10 @@ internal fun AllAppsScreen(
                         ).coerceIn(0f, 1f)
                         val scale = lerpFloat(.60f, 1f, 1f - pageOffset)
                         val app = apps[page]
+                        val displayLabel = launcherDiscoveryLabel(app, actions::appLabel)
                         AppCarouselItem(
                             app = app,
+                            displayLabel = displayLabel,
                             actions = actions,
                             iconSize = iconSize,
                             scale = scale,
@@ -267,7 +306,10 @@ internal fun AllAppsScreen(
                                     if (!actions.launchLauncherTarget(app)) {
                                         Toast.makeText(
                                             context,
-                                            context.getString(R.string.launcher_app_unavailable, app.label),
+                                            context.getString(
+                                                R.string.launcher_app_unavailable,
+                                                displayLabel,
+                                            ),
                                             Toast.LENGTH_LONG,
                                         ).show()
                                     }
@@ -275,17 +317,18 @@ internal fun AllAppsScreen(
                                     scope.launch { pagerState.animateScrollToPage(page) }
                                 }
                             },
+                            onLongClick = { managementTarget = app },
                         )
                     }
                     LetterArc(
                         availableLetters = remember(apps) {
-                            apps.mapNotNull { letterForLauncherApp(it) }.toSet()
+                            apps.mapNotNull { letterForLauncherTarget(it) }.toSet()
                         },
-                        selectedLetter = letterForLauncherApp(focusedApp),
+                        selectedLetter = letterForLauncherTarget(focusedApp),
                         selectedContentColor = edgeColor,
                         compact = compact,
                         onLetter = { letter ->
-                            launcherAppIndexForLetter(apps, letter)?.let { index ->
+                            launcherTargetIndexForLetter(apps, letter)?.let { index ->
                                 scope.launch { pagerState.scrollToPage(index) }
                             }
                         },
@@ -293,6 +336,26 @@ internal fun AllAppsScreen(
                 }
             }
         }
+    }
+
+    managementTarget?.let { target ->
+        val displayLabel = launcherDiscoveryLabel(target, actions::appLabel)
+        AppManagementDialog(
+            target = target,
+            displayLabel = displayLabel,
+            actions = actions,
+            onDismiss = { managementTarget = null },
+            onAppInfo = {
+                managementTarget = null
+                if (!actions.openLauncherTargetAppInfo(target)) {
+                    Toast.makeText(
+                        context,
+                        context.getString(R.string.app_info_unavailable),
+                        Toast.LENGTH_LONG,
+                    ).show()
+                }
+            },
+        )
     }
 }
 }

@@ -29,6 +29,7 @@ import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.GridView
+import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Work
 import androidx.compose.material3.Button
 import androidx.compose.material3.HorizontalDivider
@@ -257,6 +258,15 @@ private fun PinShortcutPlacementList(
                 stringResource(R.string.choose_shortcut_destination_description),
                 color = Muted,
                 fontSize = Dimens.sp12,
+            )
+        }
+        item(PinShortcutDestination.AddToLibrary.key) {
+            DestinationRow(
+                title = stringResource(R.string.add_to_search_and_all_apps),
+                subtitle = stringResource(R.string.add_to_search_and_all_apps_description),
+                selected = selectedKey == PinShortcutDestination.AddToLibrary.key,
+                onClick = { onSelect(PinShortcutDestination.AddToLibrary.key) },
+                leading = { Icon(Icons.Default.Search, null) },
             )
         }
         item { DestinationSectionLabel(stringResource(R.string.home_shortcuts)) }

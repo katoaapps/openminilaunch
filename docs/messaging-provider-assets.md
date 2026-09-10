@@ -4,10 +4,12 @@ OpenMink bundles a current icon for every provider in `MessagingProviderCatalog`
 app picker can identify supported services even when they are not installed. When an app is
 installed, Android's `PackageManager` remains the source of truth for its current label and icon.
 
-The bundled files were downloaded from each app's official Google Play listing on August 26,
-2026. Each listing exposes its developer-supplied 512 x 512 icon through `og:image`. The Viber
+Most bundled files were downloaded from each app's official Google Play listing on August 26,
+2026. Each listing exposes its developer-supplied 512 x 512 icon through `og:image`. Beeper was
+added from its official Play listing on September 8, 2026. Molly is not distributed through Google
+Play, so its vector artwork comes from the official Molly Android source repository. The Viber
 listing returned JPEG data, which was converted to PNG for Android resource consistency; the
-other downloads were already PNG files.
+other Play downloads were already PNG files.
 
 These provider names and icons are used only for nominative identification. Their inclusion does
 not imply endorsement, sponsorship, or partnership. The marks remain the property of their
@@ -19,6 +21,8 @@ respective owners.
 | WhatsApp Business | `com.whatsapp.w4b` | `messaging_provider_whatsapp_business.png` | [Google Play](https://play.google.com/store/apps/details?id=com.whatsapp.w4b) |
 | Telegram | `org.telegram.messenger` | `messaging_provider_telegram.png` | [Google Play](https://play.google.com/store/apps/details?id=org.telegram.messenger) |
 | LINE | `jp.naver.line.android` | `messaging_provider_line.png` | [Google Play](https://play.google.com/store/apps/details?id=jp.naver.line.android) |
+| Beeper | `com.beeper.android` | `messaging_provider_beeper.png` | [Google Play](https://play.google.com/store/apps/details?id=com.beeper.android) |
+| Molly | `im.molly.app` | `messaging_provider_molly.xml` | [Molly](https://molly.im/) |
 | Signal | `org.thoughtcrime.securesms` | `messaging_provider_signal.png` | [Google Play](https://play.google.com/store/apps/details?id=org.thoughtcrime.securesms) |
 | KakaoTalk | `com.kakao.talk` | `messaging_provider_kakaotalk.png` | [Google Play](https://play.google.com/store/apps/details?id=com.kakao.talk) |
 | WeChat | `com.tencent.mm` | `messaging_provider_wechat.png` | [Google Play](https://play.google.com/store/apps/details?id=com.tencent.mm) |
@@ -39,5 +43,6 @@ respective owners.
 - Unavailable supported apps use the bundled icon with the surrounding row visually disabled.
 - Do not recolor, redraw, add effects to, or crop the provider artwork.
 - Never allow an unavailable provider to become the saved integrated package.
-- Refresh an asset only from the same package's official listing, then verify the package ID,
-  512 x 512 dimensions, PNG encoding, and Android resource build.
+- Refresh Play assets only from the same package's official listing, then verify the package ID,
+  512 x 512 dimensions, PNG encoding, and Android resource build. Refresh Molly's vector only
+  from its official Android source repository and verify the Android resource build.

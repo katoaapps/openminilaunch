@@ -6,6 +6,9 @@ import com.katoaapps.openminilaunch.R
 import com.katoaapps.openminilaunch.data.*
 import com.katoaapps.openminilaunch.model.*
 import com.katoaapps.openminilaunch.platform.*
+import com.katoaapps.openminilaunch.features.apps.launcherLibraryTargets
+import com.katoaapps.openminilaunch.features.apps.launcherDiscoveryLabel
+import com.katoaapps.openminilaunch.features.apps.launcherDiscoveryMatches
 import com.katoaapps.openminilaunch.features.calendar.*
 import com.katoaapps.openminilaunch.features.conversations.*
 import com.katoaapps.openminilaunch.features.files.*
@@ -88,9 +91,11 @@ internal fun MagicBox(
     )
     val fileSearchRepository = remember { FileSearchRepository(context.applicationContext) }
     val launcherAppsRevision by actions.launcherAppsRevision.collectAsState()
+    val launcherShortcutsRevision by actions.launcherShortcutsRevision.collectAsState()
     val localAppAccessState = if (appAccessState == null) rememberMinkAppAccessState(store) else null
     val effectiveAppAccessState = appAccessState ?: checkNotNull(localAppAccessState).value
     var text by remember { mutableStateOf(TextFieldValue()) }
+    val initialHardwareKeyCorrection = remember { InitialHardwareKeyCorrection() }
     var selectedContact by remember { mutableStateOf<ContactResult?>(null) }
     var lockedPrefix by remember { mutableStateOf<Char?>(null) }
     var expanded by remember { mutableStateOf(initiallyExpanded) }
@@ -112,6 +117,7 @@ internal fun MagicBox(
     var fileResults by remember { mutableStateOf<List<FileSearchResult>>(emptyList()) }
     var fileSearchLoading by remember { mutableStateOf(false) }
     val fileSearchRequests = remember { FileSearchRequestTracker() }
+    val fileSearchQueryGate = remember { FileSearchQueryGate() }
     val callFlow = rememberMagicCallFlow(actions, onSessionComplete)
     val smsFlow = rememberMagicSmsFlow(actions, onSessionComplete)
     var aiAppsLoaded by remember { mutableStateOf(false) }
@@ -225,9 +231,25 @@ internal fun MagicBox(
             actions.searchContacts(searchTerm, useDemoData = store.demoSearchDataEnabled).take(5)
         } else emptyList()
     }
-    val appResults = remember(prefix, searchTerm, launcherAppsRevision) {
+    val alwaysVisibleTargetKeys = store.pinnedLauncherSelectionKeys
+    val appResults = remember(
+        prefix,
+        searchTerm,
+        launcherAppsRevision,
+        launcherShortcutsRevision,
+        alwaysVisibleTargetKeys,
+        store.includeAppShortcutsInDiscovery,
+    ) {
         if (prefix == '?' && searchTerm.isNotBlank()) {
-            actions.installedApps().filter { it.label.startsWith(searchTerm, true) }.take(5)
+            launcherLibraryTargets(
+                apps = actions.installedApps(),
+                alwaysVisibleTargetKeys = alwaysVisibleTargetKeys,
+                appShortcuts = actions.installedShortcuts(),
+                includeAppShortcuts = store.includeAppShortcutsInDiscovery,
+                resolveTarget = actions::resolveLauncherSelection,
+            ).filter {
+                launcherDiscoveryMatches(it, searchTerm, actions::appLabel)
+            }.take(5)
         } else emptyList()
     }
     val visibleAppResults = remember(appResults, effectiveAppAccessState) {
@@ -245,7 +267,21 @@ internal fun MagicBox(
     val indexedFolderUris = store.searchFolders.map { it.uri }
     LaunchedEffect(plainQuery, indexedFolderUris, hasMediaAccess, store.demoSearchDataEnabled) {
         val request = fileSearchRequests.begin(plainQuery)
+        val searchScope = FileSearchScope(
+            folderUris = indexedFolderUris,
+            includesMedia = hasMediaAccess,
+            usesDemoData = store.demoSearchDataEnabled,
+        )
         if (plainQuery.length < 2) {
+            fileSearchQueryGate.reset()
+            fileResults = emptyList()
+            fileSearchLoading = false
+            magicResultsScroll.scrollTo(0)
+        } else if (!searchScope.hasSearchableSources) {
+            fileResults = emptyList()
+            fileSearchLoading = false
+            magicResultsScroll.scrollTo(0)
+        } else if (!fileSearchQueryGate.shouldSearch(plainQuery, searchScope)) {
             fileResults = emptyList()
             fileSearchLoading = false
             magicResultsScroll.scrollTo(0)
@@ -264,6 +300,11 @@ internal fun MagicBox(
                 }
                 if (fileSearchRequests.isCurrent(request)) {
                     fileResults = results
+                    fileSearchQueryGate.recordResult(
+                        query = request.query,
+                        scope = searchScope,
+                        hasResults = results.isNotEmpty(),
+                    )
                     magicResultsScroll.scrollTo(0)
                 }
             } finally {
@@ -290,6 +331,8 @@ internal fun MagicBox(
     }
     fun clearCommand() {
         fileSearchRequests.invalidate()
+        fileSearchQueryGate.reset()
+        initialHardwareKeyCorrection.clear()
         text = TextFieldValue()
         selectedContact = null
         lockedPrefix = null
@@ -383,26 +426,21 @@ internal fun MagicBox(
         )
     }
 
-    // Physical QWERTY phones keep the real text field focused so OEM long-press symbol
-    // replacement still works. Touch-first phones normally focus an invisible key target;
-    // the Home-keyboard preference focuses the same field without expanding Magic Mode.
+    // Keep collapsed Home armed without focusing a text editor. This lets a physical
+    // keyboard open Magic Mode with its first printable key without giving keyboard apps
+    // an input connection (and therefore a suggestion toolbar) before typing begins.
+    // The Home-keyboard preference still focuses the real field for touch-first devices.
     LaunchedEffect(
         keyboardInputEnabled,
         expanded,
         smsFlow.sentConfirmationVisible,
-        useDirectHardwareInput,
         showKeyboardWhileCollapsed,
     ) {
         if (!keyboardInputEnabled) {
             keyboard?.hide()
             focusManager.clearFocus(force = true)
         } else if (!expanded && !smsFlow.sentConfirmationVisible) {
-            if (useDirectHardwareInput) {
-                while (!textFieldPlaced) withFrameNanos { }
-                withFrameNanos { }
-                focusRequester.requestFocus()
-                keyboard?.hide()
-            } else if (showKeyboardWhileCollapsed) {
+            if (showKeyboardWhileCollapsed) {
                 while (!textFieldPlaced) withFrameNanos { }
                 withFrameNanos { }
                 focusRequester.requestFocus()
@@ -486,6 +524,7 @@ internal fun MagicBox(
                         canSearchContacts = canSearchContacts,
                         contactResults = contactResults,
                         appResults = visibleAppResults,
+                        includeAppShortcuts = store.includeAppShortcutsInDiscovery,
                         showClearMessage = hasMessageDraft,
                         scrollState = magicResultsScroll,
                         onSelectHistory = { query ->
@@ -517,13 +556,15 @@ internal fun MagicBox(
                                 store.addSearchQuery("?${app.label}")
                                 dismiss()
                             } else {
+                                val displayLabel = launcherDiscoveryLabel(app, actions::appLabel)
                                 Toast.makeText(
                                     context,
-                                    context.getString(R.string.launcher_app_unavailable, app.label),
+                                    context.getString(R.string.launcher_app_unavailable, displayLabel),
                                     Toast.LENGTH_LONG,
                                 ).show()
                             }
                         },
+                        onIncludeAppShortcutsChange = store::updateIncludeAppShortcutsInDiscovery,
                         onRequestContacts = {
                             permissionLauncher.launch(Manifest.permission.READ_CONTACTS)
                         },
@@ -554,17 +595,19 @@ internal fun MagicBox(
                 interactionSource = inputSurfaceInteractionSource,
                 onRefocus = { refocus(showSoftwareKeyboard = !useDirectHardwareInput) },
                 onTextChange = { value ->
-                    text = value
-                    if (!expanded && value.text.isNotEmpty()) {
+                    val correctedValue = initialHardwareKeyCorrection.correct(value)
+                    text = correctedValue
+                    if (!expanded && correctedValue.text.isNotEmpty()) {
                         expanded = true
                         onExpandedChange(true)
                     }
-                    if (!noteMode && lockedPrefix == null && value.text.firstOrNull() != prefix) {
+                    if (!noteMode && lockedPrefix == null && correctedValue.text.firstOrNull() != prefix) {
                         selectedContact = null
                     }
                 },
                 onPlaced = { textFieldPlaced = true },
                 onSubmit = ::submit,
+                onHardwareKeyUp = initialHardwareKeyCorrection::onHardwareKeyUp,
                 onClearMessage = ::requestClearMessageDraft,
                 onDeleteNote = {
                     keyboard?.hide()
@@ -581,12 +624,12 @@ internal fun MagicBox(
             CollapsedMagicBar(
                 modifier = collapsedModifier.align(Alignment.BottomCenter),
                 minimumHeight = magicBoxMinimumHeight,
-                useDirectHardwareInput = useDirectHardwareInput,
                 armedFocusRequester = armedFocusRequester,
                 onArmedPlaced = { armedTargetPlaced = true },
-                onPrintableKeyDown = { typedText ->
+                onPrintableKeyDown = { typedText, keyCode ->
                     if (!expanded) {
                         clearCommand()
+                        initialHardwareKeyCorrection.begin(typedText, keyCode)
                         text = TextFieldValue(typedText, selection = TextRange(typedText.length))
                         expanded = true
                         onExpandedChange(true)

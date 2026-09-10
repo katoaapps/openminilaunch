@@ -27,18 +27,24 @@ class MainActivity : ComponentActivity() {
     private val homeRoleLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { }
     private var homeRequestToken by mutableIntStateOf(0)
     private var widgetConfigurationResult: ((Boolean) -> Unit)? = null
+    private lateinit var actions: DeviceActions
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         WindowCompat.setDecorFitsSystemWindows(window, false)
         val store = LauncherStore.get(this)
-        val actions = DeviceActions(this)
+        actions = DeviceActions(this)
         actions.removeLegacyLockAdmin()
         lifecycleScope.launch {
             withContext(Dispatchers.IO) { actions.installedApps() }
             store.migrateLauncherSelections(actions::normalizedLauncherSelectionKey)
         }
         setContent { MiniLaunchApp(store, actions, ::requestHomeRole, homeRequestToken) }
+    }
+
+    override fun onStart() {
+        super.onStart()
+        actions.refreshDynamicLauncherIcons()
     }
 
     override fun onNewIntent(intent: Intent) {

@@ -32,7 +32,6 @@ import android.provider.Settings
 import android.provider.CalendarContract
 import android.provider.Telephony
 import android.telephony.PhoneNumberUtils
-import android.util.LruCache
 import kotlinx.coroutines.flow.StateFlow
 
 class DeviceActions(private val context: Context) {
@@ -117,6 +116,10 @@ class DeviceActions(private val context: Context) {
         launcherShortcutRepository.invalidate()
     }
 
+    fun refreshDynamicLauncherIcons() {
+        launcherAppRepository.refreshDynamicIconsIfDateChanged()
+    }
+
     fun resolveLauncherTarget(selectionKey: String): LauncherAppTarget =
         launcherAppRepository.resolve(selectionKey)
 
@@ -150,6 +153,17 @@ class DeviceActions(private val context: Context) {
     fun launchLauncherSelection(selectionKey: String): Boolean =
         launchLauncherTarget(resolveLauncherSelection(selectionKey))
 
+    fun openLauncherTargetAppInfo(target: LauncherTarget): Boolean {
+        if (launcherAppRepository.openAppDetails(target)) return true
+        if (target.isWorkProfile) return false
+        return start(
+            Intent(
+                Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
+                Uri.parse("package:${target.packageName}"),
+            ),
+        )
+    }
+
     fun openInstalledAppsSettings() = start(Intent(Settings.ACTION_APPLICATION_SETTINGS))
 
     fun openAllApps() = start(Intent(context, AllAppsActivity::class.java))
@@ -163,10 +177,8 @@ class DeviceActions(private val context: Context) {
     }
 
     fun appIcon(packageName: String): Drawable? {
-        iconStateCache.get(packageName)?.let { return it.newDrawable(context.resources) }
         return runCatching { context.packageManager.getApplicationIcon(packageName) }
             .getOrNull()
-            ?.also { drawable -> drawable.constantState?.let { iconStateCache.put(packageName, it) } }
     }
 
     fun launchPackage(packageName: String): Boolean =
@@ -389,10 +401,6 @@ class DeviceActions(private val context: Context) {
             "com.google.android.deskclock",
             "com.android.deskclock",
         )
-
-        // Package icons are reused by search, shortcuts, setup, and Settings.
-        // ConstantState gives each caller a fresh Drawable while keeping decoded icon data cached.
-        val iconStateCache = LruCache<String, Drawable.ConstantState>(96)
 
     }
 }

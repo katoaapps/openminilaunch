@@ -208,5 +208,5 @@ private fun DrawerAppsPicker(
 }
 
 private fun DeviceActions.syncPinnedSelectionsFrom(store: LauncherStore) {
-    syncPinnedLauncherShortcuts(store.shortcutTargets.values + store.drawerTargets)
+    syncPinnedLauncherShortcuts(store.pinnedLauncherSelectionKeys)
 }

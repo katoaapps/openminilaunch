@@ -39,6 +39,7 @@ internal fun MagicInputField(
     focusRequester: FocusRequester,
     onPlaced: () -> Unit,
     onSubmit: () -> Unit,
+    onHardwareKeyUp: (Int) -> Unit,
     modifier: Modifier = Modifier,
     minLines: Int = 1,
     maxLines: Int = 5,
@@ -50,6 +51,9 @@ internal fun MagicInputField(
         modifier = modifier.focusRequester(focusRequester)
             .onGloballyPositioned { onPlaced() }
             .onPreviewKeyEvent { event ->
+                if (event.type == KeyEventType.KeyUp) {
+                    onHardwareKeyUp(event.nativeKeyEvent.keyCode)
+                }
                 if (prefix == '-' && event.key == Key.Enter) {
                     if (event.type == KeyEventType.KeyUp) onSubmit()
                     true
