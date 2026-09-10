@@ -63,19 +63,24 @@ internal object MessagingProviderCatalog {
             bundledIconRes = R.drawable.messaging_provider_beeper,
             documentationUrl = "https://help.beeper.com/en_US/beeper-plus/merge-chats-getting-started-guide",
         ),
-        genericShareProvider(
+        MessagingDraftProvider(
             id = "molly",
             labelRes = R.string.provider_molly,
             packageName = "im.molly.app",
+            kind = MessagingDraftKind.SIGNAL_CONTACT,
+            supportTier = MessagingSupportTier.CONTACT_AND_DRAFT,
             bundledIconRes = R.drawable.messaging_provider_molly,
             storeUrl = "https://molly.im/",
-            documentationUrl = "https://github.com/mollyim/mollyim-android/blob/main/app/src/main/AndroidManifest.xml",
+            documentationUrl = "https://github.com/mollyim/mollyim-android/blob/main/app/src/main/java/org/thoughtcrime/securesms/SystemContactsEntrypointViewModel.kt",
         ),
-        genericShareProvider(
+        MessagingDraftProvider(
             id = "signal",
             labelRes = R.string.provider_signal,
             packageName = "org.thoughtcrime.securesms",
+            kind = MessagingDraftKind.SIGNAL_CONTACT,
+            supportTier = MessagingSupportTier.CONTACT_AND_DRAFT,
             bundledIconRes = R.drawable.messaging_provider_signal,
+            storeUrl = "https://play.google.com/store/apps/details?id=org.thoughtcrime.securesms",
             documentationUrl = "https://github.com/signalapp/Signal-Android/blob/main/app/src/main/AndroidManifest.xml",
         ),
         genericShareProvider(

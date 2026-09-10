@@ -283,11 +283,18 @@ internal fun MagicBoxLegend(activePrefix: Char?, enabled: Boolean = true, onSele
 }
 
 @Composable
-internal fun CommandChip(label: String, color: Color, contentColor: Color, onClear: () -> Unit) {
+internal fun CommandChip(
+    label: String,
+    color: Color,
+    contentColor: Color,
+    leadingContent: (@Composable () -> Unit)? = null,
+    onClear: () -> Unit,
+) {
     InputChip(
         selected = true,
         onClick = onClear,
         label = { Text(label, maxLines = 1) },
+        leadingIcon = leadingContent,
         trailingIcon = { Icon(Icons.Default.Close, stringResource(R.string.clear_command), Modifier.size(Dimens.dp16)) },
         colors = InputChipDefaults.inputChipColors(
             selectedContainerColor = color,
@@ -303,6 +310,7 @@ internal fun SuggestionRow(
     text: String,
     icon: ImageVector? = null,
     leadingContent: (@Composable () -> Unit)? = null,
+    supportingText: String? = null,
     onClick: () -> Unit,
 ) {
     val contentColor = MaterialTheme.colorScheme.onSurface
@@ -315,7 +323,12 @@ internal fun SuggestionRow(
         if (leadingContent != null) leadingContent() else icon?.let {
             Icon(it, null, Modifier.size(Dimens.dp20), tint = contentColor)
         }
-        Text(text, Modifier.padding(start = Dimens.dp10), color = contentColor, maxLines = 1, fontSize = Dimens.sp14)
+        Column(Modifier.padding(start = Dimens.dp10)) {
+            Text(text, color = contentColor, maxLines = 1, fontSize = Dimens.sp14)
+            supportingText?.let {
+                Text(it, color = Muted, maxLines = 2, fontSize = Dimens.sp11)
+            }
+        }
     }
 }
 

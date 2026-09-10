@@ -80,7 +80,7 @@ internal fun rememberMagicSmsFlow(
     fun completeSmsAttempt(draft: MessageDraft) {
         fun openComposerFallback(message: String) {
             val result = actions.openPreferredMessageDraft(
-                draft.contact,
+                draft.recipient,
                 draft.body,
                 preferredPackage = null,
             )
@@ -95,7 +95,7 @@ internal fun rememberMagicSmsFlow(
             ).show()
         }
 
-        when (actions.sendSmsDirect(draft.contact.phone, draft.body)) {
+        when (actions.sendSmsDirect(draft.recipient.address, draft.body)) {
             DirectSmsResult.QUEUED -> {
                 flow.sentConfirmationVisible = true
                 flow.sentConfirmationToken++

@@ -6,7 +6,7 @@ import com.katoaapps.openminilaunch.R
 import com.katoaapps.openminilaunch.features.messaging.MessagingProviderCatalog
 import com.katoaapps.openminilaunch.features.messaging.MessagingProviderOption
 import com.katoaapps.openminilaunch.features.messaging.MessageDraft
-import com.katoaapps.openminilaunch.model.ContactResult
+import com.katoaapps.openminilaunch.model.CommunicationRecipient
 import com.katoaapps.openminilaunch.model.LaunchableApp
 import com.katoaapps.openminilaunch.ui.onboarding.FileSearchScopeDialog
 import com.katoaapps.openminilaunch.ui.settings.AppPickerDialog
@@ -133,22 +133,22 @@ internal fun MagicPickerDialogHost(
 }
 
 @Composable
-internal fun MagicContactDialogHost(
-    callContact: ContactResult?,
+internal fun MagicCommunicationDialogHost(
+    callRecipient: CommunicationRecipient?,
     smsDraft: MessageDraft?,
     assistantActive: Boolean,
-    onCallNow: (ContactResult) -> Unit,
-    onChooseCallingApp: (ContactResult) -> Unit,
+    onCallNow: (CommunicationRecipient) -> Unit,
+    onChooseCallingApp: (CommunicationRecipient) -> Unit,
     onDismissCall: () -> Unit,
     onSendSms: (MessageDraft) -> Unit,
     onChooseMessagingApp: (MessageDraft) -> Unit,
     onDismissSms: () -> Unit,
 ) {
-    callContact?.let { contact ->
+    callRecipient?.let { recipient ->
         CallConfirmationDialog(
-            contact = contact,
-            onCallNow = { onCallNow(contact) },
-            onChooseCallingApp = { onChooseCallingApp(contact) },
+            recipient = recipient,
+            onCallNow = { onCallNow(recipient) },
+            onChooseCallingApp = { onChooseCallingApp(recipient) },
             onDismiss = onDismissCall,
         )
     }

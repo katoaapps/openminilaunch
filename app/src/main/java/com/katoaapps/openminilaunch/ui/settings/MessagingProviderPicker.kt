@@ -3,6 +3,7 @@ package com.katoaapps.openminilaunch.ui.settings
 import com.katoaapps.openminilaunch.R
 import com.katoaapps.openminilaunch.features.messaging.MessagingProviderOption
 import com.katoaapps.openminilaunch.features.messaging.MessagingSupportTier
+import com.katoaapps.openminilaunch.features.messaging.isDraftReady
 import com.katoaapps.openminilaunch.ui.components.AppIcon
 import com.katoaapps.openminilaunch.ui.components.MinkDialogDefaults
 import com.katoaapps.openminilaunch.ui.components.minkDialogWidth
@@ -65,19 +66,12 @@ internal fun MessagingProviderPickerDialog(
     var query by remember { mutableStateOf("") }
     val visibleOptions = remember(options, query, showUnavailable) {
         options.filter { option ->
-            (showUnavailable || option.selectable) &&
+            (showUnavailable || option.installed) &&
                 (query.isBlank() || option.label.contains(query.trim(), ignoreCase = true))
         }
     }
-    val fullSupport = visibleOptions.filter {
-        it.supportTier == MessagingSupportTier.CONTACT_AND_DRAFT
-    }
-    val chooseContact = visibleOptions.filter {
-        it.supportTier == MessagingSupportTier.RECIPIENT_IN_APP
-    }
-    val conditionalSupport = visibleOptions.filter {
-        it.supportTier == MessagingSupportTier.CONDITIONAL
-    }
+    val draftReady = visibleOptions.filter { it.isDraftReady }
+    val otherOptions = visibleOptions.filterNot { it.isDraftReady }
 
     Dialog(onDismissRequest = onDismiss, properties = MinkDialogDefaults.properties) {
         Surface(
@@ -126,20 +120,14 @@ internal fun MessagingProviderPickerDialog(
                         verticalArrangement = Arrangement.spacedBy(Dimens.dp6),
                     ) {
                         providerSection(
-                            title = R.string.messaging_full_support,
-                            options = fullSupport,
+                            title = R.string.messaging_draft_ready,
+                            options = draftReady,
                             selectedProviderId = selectedProviderId,
                             onProvider = onProvider,
                         )
                         providerSection(
-                            title = R.string.messaging_reselect_contact,
-                            options = chooseContact,
-                            selectedProviderId = selectedProviderId,
-                            onProvider = onProvider,
-                        )
-                        providerSection(
-                            title = R.string.messaging_conditional_support,
-                            options = conditionalSupport,
+                            title = R.string.messaging_other_options,
+                            options = otherOptions,
                             selectedProviderId = selectedProviderId,
                             onProvider = onProvider,
                         )
@@ -193,8 +181,8 @@ private fun MessagingProviderRow(
 ) {
     Surface(
         onClick = onClick,
-        enabled = option.selectable,
-        modifier = Modifier.fillMaxWidth().alpha(if (option.selectable) 1f else .42f),
+        enabled = option.installed,
+        modifier = Modifier.fillMaxWidth().alpha(if (option.installed) 1f else .42f),
         shape = RoundedCornerShape(Dimens.dp16),
         color = if (selected) {
             MaterialTheme.colorScheme.primaryContainer
@@ -265,7 +253,12 @@ private fun MessagingProviderIcon(option: MessagingProviderOption) {
 private fun providerSubtitle(option: MessagingProviderOption): String = when {
     option.systemDefault -> stringResource(R.string.messaging_system_default_description)
     !option.installed -> stringResource(R.string.messaging_not_installed)
-    !option.selectable -> stringResource(R.string.messaging_version_not_supported)
+    option.betaCompatibility -> stringResource(R.string.messaging_beta_compatibility)
+    option.supportTier == MessagingSupportTier.CONTACT_AND_DRAFT &&
+        option.supportsRecentChatDrafts ->
+        stringResource(R.string.messaging_contact_and_recent_draft_support)
+    option.supportsRecentChatDrafts ->
+        stringResource(R.string.messaging_recent_draft_support)
     option.supportTier == MessagingSupportTier.RECIPIENT_IN_APP ->
         stringResource(R.string.messaging_body_only_support)
     option.supportTier == MessagingSupportTier.CONDITIONAL ->

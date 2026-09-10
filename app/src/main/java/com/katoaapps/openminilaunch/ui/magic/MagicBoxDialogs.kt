@@ -22,7 +22,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import com.katoaapps.openminilaunch.R
 import com.katoaapps.openminilaunch.features.messaging.MessageDraft
-import com.katoaapps.openminilaunch.model.ContactResult
+import com.katoaapps.openminilaunch.model.CommunicationRecipient
+import com.katoaapps.openminilaunch.model.looksLikePhoneRecipient
 import com.katoaapps.openminilaunch.ui.components.MinkDialogDefaults
 import com.katoaapps.openminilaunch.ui.components.minkDialogWidth
 import com.katoaapps.openminilaunch.ui.theme.Dimens
@@ -59,18 +60,20 @@ internal fun MagicDiscardDialog(
 
 @Composable
 internal fun CallConfirmationDialog(
-    contact: ContactResult,
+    recipient: CommunicationRecipient,
     onCallNow: () -> Unit,
     onChooseCallingApp: () -> Unit,
     onDismiss: () -> Unit,
 ) {
+    val requiresCallingApp = recipient.userEntered &&
+        !recipient.address.looksLikePhoneRecipient()
     AlertDialog(
         modifier = Modifier.minkDialogWidth(),
         onDismissRequest = onDismiss,
         properties = MinkDialogDefaults.properties,
         icon = { Icon(Icons.Default.Phone, null, tint = MagicCallColor) },
-        title = { Text(stringResource(R.string.call_contact, contact.name)) },
-        text = { Text(stringResource(R.string.phone_type_and_number, contact.phoneLabel, contact.phone)) },
+        title = { Text(stringResource(R.string.call_recipient, recipient.displayName)) },
+        text = { Text(stringResource(R.string.phone_type_and_number, recipient.detail, recipient.address)) },
         confirmButton = {
             Button(
                 onClick = onCallNow,
@@ -78,13 +81,21 @@ internal fun CallConfirmationDialog(
                     containerColor = MagicCallColor,
                     contentColor = MinkWhite,
                 ),
-            ) { Text(stringResource(R.string.call_now)) }
+            ) {
+                Text(
+                    stringResource(
+                        if (requiresCallingApp) R.string.choose_calling_app else R.string.call_now,
+                    ),
+                )
+            }
         },
         dismissButton = {
             Row {
                 TextButton(onClick = onDismiss) { Text(stringResource(R.string.cancel)) }
-                TextButton(onClick = onChooseCallingApp) {
-                    Text(stringResource(R.string.choose_calling_app))
+                if (!requiresCallingApp) {
+                    TextButton(onClick = onChooseCallingApp) {
+                        Text(stringResource(R.string.choose_calling_app))
+                    }
                 }
             }
         },
@@ -104,10 +115,16 @@ internal fun DirectSmsConfirmationDialog(
         onDismissRequest = onDismiss,
         properties = MinkDialogDefaults.properties,
         icon = { Icon(Icons.AutoMirrored.Filled.Send, null, tint = MagicTextColor) },
-        title = { Text(stringResource(R.string.send_message_to_contact, draft.contact.name)) },
+        title = { Text(stringResource(R.string.send_message_to_recipient, draft.recipient.displayName)) },
         text = {
             Column(verticalArrangement = Arrangement.spacedBy(Dimens.dp10)) {
-                Text(stringResource(R.string.phone_type_and_number, draft.contact.phoneLabel, draft.contact.phone))
+                Text(
+                    stringResource(
+                        R.string.phone_type_and_number,
+                        draft.recipient.detail,
+                        draft.recipient.address,
+                    ),
+                )
                 Text(
                     draft.body,
                     Modifier.heightIn(max = Dimens.dp180).verticalScroll(rememberScrollState()),

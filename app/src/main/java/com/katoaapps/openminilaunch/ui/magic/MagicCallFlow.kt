@@ -15,23 +15,24 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.core.content.ContextCompat
 import com.katoaapps.openminilaunch.R
-import com.katoaapps.openminilaunch.model.ContactResult
+import com.katoaapps.openminilaunch.model.CommunicationRecipient
+import com.katoaapps.openminilaunch.model.looksLikePhoneRecipient
 import com.katoaapps.openminilaunch.platform.DeviceActions
 import com.katoaapps.openminilaunch.ui.launcher.isPermanentlyDenied
 import com.katoaapps.openminilaunch.ui.launcher.supportsDirectCalls
 
 @Stable
 internal class MagicCallFlow internal constructor() {
-    var contactToConfirm by mutableStateOf<ContactResult?>(null)
+    var recipientToConfirm by mutableStateOf<CommunicationRecipient?>(null)
         internal set
 
-    internal var pendingPermissionContact: ContactResult? = null
+    internal var pendingPermissionRecipient: CommunicationRecipient? = null
     internal var callNowAction: () -> Unit = {}
     internal var chooseCallingAppAction: () -> Unit = {}
     internal var dismissAction: () -> Unit = {}
 
-    fun requestConfirmation(contact: ContactResult) {
-        contactToConfirm = contact
+    fun requestConfirmation(recipient: CommunicationRecipient) {
+        recipientToConfirm = recipient
     }
 
     fun callNow() = callNowAction()
@@ -51,13 +52,24 @@ internal fun rememberMagicCallFlow(
     val currentOnSessionComplete by rememberUpdatedState(onSessionComplete)
     val flow = remember { MagicCallFlow() }
 
+    fun openCallingApp(recipient: CommunicationRecipient) {
+        if (!actions.chooseCallingApp(recipient.address)) {
+            Toast.makeText(
+                context,
+                context.getString(R.string.no_compatible_calling_app),
+                Toast.LENGTH_LONG,
+            ).show()
+        }
+        currentOnSessionComplete()
+    }
+
     val permissionLauncher = rememberLauncherForActivityResult(
         ActivityResultContracts.RequestPermission(),
     ) { granted ->
-        val contact = flow.pendingPermissionContact
-        flow.pendingPermissionContact = null
-        if (granted && contact != null) {
-            actions.placeCall(contact.phone)
+        val recipient = flow.pendingPermissionRecipient
+        flow.pendingPermissionRecipient = null
+        if (granted && recipient != null) {
+            actions.placeCall(recipient.address)
         } else if (!granted && isPermanentlyDenied(context, Manifest.permission.CALL_PHONE)) {
             actions.openAppSettings()
         }
@@ -65,36 +77,31 @@ internal fun rememberMagicCallFlow(
     }
 
     flow.callNowAction = {
-        flow.contactToConfirm?.let { contact ->
-            flow.contactToConfirm = null
-            if (
+        flow.recipientToConfirm?.let { recipient ->
+            flow.recipientToConfirm = null
+            if (recipient.userEntered && !recipient.address.looksLikePhoneRecipient()) {
+                openCallingApp(recipient)
+            } else if (
                 !supportsDirectCalls(context) ||
                 ContextCompat.checkSelfPermission(context, Manifest.permission.CALL_PHONE) ==
                     PackageManager.PERMISSION_GRANTED
             ) {
-                actions.placeCall(contact.phone)
+                actions.placeCall(recipient.address)
                 currentOnSessionComplete()
             } else {
-                flow.pendingPermissionContact = contact
+                flow.pendingPermissionRecipient = recipient
                 permissionLauncher.launch(Manifest.permission.CALL_PHONE)
             }
         }
     }
     flow.chooseCallingAppAction = {
-        flow.contactToConfirm?.let { contact ->
-            flow.contactToConfirm = null
-            if (!actions.chooseCallingApp(contact.phone)) {
-                Toast.makeText(
-                    context,
-                    context.getString(R.string.no_compatible_calling_app),
-                    Toast.LENGTH_LONG,
-                ).show()
-            }
-            currentOnSessionComplete()
+        flow.recipientToConfirm?.let { recipient ->
+            flow.recipientToConfirm = null
+            openCallingApp(recipient)
         }
     }
     flow.dismissAction = {
-        flow.contactToConfirm = null
+        flow.recipientToConfirm = null
         currentOnSessionComplete()
     }
     return flow

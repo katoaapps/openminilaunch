@@ -9,6 +9,7 @@ import com.katoaapps.openminilaunch.features.conversations.NotificationHub
 import com.katoaapps.openminilaunch.features.magic.normalizedWebUrl
 import com.katoaapps.openminilaunch.features.messaging.MessagingDeviceActions
 import com.katoaapps.openminilaunch.features.messaging.MessagingProviderOption
+import com.katoaapps.openminilaunch.features.messaging.ConversationShortcutDraftResult
 import com.katoaapps.openminilaunch.features.messaging.PreferredMessageDraftResult
 import com.katoaapps.openminilaunch.features.updates.GITHUB_LATEST_APK_URL
 import com.katoaapps.openminilaunch.model.*
@@ -102,6 +103,50 @@ class DeviceActions(private val context: Context) {
     fun installedApps(): List<LauncherAppTarget> = launcherAppRepository.targets()
 
     fun installedShortcuts(): List<LauncherShortcutTarget> = launcherShortcutRepository.targets()
+
+    fun recentConversationShortcuts(
+        sendAutomatically: Boolean,
+        preferredMessagingPackage: String?,
+    ): List<LauncherShortcutTarget> = launcherShortcutRepository.recentConversationTargets(
+        messagingActions.recentConversationPackages(
+            sendAutomatically = sendAutomatically,
+            preferredPackage = preferredMessagingPackage,
+        ),
+    )
+
+    fun canAddressConversationDraft(packageName: String): Boolean =
+        messagingActions.canAddressConversationDraft(packageName)
+
+    fun canDraftToConversationShortcut(shortcut: LauncherShortcutTarget): Boolean =
+        !shortcut.isWorkProfile &&
+            shortcut.isAvailable &&
+            messagingActions.canDraftToConversationShortcut(
+                packageName = shortcut.packageName,
+                shortcutId = shortcut.shortcutId,
+                shortcutCategories = launcherShortcutRepository.categories(shortcut),
+            )
+
+    /**
+     * Tries the provider's Direct Share draft contract first and preserves the existing shortcut
+     * launch as a safe fallback when the installed provider version no longer accepts it.
+     */
+    internal fun openConversationShortcutDraft(
+        shortcut: LauncherShortcutTarget,
+        body: String,
+    ): ConversationShortcutDraftResult {
+        val draftOpened = !shortcut.isWorkProfile && messagingActions.openConversationShortcutDraft(
+            packageName = shortcut.packageName,
+            shortcutId = shortcut.shortcutId,
+            shortcutCategories = launcherShortcutRepository.categories(shortcut),
+            body = body,
+        )
+        return when {
+            draftOpened -> ConversationShortcutDraftResult.DRAFT_OPENED
+            launcherShortcutRepository.launch(shortcut) ->
+                ConversationShortcutDraftResult.CONVERSATION_OPENED
+            else -> ConversationShortcutDraftResult.FAILED
+        }
+    }
 
     fun syncPinnedLauncherShortcuts(selectionKeys: Collection<String>) {
         // A picker can change a saved target while the launcher shortcut query is cached.
@@ -239,12 +284,14 @@ class DeviceActions(private val context: Context) {
 
     fun defaultMessagingAppLabel(): String = messagingActions.defaultMessagingAppLabel()
 
+    fun defaultMessagingPackage(): String? = messagingActions.defaultMessagingPackage()
+
     internal fun openPreferredMessageDraft(
-        contact: ContactResult,
+        recipient: CommunicationRecipient,
         body: String,
         preferredPackage: String?,
     ): PreferredMessageDraftResult = messagingActions.openPreferredMessageDraft(
-        contact = contact,
+        recipient = recipient,
         body = body,
         preferredPackage = preferredPackage,
     )

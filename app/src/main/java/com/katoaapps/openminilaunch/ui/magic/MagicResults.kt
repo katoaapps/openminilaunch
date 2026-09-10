@@ -40,6 +40,7 @@ import com.katoaapps.openminilaunch.features.magic.MAGIC_COMMAND_PREFIXES
 import com.katoaapps.openminilaunch.model.ContactResult
 import com.katoaapps.openminilaunch.model.FileSearchResult
 import com.katoaapps.openminilaunch.model.LauncherTarget
+import com.katoaapps.openminilaunch.model.LauncherShortcutTarget
 import com.katoaapps.openminilaunch.platform.DeviceActions
 import com.katoaapps.openminilaunch.ui.components.LauncherTargetIcon
 import com.katoaapps.openminilaunch.ui.theme.Dimens
@@ -53,6 +54,8 @@ internal fun MagicResultsPanel(
     rawText: String,
     lockedPrefix: Char?,
     prefix: Char?,
+    launcherAppsRevision: Long,
+    launcherShortcutsRevision: Long,
     plainQuery: String,
     fileSearchLoading: Boolean,
     fileResults: List<FileSearchResult>,
@@ -60,6 +63,8 @@ internal fun MagicResultsPanel(
     hasMediaAccess: Boolean,
     canSearchContacts: Boolean,
     contactResults: List<ContactResult>,
+    recentConversations: List<LauncherShortcutTarget>,
+    forcedRecipient: String?,
     appResults: List<LauncherTarget>,
     includeAppShortcuts: Boolean,
     showClearMessage: Boolean,
@@ -71,6 +76,8 @@ internal fun MagicResultsPanel(
     onSubmitWeb: () -> Unit,
     onSubmitAi: () -> Unit,
     onSelectContact: (ContactResult) -> Unit,
+    onSelectRecentConversation: (LauncherShortcutTarget) -> Unit,
+    onSelectForcedRecipient: (String) -> Unit,
     onSelectApp: (LauncherTarget) -> Unit,
     onIncludeAppShortcutsChange: (Boolean) -> Unit,
     onRequestContacts: () -> Unit,
@@ -88,6 +95,8 @@ internal fun MagicResultsPanel(
                 rawText = rawText,
                 lockedPrefix = lockedPrefix,
                 prefix = prefix,
+                launcherAppsRevision = launcherAppsRevision,
+                launcherShortcutsRevision = launcherShortcutsRevision,
                 plainQuery = plainQuery,
                 fileSearchLoading = fileSearchLoading,
                 fileResults = fileResults,
@@ -95,6 +104,8 @@ internal fun MagicResultsPanel(
                 hasMediaAccess = hasMediaAccess,
                 canSearchContacts = canSearchContacts,
                 contactResults = contactResults,
+                recentConversations = recentConversations,
+                forcedRecipient = forcedRecipient,
                 appResults = appResults,
                 includeAppShortcuts = includeAppShortcuts,
                 onSelectHistory = onSelectHistory,
@@ -104,6 +115,8 @@ internal fun MagicResultsPanel(
                 onSubmitWeb = onSubmitWeb,
                 onSubmitAi = onSubmitAi,
                 onSelectContact = onSelectContact,
+                onSelectRecentConversation = onSelectRecentConversation,
+                onSelectForcedRecipient = onSelectForcedRecipient,
                 onSelectApp = onSelectApp,
                 onIncludeAppShortcutsChange = onIncludeAppShortcutsChange,
                 onRequestContacts = onRequestContacts,
@@ -132,6 +145,8 @@ internal fun MagicResultsContent(
     rawText: String,
     lockedPrefix: Char?,
     prefix: Char?,
+    launcherAppsRevision: Long,
+    launcherShortcutsRevision: Long,
     plainQuery: String,
     fileSearchLoading: Boolean,
     fileResults: List<FileSearchResult>,
@@ -139,6 +154,8 @@ internal fun MagicResultsContent(
     hasMediaAccess: Boolean,
     canSearchContacts: Boolean,
     contactResults: List<ContactResult>,
+    recentConversations: List<LauncherShortcutTarget>,
+    forcedRecipient: String?,
     appResults: List<LauncherTarget>,
     includeAppShortcuts: Boolean,
     onSelectHistory: (String) -> Unit,
@@ -148,6 +165,8 @@ internal fun MagicResultsContent(
     onSubmitWeb: () -> Unit,
     onSubmitAi: () -> Unit,
     onSelectContact: (ContactResult) -> Unit,
+    onSelectRecentConversation: (LauncherShortcutTarget) -> Unit,
+    onSelectForcedRecipient: (String) -> Unit,
     onSelectApp: (LauncherTarget) -> Unit,
     onIncludeAppShortcutsChange: (Boolean) -> Unit,
     onRequestContacts: () -> Unit,
@@ -216,11 +235,38 @@ internal fun MagicResultsContent(
             )
         }
     }
+    if (prefix == '@' && contactResults.isNotEmpty()) {
+        MagicResultSectionTitle(stringResource(R.string.contacts))
+    }
     contactResults.forEach { contact ->
         SuggestionRow(
             stringResource(R.string.two_part_label, contact.name, contact.phoneLabel),
             Icons.Default.Person,
         ) { onSelectContact(contact) }
+    }
+    RecentConversationResults(
+        conversations = recentConversations,
+        actions = actions,
+        appsRevision = launcherAppsRevision,
+        shortcutsRevision = launcherShortcutsRevision,
+        onOpen = onSelectRecentConversation,
+    )
+    forcedRecipient?.let { identifier ->
+        val isMessage = prefix == '@'
+        SuggestionRow(
+            text = stringResource(
+                if (isMessage) R.string.try_message_recipient else R.string.try_call_recipient,
+                identifier,
+            ),
+            supportingText = stringResource(
+                if (isMessage) {
+                    R.string.try_message_recipient_beta
+                } else {
+                    R.string.try_call_recipient_beta
+                },
+            ),
+            icon = Icons.Default.Person,
+        ) { onSelectForcedRecipient(identifier) }
     }
     if (prefix == '?') {
         Row(

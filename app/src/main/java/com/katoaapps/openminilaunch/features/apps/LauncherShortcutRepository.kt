@@ -115,10 +115,33 @@ internal class LauncherShortcutRepository private constructor(context: Context) 
         )
     }
 
+    /**
+     * Returns current sharing shortcuts published by the requested messaging apps.
+     *
+     * A non-empty category set distinguishes Android direct-share targets from ordinary launcher
+     * actions such as "New message". Dynamic-only filtering avoids presenting stale cached chats
+     * that the provider no longer considers recent.
+     */
+    fun recentConversationTargets(packageNames: Set<String>): List<LauncherShortcutTarget> {
+        if (packageNames.isEmpty()) return emptyList()
+        val targetsByKey = targets().associateBy(LauncherShortcutTarget::selectionKey)
+        return synchronized(cacheLock) {
+            shortcutCache.mapNotNull { (selectionKey, info) ->
+                val target = targetsByKey[selectionKey] ?: return@mapNotNull null
+                info.asRecentConversationShortcut(target, packageNames)
+            }
+        }.sortedWith(recentConversationShortcutOrder)
+            .map(RecentConversationShortcut::target)
+    }
+
     fun icon(target: LauncherShortcutTarget): Drawable? {
         val info = shortcutInfo(target.selectionKey) ?: return null
         return runCatching { launcherApps?.getShortcutBadgedIconDrawable(info, densityDpi) }.getOrNull()
     }
+
+    /** Categories published with this shortcut, including its Direct Share target category. */
+    fun categories(target: LauncherShortcutTarget): Set<String> =
+        shortcutInfo(target.selectionKey)?.categories.orEmpty()
 
     fun launch(target: LauncherShortcutTarget): Boolean {
         if (!target.isAvailable) return false

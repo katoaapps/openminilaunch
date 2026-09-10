@@ -58,7 +58,6 @@ import androidx.core.content.ContextCompat
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.withContext
 
 @Composable
@@ -96,7 +95,7 @@ internal fun MagicBox(
     val effectiveAppAccessState = appAccessState ?: checkNotNull(localAppAccessState).value
     var text by remember { mutableStateOf(TextFieldValue()) }
     val initialHardwareKeyCorrection = remember { InitialHardwareKeyCorrection() }
-    var selectedContact by remember { mutableStateOf<ContactResult?>(null) }
+    var selectedRecipient by remember { mutableStateOf<SelectedMessageRecipient?>(null) }
     var lockedPrefix by remember { mutableStateOf<Char?>(null) }
     var expanded by remember { mutableStateOf(initiallyExpanded) }
     var showKeyboardWhileCollapsed by remember {
@@ -114,10 +113,6 @@ internal fun MagicBox(
     var showNoteDeleteConfirmation by remember { mutableStateOf(false) }
     var showMessageDiscardConfirmation by remember { mutableStateOf(false) }
     var showCommandDiscardConfirmation by remember { mutableStateOf(false) }
-    var fileResults by remember { mutableStateOf<List<FileSearchResult>>(emptyList()) }
-    var fileSearchLoading by remember { mutableStateOf(false) }
-    val fileSearchRequests = remember { FileSearchRequestTracker() }
-    val fileSearchQueryGate = remember { FileSearchQueryGate() }
     val callFlow = rememberMagicCallFlow(actions, onSessionComplete)
     val smsFlow = rememberMagicSmsFlow(actions, onSessionComplete)
     var aiAppsLoaded by remember { mutableStateOf(false) }
@@ -185,7 +180,7 @@ internal fun MagicBox(
 
     fun openMessagingProvider(draft: MessageDraft, providerPackage: String?) {
         val result = actions.openPreferredMessageDraft(
-            draft.contact,
+            draft.recipient,
             draft.body,
             providerPackage,
         )
@@ -193,7 +188,10 @@ internal fun MagicBox(
             PreferredMessageDraftResult.OPENED -> Unit
             PreferredMessageDraftResult.OPENED_WITH_RECIPIENT_PICKER -> Toast.makeText(
                 context,
-                context.getString(R.string.choose_contact_in_preferred_app, draft.contact.name),
+                context.getString(
+                    R.string.choose_recipient_in_preferred_app,
+                    draft.recipient.displayName,
+                ),
                 Toast.LENGTH_LONG,
             ).show()
             PreferredMessageDraftResult.FALLBACK_OPENED -> Toast.makeText(
@@ -227,9 +225,30 @@ internal fun MagicBox(
     val searchTerm = parsedInput.searchTerm
     val canSearchContacts = hasContacts || store.demoSearchDataEnabled
     val contactResults = remember(prefix, searchTerm, canSearchContacts, store.demoSearchDataEnabled) {
-        if (prefix in listOf('@', '#') && canSearchContacts && selectedContact == null) {
+        if (
+            prefix in listOf('@', '#') &&
+            canSearchContacts &&
+            selectedRecipient == null
+        ) {
             actions.searchContacts(searchTerm, useDemoData = store.demoSearchDataEnabled).take(5)
         } else emptyList()
+    }
+    val recentConversations = rememberRecentConversationResults(
+        prefix = prefix,
+        query = searchTerm,
+        hasSelectedRecipient = selectedRecipient != null,
+        launcherShortcutsRevision = launcherShortcutsRevision,
+        sendAutomatically = store.sendMessagesAutomatically,
+        preferredMessagingPackage = store.preferredMessagingPackage,
+        demoModeEnabled = store.demoSearchDataEnabled,
+        actions = actions,
+    )
+    val visibleRecentConversations = remember(recentConversations, effectiveAppAccessState) {
+        if (effectiveAppAccessState.isResolved) {
+            recentConversations.filterNot(effectiveAppAccessState::isPaused)
+        } else {
+            emptyList()
+        }
     }
     val alwaysVisibleTargetKeys = store.pinnedLauncherSelectionKeys
     val appResults = remember(
@@ -263,55 +282,17 @@ internal fun MagicBox(
     val noteMode = expanded && prefix == MAGIC_NOTE_PREFIX
     val hasTextDraft = expanded && hasMagicBoxDraftText(text.text, lockedPrefix)
     val hasNoteDraft = noteMode && hasTextDraft
-    val hasMessageDraft = expanded && lockedPrefix == '@' && selectedContact != null && text.text.isNotBlank()
-    val indexedFolderUris = store.searchFolders.map { it.uri }
-    LaunchedEffect(plainQuery, indexedFolderUris, hasMediaAccess, store.demoSearchDataEnabled) {
-        val request = fileSearchRequests.begin(plainQuery)
-        val searchScope = FileSearchScope(
-            folderUris = indexedFolderUris,
-            includesMedia = hasMediaAccess,
-            usesDemoData = store.demoSearchDataEnabled,
-        )
-        if (plainQuery.length < 2) {
-            fileSearchQueryGate.reset()
-            fileResults = emptyList()
-            fileSearchLoading = false
-            magicResultsScroll.scrollTo(0)
-        } else if (!searchScope.hasSearchableSources) {
-            fileResults = emptyList()
-            fileSearchLoading = false
-            magicResultsScroll.scrollTo(0)
-        } else if (!fileSearchQueryGate.shouldSearch(plainQuery, searchScope)) {
-            fileResults = emptyList()
-            fileSearchLoading = false
-            magicResultsScroll.scrollTo(0)
-        } else {
-            fileSearchLoading = true
-            try {
-                delay(180)
-                val folders = store.searchFolders.toList()
-                val results = withContext(Dispatchers.IO) {
-                    fileSearchRepository.search(
-                        query = request.query,
-                        folders = folders,
-                        includeMedia = hasMediaAccess,
-                        useDemoData = store.demoSearchDataEnabled,
-                    )
-                }
-                if (fileSearchRequests.isCurrent(request)) {
-                    fileResults = results
-                    fileSearchQueryGate.recordResult(
-                        query = request.query,
-                        scope = searchScope,
-                        hasResults = results.isNotEmpty(),
-                    )
-                    magicResultsScroll.scrollTo(0)
-                }
-            } finally {
-                if (fileSearchRequests.isCurrent(request)) fileSearchLoading = false
-            }
-        }
-    }
+    val hasMessageDraft = expanded &&
+        lockedPrefix == '@' &&
+        selectedRecipient != null &&
+        text.text.isNotBlank()
+    val fileSearchState = rememberMagicFileSearchState(
+        query = plainQuery,
+        store = store,
+        repository = fileSearchRepository,
+        hasMediaAccess = hasMediaAccess,
+        resultsScroll = magicResultsScroll,
+    )
     val actionVisuals = when (prefix) {
         '@' -> MagicActionVisuals(MagicTextColor, Icons.AutoMirrored.Filled.Send)
         '#' -> MagicActionVisuals(MagicCallColor, Icons.Default.Phone)
@@ -330,14 +311,11 @@ internal fun MagicBox(
         else -> MinkWhite
     }
     fun clearCommand() {
-        fileSearchRequests.invalidate()
-        fileSearchQueryGate.reset()
+        fileSearchState.clear()
         initialHardwareKeyCorrection.clear()
         text = TextFieldValue()
-        selectedContact = null
+        selectedRecipient = null
         lockedPrefix = null
-        fileResults = emptyList()
-        fileSearchLoading = false
     }
 
     fun requestClearMessageDraft() {
@@ -394,18 +372,45 @@ internal fun MagicBox(
         }
     }
 
+    fun selectAiApp(app: LaunchableApp) {
+        val query = pendingAiQuery ?: return
+        if (!actions.shareQueryWithApp(query, app.packageName)) return
+
+        store.setPreferredAiApp(app.packageName)
+        store.addSearchQuery(query)
+        showAiPicker = false
+        showAllAiApps = false
+        pendingAiQuery = null
+        dismiss()
+    }
+
+    fun dismissAiPickers() {
+        showAiPicker = false
+        showAllAiApps = false
+        pendingAiQuery = null
+        refocus()
+    }
+
     fun submit() {
         dispatchMagicCommand(
             prefix = prefix,
             lockedPrefix = lockedPrefix,
             rawText = text.text,
-            selectedContact = selectedContact,
+            selectedRecipient = selectedRecipient,
             store = store,
             actions = actions,
             onTodoAdded = onTodoAdded,
             onExternalDraftOpened = { keyboard?.hide() },
             onMessage = { draft, route ->
-                when (route) {
+                val resolvedRoute = resolvedMessageSendRoute(
+                    recipient = draft.recipient,
+                    selectedConversationPackage = draft.conversationPackage,
+                    defaultSmsPackage = actions.defaultMessagingPackage(),
+                    sendAutomatically = store.sendMessagesAutomatically,
+                    preferredPackage = store.preferredMessagingPackage,
+                    fallbackRoute = route,
+                )
+                when (resolvedRoute) {
                     MessagingSendRoute.DIRECT_SMS -> {
                         collapseForDialog()
                         smsFlow.requestDirect(draft)
@@ -414,13 +419,20 @@ internal fun MagicBox(
                     // in Magic Mode just as note handoffs keep their unsaved text.
                     MessagingSendRoute.PREFERRED_DRAFT -> {
                         keyboard?.hide()
-                        openMessagingProvider(draft, store.preferredMessagingPackage)
+                        openMessagingProvider(
+                            draft,
+                            draft.conversationPackage ?: store.preferredMessagingPackage,
+                        )
                     }
                     MessagingSendRoute.PROVIDER_PICKER -> {
                         keyboard?.hide()
                         pendingMessagingChoice = draft
                     }
                 }
+            },
+            onConversationShortcutMessage = { draft ->
+                keyboard?.hide()
+                handleRecentConversationDraftSend(context, draft, actions) { refocus() }
             },
             onDismiss = ::dismiss,
         )
@@ -516,13 +528,21 @@ internal fun MagicBox(
                         rawText = text.text,
                         lockedPrefix = lockedPrefix,
                         prefix = prefix,
+                        launcherAppsRevision = launcherAppsRevision,
+                        launcherShortcutsRevision = launcherShortcutsRevision,
                         plainQuery = plainQuery,
-                        fileSearchLoading = fileSearchLoading,
-                        fileResults = fileResults,
+                        fileSearchLoading = fileSearchState.loading,
+                        fileResults = fileSearchState.results,
                         fileSearchRepository = fileSearchRepository,
                         hasMediaAccess = hasMediaAccess,
                         canSearchContacts = canSearchContacts,
                         contactResults = contactResults,
+                        recentConversations = visibleRecentConversations,
+                        forcedRecipient = searchTerm.takeIf {
+                            prefix in listOf('@', '#') &&
+                                it.isNotBlank() &&
+                                selectedRecipient == null
+                        },
                         appResults = visibleAppResults,
                         includeAppShortcuts = store.includeAppShortcutsInDiscovery,
                         showClearMessage = hasMessageDraft,
@@ -542,11 +562,57 @@ internal fun MagicBox(
                         onSubmitAi = ::submitAi,
                         onSelectContact = { contact ->
                             if (prefix == '#') {
-                                callFlow.requestConfirmation(contact)
+                                callFlow.requestConfirmation(contact.toCommunicationRecipient())
                                 collapseForDialog()
                             } else {
                                 lockedPrefix = prefix
-                                selectedContact = contact
+                                selectedRecipient = SelectedMessageRecipient.AddressRecipient(
+                                    contact.toCommunicationRecipient(),
+                                )
+                                text = TextFieldValue()
+                                refocus()
+                            }
+                        },
+                        onSelectRecentConversation = { conversation ->
+                            handleRecentConversationTap(
+                                context = context,
+                                shortcut = conversation,
+                                canSearchContacts = canSearchContacts,
+                                actions = actions,
+                                onShortcutDraft = { shortcut ->
+                                    lockedPrefix = '@'
+                                    selectedRecipient =
+                                        SelectedMessageRecipient.ConversationRecipient(shortcut)
+                                    text = TextFieldValue()
+                                    refocus()
+                                },
+                                onDraftRecipient = { contact, packageName ->
+                                    lockedPrefix = '@'
+                                    selectedRecipient = SelectedMessageRecipient.AddressRecipient(
+                                        recipient = contact.toCommunicationRecipient(),
+                                        providerPackage = packageName,
+                                    )
+                                    text = TextFieldValue()
+                                    refocus()
+                                },
+                                onDirectOpen = ::dismiss,
+                            )
+                        },
+                        onSelectForcedRecipient = { identifier ->
+                            val recipient = userEnteredRecipient(identifier)
+                            if (prefix == '#') {
+                                callFlow.requestConfirmation(recipient)
+                                collapseForDialog()
+                            } else {
+                                lockedPrefix = '@'
+                                selectedRecipient = SelectedMessageRecipient.AddressRecipient(
+                                    recipient = recipient,
+                                    providerPackage = automaticMessagingPackage(
+                                        sendAutomatically = store.sendMessagesAutomatically,
+                                        preferredPackage = store.preferredMessagingPackage,
+                                        defaultMessagingPackage = actions.defaultMessagingPackage(),
+                                    ),
+                                )
                                 text = TextFieldValue()
                                 refocus()
                             }
@@ -587,7 +653,17 @@ internal fun MagicBox(
             MagicEditorSurface(
                 noteMode = noteMode,
                 text = text,
-                selectedContact = selectedContact,
+                selectedRecipientLabel = selectedRecipient?.label,
+                selectedRecipientDetail = selectedRecipient?.detail(actions::appLabel),
+                selectedRecipientLeadingIcon = selectedRecipient?.providerPackage?.let { packageName ->
+                    {
+                        DrawableIcon(
+                            drawable = actions.appIcon(packageName),
+                            iconKey = "selected-conversation:$packageName:$launcherAppsRevision",
+                            size = Dimens.dp18,
+                        )
+                    }
+                },
                 prefix = prefix,
                 actionVisuals = actionVisuals,
                 actionContentColor = actionContentColor,
@@ -602,7 +678,7 @@ internal fun MagicBox(
                         onExpandedChange(true)
                     }
                     if (!noteMode && lockedPrefix == null && correctedValue.text.firstOrNull() != prefix) {
-                        selectedContact = null
+                        selectedRecipient = null
                     }
                 },
                 onPlaced = { textFieldPlaced = true },
@@ -724,40 +800,14 @@ internal fun MagicBox(
             showAiPicker = false
             showAllAiApps = true
         },
-        onCuratedAiApp = { app ->
-            val query = pendingAiQuery
-            if (query != null && actions.shareQueryWithApp(query, app.packageName)) {
-                store.setPreferredAiApp(app.packageName)
-                store.addSearchQuery(query)
-                showAiPicker = false
-                pendingAiQuery = null
-                dismiss()
-            }
-        },
-        onDismissCuratedAi = {
-            showAiPicker = false
-            pendingAiQuery = null
-            refocus()
-        },
-        onAllAiApp = { app ->
-            val query = pendingAiQuery
-            if (query != null && actions.shareQueryWithApp(query, app.packageName)) {
-                store.setPreferredAiApp(app.packageName)
-                store.addSearchQuery(query)
-                showAllAiApps = false
-                pendingAiQuery = null
-                dismiss()
-            }
-        },
-        onDismissAllAi = {
-            showAllAiApps = false
-            pendingAiQuery = null
-            refocus()
-        },
+        onCuratedAiApp = ::selectAiApp,
+        onDismissCuratedAi = ::dismissAiPickers,
+        onAllAiApp = ::selectAiApp,
+        onDismissAllAi = ::dismissAiPickers,
     )
 
-    MagicContactDialogHost(
-        callContact = callFlow.contactToConfirm,
+    MagicCommunicationDialogHost(
+        callRecipient = callFlow.recipientToConfirm,
         smsDraft = smsFlow.draftToConfirm,
         assistantActive = actions.isAssistantRoleHeld(),
         onCallNow = { callFlow.callNow() },

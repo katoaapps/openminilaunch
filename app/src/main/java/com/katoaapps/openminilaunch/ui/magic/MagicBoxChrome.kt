@@ -50,7 +50,6 @@ import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.zIndex
 import com.katoaapps.openminilaunch.R
 import com.katoaapps.openminilaunch.features.magic.printableHardwareText
-import com.katoaapps.openminilaunch.model.ContactResult
 import com.katoaapps.openminilaunch.ui.theme.Dimens
 import com.katoaapps.openminilaunch.ui.theme.Muted
 
@@ -58,7 +57,9 @@ import com.katoaapps.openminilaunch.ui.theme.Muted
 internal fun MagicEditorSurface(
     noteMode: Boolean,
     text: TextFieldValue,
-    selectedContact: ContactResult?,
+    selectedRecipientLabel: String?,
+    selectedRecipientDetail: String? = null,
+    selectedRecipientLeadingIcon: (@Composable () -> Unit)? = null,
     prefix: Char?,
     actionVisuals: MagicActionVisuals,
     actionContentColor: Color,
@@ -92,11 +93,16 @@ internal fun MagicEditorSurface(
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 if (!noteMode) {
-                    selectedContact?.let { contact ->
+                    selectedRecipientLabel?.let { recipientLabel ->
                         CommandChip(
-                            stringResource(R.string.two_part_label, contact.name, contact.phoneLabel),
+                            stringResource(
+                                R.string.two_part_label,
+                                recipientLabel,
+                                selectedRecipientDetail.orEmpty(),
+                            ),
                             actionVisuals.color,
                             actionContentColor,
+                            leadingContent = selectedRecipientLeadingIcon,
                             onClear = onClearMessage,
                         )
                     }

@@ -3,9 +3,9 @@ package com.katoaapps.openminilaunch.ui.magic
 import com.katoaapps.openminilaunch.data.LauncherStore
 import com.katoaapps.openminilaunch.features.magic.MAGIC_NOTE_PREFIX
 import com.katoaapps.openminilaunch.features.messaging.MessageDraft
+import com.katoaapps.openminilaunch.features.messaging.ConversationShortcutDraft
 import com.katoaapps.openminilaunch.features.messaging.MessagingSendRoute
 import com.katoaapps.openminilaunch.features.messaging.messagingSendRoute
-import com.katoaapps.openminilaunch.model.ContactResult
 import com.katoaapps.openminilaunch.platform.DeviceActions
 
 /** Executes a parsed Magic Box command while the composable owns UI handoff state. */
@@ -13,12 +13,13 @@ internal fun dispatchMagicCommand(
     prefix: Char?,
     lockedPrefix: Char?,
     rawText: String,
-    selectedContact: ContactResult?,
+    selectedRecipient: SelectedMessageRecipient?,
     store: LauncherStore,
     actions: DeviceActions,
     onTodoAdded: (String) -> Unit,
     onExternalDraftOpened: () -> Unit,
     onMessage: (MessageDraft, MessagingSendRoute) -> Unit,
+    onConversationShortcutMessage: (ConversationShortcutDraft) -> Unit = {},
     onDismiss: () -> Unit,
 ) {
     val payload = if (lockedPrefix != null) rawText.trim() else rawText.drop(1).trim()
@@ -34,16 +35,33 @@ internal fun dispatchMagicCommand(
             keepDraftAfterExternalHandoff = opened
         }
         '+' -> payload.isNotBlank() && actions.createEvent(payload)
-        '@' -> (selectedContact != null && payload.isNotBlank()).also { ready ->
+        '@' -> (selectedRecipient != null && payload.isNotBlank()).also { ready ->
             if (ready) {
-                val draft = MessageDraft(checkNotNull(selectedContact), payload)
-                onMessage(
-                    draft,
-                    messagingSendRoute(
-                        sendAutomatically = store.sendMessagesAutomatically,
-                        preferredPackage = store.preferredMessagingPackage,
-                    ),
-                )
+                when (val recipient = checkNotNull(selectedRecipient)) {
+                    is SelectedMessageRecipient.ConversationRecipient -> {
+                        onConversationShortcutMessage(
+                            ConversationShortcutDraft(recipient.conversationShortcut, payload),
+                        )
+                    }
+                    is SelectedMessageRecipient.AddressRecipient -> {
+                        val draft = MessageDraft(
+                            recipient = recipient.recipient,
+                            body = payload,
+                            conversationPackage = recipient.providerPackage,
+                        )
+                        onMessage(
+                            draft,
+                            if (recipient.providerPackage != null) {
+                                MessagingSendRoute.PREFERRED_DRAFT
+                            } else {
+                                messagingSendRoute(
+                                    sendAutomatically = store.sendMessagesAutomatically,
+                                    preferredPackage = store.preferredMessagingPackage,
+                                )
+                            },
+                        )
+                    }
+                }
             }
         }
         '#', '?' -> false

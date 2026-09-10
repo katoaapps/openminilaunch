@@ -1,6 +1,7 @@
 package com.katoaapps.openminilaunch.features.messaging
 
-import com.katoaapps.openminilaunch.model.ContactResult
+import com.katoaapps.openminilaunch.model.CommunicationRecipient
+import com.katoaapps.openminilaunch.model.LauncherShortcutTarget
 
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
@@ -19,31 +20,12 @@ internal enum class MessagingSendRoute {
     PROVIDER_PICKER,
 }
 
-/**
- * "Automatically" means skipping Mink's provider picker. Only System Messages can send in the
- * background. Every other integrated provider still opens its own draft composer.
- */
-internal fun messagingSendRoute(
-    sendAutomatically: Boolean,
-    preferredPackage: String?,
-): MessagingSendRoute = when {
-    !sendAutomatically -> MessagingSendRoute.PROVIDER_PICKER
-    preferredPackage.isNullOrBlank() -> MessagingSendRoute.DIRECT_SMS
-    else -> MessagingSendRoute.PREFERRED_DRAFT
-}
-
-/** Maps settings saved by older releases into the current two-control messaging model. */
-internal fun restoredAutomaticMessageSend(saved: Boolean?, legacyMode: String?): Boolean =
-    saved ?: when (legacyMode) {
-        "DIRECT_SMS", "PREFERRED_APP", "DEFAULT_MESSENGER", "MESSAGING_APP" -> true
-        else -> false
-    }
-
 /** The Android or provider-owned contract used to prepare a message draft. */
 internal enum class MessagingDraftKind {
     WHATSAPP,
     TELEGRAM,
     LINE,
+    SIGNAL_CONTACT,
     SMS_URI,
     GENERIC_SHARE,
 }
@@ -84,9 +66,14 @@ internal data class MessagingProviderOption(
     val supportTier: MessagingSupportTier,
     @param:DrawableRes val bundledIconRes: Int?,
     val installed: Boolean,
-    val selectable: Boolean,
     val systemDefault: Boolean = false,
+    val supportsRecentChatDrafts: Boolean = false,
+    /** Installed, but Mink could not pre-verify this provider's current draft route. */
+    val betaCompatibility: Boolean = false,
 )
+
+internal val MessagingProviderOption.isDraftReady: Boolean
+    get() = supportTier == MessagingSupportTier.CONTACT_AND_DRAFT || supportsRecentChatDrafts
 
 internal enum class PreferredMessageDraftResult {
     OPENED,
@@ -95,17 +82,22 @@ internal enum class PreferredMessageDraftResult {
     FAILED,
 }
 
-/** Contact and body retained by Magic Mode until a direct send or provider draft is complete. */
+internal enum class ConversationShortcutDraftResult {
+    DRAFT_OPENED,
+    CONVERSATION_OPENED,
+    FAILED,
+}
+
+/** Recipient and body retained by Magic Mode until a direct send or provider draft is complete. */
 internal data class MessageDraft(
-    val contact: ContactResult,
+    val recipient: CommunicationRecipient,
     val body: String,
+    /** Explicit app selected through a recent conversation; null keeps normal message settings. */
+    val conversationPackage: String? = null,
 )
 
-internal fun defaultMessageDraftResult(
-    integratedPackage: String?,
-    opened: Boolean,
-): PreferredMessageDraftResult = when {
-    !opened -> PreferredMessageDraftResult.FAILED
-    integratedPackage.isNullOrBlank() -> PreferredMessageDraftResult.OPENED
-    else -> PreferredMessageDraftResult.FALLBACK_OPENED
-}
+/** A provider-published conversation selected before the user types the message body. */
+internal data class ConversationShortcutDraft(
+    val shortcut: LauncherShortcutTarget,
+    val body: String,
+)

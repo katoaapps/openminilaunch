@@ -151,7 +151,7 @@ internal fun SettingsScreen(
         if (messagingProviders.loaded && savedPackage != null) {
             val savedProviderId = MessagingProviderCatalog.providerForPackage(savedPackage)?.id
             val installedVariant = messagingProviders.options.firstOrNull {
-                it.id == savedProviderId && it.selectable
+                it.id == savedProviderId && it.installed
             }
             // Preferences store the concrete package so handoffs remain explicit. If an official
             // alternate build replaces it, migrate to that installed package without changing the

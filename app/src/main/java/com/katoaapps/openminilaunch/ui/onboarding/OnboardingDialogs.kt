@@ -12,13 +12,13 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.AddToHomeScreen
-import androidx.compose.material.icons.filled.Bolt
+import androidx.compose.material.icons.automirrored.filled.Send
+import androidx.compose.material.icons.filled.Chat
+import androidx.compose.material.icons.filled.ContactPhone
 import androidx.compose.material.icons.filled.Folder
 import androidx.compose.material.icons.filled.FolderOpen
 import androidx.compose.material.icons.filled.Pets
-import androidx.compose.material.icons.filled.Tune
-import androidx.compose.material.icons.filled.Work
+import androidx.compose.material.icons.filled.Security
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
@@ -57,14 +57,15 @@ internal fun FeatureUpdateDialog(
                 verticalArrangement = Arrangement.spacedBy(Dimens.dp14),
             ) {
                 Text(
-                    stringResource(R.string.update_notice_136_title),
+                    stringResource(R.string.update_notice_conversation_drafts_heading),
                     fontSize = Dimens.sp18,
                     fontWeight = FontWeight.Bold,
                 )
-                UpdatePoint(Icons.Default.Work, stringResource(R.string.update_notice_work_profiles_title), stringResource(R.string.update_notice_work_profiles_description))
-                UpdatePoint(Icons.Default.Bolt, stringResource(R.string.update_notice_app_shortcuts_title), stringResource(R.string.update_notice_app_shortcuts_description))
-                UpdatePoint(Icons.AutoMirrored.Filled.AddToHomeScreen, stringResource(R.string.update_notice_pin_shortcuts_title), stringResource(R.string.update_notice_pin_shortcuts_description))
-                UpdatePoint(Icons.Default.Tune, stringResource(R.string.update_notice_reachability_title), stringResource(R.string.update_notice_reachability_description))
+                UpdatePoint(Icons.Default.Chat, stringResource(R.string.update_notice_conversation_drafts_title), stringResource(R.string.update_notice_conversation_drafts_description))
+                UpdatePoint(Icons.Default.ContactPhone, stringResource(R.string.update_notice_forced_recipient_title), stringResource(R.string.update_notice_forced_recipient_description))
+                UpdatePoint(Icons.AutoMirrored.Filled.Send, stringResource(R.string.update_notice_signal_drafts_title), stringResource(R.string.update_notice_signal_drafts_description))
+                UpdatePoint(Icons.Default.Security, stringResource(R.string.update_notice_message_fallback_title), stringResource(R.string.update_notice_message_fallback_description))
+                UpdatePoint(Icons.Default.ContactPhone, stringResource(R.string.update_notice_local_conversations_title), stringResource(R.string.update_notice_local_conversations_description))
                 TextButton(onClick = onReviewTutorial, contentPadding = PaddingValues(Dimens.dp0)) {
                     Text(stringResource(R.string.review_updated_tutorial))
                 }
