@@ -66,6 +66,41 @@ internal class LauncherSelectionStore(private val persistence: LauncherStorePers
         persistence.saveShortcutOrder(shortcutOrder)
     }
 
+    fun replaceFromBackup(
+        restoredTargets: Map<Shortcut, String>,
+        restoredOrder: List<Shortcut>,
+        restoredConfirmedChoices: List<Shortcut>,
+        restoredDrawerTargets: List<String>,
+        restoredLibraryTargets: List<String>,
+    ) {
+        shortcutTargets.clear()
+        shortcutTargets.putAll(
+            restoredTargets.filter { (shortcut, target) ->
+                shortcut in configurableShortcuts && target.isNotBlank()
+            },
+        )
+
+        shortcutOrder.clear()
+        shortcutOrder.addAll(
+            restoredOrder.takeIf { it.size == Shortcut.entries.size && it.toSet() == Shortcut.entries.toSet() }
+                ?: Shortcut.entries,
+        )
+
+        confirmedShortcutChoices.clear()
+        confirmedShortcutChoices.addAll(
+            restoredConfirmedChoices.filter { it in configurableShortcuts }.distinct(),
+        )
+
+        drawerTargets.clear()
+        drawerTargets.addAll(restoredDrawerTargets.filter(String::isNotBlank).distinct().take(MAX_DRAWER_APPS))
+
+        libraryShortcutTargets.clear()
+        libraryShortcutTargets.addAll(restoredLibraryTargets.filter(String::isNotBlank).distinct())
+
+        saveSelections()
+        persistence.saveShortcutOrder(shortcutOrder)
+    }
+
     fun toggleDrawerApp(targetKey: String) {
         if (targetKey in drawerTargets) drawerTargets.remove(targetKey)
         else if (drawerTargets.size < MAX_DRAWER_APPS) drawerTargets += targetKey

@@ -14,6 +14,7 @@ internal enum class SettingsDestination {
     MESSAGING,
     FILE_SEARCH,
     MINK_DAY,
+    BACKUP_RESTORE,
     PERMISSIONS,
     ABOUT,
 }
@@ -52,6 +53,7 @@ internal fun settingsPathTo(destination: SettingsDestination): List<SettingsDest
     SettingsDestination.MINK_ASSISTANT,
     SettingsDestination.MESSAGING,
     SettingsDestination.MINK_DAY,
+    SettingsDestination.BACKUP_RESTORE,
     SettingsDestination.PERMISSIONS,
     SettingsDestination.ABOUT -> listOf(SettingsDestination.OVERVIEW, destination)
 }

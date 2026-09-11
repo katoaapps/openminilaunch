@@ -74,7 +74,7 @@ import com.katoaapps.openminilaunch.ui.wellbeing.MinkDayScreen
 import com.katoaapps.openminilaunch.ui.widgets.WidgetPage
 import kotlinx.coroutines.launch
 
-private const val FEATURE_UPDATE_ID = "conversation_shortcut_drafts_v1"
+private const val FEATURE_UPDATE_ID = "portable_backup_and_ai_catalog_v1"
 private const val MINK_DAY_PAGE = 0
 private const val HOME_PAGE = 1
 private const val WIDGET_PAGE = 2
@@ -380,9 +380,10 @@ internal fun MiniLaunchApp(
         }
         if (showUpdateNotice && !showTutorial) {
             FeatureUpdateDialog(
-                onOpenSettings = {
+                onOpenBackup = {
                     store.markUpdateSeen(FEATURE_UPDATE_ID)
                     showUpdateNotice = false
+                    settingsDestination = SettingsDestination.BACKUP_RESTORE
                     screen = Screen.SETTINGS
                 },
                 onReviewTutorial = {

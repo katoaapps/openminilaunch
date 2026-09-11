@@ -54,6 +54,20 @@ internal class TodoStore(
         save()
     }
 
+    fun replaceFromBackup(backupItems: List<TodoItem>) {
+        val usedIds = mutableSetOf<String>()
+        val restored = backupItems.mapNotNull { item ->
+            val text = item.text.trim()
+            if (text.isEmpty()) return@mapNotNull null
+            val id = item.id.takeIf { it.isNotBlank() && usedIds.add(it) }
+                ?: UUID.randomUUID().toString().also(usedIds::add)
+            TodoItem(id = id, text = text, completed = item.completed)
+        }
+        items.clear()
+        items.addAll(unfinishedFirst(restored))
+        persistence.saveTodos(items)
+    }
+
     private fun update(id: String, transform: (TodoItem) -> TodoItem) {
         val index = items.indexOfFirst { it.id == id }
         if (index < 0) return

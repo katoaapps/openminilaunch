@@ -1,5 +1,6 @@
 package com.katoaapps.openminilaunch.ui.settings
 
+import com.katoaapps.openminilaunch.features.ai.AiProviderOption
 import com.katoaapps.openminilaunch.features.messaging.MessagingProviderOption
 import com.katoaapps.openminilaunch.model.LaunchableApp
 import com.katoaapps.openminilaunch.model.LauncherAppTarget
@@ -33,5 +34,10 @@ internal data class LauncherShortcutListLoadState(
 
 internal data class MessagingProviderLoadState(
     val options: List<MessagingProviderOption> = emptyList(),
+    val loaded: Boolean = false,
+)
+
+internal data class AiProviderLoadState(
+    val options: List<AiProviderOption> = emptyList(),
     val loaded: Boolean = false,
 )

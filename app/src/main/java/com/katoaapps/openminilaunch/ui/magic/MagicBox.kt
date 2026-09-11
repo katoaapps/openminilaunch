@@ -9,6 +9,7 @@ import com.katoaapps.openminilaunch.platform.*
 import com.katoaapps.openminilaunch.features.apps.launcherLibraryTargets
 import com.katoaapps.openminilaunch.features.apps.launcherDiscoveryLabel
 import com.katoaapps.openminilaunch.features.apps.launcherDiscoveryMatches
+import com.katoaapps.openminilaunch.features.ai.*
 import com.katoaapps.openminilaunch.features.calendar.*
 import com.katoaapps.openminilaunch.features.conversations.*
 import com.katoaapps.openminilaunch.features.files.*
@@ -115,15 +116,29 @@ internal fun MagicBox(
     var showCommandDiscardConfirmation by remember { mutableStateOf(false) }
     val callFlow = rememberMagicCallFlow(actions, onSessionComplete)
     val smsFlow = rememberMagicSmsFlow(actions, onSessionComplete)
-    var aiAppsLoaded by remember { mutableStateOf(false) }
-    val curatedAiApps by produceState<List<LaunchableApp>>(initialValue = emptyList()) {
-        value = withContext(Dispatchers.IO) { actions.curatedAiApps() }
-        aiAppsLoaded = true
+    var aiProvidersLoaded by remember { mutableStateOf(false) }
+    val aiProviders by produceState<List<AiProviderOption>>(
+        initialValue = emptyList(),
+        key1 = showAiPicker,
+        key2 = launcherAppsRevision,
+    ) {
+        if (showAiPicker) {
+            aiProvidersLoaded = false
+            value = withContext(Dispatchers.IO) { actions.aiProviderOptions() }
+            aiProvidersLoaded = true
+        }
     }
     var allAiAppsLoaded by remember { mutableStateOf(false) }
-    val allAiApps by produceState<List<LaunchableApp>>(initialValue = emptyList()) {
-        value = withContext(Dispatchers.IO) { actions.textShareApps() }
-        allAiAppsLoaded = true
+    val allAiApps by produceState<List<LaunchableApp>>(
+        initialValue = emptyList(),
+        key1 = showAllAiApps,
+        key2 = launcherAppsRevision,
+    ) {
+        if (showAllAiApps) {
+            allAiAppsLoaded = false
+            value = withContext(Dispatchers.IO) { actions.compatibleAiApps() }
+            allAiAppsLoaded = true
+        }
     }
     val messagingProviders by produceState(
         initialValue = MessagingOptionsLoadState(),
@@ -357,31 +372,56 @@ internal fun MagicBox(
         onExpandedChange(false)
     }
 
+    fun completeAiHandoff(
+        query: String,
+        packageName: String,
+        result: AiHandoffResult,
+    ) {
+        if (result == AiHandoffResult.COPIED_AND_OPENED) {
+            Toast.makeText(
+                context,
+                context.getString(
+                    R.string.ai_query_copied_paste_in_app,
+                    actions.appLabel(packageName),
+                ),
+                Toast.LENGTH_LONG,
+            ).show()
+        }
+        store.addSearchQuery(query)
+        dismiss()
+    }
+
     fun submitAi() {
         val query = plainQuery
         if (query.isBlank()) return
         val preferredPackage = store.preferredAiPackage
-        if (!preferredPackage.isNullOrBlank() && actions.shareQueryWithApp(query, preferredPackage)) {
-            store.addSearchQuery(query)
-            dismiss()
-        } else {
-            if (!preferredPackage.isNullOrBlank()) store.resetPreferredAiApp()
-            pendingAiQuery = query
-            showAiPicker = true
-            keyboard?.hide()
+        if (!preferredPackage.isNullOrBlank()) {
+            val result = actions.handoffQueryToAiApp(query, preferredPackage)
+            if (result.succeeded) {
+                completeAiHandoff(query, preferredPackage, result)
+                return
+            }
+            store.resetPreferredAiApp()
         }
+        pendingAiQuery = query
+        showAiPicker = true
+        keyboard?.hide()
     }
 
-    fun selectAiApp(app: LaunchableApp) {
+    fun selectAiPackage(packageName: String) {
         val query = pendingAiQuery ?: return
-        if (!actions.shareQueryWithApp(query, app.packageName)) return
+        val result = actions.handoffQueryToAiApp(query, packageName)
+        if (!result.succeeded) return
 
-        store.setPreferredAiApp(app.packageName)
-        store.addSearchQuery(query)
+        store.setPreferredAiApp(packageName)
         showAiPicker = false
         showAllAiApps = false
         pendingAiQuery = null
-        dismiss()
+        completeAiHandoff(query, packageName, result)
+    }
+
+    fun selectAiApp(app: LaunchableApp) {
+        selectAiPackage(app.packageName)
     }
 
     fun dismissAiPickers() {
@@ -776,8 +816,8 @@ internal fun MagicBox(
         preferredMessagingPackage = store.preferredMessagingPackage,
         showAiPicker = showAiPicker,
         showAllAiApps = showAllAiApps,
-        curatedAiApps = curatedAiApps,
-        curatedAiAppsLoaded = aiAppsLoaded,
+        aiProviders = aiProviders,
+        aiProvidersLoaded = aiProvidersLoaded,
         allAiApps = allAiApps,
         allAiAppsLoaded = allAiAppsLoaded,
         preferredAiPackage = store.preferredAiPackage,
@@ -800,7 +840,10 @@ internal fun MagicBox(
             showAiPicker = false
             showAllAiApps = true
         },
-        onCuratedAiApp = ::selectAiApp,
+        onAiProvider = { option ->
+            option.installedPackageName?.let(::selectAiPackage)
+        },
+        onInstallAiProvider = { actions.openAiProviderInstallPage(it) },
         onDismissCuratedAi = ::dismissAiPickers,
         onAllAiApp = ::selectAiApp,
         onDismissAllAi = ::dismissAiPickers,

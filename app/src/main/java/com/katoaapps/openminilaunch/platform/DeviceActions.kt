@@ -2,6 +2,10 @@ package com.katoaapps.openminilaunch.platform
 
 import com.katoaapps.openminilaunch.R
 import com.katoaapps.openminilaunch.features.calendar.parseCalendarPhrase
+import com.katoaapps.openminilaunch.features.ai.AiHandoffMode
+import com.katoaapps.openminilaunch.features.ai.AiHandoffResult
+import com.katoaapps.openminilaunch.features.ai.AiProviderCatalog
+import com.katoaapps.openminilaunch.features.ai.AiProviderOption
 import com.katoaapps.openminilaunch.features.apps.LauncherAppRepository
 import com.katoaapps.openminilaunch.features.apps.LauncherShortcutRepository
 import com.katoaapps.openminilaunch.features.apps.LegacyLauncherShortcutRepository
@@ -19,6 +23,8 @@ import android.Manifest
 import android.provider.AlarmClock
 import android.content.Context
 import android.content.ComponentName
+import android.content.ClipData
+import android.content.ClipboardManager
 import android.content.Intent
 import android.app.admin.DevicePolicyManager
 import android.app.role.RoleManager
@@ -320,23 +326,52 @@ class DeviceActions(private val context: Context) {
         return hasHandler(intent) && start(intent, chooser = true)
     }
 
-    fun textShareApps(): List<LaunchableApp> {
-        return shareTargetDiscovery.textShareApps()
+    fun compatibleAiApps(): List<LaunchableApp> {
+        return shareTargetDiscovery.compatibleAiApps()
     }
 
-    fun curatedAiApps(): List<LaunchableApp> {
-        return shareTargetDiscovery.curatedAiApps()
+    internal fun aiProviderOptions(): List<AiProviderOption> {
+        return shareTargetDiscovery.aiProviderOptions()
     }
+
+    internal fun openAiProviderInstallPage(option: AiProviderOption): Boolean =
+        start(Intent(Intent.ACTION_VIEW, Uri.parse(option.installUrl)))
 
     fun webSearchApps(): List<LaunchableApp> {
         return shareTargetDiscovery.webSearchApps()
     }
 
-    fun shareQueryWithApp(query: String, packageName: String): Boolean {
+    internal fun handoffQueryToAiApp(query: String, packageName: String): AiHandoffResult {
+        val cleanQuery = query.trim()
+        if (cleanQuery.isEmpty()) return AiHandoffResult.FAILED
+        return when (AiProviderCatalog.handoffMode(packageName)) {
+            AiHandoffMode.TEXT_SHARE -> shareQueryWithApp(cleanQuery, packageName)
+            AiHandoffMode.COPY_AND_LAUNCH -> copyQueryAndLaunchApp(cleanQuery, packageName)
+        }
+    }
+
+    private fun shareQueryWithApp(query: String, packageName: String): AiHandoffResult {
         val intent = Intent(Intent.ACTION_SEND).setType("text/plain")
-            .putExtra(Intent.EXTRA_TEXT, query.trim())
+            .putExtra(Intent.EXTRA_TEXT, query)
             .setPackage(packageName)
-        return canResolve(intent) && start(intent)
+        return if (canResolve(intent) && start(intent)) {
+            AiHandoffResult.SHARED
+        } else {
+            AiHandoffResult.FAILED
+        }
+    }
+
+    private fun copyQueryAndLaunchApp(query: String, packageName: String): AiHandoffResult {
+        val launchIntent = context.packageManager.getLaunchIntentForPackage(packageName)
+            ?: return AiHandoffResult.FAILED
+        val clipboard = context.getSystemService(ClipboardManager::class.java)
+            ?: return AiHandoffResult.FAILED
+        if (!start(launchIntent)) return AiHandoffResult.FAILED
+
+        clipboard.setPrimaryClip(
+            ClipData.newPlainText(context.getString(R.string.ai_query_clipboard_label), query),
+        )
+        return AiHandoffResult.COPIED_AND_OPENED
     }
 
     fun shareText(text: String) = start(

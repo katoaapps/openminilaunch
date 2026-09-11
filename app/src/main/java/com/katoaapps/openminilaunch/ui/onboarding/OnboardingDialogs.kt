@@ -12,9 +12,8 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.Send
-import androidx.compose.material.icons.filled.Chat
-import androidx.compose.material.icons.filled.ContactPhone
+import androidx.compose.material.icons.filled.AutoAwesome
+import androidx.compose.material.icons.filled.FileUpload
 import androidx.compose.material.icons.filled.Folder
 import androidx.compose.material.icons.filled.FolderOpen
 import androidx.compose.material.icons.filled.Pets
@@ -41,7 +40,7 @@ import com.katoaapps.openminilaunch.ui.theme.Rust
 
 @Composable
 internal fun FeatureUpdateDialog(
-    onOpenSettings: () -> Unit,
+    onOpenBackup: () -> Unit,
     onReviewTutorial: () -> Unit,
     onNotNow: () -> Unit,
 ) {
@@ -57,21 +56,19 @@ internal fun FeatureUpdateDialog(
                 verticalArrangement = Arrangement.spacedBy(Dimens.dp14),
             ) {
                 Text(
-                    stringResource(R.string.update_notice_conversation_drafts_heading),
+                    stringResource(R.string.update_notice_backup_heading),
                     fontSize = Dimens.sp18,
                     fontWeight = FontWeight.Bold,
                 )
-                UpdatePoint(Icons.Default.Chat, stringResource(R.string.update_notice_conversation_drafts_title), stringResource(R.string.update_notice_conversation_drafts_description))
-                UpdatePoint(Icons.Default.ContactPhone, stringResource(R.string.update_notice_forced_recipient_title), stringResource(R.string.update_notice_forced_recipient_description))
-                UpdatePoint(Icons.AutoMirrored.Filled.Send, stringResource(R.string.update_notice_signal_drafts_title), stringResource(R.string.update_notice_signal_drafts_description))
-                UpdatePoint(Icons.Default.Security, stringResource(R.string.update_notice_message_fallback_title), stringResource(R.string.update_notice_message_fallback_description))
-                UpdatePoint(Icons.Default.ContactPhone, stringResource(R.string.update_notice_local_conversations_title), stringResource(R.string.update_notice_local_conversations_description))
+                UpdatePoint(Icons.Default.FileUpload, stringResource(R.string.update_notice_backup_title), stringResource(R.string.update_notice_backup_description))
+                UpdatePoint(Icons.Default.Security, stringResource(R.string.update_notice_backup_boundaries_title), stringResource(R.string.update_notice_backup_boundaries_description))
+                UpdatePoint(Icons.Default.AutoAwesome, stringResource(R.string.update_notice_ai_catalog_title), stringResource(R.string.update_notice_ai_catalog_description))
                 TextButton(onClick = onReviewTutorial, contentPadding = PaddingValues(Dimens.dp0)) {
                     Text(stringResource(R.string.review_updated_tutorial))
                 }
             }
         },
-        confirmButton = { Button(onClick = onOpenSettings) { Text(stringResource(R.string.open_settings)) } },
+        confirmButton = { Button(onClick = onOpenBackup) { Text(stringResource(R.string.open_backup_settings)) } },
         dismissButton = { TextButton(onClick = onNotNow) { Text(stringResource(R.string.not_now)) } },
     )
 }

@@ -95,6 +95,10 @@ internal fun SettingsDestinationContent(
             onOpenPermissions = { onNavigate(SettingsDestination.PERMISSIONS) },
             goBack = onNavigateBack,
         )
+        SettingsDestination.BACKUP_RESTORE -> BackupRestoreSettingsPage(
+            store = store,
+            goBack = onNavigateBack,
+        )
         SettingsDestination.PERMISSIONS -> PermissionsSettingsPage(
             state = permissionState,
             actions = permissionActions,

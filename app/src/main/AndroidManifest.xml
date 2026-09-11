@@ -53,6 +53,8 @@
         <package android:name="com.deepseek.chat" />
         <package android:name="com.facebook.stella" />
         <package android:name="com.google.android.apps.bard" />
+        <package android:name="me.proton.android.lumo" />
+        <package android:name="me.proton.lumo" />
         <package android:name="com.beeper.android" />
         <package android:name="im.molly.app" />
         <package android:name="com.samsung.android.app.notes" />

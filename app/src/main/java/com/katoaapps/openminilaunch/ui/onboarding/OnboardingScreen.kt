@@ -5,6 +5,7 @@ package com.katoaapps.openminilaunch.ui.onboarding
 import com.katoaapps.openminilaunch.data.*
 import com.katoaapps.openminilaunch.model.*
 import com.katoaapps.openminilaunch.platform.*
+import com.katoaapps.openminilaunch.features.ai.AiProviderOption
 import com.katoaapps.openminilaunch.features.magic.*
 import com.katoaapps.openminilaunch.features.messaging.MessagingProviderOption
 import com.katoaapps.openminilaunch.features.messaging.MessagingProviderCatalog
@@ -15,6 +16,7 @@ import com.katoaapps.openminilaunch.ui.launcher.displayLabel
 import com.katoaapps.openminilaunch.ui.launcher.displaySlotLabel
 import com.katoaapps.openminilaunch.ui.theme.*
 import com.katoaapps.openminilaunch.R
+import com.katoaapps.openminilaunch.ui.settings.AiProviderPickerDialog
 import com.katoaapps.openminilaunch.ui.settings.AppPickerDialog
 import com.katoaapps.openminilaunch.ui.settings.MessagingProviderPickerDialog
 
@@ -54,24 +56,33 @@ import kotlinx.coroutines.withContext
 @Composable
 internal fun OnboardingScreen(store: LauncherStore, actions: DeviceActions, onFinish: () -> Unit) {
     val appName = stringResource(R.string.app_name)
+    val launcherAppsRevision by actions.launcherAppsRevision.collectAsState()
     var page by rememberSaveable { mutableIntStateOf(0) }
     var pickingAi by remember { mutableStateOf(false) }
     var pickingAllAi by remember { mutableStateOf(false) }
     var pickingMessaging by remember { mutableStateOf(false) }
     var messagingOptions by remember { mutableStateOf<List<MessagingProviderOption>>(emptyList()) }
     var messagingOptionsLoaded by remember { mutableStateOf(false) }
-    var aiAppsLoaded by remember { mutableStateOf(false) }
-    val curatedAiApps by produceState<List<LaunchableApp>>(initialValue = emptyList()) {
-        value = withContext(Dispatchers.IO) { actions.curatedAiApps() }
-        aiAppsLoaded = true
+    var aiProvidersLoaded by remember { mutableStateOf(false) }
+    val aiProviders by produceState<List<AiProviderOption>>(
+        initialValue = emptyList(),
+        key1 = launcherAppsRevision,
+    ) {
+        aiProvidersLoaded = false
+        value = withContext(Dispatchers.IO) { actions.aiProviderOptions() }
+        aiProvidersLoaded = true
     }
     var allAiAppsLoaded by remember { mutableStateOf(false) }
     var assistantRoleHeld by remember { mutableStateOf(actions.isAssistantRoleHeld()) }
     val assistantRoleSettings = rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) {
         assistantRoleHeld = actions.isAssistantRoleHeld()
     }
-    val allAiApps by produceState<List<LaunchableApp>>(initialValue = emptyList()) {
-        value = withContext(Dispatchers.IO) { actions.textShareApps() }
+    val allAiApps by produceState<List<LaunchableApp>>(
+        initialValue = emptyList(),
+        key1 = launcherAppsRevision,
+    ) {
+        allAiAppsLoaded = false
+        value = withContext(Dispatchers.IO) { actions.compatibleAiApps() }
         allAiAppsLoaded = true
     }
     LaunchedEffect(pickingMessaging) {
@@ -88,6 +99,7 @@ internal fun OnboardingScreen(store: LauncherStore, actions: DeviceActions, onFi
         stringResource(R.string.onboarding_page_assistant),
         stringResource(R.string.onboarding_page_mink_day),
         stringResource(R.string.onboarding_page_spaces),
+        stringResource(R.string.onboarding_page_backup),
         stringResource(R.string.onboarding_page_permissions),
     )
     val icons = listOf(
@@ -98,6 +110,7 @@ internal fun OnboardingScreen(store: LauncherStore, actions: DeviceActions, onFi
         Icons.Default.Assistant,
         Icons.Default.Pets,
         Icons.Default.Widgets,
+        Icons.Default.ImportExport,
         Icons.Default.Security,
     )
     BackHandler {
@@ -275,6 +288,13 @@ internal fun OnboardingScreen(store: LauncherStore, actions: DeviceActions, onFi
                             OnboardingPoint(Icons.Default.DragIndicator, stringResource(R.string.arrange_grid), stringResource(R.string.arrange_grid_description))
                             OnboardingPoint(Icons.Default.PrivacyTip, stringResource(R.string.active_and_local), stringResource(R.string.active_and_local_description, appName))
                         }
+                        7 -> Column(verticalArrangement = Arrangement.spacedBy(Dimens.dp18)) {
+                            Text(stringResource(R.string.backup_onboarding_intro), fontSize = Dimens.sp18)
+                            OnboardingPoint(Icons.Default.FileUpload, stringResource(R.string.backup_before_switching), stringResource(R.string.backup_before_switching_description))
+                            OnboardingPoint(Icons.Default.Checklist, stringResource(R.string.backup_keeps_yours), stringResource(R.string.backup_keeps_yours_description))
+                            OnboardingPoint(Icons.Default.Security, stringResource(R.string.android_access_stays_separate), stringResource(R.string.android_access_stays_separate_description))
+                            OnboardingPoint(Icons.Default.FolderOpen, stringResource(R.string.backup_file_stays_local), stringResource(R.string.backup_file_stays_local_description))
+                        }
                         else -> Column(verticalArrangement = Arrangement.spacedBy(Dimens.dp18)) {
                             Text(stringResource(R.string.permissions_onboarding_intro, appName), fontSize = Dimens.sp18)
                             Row(
@@ -335,15 +355,18 @@ internal fun OnboardingScreen(store: LauncherStore, actions: DeviceActions, onFi
         }
     }
     if (pickingAi) {
-        AppPickerDialog(
+        AiProviderPickerDialog(
             title = stringResource(R.string.choose_ai_app_title),
-            apps = curatedAiApps,
-            selected = setOfNotNull(store.preferredAiPackage),
-            loading = !aiAppsLoaded,
-            emptyMessage = stringResource(R.string.no_curated_ai_apps_short),
-            extraActionLabel = stringResource(R.string.other_compatible_app),
-            onExtraAction = { pickingAi = false; pickingAllAi = true },
-            onApp = { store.setPreferredAiApp(it.packageName); pickingAi = false },
+            options = aiProviders,
+            selectedPackage = store.preferredAiPackage,
+            loading = !aiProvidersLoaded,
+            showUnavailable = true,
+            onProvider = { option ->
+                option.installedPackageName?.let(store::setPreferredAiApp)
+                pickingAi = false
+            },
+            onInstall = { actions.openAiProviderInstallPage(it) },
+            onSeeAllApps = { pickingAi = false; pickingAllAi = true },
             onReset = { store.resetPreferredAiApp(); pickingAi = false },
             resetLabel = stringResource(R.string.choose_on_first_use),
             onDismiss = { pickingAi = false },

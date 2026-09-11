@@ -2,7 +2,7 @@
 
 A focused, keyboard-first Android home-screen launcher and digital assistant built with Kotlin and Jetpack Compose.
 
-Current version: **Open 1.3.6** (`1.3.6`). Feature releases show existing users a one-time in-app update notice covering new behavior, privacy impact, and any optional permissions; the onboarding tutorial is updated alongside each release.
+Current version: **Open 1.5.2** (`1.5.2`). Feature releases show existing users a one-time in-app update notice covering new behavior, privacy impact, and any optional permissions; the onboarding tutorial is updated alongside each release.
 
 ## Download
 
@@ -96,9 +96,10 @@ the existing app first and clears MinkLauncher OpenSource's local data.
 - Mink Assistant deliberately ignores assist context and requests no microphone, call-log, screen-reading, or screen-context access; selecting it replaces the current default digital assistant until the user changes it back
 - The five most recent successful query handoffs and `?` app launches are stored locally, with controls to reuse, delete, or clear them; other hot-key actions are never added
 - Direct calling uses Android's Call permission; emergency numbers and failed direct-call attempts fall back to the system dialer. **Choose calling app** sends the number through Android’s dial intent, so only apps that publicly support telephone dialing appear.
-- AI setup shows a curated list of known assistants plus an explicit fallback list of apps accepting shared text
-- Android exposes the selected system assistant role, but not a universal "AI app" capability; MinkLauncher OpenSource therefore validates every selected app against the text-sharing contract
+- AI setup includes a visible catalog of Mink-reviewed providers: ChatGPT, Claude, Perplexity, Microsoft Copilot, DeepSeek, Meta AI, Google Gemini, and Lumo. Installed providers use their Android label and icon; unavailable providers use bundled identification artwork and link to the provider's own website instead of assuming Google Play is the only installation source. An explicit fallback list also exposes other installed apps accepting shared text.
+- Android exposes the selected system assistant role, but not a universal "AI app" capability. Most AI handoffs therefore use Android's `ACTION_SEND` text-sharing contract. Lumo's Play and no-GMS builds do not expose that contract, so Mink clearly labels them as copy-and-paste providers: tapping AI copies the query to Android's system clipboard and opens Lumo for the user to paste it manually.
 - AI handoff does not call AI APIs, submit prompts silently, or render responses inside MinkLauncher OpenSource
+- A versioned local JSON backup can move portable settings, launcher layout, app choices, icon preferences, Mink’s Day configuration, and to-dos between F-Droid and GitHub installs. Android permissions and roles, accessibility or notification access, widgets, and document-folder grants are deliberately excluded and must be configured again.
 - Full to-do management: add, check, edit, delete, reorder, send to a notes app, or save as PDF through Android’s document picker
 - Delete confirmation to protect against accidental taps and back-swipe gestures
 - Animated Magic Box to-do delivery into the newest widget page

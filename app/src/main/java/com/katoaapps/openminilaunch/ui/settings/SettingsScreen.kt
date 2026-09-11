@@ -72,18 +72,28 @@ internal fun SettingsScreen(
             )
         }
     }
-    val curatedAiApps by produceState(AppListLoadState(), picker, appListRefresh) {
+    val aiProviders by produceState(
+        AiProviderLoadState(),
+        picker,
+        appListRefresh,
+        launcherAppsRevision,
+    ) {
         if (picker == SettingsPicker.CuratedAiApp) {
-            value = AppListLoadState(
-                apps = withContext(Dispatchers.IO) { actions.curatedAiApps() },
+            value = AiProviderLoadState(
+                options = withContext(Dispatchers.IO) { actions.aiProviderOptions() },
                 loaded = true,
             )
         }
     }
-    val allAiApps by produceState(AppListLoadState(), picker, appListRefresh) {
+    val allAiApps by produceState(
+        AppListLoadState(),
+        picker,
+        appListRefresh,
+        launcherAppsRevision,
+    ) {
         if (picker == SettingsPicker.CompatibleAiApp) {
             value = AppListLoadState(
-                apps = withContext(Dispatchers.IO) { actions.textShareApps() },
+                apps = withContext(Dispatchers.IO) { actions.compatibleAiApps() },
                 loaded = true,
             )
         }
@@ -239,7 +249,7 @@ internal fun SettingsScreen(
         context = context,
         installedApps = installedApps,
         installedShortcuts = installedShortcuts,
-        curatedAiApps = curatedAiApps,
+        aiProviders = aiProviders,
         allAiApps = allAiApps,
         webApps = webApps,
         messagingProviders = messagingProviders,

@@ -5,10 +5,12 @@ import androidx.compose.ui.res.stringResource
 import com.katoaapps.openminilaunch.R
 import com.katoaapps.openminilaunch.features.messaging.MessagingProviderCatalog
 import com.katoaapps.openminilaunch.features.messaging.MessagingProviderOption
+import com.katoaapps.openminilaunch.features.ai.AiProviderOption
 import com.katoaapps.openminilaunch.features.messaging.MessageDraft
 import com.katoaapps.openminilaunch.model.CommunicationRecipient
 import com.katoaapps.openminilaunch.model.LaunchableApp
 import com.katoaapps.openminilaunch.ui.onboarding.FileSearchScopeDialog
+import com.katoaapps.openminilaunch.ui.settings.AiProviderPickerDialog
 import com.katoaapps.openminilaunch.ui.settings.AppPickerDialog
 import com.katoaapps.openminilaunch.ui.settings.AssistantDisclosureDialog
 import com.katoaapps.openminilaunch.ui.settings.MessagingProviderPickerDialog
@@ -78,8 +80,8 @@ internal fun MagicPickerDialogHost(
     preferredMessagingPackage: String?,
     showAiPicker: Boolean,
     showAllAiApps: Boolean,
-    curatedAiApps: List<LaunchableApp>,
-    curatedAiAppsLoaded: Boolean,
+    aiProviders: List<AiProviderOption>,
+    aiProvidersLoaded: Boolean,
     allAiApps: List<LaunchableApp>,
     allAiAppsLoaded: Boolean,
     preferredAiPackage: String?,
@@ -87,7 +89,8 @@ internal fun MagicPickerDialogHost(
     onSeeAllMessagingApps: (MessageDraft) -> Unit,
     onDismissMessaging: () -> Unit,
     onSeeAllAiApps: () -> Unit,
-    onCuratedAiApp: (LaunchableApp) -> Unit,
+    onAiProvider: (AiProviderOption) -> Unit,
+    onInstallAiProvider: (AiProviderOption) -> Unit,
     onDismissCuratedAi: () -> Unit,
     onAllAiApp: (LaunchableApp) -> Unit,
     onDismissAllAi: () -> Unit,
@@ -107,15 +110,15 @@ internal fun MagicPickerDialogHost(
         )
     }
     if (showAiPicker) {
-        AppPickerDialog(
+        AiProviderPickerDialog(
             title = stringResource(R.string.choose_ai_app),
-            apps = curatedAiApps,
-            selected = setOfNotNull(preferredAiPackage),
-            loading = !curatedAiAppsLoaded,
-            emptyMessage = stringResource(R.string.no_curated_ai_apps),
-            extraActionLabel = stringResource(R.string.other_compatible_app),
-            onExtraAction = onSeeAllAiApps,
-            onApp = onCuratedAiApp,
+            options = aiProviders,
+            selectedPackage = preferredAiPackage,
+            loading = !aiProvidersLoaded,
+            showUnavailable = true,
+            onProvider = onAiProvider,
+            onInstall = onInstallAiProvider,
+            onSeeAllApps = onSeeAllAiApps,
             onDismiss = onDismissCuratedAi,
         )
     }

@@ -14,6 +14,7 @@ import androidx.compose.material.icons.automirrored.filled.Chat
 import androidx.compose.material.icons.filled.Assistant
 import androidx.compose.material.icons.filled.AutoAwesome
 import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.ImportExport
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Pets
 import androidx.compose.material.icons.filled.Security
@@ -75,6 +76,12 @@ internal fun SettingsOverviewPage(
             ),
             icon = Icons.Default.Pets,
         ) { onNavigate(SettingsDestination.MINK_DAY) }
+        SettingsCategoryRow(
+            title = stringResource(R.string.backup_and_restore),
+            subtitle = stringResource(R.string.settings_backup_summary),
+            status = stringResource(R.string.backup_local_file),
+            icon = Icons.Default.ImportExport,
+        ) { onNavigate(SettingsDestination.BACKUP_RESTORE) }
         SettingsCategoryRow(
             title = stringResource(R.string.permissions),
             subtitle = stringResource(R.string.settings_permissions_summary),

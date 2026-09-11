@@ -29,7 +29,7 @@ internal fun SettingsPickerDialogs(
     context: Context,
     installedApps: LauncherAppListLoadState,
     installedShortcuts: LauncherShortcutListLoadState,
-    curatedAiApps: AppListLoadState,
+    aiProviders: AiProviderLoadState,
     allAiApps: AppListLoadState,
     webApps: AppListLoadState,
     messagingProviders: MessagingProviderLoadState,
@@ -53,15 +53,18 @@ internal fun SettingsPickerDialogs(
             installedShortcuts = installedShortcuts,
             onDismiss = { onPickerChange(null) },
         )
-        SettingsPicker.CuratedAiApp -> AppPickerDialog(
+        SettingsPicker.CuratedAiApp -> AiProviderPickerDialog(
             title = stringResource(R.string.choose_ai_app_title),
-            apps = curatedAiApps.apps,
-            selected = setOfNotNull(store.preferredAiPackage),
-            loading = !curatedAiApps.loaded,
-            emptyMessage = stringResource(R.string.no_curated_ai_apps_short),
-            extraActionLabel = stringResource(R.string.other_compatible_app),
-            onExtraAction = { onPickerChange(SettingsPicker.CompatibleAiApp) },
-            onApp = { store.setPreferredAiApp(it.packageName); onPickerChange(null) },
+            options = aiProviders.options,
+            selectedPackage = store.preferredAiPackage,
+            loading = !aiProviders.loaded,
+            showUnavailable = true,
+            onProvider = { option ->
+                option.installedPackageName?.let(store::setPreferredAiApp)
+                onPickerChange(null)
+            },
+            onInstall = { actions.openAiProviderInstallPage(it) },
+            onSeeAllApps = { onPickerChange(SettingsPicker.CompatibleAiApp) },
             onReset = { store.resetPreferredAiApp(); onPickerChange(null) },
             resetLabel = stringResource(R.string.reset_to_chooser),
             onDismiss = { onPickerChange(null) },

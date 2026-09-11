@@ -24,6 +24,7 @@ class LauncherStore private constructor(context: Context) {
     private val demoPreferences: DemoPreferenceStore = DemoPreferenceStore(appContext, prefs, todoStore)
     internal val demoHomeProfile get() = demoPreferences.profile
     val todos get() = todoStore.items
+    internal val savedTodosForBackup get() = persistence.loadTodos()
     /** Stable launcher target keys. Legacy package-only values are migrated after discovery. */
     val shortcutTargets get() = launcherSelections.shortcutTargets
     val shortcutOrder get() = launcherSelections.shortcutOrder
@@ -101,6 +102,10 @@ class LauncherStore private constructor(context: Context) {
 
     fun setTodoOrder(orderedIds: List<String>) = todoStore.setOrder(orderedIds)
 
+    internal fun replaceTodosFromBackup(items: List<TodoItem>) {
+        todoStore.replaceFromBackup(items)
+    }
+
     fun assignShortcut(shortcut: Shortcut, targetKey: String) {
         launcherSelections.assignShortcut(shortcut, targetKey)
     }
@@ -125,6 +130,22 @@ class LauncherStore private constructor(context: Context) {
 
     fun setShortcutOrder(order: List<Shortcut>) {
         launcherSelections.setShortcutOrder(order)
+    }
+
+    internal fun replaceLauncherSelectionsFromBackup(
+        shortcutTargets: Map<Shortcut, String>,
+        shortcutOrder: List<Shortcut>,
+        confirmedShortcutChoices: List<Shortcut>,
+        drawerTargets: List<String>,
+        libraryShortcutTargets: List<String>,
+    ) {
+        launcherSelections.replaceFromBackup(
+            restoredTargets = shortcutTargets,
+            restoredOrder = shortcutOrder,
+            restoredConfirmedChoices = confirmedShortcutChoices,
+            restoredDrawerTargets = drawerTargets,
+            restoredLibraryTargets = libraryShortcutTargets,
+        )
     }
 
     fun toggleDrawerApp(targetKey: String) {

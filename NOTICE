@@ -11,3 +11,8 @@ respective owners.
 Bundled messaging provider icons were obtained from developer-supplied artwork on official Google
 Play listings or, for providers not distributed there, their official source repository. Package
 IDs and source links are recorded in docs/messaging-provider-assets.md.
+
+Third-party AI provider names and app icons are likewise used only to identify reviewed handoff
+targets and do not imply endorsement, sponsorship, or partnership. Installed apps continue to
+supply their own current artwork through Android. Bundled artwork, package IDs, and source links
+are recorded in docs/ai-provider-assets.md.

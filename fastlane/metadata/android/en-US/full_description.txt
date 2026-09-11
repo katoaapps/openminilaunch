@@ -26,6 +26,8 @@ Optional spaces remain one swipe away:
 
 When another app requests Add to Home screen, MinkLauncher can place its shortcut in a Home slot or Top 8. Choose a stable full page or a faster confirmation sheet in Settings. Legacy shortcut requests are also supported for older apps and devices.
 
+Backup & restore exports a versioned local JSON file containing portable launcher settings, layout, app choices, icon preferences, Mink’s Day configuration, and to-dos. This makes it possible to move between F-Droid and GitHub installs. Android-managed permissions, roles, widgets, accessibility and notification access, and document-folder grants must be configured again after reinstalling.
+
 Integrated messaging:
 
 • Choose System Messages or an installed supported messaging app in Settings
@@ -41,6 +43,7 @@ Privacy is a core feature:
 • An optional, twice-daily GitHub release-metadata check shows a clear update card and a persistent Home header icon; GitHub receives normal connection metadata but no launcher content, and the app never downloads or installs APKs
 • Queries, to-dos, settings, conversations, usage analysis, and filename indexing stay on the device
 • Android cloud backup is disabled
+• Portable backups are created only when requested and stay in the location selected through Android’s document picker
 • Notification, Usage, Accessibility, and Assistant special access are optional and explained before Android Settings opens
 • The lock Accessibility Service performs only Android’s Lock screen action and cannot inspect window content
 
