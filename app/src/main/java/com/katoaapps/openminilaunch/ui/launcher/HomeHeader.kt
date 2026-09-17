@@ -4,6 +4,7 @@ import android.widget.Toast
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -73,35 +74,40 @@ internal fun HomeHeader(
                 onClick = onMinkDay,
                 modifier = Modifier.size(actionSize),
             )
-            Column(
-                modifier = Modifier.weight(1f).clickable {
-                    if (actions.openClock()) {
-                        store.markClockOpenedFromDate()
-                    } else {
-                        Toast.makeText(context, R.string.no_clock_app_found, Toast.LENGTH_SHORT).show()
-                    }
-                },
-            ) {
-                Text(
-                    rememberHomeDateTimeText(
-                        datePattern = stringResource(R.string.home_date_pattern),
-                        showClock = store.showClock,
-                        use24HourClock = store.use24HourClock,
-                    ),
-                    color = MaterialTheme.colorScheme.onBackground,
-                    letterSpacing = Dimens.sp1_5,
-                    fontSize = Dimens.sp13,
-                    fontWeight = FontWeight.Bold,
-                    maxLines = 1,
-                )
-                if (!store.hasOpenedClockFromDate) {
+            if (store.showDate || store.showClock) {
+                Column(
+                    modifier = Modifier.weight(1f).clickable {
+                        if (actions.openClock()) {
+                            store.markClockOpenedFromDate()
+                        } else {
+                            Toast.makeText(context, R.string.no_clock_app_found, Toast.LENGTH_SHORT).show()
+                        }
+                    },
+                ) {
                     Text(
-                        stringResource(R.string.tap_for_clock),
-                        color = MaterialTheme.colorScheme.onBackground.copy(alpha = .58f),
-                        fontSize = Dimens.sp9,
+                        rememberHomeDateTimeText(
+                            datePattern = stringResource(R.string.home_date_pattern),
+                            showDate = store.showDate,
+                            showClock = store.showClock,
+                            use24HourClock = store.use24HourClock,
+                        ),
+                        color = MaterialTheme.colorScheme.onBackground,
+                        letterSpacing = Dimens.sp1_5,
+                        fontSize = Dimens.sp13,
+                        fontWeight = FontWeight.Bold,
                         maxLines = 1,
                     )
+                    if (!store.hasOpenedClockFromDate) {
+                        Text(
+                            stringResource(R.string.tap_for_clock),
+                            color = MaterialTheme.colorScheme.onBackground.copy(alpha = .58f),
+                            fontSize = Dimens.sp9,
+                            maxLines = 1,
+                        )
+                    }
                 }
+            } else {
+                Spacer(Modifier.weight(1f))
             }
             if (updateAvailable) {
                 IconButton(onClick = onUpdate, modifier = Modifier.size(actionSize)) {

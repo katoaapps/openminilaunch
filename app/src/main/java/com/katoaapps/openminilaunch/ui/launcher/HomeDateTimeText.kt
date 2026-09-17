@@ -14,6 +14,7 @@ import java.util.Locale
 @Composable
 internal fun rememberHomeDateTimeText(
     datePattern: String,
+    showDate: Boolean,
     showClock: Boolean,
     use24HourClock: Boolean,
 ): String {
@@ -27,6 +28,7 @@ internal fun rememberHomeDateTimeText(
     return formatHomeDateTime(
         dateTime = currentDateTime,
         datePattern = datePattern,
+        showDate = showDate,
         showClock = showClock,
         use24HourClock = use24HourClock,
     )
@@ -35,16 +37,20 @@ internal fun rememberHomeDateTimeText(
 internal fun formatHomeDateTime(
     dateTime: LocalDateTime,
     datePattern: String,
+    showDate: Boolean,
     showClock: Boolean,
     use24HourClock: Boolean,
     locale: Locale = Locale.getDefault(),
 ): String {
-    val date = dateTime.format(DateTimeFormatter.ofPattern(datePattern, locale)).uppercase(locale)
-    if (!showClock) return date
-
+    val date = if (showDate) {
+        dateTime.format(DateTimeFormatter.ofPattern(datePattern, locale)).uppercase(locale)
+    } else {
+        null
+    }
+    if (!showClock) return date.orEmpty()
     val timePattern = if (use24HourClock) "HH:mm" else "h:mm a"
     val time = dateTime.format(DateTimeFormatter.ofPattern(timePattern, locale))
-    return "$date · $time"
+    return date?.let { "$it · $time" } ?: time
 }
 
 private fun millisUntilNextMinute(nowMillis: Long = System.currentTimeMillis()): Long {

@@ -11,6 +11,12 @@ import com.katoaapps.openminilaunch.ui.components.SettingsSwitchRow
 internal fun ClockAppearanceSettings(store: LauncherStore) {
     SectionLabel(stringResource(R.string.date_and_time))
     SettingsSwitchRow(
+        title = stringResource(R.string.show_date),
+        subtitle = stringResource(R.string.show_date_description),
+        checked = store.showDate,
+        onCheckedChange = store::updateShowDate,
+    )
+    SettingsSwitchRow(
         title = stringResource(R.string.show_clock),
         subtitle = stringResource(R.string.show_clock_description),
         checked = store.showClock,

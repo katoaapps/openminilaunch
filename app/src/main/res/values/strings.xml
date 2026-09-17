@@ -6,6 +6,8 @@
     <string name="home_date_pattern">EEE, MMM d</string>
     <string name="date_and_time">Date &amp; time</string>
     <string name="show_clock">Show clock</string>
+    <string name="show_date">Show date</string>
+    <string name="show_date_description">Show the current date in the Home header.</string>
     <string name="show_clock_description">Add the current time to the date on Home.</string>
     <string name="use_24_hour_clock">Use 24-hour time</string>
     <string name="use_24_hour_clock_description">Show 18:30 instead of 6:30 PM.</string>
@@ -680,6 +682,9 @@
     <!-- Home panel color -->
     <string name="home_panel_color">Pill color</string>
     <string name="home_panel_color_description">Changes the large To-do and shortcuts pill.</string>
+    <string name="home_panel_transparency">Pill transparency</string>
+    <string name="home_panel_transparency_value">%1$d%% transparent</string>
+    <string name="home_panel_transparency_description">Let more of the Home background show through while keeping its contents readable.</string>
     <string name="color_forest">Forest</string>
     <string name="color_mink">Mink</string>
     <string name="color_navy">Navy</string>

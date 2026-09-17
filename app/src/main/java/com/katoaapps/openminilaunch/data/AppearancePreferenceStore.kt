@@ -10,6 +10,7 @@ import androidx.compose.runtime.setValue
 import androidx.core.content.ContextCompat
 import com.katoaapps.openminilaunch.R
 import com.katoaapps.openminilaunch.model.ThemePreference
+import com.katoaapps.openminilaunch.model.normalizeHomePanelTransparency
 
 internal class AppearancePreferenceStore(
     context: Context,
@@ -30,12 +31,18 @@ internal class AppearancePreferenceStore(
         private set
     var showClock by mutableStateOf(prefs.getBoolean(SHOW_CLOCK_KEY, false))
         private set
+    var showDate by mutableStateOf(prefs.getBoolean(SHOW_DATE_KEY, true))
+        private set
     var use24HourClock by mutableStateOf(
         prefs.getBoolean(USE_24_HOUR_CLOCK_KEY, DateFormat.is24HourFormat(context)),
     )
         private set
     var homePanelColorArgb by mutableIntStateOf(
         prefs.getInt(HOME_PANEL_COLOR_KEY, ContextCompat.getColor(context, R.color.mink_forest)),
+    )
+        private set
+    var homePanelTransparency by mutableStateOf(
+        normalizeHomePanelTransparency(prefs.getFloat(HOME_PANEL_TRANSPARENCY_KEY, 0f)),
     )
         private set
     var appBackgroundColorArgb by mutableStateOf(
@@ -63,6 +70,11 @@ internal class AppearancePreferenceStore(
         prefs.edit().putBoolean(SHOW_CLOCK_KEY, enabled).apply()
     }
 
+    fun updateShowDate(enabled: Boolean) {
+        showDate = enabled
+        prefs.edit().putBoolean(SHOW_DATE_KEY, enabled).apply()
+    }
+
     fun updateUse24HourClock(enabled: Boolean) {
         use24HourClock = enabled
         prefs.edit().putBoolean(USE_24_HOUR_CLOCK_KEY, enabled).apply()
@@ -71,6 +83,11 @@ internal class AppearancePreferenceStore(
     fun setHomePanelColor(argb: Int) {
         homePanelColorArgb = argb or 0xFF000000.toInt()
         prefs.edit().putInt(HOME_PANEL_COLOR_KEY, homePanelColorArgb).apply()
+    }
+
+    fun updateHomePanelTransparency(transparency: Float) {
+        homePanelTransparency = normalizeHomePanelTransparency(transparency)
+        prefs.edit().putFloat(HOME_PANEL_TRANSPARENCY_KEY, homePanelTransparency).apply()
     }
 
     fun setAppBackgroundColor(argb: Int?) {
@@ -86,7 +103,9 @@ internal class AppearancePreferenceStore(
         const val APP_BACKGROUND_COLOR_KEY = "app_background_color"
         const val HIDE_STATUS_BAR_KEY = "hide_status_bar"
         const val HOME_PANEL_COLOR_KEY = "home_panel_color"
+        const val HOME_PANEL_TRANSPARENCY_KEY = "home_panel_transparency"
         const val SHOW_CLOCK_KEY = "show_clock"
+        const val SHOW_DATE_KEY = "show_date"
         const val THEME_PREFERENCE_KEY = "theme_preference"
         const val USE_24_HOUR_CLOCK_KEY = "use_24_hour_clock"
     }

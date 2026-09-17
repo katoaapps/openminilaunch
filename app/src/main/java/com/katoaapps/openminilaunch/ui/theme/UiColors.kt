@@ -38,6 +38,23 @@ internal fun readableContentColor(background: Color): Color {
     return if (luminance > .55f) ReadableDark else MinkWhite
 }
 
+/** Returns the color perceived when [foreground] is drawn over [background]. */
+internal fun compositeColor(foreground: Color, background: Color): Color {
+    val inverseForegroundAlpha = 1f - foreground.alpha
+    val outputAlpha = foreground.alpha + background.alpha * inverseForegroundAlpha
+    if (outputAlpha == 0f) return Color.Transparent
+    fun channel(foregroundChannel: Float, backgroundChannel: Float): Float =
+        (foregroundChannel * foreground.alpha +
+            backgroundChannel * background.alpha * inverseForegroundAlpha) / outputAlpha
+
+    return Color(
+        red = channel(foreground.red, background.red),
+        green = channel(foreground.green, background.green),
+        blue = channel(foreground.blue, background.blue),
+        alpha = outputAlpha,
+    )
+}
+
 private fun blendColor(start: Color, end: Color, fraction: Float): Color = Color(
     red = start.red + (end.red - start.red) * fraction,
     green = start.green + (end.green - start.green) * fraction,

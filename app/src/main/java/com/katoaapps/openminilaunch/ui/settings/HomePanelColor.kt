@@ -15,6 +15,7 @@ import androidx.compose.foundation.gestures.detectDragGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -35,6 +36,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
+import androidx.compose.material3.Slider
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
@@ -59,6 +61,7 @@ import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.window.Dialog
 import java.util.Locale
+import kotlin.math.roundToInt
 
 internal data class HomePanelColorPreset(@androidx.annotation.StringRes val labelRes: Int, val argb: Int)
 
@@ -72,8 +75,14 @@ internal fun formatHomePanelHex(argb: Int): String =
     String.format(Locale.US, "#%06X", argb and 0x00FFFFFF)
 
 @Composable
-internal fun HomePanelColorSetting(selectedArgb: Int, onColorSelected: (Int) -> Unit) {
+internal fun HomePanelColorSetting(
+    selectedArgb: Int,
+    transparency: Float,
+    onColorSelected: (Int) -> Unit,
+    onTransparencyChanged: (Float) -> Unit,
+) {
     val context = androidx.compose.ui.platform.LocalContext.current
+    var sliderTransparency by remember(transparency) { mutableFloatStateOf(transparency) }
     val presets = listOf(
         HomePanelColorPreset(R.string.color_forest, androidx.core.content.ContextCompat.getColor(context, R.color.mink_forest)),
         HomePanelColorPreset(R.string.color_mink, androidx.core.content.ContextCompat.getColor(context, R.color.home_panel_mink)),
@@ -90,6 +99,36 @@ internal fun HomePanelColorSetting(selectedArgb: Int, onColorSelected: (Int) -> 
         customDescriptionRes = R.string.custom_panel_color_description,
         presets = presets,
         onColorSelected = onColorSelected,
+        extraContent = {
+            Column(verticalArrangement = Arrangement.spacedBy(Dimens.dp5)) {
+                Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
+                    Text(
+                        stringResource(R.string.home_panel_transparency),
+                        fontWeight = FontWeight.Bold,
+                        modifier = Modifier.weight(1f),
+                    )
+                    Text(
+                        stringResource(
+                            R.string.home_panel_transparency_value,
+                            (sliderTransparency * 100).roundToInt(),
+                        ),
+                        color = MaterialTheme.colorScheme.primary,
+                        fontWeight = FontWeight.Black,
+                    )
+                }
+                Slider(
+                    value = sliderTransparency,
+                    onValueChange = { sliderTransparency = it },
+                    onValueChangeFinished = { onTransparencyChanged(sliderTransparency) },
+                    valueRange = 0f..MAX_HOME_PANEL_TRANSPARENCY,
+                )
+                Text(
+                    stringResource(R.string.home_panel_transparency_description),
+                    color = Muted,
+                    fontSize = Dimens.sp12,
+                )
+            }
+        },
     )
 }
 
@@ -130,6 +169,7 @@ internal fun AppearanceColorSetting(
     @androidx.annotation.StringRes customDescriptionRes: Int,
     presets: List<HomePanelColorPreset>,
     onColorSelected: (Int) -> Unit,
+    extraContent: @Composable ColumnScope.() -> Unit = {},
     onUseThemeDefault: (() -> Unit)? = null,
     @androidx.annotation.StringRes defaultValueLabelRes: Int = R.string.theme_background,
     @androidx.annotation.StringRes useDefaultLabelRes: Int = R.string.use_theme_background,
@@ -198,6 +238,7 @@ internal fun AppearanceColorSetting(
                     Modifier.padding(start = Dimens.dp8),
                 )
             }
+            extraContent()
             onUseThemeDefault?.let { useThemeDefault ->
                 TextButton(
                     onClick = useThemeDefault,

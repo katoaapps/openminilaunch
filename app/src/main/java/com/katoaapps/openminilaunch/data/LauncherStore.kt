@@ -48,8 +48,10 @@ class LauncherStore private constructor(context: Context) {
     val hideStatusBar get() = appearancePreferences.hideStatusBar
     val alignHomePanelBottom get() = appearancePreferences.alignHomePanelBottom
     val showClock get() = appearancePreferences.showClock
+    val showDate get() = appearancePreferences.showDate
     val use24HourClock get() = appearancePreferences.use24HourClock
     val homePanelColorArgb get() = appearancePreferences.homePanelColorArgb
+    val homePanelTransparency get() = appearancePreferences.homePanelTransparency
     val appBackgroundColorArgb get() = appearancePreferences.appBackgroundColorArgb
     val iconAppearance get() = iconAppearancePreferences.appearance
     val sendMessagesAutomatically get() = messagingPreferences.sendMessagesAutomatically
@@ -246,6 +248,10 @@ class LauncherStore private constructor(context: Context) {
         appearancePreferences.updateShowClock(enabled)
     }
 
+    fun updateShowDate(enabled: Boolean) {
+        appearancePreferences.updateShowDate(enabled)
+    }
+
     fun updateUse24HourClock(enabled: Boolean) {
         appearancePreferences.updateUse24HourClock(enabled)
     }
@@ -254,6 +260,10 @@ class LauncherStore private constructor(context: Context) {
         val opaqueArgb = argb or 0xFF000000.toInt()
         if (demoPreferences.setPanelColor(opaqueArgb)) return
         appearancePreferences.setHomePanelColor(opaqueArgb)
+    }
+
+    fun setHomePanelTransparency(transparency: Float) {
+        appearancePreferences.updateHomePanelTransparency(transparency)
     }
 
     fun setAppBackgroundColor(argb: Int?) {

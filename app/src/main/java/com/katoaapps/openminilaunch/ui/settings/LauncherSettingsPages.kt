@@ -92,7 +92,12 @@ internal fun AppearanceSettingsPage(
         )
         SectionLabel(stringResource(R.string.visual_style))
         IconPackAppearanceSettings(store, onApplied = onIconStyleApplied)
-        HomePanelColorSetting(store.effectiveHomePanelColorArgb, store::setHomePanelColor)
+        HomePanelColorSetting(
+            selectedArgb = store.effectiveHomePanelColorArgb,
+            transparency = store.homePanelTransparency,
+            onColorSelected = store::setHomePanelColor,
+            onTransparencyChanged = store::setHomePanelTransparency,
+        )
         AppBackgroundColorSetting(
             selectedArgb = store.effectiveAppBackgroundColorArgb,
             onColorSelected = store::setAppBackgroundColor,

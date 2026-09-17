@@ -35,8 +35,12 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalHapticFeedback
+import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.rememberTextMeasurer
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
@@ -53,6 +57,32 @@ internal fun AppCarouselItem(
     onClick: () -> Unit,
     onLongClick: () -> Unit,
 ) {
+    val labelStyle = TextStyle(
+        fontSize = if (focused) Dimens.sp18 else Dimens.sp14,
+        fontWeight = if (focused) FontWeight.Black else FontWeight.SemiBold,
+        textAlign = TextAlign.Center,
+    )
+    val horizontalLabelPadding = Dimens.dp14
+    val maxFocusedLabelWidth = (LocalConfiguration.current.screenWidthDp.dp - Dimens.dp32)
+        .coerceAtMost(320.dp)
+    val density = LocalDensity.current
+    val textMeasurer = rememberTextMeasurer()
+    val focusedLabel = remember(displayLabel, labelStyle, maxFocusedLabelWidth, density, textMeasurer) {
+        val maxTextWidthPx = with(density) {
+            (maxFocusedLabelWidth - horizontalLabelPadding * 2).roundToPx()
+        }
+        val lines = wrapAppLabelAtWordBoundaries(displayLabel, maxTextWidthPx) { value ->
+            textMeasurer.measure(value, labelStyle, softWrap = false).size.width
+        }
+        val textWidthPx = lines.maxOfOrNull { line ->
+            textMeasurer.measure(line, labelStyle, softWrap = false).size.width
+        } ?: 0
+        val surfaceWidth = with(density) {
+            (textWidthPx.toDp() + horizontalLabelPadding * 2).coerceAtMost(maxFocusedLabelWidth)
+        }
+        WrappedAppLabel(lines.joinToString("\n"), surfaceWidth)
+    }
+
     Column(
         Modifier.fillMaxSize().graphicsLayer {
             scaleX = scale
@@ -77,19 +107,49 @@ internal fun AppCarouselItem(
             color = Color.Black.copy(alpha = if (focused) .52f else .34f),
             contentColor = Color.White,
             shape = RoundedCornerShape(Dimens.dp18),
-            modifier = Modifier.padding(top = Dimens.dp14),
+            modifier = Modifier.padding(top = Dimens.dp14).then(
+                if (focused) Modifier.requiredWidth(focusedLabel.width) else Modifier,
+            ),
         ) {
             Text(
-                displayLabel,
+                if (focused) focusedLabel.text else displayLabel,
                 modifier = Modifier.padding(horizontal = Dimens.dp14, vertical = Dimens.dp7),
-                fontSize = if (focused) Dimens.sp18 else Dimens.sp14,
-                fontWeight = if (focused) FontWeight.Black else FontWeight.SemiBold,
-                textAlign = TextAlign.Center,
-                maxLines = 2,
+                style = labelStyle,
+                softWrap = false,
+                maxLines = if (focused) 2 else 1,
                 overflow = TextOverflow.Ellipsis,
             )
         }
     }
+}
+
+private data class WrappedAppLabel(val text: String, val width: androidx.compose.ui.unit.Dp)
+
+internal fun wrapAppLabelAtWordBoundaries(
+    label: String,
+    maxLineWidthPx: Int,
+    measureWidthPx: (String) -> Int,
+): List<String> {
+    val words = label.trim().split(Regex("\\s+")).filter(String::isNotBlank)
+    if (words.size <= 1) return listOf(label.trim())
+
+    val lines = mutableListOf<String>()
+    var currentLine = ""
+    for (word in words) {
+        val candidate = if (currentLine.isEmpty()) word else "$currentLine $word"
+        if (
+            currentLine.isNotEmpty() &&
+            lines.isEmpty() &&
+            measureWidthPx(candidate) > maxLineWidthPx
+        ) {
+            lines += currentLine
+            currentLine = word
+        } else {
+            currentLine = candidate
+        }
+    }
+    if (currentLine.isNotEmpty()) lines += currentLine
+    return lines.take(2)
 }
 
 @Composable

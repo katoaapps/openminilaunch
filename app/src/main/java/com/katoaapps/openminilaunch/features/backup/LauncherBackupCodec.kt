@@ -5,6 +5,7 @@ import com.katoaapps.openminilaunch.model.IconSource
 import com.katoaapps.openminilaunch.model.MAX_SOCIAL_GOAL_HOURS
 import com.katoaapps.openminilaunch.model.MIN_SOCIAL_GOAL_HOURS
 import com.katoaapps.openminilaunch.model.MinkAppPauseMode
+import com.katoaapps.openminilaunch.model.normalizeHomePanelTransparency
 import com.katoaapps.openminilaunch.model.PinShortcutRequestPresentation
 import com.katoaapps.openminilaunch.model.Shortcut
 import com.katoaapps.openminilaunch.model.ThemePreference
@@ -90,8 +91,10 @@ internal object LauncherBackupCodec {
             put("hideStatusBar", settings.hideStatusBar)
             put("alignHomePanelBottom", settings.alignHomePanelBottom)
             put("showClock", settings.showClock)
+            put("showDate", settings.showDate)
             put("use24HourClock", settings.use24HourClock)
             put("homePanelColorArgb", settings.homePanelColorArgb)
+            put("homePanelTransparency", settings.homePanelTransparency)
             putNullable("appBackgroundColorArgb", settings.appBackgroundColorArgb)
             put("iconSource", settings.iconAppearance.source.name)
             putNullable("iconPackPackage", settings.iconAppearance.iconPackPackage)
@@ -128,8 +131,12 @@ internal object LauncherBackupCodec {
             hideStatusBar = appearance.optBoolean("hideStatusBar", true),
             alignHomePanelBottom = appearance.optBoolean("alignHomePanelBottom", false),
             showClock = appearance.optBoolean("showClock", false),
+            showDate = appearance.optBoolean("showDate", true),
             use24HourClock = appearance.optBoolean("use24HourClock", false),
             homePanelColorArgb = appearance.optInt("homePanelColorArgb"),
+            homePanelTransparency = normalizeHomePanelTransparency(
+                appearance.optDouble("homePanelTransparency", 0.0).toFloat(),
+            ),
             appBackgroundColorArgb = appearance.optNullableInt("appBackgroundColorArgb"),
             iconAppearance = IconAppearance(
                 source = appearance.enumValue("iconSource", IconSource.MINK),

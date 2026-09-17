@@ -18,8 +18,10 @@ internal fun LauncherStore.createPortableBackup(appVersion: String): LauncherBac
         hideStatusBar = hideStatusBar,
         alignHomePanelBottom = alignHomePanelBottom,
         showClock = showClock,
+        showDate = showDate,
         use24HourClock = use24HourClock,
         homePanelColorArgb = homePanelColorArgb,
+        homePanelTransparency = homePanelTransparency,
         appBackgroundColorArgb = appBackgroundColorArgb,
         iconAppearance = iconAppearance,
         openSoftwareKeyboardOnHome = openSoftwareKeyboardOnHome,
@@ -54,8 +56,10 @@ internal fun LauncherStore.restorePortableBackup(backup: LauncherBackup) {
     updateHideStatusBar(settings.hideStatusBar)
     updateAlignHomePanelBottom(settings.alignHomePanelBottom)
     updateShowClock(settings.showClock)
+    updateShowDate(settings.showDate)
     updateUse24HourClock(settings.use24HourClock)
     setHomePanelColor(settings.homePanelColorArgb)
+    setHomePanelTransparency(settings.homePanelTransparency)
     setAppBackgroundColor(settings.appBackgroundColorArgb)
     when (settings.iconAppearance.source) {
         IconSource.MINK -> useMinkIcons()

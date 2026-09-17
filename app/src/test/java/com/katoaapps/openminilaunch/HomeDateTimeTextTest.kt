@@ -12,21 +12,35 @@ class HomeDateTimeTextTest {
     @Test fun dateRemainsUnchangedWhenClockIsHidden() {
         assertEquals(
             "TUE, SEP 8",
-            formatHomeDateTime(dateTime, "EEE, MMM d", false, false, Locale.US),
+            formatHomeDateTime(dateTime, "EEE, MMM d", true, false, false, Locale.US),
         )
     }
 
     @Test fun twelveHourClockIsAddedToDate() {
         assertEquals(
             "TUE, SEP 8 · 6:30 PM",
-            formatHomeDateTime(dateTime, "EEE, MMM d", true, false, Locale.US),
+            formatHomeDateTime(dateTime, "EEE, MMM d", true, true, false, Locale.US),
         )
     }
 
     @Test fun twentyFourHourClockIsAddedToDate() {
         assertEquals(
             "TUE, SEP 8 · 18:30",
-            formatHomeDateTime(dateTime, "EEE, MMM d", true, true, Locale.US),
+            formatHomeDateTime(dateTime, "EEE, MMM d", true, true, true, Locale.US),
+        )
+    }
+
+    @Test fun clockCanBeShownWithoutDate() {
+        assertEquals(
+            "6:30 PM",
+            formatHomeDateTime(dateTime, "EEE, MMM d", false, true, false, Locale.US),
+        )
+    }
+
+    @Test fun headerTextCanBeHidden() {
+        assertEquals(
+            "",
+            formatHomeDateTime(dateTime, "EEE, MMM d", false, false, false, Locale.US),
         )
     }
 }

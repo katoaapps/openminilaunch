@@ -28,6 +28,7 @@ import com.katoaapps.openminilaunch.features.wellbeing.MinkAppAccessState
 import com.katoaapps.openminilaunch.platform.DeviceActions
 import com.katoaapps.openminilaunch.ui.theme.Dimens
 import com.katoaapps.openminilaunch.ui.theme.readableContentColor
+import com.katoaapps.openminilaunch.ui.theme.compositeColor
 
 @Composable
 internal fun BoxScope.HomeFocusPanel(
@@ -44,8 +45,11 @@ internal fun BoxScope.HomeFocusPanel(
     onOpenDrawer: () -> Unit,
 ) {
     val context = LocalContext.current
-    val panelColor = Color(store.effectiveHomePanelColorArgb)
-    val contentColor = readableContentColor(panelColor)
+    val panelColor = Color(store.effectiveHomePanelColorArgb).copy(
+        alpha = 1f - store.homePanelTransparency,
+    )
+    val visiblePanelColor = compositeColor(panelColor, androidx.compose.material3.MaterialTheme.colorScheme.background)
+    val contentColor = readableContentColor(visiblePanelColor)
     val mutedColor = contentColor.copy(alpha = .68f)
     val insetColor = if (contentColor == com.katoaapps.openminilaunch.ui.theme.MinkWhite) {
         com.katoaapps.openminilaunch.ui.theme.MinkBlack.copy(alpha = .16f)
