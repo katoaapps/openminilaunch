@@ -59,7 +59,8 @@ internal fun MinkDayScreen(store: LauncherStore, isActive: Boolean, goHome: () -
     val usageSettings = rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) { permissionReturnToken++ }
 
     LazyColumn(
-        Modifier.fillMaxSize().statusBarsPadding().navigationBarsPadding(),
+        Modifier.fillMaxSize().background(MaterialTheme.colorScheme.background)
+            .statusBarsPadding().navigationBarsPadding(),
         contentPadding = androidx.compose.foundation.layout.PaddingValues(horizontal = Dimens.dp22, vertical = Dimens.dp12),
         verticalArrangement = Arrangement.spacedBy(Dimens.dp14),
     ) {

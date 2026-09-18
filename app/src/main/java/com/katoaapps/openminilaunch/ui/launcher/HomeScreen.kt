@@ -19,7 +19,6 @@ import com.katoaapps.openminilaunch.ui.wellbeing.rememberMinkAppAccessState
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.gestures.detectVerticalDragGestures
 import androidx.compose.foundation.layout.*
@@ -128,47 +127,47 @@ internal fun HomeScreen(
         val imeBottom = WindowInsets.ime.asPaddingValues().calculateBottomPadding()
         val navigationBottom = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()
         val softInputRowHeight = if (magicExpanded) Dimens.dp0 else (imeBottom - navigationBottom).coerceAtLeast(Dimens.dp0)
-        Column(
-            Modifier.fillMaxSize()
-                .background(MaterialTheme.colorScheme.background)
-                .blur(if (magicExpanded) Dimens.dp10 else Dimens.dp0),
+        Box(
+            Modifier.fillMaxSize().blur(if (magicExpanded) Dimens.dp10 else Dimens.dp0),
         ) {
-            HomeHeader(
-                store = store,
-                actions = actions,
-                minkStatusActive = minkStatusActive,
-                qwertyHome = qwertyHome,
-                horizontalPadding = homeHorizontalPadding,
-                actionSize = headerActionSize,
-                iconSize = headerIconSize,
-                updateAvailable = updateAvailable,
-                onMinkDay = openMinkDay,
-                onUpdate = { showUpdateConfirmation = true },
-                onHub = openHub,
-                openSettings = openSettings,
-            )
-            BoxWithConstraints(
-                Modifier.fillMaxWidth().weight(1f)
-                    .padding(horizontal = homeHorizontalPadding, vertical = if (qwertyHome) Dimens.dp2 else Dimens.dp10),
-            ) {
-                HomeFocusPanel(
+            Column(Modifier.fillMaxSize()) {
+                HomeHeader(
                     store = store,
                     actions = actions,
-                    appAccessState = appAccessState,
+                    minkStatusActive = minkStatusActive,
                     qwertyHome = qwertyHome,
-                    availableHeight = maxHeight,
-                    focusPanelHeight = focusPanelHeight,
-                    todoJumpToken = todoJumpToken,
-                    openTodos = openTodos,
-                    onTodoCenterChanged = { widgetCenter = it },
-                    onPausedApp = { pausedAppPackage = it },
-                    onOpenDrawer = { drawerOpen = true },
+                    horizontalPadding = homeHorizontalPadding,
+                    actionSize = headerActionSize,
+                    iconSize = headerIconSize,
+                    updateAvailable = updateAvailable,
+                    onMinkDay = openMinkDay,
+                    onUpdate = { showUpdateConfirmation = true },
+                    onHub = openHub,
+                    openSettings = openSettings,
+                )
+                BoxWithConstraints(
+                    Modifier.fillMaxWidth().weight(1f)
+                        .padding(horizontal = homeHorizontalPadding, vertical = if (qwertyHome) Dimens.dp2 else Dimens.dp10),
+                ) {
+                    HomeFocusPanel(
+                        store = store,
+                        actions = actions,
+                        appAccessState = appAccessState,
+                        qwertyHome = qwertyHome,
+                        availableHeight = maxHeight,
+                        focusPanelHeight = focusPanelHeight,
+                        todoJumpToken = todoJumpToken,
+                        openTodos = openTodos,
+                        onTodoCenterChanged = { widgetCenter = it },
+                        onPausedApp = { pausedAppPackage = it },
+                        onOpenDrawer = { drawerOpen = true },
+                    )
+                }
+                Spacer(
+                    Modifier.navigationBarsPadding()
+                        .height(Dimens.dp88 + softInputRowHeight),
                 )
             }
-            Spacer(
-                Modifier.navigationBarsPadding()
-                    .height(Dimens.dp88 + softInputRowHeight),
-            )
         }
         flyingTodo?.takeIf { flightActive }?.let { text ->
             TodoFlightChip(

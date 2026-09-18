@@ -228,6 +228,7 @@ internal object LauncherBackupCodec {
         "accessibilityAndNotificationAccess",
         "widgets",
         "documentFolderAccess",
+        "wallpaperImage",
         "recentQueryHistory",
         "demoData",
         "updateCacheAndReminders",

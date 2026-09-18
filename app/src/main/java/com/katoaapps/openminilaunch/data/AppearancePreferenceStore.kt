@@ -49,6 +49,18 @@ internal class AppearancePreferenceStore(
         if (prefs.contains(APP_BACKGROUND_COLOR_KEY)) prefs.getInt(APP_BACKGROUND_COLOR_KEY, 0) else null,
     )
         private set
+    var appBackgroundImageEnabled by mutableStateOf(prefs.getBoolean(APP_BACKGROUND_IMAGE_ENABLED_KEY, false))
+        private set
+    var appBackgroundImageRevision by mutableIntStateOf(0)
+        private set
+    var appBackgroundImageAverageColorArgb by mutableStateOf(
+        prefs.intOrNull(APP_BACKGROUND_IMAGE_AVERAGE_COLOR_KEY),
+    )
+        private set
+    var appBackgroundImageHeaderColorArgb by mutableStateOf(
+        prefs.intOrNull(APP_BACKGROUND_IMAGE_HEADER_COLOR_KEY),
+    )
+        private set
 
     fun setTheme(preference: ThemePreference) {
         themePreference = preference
@@ -92,15 +104,32 @@ internal class AppearancePreferenceStore(
 
     fun setAppBackgroundColor(argb: Int?) {
         appBackgroundColorArgb = argb?.or(0xFF000000.toInt())
+        appBackgroundImageEnabled = false
         prefs.edit().apply {
             appBackgroundColorArgb?.let { putInt(APP_BACKGROUND_COLOR_KEY, it) }
                 ?: remove(APP_BACKGROUND_COLOR_KEY)
+            putBoolean(APP_BACKGROUND_IMAGE_ENABLED_KEY, false)
         }.apply()
+    }
+
+    fun useAppBackgroundImage(averageColorArgb: Int, headerColorArgb: Int) {
+        appBackgroundImageEnabled = true
+        appBackgroundImageRevision++
+        appBackgroundImageAverageColorArgb = averageColorArgb or 0xFF000000.toInt()
+        appBackgroundImageHeaderColorArgb = headerColorArgb or 0xFF000000.toInt()
+        prefs.edit()
+            .putBoolean(APP_BACKGROUND_IMAGE_ENABLED_KEY, true)
+            .putInt(APP_BACKGROUND_IMAGE_AVERAGE_COLOR_KEY, checkNotNull(appBackgroundImageAverageColorArgb))
+            .putInt(APP_BACKGROUND_IMAGE_HEADER_COLOR_KEY, checkNotNull(appBackgroundImageHeaderColorArgb))
+            .apply()
     }
 
     private companion object {
         const val ALIGN_HOME_PANEL_BOTTOM_KEY = "align_home_panel_bottom"
         const val APP_BACKGROUND_COLOR_KEY = "app_background_color"
+        const val APP_BACKGROUND_IMAGE_ENABLED_KEY = "app_background_image_enabled"
+        const val APP_BACKGROUND_IMAGE_AVERAGE_COLOR_KEY = "app_background_image_average_color"
+        const val APP_BACKGROUND_IMAGE_HEADER_COLOR_KEY = "app_background_image_header_color"
         const val HIDE_STATUS_BAR_KEY = "hide_status_bar"
         const val HOME_PANEL_COLOR_KEY = "home_panel_color"
         const val HOME_PANEL_TRANSPARENCY_KEY = "home_panel_transparency"
@@ -110,3 +139,6 @@ internal class AppearancePreferenceStore(
         const val USE_24_HOUR_CLOCK_KEY = "use_24_hour_clock"
     }
 }
+
+private fun SharedPreferences.intOrNull(key: String): Int? =
+    if (contains(key)) getInt(key, 0) else null

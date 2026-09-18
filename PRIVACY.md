@@ -2,7 +2,7 @@
 
 MinkLauncher OpenSource does not operate an application server, include analytics or advertising SDKs, create an account, or upload launcher content or personal data. Its normal Internet permission is used only for the optional GitHub release-metadata check described below.
 
-The app stores its settings, to-dos, selected document-folder references, widget configuration, daily well-being preferences, and five most recent plain-text queries locally on the device. Android cloud backup is disabled for the application.
+The app stores its settings, to-dos, selected document-folder references, optional cropped Home wallpaper, widget configuration, daily well-being preferences, and five most recent plain-text queries locally on the device. Android cloud backup is disabled for the application.
 
 Optional permissions are used as follows:
 
@@ -10,6 +10,7 @@ Optional permissions are used as follows:
 - Phone: places a call only after the user selects a contact and confirms the call in MinkLauncher OpenSource.
 - Messaging: sends a carrier SMS only after the user selects a recipient and submits a message with System Messages and automatic sending enabled. Direct SMS is available only while MinkLauncher OpenSource is the active Android assistant handler. Integrated-app and Android share handoffs pass user-entered text, and a phone number when supported, to the selected provider; that provider handles the final send under its own terms.
 - Photos, videos, audio, and older shared-storage access: searches media filenames locally and displays local thumbnails.
+- Wallpaper: after the user chooses an image through Android’s document picker and confirms a device-sized crop, stores that crop privately and applies the same file to Android’s Home wallpaper. The source image and crop are not uploaded, and the lock-screen wallpaper is not changed.
 - Notification shade: permits the launcher’s swipe-down gesture to expand Android’s notification panel.
 - Notification access: reads active Android-standard message and email notifications in memory so they can be grouped and replied to through the originating app when it supplies a compatible reply action. Other notification categories are ignored, and conversation history is not stored by MinkLauncher OpenSource.
 - Usage access: reads foreground events for the apps the user chooses to include in Mink’s Day while MinkLauncher OpenSource is visible. Other apps are excluded from the trail and totals. The app stores the user’s daily limit, pause preference, and app choices, but does not create a separate usage-history database.

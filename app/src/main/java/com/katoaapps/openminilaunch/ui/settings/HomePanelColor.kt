@@ -17,6 +17,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -133,33 +134,6 @@ internal fun HomePanelColorSetting(
 }
 
 @Composable
-internal fun AppBackgroundColorSetting(
-    selectedArgb: Int?,
-    onColorSelected: (Int) -> Unit,
-    onUseThemeDefault: () -> Unit,
-) {
-    val context = androidx.compose.ui.platform.LocalContext.current
-    val presets = listOf(
-        HomePanelColorPreset(R.string.color_paper, androidx.core.content.ContextCompat.getColor(context, R.color.app_background_paper)),
-        HomePanelColorPreset(R.string.color_midnight, androidx.core.content.ContextCompat.getColor(context, R.color.app_background_midnight)),
-        HomePanelColorPreset(R.string.color_cream, androidx.core.content.ContextCompat.getColor(context, R.color.app_background_cream)),
-        HomePanelColorPreset(R.string.color_soft_sage, androidx.core.content.ContextCompat.getColor(context, R.color.app_background_sage)),
-        HomePanelColorPreset(R.string.color_slate, androidx.core.content.ContextCompat.getColor(context, R.color.app_background_slate)),
-    )
-    AppearanceColorSetting(
-        selectedArgb = selectedArgb,
-        pickerArgb = selectedArgb ?: MaterialTheme.colorScheme.background.toArgb(),
-        titleRes = R.string.app_background_color,
-        descriptionRes = R.string.app_background_color_description,
-        customTitleRes = R.string.custom_background_color,
-        customDescriptionRes = R.string.custom_background_color_description,
-        presets = presets,
-        onColorSelected = onColorSelected,
-        onUseThemeDefault = onUseThemeDefault,
-    )
-}
-
-@Composable
 internal fun AppearanceColorSetting(
     selectedArgb: Int?,
     pickerArgb: Int,
@@ -169,6 +143,8 @@ internal fun AppearanceColorSetting(
     @androidx.annotation.StringRes customDescriptionRes: Int,
     presets: List<HomePanelColorPreset>,
     onColorSelected: (Int) -> Unit,
+    selectedValueLabel: String? = null,
+    presetTrailingContent: @Composable RowScope.() -> Unit = {},
     extraContent: @Composable ColumnScope.() -> Unit = {},
     onUseThemeDefault: (() -> Unit)? = null,
     @androidx.annotation.StringRes defaultValueLabelRes: Int = R.string.theme_background,
@@ -194,7 +170,9 @@ internal fun AppearanceColorSetting(
                     )
                 }
                 Text(
-                    selectedArgb?.let(::formatHomePanelHex) ?: stringResource(defaultValueLabelRes),
+                    selectedValueLabel
+                        ?: selectedArgb?.let(::formatHomePanelHex)
+                        ?: stringResource(defaultValueLabelRes),
                     color = Muted,
                     fontSize = Dimens.sp12,
                 )
@@ -227,6 +205,7 @@ internal fun AppearanceColorSetting(
                         Text(stringResource(preset.labelRes), color = Muted, fontSize = Dimens.sp9, modifier = Modifier.padding(top = Dimens.dp4))
                     }
                 }
+                presetTrailingContent()
             }
             OutlinedButton(onClick = { showCustomPicker = true }, modifier = Modifier.fillMaxWidth()) {
                 Icon(Icons.Default.Palette, null, Modifier.size(Dimens.dp18))
@@ -242,7 +221,7 @@ internal fun AppearanceColorSetting(
             onUseThemeDefault?.let { useThemeDefault ->
                 TextButton(
                     onClick = useThemeDefault,
-                    enabled = selectedArgb != null,
+                    enabled = selectedArgb != null || selectedValueLabel != null,
                     modifier = Modifier.fillMaxWidth(),
                 ) {
                     Text(stringResource(useDefaultLabelRes))

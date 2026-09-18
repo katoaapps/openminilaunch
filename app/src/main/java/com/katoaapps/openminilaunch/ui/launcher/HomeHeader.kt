@@ -56,6 +56,7 @@ internal fun HomeHeader(
     openSettings: (SettingsDestination) -> Unit,
 ) {
     val context = LocalContext.current
+    val headerContentColor = launcherBackgroundContentColor(store, header = true)
     CompositionLocalProvider(LocalMinimumInteractiveComponentSize provides actionSize) {
         Row(
             Modifier.fillMaxWidth()
@@ -91,7 +92,7 @@ internal fun HomeHeader(
                             showClock = store.showClock,
                             use24HourClock = store.use24HourClock,
                         ),
-                        color = MaterialTheme.colorScheme.onBackground,
+                        color = headerContentColor,
                         letterSpacing = Dimens.sp1_5,
                         fontSize = Dimens.sp13,
                         fontWeight = FontWeight.Bold,
@@ -100,7 +101,7 @@ internal fun HomeHeader(
                     if (!store.hasOpenedClockFromDate) {
                         Text(
                             stringResource(R.string.tap_for_clock),
-                            color = MaterialTheme.colorScheme.onBackground.copy(alpha = .58f),
+                            color = headerContentColor.copy(alpha = .64f),
                             fontSize = Dimens.sp9,
                             maxLines = 1,
                         )
@@ -136,14 +137,24 @@ internal fun HomeHeader(
                         }
                     },
                 ) {
-                    Icon(Icons.Default.Forum, stringResource(R.string.conversations), Modifier.size(iconSize))
+                    Icon(
+                        Icons.Default.Forum,
+                        stringResource(R.string.conversations),
+                        Modifier.size(iconSize),
+                        tint = headerContentColor,
+                    )
                 }
             }
             IconButton(
                 onClick = { openSettings(SettingsDestination.OVERVIEW) },
                 modifier = Modifier.size(actionSize),
             ) {
-                Icon(Icons.Default.Settings, stringResource(R.string.settings), Modifier.size(iconSize))
+                Icon(
+                    Icons.Default.Settings,
+                    stringResource(R.string.settings),
+                    Modifier.size(iconSize),
+                    tint = headerContentColor,
+                )
             }
         }
     }

@@ -7,6 +7,7 @@ import com.katoaapps.openminilaunch.platform.*
 import com.katoaapps.openminilaunch.ui.components.*
 import com.katoaapps.openminilaunch.ui.theme.*
 import com.katoaapps.openminilaunch.ui.launcher.MainActivity
+import com.katoaapps.openminilaunch.ui.launcher.launcherBackgroundContentColor
 
 import android.app.Activity
 import android.appwidget.AppWidgetManager
@@ -90,6 +91,7 @@ internal fun WidgetPage(store: LauncherStore, actions: DeviceActions, goHome: ()
     var bindingStage by remember { mutableStateOf(WidgetBindingStage.IDLE) }
     var widgetInfoRevision by remember { mutableIntStateOf(0) }
     val widgetListState = rememberLazyListState()
+    val headerContentColor = launcherBackgroundContentColor(store, header = true)
 
     fun abandonPendingWidget() {
         if (pendingId != AppWidgetManager.INVALID_APPWIDGET_ID) host.deleteAppWidgetId(pendingId)
@@ -193,87 +195,98 @@ internal fun WidgetPage(store: LauncherStore, actions: DeviceActions, goHome: ()
         }
     }
 
-    Column(Modifier.fillMaxSize().statusBarsPadding().navigationBarsPadding()) {
-        Row(
-            Modifier.fillMaxWidth().padding(horizontal = Dimens.dp20, vertical = Dimens.dp12),
-            verticalAlignment = Alignment.CenterVertically,
-        ) {
-            Column(Modifier.weight(1f).clickable(onClick = goHome)) {
-                Text(stringResource(R.string.widgets), fontSize = Dimens.sp26, fontWeight = FontWeight.Black)
-                if (store.widgetIds.isNotEmpty()) {
-                    Text(stringResource(R.string.widget_count, store.widgetIds.size, 8), color = Muted, fontSize = Dimens.sp12)
-                }
-            }
-            FilledTonalIconButton(
-                onClick = {
-                    if (store.widgetIds.size >= 8) {
-                        Toast.makeText(
-                            context,
-                            context.resources.getQuantityString(R.plurals.maximum_widgets, 8, 8),
-                            Toast.LENGTH_SHORT,
-                        ).show()
-                    }
-                    else showPicker = true
-                },
-            ) { Icon(Icons.Default.Add, stringResource(R.string.add_widget)) }
-        }
-
-        if (store.widgetIds.isEmpty()) {
-            Column(
-                Modifier.fillMaxSize().padding(Dimens.dp28),
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally,
+    Box(Modifier.fillMaxSize()) {
+        Column(Modifier.fillMaxSize().statusBarsPadding().navigationBarsPadding()) {
+            Row(
+                Modifier.fillMaxWidth().padding(horizontal = Dimens.dp20, vertical = Dimens.dp12),
+                verticalAlignment = Alignment.CenterVertically,
             ) {
-                Icon(Icons.Default.Widgets, null, Modifier.size(Dimens.dp58), tint = Sage)
-                Text(stringResource(R.string.your_widget_page), fontSize = Dimens.sp24, fontWeight = FontWeight.Black, modifier = Modifier.padding(top = Dimens.dp16))
-                Text(stringResource(R.string.your_widget_page_description), color = Muted, modifier = Modifier.padding(vertical = Dimens.dp12))
-                Button(onClick = { showPicker = true }) { Icon(Icons.Default.Add, null); Text(stringResource(R.string.add_widget), Modifier.padding(start = Dimens.dp8)) }
-            }
-        } else {
-            Box(Modifier.fillMaxSize()) {
-                LazyColumn(
-                    state = widgetListState,
-                    modifier = Modifier.fillMaxSize().padding(start = Dimens.dp20, end = Dimens.dp48),
-                    verticalArrangement = Arrangement.spacedBy(Dimens.dp20),
-                ) {
-                    itemsIndexed(store.widgetIds, key = { _, id -> id }) { index, id ->
-                        val info = remember(id, widgetInfoRevision) { manager.getAppWidgetInfo(id) }
-                        if (info != null) {
-                            WidgetPanel(
-                                host = host,
-                                id = id,
-                                info = info,
-                                gridSize = store.widgetSizes[id]
-                                    ?: widgetSizeRange(info, context.resources.displayMetrics.density).preferred,
-                                canMoveUp = index > 0,
-                                canMoveDown = index < store.widgetIds.lastIndex,
-                                onMoveUp = { store.moveWidget(id, -1) },
-                                onMoveDown = { store.moveWidget(id, 1) },
-                                onRemove = {
-                                    store.removeWidget(id)
-                                    runCatching { host.deleteAppWidgetId(id) }
-                                },
-                                onResize = { store.setWidgetSize(id, it) },
-                            )
-                        } else {
-                            UnavailableWidgetPanel(
-                                onRetry = { widgetInfoRevision++ },
-                                onRemove = {
-                                    store.removeWidget(id)
-                                    runCatching { host.deleteAppWidgetId(id) }
-                                },
-                            )
-                        }
-                    }
-                    item { Spacer(Modifier.height(Dimens.dp32)) }
-                }
-                if (widgetListState.canScrollBackward || widgetListState.canScrollForward) {
-                    WidgetScrollIndicator(
-                        state = widgetListState,
-                        widgetCount = store.widgetIds.size,
-                        contentDescription = stringResource(R.string.scroll_widgets),
-                        modifier = Modifier.align(Alignment.CenterEnd).padding(end = Dimens.dp10),
+                Column(Modifier.weight(1f).clickable(onClick = goHome)) {
+                    Text(
+                        stringResource(R.string.widgets),
+                        color = headerContentColor,
+                        fontSize = Dimens.sp26,
+                        fontWeight = FontWeight.Black,
                     )
+                    if (store.widgetIds.isNotEmpty()) {
+                        Text(
+                            stringResource(R.string.widget_count, store.widgetIds.size, 8),
+                            color = headerContentColor.copy(alpha = .64f),
+                            fontSize = Dimens.sp12,
+                        )
+                    }
+                }
+                FilledTonalIconButton(
+                    onClick = {
+                        if (store.widgetIds.size >= 8) {
+                            Toast.makeText(
+                                context,
+                                context.resources.getQuantityString(R.plurals.maximum_widgets, 8, 8),
+                                Toast.LENGTH_SHORT,
+                            ).show()
+                        }
+                        else showPicker = true
+                    },
+                ) { Icon(Icons.Default.Add, stringResource(R.string.add_widget)) }
+            }
+
+            if (store.widgetIds.isEmpty()) {
+                Column(
+                    Modifier.fillMaxSize().padding(Dimens.dp28),
+                    verticalArrangement = Arrangement.Center,
+                    horizontalAlignment = Alignment.CenterHorizontally,
+                ) {
+                    Icon(Icons.Default.Widgets, null, Modifier.size(Dimens.dp58), tint = Sage)
+                    Text(stringResource(R.string.your_widget_page), fontSize = Dimens.sp24, fontWeight = FontWeight.Black, modifier = Modifier.padding(top = Dimens.dp16))
+                    Text(stringResource(R.string.your_widget_page_description), color = Muted, modifier = Modifier.padding(vertical = Dimens.dp12))
+                    Button(onClick = { showPicker = true }) { Icon(Icons.Default.Add, null); Text(stringResource(R.string.add_widget), Modifier.padding(start = Dimens.dp8)) }
+                }
+            } else {
+                Box(Modifier.fillMaxSize()) {
+                    LazyColumn(
+                        state = widgetListState,
+                        modifier = Modifier.fillMaxSize().padding(start = Dimens.dp20, end = Dimens.dp48),
+                        verticalArrangement = Arrangement.spacedBy(Dimens.dp20),
+                    ) {
+                        itemsIndexed(store.widgetIds, key = { _, id -> id }) { index, id ->
+                            val info = remember(id, widgetInfoRevision) { manager.getAppWidgetInfo(id) }
+                            if (info != null) {
+                                WidgetPanel(
+                                    host = host,
+                                    id = id,
+                                    info = info,
+                                    gridSize = store.widgetSizes[id]
+                                        ?: widgetSizeRange(info, context.resources.displayMetrics.density).preferred,
+                                    canMoveUp = index > 0,
+                                    canMoveDown = index < store.widgetIds.lastIndex,
+                                    onMoveUp = { store.moveWidget(id, -1) },
+                                    onMoveDown = { store.moveWidget(id, 1) },
+                                    onRemove = {
+                                        store.removeWidget(id)
+                                        runCatching { host.deleteAppWidgetId(id) }
+                                    },
+                                    onResize = { store.setWidgetSize(id, it) },
+                                )
+                            } else {
+                                UnavailableWidgetPanel(
+                                    onRetry = { widgetInfoRevision++ },
+                                    onRemove = {
+                                        store.removeWidget(id)
+                                        runCatching { host.deleteAppWidgetId(id) }
+                                    },
+                                )
+                            }
+                        }
+                        item { Spacer(Modifier.height(Dimens.dp32)) }
+                    }
+                    if (widgetListState.canScrollBackward || widgetListState.canScrollForward) {
+                        WidgetScrollIndicator(
+                            state = widgetListState,
+                            widgetCount = store.widgetIds.size,
+                            contentDescription = stringResource(R.string.scroll_widgets),
+                            modifier = Modifier.align(Alignment.CenterEnd).padding(end = Dimens.dp10),
+                        )
+                    }
                 }
             }
         }

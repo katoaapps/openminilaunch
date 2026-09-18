@@ -48,7 +48,8 @@ internal fun BoxScope.HomeFocusPanel(
     val panelColor = Color(store.effectiveHomePanelColorArgb).copy(
         alpha = 1f - store.homePanelTransparency,
     )
-    val visiblePanelColor = compositeColor(panelColor, androidx.compose.material3.MaterialTheme.colorScheme.background)
+    val panelOpacity = panelColor.alpha
+    val visiblePanelColor = compositeColor(panelColor, launcherBackgroundColor(store))
     val contentColor = readableContentColor(visiblePanelColor)
     val mutedColor = contentColor.copy(alpha = .68f)
     val insetColor = if (contentColor == com.katoaapps.openminilaunch.ui.theme.MinkWhite) {
@@ -71,8 +72,14 @@ internal fun BoxScope.HomeFocusPanel(
         shape = RoundedCornerShape(if (qwertyHome) Dimens.dp26 else Dimens.dp34),
         color = panelColor,
         contentColor = contentColor,
-        shadowElevation = if (isSystemInDarkTheme()) Dimens.dp2 else Dimens.dp8,
-        tonalElevation = Dimens.dp1,
+        shadowElevation = if (store.homePanelTransparency > 0f) {
+            Dimens.dp0
+        } else if (isSystemInDarkTheme()) {
+            Dimens.dp2
+        } else {
+            Dimens.dp8
+        },
+        tonalElevation = Dimens.dp1 * panelOpacity,
     ) {
         Row(
             Modifier.fillMaxSize().padding(if (qwertyHome) Dimens.dp10 else Dimens.dp14),

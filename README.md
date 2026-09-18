@@ -2,7 +2,7 @@
 
 A focused, keyboard-first Android home-screen launcher and digital assistant built with Kotlin and Jetpack Compose.
 
-Current version: **Open 1.5.2** (`1.5.2`). Feature releases show existing users a one-time in-app update notice covering new behavior, privacy impact, and any optional permissions; the onboarding tutorial is updated alongside each release.
+Current version: **Open 1.5.3** (`1.5.3`). Feature releases show existing users a one-time in-app update notice covering new behavior, privacy impact, and any optional permissions; the onboarding tutorial is updated alongside each release.
 
 ## Download
 
@@ -104,6 +104,7 @@ the existing app first and clears MinkLauncher OpenSource's local data.
 - Delete confirmation to protect against accidental taps and back-swipe gestures
 - Animated Magic Box to-do delivery into the newest widget page
 - System, light, and dark appearance modes
+- Home backgrounds can use the built-in color presets, a custom color, or a user-selected image cropped to the current display. The finished crop is stored privately on-device and applied to Android’s Home wallpaper only so system surfaces use the same image; the lock screen is not changed. Wallpaper image files are not included in portable JSON backups.
 - Mink-themed icons, original system icons, or an installed Nova/ADW-compatible icon pack selected from a visual preview in Appearance settings. Icon-pack mappings are read locally; unsupported apps fall back to their original icon.
 - A default-on **Hide Status Bar** option for Home; swipe down to reveal Android's notification shade
 - An optional **Align Pill to Bottom** setting keeps the Home panel within easier reach on tall slab phones, directly above the Magic Box
@@ -126,7 +127,7 @@ Open the folder in Android Studio or build from the terminal:
 
 The APK is generated at `app/build/outputs/apk/debug/app-debug.apk`.
 
-After installing, press the device Home button and select **MinkLauncher OpenSource** as the home app. Contact permission is requested for `@` and `#` search. Notification access is optional special access granted on Android's dedicated settings screen after MinkLauncher OpenSource explains its use. Usage Access is separately optional and is used only for local Mink’s Day calculations; app activity and insights are never sent to Katoa Apps. Direct SMS is optional and requires MinkLauncher OpenSource to be the active assistant handler; Android may grant Send SMS access with that role. Advanced permission controls are also linked from Settings.
+After installing, press the device Home button and select **MinkLauncher OpenSource** as the home app. Contact permission is requested for `@` and `#` search. Notification access is optional special access granted on Android's dedicated settings screen after MinkLauncher OpenSource explains its use. Usage Access is separately optional and is used only for local Mink’s Day calculations; app activity and insights are never sent to Katoa Apps. Direct SMS is optional and requires MinkLauncher OpenSource to be the active assistant handler; Android may grant Send SMS access with that role. The normal Android wallpaper permissions are used only after the user chooses and applies an image in Appearance, and affect the Home wallpaper rather than the lock screen. Advanced permission controls are also linked from Settings.
 
 On first launch, MinkLauncher OpenSource explicitly opens Android's default Home-app prompt. If it is dismissed, it can be reopened from **Settings → Default home app**.
 

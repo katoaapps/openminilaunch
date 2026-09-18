@@ -37,6 +37,7 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.blur
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
@@ -63,6 +64,7 @@ import com.katoaapps.openminilaunch.ui.theme.DarkOnSurface
 import com.katoaapps.openminilaunch.ui.theme.DarkPrimary
 import com.katoaapps.openminilaunch.ui.theme.DarkSurface
 import com.katoaapps.openminilaunch.ui.theme.DarkSurfaceContainerLow
+import com.katoaapps.openminilaunch.ui.theme.Dimens
 import com.katoaapps.openminilaunch.ui.theme.LightInk
 import com.katoaapps.openminilaunch.ui.theme.LightPaper
 import com.katoaapps.openminilaunch.ui.theme.MinkTransparent
@@ -74,7 +76,7 @@ import com.katoaapps.openminilaunch.ui.wellbeing.MinkDayScreen
 import com.katoaapps.openminilaunch.ui.widgets.WidgetPage
 import kotlinx.coroutines.launch
 
-private const val FEATURE_UPDATE_ID = "portable_backup_and_ai_catalog_v1"
+private const val FEATURE_UPDATE_ID = "wallpaper_and_appearance_v1"
 private const val MINK_DAY_PAGE = 0
 private const val HOME_PAGE = 1
 private const val WIDGET_PAGE = 2
@@ -281,44 +283,56 @@ internal fun MiniLaunchApp(
                         onAnimationFinished = { animateHomeEntrance = false },
                         modifier = Modifier.fillMaxSize(),
                     ) {
-                        HorizontalPager(
-                            state = launcherPagerState,
-                            modifier = Modifier.fillMaxSize(),
-                            userScrollEnabled = !homeMagicExpanded,
-                        ) { page ->
-                            when (page) {
-                                MINK_DAY_PAGE -> MinkDayScreen(
-                                    store = store,
-                                    isActive = launcherPagerState.currentPage == MINK_DAY_PAGE,
-                                    goHome = {
-                                        launcherScope.launch { launcherPagerState.animateScrollToPage(HOME_PAGE) }
+                        androidx.compose.foundation.layout.Box(Modifier.fillMaxSize()) {
+                            HomeBackground(
+                                store = store,
+                                modifier = Modifier.blur(
+                                    if (homeMagicExpanded && launcherPagerState.currentPage == HOME_PAGE) {
+                                        Dimens.dp10
+                                    } else {
+                                        Dimens.dp0
                                     },
-                                )
-                                HOME_PAGE -> HomeScreen(
-                                    store = store,
-                                    actions = actions,
-                                    openSettings = { destination ->
-                                        settingsDestination = destination
-                                        screen = Screen.SETTINGS
-                                    },
-                                    openTodos = { screen = Screen.TODOS },
-                                    openHub = { screen = Screen.HUB },
-                                    openMinkDay = {
-                                        launcherScope.launch { launcherPagerState.animateScrollToPage(MINK_DAY_PAGE) }
-                                    },
-                                    minkStatusActive = launcherPagerState.currentPage == HOME_PAGE,
-                                    onMagicExpandedChange = { homeMagicExpanded = it },
-                                    keyboardInputEnabled = launcherPagerState.currentPage == HOME_PAGE &&
-                                        !showTutorial && !showUpdateNotice && !showShortcutSetup,
-                                    homeRequestToken = homeRequestToken,
-                                )
-                                else -> WidgetPage(
-                                    store = store,
-                                    actions = actions,
-                                    goHome = {
-                                        launcherScope.launch { launcherPagerState.animateScrollToPage(HOME_PAGE) }
-                                    },
-                                )
+                                ),
+                            )
+                            HorizontalPager(
+                                state = launcherPagerState,
+                                modifier = Modifier.fillMaxSize(),
+                                userScrollEnabled = !homeMagicExpanded,
+                            ) { page ->
+                                when (page) {
+                                    MINK_DAY_PAGE -> MinkDayScreen(
+                                        store = store,
+                                        isActive = launcherPagerState.currentPage == MINK_DAY_PAGE,
+                                        goHome = {
+                                            launcherScope.launch { launcherPagerState.animateScrollToPage(HOME_PAGE) }
+                                        },
+                                    )
+                                    HOME_PAGE -> HomeScreen(
+                                        store = store,
+                                        actions = actions,
+                                        openSettings = { destination ->
+                                            settingsDestination = destination
+                                            screen = Screen.SETTINGS
+                                        },
+                                        openTodos = { screen = Screen.TODOS },
+                                        openHub = { screen = Screen.HUB },
+                                        openMinkDay = {
+                                            launcherScope.launch { launcherPagerState.animateScrollToPage(MINK_DAY_PAGE) }
+                                        },
+                                        minkStatusActive = launcherPagerState.currentPage == HOME_PAGE,
+                                        onMagicExpandedChange = { homeMagicExpanded = it },
+                                        keyboardInputEnabled = launcherPagerState.currentPage == HOME_PAGE &&
+                                            !showTutorial && !showUpdateNotice && !showShortcutSetup,
+                                        homeRequestToken = homeRequestToken,
+                                    )
+                                    else -> WidgetPage(
+                                        store = store,
+                                        actions = actions,
+                                        goHome = {
+                                            launcherScope.launch { launcherPagerState.animateScrollToPage(HOME_PAGE) }
+                                        },
+                                    )
+                                }
                             }
                         }
                     }
@@ -380,10 +394,10 @@ internal fun MiniLaunchApp(
         }
         if (showUpdateNotice && !showTutorial) {
             FeatureUpdateDialog(
-                onOpenBackup = {
+                onOpenAppearance = {
                     store.markUpdateSeen(FEATURE_UPDATE_ID)
                     showUpdateNotice = false
-                    settingsDestination = SettingsDestination.BACKUP_RESTORE
+                    settingsDestination = SettingsDestination.APPEARANCE
                     screen = Screen.SETTINGS
                 },
                 onReviewTutorial = {

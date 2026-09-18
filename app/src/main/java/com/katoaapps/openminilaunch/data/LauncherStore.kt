@@ -1,6 +1,7 @@
 package com.katoaapps.openminilaunch.data
 
 import com.katoaapps.openminilaunch.features.demo.DemoHomeProfile
+import com.katoaapps.openminilaunch.features.appearance.HomeWallpaperRepository
 import com.katoaapps.openminilaunch.model.*
 
 import android.content.Context
@@ -21,6 +22,7 @@ class LauncherStore private constructor(context: Context) {
     private val updatePreferences = UpdatePreferenceStore(prefs)
     private val pinShortcutPreferences = PinShortcutPreferenceStore(prefs)
     private val appDiscoveryPreferences = AppDiscoveryPreferenceStore(prefs)
+    private val homeWallpaperRepository = HomeWallpaperRepository(appContext)
     private val demoPreferences: DemoPreferenceStore = DemoPreferenceStore(appContext, prefs, todoStore)
     internal val demoHomeProfile get() = demoPreferences.profile
     val todos get() = todoStore.items
@@ -53,6 +55,10 @@ class LauncherStore private constructor(context: Context) {
     val homePanelColorArgb get() = appearancePreferences.homePanelColorArgb
     val homePanelTransparency get() = appearancePreferences.homePanelTransparency
     val appBackgroundColorArgb get() = appearancePreferences.appBackgroundColorArgb
+    val appBackgroundImageEnabled: Boolean
+        get() = appearancePreferences.appBackgroundImageEnabled && homeWallpaperRepository.hasWallpaper()
+    val appBackgroundImageRevision get() = appearancePreferences.appBackgroundImageRevision
+    internal val appBackgroundImageFile get() = homeWallpaperRepository.wallpaperFile
     val iconAppearance get() = iconAppearancePreferences.appearance
     val sendMessagesAutomatically get() = messagingPreferences.sendMessagesAutomatically
     val preferredMessagingPackage get() = messagingPreferences.preferredMessagingPackage
@@ -70,10 +76,36 @@ class LauncherStore private constructor(context: Context) {
         get() = demoPreferences.effectivePanelColor(homePanelColorArgb)
     val effectiveAppBackgroundColorArgb: Int?
         get() = demoPreferences.effectiveBackgroundColor(appBackgroundColorArgb)
+    val visibleAppBackgroundColorArgb: Int?
+        get() = if (appBackgroundImageEnabled) {
+            appearancePreferences.appBackgroundImageAverageColorArgb
+        } else {
+            effectiveAppBackgroundColorArgb
+        }
+    val visibleAppHeaderColorArgb: Int?
+        get() = if (appBackgroundImageEnabled) {
+            appearancePreferences.appBackgroundImageHeaderColorArgb
+        } else {
+            effectiveAppBackgroundColorArgb
+        }
     val effectiveShortcutOrder: List<Shortcut>
         get() = demoPreferences.effectiveShortcutOrder(shortcutOrder)
 
     init {
+        if (
+            appearancePreferences.appBackgroundImageEnabled &&
+            (
+                appearancePreferences.appBackgroundImageAverageColorArgb == null ||
+                    appearancePreferences.appBackgroundImageHeaderColorArgb == null
+            )
+        ) {
+            homeWallpaperRepository.readStoredAppearance()?.let { wallpaper ->
+                appearancePreferences.useAppBackgroundImage(
+                    wallpaper.averageColorArgb,
+                    wallpaper.headerColorArgb,
+                )
+            }
+        }
         prefs.edit()
             .remove("weather_zip")
             .remove("temperature_unit")
@@ -270,6 +302,12 @@ class LauncherStore private constructor(context: Context) {
         val opaqueArgb = argb?.or(0xFF000000.toInt())
         if (demoPreferences.setBackgroundColor(opaqueArgb)) return
         appearancePreferences.setAppBackgroundColor(opaqueArgb)
+    }
+
+    fun useAppBackgroundImage(averageColorArgb: Int, headerColorArgb: Int) {
+        if (homeWallpaperRepository.hasWallpaper()) {
+            appearancePreferences.useAppBackgroundImage(averageColorArgb, headerColorArgb)
+        }
     }
 
     fun useMinkIcons() {

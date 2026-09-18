@@ -213,6 +213,16 @@
     <string name="update_notice_ai_catalog_title">Reviewed AI providers</string>
     <string name="update_notice_ai_catalog_description">The AI picker identifies eight reviewed providers, links missing apps through provider-owned pages, and supports Lumo’s copy-and-paste handoff.</string>
     <string name="open_backup_settings">Open backup</string>
+    <string name="update_notice_wallpaper_heading">A Home screen that feels like yours</string>
+    <string name="update_notice_wallpaper_title">Your image, cropped for this device</string>
+    <string name="update_notice_wallpaper_description">Choose an image, then pinch and drag within a crop frame that matches this display.</string>
+    <string name="update_notice_home_only_title">One matching Home wallpaper</string>
+    <string name="update_notice_home_only_description">Mink uses the finished crop and applies the same image to Android’s Home wallpaper. Your lock screen is left alone.</string>
+    <string name="update_notice_appearance_title">More control over the pill</string>
+    <string name="update_notice_appearance_description">Adjust pill transparency while Mink keeps its contents readable against the selected background color.</string>
+    <string name="update_notice_date_title">Date and time, your way</string>
+    <string name="update_notice_date_description">Show or hide the date, add the clock, and choose 12- or 24-hour time.</string>
+    <string name="open_appearance_settings">Open appearance</string>
     <string name="update_notice_136_title">More ways to reach what you need</string>
     <string name="update_notice_work_profiles_title">Work profile support</string>
     <string name="update_notice_work_profiles_description">Work apps and their published shortcuts can appear beside personal apps with a work badge. Mink’s Day pause rules remain limited to personal apps.</string>
@@ -288,11 +298,13 @@
     <string name="onboarding_page_spaces">Conversations and widgets</string>
     <string name="onboarding_page_backup">Keep your setup</string>
     <string name="onboarding_page_permissions">Permissions, on your terms</string>
+    <string name="choose_home_wallpaper">Use your own Home wallpaper</string>
+    <string name="choose_home_wallpaper_description">Appearance can crop an image to this display and apply the same image to Mink and Android Home. The lock screen stays unchanged.</string>
     <string name="backup_onboarding_intro">Moving between the F-Droid and GitHub builds requires uninstalling first because they use different signing keys. Export a backup before you switch.</string>
     <string name="backup_before_switching">Export before uninstalling</string>
     <string name="backup_before_switching_description">Open Settings → Backup &amp; restore and save a local JSON file, then import it in the newly installed build.</string>
     <string name="backup_keeps_yours">Settings and to-dos come with you</string>
-    <string name="backup_keeps_yours_description">Your appearance, launcher layout, app choices, Magic Box preferences, Mink’s Day setup, and to-dos are restored.</string>
+    <string name="backup_keeps_yours_description">Your appearance settings, launcher layout, app choices, Magic Box preferences, Mink’s Day setup, and to-dos are restored. Select your wallpaper image again after reinstalling.</string>
     <string name="android_access_stays_separate">Android access must be enabled again</string>
     <string name="android_access_stays_separate_description">Permissions, roles, notification and accessibility access, widgets, and document folders cannot transfer between installs.</string>
     <string name="backup_file_stays_local">You choose where the file goes</string>
@@ -426,7 +438,7 @@
     <string name="export_backup_description">Save settings, app choices, layout, and to-dos</string>
     <string name="import_backup">Import backup</string>
     <string name="import_backup_description">Review and restore a previously exported file</string>
-    <string name="backup_not_included_description">Android permissions, system roles, accessibility and notification access, widgets, document-folder access, and recent query history are not included. Choices for unavailable apps or icon packs may fall back until those apps are installed and selected again.</string>
+    <string name="backup_not_included_description">Android permissions, system roles, accessibility and notification access, widgets, wallpaper image files, document-folder access, and recent query history are not included. Choices for unavailable apps or icon packs may fall back until those apps are installed and selected again.</string>
     <string name="backup_exported">Backup exported</string>
     <string name="backup_export_failed">Couldn’t export the backup</string>
     <string name="backup_import_failed">That file isn’t a supported OpenMink backup</string>
@@ -695,8 +707,8 @@
     <string name="choose_custom_color">Choose a custom color</string>
     <string name="custom_panel_color">Custom panel color</string>
     <string name="custom_panel_color_description">Swipe the field and hue strip, or enter a hex color.</string>
-    <string name="app_background_color">Background color</string>
-    <string name="app_background_color_description">Changes the background and matching surfaces throughout MinkLauncher.</string>
+    <string name="app_background_color">Background</string>
+    <string name="app_background_color_description">Choose a color or a device-sized Home wallpaper.</string>
     <string name="theme_background">Theme</string>
     <string name="use_theme_background">Use theme background</string>
     <string name="custom_background_color">Custom background color</string>
@@ -706,6 +718,15 @@
     <string name="color_cream">Cream</string>
     <string name="color_soft_sage">Sage</string>
     <string name="color_slate">Slate</string>
+    <string name="background_image">Image</string>
+    <string name="crop_wallpaper">Crop wallpaper</string>
+    <string name="crop_wallpaper_description">Pinch and drag to frame the %1$d × %2$d Home wallpaper.</string>
+    <string name="applying_wallpaper">Applying…</string>
+    <string name="home_wallpaper">Home wallpaper</string>
+    <string name="applying_wallpaper_description">Cropping the image and updating Mink and Android Home</string>
+    <string name="reset_crop">Reset</string>
+    <string name="wallpaper_image_load_failed">This image could not be opened.</string>
+    <string name="wallpaper_apply_failed">MinkLauncher could not save or set this wallpaper.</string>
     <string name="hex_color">Hex color</string>
     <string name="invalid_hex_color">Use six digits, for example #602C00</string>
 

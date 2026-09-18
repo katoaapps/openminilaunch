@@ -12,12 +12,13 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.AutoAwesome
-import androidx.compose.material.icons.filled.FileUpload
+import androidx.compose.material.icons.filled.CalendarMonth
 import androidx.compose.material.icons.filled.Folder
 import androidx.compose.material.icons.filled.FolderOpen
 import androidx.compose.material.icons.filled.Pets
 import androidx.compose.material.icons.filled.Security
+import androidx.compose.material.icons.filled.Tune
+import androidx.compose.material.icons.filled.Wallpaper
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
@@ -40,7 +41,7 @@ import com.katoaapps.openminilaunch.ui.theme.Rust
 
 @Composable
 internal fun FeatureUpdateDialog(
-    onOpenBackup: () -> Unit,
+    onOpenAppearance: () -> Unit,
     onReviewTutorial: () -> Unit,
     onNotNow: () -> Unit,
 ) {
@@ -56,19 +57,20 @@ internal fun FeatureUpdateDialog(
                 verticalArrangement = Arrangement.spacedBy(Dimens.dp14),
             ) {
                 Text(
-                    stringResource(R.string.update_notice_backup_heading),
+                    stringResource(R.string.update_notice_wallpaper_heading),
                     fontSize = Dimens.sp18,
                     fontWeight = FontWeight.Bold,
                 )
-                UpdatePoint(Icons.Default.FileUpload, stringResource(R.string.update_notice_backup_title), stringResource(R.string.update_notice_backup_description))
-                UpdatePoint(Icons.Default.Security, stringResource(R.string.update_notice_backup_boundaries_title), stringResource(R.string.update_notice_backup_boundaries_description))
-                UpdatePoint(Icons.Default.AutoAwesome, stringResource(R.string.update_notice_ai_catalog_title), stringResource(R.string.update_notice_ai_catalog_description))
+                UpdatePoint(Icons.Default.Wallpaper, stringResource(R.string.update_notice_wallpaper_title), stringResource(R.string.update_notice_wallpaper_description))
+                UpdatePoint(Icons.Default.Security, stringResource(R.string.update_notice_home_only_title), stringResource(R.string.update_notice_home_only_description))
+                UpdatePoint(Icons.Default.Tune, stringResource(R.string.update_notice_appearance_title), stringResource(R.string.update_notice_appearance_description))
+                UpdatePoint(Icons.Default.CalendarMonth, stringResource(R.string.update_notice_date_title), stringResource(R.string.update_notice_date_description))
                 TextButton(onClick = onReviewTutorial, contentPadding = PaddingValues(Dimens.dp0)) {
                     Text(stringResource(R.string.review_updated_tutorial))
                 }
             }
         },
-        confirmButton = { Button(onClick = onOpenBackup) { Text(stringResource(R.string.open_backup_settings)) } },
+        confirmButton = { Button(onClick = onOpenAppearance) { Text(stringResource(R.string.open_appearance_settings)) } },
         dismissButton = { TextButton(onClick = onNotNow) { Text(stringResource(R.string.not_now)) } },
     )
 }

@@ -2,6 +2,7 @@ package com.katoaapps.openminilaunch.ui.settings
 
 import com.katoaapps.openminilaunch.R
 import com.katoaapps.openminilaunch.data.LauncherStore
+import com.katoaapps.openminilaunch.features.appearance.HomeWallpaperRepository
 import com.katoaapps.openminilaunch.model.MAX_DRAWER_APPS
 import com.katoaapps.openminilaunch.model.PinShortcutRequestPresentation
 import com.katoaapps.openminilaunch.model.Shortcut
@@ -16,7 +17,10 @@ import com.katoaapps.openminilaunch.ui.theme.Dimens
 import com.katoaapps.openminilaunch.ui.theme.Muted
 import com.katoaapps.openminilaunch.ui.theme.Sage
 
+import android.net.Uri
 import android.widget.Toast
+import androidx.activity.compose.rememberLauncherForActivityResult
+import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.AddToHomeScreen
@@ -28,6 +32,10 @@ import androidx.compose.material.icons.filled.Restore
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.pluralStringResource
@@ -75,6 +83,12 @@ internal fun AppearanceSettingsPage(
     goBack: () -> Unit,
     onIconStyleApplied: () -> Unit,
 ) {
+    val context = LocalContext.current
+    val wallpaperRepository = remember(context) { HomeWallpaperRepository(context) }
+    var wallpaperToCrop by remember { mutableStateOf<Uri?>(null) }
+    val imagePicker = rememberLauncherForActivityResult(ActivityResultContracts.OpenDocument()) { uri ->
+        wallpaperToCrop = uri
+    }
     SettingsPage(stringResource(R.string.appearance), goBack) {
         ThemeChooser(store.themePreference, store::setTheme)
         ClockAppearanceSettings(store)
@@ -98,10 +112,28 @@ internal fun AppearanceSettingsPage(
             onColorSelected = store::setHomePanelColor,
             onTransparencyChanged = store::setHomePanelTransparency,
         )
-        AppBackgroundColorSetting(
+        AppBackgroundSetting(
             selectedArgb = store.effectiveAppBackgroundColorArgb,
+            imageSelected = store.appBackgroundImageEnabled,
+            imageRevision = store.appBackgroundImageRevision,
             onColorSelected = store::setAppBackgroundColor,
+            onChooseImage = { imagePicker.launch(arrayOf("image/*")) },
             onUseThemeDefault = { store.setAppBackgroundColor(null) },
+        )
+    }
+    wallpaperToCrop?.let { uri ->
+        WallpaperCropDialog(
+            imageUri = uri,
+            applyWallpaper = wallpaperRepository::apply,
+            onApplied = { wallpaper ->
+                store.useAppBackgroundImage(
+                    averageColorArgb = wallpaper.averageColorArgb,
+                    headerColorArgb = wallpaper.headerColorArgb,
+                )
+                wallpaperToCrop = null
+                onIconStyleApplied()
+            },
+            onDismiss = { wallpaperToCrop = null },
         )
     }
 }
