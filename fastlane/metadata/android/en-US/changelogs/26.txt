@@ -1,1 +1,7 @@
-MinkLauncher Open 1.5.3 adds device-sized image wallpapers with an in-app pinch-and-drag crop screen. The finished crop stays on-device and is applied to both Mink Home and Android’s Home wallpaper while leaving the lock screen unchanged. This release also adds pill transparency, independent date and clock controls, cleaner See All labels, and refreshed appearance onboarding. Wallpaper images are not included in portable JSON backups.
+MinkLauncher Open 1.5.3 expands Home appearance with device-sized image wallpapers and an in-app pinch-and-drag crop screen. The finished crop stays on-device, remains stationary behind the Home and Widgets pages, and is applied to Android’s Home wallpaper so system surfaces match. Mink’s Day keeps its focused solid background, and the lock screen is never changed.
+
+The Home pill now has adjustable transparency, adaptive readable content, and no lingering shadow when transparency is enabled. Header content also adapts to light or dark wallpaper regions. Date and clock visibility can be controlled independently, including 12- or 24-hour time.
+
+See All gives focused app names enough room and wraps only at word boundaries. Calendar phrases now understand named dates such as “sept 15th 9am” and abbreviated weekdays such as “next wed 8am.” Appearance onboarding, privacy explanations, and internal wallpaper handling were also refreshed.
+
+Wallpaper image files are not included in portable JSON backups. No new runtime permission prompt is required.

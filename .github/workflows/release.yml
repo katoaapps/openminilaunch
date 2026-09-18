@@ -66,6 +66,6 @@ jobs:
               MinkLauncher-OpenSource.apk \
               MinkLauncher-OpenSource.apk.sha256 \
               --verify-tag \
-              --generate-notes \
+              --notes-file RELEASE_NOTES.md \
               --title "MinkLauncher OpenSource $GITHUB_REF_NAME"
           fi
