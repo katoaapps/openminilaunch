@@ -31,6 +31,20 @@ class CalendarPhraseParserTest {
         assertStart(draft, 2026, 8, 21, 17, 0)
     }
 
+    @Test fun parsesAbbreviatedNextWeekday() {
+        val draft = parseCalendarPhrase("dr appointment next wed 8am", "New event", now)
+
+        assertEquals("dr appointment", draft.title)
+        assertStart(draft, 2026, 8, 19, 8, 0)
+    }
+
+    @Test fun parsesNamedMonthDateWithOrdinalDay() {
+        val draft = parseCalendarPhrase("dr appointment sept 15th 9am", "New event", now)
+
+        assertEquals("dr appointment", draft.title)
+        assertStart(draft, 2026, 9, 15, 9, 0)
+    }
+
     @Test fun reportedNextFridayPhraseRemainsOnFriday() {
         val draft = parseCalendarPhrase("next friday sceduled a teapart", "New event", now)
 

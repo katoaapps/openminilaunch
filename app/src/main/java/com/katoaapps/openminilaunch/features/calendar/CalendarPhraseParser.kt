@@ -2,6 +2,7 @@ package com.katoaapps.openminilaunch.features.calendar
 
 import java.time.DayOfWeek
 import java.time.LocalDate
+import java.time.Month
 import java.time.ZonedDateTime
 import java.time.temporal.ChronoUnit
 import java.time.temporal.TemporalAdjusters
@@ -20,8 +21,29 @@ private data class ParsedDatePhrase(
     val date: LocalDate,
 )
 
-private val weekdayNames =
-    "monday|tuesday|wednesday|thursday|friday|saturday|sunday"
+private val weekdayNames = listOf(
+    "monday", "mon",
+    "tuesday", "tues", "tue",
+    "wednesday", "weds", "wed",
+    "thursday", "thurs", "thur", "thu",
+    "friday", "fri",
+    "saturday", "sat",
+    "sunday", "sun",
+).joinToString("|")
+private val monthNames = listOf(
+    "january", "jan",
+    "february", "feb",
+    "march", "mar",
+    "april", "apr",
+    "may",
+    "june", "jun",
+    "july", "jul",
+    "august", "aug",
+    "september", "sept", "sep",
+    "october", "oct",
+    "november", "nov",
+    "december", "dec",
+).joinToString("|")
 private val calendarTimePattern = Regex(
     pattern = "(?i)(?:\\bat\\s+|@\\s*)(\\d{1,2})(?::(\\d{2}))?\\s*(a\\.?m\\.?|p\\.?m\\.?)?\\b",
 )
@@ -33,6 +55,9 @@ private val todayTomorrowPattern = Regex("(?i)\\b(today|tomorrow)\\b")
 private val relativeDatePattern = Regex("(?i)\\bin\\s+(\\d+)\\s+(days?|weeks?|months?)\\b")
 private val qualifiedWeekdayPattern = Regex("(?i)\\b(this|next)\\s+($weekdayNames)\\b")
 private val bareWeekdayPattern = Regex("(?i)\\b(?:on\\s+)?($weekdayNames)\\b")
+private val namedMonthDatePattern = Regex(
+    pattern = "(?i)\\b($monthNames)\\s+(\\d{1,2})(?:st|nd|rd|th)?(?:,?\\s+(\\d{4}))?\\b",
+)
 private val ordinalWeekdayAfterPattern = Regex(
     pattern = "(?i)\\b(?:the\\s+)?(?:1st|first)\\s+($weekdayNames)\\s+after\\s+(?:the\\s+)?(\\d{1,2})(?:st|nd|rd|th)?\\b",
 )
@@ -43,8 +68,7 @@ private val unsupportedDateCuePattern = Regex(
         "\\b(?:the\\s+)?(?:first|second|third|fourth|1st|2nd|3rd|4th)\\s+[a-z]+day\\s+" +
         "after\\s+(?:the\\s+)?\\d{1,2}(?:st|nd|rd|th)?\\b|" +
         "\\bon\\s+(?:the\\s+)?\\d{1,2}(?:st|nd|rd|th)\\b|" +
-        "\\b(?:jan(?:uary)?|feb(?:ruary)?|mar(?:ch)?|apr(?:il)?|may|jun(?:e)?|jul(?:y)?|" +
-        "aug(?:ust)?|sep(?:tember)?|oct(?:ober)?|nov(?:ember)?|dec(?:ember)?)\\s+\\d{1,2}\\b|" +
+        "\\b(?:$monthNames)\\s+\\d{1,2}(?:st|nd|rd|th)?(?:,?\\s+\\d{4})?\\b|" +
         "\\b\\d{1,2}/\\d{1,2}(?:/\\d{2,4})?\\b",
 )
 
@@ -131,6 +155,13 @@ private fun parseCalendarTime(match: MatchResult): Pair<Int, Int>? {
 }
 
 private fun parseDatePhrase(input: String, today: LocalDate): ParsedDatePhrase? {
+    namedMonthDatePattern.find(input)?.let { match ->
+        val month = parseMonth(match.groupValues[1]) ?: return null
+        val dayOfMonth = match.groupValues[2].toIntOrNull() ?: return null
+        val explicitYear = match.groupValues[3].toIntOrNull()
+        val date = resolveNamedDate(today, month, dayOfMonth, explicitYear) ?: return null
+        return ParsedDatePhrase(match.range, date)
+    }
     ordinalWeekdayAfterPattern.find(input)?.let { match ->
         val weekday = parseWeekday(match.groupValues[1]) ?: return null
         val dayOfMonth = match.groupValues[2].toIntOrNull() ?: return null
@@ -167,9 +198,47 @@ private fun parseDatePhrase(input: String, today: LocalDate): ParsedDatePhrase? 
     return null
 }
 
-private fun parseWeekday(value: String): DayOfWeek? = runCatching {
-    DayOfWeek.valueOf(value.uppercase(Locale.US))
-}.getOrNull()
+private fun parseWeekday(value: String): DayOfWeek? = when (value.lowercase(Locale.US)) {
+    "monday", "mon" -> DayOfWeek.MONDAY
+    "tuesday", "tues", "tue" -> DayOfWeek.TUESDAY
+    "wednesday", "weds", "wed" -> DayOfWeek.WEDNESDAY
+    "thursday", "thurs", "thur", "thu" -> DayOfWeek.THURSDAY
+    "friday", "fri" -> DayOfWeek.FRIDAY
+    "saturday", "sat" -> DayOfWeek.SATURDAY
+    "sunday", "sun" -> DayOfWeek.SUNDAY
+    else -> null
+}
+
+private fun parseMonth(value: String): Month? = when (value.lowercase(Locale.US)) {
+    "january", "jan" -> Month.JANUARY
+    "february", "feb" -> Month.FEBRUARY
+    "march", "mar" -> Month.MARCH
+    "april", "apr" -> Month.APRIL
+    "may" -> Month.MAY
+    "june", "jun" -> Month.JUNE
+    "july", "jul" -> Month.JULY
+    "august", "aug" -> Month.AUGUST
+    "september", "sept", "sep" -> Month.SEPTEMBER
+    "october", "oct" -> Month.OCTOBER
+    "november", "nov" -> Month.NOVEMBER
+    "december", "dec" -> Month.DECEMBER
+    else -> null
+}
+
+private fun resolveNamedDate(
+    today: LocalDate,
+    month: Month,
+    dayOfMonth: Int,
+    explicitYear: Int?,
+): LocalDate? {
+    if (explicitYear != null) {
+        return runCatching { LocalDate.of(explicitYear, month, dayOfMonth) }.getOrNull()
+    }
+
+    val thisYear = runCatching { LocalDate.of(today.year, month, dayOfMonth) }.getOrNull()
+    if (thisYear != null && !thisYear.isBefore(today)) return thisYear
+    return runCatching { LocalDate.of(today.year + 1, month, dayOfMonth) }.getOrNull()
+}
 
 private fun firstWeekdayAfterDayOfMonth(
     today: LocalDate,
