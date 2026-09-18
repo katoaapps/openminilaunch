@@ -16,7 +16,6 @@ import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.isImeVisible
-import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -37,7 +36,6 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.blur
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
@@ -64,7 +62,6 @@ import com.katoaapps.openminilaunch.ui.theme.DarkOnSurface
 import com.katoaapps.openminilaunch.ui.theme.DarkPrimary
 import com.katoaapps.openminilaunch.ui.theme.DarkSurface
 import com.katoaapps.openminilaunch.ui.theme.DarkSurfaceContainerLow
-import com.katoaapps.openminilaunch.ui.theme.Dimens
 import com.katoaapps.openminilaunch.ui.theme.LightInk
 import com.katoaapps.openminilaunch.ui.theme.LightPaper
 import com.katoaapps.openminilaunch.ui.theme.MinkTransparent
@@ -72,14 +69,9 @@ import com.katoaapps.openminilaunch.ui.theme.MinkWhite
 import com.katoaapps.openminilaunch.ui.theme.Rust
 import com.katoaapps.openminilaunch.ui.theme.withAppBackground
 import com.katoaapps.openminilaunch.ui.todos.TodosScreen
-import com.katoaapps.openminilaunch.ui.wellbeing.MinkDayScreen
-import com.katoaapps.openminilaunch.ui.widgets.WidgetPage
 import kotlinx.coroutines.launch
 
 private const val FEATURE_UPDATE_ID = "wallpaper_and_appearance_v1"
-private const val MINK_DAY_PAGE = 0
-private const val HOME_PAGE = 1
-private const val WIDGET_PAGE = 2
 
 @Composable
 internal fun MiniLaunchApp(
@@ -283,58 +275,23 @@ internal fun MiniLaunchApp(
                         onAnimationFinished = { animateHomeEntrance = false },
                         modifier = Modifier.fillMaxSize(),
                     ) {
-                        androidx.compose.foundation.layout.Box(Modifier.fillMaxSize()) {
-                            HomeBackground(
-                                store = store,
-                                modifier = Modifier.blur(
-                                    if (homeMagicExpanded && launcherPagerState.currentPage == HOME_PAGE) {
-                                        Dimens.dp10
-                                    } else {
-                                        Dimens.dp0
-                                    },
-                                ),
-                            )
-                            HorizontalPager(
-                                state = launcherPagerState,
-                                modifier = Modifier.fillMaxSize(),
-                                userScrollEnabled = !homeMagicExpanded,
-                            ) { page ->
-                                when (page) {
-                                    MINK_DAY_PAGE -> MinkDayScreen(
-                                        store = store,
-                                        isActive = launcherPagerState.currentPage == MINK_DAY_PAGE,
-                                        goHome = {
-                                            launcherScope.launch { launcherPagerState.animateScrollToPage(HOME_PAGE) }
-                                        },
-                                    )
-                                    HOME_PAGE -> HomeScreen(
-                                        store = store,
-                                        actions = actions,
-                                        openSettings = { destination ->
-                                            settingsDestination = destination
-                                            screen = Screen.SETTINGS
-                                        },
-                                        openTodos = { screen = Screen.TODOS },
-                                        openHub = { screen = Screen.HUB },
-                                        openMinkDay = {
-                                            launcherScope.launch { launcherPagerState.animateScrollToPage(MINK_DAY_PAGE) }
-                                        },
-                                        minkStatusActive = launcherPagerState.currentPage == HOME_PAGE,
-                                        onMagicExpandedChange = { homeMagicExpanded = it },
-                                        keyboardInputEnabled = launcherPagerState.currentPage == HOME_PAGE &&
-                                            !showTutorial && !showUpdateNotice && !showShortcutSetup,
-                                        homeRequestToken = homeRequestToken,
-                                    )
-                                    else -> WidgetPage(
-                                        store = store,
-                                        actions = actions,
-                                        goHome = {
-                                            launcherScope.launch { launcherPagerState.animateScrollToPage(HOME_PAGE) }
-                                        },
-                                    )
-                                }
-                            }
-                        }
+                        LauncherHomePager(
+                            store = store,
+                            actions = actions,
+                            pagerState = launcherPagerState,
+                            magicBoxExpanded = homeMagicExpanded,
+                            keyboardInputEnabled = launcherPagerState.currentPage == HOME_PAGE &&
+                                !showTutorial && !showUpdateNotice && !showShortcutSetup,
+                            homeRequestToken = homeRequestToken,
+                            openSettings = { destination ->
+                                settingsDestination = destination
+                                screen = Screen.SETTINGS
+                            },
+                            openTodos = { screen = Screen.TODOS },
+                            openHub = { screen = Screen.HUB },
+                            onMagicBoxExpandedChange = { homeMagicExpanded = it },
+                            modifier = Modifier.fillMaxSize(),
+                        )
                     }
                     Screen.SETTINGS -> SettingsScreen(
                         store = store,

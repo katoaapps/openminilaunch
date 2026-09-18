@@ -126,10 +126,7 @@ internal fun AppearanceSettingsPage(
             imageUri = uri,
             applyWallpaper = wallpaperRepository::apply,
             onApplied = { wallpaper ->
-                store.useAppBackgroundImage(
-                    averageColorArgb = wallpaper.averageColorArgb,
-                    headerColorArgb = wallpaper.headerColorArgb,
-                )
+                store.useAppBackgroundImage(wallpaper)
                 wallpaperToCrop = null
                 onIconStyleApplied()
             },

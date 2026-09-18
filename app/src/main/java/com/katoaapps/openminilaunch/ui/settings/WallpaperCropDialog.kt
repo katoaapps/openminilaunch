@@ -5,9 +5,6 @@ import android.net.Uri
 import android.os.SystemClock
 import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.BorderStroke
-import androidx.compose.foundation.Canvas
-import androidx.compose.foundation.background
-import androidx.compose.foundation.gestures.detectTransformGestures
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
@@ -40,36 +37,29 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.graphics.FilterQuality
-import androidx.compose.ui.graphics.asImageBitmap
-import androidx.compose.ui.input.pointer.pointerInput
-import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import com.katoaapps.openminilaunch.R
-import com.katoaapps.openminilaunch.features.appearance.AppliedHomeWallpaper
 import com.katoaapps.openminilaunch.features.appearance.WallpaperImageProcessor
+import com.katoaapps.openminilaunch.model.HomeWallpaperAppearance
 import com.katoaapps.openminilaunch.ui.theme.Dimens
 import com.katoaapps.openminilaunch.ui.theme.Muted
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
-import kotlin.math.max
-import kotlin.math.roundToInt
 
 private const val WALLPAPER_APPLYING_FEEDBACK_MILLIS = 1_000L
 
 @Composable
 internal fun WallpaperCropDialog(
     imageUri: Uri,
-    applyWallpaper: (Bitmap) -> Result<AppliedHomeWallpaper>,
-    onApplied: (AppliedHomeWallpaper) -> Unit,
+    applyWallpaper: (Bitmap) -> Result<HomeWallpaperAppearance>,
+    onApplied: (HomeWallpaperAppearance) -> Unit,
     onDismiss: () -> Unit,
 ) {
     val context = LocalContext.current
@@ -218,18 +208,13 @@ internal fun WallpaperCropDialog(
                                         val feedbackStartedAt = SystemClock.elapsedRealtime()
                                         val result = withContext(Dispatchers.IO) {
                                             runCatching {
-                                                val cropped = WallpaperImageProcessor.renderCrop(
+                                                WallpaperImageProcessor.useRenderedCrop(
                                                     source = bitmap,
                                                     viewport = viewportSize,
                                                     target = targetSize,
                                                     zoom = zoom,
                                                     offset = offset,
-                                                )
-                                                try {
-                                                    applyWallpaper(cropped).getOrThrow()
-                                                } finally {
-                                                    cropped.recycle()
-                                                }
+                                                ) { crop -> applyWallpaper(crop).getOrThrow() }
                                             }
                                         }
                                         val remainingFeedbackTime = WALLPAPER_APPLYING_FEEDBACK_MILLIS -
@@ -248,40 +233,5 @@ internal fun WallpaperCropDialog(
                 }
             }
         }
-    }
-}
-
-@Composable
-private fun WallpaperCropCanvas(
-    bitmap: Bitmap,
-    zoom: Float,
-    offset: Offset,
-    onViewportChanged: (IntSize) -> Unit,
-    onTransform: (zoom: Float, pan: Offset) -> Unit,
-) {
-    val image = remember(bitmap) { bitmap.asImageBitmap() }
-    Canvas(
-        Modifier.fillMaxSize()
-            .background(MaterialTheme.colorScheme.surfaceContainerLowest)
-            .onSizeChanged(onViewportChanged)
-            .pointerInput(bitmap) {
-                detectTransformGestures { _, pan, gestureZoom, _ ->
-                    onTransform(gestureZoom, pan)
-                }
-            },
-    ) {
-        val baseScale = max(size.width / bitmap.width, size.height / bitmap.height)
-        val scale = baseScale * zoom
-        val drawnWidth = bitmap.width * scale
-        val drawnHeight = bitmap.height * scale
-        drawImage(
-            image = image,
-            dstOffset = IntOffset(
-                ((size.width - drawnWidth) / 2f + offset.x).roundToInt(),
-                ((size.height - drawnHeight) / 2f + offset.y).roundToInt(),
-            ),
-            dstSize = IntSize(drawnWidth.roundToInt(), drawnHeight.roundToInt()),
-            filterQuality = FilterQuality.High,
-        )
     }
 }

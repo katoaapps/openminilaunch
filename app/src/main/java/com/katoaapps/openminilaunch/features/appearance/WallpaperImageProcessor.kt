@@ -111,6 +111,22 @@ internal object WallpaperImageProcessor {
         return output
     }
 
+    inline fun <T> useRenderedCrop(
+        source: Bitmap,
+        viewport: IntSize,
+        target: IntSize,
+        zoom: Float,
+        offset: Offset,
+        action: (Bitmap) -> T,
+    ): T {
+        val crop = renderCrop(source, viewport, target, zoom, offset)
+        return try {
+            action(crop)
+        } finally {
+            crop.recycle()
+        }
+    }
+
     private fun baseScale(source: IntSize, viewport: IntSize): Float = max(
         viewport.width.toFloat() / source.width,
         viewport.height.toFloat() / source.height,

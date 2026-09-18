@@ -17,6 +17,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.produceState
 import androidx.compose.runtime.remember
@@ -82,6 +83,10 @@ private fun BackgroundImageChoice(
     val repository = remember(context) { HomeWallpaperRepository(context) }
     val thumbnail by produceState<Bitmap?>(null, imageRevision, repository.wallpaperFile.lastModified()) {
         value = withContext(Dispatchers.IO) { repository.loadThumbnail(maximumSide = 160) }
+    }
+    DisposableEffect(thumbnail) {
+        val bitmap = thumbnail
+        onDispose { bitmap?.takeUnless(Bitmap::isRecycled)?.recycle() }
     }
     Column(horizontalAlignment = Alignment.CenterHorizontally) {
         Surface(

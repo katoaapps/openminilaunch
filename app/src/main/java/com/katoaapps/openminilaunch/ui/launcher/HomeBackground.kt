@@ -1,5 +1,6 @@
 package com.katoaapps.openminilaunch.ui.launcher
 
+import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -7,8 +8,10 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.produceState
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
@@ -23,7 +26,7 @@ internal fun HomeBackground(store: LauncherStore, modifier: Modifier = Modifier)
     val imageEnabled = store.appBackgroundImageEnabled
     val imageRevision = store.appBackgroundImageRevision
     val wallpaperFile = store.appBackgroundImageFile
-    val wallpaper by produceState<androidx.compose.ui.graphics.ImageBitmap?>(
+    val wallpaperBitmap by produceState<Bitmap?>(
         initialValue = null,
         imageEnabled,
         imageRevision,
@@ -31,16 +34,21 @@ internal fun HomeBackground(store: LauncherStore, modifier: Modifier = Modifier)
     ) {
         value = if (imageEnabled) {
             withContext(Dispatchers.IO) {
-                BitmapFactory.decodeFile(wallpaperFile.absolutePath)?.asImageBitmap()
+                BitmapFactory.decodeFile(wallpaperFile.absolutePath)
             }
         } else {
             null
         }
     }
+    DisposableEffect(wallpaperBitmap) {
+        val bitmap = wallpaperBitmap
+        onDispose { bitmap?.takeUnless(Bitmap::isRecycled)?.recycle() }
+    }
 
-    if (wallpaper != null) {
+    if (wallpaperBitmap != null) {
+        val wallpaper = remember(wallpaperBitmap) { checkNotNull(wallpaperBitmap).asImageBitmap() }
         Image(
-            bitmap = checkNotNull(wallpaper),
+            bitmap = wallpaper,
             contentDescription = null,
             contentScale = ContentScale.Crop,
             modifier = modifier.fillMaxSize(),

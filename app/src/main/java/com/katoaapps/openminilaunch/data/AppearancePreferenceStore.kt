@@ -9,6 +9,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import androidx.core.content.ContextCompat
 import com.katoaapps.openminilaunch.R
+import com.katoaapps.openminilaunch.model.HomeWallpaperAppearance
 import com.katoaapps.openminilaunch.model.ThemePreference
 import com.katoaapps.openminilaunch.model.normalizeHomePanelTransparency
 
@@ -53,12 +54,11 @@ internal class AppearancePreferenceStore(
         private set
     var appBackgroundImageRevision by mutableIntStateOf(0)
         private set
-    var appBackgroundImageAverageColorArgb by mutableStateOf(
-        prefs.intOrNull(APP_BACKGROUND_IMAGE_AVERAGE_COLOR_KEY),
-    )
-        private set
-    var appBackgroundImageHeaderColorArgb by mutableStateOf(
-        prefs.intOrNull(APP_BACKGROUND_IMAGE_HEADER_COLOR_KEY),
+    var appBackgroundImageAppearance by mutableStateOf(
+        prefs.homeWallpaperAppearanceOrNull(
+            APP_BACKGROUND_IMAGE_AVERAGE_COLOR_KEY,
+            APP_BACKGROUND_IMAGE_HEADER_COLOR_KEY,
+        ),
     )
         private set
 
@@ -112,15 +112,18 @@ internal class AppearancePreferenceStore(
         }.apply()
     }
 
-    fun useAppBackgroundImage(averageColorArgb: Int, headerColorArgb: Int) {
+    fun useAppBackgroundImage(appearance: HomeWallpaperAppearance) {
+        val savedAppearance = appearance.copy(
+            averageColorArgb = appearance.averageColorArgb or 0xFF000000.toInt(),
+            headerColorArgb = appearance.headerColorArgb or 0xFF000000.toInt(),
+        )
         appBackgroundImageEnabled = true
         appBackgroundImageRevision++
-        appBackgroundImageAverageColorArgb = averageColorArgb or 0xFF000000.toInt()
-        appBackgroundImageHeaderColorArgb = headerColorArgb or 0xFF000000.toInt()
+        appBackgroundImageAppearance = savedAppearance
         prefs.edit()
             .putBoolean(APP_BACKGROUND_IMAGE_ENABLED_KEY, true)
-            .putInt(APP_BACKGROUND_IMAGE_AVERAGE_COLOR_KEY, checkNotNull(appBackgroundImageAverageColorArgb))
-            .putInt(APP_BACKGROUND_IMAGE_HEADER_COLOR_KEY, checkNotNull(appBackgroundImageHeaderColorArgb))
+            .putInt(APP_BACKGROUND_IMAGE_AVERAGE_COLOR_KEY, savedAppearance.averageColorArgb)
+            .putInt(APP_BACKGROUND_IMAGE_HEADER_COLOR_KEY, savedAppearance.headerColorArgb)
             .apply()
     }
 
@@ -140,5 +143,15 @@ internal class AppearancePreferenceStore(
     }
 }
 
-private fun SharedPreferences.intOrNull(key: String): Int? =
-    if (contains(key)) getInt(key, 0) else null
+private fun SharedPreferences.homeWallpaperAppearanceOrNull(
+    averageColorKey: String,
+    headerColorKey: String,
+): HomeWallpaperAppearance? {
+    if (!contains(averageColorKey) || !contains(headerColorKey)) {
+        return null
+    }
+    return HomeWallpaperAppearance(
+        averageColorArgb = getInt(averageColorKey, 0),
+        headerColorArgb = getInt(headerColorKey, 0),
+    )
+}

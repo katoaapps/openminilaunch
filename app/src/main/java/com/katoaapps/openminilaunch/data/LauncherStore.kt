@@ -78,13 +78,13 @@ class LauncherStore private constructor(context: Context) {
         get() = demoPreferences.effectiveBackgroundColor(appBackgroundColorArgb)
     val visibleAppBackgroundColorArgb: Int?
         get() = if (appBackgroundImageEnabled) {
-            appearancePreferences.appBackgroundImageAverageColorArgb
+            appearancePreferences.appBackgroundImageAppearance?.averageColorArgb
         } else {
             effectiveAppBackgroundColorArgb
         }
     val visibleAppHeaderColorArgb: Int?
         get() = if (appBackgroundImageEnabled) {
-            appearancePreferences.appBackgroundImageHeaderColorArgb
+            appearancePreferences.appBackgroundImageAppearance?.headerColorArgb
         } else {
             effectiveAppBackgroundColorArgb
         }
@@ -94,17 +94,10 @@ class LauncherStore private constructor(context: Context) {
     init {
         if (
             appearancePreferences.appBackgroundImageEnabled &&
-            (
-                appearancePreferences.appBackgroundImageAverageColorArgb == null ||
-                    appearancePreferences.appBackgroundImageHeaderColorArgb == null
-            )
+            appearancePreferences.appBackgroundImageAppearance == null
         ) {
-            homeWallpaperRepository.readStoredAppearance()?.let { wallpaper ->
-                appearancePreferences.useAppBackgroundImage(
-                    wallpaper.averageColorArgb,
-                    wallpaper.headerColorArgb,
-                )
-            }
+            homeWallpaperRepository.readStoredAppearance()
+                ?.let(appearancePreferences::useAppBackgroundImage)
         }
         prefs.edit()
             .remove("weather_zip")
@@ -304,9 +297,9 @@ class LauncherStore private constructor(context: Context) {
         appearancePreferences.setAppBackgroundColor(opaqueArgb)
     }
 
-    fun useAppBackgroundImage(averageColorArgb: Int, headerColorArgb: Int) {
+    internal fun useAppBackgroundImage(appearance: HomeWallpaperAppearance) {
         if (homeWallpaperRepository.hasWallpaper()) {
-            appearancePreferences.useAppBackgroundImage(averageColorArgb, headerColorArgb)
+            appearancePreferences.useAppBackgroundImage(appearance)
         }
     }
 
