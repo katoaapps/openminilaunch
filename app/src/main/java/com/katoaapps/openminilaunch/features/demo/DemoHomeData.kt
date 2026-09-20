@@ -116,5 +116,5 @@ internal object DemoHomeData {
         index: Int,
         text: String,
         completed: Boolean = false,
-    ) = TodoItem("demo-${profile.name.lowercase()}-$index", text, completed)
+    ) = TodoItem("demo-${profile.name.lowercase(java.util.Locale.ROOT)}-$index", text, completed)
 }

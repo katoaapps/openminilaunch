@@ -223,7 +223,8 @@ class MinkNotificationListenerService : NotificationListenerService() {
         }.getOrNull()
     }
 
-    private fun normalizeName(value: String): String = value.lowercase().filter(Char::isLetterOrDigit)
+    private fun normalizeName(value: String): String =
+        value.lowercase(java.util.Locale.ROOT).filter(Char::isLetterOrDigit)
 
     companion object {
         @Volatile internal var connectedService: MinkNotificationListenerService? = null

@@ -11,6 +11,10 @@ import com.katoaapps.openminilaunch.features.apps.launcherDiscoveryLabel
 import com.katoaapps.openminilaunch.features.apps.launcherDiscoveryMatches
 import com.katoaapps.openminilaunch.features.ai.*
 import com.katoaapps.openminilaunch.features.calendar.*
+import com.katoaapps.openminilaunch.features.calendar.engine.CalendarPhraseEngine
+import com.katoaapps.openminilaunch.features.calendar.language.effectiveLanguageTag
+import com.katoaapps.openminilaunch.features.calendar.model.CalendarParseRequest
+import com.katoaapps.openminilaunch.features.calendar.model.CalendarParseResult
 import com.katoaapps.openminilaunch.features.conversations.*
 import com.katoaapps.openminilaunch.features.files.*
 import com.katoaapps.openminilaunch.features.magic.*
@@ -114,6 +118,7 @@ internal fun MagicBox(
     var showNoteDeleteConfirmation by remember { mutableStateOf(false) }
     var showMessageDiscardConfirmation by remember { mutableStateOf(false) }
     var showCommandDiscardConfirmation by remember { mutableStateOf(false) }
+    var pendingCalendarReview by remember { mutableStateOf<CalendarParseResult?>(null) }
     val callFlow = rememberMagicCallFlow(actions, onSessionComplete)
     val smsFlow = rememberMagicSmsFlow(actions, onSessionComplete)
     var aiProvidersLoaded by remember { mutableStateOf(false) }
@@ -238,6 +243,19 @@ internal fun MagicBox(
     val parsedInput = parseMagicBoxInput(text.text, lockedPrefix)
     val prefix = parsedInput.prefix
     val searchTerm = parsedInput.searchTerm
+    val calendarLanguageTag = store.calendarInputLanguage.effectiveLanguageTag(context)
+    val calendarPayload = if (prefix == '+') text.text.drop(1).trim() else ""
+    val calendarParseResult = remember(calendarPayload, calendarLanguageTag) {
+        calendarPayload.takeIf(String::isNotBlank)?.let { payload ->
+            CalendarPhraseEngine.parse(
+                CalendarParseRequest(
+                    text = payload,
+                    defaultTitle = context.getString(R.string.new_event),
+                    languageTag = calendarLanguageTag,
+                ),
+            )
+        }
+    }
     val canSearchContacts = hasContacts || store.demoSearchDataEnabled
     val contactResults = remember(prefix, searchTerm, canSearchContacts, store.demoSearchDataEnabled) {
         if (
@@ -313,7 +331,14 @@ internal fun MagicBox(
         '#' -> MagicActionVisuals(MagicCallColor, Icons.Default.Phone)
         '-' -> MagicActionVisuals(MagicTodoColor, Icons.Default.Checklist)
         MAGIC_NOTE_PREFIX -> MagicActionVisuals(MagicNoteColor, Icons.AutoMirrored.Filled.NoteAdd)
-        '+' -> MagicActionVisuals(MagicEventColor, Icons.Default.Event)
+        '+' -> if (
+            calendarParseResult is CalendarParseResult.NeedsReview ||
+            calendarParseResult is CalendarParseResult.Invalid
+        ) {
+            MagicActionVisuals(MaterialTheme.colorScheme.error, Icons.Default.WarningAmber)
+        } else {
+            MagicActionVisuals(MagicEventColor, Icons.Default.Event)
+        }
         '?' -> MagicActionVisuals(MagicAppColor, Icons.Default.Apps)
         else -> MagicActionVisuals(
             MaterialTheme.colorScheme.primary,
@@ -331,6 +356,7 @@ internal fun MagicBox(
         text = TextFieldValue()
         selectedRecipient = null
         lockedPrefix = null
+        pendingCalendarReview = null
     }
 
     fun requestClearMessageDraft() {
@@ -432,6 +458,21 @@ internal fun MagicBox(
     }
 
     fun submit() {
+        if (prefix == '+') {
+            when (val result = calendarParseResult) {
+                is CalendarParseResult.Success,
+                is CalendarParseResult.NoTemporalPhrase -> {
+                    if (actions.createEvent(checkNotNull(result).draft)) dismiss()
+                }
+                is CalendarParseResult.NeedsReview,
+                is CalendarParseResult.Invalid -> {
+                    pendingCalendarReview = result
+                    keyboard?.hide()
+                }
+                null -> Unit
+            }
+            return
+        }
         dispatchMagicCommand(
             prefix = prefix,
             lockedPrefix = lockedPrefix,
@@ -690,6 +731,18 @@ internal fun MagicBox(
                 }
             }
 
+            calendarParseResult?.let { result ->
+                CalendarParsePreview(
+                    result = result,
+                    languageTag = calendarLanguageTag,
+                    use24HourClock = store.use24HourClock,
+                    onReview = {
+                        pendingCalendarReview = result
+                        keyboard?.hide()
+                    },
+                )
+            }
+
             MagicEditorSurface(
                 noteMode = noteMode,
                 text = text,
@@ -860,4 +913,21 @@ internal fun MagicBox(
         onChooseMessagingApp = { smsFlow.chooseMessagingApp { pendingMessagingChoice = it } },
         onDismissSms = { smsFlow.dismissDraft(onSessionComplete) },
     )
+    pendingCalendarReview?.let { review ->
+        CalendarReviewDialog(
+            result = review,
+            onContinueWithoutTime = { draft ->
+                pendingCalendarReview = null
+                if (actions.createEvent(draft.copy(startMillis = null, endMillis = null, allDay = false))) {
+                    dismiss()
+                } else {
+                    refocus()
+                }
+            },
+            onEdit = {
+                pendingCalendarReview = null
+                refocus()
+            },
+        )
+    }
 }

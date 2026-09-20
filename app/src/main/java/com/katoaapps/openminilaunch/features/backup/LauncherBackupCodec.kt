@@ -10,6 +10,7 @@ import com.katoaapps.openminilaunch.model.PinShortcutRequestPresentation
 import com.katoaapps.openminilaunch.model.Shortcut
 import com.katoaapps.openminilaunch.model.ThemePreference
 import com.katoaapps.openminilaunch.model.TodoItem
+import com.katoaapps.openminilaunch.features.calendar.language.CalendarInputLanguage
 import org.json.JSONArray
 import org.json.JSONObject
 
@@ -41,7 +42,7 @@ internal object LauncherBackupCodec {
     fun decode(json: String): LauncherBackup {
         val root = JSONObject(json)
         require(root.optString("format") == LAUNCHER_BACKUP_FORMAT) { "Not an OpenMink backup" }
-        require(root.optInt("schemaVersion", -1) == LAUNCHER_BACKUP_SCHEMA_VERSION) {
+        require(root.optInt("schemaVersion", -1) in 1..LAUNCHER_BACKUP_SCHEMA_VERSION) {
             "Unsupported OpenMink backup version"
         }
 
@@ -105,6 +106,7 @@ internal object LauncherBackupCodec {
             put("includeAppShortcutsInDiscovery", settings.includeAppShortcutsInDiscovery)
             putNullable("preferredAiPackage", settings.preferredAiPackage)
             putNullable("preferredWebPackage", settings.preferredWebPackage)
+            put("calendarInputLanguage", settings.calendarInputLanguage.storageValue)
         })
         put("messaging", JSONObject().apply {
             put("sendMessagesAutomatically", settings.sendMessagesAutomatically)
@@ -158,6 +160,9 @@ internal object LauncherBackupCodec {
             pinShortcutRequestPresentation = json.enumValue(
                 "pinShortcutRequestPresentation",
                 PinShortcutRequestPresentation.FULL_PAGE,
+            ),
+            calendarInputLanguage = CalendarInputLanguage.fromStorage(
+                magicBox.optNullableString("calendarInputLanguage"),
             ),
         )
     }

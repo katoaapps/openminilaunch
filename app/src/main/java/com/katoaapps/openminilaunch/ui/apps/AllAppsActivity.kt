@@ -223,7 +223,7 @@ internal fun AllAppsScreen(
                 }
                 Column(Modifier.weight(1f)) {
                     Text(
-                        stringResource(R.string.all_apps).uppercase(),
+                        stringResource(R.string.all_apps),
                         color = Color.White,
                         fontWeight = FontWeight.Black,
                         letterSpacing = Dimens.sp1_5,

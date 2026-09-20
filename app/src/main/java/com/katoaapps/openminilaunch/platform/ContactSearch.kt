@@ -10,7 +10,7 @@ import com.katoaapps.openminilaunch.model.ContactResult
 
 internal class ContactSearch(private val context: Context) {
     fun search(query: String, useDemoData: Boolean): List<ContactResult> {
-        if (useDemoData) return DemoSearchData.searchContacts(query)
+        if (useDemoData) return DemoSearchData.searchContacts(context, query)
         if (query.isBlank()) return emptyList()
 
         val results = mutableListOf<ContactResult>()

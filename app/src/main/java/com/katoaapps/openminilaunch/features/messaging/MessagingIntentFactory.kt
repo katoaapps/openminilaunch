@@ -139,7 +139,7 @@ internal class MessagingIntentFactory(private val context: Context) {
             ?: telephony?.simCountryIso?.takeIf(String::isNotBlank)
             ?: Locale.getDefault().country.takeIf(String::isNotBlank)
             ?: return null
-        return PhoneNumberUtils.formatNumberToE164(phone, countryIso.uppercase(Locale.US))
+        return PhoneNumberUtils.formatNumberToE164(phone, countryIso.uppercase(Locale.ROOT))
     }
 }
 

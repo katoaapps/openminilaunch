@@ -83,7 +83,7 @@ the existing app first and clears MinkLauncher OpenSource's local data.
   - `#name` — choose a contact or explicitly try an unsaved phone number or username. Phone-like values retain the confirmed carrier-call option; usernames go directly to Android’s compatible calling-app chooser.
   - `-task` — save an internal to-do
   - `/text` — enter a multiline note; prefer Android's dedicated create-note action, use the chosen Notes app when compatible, and use Samsung Notes' text handoff on Samsung devices
-  - `+text` — create a calendar draft with local English-language parsing for titles, `for …` descriptions, today/tomorrow, weekdays, `in N days/weeks/months`, `first weekday after the Nth`, and common 12/24-hour times
+  - `+text` — preview a locally parsed calendar draft before handoff. The English reference parser understands today/tomorrow, weekdays, named and numeric dates, `in N days/weeks/months`, `first weekday after the Nth`, common 12/24-hour times, and explicit numeric durations. Unsupported or conflicting date wording requires review instead of silently becoming a current-day event.
   - `?app` — search and launch any installed app
 - **Mink Assistant** integration: invoke the same keyboard-first Magic Box over the current app using the phone's system assistant gesture
 - Direct SMS is available only while MinkLauncher OpenSource is the active assistant handler. Android may grant Send SMS access automatically as part of that role; MinkLauncher OpenSource uses it only after the user approves a specific recipient and message. If it is not role-granted, it is requested on first use or from Settings.
@@ -111,6 +111,8 @@ the existing app first and clears MinkLauncher OpenSource's local data.
 - Swipe down anywhere on the home screen to expand notifications
 - Optionally enable the minimal **Double-tap screen lock** accessibility service, then double-tap empty home-screen space to lock like the power button. The service cannot read screen content, subscribe to accessibility events, perform gestures, or collect data.
 - Local persistence via SharedPreferences; no account is required. Network access is used only for the optional GitHub release-metadata check, which sends no launcher data.
+- Android per-app language support is wired to the system language setting, with a separate on-device calendar-input language preference. Additional UI and calendar languages are exposed only after their translations and parser corpus are complete.
+- Calendar input modules currently cover US English, UK English, Spanish, Simplified Chinese, and Arabic. Their additional app UI translations stay hidden until their complete resource sets receive review.
 - Privacy-first file search through Android's MediaStore and user-selected document folders; filenames never leave the device
 - Document search uses only folders the user explicitly selects through Android's system folder picker, with an in-search setup reminder until one is selected
 - File results are grouped as Photos, Videos, Documents, and Audio, with locally generated thumbnails where Android provides them

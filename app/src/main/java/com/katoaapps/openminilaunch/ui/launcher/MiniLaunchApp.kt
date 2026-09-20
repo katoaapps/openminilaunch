@@ -71,7 +71,7 @@ import com.katoaapps.openminilaunch.ui.theme.withAppBackground
 import com.katoaapps.openminilaunch.ui.todos.TodosScreen
 import kotlinx.coroutines.launch
 
-private const val FEATURE_UPDATE_ID = "wallpaper_and_appearance_v1"
+private const val FEATURE_UPDATE_ID = "calendar_language_v1"
 
 @Composable
 internal fun MiniLaunchApp(
@@ -80,8 +80,8 @@ internal fun MiniLaunchApp(
     requestHomeRole: () -> Unit,
     homeRequestToken: Int,
 ) {
-    var screen by remember { mutableStateOf(Screen.HOME) }
-    var settingsDestination by remember { mutableStateOf(SettingsDestination.OVERVIEW) }
+    var screen by rememberSaveable { mutableStateOf(Screen.HOME) }
+    var settingsDestination by rememberSaveable { mutableStateOf(SettingsDestination.OVERVIEW) }
     var showTutorial by rememberSaveable { mutableStateOf(!store.onboardingComplete) }
     var showUpdateNotice by rememberSaveable {
         mutableStateOf(store.onboardingComplete && !store.hasSeenUpdate(FEATURE_UPDATE_ID))
@@ -351,10 +351,10 @@ internal fun MiniLaunchApp(
         }
         if (showUpdateNotice && !showTutorial) {
             FeatureUpdateDialog(
-                onOpenAppearance = {
+                onOpenMagicBox = {
                     store.markUpdateSeen(FEATURE_UPDATE_ID)
                     showUpdateNotice = false
-                    settingsDestination = SettingsDestination.APPEARANCE
+                    settingsDestination = SettingsDestination.MAGIC_BOX
                     screen = Screen.SETTINGS
                 },
                 onReviewTutorial = {

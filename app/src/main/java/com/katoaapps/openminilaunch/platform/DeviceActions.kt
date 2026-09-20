@@ -1,7 +1,7 @@
 package com.katoaapps.openminilaunch.platform
 
 import com.katoaapps.openminilaunch.R
-import com.katoaapps.openminilaunch.features.calendar.parseCalendarPhrase
+import com.katoaapps.openminilaunch.features.calendar.model.CalendarDraft
 import com.katoaapps.openminilaunch.features.ai.AiHandoffMode
 import com.katoaapps.openminilaunch.features.ai.AiHandoffResult
 import com.katoaapps.openminilaunch.features.ai.AiProviderCatalog
@@ -404,8 +404,7 @@ class DeviceActions(private val context: Context) {
         )
     }
 
-    fun createEvent(description: String): Boolean {
-        val draft = parseCalendarPhrase(description, context.getString(R.string.new_event))
+    internal fun createEvent(draft: CalendarDraft): Boolean {
         val intent = Intent(Intent.ACTION_INSERT).setData(CalendarContract.Events.CONTENT_URI)
             .putExtra(CalendarContract.Events.TITLE, draft.title)
             .putExtra(CalendarContract.Events.DESCRIPTION, draft.description)

@@ -9,6 +9,8 @@ import org.junit.Assert.assertTrue
 import org.junit.Test
 
 class DemoSearchDataTest {
+    private val phoneLabels = listOf("Mobile", "Work", "Home")
+
     @Test
     fun demoHomeProvidesFiveSafeTodosWithKaraCompleted() {
         val todos = DemoHomeData.todos()
@@ -37,7 +39,7 @@ class DemoSearchDataTest {
     fun contactSearchProvidesTwoToFourNamedResultsForEveryLetter() {
         var totalResults = 0
         ('a'..'z').forEach { letter ->
-            val results = DemoSearchData.searchContacts(letter.toString())
+            val results = DemoSearchData.searchContacts(letter.toString(), phoneLabels)
             assertTrue(results.size in 2..4)
             assertTrue(results.all { it.name.startsWith(letter, ignoreCase = true) })
             totalResults += results.size
@@ -47,8 +49,8 @@ class DemoSearchDataTest {
 
     @Test
     fun contactSearchGeneratesOnlyTheRequestedResultsAndStaysDeterministic() {
-        val firstSearch = DemoSearchData.searchContacts("gab")
-        val repeatedSearch = DemoSearchData.searchContacts("gab")
+        val firstSearch = DemoSearchData.searchContacts("gab", phoneLabels)
+        val repeatedSearch = DemoSearchData.searchContacts("gab", phoneLabels)
 
         assertEquals(1, firstSearch.size)
         assertEquals(firstSearch, repeatedSearch)
@@ -57,7 +59,7 @@ class DemoSearchDataTest {
 
     @Test
     fun contactNumbersStayInsideReservedFictionalRange() {
-        val results = ('a'..'z').flatMap { DemoSearchData.searchContacts(it.toString()) }
+        val results = ('a'..'z').flatMap { DemoSearchData.searchContacts(it.toString(), phoneLabels) }
         assertTrue(results.all { it.phone.startsWith("+1 202-555-01") })
     }
 }

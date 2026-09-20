@@ -197,6 +197,11 @@ internal fun OnboardingScreen(store: LauncherStore, actions: DeviceActions, onFi
                                 "+" to stringResource(R.string.magic_create_event),
                                 "?" to stringResource(R.string.magic_find_app),
                             ).forEach { (key, description) -> MagicKeyRow(key, description) }
+                            Text(
+                                stringResource(R.string.calendar_onboarding_privacy),
+                                color = Muted,
+                                fontSize = Dimens.sp12,
+                            )
                             Text(stringResource(R.string.message_behavior_onboarding), color = Muted, fontSize = Dimens.sp12)
                         }
                         2 -> Column(verticalArrangement = Arrangement.spacedBy(Dimens.dp18)) {

@@ -22,6 +22,7 @@ class LauncherStore private constructor(context: Context) {
     private val updatePreferences = UpdatePreferenceStore(prefs)
     private val pinShortcutPreferences = PinShortcutPreferenceStore(prefs)
     private val appDiscoveryPreferences = AppDiscoveryPreferenceStore(prefs)
+    private val calendarPreferences = CalendarPreferenceStore(prefs)
     private val homeWallpaperRepository = HomeWallpaperRepository(appContext)
     private val demoPreferences: DemoPreferenceStore = DemoPreferenceStore(appContext, prefs, todoStore)
     internal val demoHomeProfile get() = demoPreferences.profile
@@ -72,6 +73,7 @@ class LauncherStore private constructor(context: Context) {
     val latestGitHubReleaseTag get() = updatePreferences.latestReleaseTag
     val pinShortcutRequestPresentation get() = pinShortcutPreferences.requestPresentation
     val includeAppShortcutsInDiscovery get() = appDiscoveryPreferences.includeAppShortcuts
+    internal val calendarInputLanguage get() = calendarPreferences.inputLanguage
     val effectiveHomePanelColorArgb: Int
         get() = demoPreferences.effectivePanelColor(homePanelColorArgb)
     val effectiveAppBackgroundColorArgb: Int?
@@ -194,6 +196,10 @@ class LauncherStore private constructor(context: Context) {
 
     fun updateIncludeAppShortcutsInDiscovery(enabled: Boolean) {
         appDiscoveryPreferences.updateIncludeAppShortcuts(enabled)
+    }
+
+    internal fun setCalendarInputLanguage(language: com.katoaapps.openminilaunch.features.calendar.language.CalendarInputLanguage) {
+        calendarPreferences.updateInputLanguage(language)
     }
 
     /** Converts package-only settings to personal-profile activity keys without assigning work copies. */

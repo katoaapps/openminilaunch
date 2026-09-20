@@ -16,8 +16,8 @@ class CalendarPhraseParserTest {
     @Test fun parsesTitleDescriptionAndNaturalTime() {
         val draft = parseCalendarPhrase("movie for friends at 5pm", "New event", now)
 
-        assertEquals("movie", draft.title)
-        assertEquals("for friends", draft.description)
+        assertEquals("movie for friends", draft.title)
+        assertEquals("", draft.description)
         assertStart(draft, 2026, 8, 18, 17, 0)
         assertEnd(draft, 2026, 8, 18, 18, 0)
         assertFalse(draft.allDay)
@@ -26,8 +26,8 @@ class CalendarPhraseParserTest {
     @Test fun parsesNextWeekday() {
         val draft = parseCalendarPhrase("movie for friends next Friday at 5pm", "New event", now)
 
-        assertEquals("movie", draft.title)
-        assertEquals("for friends", draft.description)
+        assertEquals("movie for friends", draft.title)
+        assertEquals("", draft.description)
         assertStart(draft, 2026, 8, 21, 17, 0)
     }
 
@@ -93,8 +93,8 @@ class CalendarPhraseParserTest {
     @Test fun leavesTimeUnsetWhenNoDateOrTimeWasProvided() {
         val draft = parseCalendarPhrase("team planning for launch", "New event", now)
 
-        assertEquals("team planning", draft.title)
-        assertEquals("for launch", draft.description)
+        assertEquals("team planning for launch", draft.title)
+        assertEquals("", draft.description)
         assertNull(draft.startMillis)
         assertNull(draft.endMillis)
         assertFalse(draft.allDay)

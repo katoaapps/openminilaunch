@@ -29,6 +29,7 @@ import androidx.compose.material.icons.filled.GridView
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Palette
 import androidx.compose.material.icons.filled.Restore
+import androidx.compose.material.icons.filled.Translate
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -40,6 +41,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
+import com.katoaapps.openminilaunch.features.localization.SupportedAppLanguages
 
 @Composable
 internal fun LauncherSettingsPage(
@@ -49,6 +51,16 @@ internal fun LauncherSettingsPage(
     goBack: () -> Unit,
 ) {
     val appName = stringResource(R.string.app_name)
+    val context = LocalContext.current
+    val languageSummary = if (SupportedAppLanguages.isSupportedByDevice()) {
+        SupportedAppLanguages.selectedLanguageTag(context)?.let { selected ->
+            SupportedAppLanguages.all.firstOrNull {
+                it.languageTag.equals(selected, ignoreCase = true)
+            }?.nativeDisplayName() ?: selected
+        } ?: stringResource(R.string.system_default)
+    } else {
+        stringResource(R.string.app_language_requires_android_13_short)
+    }
     SettingsPage(stringResource(R.string.launcher), goBack) {
         SectionLabel(stringResource(R.string.system_roles))
         SettingsRow(
@@ -59,6 +71,11 @@ internal fun LauncherSettingsPage(
         )
         HorizontalDivider(color = Sage)
         SectionLabel(stringResource(R.string.customize))
+        SettingsRow(
+            stringResource(R.string.language),
+            languageSummary,
+            Icons.Default.Translate,
+        ) { onNavigate(SettingsDestination.LANGUAGE) }
         SettingsRow(
             stringResource(R.string.appearance),
             stringResource(R.string.appearance_summary, stringResource(store.themePreference.labelRes)),

@@ -323,7 +323,7 @@
     <string name="magic_call_contact">Call a contact, number, or username</string>
     <string name="magic_create_todo">Create a to-do</string>
     <string name="magic_send_note">Send text to a notes app</string>
-    <string name="magic_create_event">Create an event, e.g. next Friday or in 4 weeks</string>
+    <string name="magic_create_event">Preview and create an event, e.g. next Friday at 9am. Calendar phrases are understood locally in your selected input language.</string>
     <string name="magic_find_app">Find and launch an app</string>
     <string name="message_behavior_onboarding">Press @ by itself for recent conversations published locally by your messaging apps, or keep typing to filter them alongside Android contacts. Supported conversation shortcuts stay selected while you type and open that exact chat with your draft. You can also select the BETA row to try a phone number or username that is not in either list; the receiving app decides whether it can use that address.</string>
     <string name="todo_onboarding_intro">Type - followed by your task to send it straight to the Home widget.</string>

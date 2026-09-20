@@ -1,0 +1,39 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="calendar">Calendar</string>
+    <string name="calendar_input_language_description">Choose the language Mink uses to understand + event phrases. Parsing stays entirely on this device.</string>
+    <string name="calendar_onboarding_privacy">Mink previews the date and time before opening your calendar. Calendar phrases are interpreted on this device and are never sent to us.</string>
+    <string name="use_app_language">Use app language</string>
+    <string name="use_system_language">Use system language</string>
+    <string name="follow_android_system_language">Follow Android’s current system language</string>
+    <string name="calendar_language_fallback">%1$s calendar phrases are not supported yet. Mink will ask you to review them instead of guessing.</string>
+    <string name="calendar_preview_all_day">All day</string>
+    <string name="calendar_preview_no_time">No date or time detected</string>
+    <string name="calendar_preview_date_all_day">%1$s · All day</string>
+    <string name="calendar_preview_date_time">%1$s · %2$s</string>
+    <string name="calendar_preview_date_time_range">%1$s · %2$s–%3$s</string>
+    <string name="calendar_preview_review">Review before opening Calendar</string>
+    <string name="calendar_review_title">Check this event</string>
+    <string name="calendar_review_continue">Continue without date or time</string>
+    <string name="calendar_review_edit">Edit phrase</string>
+    <string name="calendar_issue_empty">Enter an event title.</string>
+    <string name="calendar_issue_unsupported_language">This calendar language is not supported yet.</string>
+    <string name="calendar_issue_unsupported_phrase">Mink found date or time wording it could not safely understand.</string>
+    <string name="calendar_issue_ambiguous_date">This date can be interpreted more than one way.</string>
+    <string name="calendar_issue_invalid_date">This date is not valid.</string>
+    <string name="calendar_issue_invalid_time">This time is not valid.</string>
+    <string name="calendar_issue_conflict">The phrase contains more than one date, time, or duration.</string>
+    <string name="calendar_issue_dst_gap">This local time does not exist because the clock changes then.</string>
+    <string name="calendar_warning_past">This event is in the past.</string>
+    <string name="calendar_warning_dst_overlap">This time occurs twice because the clock changes then.</string>
+    <string name="update_notice_calendar_heading">Calendar commands you can trust</string>
+    <string name="update_notice_calendar_preview_title">See the event before handoff</string>
+    <string name="update_notice_calendar_preview_description">The + command now previews the exact title, date, time, and duration Mink will send to your calendar app.</string>
+    <string name="update_notice_calendar_review_title">Mink stops instead of guessing</string>
+    <string name="update_notice_calendar_review_description">Invalid, conflicting, or unsupported date wording asks for review instead of quietly creating an event today.</string>
+    <string name="update_notice_calendar_language_title">Calendar language is your choice</string>
+    <string name="update_notice_calendar_language_description">Calendar input can follow the app, follow Android, or use a separately supported language from Magic Box settings.</string>
+    <string name="update_notice_calendar_local_title">Still entirely on device</string>
+    <string name="update_notice_calendar_local_description">Mink uses deterministic language modules inside the app. Calendar phrases are not uploaded or sent to an AI service.</string>
+    <string name="open_magic_box_settings">Open Magic Box settings</string>
+</resources>

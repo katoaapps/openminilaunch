@@ -34,7 +34,8 @@ internal fun dispatchMagicCommand(
         MAGIC_NOTE_PREFIX -> payload.isNotBlank() && actions.createNote(payload).also { opened ->
             keepDraftAfterExternalHandoff = opened
         }
-        '+' -> payload.isNotBlank() && actions.createEvent(payload)
+        // Calendar commands are parsed and reviewed by MagicBox before platform handoff.
+        '+' -> false
         '@' -> (selectedRecipient != null && payload.isNotBlank()).also { ready ->
             if (ready) {
                 when (val recipient = checkNotNull(selectedRecipient)) {

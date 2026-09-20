@@ -37,6 +37,7 @@ internal fun SettingsDestinationContent(
             onNavigate = onNavigate,
             goBack = onExitSettings,
         )
+        SettingsDestination.LANGUAGE -> AppLanguageSettingsPage(goBack = onNavigateBack)
         SettingsDestination.LAUNCHER -> LauncherSettingsPage(
             store = store,
             requestHomeRole = requestHomeRole,

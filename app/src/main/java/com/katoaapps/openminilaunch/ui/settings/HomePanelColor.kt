@@ -302,7 +302,7 @@ private fun AppearanceColorDialog(
                 OutlinedTextField(
                     value = hexText,
                     onValueChange = { entered ->
-                        val filtered = entered.uppercase().filterIndexed { index, char ->
+                        val filtered = entered.uppercase(Locale.ROOT).filterIndexed { index, char ->
                             (index == 0 && char == '#') || char in '0'..'9' || char in 'A'..'F'
                         }.take(7)
                         hexText = filtered

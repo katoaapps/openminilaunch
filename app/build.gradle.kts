@@ -37,6 +37,11 @@ android {
         versionName = "1.5.3"
     }
 
+    androidResources {
+        generateLocaleConfig = true
+        localeFilters += listOf("en")
+    }
+
     buildFeatures {
         compose = true
         buildConfig = true
@@ -54,6 +59,9 @@ android {
     }
 
     buildTypes {
+        getByName("debug") {
+            isPseudoLocalesEnabled = true
+        }
         getByName("release") {
             signingConfig = signingConfigs.findByName("upstreamRelease")
         }

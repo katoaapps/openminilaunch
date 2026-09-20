@@ -5,6 +5,7 @@ import androidx.compose.runtime.staticCompositionLocalOf
 
 internal enum class SettingsDestination {
     OVERVIEW,
+    LANGUAGE,
     LAUNCHER,
     APPEARANCE,
     SHORTCUTS,
@@ -31,6 +32,11 @@ internal fun popSettingsDestination(stack: List<SettingsDestination>): List<Sett
 
 internal fun settingsPathTo(destination: SettingsDestination): List<SettingsDestination> = when (destination) {
     SettingsDestination.OVERVIEW -> listOf(SettingsDestination.OVERVIEW)
+    SettingsDestination.LANGUAGE -> listOf(
+        SettingsDestination.OVERVIEW,
+        SettingsDestination.LAUNCHER,
+        SettingsDestination.LANGUAGE,
+    )
     SettingsDestination.LAUNCHER -> listOf(SettingsDestination.OVERVIEW, SettingsDestination.LAUNCHER)
     SettingsDestination.APPEARANCE,
     SettingsDestination.SHORTCUTS -> listOf(
