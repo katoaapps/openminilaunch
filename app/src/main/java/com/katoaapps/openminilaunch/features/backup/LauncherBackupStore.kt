@@ -26,6 +26,7 @@ internal fun LauncherStore.createPortableBackup(appVersion: String): LauncherBac
             showBatteryPercentage = showBatteryPercentage,
             use24HourClock = use24HourClock,
             homePanelColorArgb = homePanelColorArgb,
+            watermelonModeEnabled = watermelonModeEnabled,
             homePanelTransparency = homePanelTransparency,
             appBackgroundColorArgb = appBackgroundColorArgb,
             iconAppearance = iconAppearance,
@@ -70,6 +71,7 @@ internal fun LauncherStore.restorePortableBackup(backup: LauncherBackup) {
     updateShowBatteryPercentage(settings.showBatteryPercentage)
     updateUse24HourClock(settings.use24HourClock)
     setHomePanelColor(settings.homePanelColorArgb)
+    if (settings.watermelonModeEnabled) activateWatermelonMode()
     setHomePanelTransparency(settings.homePanelTransparency)
     setAppBackgroundColor(settings.appBackgroundColorArgb)
     when (settings.iconAppearance.source) {

@@ -42,6 +42,7 @@ internal data class LauncherBackupSettings(
     val showBatteryPercentage: Boolean,
     val use24HourClock: Boolean,
     val homePanelColorArgb: Int,
+    val watermelonModeEnabled: Boolean,
     val homePanelTransparency: Float,
     val appBackgroundColorArgb: Int?,
     val iconAppearance: IconAppearance,

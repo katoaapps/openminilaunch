@@ -76,6 +76,7 @@ class LauncherBackupCodecTest {
             showBatteryPercentage = true,
             use24HourClock = false,
             homePanelColorArgb = 0xFF123456.toInt(),
+            watermelonModeEnabled = true,
             homePanelTransparency = 0f,
             appBackgroundColorArgb = null,
             iconAppearance = IconAppearance(),

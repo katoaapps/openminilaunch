@@ -103,6 +103,7 @@ internal object LauncherBackupCodec {
             put("showBatteryPercentage", settings.showBatteryPercentage)
             put("use24HourClock", settings.use24HourClock)
             put("homePanelColorArgb", settings.homePanelColorArgb)
+            put("watermelonModeEnabled", settings.watermelonModeEnabled)
             put("homePanelTransparency", settings.homePanelTransparency)
             putNullable("appBackgroundColorArgb", settings.appBackgroundColorArgb)
             put("iconSource", settings.iconAppearance.source.name)
@@ -147,6 +148,7 @@ internal object LauncherBackupCodec {
             showBatteryPercentage = appearance.optBoolean("showBatteryPercentage", false),
             use24HourClock = appearance.optBoolean("use24HourClock", false),
             homePanelColorArgb = appearance.optInt("homePanelColorArgb"),
+            watermelonModeEnabled = appearance.optBoolean("watermelonModeEnabled", false),
             homePanelTransparency = normalizeHomePanelTransparency(
                 appearance.optDouble("homePanelTransparency", 0.0).toFloat(),
             ),

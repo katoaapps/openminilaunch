@@ -49,6 +49,8 @@ internal class AppearancePreferenceStore(
         prefs.getInt(HOME_PANEL_COLOR_KEY, ContextCompat.getColor(context, R.color.mink_forest)),
     )
         private set
+    var watermelonModeEnabled by mutableStateOf(prefs.getBoolean(WATERMELON_MODE_KEY, false))
+        private set
     var homePanelTransparency by mutableStateOf(
         normalizeHomePanelTransparency(prefs.getFloat(HOME_PANEL_TRANSPARENCY_KEY, 0f)),
     )
@@ -136,9 +138,13 @@ internal class AppearancePreferenceStore(
         prefs.edit().putBoolean(USE_24_HOUR_CLOCK_KEY, enabled).apply()
     }
 
-    fun setHomePanelColor(argb: Int) {
+    fun setHomePanelColor(argb: Int, watermelonMode: Boolean = false) {
         homePanelColorArgb = argb or 0xFF000000.toInt()
-        prefs.edit().putInt(HOME_PANEL_COLOR_KEY, homePanelColorArgb).apply()
+        watermelonModeEnabled = watermelonMode
+        prefs.edit()
+            .putInt(HOME_PANEL_COLOR_KEY, homePanelColorArgb)
+            .putBoolean(WATERMELON_MODE_KEY, watermelonMode)
+            .apply()
     }
 
     fun updateHomePanelTransparency(transparency: Float) {
@@ -187,6 +193,7 @@ internal class AppearancePreferenceStore(
         const val TWO_PANEL_AUTO_PENDING_KEY = "two_panel_auto_pending"
         const val TWO_PANEL_MODE_FOR_LARGE_DISPLAYS_KEY = "two_panel_mode_for_large_displays"
         const val USE_24_HOUR_CLOCK_KEY = "use_24_hour_clock"
+        const val WATERMELON_MODE_KEY = "watermelon_mode"
     }
 }
 

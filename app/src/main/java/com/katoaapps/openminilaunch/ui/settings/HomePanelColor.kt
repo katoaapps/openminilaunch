@@ -5,6 +5,8 @@ import com.katoaapps.openminilaunch.data.*
 import com.katoaapps.openminilaunch.model.*
 import com.katoaapps.openminilaunch.platform.*
 import com.katoaapps.openminilaunch.features.files.*
+import com.katoaapps.openminilaunch.features.appearance.WATERMELON_HOTPHRASE
+import com.katoaapps.openminilaunch.features.appearance.WATERMELON_PILL_COLOR_ARGB
 import com.katoaapps.openminilaunch.features.wellbeing.*
 import com.katoaapps.openminilaunch.ui.components.*
 import com.katoaapps.openminilaunch.ui.theme.*
@@ -80,6 +82,7 @@ internal fun HomePanelColorSetting(
     selectedArgb: Int,
     transparency: Float,
     onColorSelected: (Int) -> Unit,
+    onWatermelonSelected: () -> Unit,
     onTransparencyChanged: (Float) -> Unit,
 ) {
     val context = androidx.compose.ui.platform.LocalContext.current
@@ -100,6 +103,14 @@ internal fun HomePanelColorSetting(
         customDescriptionRes = R.string.custom_panel_color_description,
         presets = presets,
         onColorSelected = onColorSelected,
+        colorHotphrases = mapOf(WATERMELON_HOTPHRASE to WATERMELON_PILL_COLOR_ARGB),
+        onCustomColorSelected = { input, argb ->
+            if (input.trim().equals(WATERMELON_HOTPHRASE, ignoreCase = true)) {
+                onWatermelonSelected()
+            } else {
+                onColorSelected(argb)
+            }
+        },
         extraContent = {
             Column(verticalArrangement = Arrangement.spacedBy(Dimens.dp5)) {
                 Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
@@ -143,6 +154,8 @@ internal fun AppearanceColorSetting(
     @androidx.annotation.StringRes customDescriptionRes: Int,
     presets: List<HomePanelColorPreset>,
     onColorSelected: (Int) -> Unit,
+    colorHotphrases: Map<String, Int> = emptyMap(),
+    onCustomColorSelected: (String, Int) -> Unit = { _, argb -> onColorSelected(argb) },
     selectedValueLabel: String? = null,
     presetTrailingContent: @Composable RowScope.() -> Unit = {},
     extraContent: @Composable ColumnScope.() -> Unit = {},
@@ -235,8 +248,9 @@ internal fun AppearanceColorSetting(
             initialArgb = pickerArgb,
             titleRes = customTitleRes,
             descriptionRes = customDescriptionRes,
-            onConfirm = {
-                onColorSelected(it)
+            colorHotphrases = colorHotphrases,
+            onConfirm = { input, argb ->
+                onCustomColorSelected(input, argb)
                 showCustomPicker = false
             },
             onDismiss = { showCustomPicker = false },
@@ -249,7 +263,8 @@ private fun AppearanceColorDialog(
     initialArgb: Int,
     @androidx.annotation.StringRes titleRes: Int,
     @androidx.annotation.StringRes descriptionRes: Int,
-    onConfirm: (Int) -> Unit,
+    colorHotphrases: Map<String, Int>,
+    onConfirm: (String, Int) -> Unit,
     onDismiss: () -> Unit,
 ) {
     val initialHsv = remember(initialArgb) {
@@ -260,6 +275,11 @@ private fun AppearanceColorDialog(
     var brightness by remember(initialArgb) { mutableFloatStateOf(initialHsv[2]) }
     var hexText by remember(initialArgb) { mutableStateOf(formatHomePanelHex(initialArgb)) }
     val currentArgb = android.graphics.Color.HSVToColor(floatArrayOf(hue, saturation, brightness))
+
+    fun parseColorInput(value: String): Int? {
+        val normalized = value.trim().uppercase(Locale.ROOT)
+        return colorHotphrases[normalized] ?: parseHomePanelHex(normalized)
+    }
 
     fun syncHex() {
         hexText = formatHomePanelHex(android.graphics.Color.HSVToColor(floatArrayOf(hue, saturation, brightness)))
@@ -302,11 +322,16 @@ private fun AppearanceColorDialog(
                 OutlinedTextField(
                     value = hexText,
                     onValueChange = { entered ->
+                        val allowsHotphrase = colorHotphrases.isNotEmpty()
+                        val maximumLength = maxOf(7, colorHotphrases.keys.maxOfOrNull(String::length) ?: 0)
                         val filtered = entered.uppercase(Locale.ROOT).filterIndexed { index, char ->
-                            (index == 0 && char == '#') || char in '0'..'9' || char in 'A'..'F'
-                        }.take(7)
+                            (index == 0 && char == '#') ||
+                                char in '0'..'9' ||
+                                char in 'A'..'F' ||
+                                (allowsHotphrase && char in 'A'..'Z')
+                        }.take(maximumLength)
                         hexText = filtered
-                        parseHomePanelHex(filtered)?.let { parsed ->
+                        parseColorInput(filtered)?.let { parsed ->
                             val hsv = FloatArray(3)
                             android.graphics.Color.colorToHSV(parsed, hsv)
                             hue = hsv[0]
@@ -316,9 +341,9 @@ private fun AppearanceColorDialog(
                     },
                     label = { Text(stringResource(R.string.hex_color)) },
                     supportingText = {
-                        if (parseHomePanelHex(hexText) == null) Text(stringResource(R.string.invalid_hex_color))
+                        if (parseColorInput(hexText) == null) Text(stringResource(R.string.invalid_hex_color))
                     },
-                    isError = parseHomePanelHex(hexText) == null,
+                    isError = parseColorInput(hexText) == null,
                     singleLine = true,
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Ascii),
                     modifier = Modifier.fillMaxWidth(),
@@ -327,8 +352,8 @@ private fun AppearanceColorDialog(
                     TextButton(onClick = onDismiss) { Text(stringResource(R.string.cancel)) }
                     Spacer(Modifier.size(Dimens.dp8))
                     Button(
-                        onClick = { onConfirm(currentArgb) },
-                        enabled = parseHomePanelHex(hexText) != null,
+                        onClick = { parseColorInput(hexText)?.let { onConfirm(hexText, it) } },
+                        enabled = parseColorInput(hexText) != null,
                     ) { Text(stringResource(R.string.apply)) }
                 }
             }

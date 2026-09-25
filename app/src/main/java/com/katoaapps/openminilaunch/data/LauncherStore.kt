@@ -1,7 +1,8 @@
 package com.katoaapps.openminilaunch.data
 
-import com.katoaapps.openminilaunch.features.demo.DemoHomeProfile
 import com.katoaapps.openminilaunch.features.appearance.HomeWallpaperRepository
+import com.katoaapps.openminilaunch.features.appearance.WATERMELON_PILL_COLOR_ARGB
+import com.katoaapps.openminilaunch.features.demo.DemoHomeProfile
 import com.katoaapps.openminilaunch.features.profile.ProfileRepository
 import com.katoaapps.openminilaunch.model.*
 
@@ -82,6 +83,8 @@ class LauncherStore private constructor(context: Context) {
     val includeAppShortcutsInDiscovery get() = appDiscoveryPreferences.includeAppShortcuts
     val effectiveHomePanelColorArgb: Int
         get() = demoPreferences.effectivePanelColor(homePanelColorArgb)
+    val watermelonModeEnabled: Boolean
+        get() = appearancePreferences.watermelonModeEnabled
     val effectiveAppBackgroundColorArgb: Int?
         get() = demoPreferences.effectiveBackgroundColor(appBackgroundColorArgb)
     val visibleAppBackgroundColorArgb: Int?
@@ -310,6 +313,10 @@ class LauncherStore private constructor(context: Context) {
         val opaqueArgb = argb or 0xFF000000.toInt()
         if (demoPreferences.setPanelColor(opaqueArgb)) return
         appearancePreferences.setHomePanelColor(opaqueArgb)
+    }
+
+    fun activateWatermelonMode() {
+        appearancePreferences.setHomePanelColor(WATERMELON_PILL_COLOR_ARGB, watermelonMode = true)
     }
 
     fun setHomePanelTransparency(transparency: Float) {

@@ -2,6 +2,7 @@ package com.katoaapps.openminilaunch.ui.components
 
 import com.katoaapps.openminilaunch.platform.DeviceActions
 import com.katoaapps.openminilaunch.data.LauncherStore
+import com.katoaapps.openminilaunch.features.appearance.WATERMELON_EMOJI
 import com.katoaapps.openminilaunch.features.iconpacks.IconPackRepository
 import com.katoaapps.openminilaunch.model.IconSource
 import com.katoaapps.openminilaunch.model.LauncherAppTarget
@@ -20,6 +21,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Apps
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -34,6 +36,8 @@ import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.luminance
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.semantics.clearAndSetSemantics
+import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.unit.Dp
 import androidx.core.graphics.drawable.toBitmap
 
@@ -153,7 +157,12 @@ private fun RenderedAppIcon(
     themedTint: Color?,
     contentDescription: String?,
 ) {
+    val context = LocalContext.current
     val density = LocalDensity.current
+    if (LauncherStore.get(context).watermelonModeEnabled) {
+        WatermelonAppIcon(size, contentDescription)
+        return
+    }
     val targetBitmapSize = with(density) {
         (size * MONOCHROME_ICON_SCALE).roundToPx()
     }.coerceAtLeast(MIN_ICON_BITMAP_SIZE_PX)
@@ -198,6 +207,27 @@ private fun RenderedAppIcon(
                 modifier = Modifier.size(size * .55f),
             )
         }
+    }
+}
+
+@Composable
+private fun WatermelonAppIcon(size: Dp, description: String?) {
+    val density = LocalDensity.current
+    val semantics = if (description == null) {
+        Modifier
+    } else {
+        Modifier.clearAndSetSemantics { contentDescription = description }
+    }
+    Box(
+        modifier = semantics.size(size),
+        contentAlignment = Alignment.Center,
+    ) {
+        Text(
+            text = WATERMELON_EMOJI,
+            fontSize = with(density) { (size * .8f).toSp() },
+            lineHeight = with(density) { size.toSp() },
+            maxLines = 1,
+        )
     }
 }
 

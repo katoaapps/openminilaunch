@@ -140,6 +140,7 @@ internal fun AppearanceSettingsPage(
             selectedArgb = store.effectiveHomePanelColorArgb,
             transparency = store.homePanelTransparency,
             onColorSelected = store::setHomePanelColor,
+            onWatermelonSelected = store::activateWatermelonMode,
             onTransparencyChanged = store::setHomePanelTransparency,
         )
         AppBackgroundSetting(
