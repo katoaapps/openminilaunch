@@ -314,7 +314,7 @@
     <string name="just_start_typing">Mulailah mengetik</string>
     <string name="just_start_typing_description">Di ponsel dengan keyboard fisik, tekan tombol teks apa saja dari Beranda. Magic Box muncul dengan karakter pertama yang sudah dimasukkan.</string>
     <string name="everything_reachable">Semuanya masih bisa dijangkau</string>
-    <string name="everything_reachable_description">Gunakan? untuk menemukan aplikasi terinstal dan pintasan yang disimpan, atau buka 8 Teratas dan pilih Lihat semua. Menyertakan pintasan aplikasi adalah opsional dan mengingat pilihan Anda.</string>
+    <string name="everything_reachable_description">Gunakan ? untuk menemukan aplikasi terinstal dan pintasan tersimpan, atau buka Top 8 lalu pilih Lihat semua. Menyertakan pintasan aplikasi bersifat opsional dan pilihan Anda akan diingat. Anda juga dapat menggeser ke atas dari Home untuk membuka Lihat semua.</string>
     <string name="magic_box_ready_description">Magic Box siap sejak Beranda dibuka. Tidak diperlukan ketukan pada keyboard fisik.</string>
     <string name="magic_text_contact">Buka percakapan terkini atau kirim SMS ke kontak</string>
     <string name="magic_call_contact">Hubungi kontak, nomor, atau nama pengguna</string>

@@ -314,7 +314,7 @@
     <string name="just_start_typing">Commencez simplement à taper</string>
     <string name="just_start_typing_description">Sur un téléphone à clavier physique, appuyez sur n’importe quelle touche de texte depuis Accueil. Le Magic Box apparaît avec ce premier caractère déjà saisi.</string>
     <string name="everything_reachable">Tout est toujours accessible</string>
-    <string name="everything_reachable_description">Utiliser ? pour rechercher les applications installées et les raccourcis enregistrés, ou ouvrez Top 8 et choisissez Tout voir. L\'inclusion des raccourcis d\'application est facultative et mémorise votre choix.</string>
+    <string name="everything_reachable_description">Utilisez ? pour rechercher les applications installées et les raccourcis enregistrés, ou ouvrez Top 8 et choisissez Tout voir. L’inclusion des raccourcis d’application est facultative et votre choix est mémorisé. Vous pouvez aussi balayer vers le haut depuis l’accueil pour ouvrir Tout voir.</string>
     <string name="magic_box_ready_description">Le Magic Box est prêt dès l\'ouverture de Home. Aucune pression n\'est requise sur un clavier physique.</string>
     <string name="magic_text_contact">Ouvrir une conversation récente ou envoyer un SMS à un contact</string>
     <string name="magic_call_contact">Appeler un contact, un numéro ou un nom d\'utilisateur</string>

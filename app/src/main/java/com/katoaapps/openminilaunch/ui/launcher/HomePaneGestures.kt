@@ -13,6 +13,8 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clipToBounds
 import androidx.compose.ui.input.pointer.PointerEventPass
 import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.platform.LocalDensity
+import com.katoaapps.openminilaunch.ui.theme.Dimens
 
 /** Keeps Home's pane navigation gestures separate from its visual layout. */
 @Composable
@@ -21,12 +23,16 @@ internal fun Modifier.homePaneGestures(
     onPaneInteracted: () -> Unit,
     onHorizontalDrag: ((Float) -> Unit)?,
     onHorizontalDragFinished: ((Float, Long) -> Unit)?,
+    onSwipeUp: () -> Unit,
     onSwipeDown: () -> Unit,
     onDoubleTap: () -> Unit,
 ): Modifier {
+    val density = LocalDensity.current
+    val verticalSwipeThresholdPx = with(density) { Dimens.dp48.toPx() }
     val currentPaneInteracted by rememberUpdatedState(onPaneInteracted)
     val currentHorizontalDrag by rememberUpdatedState(onHorizontalDrag)
     val currentHorizontalDragFinished by rememberUpdatedState(onHorizontalDragFinished)
+    val currentSwipeUp by rememberUpdatedState(onSwipeUp)
     val currentSwipeDown by rememberUpdatedState(onSwipeDown)
     val currentDoubleTap by rememberUpdatedState(onDoubleTap)
 
@@ -70,12 +76,17 @@ internal fun Modifier.homePaneGestures(
                 currentPaneInteracted()
             }
         }
-        .pointerInput(Unit) {
-            var distance = 0f
+        .pointerInput(verticalSwipeThresholdPx, magicExpanded) {
+            var verticalDistance = 0f
             detectVerticalDragGestures(
-                onDragStart = { distance = 0f },
-                onVerticalDrag = { _, amount -> if (amount > 0) distance += amount },
-                onDragEnd = { if (distance > 140f) currentSwipeDown() },
+                onDragStart = { verticalDistance = 0f },
+                onVerticalDrag = { _, amount -> verticalDistance += amount },
+                onDragEnd = {
+                    when {
+                        verticalDistance >= verticalSwipeThresholdPx -> currentSwipeDown()
+                        verticalDistance <= -verticalSwipeThresholdPx && !magicExpanded -> currentSwipeUp()
+                    }
+                },
             )
         }
         .pointerInput(magicExpanded) {

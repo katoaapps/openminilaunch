@@ -121,6 +121,7 @@ internal fun HomeScreen(
                 onPaneInteracted = onPaneInteracted,
                 onHorizontalDrag = onHorizontalDrag,
                 onHorizontalDragFinished = onHorizontalDragFinished,
+                onSwipeUp = { actions.openAllAppsFromBottom() },
                 onSwipeDown = actions::expandNotificationShade,
                 onDoubleTap = ::lockFromHome,
             ),

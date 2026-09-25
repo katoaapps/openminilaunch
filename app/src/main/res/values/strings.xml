@@ -324,7 +324,7 @@
     <string name="just_start_typing">Just start typing</string>
     <string name="just_start_typing_description">On a physical-keyboard phone, press any text key from Home. The Magic Box appears with that first character already entered.</string>
     <string name="everything_reachable">Everything is still reachable</string>
-    <string name="everything_reachable_description">Use ? to find installed apps and saved shortcuts, or open Top 8 and choose See all. Include app shortcuts is optional and remembers your choice.</string>
+    <string name="everything_reachable_description">Use ? to find installed apps and saved shortcuts, or open Top 8 and choose See all. Include app shortcuts is optional and remembers your choice. You can also swipe up from Home to open See all.</string>
     <string name="magic_box_ready_description">The Magic Box is ready from the moment Home opens. No tap is required on a physical keyboard.</string>
     <string name="magic_text_contact">Open a recent conversation or text a contact</string>
     <string name="magic_call_contact">Call a contact, number, or username</string>

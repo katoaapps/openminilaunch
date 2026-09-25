@@ -314,7 +314,7 @@
     <string name="just_start_typing">শুধু টাইপ করা শুরু করুন</string>
     <string name="just_start_typing_description">একটি ফিজিক্যাল-কীবোর্ড ফোনে, হোম থেকে যেকোনো টেক্সট কী টিপুন। Magic Box সেই প্রথম অক্ষরটি ইতিমধ্যেই প্রবেশ করানো সহ উপস্থিত হয়৷</string>
     <string name="everything_reachable">সবকিছু এখনও নাগাল হয়</string>
-    <string name="everything_reachable_description">ব্যবহার করবেন? ইনস্টল করা অ্যাপস এবং সংরক্ষিত শর্টকাটগুলি খুঁজে পেতে, অথবা শীর্ষ 8 খুলুন এবং সমস্ত দেখুন নির্বাচন করুন৷ অ্যাপ শর্টকাট অন্তর্ভুক্ত করা ঐচ্ছিক এবং আপনার পছন্দ মনে রাখে।</string>
+    <string name="everything_reachable_description">\? ব্যবহার করে ইনস্টল করা অ্যাপ ও সংরক্ষিত শর্টকাট খুঁজুন, অথবা Top 8 খুলে সব দেখুন বেছে নিন। অ্যাপ শর্টকাট অন্তর্ভুক্ত করা ঐচ্ছিক এবং আপনার পছন্দ মনে রাখা হবে। সব দেখুন খুলতে Home থেকে ওপরের দিকে সোয়াইপও করতে পারেন।</string>
     <string name="magic_box_ready_description">হোম খোলার মুহুর্ত থেকে Magic Box প্রস্তুত। একটি ফিজিক্যাল কীবোর্ডে কোনো ট্যাপের প্রয়োজন নেই।</string>
     <string name="magic_text_contact">একটি সাম্প্রতিক কথোপকথন খুলুন বা একটি পরিচিতি টেক্সট</string>
     <string name="magic_call_contact">একটি পরিচিতি, নম্বর, বা ব্যবহারকারীর নাম কল করুন</string>

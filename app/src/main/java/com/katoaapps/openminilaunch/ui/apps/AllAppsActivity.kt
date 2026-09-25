@@ -82,8 +82,24 @@ class AllAppsActivity : ComponentActivity() {
                     store = store,
                     actions = actions,
                     onClose = ::finish,
+                    onSwipeDown = ::finishToBottom,
                 )
             }
+        }
+    }
+
+    private fun finishToBottom() {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+            overrideActivityTransition(
+                Activity.OVERRIDE_TRANSITION_CLOSE,
+                R.anim.hold_position,
+                R.anim.slide_out_to_bottom,
+            )
+            finish()
+        } else {
+            finish()
+            @Suppress("DEPRECATION")
+            overridePendingTransition(R.anim.hold_position, R.anim.slide_out_to_bottom)
         }
     }
 }
@@ -146,6 +162,7 @@ internal fun AllAppsScreen(
     store: LauncherStore,
     actions: DeviceActions,
     onClose: () -> Unit,
+    onSwipeDown: () -> Unit,
 ) {
     val context = LocalContext.current
     val launcherAppsRevision by actions.launcherAppsRevision.collectAsState()
@@ -200,7 +217,9 @@ internal fun AllAppsScreen(
     val edgeColor = lerpColor(accent, Color.Black, .68f)
     val density = LocalDensity.current
 
-    BoxWithConstraints(Modifier.fillMaxSize()) {
+    BoxWithConstraints(
+        Modifier.fillMaxSize().dismissAllAppsOnSwipeDown(onSwipeDown),
+    ) {
         val compact = maxHeight < Dimens.dp560
         val availableWidth = maxWidth
         Box(

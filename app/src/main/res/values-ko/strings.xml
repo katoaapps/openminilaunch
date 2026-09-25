@@ -314,7 +314,7 @@
     <string name="just_start_typing">그냥 입력을 시작하세요</string>
     <string name="just_start_typing_description">실제 키보드 휴대폰에서는 홈에서 아무 텍스트 키나 누릅니다. Magic Box는 ​​첫 번째 문자가 이미 입력된 상태로 나타납니다.</string>
     <string name="everything_reachable">모든 것에 여전히 접근 가능</string>
-    <string name="everything_reachable_description">사용 ? 설치된 앱과 저장된 바로가기를 찾으려면 상위 8개 항목을 열고 모두 보기를 선택하세요. 앱 바로가기 포함은 선택 사항이며 선택 사항을 기억합니다.</string>
+    <string name="everything_reachable_description">\?를 사용하여 설치된 앱과 저장된 바로가기를 찾거나 Top 8을 열고 모두 보기를 선택하세요. 앱 바로가기 포함 여부는 선택 사항이며 설정이 기억됩니다. 홈에서 위로 스와이프하여 모두 보기를 열 수도 있습니다.</string>
     <string name="magic_box_ready_description">Magic Box는 홈이 열리는 순간부터 준비됩니다. 실제 키보드에서는 탭할 필요가 없습니다.</string>
     <string name="magic_text_contact">최근 대화를 열거나 연락처에 문자 메시지를 보내세요.</string>
     <string name="magic_call_contact">연락처, 전화번호 또는 사용자 이름으로 전화 걸기</string>

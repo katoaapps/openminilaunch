@@ -314,7 +314,7 @@
     <string name="just_start_typing">बस टाइप करना शुरू करें</string>
     <string name="just_start_typing_description">भौतिक-कीबोर्ड फ़ोन पर, होम से कोई भी टेक्स्ट कुंजी दबाएँ। Magic Box पहले से ही दर्ज किए गए पहले अक्षर के साथ प्रकट होता है।</string>
     <string name="everything_reachable">सब कुछ अभी भी पहुंच योग्य है</string>
-    <string name="everything_reachable_description">उपयोग करें ? इंस्टॉल किए गए ऐप्स और सहेजे गए शॉर्टकट ढूंढने के लिए, या शीर्ष 8 खोलें और सभी देखें चुनें। ऐप शॉर्टकट शामिल करना वैकल्पिक है और आपकी पसंद को याद रखता है।</string>
+    <string name="everything_reachable_description">इंस्टॉल किए गए ऐप और सहेजे गए शॉर्टकट खोजने के लिए ? का उपयोग करें, या Top 8 खोलकर सभी देखें चुनें। ऐप शॉर्टकट शामिल करना वैकल्पिक है और आपकी पसंद याद रखी जाएगी। सभी देखें खोलने के लिए Home से ऊपर स्वाइप भी कर सकते हैं।</string>
     <string name="magic_box_ready_description">Magic Box होम खुलने के क्षण से ही तैयार है। भौतिक कीबोर्ड पर किसी टैप की आवश्यकता नहीं है।</string>
     <string name="magic_text_contact">हाल की बातचीत खोलें या किसी संपर्क को टेक्स्ट करें</string>
     <string name="magic_call_contact">किसी संपर्क, नंबर या उपयोगकर्ता नाम पर कॉल करें</string>

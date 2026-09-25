@@ -314,7 +314,7 @@
     <string name="just_start_typing">啱啱開始打字</string>
     <string name="just_start_typing_description">喺實體鍵盤手機上面，撳主頁入面嘅任何文字鍵。 Magic Box 會出現，而第一個字元已經輸入咗。</string>
     <string name="everything_reachable">所有嘢都仲可以去到</string>
-    <string name="everything_reachable_description">用 ? 搵安裝咗嘅應用程式同儲存咗嘅捷徑，或者打開 Top 8，然後揀睇全部。包括應用程式捷徑係選擇性嘅，記住你嘅選擇。</string>
+    <string name="everything_reachable_description">用 ? 搵已安裝嘅應用程式同已儲存嘅捷徑，或者打開 Top 8，再揀「睇全部」。要唔要包括應用程式捷徑係你嘅選擇，設定會被記住。你亦可以喺主畫面向上掃嚟打開「睇全部」。</string>
     <string name="magic_box_ready_description">Magic Box 由 Home 開放嗰一刻開始就準備好喇。喺實體鍵盤上面唔需要撳。</string>
     <string name="magic_text_contact">打開最近嘅對話或者發短訊畀聯絡人</string>
     <string name="magic_call_contact">打去聯絡人、電話號碼或者用戶名</string>

@@ -314,7 +314,7 @@
     <string name="just_start_typing">Simplemente empieza a escribir</string>
     <string name="just_start_typing_description">En un teléfono con teclado físico, presione cualquier tecla de texto desde Inicio. El Magic Box aparece con ese primer carácter ya ingresado.</string>
     <string name="everything_reachable">Todo todavía es accesible</string>
-    <string name="everything_reachable_description">¿Usar? para buscar aplicaciones instaladas y accesos directos guardados, o abra el Top 8 y elija Ver todo. Incluir accesos directos a aplicaciones es opcional y recuerda su elección.</string>
+    <string name="everything_reachable_description">Usa ? para buscar aplicaciones instaladas y accesos directos guardados, o abre Top 8 y elige Ver todo. Incluir accesos directos de aplicaciones es opcional y se recuerda tu elección. También puedes deslizar hacia arriba desde Inicio para abrir Ver todo.</string>
     <string name="magic_box_ready_description">El Magic Box está listo desde el momento en que se abre Home. No es necesario tocar un teclado físico.</string>
     <string name="magic_text_contact">Abrir una conversación reciente o enviar un mensaje de texto a un contacto</string>
     <string name="magic_call_contact">Llamar a un contacto, número o nombre de usuario</string>

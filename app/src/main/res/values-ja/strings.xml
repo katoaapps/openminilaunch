@@ -314,7 +314,7 @@
     <string name="just_start_typing">入力を開始してください</string>
     <string name="just_start_typing_description">物理キーボード電話の場合は、ホームから任意のテキスト キーを押します。 Magic Box は、最初の文字がすでに入力された状態で表示されます。</string>
     <string name="everything_reachable">すべてはまだ到達可能です</string>
-    <string name="everything_reachable_description">\? を使ってインストール済みのアプリや保存済みのショートカットを検索するか、「トップ 8」を開いて「すべて表示」を選択します。アプリのショートカットを含めるかどうかは任意で、選択は記憶されます。</string>
+    <string name="everything_reachable_description">\? を使ってインストール済みのアプリや保存済みのショートカットを検索するか、「Top 8」を開いて「すべて表示」を選択します。アプリのショートカットを含めるかどうかは任意で、選択は記憶されます。「すべて表示」を開くには、ホームから上にスワイプすることもできます。</string>
     <string name="magic_box_ready_description">Magic Box は、ホームが開いた瞬間から準備ができています。物理キーボードをタップする必要はありません。</string>
     <string name="magic_text_contact">最近の会話を開くか、連絡先にテキストメッセージを送信します</string>
     <string name="magic_call_contact">連絡先、電話番号、またはユーザー名に電話をかける</string>

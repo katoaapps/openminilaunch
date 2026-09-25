@@ -20,6 +20,7 @@ import com.katoaapps.openminilaunch.model.*
 import com.katoaapps.openminilaunch.ui.apps.AllAppsActivity
 
 import android.Manifest
+import android.app.ActivityOptions
 import android.provider.AlarmClock
 import android.content.Context
 import android.content.ComponentName
@@ -218,6 +219,15 @@ class DeviceActions(private val context: Context) {
     fun openInstalledAppsSettings() = start(Intent(Settings.ACTION_APPLICATION_SETTINGS))
 
     fun openAllApps() = start(Intent(context, AllAppsActivity::class.java))
+
+    fun openAllAppsFromBottom() = startWithAnimation(
+        intent = Intent(context, AllAppsActivity::class.java),
+        options = ActivityOptions.makeCustomAnimation(
+            context,
+            R.anim.slide_in_from_bottom,
+            R.anim.hold_position,
+        ),
+    )
 
     fun appLabel(packageName: String): String {
         synchronized(labelCache) { labelCache[packageName]?.let { return it } }
@@ -471,6 +481,14 @@ class DeviceActions(private val context: Context) {
         intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         return runCatching {
             context.startActivity(if (chooser) Intent.createChooser(intent, null).addFlags(Intent.FLAG_ACTIVITY_NEW_TASK) else intent)
+            true
+        }.getOrDefault(false)
+    }
+
+    private fun startWithAnimation(intent: Intent, options: ActivityOptions): Boolean {
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        return runCatching {
+            context.startActivity(intent, options.toBundle())
             true
         }.getOrDefault(false)
     }

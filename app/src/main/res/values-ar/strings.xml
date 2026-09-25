@@ -314,7 +314,7 @@
     <string name="just_start_typing">فقط ابدأ بالكتابة</string>
     <string name="just_start_typing_description">على الهاتف الذي يحتوي على لوحة مفاتيح فعلية، اضغط على أي مفتاح نصي من الصفحة الرئيسية. يظهر Magic Box مع إدخال الحرف الأول بالفعل.</string>
     <string name="everything_reachable">كل شيء لا يزال في متناول اليد</string>
-    <string name="everything_reachable_description">استخدام ? للعثور على التطبيقات المثبتة والاختصارات المحفوظة، أو افتح Top 8 واختر عرض الكل. يعد تضمين اختصارات التطبيق أمرًا اختياريًا ويتذكر اختيارك.</string>
+    <string name="everything_reachable_description">استخدم ? للعثور على التطبيقات المثبتة والاختصارات المحفوظة، أو افتح Top 8 واختر عرض الكل. تضمين اختصارات التطبيقات اختياري، وسيتم تذكّر اختيارك. يمكنك أيضًا السحب لأعلى من الشاشة الرئيسية لفتح عرض الكل.</string>
     <string name="magic_box_ready_description">Magic Box جاهز منذ لحظة فتح المنزل. لا يلزم النقر على لوحة المفاتيح الفعلية.</string>
     <string name="magic_text_contact">افتح محادثة حديثة أو أرسل رسالة نصية إلى جهة اتصال</string>
     <string name="magic_call_contact">اتصل بجهة اتصال أو رقم أو اسم مستخدم</string>

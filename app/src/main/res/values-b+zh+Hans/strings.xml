@@ -314,7 +314,7 @@
     <string name="just_start_typing">刚开始打字</string>
     <string name="just_start_typing_description">在物理键盘电话上，按主屏幕中的任意文本键。 Magic Box 出现时，第一个字符已输入。</string>
     <string name="everything_reachable">一切依然触手可及</string>
-    <string name="everything_reachable_description">使用 ? 查找已安装的应用程序和保存的快捷方式，或打开前 8 个应用程序并选择查看全部。包含应用程序快捷方式是可选的，并且会记住您的选择。</string>
+    <string name="everything_reachable_description">使用 ? 查找已安装的应用和保存的快捷方式，或打开 Top 8 并选择“查看全部”。是否包含应用快捷方式由您选择，设置会被记住。您也可以在主屏幕向上滑动来打开“查看全部”。</string>
     <string name="magic_box_ready_description">从主页打开的那一刻起，Magic Box 就准备好了。无需点击物理键盘。</string>
     <string name="magic_text_contact">打开最近的对话或给联系人发短信</string>
     <string name="magic_call_contact">呼叫联系人、号码或用户名</string>
