@@ -1,0 +1,11 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="demo_phone_mobile">мобильный</string>
+    <string name="demo_phone_work">Работа</string>
+    <string name="demo_phone_home">Главная</string>
+    <string name="demo_invoice_title">СЧЕТ</string>
+    <string name="demo_invoice_number">Номер счета: %1$s</string>
+    <string name="demo_invoice_services">Демонстрационные услуги и материалы</string>
+    <string name="demo_invoice_total">Итого: %1$s</string>
+    <string name="demo_invoice_footer">Образец документа, созданный MinkLauncher OpenSource</string>
+</resources>

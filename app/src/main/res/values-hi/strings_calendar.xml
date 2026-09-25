@@ -1,0 +1,33 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="calendar">कैलेंडर</string>
+    <string name="calendar_onboarding_privacy">Mink आपका कैलेंडर खोलने से पहले दिनांक और समय का पूर्वावलोकन करता है। कैलेंडर वाक्यांशों की व्याख्या इस उपकरण पर की जाती है और हमें कभी नहीं भेजा जाता है।</string>
+    <string name="calendar_preview_all_day">सारा दिन</string>
+    <string name="calendar_preview_no_time">कोई दिनांक या समय पता नहीं चला</string>
+    <string name="calendar_preview_date_all_day">%1$s · पूरा दिन</string>
+    <string name="calendar_preview_date_time">%1$s · %2$s</string>
+    <string name="calendar_preview_date_time_range">%1$s · %2$s–%3$s</string>
+    <string name="calendar_preview_review">कैलेंडर खोलने से पहले समीक्षा करें</string>
+    <string name="calendar_review_title">इस घटना की जाँच करें</string>
+    <string name="calendar_review_continue">बिना दिनांक या समय के जारी रखें</string>
+    <string name="calendar_review_edit">वाक्यांश संपादित करें</string>
+    <string name="calendar_issue_empty">ईवेंट शीर्षक दर्ज करें.</string>
+    <string name="calendar_issue_unsupported_language">यह कैलेंडर भाषा अभी समर्थित नहीं है.</string>
+    <string name="calendar_issue_unsupported_phrase">Mink को दिनांक या समय के शब्द मिले जिन्हें वह सुरक्षित रूप से समझ नहीं सका।</string>
+    <string name="calendar_issue_ambiguous_date">इस तिथि की एक से अधिक प्रकार से व्याख्या की जा सकती है।</string>
+    <string name="calendar_issue_invalid_date">यह तिथि मान्य नहीं है.</string>
+    <string name="calendar_issue_invalid_time">यह समय मान्य नहीं है.</string>
+    <string name="calendar_issue_conflict">वाक्यांश में एक से अधिक दिनांक, समय या अवधि शामिल है।</string>
+    <string name="calendar_issue_dst_gap">यह स्थानीय समय अस्तित्व में नहीं है क्योंकि तब घड़ी बदल जाती है।</string>
+    <string name="calendar_warning_past">यह घटना अतीत की है.</string>
+    <string name="calendar_warning_dst_overlap">यह समय दो बार होता है क्योंकि घड़ी तब बदलती है।</string>
+    <string name="update_notice_calendar_heading">कैलेंडर कमांड पर आप भरोसा कर सकते हैं</string>
+    <string name="update_notice_calendar_preview_title">हैंडऑफ़ से पहले इवेंट देखें</string>
+    <string name="update_notice_calendar_preview_description">+ कमांड अब सटीक शीर्षक, दिनांक, समय और अवधि का पूर्वावलोकन करता है जो Mink आपके कैलेंडर ऐप पर भेजेगा।</string>
+    <string name="update_notice_calendar_review_title">Mink अनुमान लगाने के बजाय रुक जाता है</string>
+    <string name="update_notice_calendar_review_description">अमान्य, विरोधाभासी, या असमर्थित दिनांक शब्द आज चुपचाप एक ईवेंट बनाने के बजाय समीक्षा की मांग करते हैं।</string>
+    <string name="update_notice_calendar_language_title">संपूर्ण Mink में एक भाषा</string>
+    <string name="update_notice_calendar_language_description">कैलेंडर वाक्यांश स्वचालित रूप से लॉन्चर सेटिंग्स में चयनित भाषा का पालन करते हैं।</string>
+    <string name="update_notice_calendar_local_title">अभी भी पूरी तरह से डिवाइस पर है</string>
+    <string name="update_notice_calendar_local_description">Mink ऐप के अंदर नियतात्मक भाषा मॉड्यूल का उपयोग करता है। कैलेंडर वाक्यांश किसी AI सेवा पर अपलोड या भेजे नहीं जाते हैं।</string>
+</resources>

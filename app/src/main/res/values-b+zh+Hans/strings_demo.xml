@@ -1,0 +1,11 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="demo_phone_mobile">手机</string>
+    <string name="demo_phone_work">工作</string>
+    <string name="demo_phone_home">首页</string>
+    <string name="demo_invoice_title">发票</string>
+    <string name="demo_invoice_number">发票号码：%1$s</string>
+    <string name="demo_invoice_services">演示服务和材料</string>
+    <string name="demo_invoice_total">总计：%1$s</string>
+    <string name="demo_invoice_footer">MinkLauncher OpenSource生成的示例文档</string>
+</resources>

@@ -1,0 +1,12 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="conversations_service_label">MinkLauncher OpenSource 对话</string>
+    <string name="language">语言</string>
+    <string name="settings_language_summary">选择OpenMink使用的语言</string>
+    <string name="app_language_description">按照手机语言或为 OpenMink 选择一种语言。日历短语也遵循此选择。</string>
+    <string name="system_default">系统默认</string>
+    <string name="system_default_language_description">使用Android当前的语言偏好</string>
+    <string name="language_screen_refresh_notice">更改语言会刷新当前的 OpenMink 屏幕。</string>
+    <string name="app_language_requires_android_13">选择单独的启动器语言需要 Android 13 或更高版本。在较旧的设备上，OpenMink 和日历短语遵循 Android 的语言。</string>
+    <string name="app_language_requires_android_13_short">需要 Android 13 或更高版本</string>
+</resources>

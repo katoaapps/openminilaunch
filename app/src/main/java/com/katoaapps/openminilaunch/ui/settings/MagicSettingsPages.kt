@@ -59,9 +59,6 @@ internal fun MagicBoxSettingsPage(
             onCheckedChange = store::updateOpenSoftwareKeyboardOnHome,
         )
         HorizontalDivider(color = Sage)
-        SectionLabel(stringResource(R.string.calendar))
-        CalendarLanguageSetting(store)
-        HorizontalDivider(color = Sage)
         SectionLabel(stringResource(R.string.search))
         SettingsRow(
             stringResource(R.string.web_app),

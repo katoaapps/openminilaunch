@@ -1,0 +1,33 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="calendar">التقويم</string>
+    <string name="calendar_onboarding_privacy">يقوم Mink بمعاينة التاريخ والوقت قبل فتح التقويم الخاص بك. يتم تفسير عبارات التقويم على هذا الجهاز ولا يتم إرسالها إلينا مطلقًا.</string>
+    <string name="calendar_preview_all_day">طوال اليوم</string>
+    <string name="calendar_preview_no_time">لم يتم الكشف عن التاريخ أو الوقت</string>
+    <string name="calendar_preview_date_all_day">%1$s · طوال اليوم</string>
+    <string name="calendar_preview_date_time">%1$s · %2$s</string>
+    <string name="calendar_preview_date_time_range">%1$s · %2$s–%3$s</string>
+    <string name="calendar_preview_review">قم بالمراجعة قبل فتح التقويم</string>
+    <string name="calendar_review_title">تحقق من هذا الحدث</string>
+    <string name="calendar_review_continue">استمر بدون تاريخ أو وقت</string>
+    <string name="calendar_review_edit">تحرير العبارة</string>
+    <string name="calendar_issue_empty">أدخل عنوان الحدث.</string>
+    <string name="calendar_issue_unsupported_language">لغة التقويم هذه غير مدعومة بعد.</string>
+    <string name="calendar_issue_unsupported_phrase">عثر Mink على صيغة التاريخ أو الوقت ولم يتمكن من فهمها بشكل آمن.</string>
+    <string name="calendar_issue_ambiguous_date">يمكن تفسير هذا التاريخ بأكثر من طريقة.</string>
+    <string name="calendar_issue_invalid_date">هذا التاريخ غير صالح.</string>
+    <string name="calendar_issue_invalid_time">هذه المرة غير صالحة.</string>
+    <string name="calendar_issue_conflict">تحتوي العبارة على أكثر من تاريخ أو وقت أو مدة.</string>
+    <string name="calendar_issue_dst_gap">هذا التوقيت المحلي غير موجود لأن الساعة تتغير بعد ذلك.</string>
+    <string name="calendar_warning_past">هذا الحدث في الماضي.</string>
+    <string name="calendar_warning_dst_overlap">تحدث هذه المرة مرتين لأن الساعة تتغير بعد ذلك.</string>
+    <string name="update_notice_calendar_heading">أوامر التقويم التي يمكنك الوثوق بها</string>
+    <string name="update_notice_calendar_preview_title">شاهد الحدث قبل التسليم</string>
+    <string name="update_notice_calendar_preview_description">يقوم الأمر + الآن بمعاينة العنوان الدقيق والتاريخ والوقت والمدة التي سيرسلها Mink إلى تطبيق التقويم الخاص بك.</string>
+    <string name="update_notice_calendar_review_title">يتوقف Mink بدلاً من التخمين</string>
+    <string name="update_notice_calendar_review_description">تطلب صياغة التاريخ غير الصالحة أو المتعارضة أو غير المدعومة المراجعة بدلاً من إنشاء حدث اليوم بهدوء.</string>
+    <string name="update_notice_calendar_language_title">لغة واحدة في جميع أنحاء Mink</string>
+    <string name="update_notice_calendar_language_description">تتبع عبارات التقويم تلقائيًا اللغة المحددة في إعدادات Launcher.</string>
+    <string name="update_notice_calendar_local_title">لا يزال موجودًا بالكامل على الجهاز</string>
+    <string name="update_notice_calendar_local_description">يستخدم Mink وحدات لغة حتمية داخل التطبيق. لا يتم تحميل عبارات التقويم أو إرسالها إلى خدمة الذكاء الاصطناعي.</string>
+</resources>

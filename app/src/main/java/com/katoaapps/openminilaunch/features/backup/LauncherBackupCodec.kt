@@ -10,7 +10,6 @@ import com.katoaapps.openminilaunch.model.PinShortcutRequestPresentation
 import com.katoaapps.openminilaunch.model.Shortcut
 import com.katoaapps.openminilaunch.model.ThemePreference
 import com.katoaapps.openminilaunch.model.TodoItem
-import com.katoaapps.openminilaunch.features.calendar.language.CalendarInputLanguage
 import org.json.JSONArray
 import org.json.JSONObject
 
@@ -107,7 +106,6 @@ internal object LauncherBackupCodec {
             put("includeAppShortcutsInDiscovery", settings.includeAppShortcutsInDiscovery)
             putNullable("preferredAiPackage", settings.preferredAiPackage)
             putNullable("preferredWebPackage", settings.preferredWebPackage)
-            put("calendarInputLanguage", settings.calendarInputLanguage.storageValue)
         })
         put("messaging", JSONObject().apply {
             put("sendMessagesAutomatically", settings.sendMessagesAutomatically)
@@ -164,9 +162,6 @@ internal object LauncherBackupCodec {
             pinShortcutRequestPresentation = json.enumValue(
                 "pinShortcutRequestPresentation",
                 PinShortcutRequestPresentation.FULL_PAGE,
-            ),
-            calendarInputLanguage = CalendarInputLanguage.fromStorage(
-                magicBox.optNullableString("calendarInputLanguage"),
             ),
         )
     }

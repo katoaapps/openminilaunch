@@ -1,0 +1,11 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="demo_phone_mobile">मोबाइल</string>
+    <string name="demo_phone_work">काम</string>
+    <string name="demo_phone_home">घर</string>
+    <string name="demo_invoice_title">चालान</string>
+    <string name="demo_invoice_number">चालान संख्या: %1$s</string>
+    <string name="demo_invoice_services">डेमो सेवाएँ और सामग्री</string>
+    <string name="demo_invoice_total">कुल: %1$s</string>
+    <string name="demo_invoice_footer">MinkLauncher OpenSource द्वारा उत्पन्न नमूना दस्तावेज़</string>
+</resources>

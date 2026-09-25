@@ -2,6 +2,7 @@ package com.katoaapps.openminilaunch.features.localization
 
 import android.app.LocaleManager
 import android.content.Context
+import android.content.res.Resources
 import android.os.Build
 import android.os.LocaleList
 import androidx.annotation.RequiresApi
@@ -17,7 +18,37 @@ internal data class SupportedAppLanguage(val languageTag: String) {
 }
 
 internal object SupportedAppLanguages {
-    val all = listOf(SupportedAppLanguage("en-US"))
+    val all = listOf(
+        SupportedAppLanguage("en-US"),
+        SupportedAppLanguage("en-GB"),
+        SupportedAppLanguage("zh-Hans"),
+        SupportedAppLanguage("yue-Hant-HK"),
+        SupportedAppLanguage("ja"),
+        SupportedAppLanguage("ko"),
+        SupportedAppLanguage("hi"),
+        SupportedAppLanguage("es"),
+        SupportedAppLanguage("fr"),
+        SupportedAppLanguage("bn"),
+        SupportedAppLanguage("pt-BR"),
+        SupportedAppLanguage("ru"),
+        SupportedAppLanguage("ur"),
+        SupportedAppLanguage("id"),
+        SupportedAppLanguage("ar"),
+    )
+
+    /** The user's explicit OpenMink locale, or Android's authoritative system locale. */
+    fun activeLanguageTag(context: Context): String =
+        selectedLanguageTag(context) ?: systemLanguageTag(context)
+
+    private fun systemLanguageTag(context: Context): String =
+        if (isSupportedByDevice()) {
+            localeManager(context).systemLocales[0]
+        } else {
+            Resources.getSystem().configuration.locales[0]
+        }
+            ?.toLanguageTag()
+            .orEmpty()
+            .ifBlank { "en-US" }
 
     fun isSupportedByDevice(): Boolean = Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU
 

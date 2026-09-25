@@ -1,0 +1,11 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="demo_phone_mobile">الجوال</string>
+    <string name="demo_phone_work">العمل</string>
+    <string name="demo_phone_home">الصفحة الرئيسية</string>
+    <string name="demo_invoice_title">الفاتورة</string>
+    <string name="demo_invoice_number">رقم الفاتورة: %1$s</string>
+    <string name="demo_invoice_services">الخدمات والمواد التجريبية</string>
+    <string name="demo_invoice_total">الإجمالي: %1$s</string>
+    <string name="demo_invoice_footer">نموذج مستند تم إنشاؤه بواسطة MinkLauncher OpenSource</string>
+</resources>

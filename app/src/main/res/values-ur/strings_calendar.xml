@@ -1,0 +1,33 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="calendar">کیلنڈر</string>
+    <string name="calendar_onboarding_privacy">Mink آپ کا کیلنڈر کھولنے سے پہلے تاریخ اور وقت کا پیش نظارہ کرتا ہے۔ کیلنڈر کے فقرے اس ڈیوائس پر تشریح کیے جاتے ہیں اور ہمیں کبھی نہیں بھیجے جاتے ہیں۔</string>
+    <string name="calendar_preview_all_day">سارا دن</string>
+    <string name="calendar_preview_no_time">کسی تاریخ یا وقت کا پتہ نہیں چلا</string>
+    <string name="calendar_preview_date_all_day">%1$s · سارا دن</string>
+    <string name="calendar_preview_date_time">%1$s · %2$s</string>
+    <string name="calendar_preview_date_time_range">%1$s · %2$s–%3$s</string>
+    <string name="calendar_preview_review">کیلنڈر کھولنے سے پہلے جائزہ لیں۔</string>
+    <string name="calendar_review_title">اس واقعہ کو چیک کریں۔</string>
+    <string name="calendar_review_continue">تاریخ یا وقت کے بغیر جاری رکھیں</string>
+    <string name="calendar_review_edit">جملے میں ترمیم کریں۔</string>
+    <string name="calendar_issue_empty">ایونٹ کا عنوان درج کریں۔</string>
+    <string name="calendar_issue_unsupported_language">یہ کیلنڈر زبان ابھی تک تعاون یافتہ نہیں ہے۔</string>
+    <string name="calendar_issue_unsupported_phrase">Mink کو تاریخ یا وقت کے الفاظ ملے جو اسے محفوظ طریقے سے نہیں سمجھ سکے۔</string>
+    <string name="calendar_issue_ambiguous_date">اس تاریخ کی ایک سے زیادہ تشریح کی جا سکتی ہے۔</string>
+    <string name="calendar_issue_invalid_date">یہ تاریخ درست نہیں ہے۔</string>
+    <string name="calendar_issue_invalid_time">یہ وقت درست نہیں ہے۔</string>
+    <string name="calendar_issue_conflict">فقرہ ایک سے زیادہ تاریخ، وقت، یا دورانیہ پر مشتمل ہے۔</string>
+    <string name="calendar_issue_dst_gap">یہ مقامی وقت موجود نہیں ہے کیونکہ اس وقت گھڑی بدل جاتی ہے۔</string>
+    <string name="calendar_warning_past">یہ واقعہ ماضی کا ہے۔</string>
+    <string name="calendar_warning_dst_overlap">یہ وقت دو بار آتا ہے کیونکہ گھڑی بدل جاتی ہے۔</string>
+    <string name="update_notice_calendar_heading">کیلنڈر کمانڈز جن پر آپ بھروسہ کر سکتے ہیں۔</string>
+    <string name="update_notice_calendar_preview_title">ہینڈ آف سے پہلے واقعہ دیکھیں</string>
+    <string name="update_notice_calendar_preview_description">+ کمانڈ اب عین عنوان، تاریخ، وقت، اور دورانیہ کا جائزہ لیتی ہے Mink آپ کے کیلنڈر ایپ کو بھیجے گا۔</string>
+    <string name="update_notice_calendar_review_title">Mink اندازہ لگانے کے بجائے رک جاتا ہے۔</string>
+    <string name="update_notice_calendar_review_description">غلط، متضاد، یا غیر تعاون یافتہ تاریخ کے الفاظ خاموشی سے آج ہی کوئی ایونٹ بنانے کے بجائے جائزہ لینے کے لیے کہتے ہیں۔</string>
+    <string name="update_notice_calendar_language_title">Mink بھر میں ایک زبان</string>
+    <string name="update_notice_calendar_language_description">کیلنڈر کے جملے لانچر کی ترتیبات میں منتخب کردہ زبان کی خود بخود پیروی کرتے ہیں۔</string>
+    <string name="update_notice_calendar_local_title">اب بھی مکمل طور پر ڈیوائس پر ہے۔</string>
+    <string name="update_notice_calendar_local_description">Mink ایپ کے اندر فیصلہ کن زبان کے ماڈیولز کا استعمال کرتا ہے۔ کیلنڈر کے جملے AI سروس کو اپ لوڈ یا بھیجے نہیں جاتے ہیں۔</string>
+</resources>

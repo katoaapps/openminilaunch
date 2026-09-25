@@ -1,6 +1,5 @@
 package com.katoaapps.openminilaunch.features.backup
 
-import com.katoaapps.openminilaunch.features.calendar.language.CalendarInputLanguage
 import com.katoaapps.openminilaunch.model.IconAppearance
 import com.katoaapps.openminilaunch.model.MinkAppPauseMode
 import com.katoaapps.openminilaunch.model.PinShortcutRequestPresentation
@@ -65,7 +64,6 @@ class LauncherBackupCodecTest {
             minkAppPauseMode = MinkAppPauseMode.NEVER,
             githubUpdateChecksEnabled = true,
             pinShortcutRequestPresentation = PinShortcutRequestPresentation.FULL_PAGE,
-            calendarInputLanguage = CalendarInputLanguage.AppLanguage,
         ),
         todos = emptyList(),
     )

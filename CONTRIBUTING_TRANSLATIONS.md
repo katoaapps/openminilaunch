@@ -1,61 +1,65 @@
 # Contributing OpenMink translations
 
-OpenMink has two independent language surfaces:
+OpenMink has two technical language surfaces that share one user-facing **Launcher language** setting:
 
 1. Android UI resources in `app/src/main/res/values-<locale>/`.
 2. Deterministic calendar phrase modules in `features/calendar/language/<locale>/`.
 
-A translated UI does not automatically make that language available for `+` calendar commands. Calendar support is listed separately in Settings.
+Changing the Launcher language changes both surfaces. A translated UI does not automatically make that language available for `+` calendar commands, however. When a matching calendar grammar is unavailable or cannot confidently understand a phrase, OpenMink must ask the user to review it instead of guessing.
+
+OpenMink does not upload phrases for translation or parsing. UI resources and calendar modules ship inside the APK and run on the device.
 
 ## Target language roadmap
 
-OpenMink's long-term target set is listed below. A target does not become a shipped language until its UI resources and calendar grammar have completed review.
+US English is the reference locale. Machine-generated UI drafts now exist for every target below, but a locale does not become release-ready until its UI resources have received fluent human review. Calendar grammar support is reviewed separately.
 
-| Language | Planned BCP 47 tag | Notes |
-| --- | --- | --- |
-| English (United States) | `en-US` | Reference locale and current calendar grammar |
-| English (United Kingdom) | `en-GB` | First wave: day-month calendar grammar implemented; complete UI resources pending |
-| Mandarin Chinese | `zh-Hans` | First wave: Simplified Chinese calendar grammar implemented; UI translation pending |
-| Cantonese | `yue-Hant-HK` | Traditional Chinese script and Hong Kong Cantonese grammar |
-| Japanese | `ja` | |
-| Korean | `ko` | |
-| Hindi | `hi` | |
-| Spanish | `es` | First wave: calendar grammar implemented; region-neutral UI translation pending |
-| French | `fr` | |
-| Bengali | `bn` | Bengali-script input plus documented Latin-digit handling |
-| Portuguese (Brazil) | `pt-BR` | Confirmed regional baseline |
-| Russian | `ru` | |
-| Urdu | `ur` | Right-to-left layout |
-| Indonesian | `id` | |
-| Arabic | `ar` | First wave: calendar grammar implemented; UI translation and RTL review pending |
+| Language | BCP 47 tag | UI status | Calendar status |
+| --- | --- | --- | --- |
+| English (United States) | `en-US` | Reference locale | Implemented |
+| English (United Kingdom) | `en-GB` | Machine draft; review required | Implemented |
+| Mandarin Chinese | `zh-Hans` | Machine draft; review required | Implemented |
+| Cantonese | `yue-Hant-HK` | Machine draft; review required | Planned |
+| Japanese | `ja` | Machine draft; review required | Planned |
+| Korean | `ko` | Machine draft; review required | Planned |
+| Hindi | `hi` | Machine draft; review required | Planned |
+| Spanish | `es` | Machine draft; review required | Implemented |
+| French | `fr` | Machine draft; review required | Planned |
+| Bengali | `bn` | Machine draft; review required | Planned |
+| Portuguese (Brazil) | `pt-BR` | Machine draft; review required | Planned |
+| Russian | `ru` | Machine draft; review required | Planned |
+| Urdu | `ur` | Machine draft; review required | Planned |
+| Indonesian | `id` | Machine draft; review required | Planned |
+| Arabic | `ar` | Machine draft; review required | Implemented |
 
-The app language picker is intentionally generated only from completed locale resources. Do not add roadmap-only tags to `localeFilters` or `SupportedAppLanguages`.
+The app language picker is generated only from packaged locale resources. Do not add a roadmap-only locale to `localeFilters` or `SupportedAppLanguages` until its resource catalog is complete and validated.
 
-## Protected names and syntax
+## Protected English names and syntax
 
-Do not translate product and provider names or command syntax:
+The following brand names always remain exactly in plain English in every locale:
 
-- MinkLauncher OpenSource
-- MinkLauncher and Mink
+- Mink
+- Mink Launcher
 - Mink's Day
-- Katoa Apps
-- `@`, `#`, `-`, `/`, `+`, and `?`
-- app/provider names, URLs, email addresses, package names, and Android permission names
 
-Translate the explanation beside each command symbol.
+Also preserve the established spellings of `MinkLauncher`, `OpenMink`, `MinkLauncher OpenSource`, `Magic Box`, and `Katoa Apps` wherever they appear. Do not translate product or provider names.
+
+Keep `@`, `#`, `-`, `/`, `+`, and `?` unchanged. Translate the explanation beside each command symbol, not the symbol itself. Preserve URLs, email addresses, package names, file extensions, and Android permission identifiers.
 
 ## UI resource rules
 
 - Translate from the unqualified English resources in `res/values/`.
-- Preserve positional placeholders exactly: `%1$s`, `%2$d`, and similar.
-- Preserve XML markup and escaping.
+- Preserve positional placeholders such as `%1$s`, `%2$d`, and `%%` exactly.
+- Preserve explicit `\n` line breaks, XML markup, and escaping.
 - Use Android plural resources instead of building singular/plural sentences in Kotlin.
+- Review plurals using the target language's rules rather than translating English forms literally.
 - Do not translate by concatenating fragments. Ask for a complete contextual resource when needed.
+- Prefer natural, concise mobile-interface language over word-for-word translation.
 - Add translator notes when a source string is ambiguous.
+- Check privacy and permission explanations especially carefully.
 - Check long text and right-to-left layout; do not shorten away meaning merely to fit.
-- Machine translation is useful for a draft, but a fluent human review is required before release.
+- Machine translation is useful for a draft, but fluent human review is required before release.
 
-Incomplete locale folders must not be merged into a release branch. Android's generated locale configuration advertises every packaged locale to users.
+Incomplete or unreviewed locale folders must not ship in a production release. Android's generated locale configuration advertises every packaged locale to users.
 
 ## Calendar language rules
 
@@ -85,12 +89,12 @@ Every calendar language requires a fixed corpus covering:
 
 ## Before requesting review
 
+- Run `python3 tools/validate_localizations.py`.
 - Confirm all placeholders and plural forms match English.
 - Inspect the locale with a long-text screen and, where applicable, RTL layout.
 - Exercise Home, Settings, onboarding, To-dos, Widgets, Conversations, All Apps, Mink's Day, and Magic Box.
+- Verify that Mink, Mink Launcher, and Mink's Day remain in plain English.
 - Verify physical-keyboard command symbols are unchanged.
 - Verify calendar previews show the exact date/time handed to the provider.
 - Verify unsupported temporal wording asks for review instead of scheduling a partial match.
 - Include the translator/reviewer names or handles in the pull request when they want attribution.
-
-OpenMink does not upload phrases for translation or parsing. UI resources and calendar modules ship inside the APK and run on the device.

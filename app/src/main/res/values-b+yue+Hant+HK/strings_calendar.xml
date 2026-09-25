@@ -1,0 +1,33 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="calendar">日曆</string>
+    <string name="calendar_onboarding_privacy">Mink 會喺打開日曆之前預覽日期同時間。日曆短語會喺呢部裝置上面解釋，而且從來唔會傳送畀我哋。</string>
+    <string name="calendar_preview_all_day">全日</string>
+    <string name="calendar_preview_no_time">偵測唔到日期或者時間</string>
+    <string name="calendar_preview_date_all_day">%1$s · 全日</string>
+    <string name="calendar_preview_date_time">%1$s · %2$s</string>
+    <string name="calendar_preview_date_time_range">%1$s · %2$s – %3$s</string>
+    <string name="calendar_preview_review">喺打開日曆之前睇吓</string>
+    <string name="calendar_review_title">睇下呢個活動</string>
+    <string name="calendar_review_continue">繼續，唔使日期或者時間</string>
+    <string name="calendar_review_edit">編輯短語</string>
+    <string name="calendar_issue_empty">輸入個活動標題。</string>
+    <string name="calendar_issue_unsupported_language">呢個日曆語言仲未支援。</string>
+    <string name="calendar_issue_unsupported_phrase">Mink 搵到日期或者時間嘅字眼，佢唔可以安全咁理解。</string>
+    <string name="calendar_issue_ambiguous_date">呢個日期可以用多過一種方式解釋。</string>
+    <string name="calendar_issue_invalid_date">呢個日期無效。</string>
+    <string name="calendar_issue_invalid_time">呢個時間無效。</string>
+    <string name="calendar_issue_conflict">呢個詞組包含多個日期、時間或者持續時間。</string>
+    <string name="calendar_issue_dst_gap">呢個本地時間唔存在，因為嗰陣時鐘會變。</string>
+    <string name="calendar_warning_past">呢個事件已經過去。</string>
+    <string name="calendar_warning_dst_overlap">呢個時間會發生兩次，因為當時鐘會改變。</string>
+    <string name="update_notice_calendar_heading">你可以信任嘅日曆指令</string>
+    <string name="update_notice_calendar_preview_title">喺交接之前睇下個活動</string>
+    <string name="update_notice_calendar_preview_description">+ 指令而家會預覽 Mink 會傳送去你嘅日曆應用程式嘅確切標題、日期、時間同持續時間。</string>
+    <string name="update_notice_calendar_review_title">Mink 停咗而唔係估</string>
+    <string name="update_notice_calendar_review_description">無效、衝突或者唔支援嘅日期字眼要求我哋審查，而唔係喺今日靜靜地建立活動。</string>
+    <string name="update_notice_calendar_language_title">一種語言全程 Mink</string>
+    <string name="update_notice_calendar_language_description">日曆短語會自動跟住喺啟動器設定入面揀嘅語言。</string>
+    <string name="update_notice_calendar_local_title">仲係完全喺裝置上面</string>
+    <string name="update_notice_calendar_local_description">Mink 喺應用程式入面使用決定性語言模組。日曆短語唔會上載或者傳送去 AI 服務。</string>
+</resources>

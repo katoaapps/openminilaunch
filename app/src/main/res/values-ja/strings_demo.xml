@@ -1,0 +1,11 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="demo_phone_mobile">モバイル</string>
+    <string name="demo_phone_work">仕事</string>
+    <string name="demo_phone_home">ホーム</string>
+    <string name="demo_invoice_title">請求書</string>
+    <string name="demo_invoice_number">請求書番号: %1$s</string>
+    <string name="demo_invoice_services">デモサービスと資料</string>
+    <string name="demo_invoice_total">合計: %1$s</string>
+    <string name="demo_invoice_footer">MinkLauncher OpenSource によって生成されたサンプル ドキュメント</string>
+</resources>

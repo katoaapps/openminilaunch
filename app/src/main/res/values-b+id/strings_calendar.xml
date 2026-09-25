@@ -1,0 +1,33 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="calendar">Kalender</string>
+    <string name="calendar_onboarding_privacy">Mink melihat pratinjau tanggal dan waktu sebelum membuka kalender Anda. Frasa kalender ditafsirkan pada perangkat ini dan tidak pernah dikirimkan kepada kami.</string>
+    <string name="calendar_preview_all_day">Sepanjang hari</string>
+    <string name="calendar_preview_no_time">Tidak ada tanggal atau waktu yang terdeteksi</string>
+    <string name="calendar_preview_date_all_day">%1$s · Sepanjang hari</string>
+    <string name="calendar_preview_date_time">%1$s · %2$s</string>
+    <string name="calendar_preview_date_time_range">%1$s · %2$s–%3$s</string>
+    <string name="calendar_preview_review">Tinjau sebelum membuka Kalender</string>
+    <string name="calendar_review_title">Periksa acara ini</string>
+    <string name="calendar_review_continue">Lanjutkan tanpa tanggal atau waktu</string>
+    <string name="calendar_review_edit">Sunting frasa</string>
+    <string name="calendar_issue_empty">Masukkan judul acara.</string>
+    <string name="calendar_issue_unsupported_language">Bahasa kalender ini belum didukung.</string>
+    <string name="calendar_issue_unsupported_phrase">Mink menemukan kata-kata tanggal atau waktu yang tidak dapat dipahami dengan aman.</string>
+    <string name="calendar_issue_ambiguous_date">Tanggal ini dapat diartikan lebih dari satu cara.</string>
+    <string name="calendar_issue_invalid_date">Tanggal ini tidak sah.</string>
+    <string name="calendar_issue_invalid_time">Kali ini tidak sah.</string>
+    <string name="calendar_issue_conflict">Frasa tersebut mengandung lebih dari satu tanggal, waktu, atau durasi.</string>
+    <string name="calendar_issue_dst_gap">Waktu setempat ini tidak ada karena jam berubah pada saat itu.</string>
+    <string name="calendar_warning_past">Peristiwa ini terjadi di masa lalu.</string>
+    <string name="calendar_warning_dst_overlap">Kali ini terjadi dua kali karena jam berubah.</string>
+    <string name="update_notice_calendar_heading">Perintah kalender yang dapat Anda percayai</string>
+    <string name="update_notice_calendar_preview_title">Lihat acara sebelum serah terima</string>
+    <string name="update_notice_calendar_preview_description">Perintah + sekarang mempratinjau judul, tanggal, waktu, dan durasi pasti yang akan dikirimkan Mink ke aplikasi kalender Anda.</string>
+    <string name="update_notice_calendar_review_title">Mink berhenti alih-alih menebak</string>
+    <string name="update_notice_calendar_review_description">Kata-kata tanggal yang tidak valid, bertentangan, atau tidak didukung meminta peninjauan alih-alih membuat acara hari ini secara diam-diam.</string>
+    <string name="update_notice_calendar_language_title">Satu bahasa di seluruh Mink</string>
+    <string name="update_notice_calendar_language_description">Frasa kalender secara otomatis mengikuti bahasa yang dipilih dalam pengaturan Peluncur.</string>
+    <string name="update_notice_calendar_local_title">Masih sepenuhnya di perangkat</string>
+    <string name="update_notice_calendar_local_description">Mink menggunakan modul bahasa deterministik di dalam aplikasi. Frasa kalender tidak diunggah atau dikirim ke layanan AI.</string>
+</resources>

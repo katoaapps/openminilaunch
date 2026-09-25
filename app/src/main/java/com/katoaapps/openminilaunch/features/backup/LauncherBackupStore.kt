@@ -37,7 +37,6 @@ internal fun LauncherStore.createPortableBackup(appVersion: String): LauncherBac
         minkAppPauseMode = minkAppPauseMode,
         githubUpdateChecksEnabled = githubUpdateChecksEnabled,
         pinShortcutRequestPresentation = pinShortcutRequestPresentation,
-        calendarInputLanguage = calendarInputLanguage,
     ),
     todos = savedTodosForBackup,
 )
@@ -88,5 +87,4 @@ internal fun LauncherStore.restorePortableBackup(backup: LauncherBackup) {
 
     setGitHubUpdateChecksEnabled(settings.githubUpdateChecksEnabled)
     setPinShortcutRequestPresentation(settings.pinShortcutRequestPresentation)
-    setCalendarInputLanguage(settings.calendarInputLanguage)
 }

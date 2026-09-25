@@ -1,0 +1,12 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="conversations_service_label">MinkLauncher OpenSource 대화</string>
+    <string name="language">언어</string>
+    <string name="settings_language_summary">OpenMink가 사용하는 언어를 선택하세요</string>
+    <string name="app_language_description">전화 언어를 따르거나 OpenMink에 대한 언어 하나를 선택하십시오. 달력 문구도 이 선택을 따릅니다.</string>
+    <string name="system_default">시스템 기본값</string>
+    <string name="system_default_language_description">Android의 현재 언어 기본 설정 사용</string>
+    <string name="language_screen_refresh_notice">언어를 변경하면 현재 OpenMink 화면이 새로 고쳐집니다.</string>
+    <string name="app_language_requires_android_13">별도의 실행 프로그램 언어를 선택하려면 Android 13 이상이 필요합니다. 이전 장치에서는 OpenMink 및 달력 문구가 Android의 언어를 따릅니다.</string>
+    <string name="app_language_requires_android_13_short">Android 13 이상이 필요합니다.</string>
+</resources>

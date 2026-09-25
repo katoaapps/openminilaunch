@@ -12,7 +12,7 @@ import com.katoaapps.openminilaunch.features.apps.launcherDiscoveryMatches
 import com.katoaapps.openminilaunch.features.ai.*
 import com.katoaapps.openminilaunch.features.calendar.*
 import com.katoaapps.openminilaunch.features.calendar.engine.CalendarPhraseEngine
-import com.katoaapps.openminilaunch.features.calendar.language.effectiveLanguageTag
+import com.katoaapps.openminilaunch.features.localization.SupportedAppLanguages
 import com.katoaapps.openminilaunch.features.calendar.model.CalendarParseRequest
 import com.katoaapps.openminilaunch.features.calendar.model.CalendarParseResult
 import com.katoaapps.openminilaunch.features.conversations.*
@@ -244,7 +244,7 @@ internal fun MagicBoxContent(
     val parsedInput = parseMagicBoxInput(text.text, lockedPrefix)
     val prefix = parsedInput.prefix
     val searchTerm = parsedInput.searchTerm
-    val calendarLanguageTag = store.calendarInputLanguage.effectiveLanguageTag(context)
+    val calendarLanguageTag = SupportedAppLanguages.activeLanguageTag(context)
     val calendarPayload = if (prefix == '+') text.text.drop(1).trim() else ""
     val calendarParseResult = remember(calendarPayload, calendarLanguageTag) {
         calendarPayload.takeIf(String::isNotBlank)?.let { payload ->

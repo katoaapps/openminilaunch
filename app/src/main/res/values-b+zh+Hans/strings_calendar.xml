@@ -1,0 +1,33 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="calendar">日历</string>
+    <string name="calendar_onboarding_privacy">Mink 在打开日历之前预览日期和时间。日历短语在此设备上进行解释，并且绝不会发送给我们。</string>
+    <string name="calendar_preview_all_day">全天</string>
+    <string name="calendar_preview_no_time">未检测到日期或时间</string>
+    <string name="calendar_preview_date_all_day">%1$s · 全天</string>
+    <string name="calendar_preview_date_time">%1$s · %2$s</string>
+    <string name="calendar_preview_date_time_range">%1$s · %2$s–%3$s</string>
+    <string name="calendar_preview_review">打开日历前查看</string>
+    <string name="calendar_review_title">查看此活动</string>
+    <string name="calendar_review_continue">不指定日期或时间继续</string>
+    <string name="calendar_review_edit">编辑短语</string>
+    <string name="calendar_issue_empty">输入活动标题。</string>
+    <string name="calendar_issue_unsupported_language">尚不支持此日历语言。</string>
+    <string name="calendar_issue_unsupported_phrase">Mink 发现无法安全理解的日期或时间措辞。</string>
+    <string name="calendar_issue_ambiguous_date">这个日期可以有不止一种解释。</string>
+    <string name="calendar_issue_invalid_date">该日期无效。</string>
+    <string name="calendar_issue_invalid_time">这次无效。</string>
+    <string name="calendar_issue_conflict">该短语包含多个日期、时间或持续时间。</string>
+    <string name="calendar_issue_dst_gap">该本地时间不存在，因为时钟会改变。</string>
+    <string name="calendar_warning_past">此事件已成为过去。</string>
+    <string name="calendar_warning_dst_overlap">这个时间出现两次，因为时钟会改变。</string>
+    <string name="update_notice_calendar_heading">您可以信赖的日历命令</string>
+    <string name="update_notice_calendar_preview_title">查看切换前的事件</string>
+    <string name="update_notice_calendar_preview_description">+ 命令现在可以预览 Mink 将发送到您的日历应用程序的确切标题、日期、时间和持续时间。</string>
+    <string name="update_notice_calendar_review_title">Mink 停止而不是猜测</string>
+    <string name="update_notice_calendar_review_description">无效、冲突或不受支持的日期措辞需要进行审核，而不是在今天悄悄创建一个事件。</string>
+    <string name="update_notice_calendar_language_title">一种语言贯穿 Mink</string>
+    <string name="update_notice_calendar_language_description">日历短语自动遵循启动器设置中选择的语言。</string>
+    <string name="update_notice_calendar_local_title">仍然完全在设备上</string>
+    <string name="update_notice_calendar_local_description">Mink 在应用程序内使用确定性语言模块。日历短语不会上传或发送到 AI 服务。</string>
+</resources>

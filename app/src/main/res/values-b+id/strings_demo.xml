@@ -1,0 +1,11 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="demo_phone_mobile">Seluler</string>
+    <string name="demo_phone_work">Bekerja</string>
+    <string name="demo_phone_home">Rumah</string>
+    <string name="demo_invoice_title">FAKTUR</string>
+    <string name="demo_invoice_number">Nomor faktur: %1$s</string>
+    <string name="demo_invoice_services">Layanan dan materi demo</string>
+    <string name="demo_invoice_total">Jumlah: %1$s</string>
+    <string name="demo_invoice_footer">Contoh dokumen yang dihasilkan oleh MinkLauncher OpenSource</string>
+</resources>

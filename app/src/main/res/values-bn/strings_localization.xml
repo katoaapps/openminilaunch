@@ -1,0 +1,12 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="conversations_service_label">MinkLauncher OpenSource কথোপকথন</string>
+    <string name="language">ভাষা</string>
+    <string name="settings_language_summary">OpenMink ব্যবহার করা ভাষা বেছে নিন</string>
+    <string name="app_language_description">ফোনের ভাষা অনুসরণ করুন বা OpenMink-এর জন্য একটি ভাষা বেছে নিন। ক্যালেন্ডার বাক্যাংশগুলিও এই পছন্দ অনুসরণ করে।</string>
+    <string name="system_default">সিস্টেম ডিফল্ট</string>
+    <string name="system_default_language_description">Android এর বর্তমান ভাষা পছন্দ ব্যবহার করুন</string>
+    <string name="language_screen_refresh_notice">ভাষা পরিবর্তন করা বর্তমান OpenMink স্ক্রীনকে রিফ্রেশ করে।</string>
+    <string name="app_language_requires_android_13">একটি পৃথক লঞ্চার ভাষা বেছে নেওয়ার জন্য Android 13 বা নতুন প্রয়োজন৷ পুরানো ডিভাইসগুলিতে, OpenMink এবং ক্যালেন্ডার বাক্যাংশগুলি Android-এর ভাষা অনুসরণ করে।</string>
+    <string name="app_language_requires_android_13_short">Android 13 বা নতুন প্রয়োজন</string>
+</resources>

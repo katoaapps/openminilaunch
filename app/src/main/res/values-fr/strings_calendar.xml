@@ -1,0 +1,33 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="calendar">Calendrier</string>
+    <string name="calendar_onboarding_privacy">Mink prévisualise la date et l\'heure avant d\'ouvrir votre calendrier. Les phrases du calendrier sont interprétées sur cet appareil et ne nous sont jamais envoyées.</string>
+    <string name="calendar_preview_all_day">Toute la journée</string>
+    <string name="calendar_preview_no_time">Aucune date ni heure détectée</string>
+    <string name="calendar_preview_date_all_day">%1$s · Toute la journée</string>
+    <string name="calendar_preview_date_time">%1$s · %2$s</string>
+    <string name="calendar_preview_date_time_range">%1$s · %2$s–%3$s</string>
+    <string name="calendar_preview_review">Vérifier avant d\'ouvrir Agenda</string>
+    <string name="calendar_review_title">Vérifiez cet événement</string>
+    <string name="calendar_review_continue">Continuer sans date ni heure</string>
+    <string name="calendar_review_edit">Modifier l\'expression</string>
+    <string name="calendar_issue_empty">Saisissez un titre d\'événement.</string>
+    <string name="calendar_issue_unsupported_language">Cette langue de calendrier n\'est pas encore prise en charge.</string>
+    <string name="calendar_issue_unsupported_phrase">Mink a trouvé un libellé de date ou d\'heure qu\'il ne pouvait pas comprendre en toute sécurité.</string>
+    <string name="calendar_issue_ambiguous_date">Cette date peut être interprétée de plusieurs manières.</string>
+    <string name="calendar_issue_invalid_date">Cette date n\'est pas valide.</string>
+    <string name="calendar_issue_invalid_time">Cette heure n\'est pas valable.</string>
+    <string name="calendar_issue_conflict">La phrase contient plusieurs dates, heures ou durées.</string>
+    <string name="calendar_issue_dst_gap">Cette heure locale n\'existe pas car l\'horloge change alors.</string>
+    <string name="calendar_warning_past">Cet événement appartient au passé.</string>
+    <string name="calendar_warning_dst_overlap">Cette heure se produit deux fois car l\'horloge change alors.</string>
+    <string name="update_notice_calendar_heading">Commandes de calendrier auxquelles vous pouvez faire confiance</string>
+    <string name="update_notice_calendar_preview_title">Voir l\'événement avant le transfert</string>
+    <string name="update_notice_calendar_preview_description">La commande + affiche désormais un aperçu exact du titre, de la date, de l\'heure et de la durée que Mink enverra à votre application de calendrier.</string>
+    <string name="update_notice_calendar_review_title">Mink s\'arrête au lieu de deviner</string>
+    <string name="update_notice_calendar_review_description">Une formulation de date invalide, conflictuelle ou non prise en charge demande une révision au lieu de créer discrètement un événement aujourd\'hui.</string>
+    <string name="update_notice_calendar_language_title">Une seule langue pour tout le Mink</string>
+    <string name="update_notice_calendar_language_description">Les phrases du calendrier suivent automatiquement la langue sélectionnée dans les paramètres du lanceur.</string>
+    <string name="update_notice_calendar_local_title">Toujours entièrement sur l\'appareil</string>
+    <string name="update_notice_calendar_local_description">Mink utilise des modules de langage déterministes dans l\'application. Les expressions du calendrier ne sont pas téléchargées ni envoyées à un service d\'IA.</string>
+</resources>

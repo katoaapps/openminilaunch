@@ -6,7 +6,6 @@ import com.katoaapps.openminilaunch.model.PinShortcutRequestPresentation
 import com.katoaapps.openminilaunch.model.Shortcut
 import com.katoaapps.openminilaunch.model.ThemePreference
 import com.katoaapps.openminilaunch.model.TodoItem
-import com.katoaapps.openminilaunch.features.calendar.language.CalendarInputLanguage
 
 internal const val LAUNCHER_BACKUP_FORMAT = "minklauncher-open-backup"
 internal const val LAUNCHER_BACKUP_SCHEMA_VERSION = 2
@@ -53,5 +52,4 @@ internal data class LauncherBackupSettings(
     val minkAppPauseMode: MinkAppPauseMode,
     val githubUpdateChecksEnabled: Boolean,
     val pinShortcutRequestPresentation: PinShortcutRequestPresentation,
-    val calendarInputLanguage: CalendarInputLanguage,
 )

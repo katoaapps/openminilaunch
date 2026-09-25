@@ -1,0 +1,33 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="calendar">ক্যালেন্ডার</string>
+    <string name="calendar_onboarding_privacy">Mink আপনার ক্যালেন্ডার খোলার আগে তারিখ এবং সময়ের পূর্বরূপ দেখে। ক্যালেন্ডার বাক্যাংশ এই ডিভাইসে ব্যাখ্যা করা হয় এবং আমাদের কাছে পাঠানো হয় না।</string>
+    <string name="calendar_preview_all_day">সারাদিন</string>
+    <string name="calendar_preview_no_time">কোন তারিখ বা সময় সনাক্ত করা হয়নি</string>
+    <string name="calendar_preview_date_all_day">%1$s · সারাদিন</string>
+    <string name="calendar_preview_date_time">%1$s · %2$s</string>
+    <string name="calendar_preview_date_time_range">%1$s · %2$s–%3$s</string>
+    <string name="calendar_preview_review">ক্যালেন্ডার খোলার আগে পর্যালোচনা করুন</string>
+    <string name="calendar_review_title">এই ঘটনা চেক করুন</string>
+    <string name="calendar_review_continue">তারিখ বা সময় ছাড়াই চালিয়ে যান</string>
+    <string name="calendar_review_edit">বাক্যাংশ সম্পাদনা করুন</string>
+    <string name="calendar_issue_empty">একটি ইভেন্ট শিরোনাম লিখুন.</string>
+    <string name="calendar_issue_unsupported_language">এই ক্যালেন্ডার ভাষা এখনও সমর্থিত নয়.</string>
+    <string name="calendar_issue_unsupported_phrase">Mink তারিখ বা সময় শব্দ পাওয়া গেছে এটি নিরাপদে বুঝতে পারেনি।</string>
+    <string name="calendar_issue_ambiguous_date">এই তারিখটি একাধিক উপায়ে ব্যাখ্যা করা যেতে পারে।</string>
+    <string name="calendar_issue_invalid_date">এই তারিখ বৈধ নয়.</string>
+    <string name="calendar_issue_invalid_time">এই সময় বৈধ নয়.</string>
+    <string name="calendar_issue_conflict">বাক্যাংশটিতে একাধিক তারিখ, সময় বা সময়কাল রয়েছে।</string>
+    <string name="calendar_issue_dst_gap">এই স্থানীয় সময়টি বিদ্যমান নেই কারণ তখন ঘড়ির কাঁটা পরিবর্তিত হয়।</string>
+    <string name="calendar_warning_past">এই ঘটনা অতীতের।</string>
+    <string name="calendar_warning_dst_overlap">এই সময়টি দুবার ঘটে কারণ ঘড়ির কাঁটা তখন পরিবর্তন হয়।</string>
+    <string name="update_notice_calendar_heading">আপনি বিশ্বাস করতে পারেন ক্যালেন্ডার কমান্ড</string>
+    <string name="update_notice_calendar_preview_title">হ্যান্ডঅফ আগে ইভেন্ট দেখুন</string>
+    <string name="update_notice_calendar_preview_description">+ কমান্ড এখন সঠিক শিরোনাম, তারিখ, সময়, এবং সময়কালের পূর্বরূপ দেখে Mink আপনার ক্যালেন্ডার অ্যাপে পাঠাবে।</string>
+    <string name="update_notice_calendar_review_title">Mink অনুমান করার পরিবর্তে থামে</string>
+    <string name="update_notice_calendar_review_description">অবৈধ, বিরোধপূর্ণ, বা অসমর্থিত তারিখ শব্দগুলি আজ শান্তভাবে একটি ইভেন্ট তৈরি করার পরিবর্তে পর্যালোচনার জন্য জিজ্ঞাসা করে৷</string>
+    <string name="update_notice_calendar_language_title">Mink জুড়ে একটি ভাষা</string>
+    <string name="update_notice_calendar_language_description">ক্যালেন্ডার শব্দগুচ্ছ স্বয়ংক্রিয়ভাবে লঞ্চার সেটিংসে নির্বাচিত ভাষা অনুসরণ করে।</string>
+    <string name="update_notice_calendar_local_title">এখনও সম্পূর্ণরূপে ডিভাইসে</string>
+    <string name="update_notice_calendar_local_description">Mink অ্যাপের ভিতরে নির্ধারক ভাষা মডিউল ব্যবহার করে। ক্যালেন্ডার বাক্যাংশ আপলোড করা হয় না বা কোনো AI পরিষেবাতে পাঠানো হয় না।</string>
+</resources>

@@ -1,0 +1,33 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="calendar">カレンダー</string>
+    <string name="calendar_onboarding_privacy">Mink は、カレンダーを開く前に日付と時刻をプレビューします。カレンダーのフレーズはこのデバイス上で解釈され、当社に送信されることはありません。</string>
+    <string name="calendar_preview_all_day">一日中</string>
+    <string name="calendar_preview_no_time">日付または時刻が検出されませんでした</string>
+    <string name="calendar_preview_date_all_day">%1$s · 一日中</string>
+    <string name="calendar_preview_date_time">%1$s · %2$s</string>
+    <string name="calendar_preview_date_time_range">%1$s · %2$s–%3$s</string>
+    <string name="calendar_preview_review">カレンダーを開く前に確認してください</string>
+    <string name="calendar_review_title">このイベントをチェックする</string>
+    <string name="calendar_review_continue">日付や時刻を指定せずに続行します</string>
+    <string name="calendar_review_edit">フレーズを編集する</string>
+    <string name="calendar_issue_empty">イベントのタイトルを入力します。</string>
+    <string name="calendar_issue_unsupported_language">このカレンダー言語はまだサポートされていません。</string>
+    <string name="calendar_issue_unsupported_phrase">Mink では、安全に理解できない日付または時刻の文言が見つかりました。</string>
+    <string name="calendar_issue_ambiguous_date">この日付は複数の方法で解釈できます。</string>
+    <string name="calendar_issue_invalid_date">この日付は無効です。</string>
+    <string name="calendar_issue_invalid_time">この時間は無効です。</string>
+    <string name="calendar_issue_conflict">フレーズには複数の日付、時刻、または期間が含まれています。</string>
+    <string name="calendar_issue_dst_gap">この現地時間は時計が変わるため存在しません。</string>
+    <string name="calendar_warning_past">このイベントは過去のものです。</string>
+    <string name="calendar_warning_dst_overlap">時計が変わるため、この時間が 2 回発生します。</string>
+    <string name="update_notice_calendar_heading">信頼できるカレンダー コマンド</string>
+    <string name="update_notice_calendar_preview_title">引き継ぎ前にイベントを確認する</string>
+    <string name="update_notice_calendar_preview_description">+ コマンドにより、Mink がカレンダー アプリに送信する正確なタイトル、日付、時刻、期間がプレビューされるようになりました。</string>
+    <string name="update_notice_calendar_review_title">Mink は推測する代わりに停止します</string>
+    <string name="update_notice_calendar_review_description">無効な日付、競合する日付、またはサポートされていない日付の文言がある場合は、今日イベントを静かに作成するのではなく、レビューを求めます。</string>
+    <string name="update_notice_calendar_language_title">Mink 全体で 1 つの言語</string>
+    <string name="update_notice_calendar_language_description">カレンダーのフレーズは、ランチャー設定で選択された言語に従います。</string>
+    <string name="update_notice_calendar_local_title">まだ完全にデバイス上にあります</string>
+    <string name="update_notice_calendar_local_description">Mink は、アプリ内で決定論的言語モジュールを使用します。カレンダーのフレーズは AI サービスにアップロードまたは送信されません。</string>
+</resources>

@@ -1,0 +1,11 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="demo_phone_mobile">모바일</string>
+    <string name="demo_phone_work">일</string>
+    <string name="demo_phone_home">홈</string>
+    <string name="demo_invoice_title">송장</string>
+    <string name="demo_invoice_number">송장 번호: %1$s</string>
+    <string name="demo_invoice_services">데모 서비스 및 자료</string>
+    <string name="demo_invoice_total">합계: %1$s</string>
+    <string name="demo_invoice_footer">MinkLauncher OpenSource로 생성된 샘플 문서</string>
+</resources>

@@ -1,0 +1,12 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="conversations_service_label">Percakapan MinkLauncher OpenSource</string>
+    <string name="language">Bahasa</string>
+    <string name="settings_language_summary">Pilih bahasa yang digunakan OpenMink</string>
+    <string name="app_language_description">Ikuti bahasa telepon atau pilih satu bahasa untuk OpenMink. Frasa kalender juga mengikuti pilihan ini.</string>
+    <string name="system_default">Bawaan sistem</string>
+    <string name="system_default_language_description">Gunakan preferensi bahasa Android saat ini</string>
+    <string name="language_screen_refresh_notice">Mengubah bahasa akan menyegarkan layar OpenMink saat ini.</string>
+    <string name="app_language_requires_android_13">Memilih bahasa peluncur terpisah memerlukan Android 13 atau lebih baru. Pada perangkat lama, OpenMink dan frasa kalender mengikuti bahasa Android.</string>
+    <string name="app_language_requires_android_13_short">Membutuhkan Android 13 atau lebih baru</string>
+</resources>

@@ -1,0 +1,11 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="demo_phone_mobile">Mobile</string>
+    <string name="demo_phone_work">Travail</string>
+    <string name="demo_phone_home">Accueil</string>
+    <string name="demo_invoice_title">FACTURE</string>
+    <string name="demo_invoice_number">Numéro de facture : %1$s</string>
+    <string name="demo_invoice_services">Services et matériels de démonstration</string>
+    <string name="demo_invoice_total">Total : %1$s</string>
+    <string name="demo_invoice_footer">Exemple de document généré par MinkLauncher OpenSource</string>
+</resources>
