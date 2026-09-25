@@ -47,10 +47,13 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.lifecycle.Lifecycle
@@ -82,13 +85,17 @@ internal data class WidgetSizeRange(
 internal fun WidgetPage(store: LauncherStore, actions: DeviceActions, goHome: () -> Unit) {
     val context = LocalContext.current
     val activity = context as MainActivity
+    val density = LocalDensity.current.density
+    val widgetHorizontalPaddingDp = Dimens.dp20.value + Dimens.dp48.value
     val manager = remember { AppWidgetManager.getInstance(context) }
     val host = remember { InteractiveAppWidgetHost(context, MINK_WIDGET_HOST_ID) }
     var showPicker by remember { mutableStateOf(false) }
     var sizingProvider by remember { mutableStateOf<AppWidgetProviderInfo?>(null) }
-    var pendingId by remember { mutableIntStateOf(AppWidgetManager.INVALID_APPWIDGET_ID) }
-    var pendingSize by remember { mutableStateOf<WidgetGridSize?>(null) }
-    var bindingStage by remember { mutableStateOf(WidgetBindingStage.IDLE) }
+    var pendingId by rememberSaveable { mutableIntStateOf(AppWidgetManager.INVALID_APPWIDGET_ID) }
+    var pendingColumns by rememberSaveable { mutableIntStateOf(0) }
+    var pendingRows by rememberSaveable { mutableIntStateOf(0) }
+    var bindingStage by rememberSaveable { mutableStateOf(WidgetBindingStage.IDLE) }
+    var paneWidthPx by remember { mutableIntStateOf(0) }
     var widgetInfoRevision by remember { mutableIntStateOf(0) }
     val widgetListState = rememberLazyListState()
     val headerContentColor = launcherBackgroundContentColor(store, header = true)
@@ -96,19 +103,23 @@ internal fun WidgetPage(store: LauncherStore, actions: DeviceActions, goHome: ()
     fun abandonPendingWidget() {
         if (pendingId != AppWidgetManager.INVALID_APPWIDGET_ID) host.deleteAppWidgetId(pendingId)
         pendingId = AppWidgetManager.INVALID_APPWIDGET_ID
-        pendingSize = null
+        pendingColumns = 0
+        pendingRows = 0
         bindingStage = WidgetBindingStage.IDLE
     }
 
     fun finishPendingWidget() {
         if (pendingId != AppWidgetManager.INVALID_APPWIDGET_ID) {
-            val size = pendingSize ?: manager.getAppWidgetInfo(pendingId)?.let {
+            val size = if (pendingColumns > 0 && pendingRows > 0) {
+                WidgetGridSize(pendingColumns, pendingRows)
+            } else manager.getAppWidgetInfo(pendingId)?.let {
                 widgetSizeRange(it, context.resources.displayMetrics.density).preferred
             }
             if (size != null) store.addWidget(pendingId, size)
         }
         pendingId = AppWidgetManager.INVALID_APPWIDGET_ID
-        pendingSize = null
+        pendingColumns = 0
+        pendingRows = 0
         bindingStage = WidgetBindingStage.IDLE
     }
 
@@ -117,16 +128,19 @@ internal fun WidgetPage(store: LauncherStore, actions: DeviceActions, goHome: ()
     }
 
     fun beginWidgetBinding(info: AppWidgetProviderInfo, size: WidgetGridSize) {
+        if (paneWidthPx <= 0) return
         val id = host.allocateAppWidgetId()
         pendingId = id
-        pendingSize = size
-        val cellWidthDp = ((context.resources.configuration.screenWidthDp - 40).coerceAtLeast(280) / 4f)
+        pendingColumns = size.columns
+        pendingRows = size.rows
+        val contentWidthDp = paneWidthPx / density - widgetHorizontalPaddingDp
+        val dimensions = widgetPanelDimensions(contentWidthDp, size)
         val options = Bundle().apply {
             putInt(AppWidgetManager.OPTION_APPWIDGET_HOST_CATEGORY, AppWidgetProviderInfo.WIDGET_CATEGORY_HOME_SCREEN)
-            putInt(AppWidgetManager.OPTION_APPWIDGET_MIN_WIDTH, (cellWidthDp * size.columns).roundToInt())
-            putInt(AppWidgetManager.OPTION_APPWIDGET_MAX_WIDTH, (cellWidthDp * size.columns).roundToInt())
-            putInt(AppWidgetManager.OPTION_APPWIDGET_MIN_HEIGHT, (cellWidthDp * size.rows).roundToInt())
-            putInt(AppWidgetManager.OPTION_APPWIDGET_MAX_HEIGHT, (cellWidthDp * size.rows).roundToInt())
+            putInt(AppWidgetManager.OPTION_APPWIDGET_MIN_WIDTH, dimensions.widthDp.roundToInt())
+            putInt(AppWidgetManager.OPTION_APPWIDGET_MAX_WIDTH, dimensions.widthDp.roundToInt())
+            putInt(AppWidgetManager.OPTION_APPWIDGET_MIN_HEIGHT, dimensions.heightDp.roundToInt())
+            putInt(AppWidgetManager.OPTION_APPWIDGET_MAX_HEIGHT, dimensions.heightDp.roundToInt())
         }
         if (manager.bindAppWidgetIdIfAllowed(id, info.profile, info.provider, options)) {
             bindingStage = WidgetBindingStage.BOUND
@@ -150,15 +164,25 @@ internal fun WidgetPage(store: LauncherStore, actions: DeviceActions, goHome: ()
             abandonPendingWidget()
         } else if (info.configure != null) {
             bindingStage = WidgetBindingStage.CONFIGURING
-            val launched = activity.configureAppWidget(host, pendingId) { configured ->
-                if (configured) finishPendingWidget() else abandonPendingWidget()
-            }
+            val launched = activity.configureAppWidget(host, pendingId)
             if (!launched) {
                 abandonPendingWidget()
                 Toast.makeText(context, context.getString(R.string.widget_configuration_failed), Toast.LENGTH_SHORT).show()
             }
         } else {
             finishPendingWidget()
+        }
+    }
+
+    // Android can recreate Home while a provider's setup screen is open. The Activity keeps
+    // its result keyed by widget ID until this restored page consumes it.
+    val configurationResult = activity.widgetConfigurationResult
+    LaunchedEffect(configurationResult, pendingId) {
+        if (configurationResult?.first != pendingId) return@LaunchedEffect
+        if (activity.consumeWidgetConfigurationResult(pendingId) == true) {
+            finishPendingWidget()
+        } else {
+            abandonPendingWidget()
         }
     }
 
@@ -195,7 +219,10 @@ internal fun WidgetPage(store: LauncherStore, actions: DeviceActions, goHome: ()
         }
     }
 
-    Column(Modifier.fillMaxSize().statusBarsPadding().navigationBarsPadding()) {
+    Column(
+        Modifier.fillMaxSize().statusBarsPadding().navigationBarsPadding()
+            .onSizeChanged { paneWidthPx = it.width },
+    ) {
         Row(
             Modifier.fillMaxWidth().padding(horizontal = Dimens.dp20, vertical = Dimens.dp12),
             verticalAlignment = Alignment.CenterVertically,

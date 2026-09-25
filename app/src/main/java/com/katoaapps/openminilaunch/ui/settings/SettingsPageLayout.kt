@@ -18,6 +18,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -46,10 +47,15 @@ internal fun SettingsPage(
     goBack: () -> Unit,
     content: @Composable ColumnScope.() -> Unit,
 ) {
-    Column(Modifier.fillMaxSize().statusBarsPadding()) {
-        PageHeader(title, goBack)
+    Column(
+        Modifier.fillMaxSize().statusBarsPadding(),
+        horizontalAlignment = Alignment.CenterHorizontally,
+    ) {
+        Box(Modifier.widthIn(max = Dimens.dp720).fillMaxWidth()) {
+            PageHeader(title, goBack)
+        }
         Column(
-            Modifier.fillMaxSize()
+            Modifier.widthIn(max = Dimens.dp720).fillMaxWidth().weight(1f)
                 .verticalScroll(LocalSettingsScrollState.current)
                 .padding(horizontal = Dimens.dp22),
             verticalArrangement = Arrangement.spacedBy(Dimens.dp14),

@@ -120,8 +120,9 @@ internal fun OnboardingScreen(store: LauncherStore, actions: DeviceActions, onFi
         Modifier.fillMaxSize(),
         color = MaterialTheme.colorScheme.background,
     ) {
+        Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
         Column(
-            Modifier.fillMaxSize()
+            Modifier.widthIn(max = Dimens.dp720).fillMaxWidth().fillMaxHeight()
                 .statusBarsPadding()
                 .navigationBarsPadding()
                 .padding(horizontal = Dimens.dp24),
@@ -290,6 +291,7 @@ internal fun OnboardingScreen(store: LauncherStore, actions: DeviceActions, onFi
                             OnboardingPoint(Icons.Default.Forum, stringResource(R.string.conversations), stringResource(R.string.conversations_onboarding_description))
                             OnboardingPoint(Icons.Default.Widgets, stringResource(R.string.widget_page), stringResource(R.string.widget_page_onboarding_description))
                             OnboardingPoint(Icons.Default.Pets, stringResource(R.string.mink_day), stringResource(R.string.mink_day_onboarding_short_description))
+                            OnboardingPoint(Icons.Default.TabletAndroid, stringResource(R.string.two_panel_onboarding_title), stringResource(R.string.two_panel_onboarding_description))
                             OnboardingPoint(Icons.Default.Apps, stringResource(R.string.six_shortcuts_any_apps), stringResource(R.string.six_shortcuts_any_apps_description))
                             OnboardingPoint(Icons.Default.DragIndicator, stringResource(R.string.arrange_grid), stringResource(R.string.arrange_grid_description))
                             OnboardingPoint(Icons.Default.PrivacyTip, stringResource(R.string.active_and_local), stringResource(R.string.active_and_local_description, appName))
@@ -358,6 +360,7 @@ internal fun OnboardingScreen(store: LauncherStore, actions: DeviceActions, onFi
                     }
                 }
             }
+        }
         }
     }
     if (pickingAi) {

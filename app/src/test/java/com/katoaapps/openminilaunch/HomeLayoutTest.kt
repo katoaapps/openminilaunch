@@ -22,6 +22,40 @@ class HomeLayoutTest {
         assertEquals(88f, shortcutCellSizeDp(240f, 500f), .01f)
     }
 
+    @Test fun largeDisplayTodoTextUsesAvailableRoomAndFontScale() {
+        val normalFont = homeTodoTextMetrics(
+            largeDisplay = true,
+            compact = true,
+            panelHeightDp = 700f,
+            itemsPerPage = 5,
+            fontScale = 1f,
+        )
+        val largeFont = homeTodoTextMetrics(
+            largeDisplay = true,
+            compact = true,
+            panelHeightDp = 700f,
+            itemsPerPage = 5,
+            fontScale = 1.5f,
+        )
+
+        assertEquals(20f, normalFont.fontSizeSp, .01f)
+        assertEquals(4, normalFont.maxLines)
+        assertEquals(3, largeFont.maxLines)
+    }
+
+    @Test fun phoneTodoTypographyRemainsCompact() {
+        val metrics = homeTodoTextMetrics(
+            largeDisplay = false,
+            compact = true,
+            panelHeightDp = 350f,
+            itemsPerPage = 3,
+            fontScale = 1f,
+        )
+
+        assertEquals(13f, metrics.fontSizeSp, .01f)
+        assertEquals(2, metrics.maxLines)
+    }
+
     @Test fun configurableShortcutsUseStableGenericSlotLabels() {
         assertEquals(6, configurableShortcuts.size)
         assertEquals(R.string.shortcut_note, Shortcut.NOTE.labelRes)

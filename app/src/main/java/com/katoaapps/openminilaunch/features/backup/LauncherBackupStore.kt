@@ -17,6 +17,7 @@ internal fun LauncherStore.createPortableBackup(appVersion: String): LauncherBac
         themePreference = themePreference,
         hideStatusBar = hideStatusBar,
         alignHomePanelBottom = alignHomePanelBottom,
+        twoPanelModeForLargeDisplays = twoPanelModeForLargeDisplays,
         showClock = showClock,
         showDate = showDate,
         use24HourClock = use24HourClock,
@@ -56,6 +57,7 @@ internal fun LauncherStore.restorePortableBackup(backup: LauncherBackup) {
     setTheme(settings.themePreference)
     updateHideStatusBar(settings.hideStatusBar)
     updateAlignHomePanelBottom(settings.alignHomePanelBottom)
+    settings.twoPanelModeForLargeDisplays?.let(::updateTwoPanelModeForLargeDisplays)
     updateShowClock(settings.showClock)
     updateShowDate(settings.showDate)
     updateUse24HourClock(settings.use24HourClock)

@@ -121,6 +121,12 @@ internal fun AppearanceSettingsPage(
             checked = store.alignHomePanelBottom,
             onCheckedChange = store::updateAlignHomePanelBottom,
         )
+        SettingsSwitchRow(
+            title = stringResource(R.string.two_panel_mode_for_large_displays),
+            subtitle = stringResource(R.string.two_panel_mode_for_large_displays_description),
+            checked = store.twoPanelModeForLargeDisplays,
+            onCheckedChange = store::updateTwoPanelModeForLargeDisplays,
+        )
         SectionLabel(stringResource(R.string.visual_style))
         IconPackAppearanceSettings(store, onApplied = onIconStyleApplied)
         HomePanelColorSetting(

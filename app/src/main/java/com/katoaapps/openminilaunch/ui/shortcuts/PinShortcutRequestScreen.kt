@@ -21,6 +21,7 @@ import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -137,44 +138,52 @@ private fun PinShortcutFullPage(
         modifier = Modifier.fillMaxSize().background(MaterialTheme.colorScheme.background),
         containerColor = MaterialTheme.colorScheme.background,
         topBar = {
-            Row(
-                Modifier.fillMaxWidth().statusBarsPadding()
-                    .padding(horizontal = Dimens.dp10, vertical = Dimens.dp8),
-                verticalAlignment = Alignment.CenterVertically,
-            ) {
-                IconButton(onClick = onCancel) {
-                    Icon(Icons.AutoMirrored.Filled.ArrowBack, stringResource(R.string.cancel))
+            Box(Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
+                Row(
+                    Modifier.widthIn(max = Dimens.dp720).fillMaxWidth().statusBarsPadding()
+                        .padding(horizontal = Dimens.dp10, vertical = Dimens.dp8),
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
+                    IconButton(onClick = onCancel) {
+                        Icon(Icons.AutoMirrored.Filled.ArrowBack, stringResource(R.string.cancel))
+                    }
+                    Text(
+                        stringResource(R.string.add_shortcut),
+                        Modifier.weight(1f),
+                        fontSize = Dimens.sp26,
+                        fontWeight = FontWeight.Black,
+                    )
                 }
-                Text(
-                    stringResource(R.string.add_shortcut),
-                    Modifier.weight(1f),
-                    fontSize = Dimens.sp26,
-                    fontWeight = FontWeight.Black,
-                )
             }
         },
         bottomBar = {
-            ConfirmationBar(
-                selected = PinShortcutDestination.fromKey(selectedKey),
-                showError = showError,
-                onConfirm = onConfirm,
-                modifier = Modifier.navigationBarsPadding(),
-            )
+            Box(Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
+                ConfirmationBar(
+                    selected = PinShortcutDestination.fromKey(selectedKey),
+                    showError = showError,
+                    onConfirm = onConfirm,
+                    modifier = Modifier.widthIn(max = Dimens.dp720).fillMaxWidth()
+                        .navigationBarsPadding(),
+                )
+            }
         },
     ) { insets ->
-        PinShortcutPlacementList(
-            pending = pending,
-            store = store,
-            actions = actions,
-            selectedKey = selectedKey,
-            onSelect = onSelect,
-            contentPadding = PaddingValues(
-                start = Dimens.dp22,
-                end = Dimens.dp22,
-                top = insets.calculateTopPadding() + Dimens.dp8,
-                bottom = insets.calculateBottomPadding() + Dimens.dp16,
-            ),
-        )
+        Box(Modifier.fillMaxSize(), contentAlignment = Alignment.TopCenter) {
+            PinShortcutPlacementList(
+                pending = pending,
+                store = store,
+                actions = actions,
+                selectedKey = selectedKey,
+                onSelect = onSelect,
+                modifier = Modifier.widthIn(max = Dimens.dp720).fillMaxWidth(),
+                contentPadding = PaddingValues(
+                    start = Dimens.dp22,
+                    end = Dimens.dp22,
+                    top = insets.calculateTopPadding() + Dimens.dp8,
+                    bottom = insets.calculateBottomPadding() + Dimens.dp16,
+                ),
+            )
+        }
     }
 }
 
@@ -194,6 +203,7 @@ private fun PinShortcutConfirmationSheet(
     ) {
         ModalBottomSheet(
             onDismissRequest = onCancel,
+            modifier = Modifier.widthIn(max = Dimens.dp720).fillMaxWidth(),
             sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true),
             containerColor = MaterialTheme.colorScheme.surface,
         ) {

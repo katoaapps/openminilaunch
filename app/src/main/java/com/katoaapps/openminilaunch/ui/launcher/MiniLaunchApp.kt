@@ -13,6 +13,7 @@ import androidx.activity.compose.BackHandler
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.isSystemInDarkTheme
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.isImeVisible
@@ -32,7 +33,6 @@ import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
@@ -49,6 +49,7 @@ import com.katoaapps.openminilaunch.model.Screen
 import com.katoaapps.openminilaunch.model.ThemePreference
 import com.katoaapps.openminilaunch.platform.DeviceActions
 import com.katoaapps.openminilaunch.ui.conversations.NotificationHubScreen
+import com.katoaapps.openminilaunch.ui.magic.rememberMagicBoxSessionState
 import com.katoaapps.openminilaunch.ui.onboarding.FeatureUpdateDialog
 import com.katoaapps.openminilaunch.ui.onboarding.OnboardingScreen
 import com.katoaapps.openminilaunch.ui.onboarding.ShortcutSetupDialog
@@ -69,9 +70,9 @@ import com.katoaapps.openminilaunch.ui.theme.MinkWhite
 import com.katoaapps.openminilaunch.ui.theme.Rust
 import com.katoaapps.openminilaunch.ui.theme.withAppBackground
 import com.katoaapps.openminilaunch.ui.todos.TodosScreen
-import kotlinx.coroutines.launch
 
-private const val FEATURE_UPDATE_ID = "calendar_language_v1"
+private const val PREVIOUS_FEATURE_UPDATE_ID = "calendar_language_v1"
+private const val FEATURE_UPDATE_ID = "two_panel_large_display_v1"
 
 @Composable
 internal fun MiniLaunchApp(
@@ -90,14 +91,18 @@ internal fun MiniLaunchApp(
     var showNotificationAccessPrompt by rememberSaveable { mutableStateOf(false) }
     var showUsageAccessPrompt by rememberSaveable { mutableStateOf(false) }
     var tutorialRun by rememberSaveable { mutableIntStateOf(0) }
-    var homeMagicExpanded by remember { mutableStateOf(false) }
+    val homeMagicBoxSessionState = rememberMagicBoxSessionState()
     var animateHomeEntrance by remember { mutableStateOf(false) }
+    var focusedLauncherPage by rememberSaveable { mutableIntStateOf(HOME_PAGE) }
+    var twoPanelActive by remember { mutableStateOf(false) }
+    var homePageRequestToken by remember { mutableIntStateOf(0) }
     val launcherPagerState = rememberPagerState(initialPage = HOME_PAGE, pageCount = { WIDGET_PAGE + 1 })
-    val launcherScope = rememberCoroutineScope()
+    val twoPanelState = rememberLazyListState(initialFirstVisibleItemIndex = 1)
     LaunchedEffect(homeRequestToken) {
         if (homeRequestToken > 0) {
             screen = Screen.HOME
-            launcherPagerState.animateScrollToPage(HOME_PAGE)
+            focusedLauncherPage = HOME_PAGE
+            homePageRequestToken++
         }
     }
     val context = LocalContext.current
@@ -227,14 +232,17 @@ internal fun MiniLaunchApp(
     MaterialTheme(colorScheme = colors, typography = Typography()) {
         BackHandler(enabled = !showTutorial && screen != Screen.HOME) { screen = Screen.HOME }
         BackHandler(
-            enabled = !showTutorial && screen == Screen.HOME && launcherPagerState.currentPage != HOME_PAGE,
+            enabled = !showTutorial && screen == Screen.HOME &&
+                (if (twoPanelActive) twoPanelState.firstVisibleItemIndex == 0
+                    else launcherPagerState.currentPage != HOME_PAGE),
         ) {
-            launcherScope.launch { launcherPagerState.animateScrollToPage(HOME_PAGE) }
+            focusedLauncherPage = HOME_PAGE
+            homePageRequestToken++
         }
         val imeVisible = WindowInsets.isImeVisible
         BackHandler(
             enabled = !showTutorial && screen == Screen.HOME &&
-                launcherPagerState.currentPage == HOME_PAGE && !imeVisible,
+                (twoPanelActive || launcherPagerState.currentPage == HOME_PAGE) && !imeVisible,
         ) { }
 
         Surface(Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
@@ -245,6 +253,7 @@ internal fun MiniLaunchApp(
                         actions = actions,
                         onFinish = {
                             store.completeOnboarding()
+                            store.markUpdateSeen(PREVIOUS_FEATURE_UPDATE_ID)
                             store.markUpdateSeen(FEATURE_UPDATE_ID)
                             showTutorial = false
                             if (ContextCompat.checkSelfPermission(
@@ -279,17 +288,21 @@ internal fun MiniLaunchApp(
                             store = store,
                             actions = actions,
                             pagerState = launcherPagerState,
-                            magicBoxExpanded = homeMagicExpanded,
-                            keyboardInputEnabled = launcherPagerState.currentPage == HOME_PAGE &&
+                            twoPanelState = twoPanelState,
+                            focusedPage = focusedLauncherPage,
+                            onFocusedPageChange = { focusedLauncherPage = it },
+                            onTwoPanelActiveChange = { twoPanelActive = it },
+                            homePageRequestToken = homePageRequestToken,
+                            keyboardInputEnabled = (twoPanelActive || launcherPagerState.currentPage == HOME_PAGE) &&
                                 !showTutorial && !showUpdateNotice && !showShortcutSetup,
                             homeRequestToken = homeRequestToken,
+                            magicBoxSessionState = homeMagicBoxSessionState,
                             openSettings = { destination ->
                                 settingsDestination = destination
                                 screen = Screen.SETTINGS
                             },
                             openTodos = { screen = Screen.TODOS },
                             openHub = { screen = Screen.HUB },
-                            onMagicBoxExpandedChange = { homeMagicExpanded = it },
                             modifier = Modifier.fillMaxSize(),
                         )
                     }
@@ -351,19 +364,23 @@ internal fun MiniLaunchApp(
         }
         if (showUpdateNotice && !showTutorial) {
             FeatureUpdateDialog(
-                onOpenMagicBox = {
+                showCalendarHighlights = !store.hasSeenUpdate(PREVIOUS_FEATURE_UPDATE_ID),
+                onOpenAppearance = {
+                    store.markUpdateSeen(PREVIOUS_FEATURE_UPDATE_ID)
                     store.markUpdateSeen(FEATURE_UPDATE_ID)
                     showUpdateNotice = false
-                    settingsDestination = SettingsDestination.MAGIC_BOX
+                    settingsDestination = SettingsDestination.APPEARANCE
                     screen = Screen.SETTINGS
                 },
                 onReviewTutorial = {
+                    store.markUpdateSeen(PREVIOUS_FEATURE_UPDATE_ID)
                     store.markUpdateSeen(FEATURE_UPDATE_ID)
                     showUpdateNotice = false
                     tutorialRun++
                     showTutorial = true
                 },
                 onNotNow = {
+                    store.markUpdateSeen(PREVIOUS_FEATURE_UPDATE_ID)
                     store.markUpdateSeen(FEATURE_UPDATE_ID)
                     showUpdateNotice = false
                 },

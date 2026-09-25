@@ -14,15 +14,18 @@ import com.katoaapps.openminilaunch.ui.theme.Sage
 
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.material.icons.Icons
@@ -36,6 +39,7 @@ import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -51,7 +55,7 @@ internal fun NotificationHubScreen(store: LauncherStore, actions: DeviceActions,
     val activity = context as androidx.activity.ComponentActivity
     var accessGranted by remember { mutableStateOf(NotificationHub.hasAccess(context)) }
     var showAccessDisclosure by remember { mutableStateOf(false) }
-    var selectedConversationId by remember { mutableStateOf<String?>(null) }
+    var selectedConversationId by rememberSaveable { mutableStateOf<String?>(null) }
     val demoModeEnabled = store.demoSearchDataEnabled
     val conversations = NotificationHub.conversations(useDemoData = demoModeEnabled)
     val selectedConversation = conversations.firstOrNull { it.id == selectedConversationId }
@@ -69,35 +73,39 @@ internal fun NotificationHubScreen(store: LauncherStore, actions: DeviceActions,
 
     BackHandler(enabled = selectedConversation != null) { selectedConversationId = null }
 
-    if (selectedConversation != null) {
-        ConversationWindow(
-            conversation = selectedConversation,
-            actions = actions,
-            goBack = { selectedConversationId = null },
-        )
-    } else {
-        Column(Modifier.fillMaxSize().statusBarsPadding().navigationBarsPadding()) {
-            PageHeader(stringResource(R.string.conversations), goBack)
-            when {
-                !accessGranted && !demoModeEnabled -> ConversationAccessEmptyState { showAccessDisclosure = true }
-                conversations.isEmpty() -> NoConversationsEmptyState()
-                else -> LazyColumn(
-                    Modifier.fillMaxSize().padding(horizontal = Dimens.dp18),
-                    verticalArrangement = Arrangement.spacedBy(Dimens.dp10),
-                ) {
-                    item {
-                        Text(
-                            stringResource(R.string.active_conversations),
-                            Modifier.padding(top = Dimens.dp14, bottom = Dimens.dp2),
-                            letterSpacing = Dimens.sp1,
-                            fontWeight = FontWeight.Black,
-                            fontSize = Dimens.sp12,
-                        )
+    Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+        Box(Modifier.widthIn(max = Dimens.dp720).fillMaxWidth().fillMaxHeight()) {
+            if (selectedConversation != null) {
+                ConversationWindow(
+                    conversation = selectedConversation,
+                    actions = actions,
+                    goBack = { selectedConversationId = null },
+                )
+            } else {
+                Column(Modifier.fillMaxSize().statusBarsPadding().navigationBarsPadding()) {
+                    PageHeader(stringResource(R.string.conversations), goBack)
+                    when {
+                        !accessGranted && !demoModeEnabled -> ConversationAccessEmptyState { showAccessDisclosure = true }
+                        conversations.isEmpty() -> NoConversationsEmptyState()
+                        else -> LazyColumn(
+                            Modifier.fillMaxSize().padding(horizontal = Dimens.dp18),
+                            verticalArrangement = Arrangement.spacedBy(Dimens.dp10),
+                        ) {
+                            item {
+                                Text(
+                                    stringResource(R.string.active_conversations),
+                                    Modifier.padding(top = Dimens.dp14, bottom = Dimens.dp2),
+                                    letterSpacing = Dimens.sp1,
+                                    fontWeight = FontWeight.Black,
+                                    fontSize = Dimens.sp12,
+                                )
+                            }
+                            items(conversations, key = HubConversation::id) { conversation ->
+                                ConversationCard(conversation, actions) { selectedConversationId = conversation.id }
+                            }
+                            item { Spacer(Modifier.height(Dimens.dp28)) }
+                        }
                     }
-                    items(conversations, key = HubConversation::id) { conversation ->
-                        ConversationCard(conversation, actions) { selectedConversationId = conversation.id }
-                    }
-                    item { Spacer(Modifier.height(Dimens.dp28)) }
                 }
             }
         }

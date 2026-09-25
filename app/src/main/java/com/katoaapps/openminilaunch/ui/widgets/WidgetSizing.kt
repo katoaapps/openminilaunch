@@ -39,6 +39,18 @@ import com.katoaapps.openminilaunch.ui.theme.displayLabel
 import kotlin.math.ceil
 import kotlin.math.roundToInt
 
+internal data class WidgetPanelDimensions(val widthDp: Float, val heightDp: Float)
+
+/** Keep the provider's initial size options in step with the hosted view's actual grid cell. */
+internal fun widgetPanelDimensions(contentWidthDp: Float, gridSize: WidgetGridSize): WidgetPanelDimensions {
+    val availableWidthDp = contentWidthDp.coerceAtLeast(1f)
+    val cellWidthDp = availableWidthDp / 4f
+    return WidgetPanelDimensions(
+        widthDp = (cellWidthDp * gridSize.columns).coerceAtLeast(96f).coerceAtMost(availableWidthDp),
+        heightDp = (cellWidthDp * gridSize.rows).coerceIn(72f, 420f),
+    )
+}
+
 @Composable
 internal fun WidgetSizeDialog(
     info: AppWidgetProviderInfo,

@@ -8,7 +8,8 @@ import com.katoaapps.openminilaunch.data.LauncherStore
 import com.katoaapps.openminilaunch.features.updates.GitHubReleaseChecker
 import com.katoaapps.openminilaunch.features.updates.isNewerRelease
 import com.katoaapps.openminilaunch.platform.DeviceActions
-import com.katoaapps.openminilaunch.ui.magic.MagicBox
+import com.katoaapps.openminilaunch.ui.magic.HomeMagicBox
+import com.katoaapps.openminilaunch.ui.magic.MagicBoxSessionState
 import com.katoaapps.openminilaunch.ui.settings.LockAccessibilityDisclosureDialog
 import com.katoaapps.openminilaunch.ui.settings.SettingsDestination
 import com.katoaapps.openminilaunch.ui.theme.Dimens
@@ -19,8 +20,6 @@ import com.katoaapps.openminilaunch.ui.wellbeing.rememberMinkAppAccessState
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.foundation.gestures.detectTapGestures
-import androidx.compose.foundation.gestures.detectVerticalDragGestures
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.animation.core.Animatable
@@ -30,7 +29,7 @@ import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.blur
 import androidx.compose.ui.geometry.Offset
-import androidx.compose.ui.input.pointer.pointerInput
+import androidx.compose.ui.focus.focusProperties
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.layout.positionInRoot
 import androidx.compose.ui.platform.LocalContext
@@ -50,6 +49,13 @@ internal fun HomeScreen(
     onMagicExpandedChange: (Boolean) -> Unit,
     keyboardInputEnabled: Boolean,
     homeRequestToken: Int,
+    magicBoxSessionState: MagicBoxSessionState,
+    paneModifier: Modifier = Modifier.fillMaxSize(),
+    collapsedBarMaxWidth: androidx.compose.ui.unit.Dp = Dimens.dp620,
+    collapsedBarOffsetX: androidx.compose.ui.unit.Dp = Dimens.dp0,
+    onPaneInteracted: () -> Unit = {},
+    onHorizontalDrag: ((Float) -> Unit)? = null,
+    onHorizontalDragFinished: ((Float, Long) -> Unit)? = null,
 ) {
     val context = LocalContext.current
     var drawerOpen by remember { mutableStateOf(false) }
@@ -58,7 +64,7 @@ internal fun HomeScreen(
     var flightActive by remember { mutableStateOf(false) }
     var widgetCenter by remember { mutableStateOf(Offset.Zero) }
     var magicCenter by remember { mutableStateOf(Offset.Zero) }
-    var magicExpanded by remember { mutableStateOf(false) }
+    val magicExpanded = magicBoxSessionState.expanded
     var showLockDisclosure by remember { mutableStateOf(false) }
     var showUpdateConfirmation by remember { mutableStateOf(false) }
     var pausedAppPackage by remember { mutableStateOf<String?>(null) }
@@ -70,6 +76,7 @@ internal fun HomeScreen(
     val lockServiceLauncher = rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) {
         if (actions.isLockServiceEnabled()) actions.lockDevice()
     }
+    LaunchedEffect(magicExpanded) { onMagicExpandedChange(magicExpanded) }
 
     fun lockFromHome() {
         if (!actions.supportsLockScreenAction()) {
@@ -107,66 +114,77 @@ internal fun HomeScreen(
         }
     }
 
-    BoxWithConstraints(
-        Modifier.fillMaxSize().pointerInput(Unit) {
-            var distance = 0f
-            detectVerticalDragGestures(
-                onDragStart = { distance = 0f },
-                onVerticalDrag = { _, amount -> if (amount > 0) distance += amount },
-                onDragEnd = { if (distance > 140f) actions.expandNotificationShade() },
-            )
-        }.pointerInput(magicExpanded) {
-            if (!magicExpanded) detectTapGestures(onDoubleTap = { lockFromHome() })
-        },
-    ) {
-        val qwertyHome = maxHeight <= maxWidth * 1.55f
-        val homeHorizontalPadding = if (qwertyHome) Dimens.dp14 else Dimens.dp22
-        val headerActionSize = if (qwertyHome) Dimens.dp40 else Dimens.dp48
-        val headerIconSize = if (qwertyHome) Dimens.dp21 else Dimens.dp24
-        val focusPanelHeight = (maxWidth * .78f).coerceIn(Dimens.dp310, Dimens.dp350)
-        val imeBottom = WindowInsets.ime.asPaddingValues().calculateBottomPadding()
-        val navigationBottom = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()
-        val softInputRowHeight = if (magicExpanded) Dimens.dp0 else (imeBottom - navigationBottom).coerceAtLeast(Dimens.dp0)
-        Box(
-            Modifier.fillMaxSize().blur(if (magicExpanded) Dimens.dp10 else Dimens.dp0),
+    Box(Modifier.fillMaxSize()) {
+        BoxWithConstraints(
+            paneModifier.homePaneGestures(
+                magicExpanded = magicExpanded,
+                onPaneInteracted = onPaneInteracted,
+                onHorizontalDrag = onHorizontalDrag,
+                onHorizontalDragFinished = onHorizontalDragFinished,
+                onSwipeDown = actions::expandNotificationShade,
+                onDoubleTap = ::lockFromHome,
+            ),
         ) {
-            Column(Modifier.fillMaxSize()) {
-                HomeHeader(
-                    store = store,
-                    actions = actions,
-                    minkStatusActive = minkStatusActive,
-                    qwertyHome = qwertyHome,
-                    horizontalPadding = homeHorizontalPadding,
-                    actionSize = headerActionSize,
-                    iconSize = headerIconSize,
-                    updateAvailable = updateAvailable,
-                    onMinkDay = openMinkDay,
-                    onUpdate = { showUpdateConfirmation = true },
-                    onHub = openHub,
-                    openSettings = openSettings,
-                )
-                BoxWithConstraints(
-                    Modifier.fillMaxWidth().weight(1f)
-                        .padding(horizontal = homeHorizontalPadding, vertical = if (qwertyHome) Dimens.dp2 else Dimens.dp10),
-                ) {
-                    HomeFocusPanel(
+            val qwertyHome = maxHeight <= maxWidth * 1.55f
+            val homeHorizontalPadding = if (qwertyHome) Dimens.dp14 else Dimens.dp22
+            val headerActionSize = if (qwertyHome) Dimens.dp40 else Dimens.dp48
+            val headerIconSize = if (qwertyHome) Dimens.dp21 else Dimens.dp24
+            val focusPanelHeight = (maxWidth * .78f).coerceIn(Dimens.dp310, Dimens.dp350)
+            val imeBottom = WindowInsets.ime.asPaddingValues().calculateBottomPadding()
+            val navigationBottom = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()
+            val softInputRowHeight = if (magicExpanded) {
+                Dimens.dp0
+            } else {
+                (imeBottom - navigationBottom).coerceAtLeast(Dimens.dp0)
+            }
+            Box(
+                Modifier.fillMaxSize()
+                    .blur(if (magicExpanded) Dimens.dp10 else Dimens.dp0)
+                    .then(
+                        if (magicExpanded) Modifier.focusProperties { canFocus = false }
+                        else Modifier,
+                    ),
+            ) {
+                Column(Modifier.fillMaxSize()) {
+                    HomeHeader(
                         store = store,
                         actions = actions,
-                        appAccessState = appAccessState,
+                        minkStatusActive = minkStatusActive,
                         qwertyHome = qwertyHome,
-                        availableHeight = maxHeight,
-                        focusPanelHeight = focusPanelHeight,
-                        todoJumpToken = todoJumpToken,
-                        openTodos = openTodos,
-                        onTodoCenterChanged = { widgetCenter = it },
-                        onPausedApp = { pausedAppPackage = it },
-                        onOpenDrawer = { drawerOpen = true },
+                        horizontalPadding = homeHorizontalPadding,
+                        actionSize = headerActionSize,
+                        iconSize = headerIconSize,
+                        updateAvailable = updateAvailable,
+                        onMinkDay = openMinkDay,
+                        onUpdate = { showUpdateConfirmation = true },
+                        onHub = openHub,
+                        openSettings = openSettings,
+                    )
+                    BoxWithConstraints(
+                        Modifier.fillMaxWidth().weight(1f).padding(
+                            horizontal = homeHorizontalPadding,
+                            vertical = if (qwertyHome) Dimens.dp2 else Dimens.dp10,
+                        ),
+                    ) {
+                        HomeFocusPanel(
+                            store = store,
+                            actions = actions,
+                            appAccessState = appAccessState,
+                            qwertyHome = qwertyHome,
+                            availableHeight = maxHeight,
+                            focusPanelHeight = focusPanelHeight,
+                            todoJumpToken = todoJumpToken,
+                            openTodos = openTodos,
+                            onTodoCenterChanged = { widgetCenter = it },
+                            onPausedApp = { pausedAppPackage = it },
+                            onOpenDrawer = { drawerOpen = true },
+                        )
+                    }
+                    Spacer(
+                        Modifier.navigationBarsPadding()
+                            .height(Dimens.dp88 + softInputRowHeight),
                     )
                 }
-                Spacer(
-                    Modifier.navigationBarsPadding()
-                        .height(Dimens.dp88 + softInputRowHeight),
-                )
             }
         }
         flyingTodo?.takeIf { flightActive }?.let { text ->
@@ -177,11 +195,13 @@ internal fun HomeScreen(
                 destination = widgetCenter,
             )
         }
-        MagicBox(
+        HomeMagicBox(
             store = store,
             actions = actions,
+            sessionState = magicBoxSessionState,
             modifier = Modifier.fillMaxSize().zIndex(if (magicExpanded) 20f else 0f),
-            collapsedModifier = Modifier.widthIn(max = Dimens.dp620).fillMaxWidth().navigationBarsPadding().imePadding()
+            collapsedModifier = Modifier.widthIn(max = collapsedBarMaxWidth).fillMaxWidth()
+                .offset(x = collapsedBarOffsetX).navigationBarsPadding().imePadding()
                 .padding(horizontal = Dimens.dp22, vertical = Dimens.dp12)
                 .onGloballyPositioned { coordinates ->
                     val origin = coordinates.positionInRoot()
@@ -194,7 +214,6 @@ internal fun HomeScreen(
                 flyingTodo = text
                 todoJumpToken++
             },
-            onExpandedChange = { magicExpanded = it; onMagicExpandedChange(it) },
             appAccessState = appAccessState,
         )
     }

@@ -32,6 +32,8 @@ internal data class LauncherBackupSettings(
     val themePreference: ThemePreference,
     val hideStatusBar: Boolean,
     val alignHomePanelBottom: Boolean,
+    /** Null means this backup predates the two-panel preference. */
+    val twoPanelModeForLargeDisplays: Boolean?,
     val showClock: Boolean,
     val showDate: Boolean,
     val use24HourClock: Boolean,

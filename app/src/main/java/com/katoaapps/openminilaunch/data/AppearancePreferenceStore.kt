@@ -16,6 +16,7 @@ import com.katoaapps.openminilaunch.model.normalizeHomePanelTransparency
 internal class AppearancePreferenceStore(
     context: Context,
     private val prefs: SharedPreferences,
+    isFreshInstall: Boolean,
 ) {
     var themePreference by mutableStateOf(
         runCatching {
@@ -29,6 +30,10 @@ internal class AppearancePreferenceStore(
     var hideStatusBar by mutableStateOf(prefs.getBoolean(HIDE_STATUS_BAR_KEY, true))
         private set
     var alignHomePanelBottom by mutableStateOf(prefs.getBoolean(ALIGN_HOME_PANEL_BOTTOM_KEY, false))
+        private set
+    var twoPanelModeForLargeDisplays by mutableStateOf(
+        prefs.getBoolean(TWO_PANEL_MODE_FOR_LARGE_DISPLAYS_KEY, false),
+    )
         private set
     var showClock by mutableStateOf(prefs.getBoolean(SHOW_CLOCK_KEY, false))
         private set
@@ -62,6 +67,16 @@ internal class AppearancePreferenceStore(
     )
         private set
 
+    init {
+        if (!prefs.contains(TWO_PANEL_MODE_FOR_LARGE_DISPLAYS_KEY) &&
+            (isFreshInstall || prefs.getBoolean(TWO_PANEL_AUTO_PENDING_KEY, false))
+        ) {
+            // A cover-screen first launch can defer the default until the device is opened.
+            prefs.edit().putBoolean(TWO_PANEL_AUTO_PENDING_KEY, true).apply()
+            maybeEnableTwoPanelForDisplay(context)
+        }
+    }
+
     fun setTheme(preference: ThemePreference) {
         themePreference = preference
         prefs.edit().putString(THEME_PREFERENCE_KEY, preference.name).apply()
@@ -75,6 +90,28 @@ internal class AppearancePreferenceStore(
     fun updateAlignHomePanelBottom(enabled: Boolean) {
         alignHomePanelBottom = enabled
         prefs.edit().putBoolean(ALIGN_HOME_PANEL_BOTTOM_KEY, enabled).apply()
+    }
+
+    fun updateTwoPanelModeForLargeDisplays(enabled: Boolean) {
+        twoPanelModeForLargeDisplays = enabled
+        prefs.edit()
+            .putBoolean(TWO_PANEL_MODE_FOR_LARGE_DISPLAYS_KEY, enabled)
+            .remove(TWO_PANEL_AUTO_PENDING_KEY)
+            .apply()
+    }
+
+    fun maybeEnableTwoPanelForDisplay(context: Context) {
+        if (prefs.contains(TWO_PANEL_MODE_FOR_LARGE_DISPLAYS_KEY) ||
+            !prefs.getBoolean(TWO_PANEL_AUTO_PENDING_KEY, false)
+        ) return
+        if (defaultTwoPanelModeForDisplay(context)) updateTwoPanelModeForLargeDisplays(true)
+    }
+
+    fun maybeEnableTwoPanelForUnfoldedBookDisplay(unfoldedBookDisplay: Boolean) {
+        if (!unfoldedBookDisplay || prefs.contains(TWO_PANEL_MODE_FOR_LARGE_DISPLAYS_KEY) ||
+            !prefs.getBoolean(TWO_PANEL_AUTO_PENDING_KEY, false)
+        ) return
+        updateTwoPanelModeForLargeDisplays(true)
     }
 
     fun updateShowClock(enabled: Boolean) {
@@ -139,6 +176,8 @@ internal class AppearancePreferenceStore(
         const val SHOW_CLOCK_KEY = "show_clock"
         const val SHOW_DATE_KEY = "show_date"
         const val THEME_PREFERENCE_KEY = "theme_preference"
+        const val TWO_PANEL_AUTO_PENDING_KEY = "two_panel_auto_pending"
+        const val TWO_PANEL_MODE_FOR_LARGE_DISPLAYS_KEY = "two_panel_mode_for_large_displays"
         const val USE_24_HOUR_CLOCK_KEY = "use_24_hour_clock"
     }
 }

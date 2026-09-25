@@ -52,6 +52,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import sh.calvin.reorderable.ReorderableItem
 import sh.calvin.reorderable.rememberReorderableLazyGridState
 import kotlin.math.ceil
@@ -62,6 +63,7 @@ internal fun TodoPager(
     openTodos: () -> Unit,
     jumpToken: Int,
     itemsPerPage: Int = 3,
+    textMetrics: HomeTodoTextMetrics = HomeTodoTextMetrics(15f, 20f, 2),
     compact: Boolean = false,
     embedded: Boolean = false,
     contentColor: Color = LightPaper,
@@ -123,9 +125,9 @@ internal fun TodoPager(
                             Text(
                                 item.text,
                                 color = if (item.completed) mutedContentColor else contentColor,
-                                fontSize = if (compact) Dimens.sp13 else Dimens.sp15,
-                                lineHeight = if (compact) Dimens.sp17 else Dimens.sp20,
-                                maxLines = 2,
+                                fontSize = textMetrics.fontSizeSp.sp,
+                                lineHeight = textMetrics.lineHeightSp.sp,
+                                maxLines = textMetrics.maxLines,
                                 overflow = TextOverflow.Ellipsis,
                                 textDecoration = if (item.completed) TextDecoration.LineThrough else null,
                                 modifier = Modifier.padding(start = Dimens.dp7, top = Dimens.dp2).weight(1f),

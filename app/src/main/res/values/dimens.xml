@@ -62,6 +62,8 @@
     <dimen name="dp_420">420dp</dimen>
     <dimen name="dp_560">560dp</dimen>
     <dimen name="dp_620">620dp</dimen>
+    <dimen name="dp_720">720dp</dimen>
+    <dimen name="dp_960">960dp</dimen>
 
     <dimen name="sp_0_5">0.5sp</dimen>
     <dimen name="sp_0_8">0.8sp</dimen>

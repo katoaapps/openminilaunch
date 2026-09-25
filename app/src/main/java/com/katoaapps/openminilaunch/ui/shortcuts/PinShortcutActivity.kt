@@ -16,6 +16,7 @@ import com.katoaapps.openminilaunch.features.apps.PinShortcutRequestHandler
 import com.katoaapps.openminilaunch.model.MAX_DRAWER_APPS
 import com.katoaapps.openminilaunch.model.PinShortcutDestination
 import com.katoaapps.openminilaunch.platform.DeviceActions
+import com.katoaapps.openminilaunch.ui.components.applyLargeDisplayOrientation
 import com.katoaapps.openminilaunch.ui.theme.MinkLauncherTheme
 
 /** Receives Add to Home requests while MinkLauncher holds Android's Home role. */
@@ -28,6 +29,7 @@ class PinShortcutActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         WindowCompat.setDecorFitsSystemWindows(window, false)
         store = LauncherStore.get(this)
+        applyLargeDisplayOrientation(this, store.twoPanelModeForLargeDisplays)
         actions = DeviceActions(this)
         requestHandler = PinShortcutRequestHandler(this)
         val pending = requestHandler.read(intent)

@@ -1,6 +1,7 @@
 package com.katoaapps.openminilaunch.ui.widgets
 
 import android.appwidget.AppWidgetHost
+import android.appwidget.AppWidgetHostView
 import android.appwidget.AppWidgetProviderInfo
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -43,6 +44,7 @@ import androidx.compose.ui.platform.rememberNestedScrollInteropConnection
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.IntSize
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.view.ViewCompat
 import com.katoaapps.openminilaunch.R
@@ -121,6 +123,7 @@ internal fun WidgetPanel(
     var showResize by remember { mutableStateOf(false) }
     var measuredSize by remember(id) { mutableStateOf(IntSize.Zero) }
     val lastReportedSize = remember(id) { intArrayOf(0, 0) }
+    val lastReportedView = remember(id) { arrayOfNulls<AppWidgetHostView>(1) }
 
     Column(Modifier.fillMaxWidth()) {
         WidgetPanelHeader(
@@ -138,13 +141,9 @@ internal fun WidgetPanel(
             onRemove = { menuExpanded = false; onRemove() },
         )
         BoxWithConstraints(Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
-            val cellWidth = maxWidth / 4
-            val panelWidth = (cellWidth * gridSize.columns)
-                .coerceAtLeast(Dimens.dp96)
-                .coerceAtMost(maxWidth)
-            val panelHeight = (cellWidth * gridSize.rows)
-                .coerceAtLeast(Dimens.dp72)
-                .coerceAtMost(Dimens.dp420)
+            val dimensions = widgetPanelDimensions(maxWidth.value, gridSize)
+            val panelWidth = dimensions.widthDp.dp
+            val panelHeight = dimensions.heightDp.dp
 
             AndroidView(
                 factory = {
@@ -155,9 +154,12 @@ internal fun WidgetPanel(
                 },
                 update = { view ->
                     if (measuredSize != IntSize.Zero &&
-                        (lastReportedSize[0] != measuredSize.width || lastReportedSize[1] != measuredSize.height)
+                        (lastReportedView[0] !== view ||
+                            lastReportedSize[0] != measuredSize.width ||
+                            lastReportedSize[1] != measuredSize.height)
                     ) {
                         reportWidgetSize(view, measuredSize, density.density)
+                        lastReportedView[0] = view
                         lastReportedSize[0] = measuredSize.width
                         lastReportedSize[1] = measuredSize.height
                     }

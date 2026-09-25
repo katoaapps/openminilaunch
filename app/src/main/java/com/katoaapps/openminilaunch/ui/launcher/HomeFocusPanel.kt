@@ -21,6 +21,8 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.layout.positionInRoot
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Dp
 import com.katoaapps.openminilaunch.R
 import com.katoaapps.openminilaunch.data.LauncherStore
@@ -45,6 +47,8 @@ internal fun BoxScope.HomeFocusPanel(
     onOpenDrawer: () -> Unit,
 ) {
     val context = LocalContext.current
+    val configuration = LocalConfiguration.current
+    val fontScale = LocalDensity.current.fontScale
     val panelColor = Color(store.effectiveHomePanelColorArgb).copy(
         alpha = 1f - store.homePanelTransparency,
     )
@@ -59,6 +63,13 @@ internal fun BoxScope.HomeFocusPanel(
     }
     val panelHeight = if (qwertyHome) availableHeight else minOf(availableHeight, focusPanelHeight)
     val itemsPerPage = visibleTodoItemsForHeight(panelHeight.value)
+    val todoTextMetrics = homeTodoTextMetrics(
+        largeDisplay = configuration.smallestScreenWidthDp >= 600,
+        compact = qwertyHome,
+        panelHeightDp = panelHeight.value,
+        itemsPerPage = itemsPerPage,
+        fontScale = fontScale,
+    )
     val focusModifier = if (qwertyHome) {
         Modifier.fillMaxSize()
     } else {
@@ -90,6 +101,7 @@ internal fun BoxScope.HomeFocusPanel(
                 openTodos = openTodos,
                 jumpToken = todoJumpToken,
                 itemsPerPage = itemsPerPage,
+                textMetrics = todoTextMetrics,
                 compact = qwertyHome,
                 embedded = true,
                 contentColor = contentColor,

@@ -66,9 +66,10 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
 @Composable
-internal fun MagicBox(
+internal fun MagicBoxContent(
     store: LauncherStore,
     actions: DeviceActions,
+    sessionState: MagicBoxSessionState? = null,
     modifier: Modifier = Modifier,
     collapsedModifier: Modifier = Modifier,
     keyboardInputEnabled: Boolean = true,
@@ -77,7 +78,6 @@ internal fun MagicBox(
     autoOpenSoftwareKeyboardOnHome: Boolean = false,
     homeRequestToken: Int = 0,
     onTodoAdded: (String) -> Unit = {},
-    onExpandedChange: (Boolean) -> Unit = {},
     onSessionComplete: () -> Unit = {},
     appAccessState: MinkAppAccessState? = null,
 ) {
@@ -98,11 +98,12 @@ internal fun MagicBox(
     val launcherShortcutsRevision by actions.launcherShortcutsRevision.collectAsState()
     val localAppAccessState = if (appAccessState == null) rememberMinkAppAccessState(store) else null
     val effectiveAppAccessState = appAccessState ?: checkNotNull(localAppAccessState).value
-    var text by remember { mutableStateOf(TextFieldValue()) }
+    val editorSession = sessionState ?: rememberMagicBoxSessionState(initiallyExpanded)
+    var text by editorSession.textState
     val initialHardwareKeyCorrection = remember { InitialHardwareKeyCorrection() }
-    var selectedRecipient by remember { mutableStateOf<SelectedMessageRecipient?>(null) }
-    var lockedPrefix by remember { mutableStateOf<Char?>(null) }
-    var expanded by remember { mutableStateOf(initiallyExpanded) }
+    var selectedRecipient by editorSession.selectedRecipientState
+    var lockedPrefix by editorSession.lockedPrefixState
+    var expanded by editorSession.expandedState
     var showKeyboardWhileCollapsed by remember {
         mutableStateOf(shouldAutoOpenOnHome && !initiallyExpanded)
     }
@@ -373,7 +374,6 @@ internal fun MagicBox(
         clearCommand()
         keyboard?.hide()
         expanded = false
-        onExpandedChange(false)
         onSessionComplete()
     }
 
@@ -395,7 +395,6 @@ internal fun MagicBox(
         clearCommand()
         keyboard?.hide()
         expanded = false
-        onExpandedChange(false)
     }
 
     fun completeAiHandoff(
@@ -548,22 +547,23 @@ internal fun MagicBox(
         } else {
             armedTargetPlaced = false
             if (expanded) showKeyboardWhileCollapsed = false
-            if (expanded && initiallyExpanded && focusRequestSerial == 0) {
+            if (expanded && focusRequestSerial == 0) {
                 while (!textFieldPlaced) withFrameNanos { }
                 withFrameNanos { }
                 focusRequester.requestFocus()
                 withFrameNanos { }
-                if (showSoftwareKeyboardOnStart) keyboard?.show() else keyboard?.hide()
-                onExpandedChange(true)
+                if (showSoftwareKeyboardOnStart || !useDirectHardwareInput) keyboard?.show() else keyboard?.hide()
             }
         }
     }
 
     LaunchedEffect(homeRequestToken, shouldAutoOpenOnHome, keyboardInputEnabled) {
-        if (homeRequestToken > 0 && shouldAutoOpenOnHome && keyboardInputEnabled) {
+        if (homeRequestToken > 0 && shouldAutoOpenOnHome && keyboardInputEnabled &&
+            !expanded && text.text.isBlank() && lockedPrefix == null && selectedRecipient == null
+        ) {
+            // Android can redeliver the launcher's Home intent while a fold changes displays.
+            // Re-arm an idle field, but never erase an expanded draft as a side effect.
             clearCommand()
-            expanded = false
-            onExpandedChange(false)
             showKeyboardWhileCollapsed = true
         }
     }
@@ -595,7 +595,10 @@ internal fun MagicBox(
 
         Column(
             modifier = Modifier
-                .matchParentSize()
+                .align(Alignment.Center)
+                .widthIn(max = Dimens.dp720)
+                .fillMaxWidth()
+                .fillMaxHeight()
                 .statusBarsPadding()
                 .imePadding()
                 .padding(horizontal = Dimens.dp18, vertical = Dimens.dp18),
@@ -768,7 +771,6 @@ internal fun MagicBox(
                     text = correctedValue
                     if (!expanded && correctedValue.text.isNotEmpty()) {
                         expanded = true
-                        onExpandedChange(true)
                     }
                     if (!noteMode && lockedPrefix == null && correctedValue.text.firstOrNull() != prefix) {
                         selectedRecipient = null
@@ -801,7 +803,6 @@ internal fun MagicBox(
                         initialHardwareKeyCorrection.begin(typedText, keyCode)
                         text = TextFieldValue(typedText, selection = TextRange(typedText.length))
                         expanded = true
-                        onExpandedChange(true)
                         refocus(showSoftwareKeyboard = false)
                     } else {
                         val updatedText = text.text + typedText
@@ -811,7 +812,6 @@ internal fun MagicBox(
                 onOpen = {
                     clearCommand()
                     expanded = true
-                    onExpandedChange(true)
                     refocus(showSoftwareKeyboard = true)
                 },
             )

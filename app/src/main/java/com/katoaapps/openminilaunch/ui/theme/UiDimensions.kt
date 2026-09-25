@@ -72,6 +72,8 @@ internal object Dimens {
     val dp420: Dp @Composable get() = dimensionResource(R.dimen.dp_420)
     val dp560: Dp @Composable get() = dimensionResource(R.dimen.dp_560)
     val dp620: Dp @Composable get() = dimensionResource(R.dimen.dp_620)
+    val dp720: Dp @Composable get() = dimensionResource(R.dimen.dp_720)
+    val dp960: Dp @Composable get() = dimensionResource(R.dimen.dp_960)
 
     val sp0_5: TextUnit @Composable get() = dimensionResource(R.dimen.sp_0_5).value.sp
     val sp0_8: TextUnit @Composable get() = dimensionResource(R.dimen.sp_0_8).value.sp

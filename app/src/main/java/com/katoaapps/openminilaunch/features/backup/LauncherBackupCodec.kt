@@ -91,6 +91,7 @@ internal object LauncherBackupCodec {
             put("theme", settings.themePreference.name)
             put("hideStatusBar", settings.hideStatusBar)
             put("alignHomePanelBottom", settings.alignHomePanelBottom)
+            settings.twoPanelModeForLargeDisplays?.let { put("twoPanelModeForLargeDisplays", it) }
             put("showClock", settings.showClock)
             put("showDate", settings.showDate)
             put("use24HourClock", settings.use24HourClock)
@@ -132,6 +133,9 @@ internal object LauncherBackupCodec {
             themePreference = appearance.enumValue("theme", ThemePreference.SYSTEM),
             hideStatusBar = appearance.optBoolean("hideStatusBar", true),
             alignHomePanelBottom = appearance.optBoolean("alignHomePanelBottom", false),
+            twoPanelModeForLargeDisplays = if (appearance.has("twoPanelModeForLargeDisplays")) {
+                appearance.getBoolean("twoPanelModeForLargeDisplays")
+            } else null,
             showClock = appearance.optBoolean("showClock", false),
             showDate = appearance.optBoolean("showDate", true),
             use24HourClock = appearance.optBoolean("use24HourClock", false),

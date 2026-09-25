@@ -1,31 +1,12 @@
 package com.katoaapps.openminilaunch.ui.magic
 
-import com.katoaapps.openminilaunch.data.*
-import com.katoaapps.openminilaunch.model.*
-import com.katoaapps.openminilaunch.platform.*
-import com.katoaapps.openminilaunch.features.calendar.*
-import com.katoaapps.openminilaunch.features.conversations.*
-import com.katoaapps.openminilaunch.features.files.*
-import com.katoaapps.openminilaunch.features.magic.*
-import com.katoaapps.openminilaunch.features.todos.*
-import com.katoaapps.openminilaunch.ui.components.*
-import com.katoaapps.openminilaunch.ui.theme.*
-
 import android.app.Activity
-import android.os.Build
 import android.os.Bundle
 import android.view.WindowManager
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
-import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Typography
-import androidx.compose.material3.darkColorScheme
-import androidx.compose.material3.dynamicDarkColorScheme
-import androidx.compose.material3.dynamicLightColorScheme
-import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.SideEffect
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.toArgb
@@ -33,6 +14,11 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowCompat
 import androidx.core.view.WindowInsetsControllerCompat
+import com.katoaapps.openminilaunch.data.LauncherStore
+import com.katoaapps.openminilaunch.platform.DeviceActions
+import com.katoaapps.openminilaunch.ui.components.applyLargeDisplayOrientation
+import com.katoaapps.openminilaunch.ui.theme.MinkLauncherTheme
+import com.katoaapps.openminilaunch.ui.theme.MinkTransparent
 
 /** Keyboard-first system assistant entry point. ACTION_ASSIST context is deliberately ignored. */
 class AssistantActivity : ComponentActivity() {
@@ -44,41 +30,11 @@ class AssistantActivity : ComponentActivity() {
                 WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_VISIBLE,
         )
         val store = LauncherStore.get(this)
+        applyLargeDisplayOrientation(this, store.twoPanelModeForLargeDisplays)
         val actions = DeviceActions(this)
 
         setContent {
             val context = LocalContext.current
-            val systemDark = isSystemInDarkTheme()
-            val darkTheme = when (store.themePreference) {
-                ThemePreference.SYSTEM -> systemDark
-                ThemePreference.LIGHT -> false
-                ThemePreference.DARK -> true
-            }
-            val fallback = if (darkTheme) {
-                darkColorScheme(
-                    primary = DarkPrimary,
-                    onPrimary = DarkOnPrimary,
-                    background = DarkBackground,
-                    surface = DarkSurface,
-                    surfaceContainerLow = DarkSurfaceContainerLow,
-                    onSurface = DarkOnSurface,
-                    secondary = Rust,
-                )
-            } else {
-                lightColorScheme(
-                    primary = LightInk,
-                    onPrimary = LightPaper,
-                    background = LightPaper,
-                    surface = LightPaper,
-                    surfaceContainerLow = MinkWhite,
-                    onSurface = LightInk,
-                    secondary = Rust,
-                )
-            }
-            val baseColors = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-                if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
-            } else fallback
-            val colors = baseColors.withAppBackground(store.effectiveAppBackgroundColorArgb)
             val view = LocalView.current
             val transparent = MinkTransparent
             SideEffect {
@@ -90,15 +46,12 @@ class AssistantActivity : ComponentActivity() {
                     isAppearanceLightNavigationBars = false
                 }
             }
-            MaterialTheme(colorScheme = colors, typography = Typography()) {
+            MinkLauncherTheme(store) {
                 Box(Modifier.fillMaxSize()) {
-                    MagicBox(
+                    AssistantMagicBox(
                         store = store,
                         actions = actions,
                         modifier = Modifier.fillMaxSize(),
-                        keyboardInputEnabled = true,
-                        initiallyExpanded = true,
-                        showSoftwareKeyboardOnStart = true,
                         onSessionComplete = ::finish,
                     )
                 }

@@ -34,11 +34,13 @@ import androidx.compose.animation.core.infiniteRepeatable
 import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
@@ -54,9 +56,16 @@ import java.time.format.DateTimeFormatter
 @Composable
 internal fun TodosScreen(store: LauncherStore, actions: DeviceActions, goBack: () -> Unit) {
     val context = LocalContext.current
+    val largeDisplay = LocalConfiguration.current.smallestScreenWidthDp >= 600
+    val contentMaxWidth = if (largeDisplay) Dimens.dp960 else Dimens.dp720
+    val todoTextStyle = if (largeDisplay) {
+        MaterialTheme.typography.titleMedium.copy(fontSize = Dimens.sp20, lineHeight = Dimens.sp26)
+    } else {
+        MaterialTheme.typography.bodyLarge
+    }
     val appName = stringResource(R.string.app_name)
     val todoListTitle = stringResource(R.string.todo_export_title, appName)
-    var newText by remember { mutableStateOf("") }
+    var newText by rememberSaveable { mutableStateOf("") }
     var editing by remember { mutableStateOf<TodoItem?>(null) }
     var deleting by remember { mutableStateOf<TodoItem?>(null) }
     var showExportOptions by remember { mutableStateOf(false) }
@@ -89,7 +98,8 @@ internal fun TodosScreen(store: LauncherStore, actions: DeviceActions, goBack: (
             visibleTodos.addAll(store.todos)
         }
     }
-    Column(Modifier.fillMaxSize().statusBarsPadding()) {
+    Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+    Column(Modifier.widthIn(max = contentMaxWidth).fillMaxWidth().fillMaxHeight().statusBarsPadding()) {
         PageHeader(stringResource(R.string.todo_page_title), goBack) {
             IconButton(
                 onClick = { showExportOptions = true },
@@ -106,6 +116,11 @@ internal fun TodosScreen(store: LauncherStore, actions: DeviceActions, goBack: (
                 singleLine = true,
                 modifier = Modifier.weight(1f),
                 shape = RoundedCornerShape(Dimens.dp16),
+                textStyle = if (largeDisplay) {
+                    MaterialTheme.typography.bodyLarge.copy(fontSize = Dimens.sp18)
+                } else {
+                    MaterialTheme.typography.bodyLarge
+                },
                 keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
                 keyboardActions = KeyboardActions(onDone = { store.addTodo(newText); newText = "" }),
             )
@@ -168,6 +183,8 @@ internal fun TodosScreen(store: LauncherStore, actions: DeviceActions, goBack: (
                             Text(
                                 item.text,
                                 Modifier.weight(1f).clickable { editing = item },
+                                style = todoTextStyle,
+                                lineHeight = todoTextStyle.lineHeight,
                                 textDecoration = if (item.completed) TextDecoration.LineThrough else null,
                                 color = if (item.completed) Muted else MaterialTheme.colorScheme.onSurface,
                             )
@@ -199,6 +216,7 @@ internal fun TodosScreen(store: LauncherStore, actions: DeviceActions, goBack: (
             }
         }
     }
+    }
     editing?.let { item ->
         var editText by remember(item.id) { mutableStateOf(item.text) }
         AlertDialog(
@@ -210,7 +228,11 @@ internal fun TodosScreen(store: LauncherStore, actions: DeviceActions, goBack: (
                 OutlinedTextField(
                     value = editText,
                     onValueChange = { editText = it },
-                    modifier = Modifier.fillMaxWidth().heightIn(min = Dimens.dp160, max = Dimens.dp280),
+                    modifier = Modifier.fillMaxWidth().heightIn(
+                        min = if (largeDisplay) Dimens.dp240 else Dimens.dp160,
+                        max = if (largeDisplay) Dimens.dp420 else Dimens.dp280,
+                    ),
+                    textStyle = todoTextStyle,
                     minLines = 5,
                     maxLines = 10,
                     singleLine = false,

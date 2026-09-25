@@ -15,7 +15,11 @@ class LauncherStore private constructor(context: Context) {
     private val searchStore = SearchStore(persistence, MAX_SEARCH_HISTORY)
     private val widgetStore = WidgetStore(persistence, MAX_WIDGETS)
     private val generalPreferences = GeneralPreferenceStore(prefs)
-    private val appearancePreferences = AppearancePreferenceStore(appContext, prefs)
+    private val appearancePreferences = AppearancePreferenceStore(
+        appContext,
+        prefs,
+        isFreshInstall = !generalPreferences.onboardingComplete,
+    )
     private val iconAppearancePreferences = IconAppearancePreferenceStore(prefs)
     private val messagingPreferences = MessagingPreferenceStore(prefs)
     private val minkDayPreferences = MinkDayPreferenceStore(prefs)
@@ -50,6 +54,7 @@ class LauncherStore private constructor(context: Context) {
     val themePreference get() = appearancePreferences.themePreference
     val hideStatusBar get() = appearancePreferences.hideStatusBar
     val alignHomePanelBottom get() = appearancePreferences.alignHomePanelBottom
+    val twoPanelModeForLargeDisplays get() = appearancePreferences.twoPanelModeForLargeDisplays
     val showClock get() = appearancePreferences.showClock
     val showDate get() = appearancePreferences.showDate
     val use24HourClock get() = appearancePreferences.use24HourClock
@@ -273,6 +278,18 @@ class LauncherStore private constructor(context: Context) {
 
     fun updateAlignHomePanelBottom(enabled: Boolean) {
         appearancePreferences.updateAlignHomePanelBottom(enabled)
+    }
+
+    fun updateTwoPanelModeForLargeDisplays(enabled: Boolean) {
+        appearancePreferences.updateTwoPanelModeForLargeDisplays(enabled)
+    }
+
+    fun maybeEnableTwoPanelForDisplay(context: Context) {
+        appearancePreferences.maybeEnableTwoPanelForDisplay(context)
+    }
+
+    fun maybeEnableTwoPanelForUnfoldedBookDisplay(unfoldedBookDisplay: Boolean) {
+        appearancePreferences.maybeEnableTwoPanelForUnfoldedBookDisplay(unfoldedBookDisplay)
     }
 
     fun updateShowClock(enabled: Boolean) {

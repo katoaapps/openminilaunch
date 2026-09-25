@@ -74,6 +74,7 @@ class AllAppsActivity : ComponentActivity() {
         super.onCreate(savedInstanceState)
         WindowCompat.setDecorFitsSystemWindows(window, false)
         val store = LauncherStore.get(this)
+        applyLargeDisplayOrientation(this, store.twoPanelModeForLargeDisplays)
         val actions = DeviceActions(this)
         setContent {
             AllAppsTheme(store) {

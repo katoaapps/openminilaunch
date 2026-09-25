@@ -9,6 +9,8 @@
     <string name="show_date">Show date</string>
     <string name="show_date_description">Show the current date in the Home header.</string>
     <string name="show_clock_description">Add the current time to the date on Home.</string>
+    <string name="two_panel_mode_for_large_displays">Two-panel mode for large displays</string>
+    <string name="two_panel_mode_for_large_displays_description">Starts on for landscape-first large screens and unfolded book-style folds. Swipe between Mink’s Day + Home and Home + Widgets.</string>
     <string name="use_24_hour_clock">Use 24-hour time</string>
     <string name="use_24_hour_clock_description">Show 18:30 instead of 6:30 PM.</string>
     <string name="icons">Icons</string>
@@ -205,6 +207,9 @@
 
     <!-- Generic shortcut update and setup -->
     <string name="whats_new">What’s new</string>
+    <string name="update_notice_two_panel_heading">A wider Home, when you want it</string>
+    <string name="update_notice_two_panel_title">Two panels for large displays</string>
+    <string name="update_notice_two_panel_description">Turn it on in Appearance. Tablets use it in landscape; unfolded book-style foldables can also use it in their wider portrait posture. Swipe between Mink’s Day + Home and Home + Widgets. Folding back keeps your place.</string>
     <string name="update_notice_backup_heading">Your OpenMink setup can travel</string>
     <string name="update_notice_backup_title">Local backup and restore</string>
     <string name="update_notice_backup_description">Export your portable settings, launcher layout, app choices, and to-dos before moving between F-Droid and GitHub builds.</string>
@@ -296,6 +301,8 @@
     <string name="onboarding_page_assistant">Magic Box, from anywhere</string>
     <string name="onboarding_page_mink_day">Meet Mink’s Day</string>
     <string name="onboarding_page_spaces">Conversations and widgets</string>
+    <string name="two_panel_onboarding_title">Open up a wider Home</string>
+    <string name="two_panel_onboarding_description">Two-panel mode starts on for landscape-first large screens and unfolded book-style folds, and can be changed in Appearance. Swipe between Mink’s Day + Home and Home + Widgets. Folding back keeps the page you were using.</string>
     <string name="onboarding_page_backup">Keep your setup</string>
     <string name="onboarding_page_permissions">Permissions, on your terms</string>
     <string name="choose_home_wallpaper">Use your own Home wallpaper</string>
