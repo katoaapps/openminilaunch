@@ -13,10 +13,12 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.EventNote
+import androidx.compose.material.icons.filled.Apps
 import androidx.compose.material.icons.filled.Folder
 import androidx.compose.material.icons.filled.FolderOpen
 import androidx.compose.material.icons.filled.Pets
 import androidx.compose.material.icons.filled.QrCode2
+import androidx.compose.material.icons.filled.Security
 import androidx.compose.material.icons.filled.TouchApp
 import androidx.compose.material.icons.filled.Checklist
 import androidx.compose.material.icons.filled.TabletAndroid
@@ -45,8 +47,6 @@ import com.katoaapps.openminilaunch.ui.theme.Rust
 
 @Composable
 internal fun FeatureUpdateDialog(
-    showCalendarHighlights: Boolean,
-    showTwoPanelHighlights: Boolean,
     onOpenVCardSettings: () -> Unit,
     onReviewTutorial: () -> Unit,
     onNotNow: () -> Unit,
@@ -73,6 +73,12 @@ internal fun FeatureUpdateDialog(
                     stringResource(R.string.update_notice_profile_description),
                 )
                 UpdatePoint(
+                    Icons.Default.Security,
+                    stringResource(R.string.vcard_private_title),
+                    stringResource(R.string.vcard_private_description) + " " +
+                        stringResource(R.string.vcard_no_account_description),
+                )
+                UpdatePoint(
                     Icons.Default.TouchApp,
                     stringResource(R.string.update_notice_profile_flip_title),
                     stringResource(R.string.update_notice_profile_flip_description),
@@ -82,29 +88,30 @@ internal fun FeatureUpdateDialog(
                     stringResource(R.string.update_notice_profile_todo_title),
                     stringResource(R.string.update_notice_profile_todo_description),
                 )
-                if (showTwoPanelHighlights) {
-                    Text(
-                        stringResource(R.string.update_notice_two_panel_heading),
-                        fontSize = Dimens.sp18,
-                        fontWeight = FontWeight.Bold,
-                    )
-                    UpdatePoint(
-                        Icons.Default.TabletAndroid,
-                        stringResource(R.string.update_notice_two_panel_title),
-                        stringResource(R.string.update_notice_two_panel_description),
-                    )
-                }
-                if (showCalendarHighlights) {
-                    Text(
-                        stringResource(R.string.update_notice_calendar_heading),
-                        fontSize = Dimens.sp18,
-                        fontWeight = FontWeight.Bold,
-                    )
-                    UpdatePoint(Icons.Default.Visibility, stringResource(R.string.update_notice_calendar_preview_title), stringResource(R.string.update_notice_calendar_preview_description))
-                    UpdatePoint(Icons.Default.WarningAmber, stringResource(R.string.update_notice_calendar_review_title), stringResource(R.string.update_notice_calendar_review_description))
-                    UpdatePoint(Icons.Default.Translate, stringResource(R.string.update_notice_calendar_language_title), stringResource(R.string.update_notice_calendar_language_description))
-                    UpdatePoint(Icons.AutoMirrored.Filled.EventNote, stringResource(R.string.update_notice_calendar_local_title), stringResource(R.string.update_notice_calendar_local_description))
-                }
+                Text(
+                    stringResource(R.string.update_notice_calendar_heading),
+                    fontSize = Dimens.sp18,
+                    fontWeight = FontWeight.Bold,
+                )
+                UpdatePoint(Icons.Default.Translate, stringResource(R.string.update_notice_calendar_language_title), stringResource(R.string.update_notice_calendar_language_description))
+                UpdatePoint(Icons.Default.Visibility, stringResource(R.string.update_notice_calendar_preview_title), stringResource(R.string.update_notice_calendar_preview_description))
+                UpdatePoint(Icons.Default.WarningAmber, stringResource(R.string.update_notice_calendar_review_title), stringResource(R.string.update_notice_calendar_review_description))
+                UpdatePoint(Icons.AutoMirrored.Filled.EventNote, stringResource(R.string.update_notice_calendar_local_title), stringResource(R.string.update_notice_calendar_local_description))
+                Text(
+                    stringResource(R.string.update_notice_two_panel_heading),
+                    fontSize = Dimens.sp18,
+                    fontWeight = FontWeight.Bold,
+                )
+                UpdatePoint(
+                    Icons.Default.TabletAndroid,
+                    stringResource(R.string.update_notice_two_panel_title),
+                    stringResource(R.string.update_notice_two_panel_description),
+                )
+                UpdatePoint(
+                    Icons.Default.Apps,
+                    stringResource(R.string.update_notice_smaller_improvements_title),
+                    stringResource(R.string.update_notice_smaller_improvements_description),
+                )
                 TextButton(onClick = onReviewTutorial, contentPadding = PaddingValues(Dimens.dp0)) {
                     Text(stringResource(R.string.review_updated_tutorial))
                 }

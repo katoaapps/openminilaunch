@@ -954,7 +954,7 @@
     <string name="profile_onboarding_description">The vCard shortcut flips the Home pill to your virtual contact card and QR. Tap the to-do widget to manage tasks.</string>
     <string name="vcard_private_title">Private by design</string>
     <string name="vcard_private_description">Your vCard details and contact photo are encrypted and stored only on this device.</string>
-    <string name="vcard_no_account_description">This is never sent to Mink servers and is not used to create or manage an account.</string>
+    <string name="vcard_no_account_description">This is a contact card, not an app profile. It is never sent to Mink servers or used to create or manage an account.</string>
     <string name="continue_label">Continue</string>
     <string name="more_details">More details</string>
     <string name="more_details_summary">Organization, job title, and note</string>
@@ -963,4 +963,6 @@
     <string name="delete_vcard_link_title">Delete this link?</string>
     <string name="delete_vcard_link_description">This permanently removes the link from your saved vCard library.</string>
     <string name="tap_to_enlarge">Tap to enlarge</string>
+    <string name="update_notice_smaller_improvements_title">Smaller improvements</string>
+    <string name="update_notice_smaller_improvements_description">Swipe up for See All and down to close it, optionally show battery percentage, and find refinements for physical keyboards, widgets, and everyday launcher use.</string>
 </resources>

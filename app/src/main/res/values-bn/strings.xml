@@ -908,7 +908,7 @@
 
     <string name="vcard_private_title">গোপনীয়তাকে গুরুত্ব দিয়ে তৈরি</string>
     <string name="vcard_private_description">আপনার vCard তথ্য ও পরিচিতির ছবি এনক্রিপ্ট করা হয় এবং শুধু এই ডিভাইসে সংরক্ষিত থাকে।</string>
-    <string name="vcard_no_account_description">এগুলো কখনো Mink সার্ভারে পাঠানো হয় না এবং অ্যাকাউন্ট তৈরি বা পরিচালনায় ব্যবহার করা হয় না।</string>
+    <string name="vcard_no_account_description">এটি একটি যোগাযোগ কার্ড, অ্যাপ প্রোফাইল নয়। এটি কখনো Mink সার্ভারে পাঠানো হয় না এবং অ্যাকাউন্ট তৈরি বা পরিচালনায় ব্যবহার করা হয় না।</string>
     <string name="continue_label">চালিয়ে যান</string>
     <string name="more_details">আরও তথ্য</string>
     <string name="more_details_summary">প্রতিষ্ঠান, পদবি ও নোট</string>
@@ -917,4 +917,6 @@
     <string name="delete_vcard_link_title">এই লিঙ্ক মুছবেন?</string>
     <string name="delete_vcard_link_description">এটি আপনার সংরক্ষিত vCard লাইব্রেরি থেকে লিঙ্কটি স্থায়ীভাবে সরিয়ে দেবে।</string>
     <string name="tap_to_enlarge">বড় করতে ট্যাপ করুন</string>
+    <string name="update_notice_smaller_improvements_title">আরও ছোট উন্নতি</string>
+    <string name="update_notice_smaller_improvements_description">সব অ্যাপ খুলতে উপরে এবং বন্ধ করতে নিচে সোয়াইপ করুন, চাইলে ব্যাটারির শতাংশ দেখান এবং ফিজিক্যাল কিবোর্ড, উইজেট ও দৈনন্দিন লঞ্চার ব্যবহারের উন্নতি উপভোগ করুন।</string>
 </resources>

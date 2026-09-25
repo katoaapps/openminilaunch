@@ -72,9 +72,7 @@ import com.katoaapps.openminilaunch.ui.theme.Rust
 import com.katoaapps.openminilaunch.ui.theme.withAppBackground
 import com.katoaapps.openminilaunch.ui.todos.TodosScreen
 
-private const val LEGACY_CALENDAR_UPDATE_ID = "calendar_language_v1"
-private const val PREVIOUS_FEATURE_UPDATE_ID = "two_panel_large_display_v1"
-private const val FEATURE_UPDATE_ID = "profile_vcard_v1"
+private const val FEATURE_UPDATE_ID = "v154_whats_new_v1"
 
 @Composable
 internal fun MiniLaunchApp(
@@ -255,8 +253,6 @@ internal fun MiniLaunchApp(
                         actions = actions,
                         onFinish = {
                             store.completeOnboarding()
-                            store.markUpdateSeen(LEGACY_CALENDAR_UPDATE_ID)
-                            store.markUpdateSeen(PREVIOUS_FEATURE_UPDATE_ID)
                             store.markUpdateSeen(FEATURE_UPDATE_ID)
                             showTutorial = false
                             if (ContextCompat.checkSelfPermission(
@@ -370,26 +366,18 @@ internal fun MiniLaunchApp(
         }
         if (showUpdateNotice && !showTutorial) {
             FeatureUpdateDialog(
-                showCalendarHighlights = !store.hasSeenUpdate(LEGACY_CALENDAR_UPDATE_ID),
-                showTwoPanelHighlights = !store.hasSeenUpdate(PREVIOUS_FEATURE_UPDATE_ID),
                 onOpenVCardSettings = {
-                    store.markUpdateSeen(LEGACY_CALENDAR_UPDATE_ID)
-                    store.markUpdateSeen(PREVIOUS_FEATURE_UPDATE_ID)
                     store.markUpdateSeen(FEATURE_UPDATE_ID)
                     showUpdateNotice = false
                     openVirtualContactCard(context)
                 },
                 onReviewTutorial = {
-                    store.markUpdateSeen(LEGACY_CALENDAR_UPDATE_ID)
-                    store.markUpdateSeen(PREVIOUS_FEATURE_UPDATE_ID)
                     store.markUpdateSeen(FEATURE_UPDATE_ID)
                     showUpdateNotice = false
                     tutorialRun++
                     showTutorial = true
                 },
                 onNotNow = {
-                    store.markUpdateSeen(LEGACY_CALENDAR_UPDATE_ID)
-                    store.markUpdateSeen(PREVIOUS_FEATURE_UPDATE_ID)
                     store.markUpdateSeen(FEATURE_UPDATE_ID)
                     showUpdateNotice = false
                 },

@@ -21,13 +21,13 @@
     <string name="calendar_issue_dst_gap">This local time does not exist because the clock changes then.</string>
     <string name="calendar_warning_past">This event is in the past.</string>
     <string name="calendar_warning_dst_overlap">This time occurs twice because the clock changes then.</string>
-    <string name="update_notice_calendar_heading">Calendar commands you can trust</string>
+    <string name="update_notice_calendar_heading">Language and calendar support · BETA</string>
     <string name="update_notice_calendar_preview_title">See the event before handoff</string>
     <string name="update_notice_calendar_preview_description">The + command now previews the exact title, date, time, and duration Mink will send to your calendar app.</string>
     <string name="update_notice_calendar_review_title">Mink stops instead of guessing</string>
     <string name="update_notice_calendar_review_description">Invalid, conflicting, or unsupported date wording asks for review instead of quietly creating an event today.</string>
-    <string name="update_notice_calendar_language_title">One language throughout Mink</string>
-    <string name="update_notice_calendar_language_description">Calendar phrases automatically follow the language selected in Launcher settings.</string>
+    <string name="update_notice_calendar_language_title">Mink now speaks more languages</string>
+    <string name="update_notice_calendar_language_description">Choose from 15 launcher languages. Calendar parsing is in beta for US and UK English, Spanish, Simplified Chinese, and Arabic.</string>
     <string name="update_notice_calendar_local_title">Still entirely on device</string>
     <string name="update_notice_calendar_local_description">Mink uses deterministic language modules inside the app. Calendar phrases are not uploaded or sent to an AI service.</string>
 </resources>

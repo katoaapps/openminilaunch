@@ -21,13 +21,13 @@
     <string name="calendar_issue_dst_gap">Esta hora local no existe porque el reloj cambia entonces.</string>
     <string name="calendar_warning_past">Este evento ya es cosa del pasado.</string>
     <string name="calendar_warning_dst_overlap">Este tiempo ocurre dos veces porque el reloj cambia entonces.</string>
-    <string name="update_notice_calendar_heading">Comandos del calendario en los que puedes confiar</string>
+    <string name="update_notice_calendar_heading">Compatibilidad con idiomas y calendario · BETA</string>
     <string name="update_notice_calendar_preview_title">Ver el evento antes del traspaso</string>
     <string name="update_notice_calendar_preview_description">El comando + ahora muestra una vista previa del título, la fecha, la hora y la duración exactas que Mink enviará a su aplicación de calendario.</string>
     <string name="update_notice_calendar_review_title">Mink se detiene en lugar de adivinar</string>
     <string name="update_notice_calendar_review_description">La redacción de fechas no válidas, contradictorias o no compatibles solicita una revisión en lugar de crear silenciosamente un evento hoy.</string>
-    <string name="update_notice_calendar_language_title">Un idioma en todo Mink</string>
-    <string name="update_notice_calendar_language_description">Las frases del calendario siguen automáticamente el idioma seleccionado en la configuración del Iniciador.</string>
+    <string name="update_notice_calendar_language_title">Mink ahora habla más idiomas</string>
+    <string name="update_notice_calendar_language_description">Elige entre 15 idiomas del launcher. La interpretación del calendario está en beta para inglés de EE. UU. y Reino Unido, español, chino simplificado y árabe.</string>
     <string name="update_notice_calendar_local_title">Todavía completamente en el dispositivo</string>
     <string name="update_notice_calendar_local_description">Mink utiliza módulos de lenguaje deterministas dentro de la aplicación. Las frases del calendario no se cargan ni envían a un servicio de IA.</string>
 </resources>

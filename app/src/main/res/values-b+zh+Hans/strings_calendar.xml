@@ -21,13 +21,13 @@
     <string name="calendar_issue_dst_gap">该本地时间不存在，因为时钟会改变。</string>
     <string name="calendar_warning_past">此事件已成为过去。</string>
     <string name="calendar_warning_dst_overlap">这个时间出现两次，因为时钟会改变。</string>
-    <string name="update_notice_calendar_heading">您可以信赖的日历命令</string>
+    <string name="update_notice_calendar_heading">语言和日历支持 · 测试版</string>
     <string name="update_notice_calendar_preview_title">查看切换前的事件</string>
     <string name="update_notice_calendar_preview_description">+ 命令现在可以预览 Mink 将发送到您的日历应用程序的确切标题、日期、时间和持续时间。</string>
     <string name="update_notice_calendar_review_title">Mink 停止而不是猜测</string>
     <string name="update_notice_calendar_review_description">无效、冲突或不受支持的日期措辞需要进行审核，而不是在今天悄悄创建一个事件。</string>
-    <string name="update_notice_calendar_language_title">一种语言贯穿 Mink</string>
-    <string name="update_notice_calendar_language_description">日历短语自动遵循启动器设置中选择的语言。</string>
+    <string name="update_notice_calendar_language_title">Mink 现在支持更多语言</string>
+    <string name="update_notice_calendar_language_description">可选择 15 种启动器语言。日历解析目前为测试版，支持美式和英式英语、西班牙语、简体中文和阿拉伯语。</string>
     <string name="update_notice_calendar_local_title">仍然完全在设备上</string>
     <string name="update_notice_calendar_local_description">Mink 在应用程序内使用确定性语言模块。日历短语不会上传或发送到 AI 服务。</string>
 </resources>

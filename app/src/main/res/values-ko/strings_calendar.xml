@@ -21,13 +21,13 @@
     <string name="calendar_issue_dst_gap">시계가 그때 바뀌기 때문에 이 현지 시간은 존재하지 않습니다.</string>
     <string name="calendar_warning_past">이 이벤트는 과거입니다.</string>
     <string name="calendar_warning_dst_overlap">이 시간은 시계가 바뀌기 때문에 두 번 발생합니다.</string>
-    <string name="update_notice_calendar_heading">신뢰할 수 있는 캘린더 명령</string>
+    <string name="update_notice_calendar_heading">언어 및 캘린더 지원 · 베타</string>
     <string name="update_notice_calendar_preview_title">핸드오프 전에 이벤트 보기</string>
     <string name="update_notice_calendar_preview_description">이제 + 명령을 사용하면 Mink가 캘린더 앱으로 보낼 정확한 제목, 날짜, 시간 및 기간을 미리 볼 수 있습니다.</string>
     <string name="update_notice_calendar_review_title">Mink는 추측 대신 멈춥니다.</string>
     <string name="update_notice_calendar_review_description">유효하지 않거나 상충되거나 지원되지 않는 날짜 표현을 사용하면 오늘 조용히 일정을 만드는 대신 검토를 요청합니다.</string>
-    <string name="update_notice_calendar_language_title">Mink 전체에서 하나의 언어</string>
-    <string name="update_notice_calendar_language_description">달력 문구는 실행기 설정에서 선택한 언어를 자동으로 따릅니다.</string>
+    <string name="update_notice_calendar_language_title">Mink가 더 많은 언어를 지원합니다</string>
+    <string name="update_notice_calendar_language_description">15개의 런처 언어 중에서 선택할 수 있습니다. 캘린더 분석은 미국 및 영국 영어, 스페인어, 중국어 간체, 아랍어에서 베타로 제공됩니다.</string>
     <string name="update_notice_calendar_local_title">여전히 완전히 기기에 있습니다.</string>
     <string name="update_notice_calendar_local_description">Mink는 앱 내부에서 결정론적 언어 모듈을 사용합니다. 달력 문구는 AI 서비스에 업로드되거나 전송되지 않습니다.</string>
 </resources>

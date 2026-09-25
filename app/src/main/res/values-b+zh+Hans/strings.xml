@@ -908,7 +908,7 @@
 
     <string name="vcard_private_title">隐私优先设计</string>
     <string name="vcard_private_description">您的 vCard 资料和联系人照片会加密，并且仅存储在此设备上。</string>
-    <string name="vcard_no_account_description">这些内容绝不会发送到 Mink 服务器，也不会用于创建或管理账户。</string>
+    <string name="vcard_no_account_description">这是联系人名片，不是应用个人资料。内容绝不会发送到 Mink 服务器，也不会用于创建或管理账户。</string>
     <string name="continue_label">继续</string>
     <string name="more_details">更多详情</string>
     <string name="more_details_summary">组织、职位和备注</string>
@@ -917,4 +917,6 @@
     <string name="delete_vcard_link_title">删除此链接？</string>
     <string name="delete_vcard_link_description">这将从已保存的 vCard 链接库中永久移除此链接。</string>
     <string name="tap_to_enlarge">点按放大</string>
+    <string name="update_notice_smaller_improvements_title">其他小改进</string>
+    <string name="update_notice_smaller_improvements_description">向上滑动打开“查看全部”，向下滑动关闭；还可选择显示电池百分比，并获得实体键盘、小组件和日常启动器使用方面的改进。</string>
 </resources>

@@ -21,13 +21,13 @@
     <string name="calendar_issue_dst_gap">呢個本地時間唔存在，因為嗰陣時鐘會變。</string>
     <string name="calendar_warning_past">呢個事件已經過去。</string>
     <string name="calendar_warning_dst_overlap">呢個時間會發生兩次，因為當時鐘會改變。</string>
-    <string name="update_notice_calendar_heading">你可以信任嘅日曆指令</string>
+    <string name="update_notice_calendar_heading">語言同日曆支援 · BETA</string>
     <string name="update_notice_calendar_preview_title">喺交接之前睇下個活動</string>
     <string name="update_notice_calendar_preview_description">+ 指令而家會預覽 Mink 會傳送去你嘅日曆應用程式嘅確切標題、日期、時間同持續時間。</string>
     <string name="update_notice_calendar_review_title">Mink 停咗而唔係估</string>
     <string name="update_notice_calendar_review_description">無效、衝突或者唔支援嘅日期字眼要求我哋審查，而唔係喺今日靜靜地建立活動。</string>
-    <string name="update_notice_calendar_language_title">一種語言全程 Mink</string>
-    <string name="update_notice_calendar_language_description">日曆短語會自動跟住喺啟動器設定入面揀嘅語言。</string>
+    <string name="update_notice_calendar_language_title">Mink 而家識更多語言</string>
+    <string name="update_notice_calendar_language_description">可以揀 15 種啟動器語言。日曆解析目前係測試版，支援美式同英式英文、西班牙文、簡體中文同阿拉伯文。</string>
     <string name="update_notice_calendar_local_title">仲係完全喺裝置上面</string>
     <string name="update_notice_calendar_local_description">Mink 喺應用程式入面使用決定性語言模組。日曆短語唔會上載或者傳送去 AI 服務。</string>
 </resources>

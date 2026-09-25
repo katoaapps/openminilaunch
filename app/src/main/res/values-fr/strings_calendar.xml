@@ -21,13 +21,13 @@
     <string name="calendar_issue_dst_gap">Cette heure locale n\'existe pas car l\'horloge change alors.</string>
     <string name="calendar_warning_past">Cet événement appartient au passé.</string>
     <string name="calendar_warning_dst_overlap">Cette heure se produit deux fois car l\'horloge change alors.</string>
-    <string name="update_notice_calendar_heading">Commandes de calendrier auxquelles vous pouvez faire confiance</string>
+    <string name="update_notice_calendar_heading">Langues et calendrier · BÊTA</string>
     <string name="update_notice_calendar_preview_title">Voir l\'événement avant le transfert</string>
     <string name="update_notice_calendar_preview_description">La commande + affiche désormais un aperçu exact du titre, de la date, de l\'heure et de la durée que Mink enverra à votre application de calendrier.</string>
     <string name="update_notice_calendar_review_title">Mink s\'arrête au lieu de deviner</string>
     <string name="update_notice_calendar_review_description">Une formulation de date invalide, conflictuelle ou non prise en charge demande une révision au lieu de créer discrètement un événement aujourd\'hui.</string>
-    <string name="update_notice_calendar_language_title">Une seule langue pour tout le Mink</string>
-    <string name="update_notice_calendar_language_description">Les phrases du calendrier suivent automatiquement la langue sélectionnée dans les paramètres du lanceur.</string>
+    <string name="update_notice_calendar_language_title">Mink parle désormais plus de langues</string>
+    <string name="update_notice_calendar_language_description">Choisissez parmi 15 langues du lanceur. L’analyse du calendrier est en bêta pour l’anglais américain et britannique, l’espagnol, le chinois simplifié et l’arabe.</string>
     <string name="update_notice_calendar_local_title">Toujours entièrement sur l\'appareil</string>
     <string name="update_notice_calendar_local_description">Mink utilise des modules de langage déterministes dans l\'application. Les expressions du calendrier ne sont pas téléchargées ni envoyées à un service d\'IA.</string>
 </resources>

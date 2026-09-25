@@ -21,13 +21,13 @@
     <string name="calendar_issue_dst_gap">এই স্থানীয় সময়টি বিদ্যমান নেই কারণ তখন ঘড়ির কাঁটা পরিবর্তিত হয়।</string>
     <string name="calendar_warning_past">এই ঘটনা অতীতের।</string>
     <string name="calendar_warning_dst_overlap">এই সময়টি দুবার ঘটে কারণ ঘড়ির কাঁটা তখন পরিবর্তন হয়।</string>
-    <string name="update_notice_calendar_heading">আপনি বিশ্বাস করতে পারেন ক্যালেন্ডার কমান্ড</string>
+    <string name="update_notice_calendar_heading">ভাষা ও ক্যালেন্ডার সহায়তা · BETA</string>
     <string name="update_notice_calendar_preview_title">হ্যান্ডঅফ আগে ইভেন্ট দেখুন</string>
     <string name="update_notice_calendar_preview_description">+ কমান্ড এখন সঠিক শিরোনাম, তারিখ, সময়, এবং সময়কালের পূর্বরূপ দেখে Mink আপনার ক্যালেন্ডার অ্যাপে পাঠাবে।</string>
     <string name="update_notice_calendar_review_title">Mink অনুমান করার পরিবর্তে থামে</string>
     <string name="update_notice_calendar_review_description">অবৈধ, বিরোধপূর্ণ, বা অসমর্থিত তারিখ শব্দগুলি আজ শান্তভাবে একটি ইভেন্ট তৈরি করার পরিবর্তে পর্যালোচনার জন্য জিজ্ঞাসা করে৷</string>
-    <string name="update_notice_calendar_language_title">Mink জুড়ে একটি ভাষা</string>
-    <string name="update_notice_calendar_language_description">ক্যালেন্ডার শব্দগুচ্ছ স্বয়ংক্রিয়ভাবে লঞ্চার সেটিংসে নির্বাচিত ভাষা অনুসরণ করে।</string>
+    <string name="update_notice_calendar_language_title">Mink এখন আরও ভাষা সমর্থন করে</string>
+    <string name="update_notice_calendar_language_description">১৫টি লঞ্চার ভাষা থেকে বেছে নিন। ক্যালেন্ডার পার্সিং এখন মার্কিন ও যুক্তরাজ্যের ইংরেজি, স্প্যানিশ, সরলীকৃত চীনা এবং আরবির জন্য বিটা।</string>
     <string name="update_notice_calendar_local_title">এখনও সম্পূর্ণরূপে ডিভাইসে</string>
     <string name="update_notice_calendar_local_description">Mink অ্যাপের ভিতরে নির্ধারক ভাষা মডিউল ব্যবহার করে। ক্যালেন্ডার বাক্যাংশ আপলোড করা হয় না বা কোনো AI পরিষেবাতে পাঠানো হয় না।</string>
 </resources>

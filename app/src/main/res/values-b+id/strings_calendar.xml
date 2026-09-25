@@ -21,13 +21,13 @@
     <string name="calendar_issue_dst_gap">Waktu setempat ini tidak ada karena jam berubah pada saat itu.</string>
     <string name="calendar_warning_past">Peristiwa ini terjadi di masa lalu.</string>
     <string name="calendar_warning_dst_overlap">Kali ini terjadi dua kali karena jam berubah.</string>
-    <string name="update_notice_calendar_heading">Perintah kalender yang dapat Anda percayai</string>
+    <string name="update_notice_calendar_heading">Dukungan bahasa dan kalender · BETA</string>
     <string name="update_notice_calendar_preview_title">Lihat acara sebelum serah terima</string>
     <string name="update_notice_calendar_preview_description">Perintah + sekarang mempratinjau judul, tanggal, waktu, dan durasi pasti yang akan dikirimkan Mink ke aplikasi kalender Anda.</string>
     <string name="update_notice_calendar_review_title">Mink berhenti alih-alih menebak</string>
     <string name="update_notice_calendar_review_description">Kata-kata tanggal yang tidak valid, bertentangan, atau tidak didukung meminta peninjauan alih-alih membuat acara hari ini secara diam-diam.</string>
-    <string name="update_notice_calendar_language_title">Satu bahasa di seluruh Mink</string>
-    <string name="update_notice_calendar_language_description">Frasa kalender secara otomatis mengikuti bahasa yang dipilih dalam pengaturan Peluncur.</string>
+    <string name="update_notice_calendar_language_title">Mink kini mendukung lebih banyak bahasa</string>
+    <string name="update_notice_calendar_language_description">Pilih dari 15 bahasa peluncur. Penguraian kalender masih beta untuk bahasa Inggris AS dan Inggris, Spanyol, Tionghoa Sederhana, dan Arab.</string>
     <string name="update_notice_calendar_local_title">Masih sepenuhnya di perangkat</string>
     <string name="update_notice_calendar_local_description">Mink menggunakan modul bahasa deterministik di dalam aplikasi. Frasa kalender tidak diunggah atau dikirim ke layanan AI.</string>
 </resources>

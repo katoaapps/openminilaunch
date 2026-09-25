@@ -908,7 +908,7 @@
 
     <string name="vcard_private_title">Конфиденциальность по умолчанию</string>
     <string name="vcard_private_description">Данные vCard и фотография контакта шифруются и хранятся только на этом устройстве.</string>
-    <string name="vcard_no_account_description">Они никогда не отправляются на серверы Mink и не используются для создания или управления аккаунтом.</string>
+    <string name="vcard_no_account_description">Это контактная карточка, а не профиль приложения. Она никогда не отправляется на серверы Mink и не используется для создания или управления аккаунтом.</string>
     <string name="continue_label">Продолжить</string>
     <string name="more_details">Подробнее</string>
     <string name="more_details_summary">Организация, должность и заметка</string>
@@ -917,4 +917,6 @@
     <string name="delete_vcard_link_title">Удалить эту ссылку?</string>
     <string name="delete_vcard_link_description">Ссылка будет навсегда удалена из сохранённой библиотеки vCard.</string>
     <string name="tap_to_enlarge">Нажмите, чтобы увеличить</string>
+    <string name="update_notice_smaller_improvements_title">Небольшие улучшения</string>
+    <string name="update_notice_smaller_improvements_description">Проведите вверх, чтобы открыть все приложения, и вниз, чтобы закрыть их; при желании показывайте заряд батареи в процентах и используйте улучшения для физических клавиатур, виджетов и повседневной работы лаунчера.</string>
 </resources>

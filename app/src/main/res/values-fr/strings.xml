@@ -908,7 +908,7 @@
 
     <string name="vcard_private_title">Confidentiel par conception</string>
     <string name="vcard_private_description">Les données de votre vCard et la photo du contact sont chiffrées et stockées uniquement sur cet appareil.</string>
-    <string name="vcard_no_account_description">Elles ne sont jamais envoyées aux serveurs Mink et ne servent pas à créer ou gérer un compte.</string>
+    <string name="vcard_no_account_description">Il s’agit d’une carte de contact, pas d’un profil d’application. Elle n’est jamais envoyée aux serveurs Mink et ne sert pas à créer ou gérer un compte.</string>
     <string name="continue_label">Continuer</string>
     <string name="more_details">Plus de détails</string>
     <string name="more_details_summary">Organisation, poste et note</string>
@@ -917,4 +917,6 @@
     <string name="delete_vcard_link_title">Supprimer ce lien ?</string>
     <string name="delete_vcard_link_description">Cela supprime définitivement le lien de votre bibliothèque vCard enregistrée.</string>
     <string name="tap_to_enlarge">Touchez pour agrandir</string>
+    <string name="update_notice_smaller_improvements_title">Petites améliorations</string>
+    <string name="update_notice_smaller_improvements_description">Balayez vers le haut pour ouvrir Toutes les applications et vers le bas pour fermer, affichez éventuellement le pourcentage de batterie et profitez d’améliorations pour les claviers physiques, les widgets et l’utilisation quotidienne.</string>
 </resources>

@@ -908,7 +908,7 @@
 
     <string name="vcard_private_title">رازداری کو مدنظر رکھ کر بنایا گیا</string>
     <string name="vcard_private_description">آپ کی vCard تفصیلات اور رابطے کی تصویر مرموز ہو کر صرف اسی ڈیوائس پر محفوظ ہوتی ہیں۔</string>
-    <string name="vcard_no_account_description">یہ کبھی Mink سرورز کو نہیں بھیجی جاتیں اور اکاؤنٹ بنانے یا منظم کرنے کے لیے استعمال نہیں ہوتیں۔</string>
+    <string name="vcard_no_account_description">یہ رابطہ کارڈ ہے، ایپ پروفائل نہیں۔ اسے کبھی Mink سرورز کو نہیں بھیجا جاتا اور اکاؤنٹ بنانے یا منظم کرنے کے لیے استعمال نہیں کیا جاتا۔</string>
     <string name="continue_label">جاری رکھیں</string>
     <string name="more_details">مزید تفصیلات</string>
     <string name="more_details_summary">ادارہ، عہدہ اور نوٹ</string>
@@ -917,4 +917,6 @@
     <string name="delete_vcard_link_title">یہ لنک حذف کریں؟</string>
     <string name="delete_vcard_link_description">یہ لنک آپ کی محفوظ شدہ vCard لائبریری سے مستقل طور پر ہٹا دیا جائے گا۔</string>
     <string name="tap_to_enlarge">بڑا کرنے کے لیے ٹیپ کریں</string>
+    <string name="update_notice_smaller_improvements_title">مزید چھوٹی بہتریاں</string>
+    <string name="update_notice_smaller_improvements_description">تمام ایپس کھولنے کے لیے اوپر اور بند کرنے کے لیے نیچے سوائپ کریں، چاہیں تو بیٹری کا فیصد دکھائیں، اور فزیکل کی بورڈ، وجیٹس اور روزمرہ لانچر استعمال میں بہتری حاصل کریں۔</string>
 </resources>
