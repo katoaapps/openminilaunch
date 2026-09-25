@@ -767,7 +767,7 @@
     <string name="mink_goal_passed_detail">Le temps social a dépassé l’objectif %1$s d’aujourd’hui.</string>
     <string name="mink_checking_headline">Mink continue de vérifier la piste</string>
     <plurals name="mink_opens_detail">
-        <item quantity="one">Ouvrir une application sélectionnée une fois au cours de la dernière heure peut rendre plus difficile l\'installation.</item>
+        <item quantity="one">Ouvrir une application sélectionnée %1$d fois au cours de la dernière heure peut rendre plus difficile l\'installation.</item>
         <item quantity="other">L\'ouverture des applications sélectionnées %1$d au cours de la dernière heure peut rendre plus difficile l\'installation.</item>
     </plurals>
     <string name="mink_pause_headline">Mink pourrait utiliser une pause</string>

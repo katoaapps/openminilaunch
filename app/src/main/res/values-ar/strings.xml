@@ -463,7 +463,11 @@
     <string name="appearance_summary">موضوع %1$s · ألوان اللوحة والخلفية</string>
     <string name="shortcuts_and_drawer">الاختصارات والدرج</string>
     <plurals name="shortcuts_drawer_summary">
+        <item quantity="zero">اختر تطبيقات الاختصار · تطبيقات درج %1$d/%2$d</item>
         <item quantity="one">اختر تطبيقات الاختصار · تطبيق الدرج %1$d/%2$d</item>
+        <item quantity="two">اختر تطبيقات الاختصار · تطبيقات درج %1$d/%2$d</item>
+        <item quantity="few">اختر تطبيقات الاختصار · تطبيقات درج %1$d/%2$d</item>
+        <item quantity="many">اختر تطبيقات الاختصار · تطبيقات درج %1$d/%2$d</item>
         <item quantity="other">اختر تطبيقات الاختصار · تطبيقات درج %1$d/%2$d</item>
     </plurals>
     <string name="home_shortcuts">اختصارات الصفحة الرئيسية</string>
@@ -514,7 +518,11 @@
     <string name="files_section">الملفات</string>
     <string name="file_search">بحث الملفات</string>
     <plurals name="folder_count">
+        <item quantity="zero">المجلدات %1$d</item>
         <item quantity="one">مجلد %1$d</item>
+        <item quantity="two">المجلدات %1$d</item>
+        <item quantity="few">المجلدات %1$d</item>
+        <item quantity="many">المجلدات %1$d</item>
         <item quantity="other">المجلدات %1$d</item>
     </plurals>
     <string name="file_search_status">%1$s · الوصول إلى الوسائط %2$s</string>
@@ -652,15 +660,27 @@
     <string name="choose_web_search_app">اختر تطبيق بحث الويب</string>
     <string name="no_web_search_apps">لم يتم العثور على تطبيقات بحث الويب.</string>
     <plurals name="drawer_apps_title">
+        <item quantity="zero">عناصر الدرج · %1$d/%2$d</item>
         <item quantity="one">عناصر الدرج · %1$d/%2$d</item>
+        <item quantity="two">عناصر الدرج · %1$d/%2$d</item>
+        <item quantity="few">عناصر الدرج · %1$d/%2$d</item>
+        <item quantity="many">عناصر الدرج · %1$d/%2$d</item>
         <item quantity="other">عناصر الدرج · %1$d/%2$d</item>
     </plurals>
     <plurals name="apps_selected">
+        <item quantity="zero">تم تحديد عناصر %1$d</item>
         <item quantity="one">تم تحديد العنصر %1$d</item>
+        <item quantity="two">تم تحديد عناصر %1$d</item>
+        <item quantity="few">تم تحديد عناصر %1$d</item>
+        <item quantity="many">تم تحديد عناصر %1$d</item>
         <item quantity="other">تم تحديد عناصر %1$d</item>
     </plurals>
     <plurals name="maximum_apps_selected">
+        <item quantity="zero">تم تحديد الحد الأقصى لعناصر %1$d</item>
         <item quantity="one">تم تحديد الحد الأقصى لعنصر %1$d</item>
+        <item quantity="two">تم تحديد الحد الأقصى لعناصر %1$d</item>
+        <item quantity="few">تم تحديد الحد الأقصى لعناصر %1$d</item>
+        <item quantity="many">تم تحديد الحد الأقصى لعناصر %1$d</item>
         <item quantity="other">تم تحديد الحد الأقصى لعناصر %1$d</item>
     </plurals>
     <string name="home_panel_color">لون حبوب منع الحمل</string>
@@ -704,7 +724,11 @@
     <string name="no_active_conversations">لا توجد محادثات نشطة</string>
     <string name="no_active_conversations_description">ستظهر هنا الرسائل الجديدة ومحادثات البريد الإلكتروني.</string>
     <plurals name="message_count">
+        <item quantity="zero">رسائل %1$d</item>
         <item quantity="one">رسالة %1$d</item>
+        <item quantity="two">رسائل %1$d</item>
+        <item quantity="few">رسائل %1$d</item>
+        <item quantity="many">رسائل %1$d</item>
         <item quantity="other">رسائل %1$d</item>
     </plurals>
     <string name="could_not_open_app">لا يمكن فتح %1$s</string>
@@ -725,7 +749,11 @@
     <string name="widgets">الحاجيات</string>
     <string name="widget_count">%1$d من %2$d</string>
     <plurals name="maximum_widgets">
+        <item quantity="zero">الحد الأقصى لعناصر واجهة المستخدم %1$d</item>
         <item quantity="one">الحد الأقصى لعنصر واجهة المستخدم %1$d</item>
+        <item quantity="two">الحد الأقصى لعناصر واجهة المستخدم %1$d</item>
+        <item quantity="few">الحد الأقصى لعناصر واجهة المستخدم %1$d</item>
+        <item quantity="many">الحد الأقصى لعناصر واجهة المستخدم %1$d</item>
         <item quantity="other">الحد الأقصى لعناصر واجهة المستخدم %1$d</item>
     </plurals>
     <string name="add_widget">إضافة القطعة</string>
@@ -767,7 +795,11 @@
     <string name="mink_goal_passed_detail">تجاوز الوقت الاجتماعي هدف %1$s اليوم.</string>
     <string name="mink_checking_headline">يستمر Mink في التحقق من المسار</string>
     <plurals name="mink_opens_detail">
+        <item quantity="zero">قد يؤدي فتح التطبيقات المحددة %1$d مرات خلال الساعة الأخيرة إلى زيادة صعوبة الاستقرار فيها.</item>
         <item quantity="one">قد يؤدي فتح تطبيق محدد مرة واحدة خلال الساعة الأخيرة إلى زيادة صعوبة الاستقرار فيه.</item>
+        <item quantity="two">قد يؤدي فتح التطبيقات المحددة %1$d مرات خلال الساعة الأخيرة إلى زيادة صعوبة الاستقرار فيها.</item>
+        <item quantity="few">قد يؤدي فتح التطبيقات المحددة %1$d مرات خلال الساعة الأخيرة إلى زيادة صعوبة الاستقرار فيها.</item>
+        <item quantity="many">قد يؤدي فتح التطبيقات المحددة %1$d مرات خلال الساعة الأخيرة إلى زيادة صعوبة الاستقرار فيها.</item>
         <item quantity="other">قد يؤدي فتح التطبيقات المحددة %1$d مرات خلال الساعة الأخيرة إلى زيادة صعوبة الاستقرار فيها.</item>
     </plurals>
     <string name="mink_pause_headline">يمكن أن يستخدم Mink فترة توقف مؤقت</string>
@@ -791,7 +823,11 @@
     <string name="daily_collective_limit">الحد الجماعي اليومي</string>
     <string name="daily_collective_limit_description">يقوم Mink بجمع الوقت الأمامي لليوم من التطبيقات التي حددتها. اختر رقمًا صحيحًا من 0 إلى 23 ساعة.</string>
     <plurals name="daily_limit_hours">
+        <item quantity="zero">ساعات %1$d</item>
         <item quantity="one">ساعة %1$d</item>
+        <item quantity="two">ساعات %1$d</item>
+        <item quantity="few">ساعات %1$d</item>
+        <item quantity="many">ساعات %1$d</item>
         <item quantity="other">ساعات %1$d</item>
     </plurals>
     <string name="pause_selected_apps">إيقاف التطبيقات المحددة مؤقتًا في MinkLauncher</string>
@@ -821,7 +857,11 @@
     <string name="app_plural">apps</string>
     <string name="no_tracked_apps">لم يتم تحديد أي تطبيقات. لن يتضمن Mink’s Day أي استخدام للتطبيق حتى تختار واحدًا أو تستعيد إعدادات Android الافتراضية.</string>
     <plurals name="tracked_selected_count">
+        <item quantity="zero">تم تحديد %1$d. تظهر هذه التطبيقات فقط في مسارك وإجمالياتك.</item>
         <item quantity="one">تم تحديد %1$d. يظهر هذا التطبيق فقط في مسارك والإجماليات.</item>
+        <item quantity="two">تم تحديد %1$d. تظهر هذه التطبيقات فقط في مسارك وإجمالياتك.</item>
+        <item quantity="few">تم تحديد %1$d. تظهر هذه التطبيقات فقط في مسارك وإجمالياتك.</item>
+        <item quantity="many">تم تحديد %1$d. تظهر هذه التطبيقات فقط في مسارك وإجمالياتك.</item>
         <item quantity="other">تم تحديد %1$d. تظهر هذه التطبيقات فقط في مسارك وإجمالياتك.</item>
     </plurals>
     <string name="find_app">ابحث عن تطبيق</string>

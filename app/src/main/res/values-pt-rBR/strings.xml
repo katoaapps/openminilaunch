@@ -767,7 +767,7 @@
     <string name="mink_goal_passed_detail">O tempo social ultrapassou a meta %1$s de hoje.</string>
     <string name="mink_checking_headline">Mink continua verificando a trilha</string>
     <plurals name="mink_opens_detail">
-        <item quantity="one">Abrir um aplicativo selecionado uma vez na última hora pode dificultar a adaptação.</item>
+        <item quantity="one">Abrir um aplicativo selecionado %1$d vez na última hora pode dificultar a adaptação.</item>
         <item quantity="other">Abrir aplicativos selecionados vezes %1$d na última hora pode estar dificultando a adaptação.</item>
     </plurals>
     <string name="mink_pause_headline">Mink precisa de uma pausa</string>

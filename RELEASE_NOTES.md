@@ -1,10 +1,9 @@
-This release is centered on making your Mink home screen feel more like yours.
+Open 1.5.4 adds a private Virtual Contact Card, broader language support, and a two-panel Home for tablets and foldables.
 
-- Choose an image, crop it to your device, and use the result across Mink Home and Android Home without changing your lock screen.
-- Keep that wallpaper stationary while swiping between Home and Widgets, while Mink's Day retains its focused solid background.
-- Adjust pill transparency with readable foreground colors that respond to the selected color or wallpaper.
-- Show or hide the Home date and clock independently, with optional 24-hour time.
+- Build a reusable vCard with optional contact details, links, and a photo, then show its QR directly from Home. This is a contact card—not an app profile. Its local data is encrypted, never sent to Mink servers, and never used for account management.
+- Choose from 15 launcher languages. Beta calendar parsing follows the launcher language for US and UK English, Spanish, Simplified Chinese, and Arabic, previews the interpreted event, and stops for review instead of guessing.
+- Use the optional two-panel layout on tablets and unfolded foldables to move between Mink’s Day + Home and Home + Widgets without losing the active Magic Box draft.
 
-Open 1.5.3 also cleans up focused app labels in See All and restores natural calendar phrases such as `sept 15th 9am` and `next wed 8am`.
+Smaller improvements include swipe-up access to See All, swipe-down dismissal, an optional live battery percentage, and refinements for physical keyboards, widgets, and large displays.
 
-Wallpaper images remain on-device and are not included in portable JSON backups. This update adds no new runtime permission prompt.
+This update adds no new runtime permission prompt.

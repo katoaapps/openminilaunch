@@ -1,0 +1,7 @@
+MinkLauncher Open 1.5.4 introduces an encrypted, device-local Virtual Contact Card. Build a reusable vCard with optional contact details, links, and a photo, then show its QR directly from Home. It is a contact card rather than an app profile, is never sent to Mink servers, and is never used for account management. Contact details and photos are protected locally; portable backup exports include readable contact details only after an explicit warning and continue to exclude photos.
+
+The launcher interface now supports 15 languages. Beta calendar parsing follows the launcher language for US and UK English, Spanish, Simplified Chinese, and Arabic. The + command previews the interpreted title, date, time, and duration before handoff, and ambiguous or unsupported wording stops for review instead of silently creating an incorrect event. Parsing remains entirely on-device.
+
+Tablets and unfolded foldables gain an optional two-panel Home that pairs Mink’s Day with Home or Home with Widgets. Layout, focused page, and Magic Box drafts survive supported rotation and fold changes, with responsive widget, to-do, and physical-keyboard improvements for larger displays.
+
+Swipe up from Home to open See All and swipe down to close it. Appearance also gains an optional live battery percentage beside the Home date. This release adds no new runtime permission prompt.

@@ -87,7 +87,16 @@ def validate_locale(
     errors: list[str] = []
 
     missing = sorted(source.keys() - localized.keys())
-    unexpected = sorted(localized.keys() - source.keys())
+    source_plural_names = {
+        "|".join(key.split("|")[:2])
+        for key in source
+        if key.split("|")[2] != "string"
+    }
+    unexpected = sorted(
+        key
+        for key in localized.keys() - source.keys()
+        if "|".join(key.split("|")[:2]) not in source_plural_names
+    )
     if missing:
         errors.append(f"missing {len(missing)} entries: {', '.join(missing[:5])}")
     if unexpected:
@@ -101,9 +110,19 @@ def validate_locale(
             continue
         expected_placeholders = sorted(PRINTF_PATTERN.findall(original))
         actual_placeholders = sorted(PRINTF_PATTERN.findall(translation))
-        if actual_placeholders != expected_placeholders:
+        key_parts = key.split("|")
+        accepted_placeholder_sets = {tuple(expected_placeholders)}
+        if key_parts[2] != "string":
+            plural_prefix = "|".join(key_parts[:2]) + "|"
+            accepted_placeholder_sets.update(
+                tuple(sorted(PRINTF_PATTERN.findall(value)))
+                for source_key, value in source.items()
+                if source_key.startswith(plural_prefix)
+            )
+        if tuple(actual_placeholders) not in accepted_placeholder_sets:
             errors.append(
-                f"{key}: placeholders {actual_placeholders}, expected {expected_placeholders}",
+                f"{key}: placeholders {actual_placeholders}, expected one of "
+                f"{sorted(accepted_placeholder_sets)}",
             )
         if GENERATION_TOKEN_PATTERN.search(translation):
             errors.append(f"{key}: contains an internal generation token")

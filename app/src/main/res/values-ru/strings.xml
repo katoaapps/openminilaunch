@@ -464,6 +464,8 @@
     <string name="shortcuts_and_drawer">Ярлыки и ящик</string>
     <plurals name="shortcuts_drawer_summary">
         <item quantity="one">Выберите приложения-ярлыки · Приложение ящика %1$d/%2$d</item>
+        <item quantity="few">Выберите ярлыки приложений · %1$d/%2$d приложения ящика</item>
+        <item quantity="many">Выберите ярлыки приложений · %1$d/%2$d приложения ящика</item>
         <item quantity="other">Выберите ярлыки приложений · %1$d/%2$d приложения ящика</item>
     </plurals>
     <string name="home_shortcuts">ЯРЛЫКИ НА ГЛАВНУЮ</string>
@@ -515,6 +517,8 @@
     <string name="file_search">Поиск файлов</string>
     <plurals name="folder_count">
         <item quantity="one">Папка %1$d</item>
+        <item quantity="few">Папки %1$d</item>
+        <item quantity="many">Папки %1$d</item>
         <item quantity="other">Папки %1$d</item>
     </plurals>
     <string name="file_search_status">%1$s · доступ к медиа %2$s</string>
@@ -653,14 +657,20 @@
     <string name="no_web_search_apps">Приложения веб-поиска не найдены.</string>
     <plurals name="drawer_apps_title">
         <item quantity="one">Предметы для ящиков · %1$d/%2$d</item>
+        <item quantity="few">Предметы для ящиков · %1$d/%2$d</item>
+        <item quantity="many">Предметы для ящиков · %1$d/%2$d</item>
         <item quantity="other">Предметы для ящиков · %1$d/%2$d</item>
     </plurals>
     <plurals name="apps_selected">
         <item quantity="one">%1$d выбран элемент</item>
+        <item quantity="few">%1$d выбраны элементы</item>
+        <item quantity="many">%1$d выбраны элементы</item>
         <item quantity="other">%1$d выбраны элементы</item>
     </plurals>
     <plurals name="maximum_apps_selected">
         <item quantity="one">Выбран максимум %1$d.</item>
+        <item quantity="few">Выбрано максимум %1$d элементов.</item>
+        <item quantity="many">Выбрано максимум %1$d элементов.</item>
         <item quantity="other">Выбрано максимум %1$d элементов.</item>
     </plurals>
     <string name="home_panel_color">Цвет таблетки</string>
@@ -705,6 +715,8 @@
     <string name="no_active_conversations_description">Здесь будут появляться новые сообщения и беседы по электронной почте.</string>
     <plurals name="message_count">
         <item quantity="one">Сообщение %1$d</item>
+        <item quantity="few">Сообщения %1$d</item>
+        <item quantity="many">Сообщения %1$d</item>
         <item quantity="other">Сообщения %1$d</item>
     </plurals>
     <string name="could_not_open_app">Не удалось открыть %1$s.</string>
@@ -726,6 +738,8 @@
     <string name="widget_count">%1$d из %2$d</string>
     <plurals name="maximum_widgets">
         <item quantity="one">Максимум виджета %1$d</item>
+        <item quantity="few">Максимум виджетов %1$d</item>
+        <item quantity="many">Максимум виджетов %1$d</item>
         <item quantity="other">Максимум виджетов %1$d</item>
     </plurals>
     <string name="add_widget">Добавить виджет</string>
@@ -767,7 +781,9 @@
     <string name="mink_goal_passed_detail">Время общения превысило сегодняшнюю цель %1$s.</string>
     <string name="mink_checking_headline">Mink продолжает проверять след.</string>
     <plurals name="mink_opens_detail">
-        <item quantity="one">Открытие выбранного приложения один раз за последний час может затруднить привыкание.</item>
+        <item quantity="one">Открытие выбранного приложения %1$d раз за последний час может затруднить привыкание.</item>
+        <item quantity="few">Открытие выбранных приложений %1$d раз за последний час может затруднить адаптацию.</item>
+        <item quantity="many">Открытие выбранных приложений %1$d раз за последний час может затруднить адаптацию.</item>
         <item quantity="other">Открытие выбранных приложений %1$d раз за последний час может затруднить адаптацию.</item>
     </plurals>
     <string name="mink_pause_headline">Mink мог бы сделать паузу.</string>
@@ -792,6 +808,8 @@
     <string name="daily_collective_limit_description">Mink суммирует сегодняшнее время на переднем плане из выбранных вами приложений. Выберите целое число от 0 до 23 часов.</string>
     <plurals name="daily_limit_hours">
         <item quantity="one">%1$d час</item>
+        <item quantity="few">%1$d часов</item>
+        <item quantity="many">%1$d часов</item>
         <item quantity="other">%1$d часов</item>
     </plurals>
     <string name="pause_selected_apps">Приостановить выбранные приложения в MinkLauncher</string>
@@ -822,6 +840,8 @@
     <string name="no_tracked_apps">Приложения не выбраны. Mink’s Day не будет учитывать использование приложений, пока вы не выберете одно из них или не восстановите настройки Android по умолчанию.</string>
     <plurals name="tracked_selected_count">
         <item quantity="one">%1$d выбран. Только это приложение отображается в вашем журнале и итоговых показателях.</item>
+        <item quantity="few">%1$d выбран. Только эти приложения отображаются в вашем журнале и итоговых показателях.</item>
+        <item quantity="many">%1$d выбран. Только эти приложения отображаются в вашем журнале и итоговых показателях.</item>
         <item quantity="other">%1$d выбран. Только эти приложения отображаются в вашем журнале и итоговых показателях.</item>
     </plurals>
     <string name="find_app">Найти приложение</string>

@@ -2,7 +2,7 @@
 
 A focused, keyboard-first Android home-screen launcher and digital assistant built with Kotlin and Jetpack Compose.
 
-Current version: **Open 1.5.3** (`1.5.3`). Feature releases show existing users a one-time in-app update notice covering new behavior, privacy impact, and any optional permissions; the onboarding tutorial is updated alongside each release.
+Current version: **Open 1.5.4** (`1.5.4`). Feature releases show existing users a one-time in-app update notice covering new behavior, privacy impact, and any optional permissions; the onboarding tutorial is updated alongside each release.
 
 ## Download
 
@@ -39,6 +39,7 @@ the existing app first and clears MinkLauncher OpenSource's local data.
 - Replayable onboarding from Settings, including permission setup
 - A responsive raised Home panel with a two-thirds to-do area and a one-third icon-only shortcut grid
 - A responsive, horizontally snapping preview of up to five to-dos with unfinished tasks first
+- Optional two-panel layouts on tablets and unfolded foldables, pairing Mink’s Day with Home or Home with Widgets while preserving the active page and Magic Box draft across display changes
 - Eight home shortcuts: six generic slots that accept apps or app-published shortcuts, with built-in Note, Calendar, Weather, Call, Messenger, and Files defaults, plus vCard and Top 8
 - An encrypted on-device **Virtual Contact Card** with an optional contact photo, reusable contact/social/payment links, and a standards-based vCard QR. Tap the fixed vCard shortcut to flip between the regular to-do/shortcut face and the contact card; without a selected photo, the Mink icon is used. vCard content is never uploaded.
 - Long-press shortcut edit mode with persistent drag reordering and a reset control in Settings
@@ -74,6 +75,7 @@ the existing app first and clears MinkLauncher OpenSource's local data.
 - A compact drawer containing up to eight selected apps or app-published shortcuts, with exact-slot replacement when full and a **See all** handoff to the full installed-app browser
 - An update check reads GitHub release metadata at most twice a day. When a newer release exists, a focused update card shows the installed and available versions, while a persistent Home header icon lets the user reopen it. **Remind me later** snoozes the automatic card for 24 hours. GitHub receives ordinary connection metadata but no launcher content. The check can be disabled in **Settings → About**; MinkLauncher OpenSource never downloads or installs an APK itself.
 - The all-apps browser uses a three-app, one-at-a-time carousel and a draggable A–Z arc with M at its center; the focused app supplies the screen's gradient color
+- Swipe up from Home to open See All and swipe down there to close it; keyboard-first `?` search and Top 8 remain available
 - Real installed-app icons and an alphabetical jump rail in both app pickers
 - A searchable Magic Box:
   - Physical-keyboard instant typing — press any printable key from the home screen to reveal the already-focused Magic Box with the first character preserved
@@ -105,6 +107,7 @@ the existing app first and clears MinkLauncher OpenSource's local data.
 - Delete confirmation to protect against accidental taps and back-swipe gestures
 - Animated Magic Box to-do delivery into the newest widget page
 - System, light, and dark appearance modes
+- Independent date, clock, 12/24-hour time, and live battery-percentage controls for the Home header
 - Home backgrounds can use the built-in color presets, a custom color, or a user-selected image cropped to the current display. The finished crop is stored privately on-device and applied to Android’s Home wallpaper only so system surfaces use the same image; the lock screen is not changed. Wallpaper image files are not included in portable JSON backups.
 - Mink-themed icons, original system icons, or an installed Nova/ADW-compatible icon pack selected from a visual preview in Appearance settings. Icon-pack mappings are read locally; unsupported apps fall back to their original icon.
 - A default-on **Hide Status Bar** option for Home; swipe down to reveal Android's notification shade
@@ -112,8 +115,8 @@ the existing app first and clears MinkLauncher OpenSource's local data.
 - Swipe down anywhere on the home screen to expand notifications
 - Optionally enable the minimal **Double-tap screen lock** accessibility service, then double-tap empty home-screen space to lock like the power button. The service cannot read screen content, subscribe to accessibility events, perform gestures, or collect data.
 - Local persistence uses private app storage; vCard contact details, links, and the optional contact photo are additionally protected with Android Keystore-backed encryption. No account is required. Network access is used only for the optional GitHub release-metadata check, which sends no launcher data.
-- Android per-app language support is wired to the system language setting, with a separate on-device calendar-input language preference. Additional UI and calendar languages are exposed only after their translations and parser corpus are complete.
-- Calendar input modules currently cover US English, UK English, Spanish, Simplified Chinese, and Arabic. Their additional app UI translations stay hidden until their complete resource sets receive review.
+- Android per-app language support offers 15 launcher languages on Android 13 or newer and follows the system language by default. Calendar phrases use the same language selection rather than a separate preference.
+- Calendar input is marked beta and currently parses US English, UK English, Spanish, Simplified Chinese, and Arabic entirely on-device. Unsupported or conflicting wording stops for review instead of silently creating an incorrect event.
 - Privacy-first file search through Android's MediaStore and user-selected document folders; filenames never leave the device
 - Document search uses only folders the user explicitly selects through Android's system folder picker, with an in-search setup reminder until one is selected
 - File results are grouped as Photos, Videos, Documents, and Audio, with locally generated thumbnails where Android provides them

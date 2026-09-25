@@ -767,7 +767,7 @@
     <string name="mink_goal_passed_detail">সামাজিক সময় আজকের %1$s লক্ষ্য অতিক্রম করেছে।</string>
     <string name="mink_checking_headline">Mink ট্রেইল চেক করতে থাকে</string>
     <plurals name="mink_opens_detail">
-        <item quantity="one">শেষ ঘন্টায় একবার নির্বাচিত অ্যাপ খুললে তা স্থির করা কঠিন হতে পারে।</item>
+        <item quantity="one">শেষ ঘন্টায় নির্বাচিত অ্যাপ %1$d বার খুললে তা স্থির করা কঠিন হতে পারে।</item>
         <item quantity="other">শেষ ঘন্টায় নির্বাচিত অ্যাপগুলি %1$d বার খোলার ফলে সেটেল করা কঠিন হতে পারে৷</item>
     </plurals>
     <string name="mink_pause_headline">Mink একটি বিরতি ব্যবহার করতে পারে</string>

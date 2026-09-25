@@ -767,7 +767,7 @@
     <string name="mink_goal_passed_detail">सामाजिक समय आज के %1$s लक्ष्य को पार कर गया।</string>
     <string name="mink_checking_headline">Mink निशान की जाँच करता रहता है</string>
     <plurals name="mink_opens_detail">
-        <item quantity="one">किसी चयनित ऐप को अंतिम घंटे में एक बार खोलने से उसमें व्यवस्थित होना कठिन हो सकता है।</item>
+        <item quantity="one">किसी चयनित ऐप को अंतिम घंटे में %1$d बार खोलने से उसमें व्यवस्थित होना कठिन हो सकता है।</item>
         <item quantity="other">अंतिम घंटे में चयनित ऐप्स को %1$d बार खोलने से इसमें व्यवस्थित होना कठिन हो सकता है।</item>
     </plurals>
     <string name="mink_pause_headline">Mink एक विराम का उपयोग कर सकता है</string>
