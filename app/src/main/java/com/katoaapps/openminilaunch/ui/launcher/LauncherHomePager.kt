@@ -47,6 +47,7 @@ internal fun LauncherHomePager(
     magicBoxSessionState: MagicBoxSessionState,
     openSettings: (SettingsDestination) -> Unit,
     openTodos: () -> Unit,
+    openVCardSettings: () -> Unit,
     openHub: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -58,7 +59,12 @@ internal fun LauncherHomePager(
     var settledPair by remember { mutableIntStateOf(1) }
     var initialized by remember { mutableStateOf(false) }
     var previousModeWasTwoPanel by remember { mutableStateOf(false) }
+    var profileFlipResetToken by remember { mutableIntStateOf(0) }
     val magicBoxExpanded = magicBoxSessionState.expanded
+
+    LaunchedEffect(focusedPage) {
+        profileFlipResetToken++
+    }
 
     LaunchedEffect(fold, configuration.smallestScreenWidthDp) {
         store.maybeEnableTwoPanelForUnfoldedBookDisplay(
@@ -112,6 +118,7 @@ internal fun LauncherHomePager(
 
         LaunchedEffect(homePageRequestToken) {
             if (homePageRequestToken > 0) {
+                profileFlipResetToken++
                 onFocusedPageChange(HOME_PAGE)
                 if (twoPanelActive) {
                     settledPair = 1
@@ -123,6 +130,7 @@ internal fun LauncherHomePager(
         }
 
         val goHome: () -> Unit = {
+            profileFlipResetToken++
             onFocusedPageChange(HOME_PAGE)
             scope.launch {
                 if (twoPanelActive) {
@@ -166,12 +174,14 @@ internal fun LauncherHomePager(
                 homeStateHolder = homeStateHolder,
                 magicBoxExpanded = magicBoxExpanded,
                 homeRequestToken = homeRequestToken,
+                profileFlipResetKey = profileFlipResetToken,
                 magicBoxSessionState = magicBoxSessionState,
                 onFocusPage = onFocusedPageChange,
                 onMinkDay = goToMinkDay,
                 onGoHome = goHome,
                 openSettings = openSettings,
                 openTodos = openTodos,
+                openVCardSettings = openVCardSettings,
                 openHub = openHub,
                 modifier = Modifier.fillMaxSize(),
             )
@@ -193,12 +203,14 @@ internal fun LauncherHomePager(
                             actions = actions,
                             openSettings = openSettings,
                             openTodos = openTodos,
+                            openVCardSettings = openVCardSettings,
                             openHub = openHub,
                             openMinkDay = goToMinkDay,
                             minkStatusActive = pagerState.currentPage == HOME_PAGE,
                             onMagicExpandedChange = {},
                             keyboardInputEnabled = keyboardInputEnabled,
                             homeRequestToken = homeRequestToken,
+                            profileFlipResetKey = profileFlipResetToken,
                             magicBoxSessionState = magicBoxSessionState,
                         )
                     }

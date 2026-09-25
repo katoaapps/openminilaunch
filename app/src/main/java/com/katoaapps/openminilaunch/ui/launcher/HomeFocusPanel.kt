@@ -41,7 +41,9 @@ internal fun BoxScope.HomeFocusPanel(
     availableHeight: Dp,
     focusPanelHeight: Dp,
     todoJumpToken: Int,
+    profileFlipResetKey: Int,
     openTodos: () -> Unit,
+    openVCardSettings: () -> Unit,
     onTodoCenterChanged: (Offset) -> Unit,
     onPausedApp: (String) -> Unit,
     onOpenDrawer: () -> Unit,
@@ -92,47 +94,54 @@ internal fun BoxScope.HomeFocusPanel(
         },
         tonalElevation = Dimens.dp1 * panelOpacity,
     ) {
-        Row(
-            Modifier.fillMaxSize().padding(if (qwertyHome) Dimens.dp10 else Dimens.dp14),
-            horizontalArrangement = Arrangement.spacedBy(if (qwertyHome) Dimens.dp8 else Dimens.dp12),
-        ) {
-            TodoPager(
-                store = store,
-                openTodos = openTodos,
-                jumpToken = todoJumpToken,
-                itemsPerPage = itemsPerPage,
-                textMetrics = todoTextMetrics,
-                compact = qwertyHome,
-                embedded = true,
-                contentColor = contentColor,
-                mutedContentColor = mutedColor,
-                insetColor = insetColor,
-                modifier = Modifier.weight(2f).fillMaxHeight().onGloballyPositioned { coordinates ->
-                    val origin = coordinates.positionInRoot()
-                    onTodoCenterChanged(
-                        origin + Offset(coordinates.size.width / 2f, coordinates.size.height / 2f),
-                    )
-                },
-            )
-            ShortcutGrid(
-                store = store,
-                actions = actions,
-                appAccessState = appAccessState,
-                onPausedApp = onPausedApp,
-                onUnavailableApp = { label ->
-                    Toast.makeText(
-                        context,
-                        context.getString(R.string.launcher_app_unavailable, label),
-                        Toast.LENGTH_LONG,
-                    ).show()
-                },
-                openTodos = openTodos,
-                compact = qwertyHome,
-                contentColor = contentColor,
-                itemContainerColor = contentColor.copy(alpha = .09f),
-                modifier = Modifier.weight(1f).fillMaxHeight(),
-                openDrawer = onOpenDrawer,
-            )
+        FlippableHomeProfilePanel(
+            store = store,
+            compact = qwertyHome,
+            resetKey = profileFlipResetKey,
+            openVCardSettings = openVCardSettings,
+        ) { showVCard ->
+            Row(
+                Modifier.fillMaxSize().padding(if (qwertyHome) Dimens.dp10 else Dimens.dp14),
+                horizontalArrangement = Arrangement.spacedBy(if (qwertyHome) Dimens.dp8 else Dimens.dp12),
+            ) {
+                TodoPager(
+                    store = store,
+                    openTodos = openTodos,
+                    jumpToken = todoJumpToken,
+                    itemsPerPage = itemsPerPage,
+                    textMetrics = todoTextMetrics,
+                    compact = qwertyHome,
+                    embedded = true,
+                    contentColor = contentColor,
+                    mutedContentColor = mutedColor,
+                    insetColor = insetColor,
+                    modifier = Modifier.weight(2f).fillMaxHeight().onGloballyPositioned { coordinates ->
+                        val origin = coordinates.positionInRoot()
+                        onTodoCenterChanged(
+                            origin + Offset(coordinates.size.width / 2f, coordinates.size.height / 2f),
+                        )
+                    },
+                )
+                ShortcutGrid(
+                    store = store,
+                    actions = actions,
+                    appAccessState = appAccessState,
+                    onPausedApp = onPausedApp,
+                    onUnavailableApp = { label ->
+                        Toast.makeText(
+                            context,
+                            context.getString(R.string.launcher_app_unavailable, label),
+                            Toast.LENGTH_LONG,
+                        ).show()
+                    },
+                    showVCard = showVCard,
+                    compact = qwertyHome,
+                    contentColor = contentColor,
+                    itemContainerColor = contentColor.copy(alpha = .09f),
+                    modifier = Modifier.weight(1f).fillMaxHeight(),
+                    openDrawer = onOpenDrawer,
+                )
+            }
         }
     }
 }

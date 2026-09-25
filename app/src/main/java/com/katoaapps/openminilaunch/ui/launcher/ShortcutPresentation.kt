@@ -19,7 +19,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Message
 import androidx.compose.material.icons.filled.Call
-import androidx.compose.material.icons.filled.CheckCircle
+import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.ChevronRight
 import androidx.compose.material.icons.filled.Cloud
 import androidx.compose.material.icons.filled.EditNote
@@ -45,7 +45,7 @@ internal fun Shortcut.defaultIcon(): ImageVector = when (this) {
     Shortcut.CALL -> Icons.Default.Call
     Shortcut.MESSAGE -> Icons.AutoMirrored.Filled.Message
     Shortcut.FILES -> Icons.Default.FolderOpen
-    Shortcut.TODO -> Icons.Default.CheckCircle
+    Shortcut.PROFILE -> Icons.Default.AccountCircle
     Shortcut.DRAWER -> Icons.Default.GridView
 }
 

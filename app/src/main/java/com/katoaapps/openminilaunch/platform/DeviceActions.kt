@@ -261,8 +261,8 @@ class DeviceActions(private val context: Context) {
         return discoveredClock?.let(::launchLauncherTarget) == true
     }
 
-    fun launchShortcut(shortcut: Shortcut, assignedTarget: String?, openTodos: () -> Unit, openDrawer: () -> Unit) {
-        if (!assignedTarget.isNullOrBlank() && shortcut !in listOf(Shortcut.TODO, Shortcut.DRAWER)) {
+    fun launchShortcut(shortcut: Shortcut, assignedTarget: String?, showVCard: () -> Unit, openDrawer: () -> Unit) {
+        if (!assignedTarget.isNullOrBlank() && shortcut !in listOf(Shortcut.PROFILE, Shortcut.DRAWER)) {
             launchLauncherSelection(assignedTarget)
             return
         }
@@ -270,7 +270,7 @@ class DeviceActions(private val context: Context) {
             Shortcut.NOTE -> createNote("")
             Shortcut.EVENT -> start(Intent(Intent.ACTION_INSERT).setData(CalendarContract.Events.CONTENT_URI))
             Shortcut.WEATHER -> start(Intent(Intent.ACTION_VIEW, Uri.parse("https://weather.com/")))
-            Shortcut.TODO -> openTodos()
+            Shortcut.PROFILE -> showVCard()
             Shortcut.CALL -> start(Intent(Intent.ACTION_DIAL))
             Shortcut.MESSAGE -> launchDefaultMessagesApp()
             Shortcut.FILES -> openFilesApp()
@@ -279,7 +279,7 @@ class DeviceActions(private val context: Context) {
     }
 
     fun shortcutTargetPackage(shortcut: Shortcut, assignedTarget: String?): String? {
-        if (!assignedTarget.isNullOrBlank() && shortcut !in listOf(Shortcut.TODO, Shortcut.DRAWER)) {
+        if (!assignedTarget.isNullOrBlank() && shortcut !in listOf(Shortcut.PROFILE, Shortcut.DRAWER)) {
             return resolveLauncherSelection(assignedTarget).takeUnless(LauncherTarget::isWorkProfile)?.packageName
         }
         return if (shortcut == Shortcut.MESSAGE) Telephony.Sms.getDefaultSmsPackage(context) else null

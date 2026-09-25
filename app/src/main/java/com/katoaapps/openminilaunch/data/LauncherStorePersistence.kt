@@ -7,6 +7,7 @@ import com.katoaapps.openminilaunch.model.Shortcut
 import com.katoaapps.openminilaunch.model.TodoItem
 import com.katoaapps.openminilaunch.model.WidgetGridSize
 import com.katoaapps.openminilaunch.model.configurableShortcuts
+import com.katoaapps.openminilaunch.model.shortcutFromStoredName
 import org.json.JSONArray
 import org.json.JSONObject
 
@@ -33,8 +34,7 @@ internal class LauncherStorePersistence(private val prefs: SharedPreferences) {
         val savedOrder = JSONArray(prefs.getString(SHORTCUT_ORDER_KEY, "[]") ?: "[]")
         val shortcutOrder = buildList {
             repeat(savedOrder.length()) { index ->
-                runCatching { Shortcut.valueOf(savedOrder.getString(index)) }
-                    .getOrNull()
+                shortcutFromStoredName(savedOrder.optString(index))
                     ?.let { if (it !in this) add(it) }
             }
             Shortcut.entries.forEach { if (it !in this) add(it) }
@@ -44,8 +44,7 @@ internal class LauncherStorePersistence(private val prefs: SharedPreferences) {
         val confirmedChoices = buildList {
             addAll(shortcutTargets.keys.filter { it in configurableShortcuts })
             repeat(confirmed.length()) { index ->
-                runCatching { Shortcut.valueOf(confirmed.getString(index)) }
-                    .getOrNull()
+                shortcutFromStoredName(confirmed.optString(index))
                     ?.takeIf { it in configurableShortcuts }
                     ?.let { if (it !in this) add(it) }
             }

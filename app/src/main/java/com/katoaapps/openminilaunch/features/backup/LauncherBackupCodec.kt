@@ -8,6 +8,8 @@ import com.katoaapps.openminilaunch.model.MinkAppPauseMode
 import com.katoaapps.openminilaunch.model.normalizeHomePanelTransparency
 import com.katoaapps.openminilaunch.model.PinShortcutRequestPresentation
 import com.katoaapps.openminilaunch.model.Shortcut
+import com.katoaapps.openminilaunch.model.configurableShortcuts
+import com.katoaapps.openminilaunch.model.shortcutFromStoredName
 import com.katoaapps.openminilaunch.model.ThemePreference
 import com.katoaapps.openminilaunch.model.TodoItem
 import org.json.JSONArray
@@ -35,6 +37,7 @@ internal object LauncherBackupCodec {
                 })
             }
         })
+        backup.profile?.let { put("profile", ProfileBackupCodec.encode(it, backup.profileLinks)) }
         put("notIncluded", PORTABILITY_EXCLUSIONS.stringsJsonArray())
     }.toString(2)
 
@@ -44,6 +47,7 @@ internal object LauncherBackupCodec {
         require(root.optInt("schemaVersion", -1) in 1..LAUNCHER_BACKUP_SCHEMA_VERSION) {
             "Unsupported OpenMink backup version"
         }
+        val profile = root.optJSONObject("profile")?.let(ProfileBackupCodec::decode)
 
         return LauncherBackup(
             sourceAppVersion = root.optString("sourceAppVersion").safeText(80),
@@ -51,6 +55,8 @@ internal object LauncherBackupCodec {
             launcher = decodeLauncher(root.getJSONObject("launcher")),
             settings = decodeSettings(root.getJSONObject("settings")),
             todos = decodeTodos(root.optJSONArray("todos") ?: JSONArray()),
+            profile = profile?.first,
+            profileLinks = profile?.second.orEmpty(),
         )
     }
 
@@ -71,14 +77,15 @@ internal object LauncherBackupCodec {
                 targetJson.optString(shortcut.name).safeTarget()?.let { put(shortcut, it) }
             }
         }
-        val savedOrder = json.optJSONArray("shortcutOrder").enumValues<Shortcut>()
+        val savedOrder = json.optJSONArray("shortcutOrder").shortcutValues()
         val shortcutOrder = (savedOrder + Shortcut.entries).distinct()
 
         return LauncherBackupLayout(
             shortcutTargets = shortcutTargets,
             shortcutOrder = shortcutOrder,
             confirmedShortcutChoices = json.optJSONArray("confirmedShortcutChoices")
-                .enumValues<Shortcut>()
+                .shortcutValues()
+                .filter { it in configurableShortcuts }
                 .distinct(),
             drawerTargets = json.optJSONArray("drawerTargets").safeTargets(),
             libraryShortcutTargets = json.optJSONArray("libraryShortcutTargets").safeTargets(),
@@ -93,6 +100,7 @@ internal object LauncherBackupCodec {
             settings.twoPanelModeForLargeDisplays?.let { put("twoPanelModeForLargeDisplays", it) }
             put("showClock", settings.showClock)
             put("showDate", settings.showDate)
+            put("showBatteryPercentage", settings.showBatteryPercentage)
             put("use24HourClock", settings.use24HourClock)
             put("homePanelColorArgb", settings.homePanelColorArgb)
             put("homePanelTransparency", settings.homePanelTransparency)
@@ -136,6 +144,7 @@ internal object LauncherBackupCodec {
             } else null,
             showClock = appearance.optBoolean("showClock", false),
             showDate = appearance.optBoolean("showDate", true),
+            showBatteryPercentage = appearance.optBoolean("showBatteryPercentage", false),
             use24HourClock = appearance.optBoolean("use24HourClock", false),
             homePanelColorArgb = appearance.optInt("homePanelColorArgb"),
             homePanelTransparency = normalizeHomePanelTransparency(
@@ -189,6 +198,14 @@ internal object LauncherBackupCodec {
         }
     }
 
+    private fun JSONArray?.shortcutValues(): List<Shortcut> = buildList {
+        val source = this@shortcutValues ?: return@buildList
+        repeat(minOf(source.length(), MAX_ENUM_VALUES)) { index ->
+            val value = shortcutFromStoredName(source.optString(index))
+            value?.let { if (it !in this) add(it) }
+        }
+    }
+
     private inline fun <reified T : Enum<T>> JSONObject.enumValue(key: String, fallback: T): T =
         runCatching { enumValueOf<T>(optString(key)) }.getOrDefault(fallback)
 
@@ -235,6 +252,7 @@ internal object LauncherBackupCodec {
         "wallpaperImage",
         "recentQueryHistory",
         "demoData",
+        "profilePhoto",
         "updateCacheAndReminders",
     )
 

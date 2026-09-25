@@ -54,6 +54,7 @@ import com.katoaapps.openminilaunch.ui.onboarding.FeatureUpdateDialog
 import com.katoaapps.openminilaunch.ui.onboarding.OnboardingScreen
 import com.katoaapps.openminilaunch.ui.onboarding.ShortcutSetupDialog
 import com.katoaapps.openminilaunch.ui.onboarding.UsageAccessDisclosureDialog
+import com.katoaapps.openminilaunch.ui.profile.openVirtualContactCard
 import com.katoaapps.openminilaunch.ui.settings.NotificationAccessDisclosureDialog
 import com.katoaapps.openminilaunch.ui.settings.SettingsDestination
 import com.katoaapps.openminilaunch.ui.settings.SettingsScreen
@@ -71,8 +72,9 @@ import com.katoaapps.openminilaunch.ui.theme.Rust
 import com.katoaapps.openminilaunch.ui.theme.withAppBackground
 import com.katoaapps.openminilaunch.ui.todos.TodosScreen
 
-private const val PREVIOUS_FEATURE_UPDATE_ID = "calendar_language_v1"
-private const val FEATURE_UPDATE_ID = "two_panel_large_display_v1"
+private const val LEGACY_CALENDAR_UPDATE_ID = "calendar_language_v1"
+private const val PREVIOUS_FEATURE_UPDATE_ID = "two_panel_large_display_v1"
+private const val FEATURE_UPDATE_ID = "profile_vcard_v1"
 
 @Composable
 internal fun MiniLaunchApp(
@@ -253,6 +255,7 @@ internal fun MiniLaunchApp(
                         actions = actions,
                         onFinish = {
                             store.completeOnboarding()
+                            store.markUpdateSeen(LEGACY_CALENDAR_UPDATE_ID)
                             store.markUpdateSeen(PREVIOUS_FEATURE_UPDATE_ID)
                             store.markUpdateSeen(FEATURE_UPDATE_ID)
                             showTutorial = false
@@ -302,6 +305,9 @@ internal fun MiniLaunchApp(
                                 screen = Screen.SETTINGS
                             },
                             openTodos = { screen = Screen.TODOS },
+                            openVCardSettings = {
+                                openVirtualContactCard(context)
+                            },
                             openHub = { screen = Screen.HUB },
                             modifier = Modifier.fillMaxSize(),
                         )
@@ -364,15 +370,17 @@ internal fun MiniLaunchApp(
         }
         if (showUpdateNotice && !showTutorial) {
             FeatureUpdateDialog(
-                showCalendarHighlights = !store.hasSeenUpdate(PREVIOUS_FEATURE_UPDATE_ID),
-                onOpenAppearance = {
+                showCalendarHighlights = !store.hasSeenUpdate(LEGACY_CALENDAR_UPDATE_ID),
+                showTwoPanelHighlights = !store.hasSeenUpdate(PREVIOUS_FEATURE_UPDATE_ID),
+                onOpenVCardSettings = {
+                    store.markUpdateSeen(LEGACY_CALENDAR_UPDATE_ID)
                     store.markUpdateSeen(PREVIOUS_FEATURE_UPDATE_ID)
                     store.markUpdateSeen(FEATURE_UPDATE_ID)
                     showUpdateNotice = false
-                    settingsDestination = SettingsDestination.APPEARANCE
-                    screen = Screen.SETTINGS
+                    openVirtualContactCard(context)
                 },
                 onReviewTutorial = {
+                    store.markUpdateSeen(LEGACY_CALENDAR_UPDATE_ID)
                     store.markUpdateSeen(PREVIOUS_FEATURE_UPDATE_ID)
                     store.markUpdateSeen(FEATURE_UPDATE_ID)
                     showUpdateNotice = false
@@ -380,6 +388,7 @@ internal fun MiniLaunchApp(
                     showTutorial = true
                 },
                 onNotNow = {
+                    store.markUpdateSeen(LEGACY_CALENDAR_UPDATE_ID)
                     store.markUpdateSeen(PREVIOUS_FEATURE_UPDATE_ID)
                     store.markUpdateSeen(FEATURE_UPDATE_ID)
                     showUpdateNotice = false

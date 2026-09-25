@@ -2,7 +2,11 @@
 
 MinkLauncher OpenSource does not operate an application server, include analytics or advertising SDKs, create an account, or upload launcher content or personal data. Its normal Internet permission is used only for the optional GitHub release-metadata check described below.
 
-The app stores its settings, to-dos, selected document-folder references, optional cropped Home wallpaper, widget configuration, daily well-being preferences, and five most recent plain-text queries locally on the device. Android cloud backup is disabled for the application.
+The app stores its settings, to-dos, selected document-folder references, optional cropped Home wallpaper, widget configuration, daily well-being preferences, five most recent plain-text queries, and optional Virtual Contact Card locally on the device. vCard contact details, links, and photo are encrypted with an Android Keystore-backed key. Android cloud backup is disabled for the application.
+
+vCard QR codes are generated entirely on-device and contain only the identity fields and links selected by the user. The contact photo and fallback Mink icon are not embedded. The system Photo Picker provides an optional photo without granting MinkLauncher broad photo-library access.
+
+An explicit portable backup includes vCard contact details and links as readable JSON so the user can move them between distributions. The export screen warns about this boundary. Contact photos are excluded, and restoring a backup returns to the Mink icon until another photo is selected.
 
 Optional permissions are used as follows:
 

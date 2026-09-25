@@ -13,6 +13,7 @@ import com.katoaapps.openminilaunch.ui.components.SettingsRow
 import com.katoaapps.openminilaunch.ui.components.SettingsSwitchRow
 import com.katoaapps.openminilaunch.ui.launcher.ShortcutAssignmentRow
 import com.katoaapps.openminilaunch.ui.launcher.displayLabel
+import com.katoaapps.openminilaunch.ui.profile.openVirtualContactCard
 import com.katoaapps.openminilaunch.ui.theme.Dimens
 import com.katoaapps.openminilaunch.ui.theme.Muted
 import com.katoaapps.openminilaunch.ui.theme.Sage
@@ -25,6 +26,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.AddToHomeScreen
 import androidx.compose.material.icons.filled.Apps
+import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.GridView
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Palette
@@ -69,6 +71,11 @@ internal fun LauncherSettingsPage(
             Icons.Default.Home,
             onClick = requestHomeRole,
         )
+        SettingsRow(
+            stringResource(R.string.profile),
+            stringResource(R.string.vcard_settings_summary),
+            Icons.Default.AccountCircle,
+        ) { openVirtualContactCard(context) }
         HorizontalDivider(color = Sage)
         SectionLabel(stringResource(R.string.customize))
         SettingsRow(
@@ -107,7 +114,6 @@ internal fun AppearanceSettingsPage(
         wallpaperToCrop = uri
     }
     SettingsPage(stringResource(R.string.appearance), goBack) {
-        ThemeChooser(store.themePreference, store::setTheme)
         ClockAppearanceSettings(store)
         SettingsSwitchRow(
             title = stringResource(R.string.hide_status_bar),
@@ -129,6 +135,7 @@ internal fun AppearanceSettingsPage(
         )
         SectionLabel(stringResource(R.string.visual_style))
         IconPackAppearanceSettings(store, onApplied = onIconStyleApplied)
+        ThemeChooser(store.themePreference, store::setTheme)
         HomePanelColorSetting(
             selectedArgb = store.effectiveHomePanelColorArgb,
             transparency = store.homePanelTransparency,

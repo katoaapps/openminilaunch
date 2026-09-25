@@ -27,6 +27,7 @@ import com.katoaapps.openminilaunch.features.backup.LauncherBackup
 import com.katoaapps.openminilaunch.features.backup.LauncherBackupFile
 import com.katoaapps.openminilaunch.features.backup.createPortableBackup
 import com.katoaapps.openminilaunch.features.backup.restorePortableBackup
+import com.katoaapps.openminilaunch.features.profile.ProfileState
 import com.katoaapps.openminilaunch.ui.components.SettingsRow
 import com.katoaapps.openminilaunch.ui.theme.Dimens
 import com.katoaapps.openminilaunch.ui.theme.Muted
@@ -45,6 +46,7 @@ internal fun BackupRestoreSettingsPage(
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
     var pendingImport by remember { mutableStateOf<LauncherBackup?>(null) }
+    var confirmProfileExport by remember { mutableStateOf(false) }
     val exportSuccess = stringResource(R.string.backup_exported)
     val exportFailure = stringResource(R.string.backup_export_failed)
     val importFailure = stringResource(R.string.backup_import_failed)
@@ -74,6 +76,10 @@ internal fun BackupRestoreSettingsPage(
             }
         }
     }
+    val beginExport = {
+        val date = SimpleDateFormat("yyyy-MM-dd", Locale.US).format(Date())
+        createBackup.launch(context.getString(R.string.backup_filename, date))
+    }
 
     SettingsPage(stringResource(R.string.backup_and_restore), goBack) {
         Text(
@@ -86,8 +92,8 @@ internal fun BackupRestoreSettingsPage(
             subtitle = stringResource(R.string.export_backup_description),
             icon = Icons.Default.FileUpload,
             onClick = {
-                val date = SimpleDateFormat("yyyy-MM-dd", Locale.US).format(Date())
-                createBackup.launch(context.getString(R.string.backup_filename, date))
+                if (store.profileRepository.state is ProfileState.Ready) confirmProfileExport = true
+                else beginExport()
             },
         )
         SettingsRow(
@@ -101,6 +107,33 @@ internal fun BackupRestoreSettingsPage(
             color = Muted,
             fontSize = Dimens.sp11,
             modifier = Modifier.padding(top = Dimens.dp4),
+        )
+        Text(
+            stringResource(R.string.profile_backup_privacy_warning),
+            color = Muted,
+            fontSize = Dimens.sp11,
+            modifier = Modifier.padding(top = Dimens.dp4),
+        )
+    }
+
+    if (confirmProfileExport) {
+        AlertDialog(
+            onDismissRequest = { confirmProfileExport = false },
+            title = { Text(stringResource(R.string.profile_backup_export_title)) },
+            text = { Text(stringResource(R.string.profile_backup_privacy_warning)) },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        confirmProfileExport = false
+                        beginExport()
+                    },
+                ) { Text(stringResource(R.string.continue_action)) }
+            },
+            dismissButton = {
+                TextButton(onClick = { confirmProfileExport = false }) {
+                    Text(stringResource(R.string.cancel))
+                }
+            },
         )
     }
 

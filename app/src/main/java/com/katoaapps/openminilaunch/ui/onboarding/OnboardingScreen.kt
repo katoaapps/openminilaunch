@@ -209,6 +209,11 @@ internal fun OnboardingScreen(store: LauncherStore, actions: DeviceActions, onFi
                             Text(stringResource(R.string.todo_onboarding_intro), fontSize = Dimens.sp18)
                             OnboardingPoint(Icons.Default.Swipe, stringResource(R.string.swipe_widget), stringResource(R.string.swipe_widget_description))
                             OnboardingPoint(Icons.Default.TouchApp, stringResource(R.string.tap_widget), stringResource(R.string.tap_widget_description))
+                            OnboardingPoint(
+                                Icons.Default.AccountCircle,
+                                stringResource(R.string.profile_onboarding_title),
+                                stringResource(R.string.profile_onboarding_description),
+                            )
                             OnboardingPoint(Icons.Default.IosShare, stringResource(R.string.take_list_with_you), stringResource(R.string.take_list_with_you_description))
                             OnboardingPoint(Icons.Default.CheckCircle, stringResource(R.string.keep_context), stringResource(R.string.keep_context_description))
                         }

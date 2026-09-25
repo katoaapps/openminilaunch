@@ -39,7 +39,8 @@ the existing app first and clears MinkLauncher OpenSource's local data.
 - Replayable onboarding from Settings, including permission setup
 - A responsive raised Home panel with a two-thirds to-do area and a one-third icon-only shortcut grid
 - A responsive, horizontally snapping preview of up to five to-dos with unfinished tasks first
-- Eight home shortcuts: six generic slots that accept apps or app-published shortcuts, with built-in Note, Calendar, Weather, Call, Messenger, and Files defaults, plus To-do and Top 8
+- Eight home shortcuts: six generic slots that accept apps or app-published shortcuts, with built-in Note, Calendar, Weather, Call, Messenger, and Files defaults, plus vCard and Top 8
+- An encrypted on-device **Virtual Contact Card** with an optional contact photo, reusable contact/social/payment links, and a standards-based vCard QR. Tap the fixed vCard shortcut to flip between the regular to-do/shortcut face and the contact card; without a selected photo, the Mink icon is used. vCard content is never uploaded.
 - Long-press shortcut edit mode with persistent drag reordering and a reset control in Settings
 - Profile-aware app and shortcut discovery shows accessible work-profile targets with a work badge; Mink’s Day measurements and launcher barriers remain limited to personal-profile apps
 - Android Add to Home screen requests can be placed in a Home slot or Top 8 using a full page or confirmation sheet, with legacy shortcut requests supported for older apps and devices
@@ -99,7 +100,7 @@ the existing app first and clears MinkLauncher OpenSource's local data.
 - AI setup includes a visible catalog of Mink-reviewed providers: ChatGPT, Claude, Perplexity, Microsoft Copilot, DeepSeek, Meta AI, Google Gemini, and Lumo. Installed providers use their Android label and icon; unavailable providers use bundled identification artwork and link to the provider's own website instead of assuming Google Play is the only installation source. An explicit fallback list also exposes other installed apps accepting shared text.
 - Android exposes the selected system assistant role, but not a universal "AI app" capability. Most AI handoffs therefore use Android's `ACTION_SEND` text-sharing contract. Lumo's Play and no-GMS builds do not expose that contract, so Mink clearly labels them as copy-and-paste providers: tapping AI copies the query to Android's system clipboard and opens Lumo for the user to paste it manually.
 - AI handoff does not call AI APIs, submit prompts silently, or render responses inside MinkLauncher OpenSource
-- A versioned local JSON backup can move portable settings, launcher layout, app choices, icon preferences, Mink’s Day configuration, and to-dos between F-Droid and GitHub installs. Android permissions and roles, accessibility or notification access, widgets, and document-folder grants are deliberately excluded and must be configured again.
+- A versioned local JSON backup can move portable settings, launcher layout, app choices, icon preferences, Mink’s Day configuration, to-dos, and vCard contact details/links between F-Droid and GitHub installs. Exported backup JSON is readable and can contain those contact details; the encrypted local contact photo is deliberately excluded. Android permissions and roles, accessibility or notification access, widgets, and document-folder grants are also excluded and must be configured again.
 - Full to-do management: add, check, edit, delete, reorder, send to a notes app, or save as PDF through Android’s document picker
 - Delete confirmation to protect against accidental taps and back-swipe gestures
 - Animated Magic Box to-do delivery into the newest widget page
@@ -110,7 +111,7 @@ the existing app first and clears MinkLauncher OpenSource's local data.
 - An optional **Align Pill to Bottom** setting keeps the Home panel within easier reach on tall slab phones, directly above the Magic Box
 - Swipe down anywhere on the home screen to expand notifications
 - Optionally enable the minimal **Double-tap screen lock** accessibility service, then double-tap empty home-screen space to lock like the power button. The service cannot read screen content, subscribe to accessibility events, perform gestures, or collect data.
-- Local persistence via SharedPreferences; no account is required. Network access is used only for the optional GitHub release-metadata check, which sends no launcher data.
+- Local persistence uses private app storage; vCard contact details, links, and the optional contact photo are additionally protected with Android Keystore-backed encryption. No account is required. Network access is used only for the optional GitHub release-metadata check, which sends no launcher data.
 - Android per-app language support is wired to the system language setting, with a separate on-device calendar-input language preference. Additional UI and calendar languages are exposed only after their translations and parser corpus are complete.
 - Calendar input modules currently cover US English, UK English, Spanish, Simplified Chinese, and Arabic. Their additional app UI translations stay hidden until their complete resource sets receive review.
 - Privacy-first file search through Android's MediaStore and user-selected document folders; filenames never leave the device

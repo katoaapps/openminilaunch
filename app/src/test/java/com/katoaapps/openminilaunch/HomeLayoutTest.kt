@@ -60,6 +60,6 @@ class HomeLayoutTest {
         assertEquals(6, configurableShortcuts.size)
         assertEquals(R.string.shortcut_note, Shortcut.NOTE.labelRes)
         assertEquals(R.string.shortcut_files, Shortcut.FILES.labelRes)
-        assertEquals(R.string.shortcut_todo, Shortcut.TODO.labelRes)
+        assertEquals(R.string.shortcut_profile, Shortcut.PROFILE.labelRes)
     }
 }

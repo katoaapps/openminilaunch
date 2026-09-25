@@ -22,6 +22,12 @@ internal fun ClockAppearanceSettings(store: LauncherStore) {
         checked = store.showClock,
         onCheckedChange = store::updateShowClock,
     )
+    SettingsSwitchRow(
+        title = stringResource(R.string.show_battery_percentage),
+        subtitle = stringResource(R.string.show_battery_percentage_description),
+        checked = store.showBatteryPercentage,
+        onCheckedChange = store::updateShowBatteryPercentage,
+    )
     if (store.showClock) {
         SettingsSwitchRow(
             title = stringResource(R.string.use_24_hour_clock),

@@ -16,6 +16,9 @@ import androidx.compose.material.icons.automirrored.filled.EventNote
 import androidx.compose.material.icons.filled.Folder
 import androidx.compose.material.icons.filled.FolderOpen
 import androidx.compose.material.icons.filled.Pets
+import androidx.compose.material.icons.filled.QrCode2
+import androidx.compose.material.icons.filled.TouchApp
+import androidx.compose.material.icons.filled.Checklist
 import androidx.compose.material.icons.filled.TabletAndroid
 import androidx.compose.material.icons.filled.Translate
 import androidx.compose.material.icons.filled.Visibility
@@ -43,7 +46,8 @@ import com.katoaapps.openminilaunch.ui.theme.Rust
 @Composable
 internal fun FeatureUpdateDialog(
     showCalendarHighlights: Boolean,
-    onOpenAppearance: () -> Unit,
+    showTwoPanelHighlights: Boolean,
+    onOpenVCardSettings: () -> Unit,
     onReviewTutorial: () -> Unit,
     onNotNow: () -> Unit,
 ) {
@@ -59,15 +63,37 @@ internal fun FeatureUpdateDialog(
                 verticalArrangement = Arrangement.spacedBy(Dimens.dp14),
             ) {
                 Text(
-                    stringResource(R.string.update_notice_two_panel_heading),
+                    stringResource(R.string.update_notice_profile_heading),
                     fontSize = Dimens.sp18,
                     fontWeight = FontWeight.Bold,
                 )
                 UpdatePoint(
-                    Icons.Default.TabletAndroid,
-                    stringResource(R.string.update_notice_two_panel_title),
-                    stringResource(R.string.update_notice_two_panel_description),
+                    Icons.Default.QrCode2,
+                    stringResource(R.string.update_notice_profile_title),
+                    stringResource(R.string.update_notice_profile_description),
                 )
+                UpdatePoint(
+                    Icons.Default.TouchApp,
+                    stringResource(R.string.update_notice_profile_flip_title),
+                    stringResource(R.string.update_notice_profile_flip_description),
+                )
+                UpdatePoint(
+                    Icons.Default.Checklist,
+                    stringResource(R.string.update_notice_profile_todo_title),
+                    stringResource(R.string.update_notice_profile_todo_description),
+                )
+                if (showTwoPanelHighlights) {
+                    Text(
+                        stringResource(R.string.update_notice_two_panel_heading),
+                        fontSize = Dimens.sp18,
+                        fontWeight = FontWeight.Bold,
+                    )
+                    UpdatePoint(
+                        Icons.Default.TabletAndroid,
+                        stringResource(R.string.update_notice_two_panel_title),
+                        stringResource(R.string.update_notice_two_panel_description),
+                    )
+                }
                 if (showCalendarHighlights) {
                     Text(
                         stringResource(R.string.update_notice_calendar_heading),
@@ -84,7 +110,7 @@ internal fun FeatureUpdateDialog(
                 }
             }
         },
-        confirmButton = { Button(onClick = onOpenAppearance) { Text(stringResource(R.string.open_appearance_settings)) } },
+        confirmButton = { Button(onClick = onOpenVCardSettings) { Text(stringResource(R.string.open_profile)) } },
         dismissButton = { TextButton(onClick = onNotNow) { Text(stringResource(R.string.not_now)) } },
     )
 }

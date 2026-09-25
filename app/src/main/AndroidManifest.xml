@@ -165,6 +165,14 @@
             </intent-filter>
         </receiver>
         <activity
+            android:name=".ui.profile.VirtualContactCardActivity"
+            android:excludeFromRecents="false"
+            android:exported="false"
+            android:label="@string/profile"
+            android:launchMode="singleTop"
+            android:taskAffinity="${applicationId}.vcard"
+            android:windowSoftInputMode="adjustResize" />
+        <activity
             android:name=".ui.launcher.MainActivity"
             android:clearTaskOnLaunch="true"
             android:excludeFromRecents="true"

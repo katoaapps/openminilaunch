@@ -2,44 +2,51 @@ package com.katoaapps.openminilaunch.features.backup
 
 import com.katoaapps.openminilaunch.data.LauncherStore
 import com.katoaapps.openminilaunch.model.IconSource
+import com.katoaapps.openminilaunch.features.profile.ProfileState
 
-internal fun LauncherStore.createPortableBackup(appVersion: String): LauncherBackup = LauncherBackup(
-    sourceAppVersion = appVersion,
-    exportedAtMillis = System.currentTimeMillis(),
-    launcher = LauncherBackupLayout(
-        shortcutTargets = shortcutTargets.toMap(),
-        shortcutOrder = shortcutOrder.toList(),
-        confirmedShortcutChoices = confirmedShortcutChoices.toList(),
-        drawerTargets = drawerTargets.toList(),
-        libraryShortcutTargets = libraryShortcutTargets.toList(),
-    ),
-    settings = LauncherBackupSettings(
-        themePreference = themePreference,
-        hideStatusBar = hideStatusBar,
-        alignHomePanelBottom = alignHomePanelBottom,
-        twoPanelModeForLargeDisplays = twoPanelModeForLargeDisplays,
-        showClock = showClock,
-        showDate = showDate,
-        use24HourClock = use24HourClock,
-        homePanelColorArgb = homePanelColorArgb,
-        homePanelTransparency = homePanelTransparency,
-        appBackgroundColorArgb = appBackgroundColorArgb,
-        iconAppearance = iconAppearance,
-        openSoftwareKeyboardOnHome = openSoftwareKeyboardOnHome,
-        includeAppShortcutsInDiscovery = includeAppShortcutsInDiscovery,
-        sendMessagesAutomatically = sendMessagesAutomatically,
-        preferredMessagingPackage = preferredMessagingPackage,
-        preferredAiPackage = preferredAiPackage,
-        preferredWebPackage = preferredWebPackage,
-        usesAutomaticSocialApps = usesAutomaticSocialApps,
-        socialPackages = socialPackages.toList(),
-        socialGoalHours = socialGoalHours,
-        minkAppPauseMode = minkAppPauseMode,
-        githubUpdateChecksEnabled = githubUpdateChecksEnabled,
-        pinShortcutRequestPresentation = pinShortcutRequestPresentation,
-    ),
-    todos = savedTodosForBackup,
-)
+internal fun LauncherStore.createPortableBackup(appVersion: String): LauncherBackup {
+    val profile = profileRepository.state as? ProfileState.Ready
+    return LauncherBackup(
+        sourceAppVersion = appVersion,
+        exportedAtMillis = System.currentTimeMillis(),
+        launcher = LauncherBackupLayout(
+            shortcutTargets = shortcutTargets.toMap(),
+            shortcutOrder = shortcutOrder.toList(),
+            confirmedShortcutChoices = confirmedShortcutChoices.toList(),
+            drawerTargets = drawerTargets.toList(),
+            libraryShortcutTargets = libraryShortcutTargets.toList(),
+        ),
+        settings = LauncherBackupSettings(
+            themePreference = themePreference,
+            hideStatusBar = hideStatusBar,
+            alignHomePanelBottom = alignHomePanelBottom,
+            twoPanelModeForLargeDisplays = twoPanelModeForLargeDisplays,
+            showClock = showClock,
+            showDate = showDate,
+            showBatteryPercentage = showBatteryPercentage,
+            use24HourClock = use24HourClock,
+            homePanelColorArgb = homePanelColorArgb,
+            homePanelTransparency = homePanelTransparency,
+            appBackgroundColorArgb = appBackgroundColorArgb,
+            iconAppearance = iconAppearance,
+            openSoftwareKeyboardOnHome = openSoftwareKeyboardOnHome,
+            includeAppShortcutsInDiscovery = includeAppShortcutsInDiscovery,
+            sendMessagesAutomatically = sendMessagesAutomatically,
+            preferredMessagingPackage = preferredMessagingPackage,
+            preferredAiPackage = preferredAiPackage,
+            preferredWebPackage = preferredWebPackage,
+            usesAutomaticSocialApps = usesAutomaticSocialApps,
+            socialPackages = socialPackages.toList(),
+            socialGoalHours = socialGoalHours,
+            minkAppPauseMode = minkAppPauseMode,
+            githubUpdateChecksEnabled = githubUpdateChecksEnabled,
+            pinShortcutRequestPresentation = pinShortcutRequestPresentation,
+        ),
+        todos = savedTodosForBackup,
+        profile = profile?.card?.copy(hasPortrait = false),
+        profileLinks = profile?.links.orEmpty(),
+    )
+}
 
 internal fun LauncherStore.restorePortableBackup(backup: LauncherBackup) {
     if (demoSearchDataEnabled) toggleDemoSearchData()
@@ -52,6 +59,7 @@ internal fun LauncherStore.restorePortableBackup(backup: LauncherBackup) {
         libraryShortcutTargets = backup.launcher.libraryShortcutTargets,
     )
     replaceTodosFromBackup(backup.todos)
+    profileRepository.replaceFromBackup(backup.profile, backup.profileLinks)
 
     setTheme(settings.themePreference)
     updateHideStatusBar(settings.hideStatusBar)
@@ -59,6 +67,7 @@ internal fun LauncherStore.restorePortableBackup(backup: LauncherBackup) {
     settings.twoPanelModeForLargeDisplays?.let(::updateTwoPanelModeForLargeDisplays)
     updateShowClock(settings.showClock)
     updateShowDate(settings.showDate)
+    updateShowBatteryPercentage(settings.showBatteryPercentage)
     updateUse24HourClock(settings.use24HourClock)
     setHomePanelColor(settings.homePanelColorArgb)
     setHomePanelTransparency(settings.homePanelTransparency)

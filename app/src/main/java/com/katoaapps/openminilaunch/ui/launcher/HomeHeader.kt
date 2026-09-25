@@ -75,6 +75,18 @@ internal fun HomeHeader(
                 onClick = onMinkDay,
                 modifier = Modifier.size(actionSize),
             )
+            if (store.showBatteryPercentage) {
+                rememberBatteryPercentageText()?.let { batteryPercentage ->
+                    Text(
+                        batteryPercentage,
+                        modifier = Modifier.padding(end = Dimens.dp8),
+                        color = headerContentColor,
+                        fontSize = Dimens.sp13,
+                        fontWeight = FontWeight.Bold,
+                        maxLines = 1,
+                    )
+                }
+            }
             if (store.showDate || store.showClock) {
                 Column(
                     modifier = Modifier.weight(1f).clickable {

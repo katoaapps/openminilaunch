@@ -2,6 +2,7 @@ package com.katoaapps.openminilaunch.data
 
 import com.katoaapps.openminilaunch.features.demo.DemoHomeProfile
 import com.katoaapps.openminilaunch.features.appearance.HomeWallpaperRepository
+import com.katoaapps.openminilaunch.features.profile.ProfileRepository
 import com.katoaapps.openminilaunch.model.*
 
 import android.content.Context
@@ -27,6 +28,7 @@ class LauncherStore private constructor(context: Context) {
     private val pinShortcutPreferences = PinShortcutPreferenceStore(prefs)
     private val appDiscoveryPreferences = AppDiscoveryPreferenceStore(prefs)
     private val homeWallpaperRepository = HomeWallpaperRepository(appContext)
+    internal val profileRepository = ProfileRepository(appContext)
     private val demoPreferences: DemoPreferenceStore = DemoPreferenceStore(appContext, prefs, todoStore)
     internal val demoHomeProfile get() = demoPreferences.profile
     val todos get() = todoStore.items
@@ -56,6 +58,7 @@ class LauncherStore private constructor(context: Context) {
     val twoPanelModeForLargeDisplays get() = appearancePreferences.twoPanelModeForLargeDisplays
     val showClock get() = appearancePreferences.showClock
     val showDate get() = appearancePreferences.showDate
+    val showBatteryPercentage get() = appearancePreferences.showBatteryPercentage
     val use24HourClock get() = appearancePreferences.use24HourClock
     val homePanelColorArgb get() = appearancePreferences.homePanelColorArgb
     val homePanelTransparency get() = appearancePreferences.homePanelTransparency
@@ -293,6 +296,10 @@ class LauncherStore private constructor(context: Context) {
 
     fun updateShowDate(enabled: Boolean) {
         appearancePreferences.updateShowDate(enabled)
+    }
+
+    fun updateShowBatteryPercentage(enabled: Boolean) {
+        appearancePreferences.updateShowBatteryPercentage(enabled)
     }
 
     fun updateUse24HourClock(enabled: Boolean) {

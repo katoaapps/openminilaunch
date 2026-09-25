@@ -39,6 +39,8 @@ internal class AppearancePreferenceStore(
         private set
     var showDate by mutableStateOf(prefs.getBoolean(SHOW_DATE_KEY, true))
         private set
+    var showBatteryPercentage by mutableStateOf(prefs.getBoolean(SHOW_BATTERY_PERCENTAGE_KEY, false))
+        private set
     var use24HourClock by mutableStateOf(
         prefs.getBoolean(USE_24_HOUR_CLOCK_KEY, DateFormat.is24HourFormat(context)),
     )
@@ -124,6 +126,11 @@ internal class AppearancePreferenceStore(
         prefs.edit().putBoolean(SHOW_DATE_KEY, enabled).apply()
     }
 
+    fun updateShowBatteryPercentage(enabled: Boolean) {
+        showBatteryPercentage = enabled
+        prefs.edit().putBoolean(SHOW_BATTERY_PERCENTAGE_KEY, enabled).apply()
+    }
+
     fun updateUse24HourClock(enabled: Boolean) {
         use24HourClock = enabled
         prefs.edit().putBoolean(USE_24_HOUR_CLOCK_KEY, enabled).apply()
@@ -175,6 +182,7 @@ internal class AppearancePreferenceStore(
         const val HOME_PANEL_TRANSPARENCY_KEY = "home_panel_transparency"
         const val SHOW_CLOCK_KEY = "show_clock"
         const val SHOW_DATE_KEY = "show_date"
+        const val SHOW_BATTERY_PERCENTAGE_KEY = "show_battery_percentage"
         const val THEME_PREFERENCE_KEY = "theme_preference"
         const val TWO_PANEL_AUTO_PENDING_KEY = "two_panel_auto_pending"
         const val TWO_PANEL_MODE_FOR_LARGE_DISPLAYS_KEY = "two_panel_mode_for_large_displays"
