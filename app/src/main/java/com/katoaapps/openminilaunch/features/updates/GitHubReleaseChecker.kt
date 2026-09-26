@@ -5,8 +5,10 @@ import java.net.URL
 
 internal const val GITHUB_LATEST_APK_URL =
     "https://github.com/katoaapps/openminilaunch/releases/latest/download/MinkLauncher-OpenSource.apk"
+internal const val GITHUB_RELEASES_URL =
+    "https://github.com/katoaapps/openminilaunch/releases"
 internal const val FDROID_PACKAGE_URL =
-    "https://f-droid.org/packages/com.katoaapps.openminilaunch/"
+    "https://f-droid.org/en/packages/com.katoaapps.openminilaunch/"
 
 private const val GITHUB_LATEST_RELEASE_API =
     "https://api.github.com/repos/katoaapps/openminilaunch/releases/latest"

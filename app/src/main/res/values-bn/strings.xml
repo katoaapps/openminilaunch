@@ -923,4 +923,8 @@
     <string name="tap_to_enlarge">বড় করতে ট্যাপ করুন</string>
     <string name="update_notice_smaller_improvements_title">আরও ছোট উন্নতি</string>
     <string name="update_notice_smaller_improvements_description">সব অ্যাপ খুলতে উপরে এবং বন্ধ করতে নিচে সোয়াইপ করুন, চাইলে ব্যাটারির শতাংশ দেখান এবং ফিজিক্যাল কিবোর্ড, উইজেট ও দৈনন্দিন লঞ্চার ব্যবহারের উন্নতি উপভোগ করুন।</string>
+    <string name="github_releases">GitHub রিলিজ</string>
+    <string name="github_releases_summary">সর্বশেষ APK ও রিলিজ নোট</string>
+    <string name="fdroid_releases">F-Droid রিলিজ</string>
+    <string name="fdroid_releases_summary">F-Droid বিল্ড ইনস্টল ও পর্যালোচনা করুন</string>
 </resources>

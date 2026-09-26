@@ -963,4 +963,8 @@
     <string name="tap_to_enlarge">اضغط للتكبير</string>
     <string name="update_notice_smaller_improvements_title">تحسينات إضافية</string>
     <string name="update_notice_smaller_improvements_description">اسحب لأعلى لفتح كل التطبيقات ولأسفل لإغلاقها، واعرض نسبة البطارية اختياريًا، واستفد من تحسينات لوحات المفاتيح الفعلية والأدوات والاستخدام اليومي للمشغّل.</string>
+    <string name="github_releases">إصدارات GitHub</string>
+    <string name="github_releases_summary">أحدث ملفات APK وملاحظات الإصدار</string>
+    <string name="fdroid_releases">إصدارات F-Droid</string>
+    <string name="fdroid_releases_summary">تثبيت ومراجعة إصدارات F-Droid</string>
 </resources>

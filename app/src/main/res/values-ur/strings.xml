@@ -923,4 +923,8 @@
     <string name="tap_to_enlarge">بڑا کرنے کے لیے ٹیپ کریں</string>
     <string name="update_notice_smaller_improvements_title">مزید چھوٹی بہتریاں</string>
     <string name="update_notice_smaller_improvements_description">تمام ایپس کھولنے کے لیے اوپر اور بند کرنے کے لیے نیچے سوائپ کریں، چاہیں تو بیٹری کا فیصد دکھائیں، اور فزیکل کی بورڈ، وجیٹس اور روزمرہ لانچر استعمال میں بہتری حاصل کریں۔</string>
+    <string name="github_releases">GitHub ریلیزز</string>
+    <string name="github_releases_summary">تازہ ترین APK اور ریلیز نوٹس</string>
+    <string name="fdroid_releases">F-Droid ریلیزز</string>
+    <string name="fdroid_releases_summary">F-Droid بلڈز انسٹال کریں اور دیکھیں</string>
 </resources>

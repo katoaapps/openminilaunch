@@ -923,4 +923,8 @@
     <string name="tap_to_enlarge">Ketuk untuk memperbesar</string>
     <string name="update_notice_smaller_improvements_title">Peningkatan kecil</string>
     <string name="update_notice_smaller_improvements_description">Geser ke atas untuk membuka Lihat semua dan ke bawah untuk menutupnya, tampilkan persentase baterai bila diinginkan, serta nikmati penyempurnaan untuk keyboard fisik, widget, dan penggunaan peluncur sehari-hari.</string>
+    <string name="github_releases">Rilis GitHub</string>
+    <string name="github_releases_summary">APK terbaru dan catatan rilis</string>
+    <string name="fdroid_releases">Rilis F-Droid</string>
+    <string name="fdroid_releases_summary">Instal dan tinjau build F-Droid</string>
 </resources>

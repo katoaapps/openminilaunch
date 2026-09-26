@@ -923,4 +923,8 @@
     <string name="tap_to_enlarge">Toque para ampliar</string>
     <string name="update_notice_smaller_improvements_title">Pequenas melhorias</string>
     <string name="update_notice_smaller_improvements_description">Deslize para cima para abrir Ver tudo e para baixo para fechar, mostre opcionalmente a porcentagem da bateria e aproveite melhorias para teclados físicos, widgets e o uso diário do launcher.</string>
+    <string name="github_releases">Versões do GitHub</string>
+    <string name="github_releases_summary">APKs mais recentes e notas da versão</string>
+    <string name="fdroid_releases">Versões do F-Droid</string>
+    <string name="fdroid_releases_summary">Instale e consulte as versões do F-Droid</string>
 </resources>

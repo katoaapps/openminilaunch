@@ -21,6 +21,7 @@ internal enum class SettingsDestination {
 }
 
 internal val LocalSettingsScrollState = staticCompositionLocalOf { ScrollState(0) }
+internal val LocalSettingsShowBackButton = staticCompositionLocalOf { true }
 
 internal fun pushSettingsDestination(
     stack: List<SettingsDestination>,

@@ -14,13 +14,6 @@ import androidx.activity.ComponentActivity
 import androidx.activity.compose.BackHandler
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.animation.AnimatedContent
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
-import androidx.compose.animation.slideInHorizontally
-import androidx.compose.animation.slideOutHorizontally
-import androidx.compose.animation.togetherWith
-import androidx.compose.animation.core.tween
 import androidx.compose.foundation.ScrollState
 import androidx.compose.runtime.*
 import androidx.compose.ui.platform.LocalContext
@@ -186,6 +179,11 @@ internal fun SettingsScreen(
         settingsStack = pushSettingsDestination(settingsStack, next)
     }
 
+    fun navigateFromOverview(next: SettingsDestination) {
+        navigatingBack = false
+        settingsStack = settingsPathTo(next)
+    }
+
     fun navigateBack() {
         if (settingsStack.size > 1) {
             navigatingBack = true
@@ -197,17 +195,7 @@ internal fun SettingsScreen(
 
     BackHandler(enabled = settingsStack.size > 1) { navigateBack() }
 
-    AnimatedContent(
-        targetState = destination,
-        transitionSpec = {
-            val direction = if (navigatingBack) -1 else 1
-            (slideInHorizontally(tween(180)) { width -> direction * width / 6 } + fadeIn(tween(150)))
-                .togetherWith(
-                    slideOutHorizontally(tween(180)) { width -> -direction * width / 6 } + fadeOut(tween(120)),
-                )
-        },
-        label = "settings-page",
-    ) { page ->
+    val destinationContent: @Composable (SettingsDestination) -> Unit = { page ->
         CompositionLocalProvider(LocalSettingsScrollState provides settingsScrollStates.getValue(page)) {
             SettingsDestinationContent(
                 destination = page,
@@ -218,6 +206,7 @@ internal fun SettingsScreen(
                 requestHomeRole = requestHomeRole,
                 onRepeatTutorial = onRepeatTutorial,
                 onNavigate = ::navigateTo,
+                onOverviewNavigate = ::navigateFromOverview,
                 onNavigateBack = ::navigateBack,
                 onExitSettings = goBack,
                 onIconStyleApplied = onIconStyleApplied,
@@ -241,6 +230,15 @@ internal fun SettingsScreen(
             )
         }
     }
+
+    SettingsAdaptiveLayout(
+        twoPanelEnabled = store.twoPanelModeForLargeDisplays,
+        destination = destination,
+        navigatingBack = navigatingBack,
+        showDetailBackButton = settingsStack.size > 2,
+        overviewContent = { destinationContent(SettingsDestination.OVERVIEW) },
+        destinationContent = destinationContent,
+    )
 
     SettingsPickerDialogs(
         picker = picker,

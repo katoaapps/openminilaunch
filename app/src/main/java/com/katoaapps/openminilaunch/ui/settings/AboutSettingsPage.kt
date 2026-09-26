@@ -21,6 +21,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Email
+import androidx.compose.material.icons.filled.Download
 import androidx.compose.material.icons.filled.Gavel
 import androidx.compose.material.icons.filled.Palette
 import androidx.compose.material.icons.filled.PrivacyTip
@@ -62,6 +63,26 @@ internal fun AboutSettingsPage(
             subtitle = stringResource(R.string.github_update_checks_description),
             checked = store.githubUpdateChecksEnabled,
             onCheckedChange = store::setGitHubUpdateChecksEnabled,
+        )
+        SettingsRow(
+            stringResource(R.string.github_releases),
+            stringResource(R.string.github_releases_summary),
+            Icons.Default.SystemUpdateAlt,
+            onClick = {
+                if (!actions.openGitHubReleasesPage()) {
+                    Toast.makeText(context, R.string.no_browser_available, Toast.LENGTH_SHORT).show()
+                }
+            },
+        )
+        SettingsRow(
+            stringResource(R.string.fdroid_releases),
+            stringResource(R.string.fdroid_releases_summary),
+            Icons.Default.Download,
+            onClick = {
+                if (!actions.openFdroidPackagePage()) {
+                    Toast.makeText(context, R.string.no_browser_available, Toast.LENGTH_SHORT).show()
+                }
+            },
         )
         HorizontalDivider(color = Sage)
         SettingsRow(

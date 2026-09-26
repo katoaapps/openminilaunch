@@ -17,6 +17,7 @@ internal fun SettingsDestinationContent(
     requestHomeRole: () -> Unit,
     onRepeatTutorial: () -> Unit,
     onNavigate: (SettingsDestination) -> Unit,
+    onOverviewNavigate: (SettingsDestination) -> Unit,
     onNavigateBack: () -> Unit,
     onExitSettings: () -> Unit,
     onIconStyleApplied: () -> Unit,
@@ -34,7 +35,7 @@ internal fun SettingsDestinationContent(
             store = store,
             actions = actions,
             permissionState = permissionState,
-            onNavigate = onNavigate,
+            onNavigate = onOverviewNavigate,
             goBack = onExitSettings,
         )
         SettingsDestination.LANGUAGE -> AppLanguageSettingsPage(goBack = onNavigateBack)

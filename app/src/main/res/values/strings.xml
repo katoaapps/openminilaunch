@@ -969,4 +969,8 @@
     <string name="tap_to_enlarge">Tap to enlarge</string>
     <string name="update_notice_smaller_improvements_title">Smaller improvements</string>
     <string name="update_notice_smaller_improvements_description">Swipe up for See All and down to close it, optionally show battery percentage, and find refinements for physical keyboards, widgets, and everyday launcher use.</string>
+    <string name="github_releases">GitHub releases</string>
+    <string name="github_releases_summary">Latest APKs and release notes</string>
+    <string name="fdroid_releases">F-Droid releases</string>
+    <string name="fdroid_releases_summary">Install and review F-Droid builds</string>
 </resources>

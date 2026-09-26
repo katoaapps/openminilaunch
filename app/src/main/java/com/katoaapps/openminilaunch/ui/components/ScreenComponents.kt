@@ -25,13 +25,20 @@ import com.katoaapps.openminilaunch.ui.theme.Muted
 import com.katoaapps.openminilaunch.ui.theme.Rust
 
 @Composable
-internal fun PageHeader(title: String, goBack: () -> Unit, action: (@Composable () -> Unit)? = null) {
+internal fun PageHeader(
+    title: String,
+    goBack: () -> Unit,
+    showBackButton: Boolean = true,
+    action: (@Composable () -> Unit)? = null,
+) {
     Row(
         Modifier.fillMaxWidth().padding(horizontal = Dimens.dp10, vertical = Dimens.dp8),
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        IconButton(onClick = goBack) {
-            Icon(Icons.AutoMirrored.Filled.ArrowBack, stringResource(R.string.back))
+        if (showBackButton) {
+            IconButton(onClick = goBack) {
+                Icon(Icons.AutoMirrored.Filled.ArrowBack, stringResource(R.string.back))
+            }
         }
         Text(
             title,

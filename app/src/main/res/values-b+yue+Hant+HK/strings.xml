@@ -923,4 +923,8 @@
     <string name="tap_to_enlarge">撳一下放大</string>
     <string name="update_notice_smaller_improvements_title">其他小改進</string>
     <string name="update_notice_smaller_improvements_description">向上滑開啟「查看全部」，向下滑關閉；亦可以選擇顯示電池百分比，並享用實體鍵盤、小工具同日常啟動器操作嘅改進。</string>
+    <string name="github_releases">GitHub 版本</string>
+    <string name="github_releases_summary">最新 APK 同版本說明</string>
+    <string name="fdroid_releases">F-Droid 版本</string>
+    <string name="fdroid_releases_summary">安裝同查看 F-Droid 版本</string>
 </resources>

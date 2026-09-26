@@ -923,4 +923,8 @@
     <string name="tap_to_enlarge">Touchez pour agrandir</string>
     <string name="update_notice_smaller_improvements_title">Petites améliorations</string>
     <string name="update_notice_smaller_improvements_description">Balayez vers le haut pour ouvrir Toutes les applications et vers le bas pour fermer, affichez éventuellement le pourcentage de batterie et profitez d’améliorations pour les claviers physiques, les widgets et l’utilisation quotidienne.</string>
+    <string name="github_releases">Versions GitHub</string>
+    <string name="github_releases_summary">Derniers APK et notes de version</string>
+    <string name="fdroid_releases">Versions F-Droid</string>
+    <string name="fdroid_releases_summary">Installer et consulter les versions F-Droid</string>
 </resources>

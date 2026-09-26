@@ -923,4 +923,8 @@
     <string name="tap_to_enlarge">タップして拡大</string>
     <string name="update_notice_smaller_improvements_title">その他の改善</string>
     <string name="update_notice_smaller_improvements_description">上にスワイプして「すべて表示」を開き、下にスワイプして閉じられます。バッテリー残量の表示も選択でき、物理キーボード、ウィジェット、日常のランチャー操作も改善されています。</string>
+    <string name="github_releases">GitHub リリース</string>
+    <string name="github_releases_summary">最新の APK とリリースノート</string>
+    <string name="fdroid_releases">F-Droid リリース</string>
+    <string name="fdroid_releases_summary">F-Droid ビルドをインストールして確認</string>
 </resources>

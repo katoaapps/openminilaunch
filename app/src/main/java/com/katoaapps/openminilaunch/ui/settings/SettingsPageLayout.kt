@@ -52,7 +52,11 @@ internal fun SettingsPage(
         horizontalAlignment = Alignment.CenterHorizontally,
     ) {
         Box(Modifier.widthIn(max = Dimens.dp720).fillMaxWidth()) {
-            PageHeader(title, goBack)
+            PageHeader(
+                title = title,
+                goBack = goBack,
+                showBackButton = LocalSettingsShowBackButton.current,
+            )
         }
         Column(
             Modifier.widthIn(max = Dimens.dp720).fillMaxWidth().weight(1f)
