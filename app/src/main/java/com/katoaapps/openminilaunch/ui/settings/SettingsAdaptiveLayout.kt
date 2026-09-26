@@ -127,23 +127,21 @@ private fun SettingsDestinationTransition(
 
 @Composable
 private fun EmptySettingsDetail() {
-    Column(
+    Box(
         Modifier.fillMaxSize().statusBarsPadding().padding(Dimens.dp32),
-        horizontalAlignment = Alignment.CenterHorizontally,
+        contentAlignment = Alignment.Center,
     ) {
-        Box(Modifier.weight(1f), contentAlignment = Alignment.Center) {
-            Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                Icon(
-                    Icons.Default.Settings,
-                    contentDescription = null,
-                    tint = MaterialTheme.colorScheme.primary,
-                )
-                Text(
-                    stringResource(R.string.settings_overview_description, stringResource(R.string.app_name)),
-                    modifier = Modifier.padding(top = Dimens.dp12),
-                    color = Muted,
-                )
-            }
+        Column(horizontalAlignment = Alignment.CenterHorizontally) {
+            Icon(
+                Icons.Default.Settings,
+                contentDescription = null,
+                tint = MaterialTheme.colorScheme.primary,
+            )
+            Text(
+                stringResource(R.string.settings_overview_description, stringResource(R.string.app_name)),
+                modifier = Modifier.padding(top = Dimens.dp12),
+                color = Muted,
+            )
         }
     }
 }

@@ -2,7 +2,7 @@
 
 A focused, keyboard-first Android home-screen launcher and digital assistant built with Kotlin and Jetpack Compose.
 
-Current version: **Open 1.5.4** (`1.5.4`). Feature releases show existing users a one-time in-app update notice covering new behavior, privacy impact, and any optional permissions; the onboarding tutorial is updated alongside each release.
+Current version: **Open 1.5.5** (`1.5.5`). Feature releases show existing users a one-time in-app update notice covering new behavior, privacy impact, and any optional permissions; the onboarding tutorial is updated alongside each release.
 
 ## Download
 
@@ -39,9 +39,9 @@ the existing app first and clears MinkLauncher OpenSource's local data.
 - Replayable onboarding from Settings, including permission setup
 - A responsive raised Home panel with a two-thirds to-do area and a one-third icon-only shortcut grid
 - A responsive, horizontally snapping preview of up to five to-dos with unfinished tasks first
-- Optional two-panel layouts on tablets and unfolded foldables, pairing Mink’s Day with Home or Home with Widgets while preserving the active page and Magic Box draft across display changes
+- Optional two-panel layouts on tablets and unfolded foldables, pairing Mink’s Day with Home or Home with Widgets while preserving the active page and Magic Box draft across display changes. Settings uses the same large-display mode with its section list beside one active detail page.
 - Eight home shortcuts: six generic slots that accept apps or app-published shortcuts, with built-in Note, Calendar, Weather, Call, Messenger, and Files defaults, plus vCard and Top 8
-- An encrypted on-device **Virtual Contact Card** with an optional contact photo, reusable contact/social/payment links, and a standards-based vCard QR. Tap the fixed vCard shortcut to flip between the regular to-do/shortcut face and the contact card; without a selected photo, the Mink icon is used. vCard content is never uploaded.
+- An encrypted on-device **Virtual Contact Card** with an optional contact photo, reusable contact/social/payment links, and a standards-based vCard QR. Tap the fixed vCard shortcut to flip between the regular to-do/shortcut face and the contact card; without a selected photo, the Mink icon is used. An optional display setting can include selected link names and values on the Home card. vCard content is never uploaded.
 - Long-press shortcut edit mode with persistent drag reordering and a reset control in Settings
 - Profile-aware app and shortcut discovery shows accessible work-profile targets with a work badge; Mink’s Day measurements and launcher barriers remain limited to personal-profile apps
 - Android Add to Home screen requests can be placed in a Home slot or Top 8 using a full page or confirmation sheet, with legacy shortcut requests supported for older apps and devices
@@ -73,7 +73,7 @@ the existing app first and clears MinkLauncher OpenSource's local data.
 - Six generic app slots that accept any installed app and replace the default Home icon; Android monochrome icons follow the Home panel theme when available
 - One-tap reset restores each slot's original built-in action and icon
 - A compact drawer containing up to eight selected apps or app-published shortcuts, with exact-slot replacement when full and a **See all** handoff to the full installed-app browser
-- An update check reads GitHub release metadata at most twice a day. When a newer release exists, a focused update card shows the installed and available versions, while a persistent Home header icon lets the user reopen it. **Remind me later** snoozes the automatic card for 24 hours. GitHub receives ordinary connection metadata but no launcher content. The check can be disabled in **Settings → About**; MinkLauncher OpenSource never downloads or installs an APK itself.
+- An update check reads GitHub release metadata at most twice a day. When a newer release exists, a focused update card shows the installed and available versions, offers the GitHub and F-Droid release routes, and explains that F-Droid publication can arrive later. A persistent Home header icon lets the user reopen it, while **Remind me later** snoozes the automatic card for 24 hours. GitHub receives ordinary connection metadata but no launcher content. The check can be disabled—and either release page opened directly—in **Settings → About**; MinkLauncher OpenSource never downloads or installs an APK itself.
 - The all-apps browser uses a three-app, one-at-a-time carousel and a draggable A–Z arc with M at its center; the focused app supplies the screen's gradient color
 - Swipe up from Home to open See All and swipe down there to close it; keyboard-first `?` search and Top 8 remain available
 - Real installed-app icons and an alphabetical jump rail in both app pickers
