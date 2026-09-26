@@ -566,9 +566,11 @@
     <string name="update_available">업데이트 가능</string>
     <string name="github_update_dialog_title">MinkLauncher 업데이트</string>
     <string name="github_update_version_line">버전 %1$s 사용 가능 · %2$s 보유</string>
-    <string name="github_update_description">MinkLauncher OpenSource의 새 버전을 사용할 수 있습니다. 브라우저에서 GitHub 릴리스를 열어 검토하고 다운로드하세요. MinkLauncher는 APK 자체를 다운로드하거나 설치하지 않습니다.</string>
-    <string name="github_update_fdroid_note">F-Droid 빌드를 사용하시나요? 대신 F-Droid를 통해 업데이트하세요. GitHub 및 F-Droid 빌드는 서로 다른 서명 키를 사용합니다.</string>
+    <string name="github_update_description">MinkLauncher OpenSource의 새 버전을 사용할 수 있습니다. 받을 위치를 선택하세요. MinkLauncher는 APK를 직접 다운로드하거나 설치하지 않습니다.</string>
+    <string name="github_update_fdroid_note">F-Droid 업데이트는 F-Droid 일정에 따라 빌드되고 게시되므로 최신 버전이 GitHub보다 늦게 도착할 수 있습니다. 설치된 빌드와 같은 출처를 사용하세요. GitHub와 F-Droid 빌드는 서로 다른 서명 키를 사용합니다.</string>
     <string name="view_update">업데이트 보기</string>
+    <string name="download_from_github">GitHub에서 다운로드</string>
+    <string name="download_from_fdroid">F-Droid에서 다운로드</string>
     <string name="remind_me_later">나중에 알림</string>
     <string name="no_browser_available">사용할 수 있는 브라우저가 없습니다.</string>
     <string name="version">버전</string>
@@ -851,6 +853,8 @@
     <string name="remove_profile_photo">Remove contact photo</string>
     <string name="profile_photo_failed">Couldn’t use that photo</string>
     <string name="selected_profile_links">SELECTED LINKS</string>
+    <string name="show_values_on_card">카드에 값 표시</string>
+    <string name="show_values_on_card_description">홈 vCard에 선택한 각 링크의 이름과 값을 표시합니다.</string>
     <string name="available_profile_links">AVAILABLE LINKS</string>
     <string name="no_profile_links_selected">No links selected yet.</string>
     <string name="add_profile_link">Add link</string>

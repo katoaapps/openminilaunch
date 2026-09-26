@@ -146,8 +146,15 @@ internal fun AboutSettingsPage(
         GitHubUpdateDialog(
             currentVersion = BuildConfig.VERSION_NAME,
             availableVersion = previewUpdateVersion(BuildConfig.VERSION_NAME),
-            onOpenBrowser = {
+            onOpenGitHub = {
                 if (actions.openLatestGitHubReleaseDownload()) {
+                    showDemoUpdatePreview = false
+                } else {
+                    Toast.makeText(context, R.string.no_browser_available, Toast.LENGTH_SHORT).show()
+                }
+            },
+            onOpenFdroid = {
+                if (actions.openFdroidPackagePage()) {
                     showDemoUpdatePreview = false
                 } else {
                     Toast.makeText(context, R.string.no_browser_available, Toast.LENGTH_SHORT).show()

@@ -6,6 +6,7 @@ data class ProfileCard(
     val jobTitle: String = "",
     val note: String = "",
     val selectedLinkIds: List<String> = emptyList(),
+    val showValuesOnCard: Boolean = false,
     val hasPortrait: Boolean = false,
 )
 

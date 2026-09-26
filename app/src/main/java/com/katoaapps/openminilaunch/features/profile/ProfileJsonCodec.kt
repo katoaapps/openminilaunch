@@ -15,6 +15,7 @@ internal object ProfileJsonCodec {
             put("jobTitle", card.jobTitle)
             put("note", card.note)
             put("selectedLinkIds", JSONArray(card.selectedLinkIds))
+            put("showValuesOnCard", card.showValuesOnCard)
         })
         put("links", JSONArray().apply {
             links.forEach { link ->
@@ -67,6 +68,7 @@ internal object ProfileJsonCodec {
             jobTitle = cardJson.optString("jobTitle").safeText(300),
             note = cardJson.optString("note").safeText(MAX_TEXT),
             selectedLinkIds = selectedIds,
+            showValuesOnCard = cardJson.optBoolean("showValuesOnCard", false),
         ) to links
     }
 

@@ -49,9 +49,6 @@ internal fun ProfileQrImage(
     val density = LocalDensity.current
     val pixels = with(density) { size.roundToPx() }
     val bitmap = remember(code.payload, pixels) { ProfileQrGenerator.render(code, pixels) }
-    DisposableEffect(bitmap) {
-        onDispose { bitmap.takeUnless(android.graphics.Bitmap::isRecycled)?.recycle() }
-    }
     Image(bitmap.asImageBitmap(), description, modifier.size(size).background(Color.White))
 }
 

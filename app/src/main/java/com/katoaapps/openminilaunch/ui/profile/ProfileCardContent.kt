@@ -22,7 +22,6 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.produceState
 import androidx.compose.ui.Alignment
@@ -53,9 +52,6 @@ internal fun ProfilePortrait(
     val revision = store.profileRepository.portraitRevision
     val bitmap by produceState<Bitmap?>(initialValue = null, key1 = revision) {
         value = withContext(Dispatchers.IO) { store.profileRepository.loadPortrait() }
-    }
-    DisposableEffect(bitmap) {
-        onDispose { bitmap?.takeUnless(Bitmap::isRecycled)?.recycle() }
     }
     Box(
         modifier.size(size).clip(CircleShape)

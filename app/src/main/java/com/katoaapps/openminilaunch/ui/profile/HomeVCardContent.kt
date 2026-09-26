@@ -93,13 +93,33 @@ internal fun HomeVCardContent(
                             modifier = Modifier.size(Dimens.dp14),
                             tint = Color.White.copy(alpha = .72f),
                         )
-                        Text(
-                            link.label.ifBlank { profileLinkTypeLabel(link.type) },
-                            color = Color.White.copy(alpha = .82f),
-                            fontSize = Dimens.sp12,
-                            maxLines = 1,
-                            overflow = TextOverflow.Ellipsis,
-                        )
+                        if (card.showValuesOnCard) {
+                            Column(Modifier.weight(1f)) {
+                                Text(
+                                    link.label.ifBlank { profileLinkTypeLabel(link.type) },
+                                    color = Color.White.copy(alpha = .68f),
+                                    fontSize = Dimens.sp11,
+                                    maxLines = 1,
+                                    overflow = TextOverflow.Ellipsis,
+                                )
+                                Text(
+                                    link.value,
+                                    color = Color.White.copy(alpha = .92f),
+                                    fontSize = Dimens.sp12,
+                                    fontWeight = FontWeight.SemiBold,
+                                    maxLines = 1,
+                                    overflow = TextOverflow.Ellipsis,
+                                )
+                            }
+                        } else {
+                            Text(
+                                link.label.ifBlank { profileLinkTypeLabel(link.type) },
+                                color = Color.White.copy(alpha = .82f),
+                                fontSize = Dimens.sp12,
+                                maxLines = 1,
+                                overflow = TextOverflow.Ellipsis,
+                            )
+                        }
                     }
                 }
             }

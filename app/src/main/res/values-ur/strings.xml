@@ -566,9 +566,11 @@
     <string name="update_available">اپ ڈیٹ دستیاب ہے۔</string>
     <string name="github_update_dialog_title">MinkLauncher کو اپ ڈیٹ کریں۔</string>
     <string name="github_update_version_line">ورژن %1$s دستیاب ہے۔ آپ کے پاس %2$s ہے۔</string>
-    <string name="github_update_description">MinkLauncher OpenSource کا نیا ورژن دستیاب ہے۔ اس کا جائزہ لینے اور ڈاؤن لوڈ کرنے کے لیے اپنے براؤزر میں GitHub ریلیز کھولیں۔ MinkLauncher کبھی بھی APK کو ڈاؤن لوڈ یا انسٹال نہیں کرتا ہے۔</string>
-    <string name="github_update_fdroid_note">F-Droid تعمیر کا استعمال کر رہے ہیں؟ اس کے بجائے F-Droid کے ذریعے اپ ڈیٹ کریں۔ GitHub اور F-Droid تعمیرات مختلف سائننگ کیز استعمال کرتے ہیں۔</string>
+    <string name="github_update_description">MinkLauncher OpenSource کا نیا ورژن دستیاب ہے۔ منتخب کریں کہ اسے کہاں سے حاصل کرنا ہے۔ MinkLauncher کبھی بھی خود APK ڈاؤن لوڈ یا انسٹال نہیں کرتا۔</string>
+    <string name="github_update_fdroid_note">F-Droid اپ ڈیٹس اس کے اپنے شیڈول پر بنائی اور شائع کی جاتی ہیں، اس لیے تازہ ترین ورژن GitHub کے بعد آ سکتا ہے۔ وہی ذریعہ استعمال کریں جو آپ کی انسٹال شدہ تعمیر سے میل کھاتا ہو؛ GitHub اور F-Droid تعمیرات مختلف سائننگ کیز استعمال کرتی ہیں۔</string>
     <string name="view_update">اپ ڈیٹ دیکھیں</string>
+    <string name="download_from_github">GitHub سے ڈاؤن لوڈ کریں</string>
+    <string name="download_from_fdroid">F-Droid سے ڈاؤن لوڈ کریں</string>
     <string name="remind_me_later">مجھے بعد میں یاد دلائیں۔</string>
     <string name="no_browser_available">کوئی براؤزر دستیاب نہیں ہے۔</string>
     <string name="version">ورژن</string>
@@ -851,6 +853,8 @@
     <string name="remove_profile_photo">Remove contact photo</string>
     <string name="profile_photo_failed">Couldn’t use that photo</string>
     <string name="selected_profile_links">SELECTED LINKS</string>
+    <string name="show_values_on_card">کارڈ پر قدریں دکھائیں</string>
+    <string name="show_values_on_card_description">ہوم vCard پر ہر منتخب لنک کا نام اور قدر دکھائیں۔</string>
     <string name="available_profile_links">AVAILABLE LINKS</string>
     <string name="no_profile_links_selected">No links selected yet.</string>
     <string name="add_profile_link">Add link</string>

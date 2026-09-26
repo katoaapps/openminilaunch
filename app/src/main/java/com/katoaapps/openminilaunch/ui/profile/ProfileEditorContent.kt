@@ -39,6 +39,7 @@ import com.katoaapps.openminilaunch.features.profile.ProfileQrDensity
 import com.katoaapps.openminilaunch.features.profile.ProfileQrGenerator
 import com.katoaapps.openminilaunch.features.profile.resolveSelectedLinks
 import com.katoaapps.openminilaunch.ui.components.SectionLabel
+import com.katoaapps.openminilaunch.ui.components.SettingsSwitchRow
 import com.katoaapps.openminilaunch.ui.theme.Dimens
 import com.katoaapps.openminilaunch.ui.theme.Muted
 import com.katoaapps.openminilaunch.ui.theme.Rust
@@ -104,6 +105,12 @@ internal fun ProfileEditorContent(
         )
 
         SectionLabel(stringResource(R.string.selected_profile_links))
+        SettingsSwitchRow(
+            title = stringResource(R.string.show_values_on_card),
+            subtitle = stringResource(R.string.show_values_on_card_description),
+            checked = card.showValuesOnCard,
+            onCheckedChange = repository::setShowValuesOnCard,
+        )
         if (selected.isEmpty()) {
             Text(stringResource(R.string.no_profile_links_selected), color = Muted)
         } else {

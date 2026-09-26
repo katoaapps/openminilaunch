@@ -91,6 +91,11 @@ class ProfileRepository(context: Context) {
         persist(card.copy(selectedLinkIds = order), links)
     }
 
+    fun setShowValuesOnCard(show: Boolean) {
+        val (card, links) = editableData()
+        persist(card.copy(showValuesOnCard = show), links)
+    }
+
     fun savePortrait(bitmap: Bitmap) {
         val bytes = ByteArrayOutputStream().use { output ->
             check(bitmap.compress(Bitmap.CompressFormat.JPEG, 92, output))

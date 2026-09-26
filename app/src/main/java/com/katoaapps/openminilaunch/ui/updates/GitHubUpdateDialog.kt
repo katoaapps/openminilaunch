@@ -8,7 +8,9 @@ import com.katoaapps.openminilaunch.ui.theme.Dimens
 import com.katoaapps.openminilaunch.ui.wellbeing.MinkSprite
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.OpenInBrowser
@@ -26,7 +28,8 @@ import androidx.compose.ui.window.Dialog
 internal fun GitHubUpdateDialog(
     currentVersion: String,
     availableVersion: String,
-    onOpenBrowser: () -> Unit,
+    onOpenGitHub: () -> Unit,
+    onOpenFdroid: () -> Unit,
     onDismiss: () -> Unit,
 ) {
     Dialog(
@@ -41,7 +44,7 @@ internal fun GitHubUpdateDialog(
             shadowElevation = Dimens.dp12,
         ) {
             Column(
-                Modifier.padding(Dimens.dp20),
+                Modifier.padding(Dimens.dp20).verticalScroll(rememberScrollState()),
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
                 Box(
@@ -76,11 +79,24 @@ internal fun GitHubUpdateDialog(
                     fontSize = Dimens.sp12,
                 )
                 Button(
-                    onClick = onOpenBrowser,
+                    onClick = onOpenGitHub,
                     modifier = Modifier.fillMaxWidth().padding(top = Dimens.dp18),
                 ) {
                     Icon(Icons.Default.OpenInBrowser, null)
-                    Text(stringResource(R.string.view_update), Modifier.padding(start = Dimens.dp8))
+                    Text(
+                        stringResource(R.string.download_from_github),
+                        Modifier.padding(start = Dimens.dp8),
+                    )
+                }
+                FilledTonalButton(
+                    onClick = onOpenFdroid,
+                    modifier = Modifier.fillMaxWidth().padding(top = Dimens.dp8),
+                ) {
+                    Icon(Icons.Default.OpenInBrowser, null)
+                    Text(
+                        stringResource(R.string.download_from_fdroid),
+                        Modifier.padding(start = Dimens.dp8),
+                    )
                 }
                 TextButton(onClick = onDismiss, modifier = Modifier.fillMaxWidth()) {
                     Text(stringResource(R.string.remind_me_later))

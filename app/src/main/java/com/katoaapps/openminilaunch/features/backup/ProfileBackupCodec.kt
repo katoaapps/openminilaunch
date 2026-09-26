@@ -17,6 +17,7 @@ internal object ProfileBackupCodec {
         put("jobTitle", card.jobTitle)
         put("note", card.note)
         put("selectedLinkIds", JSONArray(card.selectedLinkIds))
+        put("showValuesOnCard", card.showValuesOnCard)
         put("links", JSONArray().apply {
             links.forEach { link ->
                 put(JSONObject().apply {
@@ -58,6 +59,7 @@ internal object ProfileBackupCodec {
             jobTitle = json.optString("jobTitle").take(300),
             note = json.optString("note").take(MAX_TEXT_LENGTH),
             selectedLinkIds = selected,
+            showValuesOnCard = json.optBoolean("showValuesOnCard", false),
             hasPortrait = false,
         ) to links
     }

@@ -566,9 +566,11 @@
     <string name="update_available">আপডেট উপলব্ধ</string>
     <string name="github_update_dialog_title">MinkLauncher আপডেট করুন</string>
     <string name="github_update_version_line">%1$s সংস্করণ উপলব্ধ · আপনার কাছে %2$s আছে</string>
-    <string name="github_update_description">MinkLauncher OpenSource এর একটি নতুন সংস্করণ উপলব্ধ। পর্যালোচনা এবং ডাউনলোড করতে আপনার ব্রাউজারে GitHub রিলিজটি খুলুন। MinkLauncher কখনোই একটি APK ডাউনলোড বা ইনস্টল করে না।</string>
-    <string name="github_update_fdroid_note">F-Droid বিল্ড ব্যবহার করছেন? পরিবর্তে F-Droid এর মাধ্যমে আপডেট করুন। GitHub এবং F-Droid বিল্ডগুলি বিভিন্ন সাইনিং কী ব্যবহার করে।</string>
+    <string name="github_update_description">MinkLauncher OpenSource-এর একটি নতুন সংস্করণ উপলভ্য। কোথা থেকে নেবেন তা বেছে নিন।MinkLauncher নিজে কখনও APK ডাউনলোড বা ইনস্টল করে না।</string>
+    <string name="github_update_fdroid_note">F-Droid আপডেট তাদের নিজস্ব সময়সূচি অনুযায়ী তৈরি ও প্রকাশিত হয়, তাই সর্বশেষ সংস্করণ GitHub-এর পরে আসতে পারে। আপনার ইনস্টল করা বিল্ডের সঙ্গে মেলে এমন উৎস ব্যবহার করুন; GitHub ও F-Droid বিল্ড আলাদা সাইনিং কী ব্যবহার করে।</string>
     <string name="view_update">আপডেট দেখুন</string>
+    <string name="download_from_github">GitHub থেকে ডাউনলোড করুন</string>
+    <string name="download_from_fdroid">F-Droid থেকে ডাউনলোড করুন</string>
     <string name="remind_me_later">পরে মনে করিয়ে দিও</string>
     <string name="no_browser_available">কোন ব্রাউজার উপলব্ধ নেই</string>
     <string name="version">সংস্করণ</string>
@@ -851,6 +853,8 @@
     <string name="remove_profile_photo">Remove contact photo</string>
     <string name="profile_photo_failed">Couldn’t use that photo</string>
     <string name="selected_profile_links">SELECTED LINKS</string>
+    <string name="show_values_on_card">কার্ডে মান দেখান</string>
+    <string name="show_values_on_card_description">হোম vCard-এ প্রতিটি নির্বাচিত লিঙ্কের নাম ও মান দেখান।</string>
     <string name="available_profile_links">AVAILABLE LINKS</string>
     <string name="no_profile_links_selected">No links selected yet.</string>
     <string name="add_profile_link">Add link</string>

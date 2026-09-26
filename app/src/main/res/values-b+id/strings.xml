@@ -566,9 +566,11 @@
     <string name="update_available">Pembaruan tersedia</string>
     <string name="github_update_dialog_title">Perbarui MinkLauncher</string>
     <string name="github_update_version_line">Versi %1$s tersedia · Anda memiliki %2$s</string>
-    <string name="github_update_description">Versi baru MinkLauncher OpenSource telah tersedia. Buka rilis GitHub di browser Anda untuk meninjau dan mendownloadnya. MinkLauncher tidak pernah mengunduh atau memasang APK itu sendiri.</string>
-    <string name="github_update_fdroid_note">Menggunakan build F-Droid? Perbarui melalui F-Droid sebagai gantinya. Build GitHub dan F-Droid menggunakan kunci penandatanganan yang berbeda.</string>
+    <string name="github_update_description">Versi baru MinkLauncher OpenSource tersedia. Pilih tempat untuk mendapatkannya. MinkLauncher tidak pernah mengunduh atau memasang APK sendiri.</string>
+    <string name="github_update_fdroid_note">Pembaruan F-Droid dibuat dan diterbitkan sesuai jadwal F-Droid, jadi versi terbaru mungkin hadir lebih lambat daripada GitHub. Gunakan sumber yang sesuai dengan build terpasang; build GitHub dan F-Droid menggunakan kunci penandatanganan yang berbeda.</string>
     <string name="view_update">Lihat pembaruan</string>
+    <string name="download_from_github">Unduh dari GitHub</string>
+    <string name="download_from_fdroid">Unduh dari F-Droid</string>
     <string name="remind_me_later">Ingatkan saya nanti</string>
     <string name="no_browser_available">Tidak ada peramban yang tersedia</string>
     <string name="version">Versi</string>
@@ -851,6 +853,8 @@
     <string name="remove_profile_photo">Remove contact photo</string>
     <string name="profile_photo_failed">Couldn’t use that photo</string>
     <string name="selected_profile_links">SELECTED LINKS</string>
+    <string name="show_values_on_card">Tampilkan nilai di kartu</string>
+    <string name="show_values_on_card_description">Tampilkan nama dan nilai setiap tautan yang dipilih di vCard Beranda.</string>
     <string name="available_profile_links">AVAILABLE LINKS</string>
     <string name="no_profile_links_selected">No links selected yet.</string>
     <string name="add_profile_link">Add link</string>

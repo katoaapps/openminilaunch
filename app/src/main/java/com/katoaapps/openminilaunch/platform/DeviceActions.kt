@@ -16,6 +16,7 @@ import com.katoaapps.openminilaunch.features.messaging.MessagingProviderOption
 import com.katoaapps.openminilaunch.features.messaging.ConversationShortcutDraftResult
 import com.katoaapps.openminilaunch.features.messaging.PreferredMessageDraftResult
 import com.katoaapps.openminilaunch.features.updates.GITHUB_LATEST_APK_URL
+import com.katoaapps.openminilaunch.features.updates.FDROID_PACKAGE_URL
 import com.katoaapps.openminilaunch.model.*
 import com.katoaapps.openminilaunch.ui.apps.AllAppsActivity
 
@@ -432,6 +433,9 @@ class DeviceActions(private val context: Context) {
 
     fun openLatestGitHubReleaseDownload(): Boolean =
         start(Intent(Intent.ACTION_VIEW, Uri.parse(GITHUB_LATEST_APK_URL)))
+
+    fun openFdroidPackagePage(): Boolean =
+        start(Intent(Intent.ACTION_VIEW, Uri.parse(FDROID_PACKAGE_URL)))
 
     fun webSearch(query: String, preferredPackage: String? = null): Boolean {
         val clean = query.trim()

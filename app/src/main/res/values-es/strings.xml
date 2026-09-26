@@ -566,9 +566,11 @@
     <string name="update_available">Actualización disponible</string>
     <string name="github_update_dialog_title">Actualización MinkLauncher</string>
     <string name="github_update_version_line">Versión %1$s disponible · Tienes %2$s</string>
-    <string name="github_update_description">Está disponible una nueva versión de MinkLauncher OpenSource. Abra la versión GitHub en su navegador para revisarla y descargarla. MinkLauncher nunca descarga ni instala un APK.</string>
-    <string name="github_update_fdroid_note">¿Usando la compilación F-Droid? Actualice a través de F-Droid en su lugar. Las compilaciones GitHub y F-Droid utilizan claves de firma diferentes.</string>
+    <string name="github_update_description">Hay una nueva versión de MinkLauncher OpenSource disponible. Elija dónde obtenerla. MinkLauncher nunca descarga ni instala un APK por sí mismo.</string>
+    <string name="github_update_fdroid_note">Las actualizaciones de F-Droid se compilan y publican según su propio calendario, por lo que la versión más reciente puede llegar después que en GitHub. Use la fuente que coincida con la compilación instalada; las compilaciones de GitHub y F-Droid usan claves de firma diferentes.</string>
     <string name="view_update">Ver actualización</string>
+    <string name="download_from_github">Descargar desde GitHub</string>
+    <string name="download_from_fdroid">Descargar desde F-Droid</string>
     <string name="remind_me_later">Recuérdamelo más tarde</string>
     <string name="no_browser_available">No hay ningún navegador disponible</string>
     <string name="version">Versión</string>
@@ -851,6 +853,8 @@
     <string name="remove_profile_photo">Remove contact photo</string>
     <string name="profile_photo_failed">Couldn’t use that photo</string>
     <string name="selected_profile_links">SELECTED LINKS</string>
+    <string name="show_values_on_card">Mostrar valores en la tarjeta</string>
+    <string name="show_values_on_card_description">Muestra el nombre y el valor de cada enlace seleccionado en la vCard de inicio.</string>
     <string name="available_profile_links">AVAILABLE LINKS</string>
     <string name="no_profile_links_selected">No links selected yet.</string>
     <string name="add_profile_link">Add link</string>

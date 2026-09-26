@@ -574,9 +574,11 @@
     <string name="update_available">التحديث متاح</string>
     <string name="github_update_dialog_title">تحديث MinkLauncher</string>
     <string name="github_update_version_line">الإصدار %1$s متاح · لديك %2$s</string>
-    <string name="github_update_description">يتوفر إصدار جديد من MinkLauncher OpenSource. افتح الإصدار GitHub في متصفحك لمراجعته وتنزيله. MinkLauncher لا يقوم مطلقًا بتنزيل أو تثبيت APK نفسه.</string>
-    <string name="github_update_fdroid_note">باستخدام بناء F-Droid؟ قم بالتحديث من خلال F-Droid بدلاً من ذلك. يستخدم الإصداران GitHub وF-Droid مفاتيح توقيع مختلفة.</string>
+    <string name="github_update_description">يتوفر إصدار جديد من MinkLauncher OpenSource. اختر مصدر الحصول عليه. لا يقوم MinkLauncher مطلقًا بتنزيل أو تثبيت APK بنفسه.</string>
+    <string name="github_update_fdroid_note">تُبنى تحديثات F-Droid وتُنشر وفق جدول F-Droid، لذلك قد يصل الإصدار الأحدث بعد GitHub. استخدم المصدر المطابق للإصدار المثبت لديك؛ يستخدم إصدارا GitHub وF-Droid مفاتيح توقيع مختلفة.</string>
     <string name="view_update">عرض التحديث</string>
+    <string name="download_from_github">تنزيل من GitHub</string>
+    <string name="download_from_fdroid">تنزيل من F-Droid</string>
     <string name="remind_me_later">ذكرني لاحقا</string>
     <string name="no_browser_available">لا يوجد متصفح متاح</string>
     <string name="version">الإصدار</string>
@@ -891,6 +893,8 @@
     <string name="remove_profile_photo">Remove contact photo</string>
     <string name="profile_photo_failed">Couldn’t use that photo</string>
     <string name="selected_profile_links">SELECTED LINKS</string>
+    <string name="show_values_on_card">إظهار القيم على البطاقة</string>
+    <string name="show_values_on_card_description">اعرض اسم وقيمة كل رابط محدد على بطاقة vCard الرئيسية.</string>
     <string name="available_profile_links">AVAILABLE LINKS</string>
     <string name="no_profile_links_selected">No links selected yet.</string>
     <string name="add_profile_link">Add link</string>

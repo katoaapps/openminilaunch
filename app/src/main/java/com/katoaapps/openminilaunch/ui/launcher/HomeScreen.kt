@@ -237,8 +237,16 @@ internal fun HomeScreen(
         GitHubUpdateDialog(
             currentVersion = BuildConfig.VERSION_NAME,
             availableVersion = store.latestGitHubReleaseTag.orEmpty().removePrefix("v"),
-            onOpenBrowser = {
+            onOpenGitHub = {
                 if (actions.openLatestGitHubReleaseDownload()) {
+                    store.latestGitHubReleaseTag?.let(store::snoozeGitHubUpdateReminder)
+                    showUpdateConfirmation = false
+                } else {
+                    Toast.makeText(context, R.string.no_browser_available, Toast.LENGTH_SHORT).show()
+                }
+            },
+            onOpenFdroid = {
+                if (actions.openFdroidPackagePage()) {
                     store.latestGitHubReleaseTag?.let(store::snoozeGitHubUpdateReminder)
                     showUpdateConfirmation = false
                 } else {
