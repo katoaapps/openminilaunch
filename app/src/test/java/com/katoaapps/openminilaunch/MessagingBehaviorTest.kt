@@ -176,6 +176,28 @@ class MessagingBehaviorTest {
         assertEquals(MessagingSupportTier.CONTACT_AND_DRAFT, signal.supportTier)
     }
 
+    @Test fun nextcloudTalkUsesItsPickerAndSupportsRecentConversationDrafts() {
+        val provider = MessagingProviderCatalog.providerForPackage("com.nextcloud.talk2")!!
+
+        assertEquals("nextcloud_talk", provider.id)
+        assertEquals(MessagingDraftKind.GENERIC_SHARE, provider.kind)
+        assertEquals(MessagingSupportTier.RECIPIENT_IN_APP, provider.supportTier)
+        assertEquals("https://nextcloud.com/install/", provider.storeUrl)
+        assertEquals(
+            "com.nextcloud.talk.conversationlist.ConversationsListActivity",
+            MessagingShortcutDraftCatalog.routeFor(
+                packageName = "com.nextcloud.talk2",
+                shortcutCategories = setOf("com.nextcloud.talk.sharing.SHARE_TARGET_CATEGORY"),
+            )?.targetActivity,
+        )
+        assertNull(
+            MessagingShortcutDraftCatalog.routeFor(
+                packageName = "com.nextcloud.talk2",
+                shortcutCategories = setOf("android.shortcut.conversation"),
+            ),
+        )
+    }
+
     @Test fun shortcutDraftCatalogRequiresThePublishedShareCategory() {
         assertEquals(
             "slack.app.ui.ShareReceiverActivity",

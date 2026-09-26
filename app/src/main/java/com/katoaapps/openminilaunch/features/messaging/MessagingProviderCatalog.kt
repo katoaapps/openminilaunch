@@ -63,6 +63,14 @@ internal object MessagingProviderCatalog {
             bundledIconRes = R.drawable.messaging_provider_beeper,
             documentationUrl = "https://help.beeper.com/en_US/beeper-plus/merge-chats-getting-started-guide",
         ),
+        genericShareProvider(
+            id = "nextcloud_talk",
+            labelRes = R.string.provider_nextcloud_talk,
+            packageName = "com.nextcloud.talk2",
+            bundledIconRes = R.drawable.messaging_provider_nextcloud_talk,
+            storeUrl = "https://nextcloud.com/install/",
+            documentationUrl = "https://github.com/nextcloud/talk-android/blob/v25.0.0/app/src/main/java/com/nextcloud/talk/conversationlist/DirectShareHelper.kt",
+        ),
         MessagingDraftProvider(
             id = "molly",
             labelRes = R.string.provider_molly,

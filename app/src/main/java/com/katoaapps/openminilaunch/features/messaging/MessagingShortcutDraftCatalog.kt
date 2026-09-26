@@ -18,6 +18,11 @@ internal object MessagingShortcutDraftCatalog {
             shortcutCategory = "com.beeper.android.SHORTCUT_SHARE",
         ),
         route(
+            packageName = "com.nextcloud.talk2",
+            targetActivity = "com.nextcloud.talk.conversationlist.ConversationsListActivity",
+            shortcutCategory = "com.nextcloud.talk.sharing.SHARE_TARGET_CATEGORY",
+        ),
+        route(
             packageName = "im.molly.app",
             targetActivity = "org.thoughtcrime.securesms.sharing.v2.ShareActivity",
             shortcutCategory = SIGNAL_SHARE_CATEGORY,

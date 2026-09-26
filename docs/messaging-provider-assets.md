@@ -9,7 +9,8 @@ Most bundled files were downloaded from each app's official Google Play listing 
 added from its official Play listing on September 8, 2026. Molly is not distributed through Google
 Play, so its vector artwork comes from the official Molly Android source repository. The Viber
 listing returned JPEG data, which was converted to PNG for Android resource consistency; the
-other Play downloads were already PNG files.
+other Play downloads were already PNG files. Nextcloud Talk's launcher artwork comes directly
+from its official Android v25.0.0 source repository.
 
 These provider names and icons are used only for nominative identification. Their inclusion does
 not imply endorsement, sponsorship, or partnership. The marks remain the property of their
@@ -22,6 +23,7 @@ respective owners.
 | Telegram | `org.telegram.messenger` | `messaging_provider_telegram.png` | [Google Play](https://play.google.com/store/apps/details?id=org.telegram.messenger) |
 | LINE | `jp.naver.line.android` | `messaging_provider_line.png` | [Google Play](https://play.google.com/store/apps/details?id=jp.naver.line.android) |
 | Beeper | `com.beeper.android` | `messaging_provider_beeper.png` | [Google Play](https://play.google.com/store/apps/details?id=com.beeper.android) |
+| Nextcloud Talk | `com.nextcloud.talk2` | `messaging_provider_nextcloud_talk.png` | [Nextcloud](https://nextcloud.com/install/) |
 | Molly | `im.molly.app` | `messaging_provider_molly.xml` | [Molly](https://molly.im/) |
 | Signal | `org.thoughtcrime.securesms` | `messaging_provider_signal.png` | [Google Play](https://play.google.com/store/apps/details?id=org.thoughtcrime.securesms) |
 | KakaoTalk | `com.kakao.talk` | `messaging_provider_kakaotalk.png` | [Google Play](https://play.google.com/store/apps/details?id=com.kakao.talk) |

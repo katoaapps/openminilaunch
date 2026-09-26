@@ -58,6 +58,7 @@
         <package android:name="me.proton.android.lumo" />
         <package android:name="me.proton.lumo" />
         <package android:name="com.beeper.android" />
+        <package android:name="com.nextcloud.talk2" />
         <package android:name="im.molly.app" />
         <package android:name="com.samsung.android.app.notes" />
         <package android:name="com.sec.android.app.clockpackage" />

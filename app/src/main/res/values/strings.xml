@@ -531,6 +531,7 @@
     <string name="provider_telegram" translatable="false">Telegram</string>
     <string name="provider_line" translatable="false">LINE</string>
     <string name="provider_beeper" translatable="false">Beeper</string>
+    <string name="provider_nextcloud_talk" translatable="false">Nextcloud Talk</string>
     <string name="provider_molly" translatable="false">Molly</string>
     <string name="provider_signal" translatable="false">Signal</string>
     <string name="provider_kakaotalk" translatable="false">KakaoTalk</string>
