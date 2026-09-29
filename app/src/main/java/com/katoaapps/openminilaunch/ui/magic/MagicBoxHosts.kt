@@ -1,20 +1,19 @@
 package com.katoaapps.openminilaunch.ui.magic
 
+import androidx.compose.animation.core.Animatable
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
-import androidx.compose.animation.core.Animatable
-import androidx.compose.animation.core.FastOutSlowInEasing
-import androidx.compose.animation.core.tween
-import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.ui.Modifier
 import com.katoaapps.openminilaunch.data.LauncherStore
 import com.katoaapps.openminilaunch.features.wellbeing.MinkAppAccessState
 import com.katoaapps.openminilaunch.platform.DeviceActions
+import com.katoaapps.openminilaunch.ui.components.todoFlightAnimationSpec
 
 /** Home owns a persistent session and can present the collapsed keyboard-first entry bar. */
 @Composable
@@ -53,7 +52,7 @@ internal fun AssistantMagicBox(
     store: LauncherStore,
     actions: DeviceActions,
     onSessionComplete: () -> Unit,
-    onBubbleLaunched: () -> Unit,
+    onBubblePublished: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     var todoFeedback by remember { mutableStateOf<AssistantTodoFeedback?>(null) }
@@ -64,7 +63,7 @@ internal fun AssistantMagicBox(
         todoFlightProgress.snapTo(0f)
         todoFlightProgress.animateTo(
             targetValue = 1f,
-            animationSpec = tween(1_300, easing = FastOutSlowInEasing),
+            animationSpec = todoFlightAnimationSpec(),
         )
         todoFeedback = null
         feedback.onAnimationFinished()
@@ -82,7 +81,7 @@ internal fun AssistantMagicBox(
                 todoFeedback = AssistantTodoFeedback(text, animationFinished)
             },
             onSessionComplete = onSessionComplete,
-            onBubbleLaunched = onBubbleLaunched,
+            onBubblePublished = onBubblePublished,
         )
         todoFeedback?.let { feedback ->
             AssistantTodoFlightChip(

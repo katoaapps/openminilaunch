@@ -45,13 +45,12 @@ class AppBubbleHostActivity : Activity() {
         startActivity(Intent.makeMainActivity(component))
         true
     }.onFailure { error ->
-        Log.w(TAG, "Unable to start $component inside the app bubble", error)
+        Log.w(APP_BUBBLE_LOG_TAG, "Unable to start $component inside the app bubble", error)
     }.getOrDefault(false)
 
     companion object {
         private const val EXTRA_TARGET_COMPONENT = "app_bubble_target_component"
         private const val STATE_TARGET_STARTED = "app_bubble_target_started"
-        private const val TAG = "MinkAppBubbles"
 
         fun intentFor(context: Context, target: LauncherAppTarget): Intent =
             Intent(context, AppBubbleHostActivity::class.java).apply {
@@ -63,5 +62,9 @@ class AppBubbleHostActivity : Activity() {
                     .build()
                 putExtra(EXTRA_TARGET_COMPONENT, target.componentName.flattenToString())
             }
+
+        fun isCurrentIntent(intent: Intent?): Boolean =
+            intent?.component?.className == AppBubbleHostActivity::class.java.name &&
+                intent.hasExtra(EXTRA_TARGET_COMPONENT)
     }
 }

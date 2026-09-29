@@ -4,6 +4,7 @@ import android.content.SharedPreferences
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
+import androidx.core.content.edit
 
 /** Locally remembers which launcher activities should open through Android's bubble UI. */
 internal class AppBubblePreferenceStore(private val prefs: SharedPreferences) {
@@ -13,17 +14,21 @@ internal class AppBubblePreferenceStore(private val prefs: SharedPreferences) {
         private set
 
     fun setAutomatic(targetKey: String, enabled: Boolean) {
+        if ((targetKey in automaticTargetKeys) == enabled) return
+
         val updated = automaticTargetKeys.toMutableSet().apply {
             if (enabled) add(targetKey) else remove(targetKey)
         }.toSet()
         automaticTargetKeys = updated
-        prefs.edit().putStringSet(AUTOMATIC_TARGETS_KEY, updated).apply()
+        prefs.edit { putStringSet(AUTOMATIC_TARGETS_KEY, updated) }
     }
 
     fun replaceAutomaticTargets(targetKeys: Collection<String>) {
         val updated = targetKeys.toSet()
+        if (updated == automaticTargetKeys) return
+
         automaticTargetKeys = updated
-        prefs.edit().putStringSet(AUTOMATIC_TARGETS_KEY, updated).apply()
+        prefs.edit { putStringSet(AUTOMATIC_TARGETS_KEY, updated) }
     }
 
     private companion object {

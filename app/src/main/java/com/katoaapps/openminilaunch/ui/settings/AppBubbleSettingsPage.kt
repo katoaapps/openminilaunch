@@ -49,7 +49,7 @@ import androidx.compose.ui.text.input.TextFieldValue
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
-/** Manages the personal-profile apps which Magic Box should open as Android bubbles. */
+/** Manages the personal apps which Magic Box should open as Android bubbles. */
 @Composable
 internal fun AppBubbleSettingsPage(
     store: LauncherStore,

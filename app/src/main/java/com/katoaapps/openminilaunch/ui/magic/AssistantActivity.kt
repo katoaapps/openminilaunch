@@ -55,7 +55,7 @@ class AssistantActivity : ComponentActivity() {
                         actions = actions,
                         modifier = Modifier.fillMaxSize(),
                         onSessionComplete = ::finish,
-                        onBubbleLaunched = { finishAfterLeavingForeground = true },
+                        onBubblePublished = { finishAfterLeavingForeground = true },
                     )
                 }
             }

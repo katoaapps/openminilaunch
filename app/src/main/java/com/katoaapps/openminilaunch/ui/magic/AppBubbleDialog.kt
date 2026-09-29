@@ -83,3 +83,21 @@ internal fun AppBubbleActionDialog(
         },
     )
 }
+
+@Composable
+internal fun MagicAppBubbleDialogHost(
+    flow: MagicAppBubbleFlow,
+    actions: DeviceActions,
+) {
+    flow.actionTarget?.let { target ->
+        AppBubbleActionDialog(
+            target = target,
+            actions = actions,
+            automatic = flow.opensAutomatically(target),
+            onAutomaticChange = { flow.updateAutomatic(target, it) },
+            onOpenNormally = { flow.openNormally(target) },
+            onOpenBubble = { flow.launchInBubble(target) },
+            onDismiss = flow::dismissActions,
+        )
+    }
+}

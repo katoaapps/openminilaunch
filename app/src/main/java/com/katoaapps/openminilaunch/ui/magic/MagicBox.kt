@@ -81,7 +81,7 @@ internal fun MagicBoxContent(
         finished()
     },
     onSessionComplete: () -> Unit = {},
-    onBubbleLaunched: () -> Unit = {},
+    onBubblePublished: () -> Unit = {},
     appAccessState: MinkAppAccessState? = null,
 ) {
     val magicBoxMinimumHeight = Dimens.dp64
@@ -392,15 +392,23 @@ internal fun MagicBoxContent(
         }
     }
 
+    fun completeAppHandoff(target: LauncherAppTarget) {
+        store.addSearchQuery("?${target.label}")
+        clearCommand()
+        keyboard?.hide()
+        expanded = false
+    }
+
     val appBubbleFlow = rememberMagicAppBubbleFlow(
         store = store,
         actions = actions,
-        onAppOpened = { target ->
-            store.addSearchQuery("?${target.label}")
-            clearCommand()
-            keyboard?.hide()
-            expanded = false
-            onBubbleLaunched()
+        onBubblePublished = { target ->
+            completeAppHandoff(target)
+            onBubblePublished()
+        },
+        onAppOpenedNormally = { target ->
+            completeAppHandoff(target)
+            onSessionComplete()
         },
         onRefocus = { refocus() },
     )
@@ -732,7 +740,7 @@ internal fun MagicBoxContent(
                         },
                         onSelectApp = { app ->
                             if (app is LauncherAppTarget && appBubbleFlow.opensAutomatically(app)) {
-                                appBubbleFlow.openBubble(app)
+                                appBubbleFlow.launchInBubble(app)
                             } else if (actions.launchLauncherTarget(app)) {
                                 store.addSearchQuery("?${app.label}")
                                 dismiss()

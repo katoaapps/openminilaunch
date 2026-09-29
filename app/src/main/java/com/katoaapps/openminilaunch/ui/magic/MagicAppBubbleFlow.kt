@@ -29,7 +29,7 @@ internal class MagicAppBubbleFlow internal constructor(
     private val automaticTargetKeys: Set<String>,
     private val setActionTarget: (LauncherAppTarget?) -> Unit,
     private val setAutomatic: (LauncherAppTarget, Boolean) -> Unit,
-    private val openBubbleAction: (LauncherAppTarget) -> Unit,
+    private val launchInBubbleAction: (LauncherAppTarget) -> Unit,
     private val openNormallyAction: (LauncherAppTarget) -> Unit,
     private val dismissAction: () -> Unit,
 ) {
@@ -38,14 +38,12 @@ internal class MagicAppBubbleFlow internal constructor(
 
     fun showActions(target: LauncherAppTarget) = setActionTarget(target)
 
-    fun isAutomatic(target: LauncherAppTarget): Boolean = opensAutomatically(target)
-
     fun updateAutomatic(target: LauncherAppTarget, enabled: Boolean) =
         setAutomatic(target, enabled)
 
-    fun openBubble(target: LauncherAppTarget) {
+    fun launchInBubble(target: LauncherAppTarget) {
         setActionTarget(null)
-        openBubbleAction(target)
+        launchInBubbleAction(target)
     }
 
     fun openNormally(target: LauncherAppTarget) = openNormallyAction(target)
@@ -57,11 +55,13 @@ internal class MagicAppBubbleFlow internal constructor(
 internal fun rememberMagicAppBubbleFlow(
     store: LauncherStore,
     actions: DeviceActions,
-    onAppOpened: (LauncherAppTarget) -> Unit,
+    onBubblePublished: (LauncherAppTarget) -> Unit,
+    onAppOpenedNormally: (LauncherAppTarget) -> Unit,
     onRefocus: () -> Unit,
 ): MagicAppBubbleFlow {
     val context = LocalContext.current
-    val currentOnAppOpened by rememberUpdatedState(onAppOpened)
+    val currentOnBubblePublished by rememberUpdatedState(onBubblePublished)
+    val currentOnAppOpenedNormally by rememberUpdatedState(onAppOpenedNormally)
     val currentOnRefocus by rememberUpdatedState(onRefocus)
     var actionTarget by remember { mutableStateOf<LauncherAppTarget?>(null) }
     var pendingPermissionTarget by remember { mutableStateOf<LauncherAppTarget?>(null) }
@@ -87,9 +87,9 @@ internal fun rememberMagicAppBubbleFlow(
         Toast.makeText(context, context.getString(message), Toast.LENGTH_LONG).show()
     }
 
-    fun openBubble(target: LauncherAppTarget) {
+    fun launchInBubble(target: LauncherAppTarget) {
         when (actions.launchAppBubble(target)) {
-            AppBubbleLaunchResult.OPENED -> currentOnAppOpened(target)
+            AppBubbleLaunchResult.PUBLISHED -> currentOnBubblePublished(target)
             AppBubbleLaunchResult.NOTIFICATION_PERMISSION_REQUIRED -> {
                 pendingPermissionTarget = target
                 val canRequestRuntimePermission = Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU &&
@@ -135,7 +135,7 @@ internal fun rememberMagicAppBubbleFlow(
     LaunchedEffect(grantedPermissionTarget) {
         grantedPermissionTarget?.let { target ->
             grantedPermissionTarget = null
-            openBubble(target)
+            launchInBubble(target)
         }
     }
 
@@ -146,11 +146,11 @@ internal fun rememberMagicAppBubbleFlow(
         setAutomatic = { target, enabled ->
             store.setAppBubbleAutomatic(target.selectionKey, enabled)
         },
-        openBubbleAction = ::openBubble,
+        launchInBubbleAction = ::launchInBubble,
         openNormallyAction = { target ->
             actionTarget = null
             if (actions.launchLauncherTarget(target)) {
-                currentOnAppOpened(target)
+                currentOnAppOpenedNormally(target)
             } else {
                 Toast.makeText(
                     context,
@@ -165,19 +165,4 @@ internal fun rememberMagicAppBubbleFlow(
             currentOnRefocus()
         },
     )
-}
-
-@Composable
-internal fun MagicAppBubbleDialogHost(flow: MagicAppBubbleFlow, actions: DeviceActions) {
-    flow.actionTarget?.let { target ->
-        AppBubbleActionDialog(
-            target = target,
-            actions = actions,
-            automatic = flow.isAutomatic(target),
-            onAutomaticChange = { flow.updateAutomatic(target, it) },
-            onOpenNormally = { flow.openNormally(target) },
-            onOpenBubble = { flow.openBubble(target) },
-            onDismiss = flow::dismissActions,
-        )
-    }
 }

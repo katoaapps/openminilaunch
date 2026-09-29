@@ -1,6 +1,9 @@
 package com.katoaapps.openminilaunch.ui.components
 
 import androidx.compose.animation.core.Animatable
+import androidx.compose.animation.core.FastOutSlowInEasing
+import androidx.compose.animation.core.FiniteAnimationSpec
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
@@ -24,6 +27,11 @@ import com.katoaapps.openminilaunch.ui.theme.Dimens
 import com.katoaapps.openminilaunch.ui.theme.LightInk
 import com.katoaapps.openminilaunch.ui.theme.MagicTodoColor
 import kotlin.math.roundToInt
+
+internal fun todoFlightAnimationSpec(): FiniteAnimationSpec<Float> = tween(
+    durationMillis = 1_300,
+    easing = FastOutSlowInEasing,
+)
 
 @Composable
 internal fun TodoFlightChip(

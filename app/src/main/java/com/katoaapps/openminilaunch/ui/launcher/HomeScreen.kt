@@ -8,9 +8,10 @@ import com.katoaapps.openminilaunch.data.LauncherStore
 import com.katoaapps.openminilaunch.features.updates.GitHubReleaseChecker
 import com.katoaapps.openminilaunch.features.updates.isNewerRelease
 import com.katoaapps.openminilaunch.platform.DeviceActions
+import com.katoaapps.openminilaunch.ui.components.TodoFlightChip
+import com.katoaapps.openminilaunch.ui.components.todoFlightAnimationSpec
 import com.katoaapps.openminilaunch.ui.magic.HomeMagicBox
 import com.katoaapps.openminilaunch.ui.magic.MagicBoxSessionState
-import com.katoaapps.openminilaunch.ui.components.TodoFlightChip
 import com.katoaapps.openminilaunch.ui.settings.LockAccessibilityDisclosureDialog
 import com.katoaapps.openminilaunch.ui.settings.SettingsDestination
 import com.katoaapps.openminilaunch.ui.theme.Dimens
@@ -24,8 +25,6 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.animation.core.Animatable
-import androidx.compose.animation.core.FastOutSlowInEasing
-import androidx.compose.animation.core.tween
 import androidx.compose.runtime.*
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.blur
@@ -93,7 +92,7 @@ internal fun HomeScreen(
         if (flyingTodo != null && widgetCenter != Offset.Zero && magicCenter != Offset.Zero) {
             flightProgress.snapTo(0f)
             flightActive = true
-            flightProgress.animateTo(1f, tween(1_300, easing = FastOutSlowInEasing))
+            flightProgress.animateTo(1f, todoFlightAnimationSpec())
             flightActive = false
             flyingTodo = null
         }
