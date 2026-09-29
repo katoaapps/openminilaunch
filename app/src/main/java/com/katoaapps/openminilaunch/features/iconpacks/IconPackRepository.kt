@@ -22,7 +22,7 @@ internal class IconPackRepository private constructor(context: Context) {
     private val userManager = appContext.getSystemService(UserManager::class.java)
     private val discovery = IconPackDiscovery(packageManager)
     private val definitionLoader = IconPackDefinitionLoader(packageManager)
-    private val drawableLoader = IconPackDrawableLoader(packageManager)
+    private val drawableLoader = IconPackDrawableLoader(appContext)
     private val revisionState = MutableStateFlow(0L)
     val revision: StateFlow<Long> = revisionState.asStateFlow()
 

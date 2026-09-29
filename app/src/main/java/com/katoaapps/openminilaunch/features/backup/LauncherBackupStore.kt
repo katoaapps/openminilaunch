@@ -32,6 +32,7 @@ internal fun LauncherStore.createPortableBackup(appVersion: String): LauncherBac
             iconAppearance = iconAppearance,
             openSoftwareKeyboardOnHome = openSoftwareKeyboardOnHome,
             includeAppShortcutsInDiscovery = includeAppShortcutsInDiscovery,
+            automaticAppBubbleTargets = automaticAppBubbleTargets.toList(),
             sendMessagesAutomatically = sendMessagesAutomatically,
             preferredMessagingPackage = preferredMessagingPackage,
             preferredAiPackage = preferredAiPackage,
@@ -85,6 +86,7 @@ internal fun LauncherStore.restorePortableBackup(backup: LauncherBackup) {
 
     updateOpenSoftwareKeyboardOnHome(settings.openSoftwareKeyboardOnHome)
     updateIncludeAppShortcutsInDiscovery(settings.includeAppShortcutsInDiscovery)
+    replaceAutomaticAppBubbleTargets(settings.automaticAppBubbleTargets)
     updateSendMessagesAutomatically(settings.sendMessagesAutomatically)
     settings.preferredMessagingPackage?.let(::setPreferredMessagingApp)
         ?: resetPreferredMessagingApp()

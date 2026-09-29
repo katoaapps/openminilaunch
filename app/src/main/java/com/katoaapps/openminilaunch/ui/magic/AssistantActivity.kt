@@ -22,6 +22,8 @@ import com.katoaapps.openminilaunch.ui.theme.MinkTransparent
 
 /** Keyboard-first system assistant entry point. ACTION_ASSIST context is deliberately ignored. */
 class AssistantActivity : ComponentActivity() {
+    private var finishAfterLeavingForeground = false
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         WindowCompat.setDecorFitsSystemWindows(window, false)
@@ -53,9 +55,15 @@ class AssistantActivity : ComponentActivity() {
                         actions = actions,
                         modifier = Modifier.fillMaxSize(),
                         onSessionComplete = ::finish,
+                        onBubbleLaunched = { finishAfterLeavingForeground = true },
                     )
                 }
             }
         }
+    }
+
+    override fun onStop() {
+        super.onStop()
+        if (finishAfterLeavingForeground) finish()
     }
 }

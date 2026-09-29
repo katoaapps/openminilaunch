@@ -77,8 +77,11 @@ internal fun MagicBoxContent(
     showSoftwareKeyboardOnStart: Boolean = false,
     autoOpenSoftwareKeyboardOnHome: Boolean = false,
     homeRequestToken: Int = 0,
-    onTodoAdded: (String) -> Unit = {},
+    onTodoAdded: (String, onAnimationFinished: () -> Unit) -> Unit = { _, finished ->
+        finished()
+    },
     onSessionComplete: () -> Unit = {},
+    onBubbleLaunched: () -> Unit = {},
     appAccessState: MinkAppAccessState? = null,
 ) {
     val magicBoxMinimumHeight = Dimens.dp64
@@ -119,6 +122,7 @@ internal fun MagicBoxContent(
     var showNoteDeleteConfirmation by remember { mutableStateOf(false) }
     var showMessageDiscardConfirmation by remember { mutableStateOf(false) }
     var showCommandDiscardConfirmation by remember { mutableStateOf(false) }
+    var todoCompletionPending by remember { mutableStateOf(false) }
     var pendingCalendarReview by remember { mutableStateOf<CalendarParseResult?>(null) }
     val callFlow = rememberMagicCallFlow(actions, onSessionComplete)
     val smsFlow = rememberMagicSmsFlow(actions, onSessionComplete)
@@ -281,7 +285,7 @@ internal fun MagicBoxContent(
         if (effectiveAppAccessState.isResolved) {
             recentConversations.filterNot(effectiveAppAccessState::isPaused)
         } else {
-            emptyList()
+            recentConversations
         }
     }
     val alwaysVisibleTargetKeys = store.pinnedLauncherSelectionKeys
@@ -309,7 +313,7 @@ internal fun MagicBoxContent(
         if (effectiveAppAccessState.isResolved) {
             appResults.filterNot(effectiveAppAccessState::isPaused)
         } else {
-            emptyList()
+            appResults
         }
     }
     val plainQuery = parsedInput.plainQuery
@@ -376,6 +380,30 @@ internal fun MagicBoxContent(
         expanded = false
         onSessionComplete()
     }
+
+    fun beginTodoCompletion(todo: String) {
+        clearCommand()
+        keyboard?.hide()
+        expanded = false
+        todoCompletionPending = true
+        onTodoAdded(todo) {
+            todoCompletionPending = false
+            onSessionComplete()
+        }
+    }
+
+    val appBubbleFlow = rememberMagicAppBubbleFlow(
+        store = store,
+        actions = actions,
+        onAppOpened = { target ->
+            store.addSearchQuery("?${target.label}")
+            clearCommand()
+            keyboard?.hide()
+            expanded = false
+            onBubbleLaunched()
+        },
+        onRefocus = { refocus() },
+    )
 
     fun requestDismiss() {
         when {
@@ -479,7 +507,7 @@ internal fun MagicBoxContent(
             selectedRecipient = selectedRecipient,
             store = store,
             actions = actions,
-            onTodoAdded = onTodoAdded,
+            onTodoAdded = ::beginTodoCompletion,
             onExternalDraftOpened = { keyboard?.hide() },
             onMessage = { draft, route ->
                 val resolvedRoute = resolvedMessageSendRoute(
@@ -527,11 +555,12 @@ internal fun MagicBoxContent(
         expanded,
         smsFlow.sentConfirmationVisible,
         showKeyboardWhileCollapsed,
+        todoCompletionPending,
     ) {
         if (!keyboardInputEnabled) {
             keyboard?.hide()
             focusManager.clearFocus(force = true)
-        } else if (!expanded && !smsFlow.sentConfirmationVisible) {
+        } else if (!expanded && !smsFlow.sentConfirmationVisible && !todoCompletionPending) {
             if (showKeyboardWhileCollapsed) {
                 while (!textFieldPlaced) withFrameNanos { }
                 withFrameNanos { }
@@ -702,7 +731,9 @@ internal fun MagicBoxContent(
                             }
                         },
                         onSelectApp = { app ->
-                            if (actions.launchLauncherTarget(app)) {
+                            if (app is LauncherAppTarget && appBubbleFlow.opensAutomatically(app)) {
+                                appBubbleFlow.openBubble(app)
+                            } else if (actions.launchLauncherTarget(app)) {
                                 store.addSearchQuery("?${app.label}")
                                 dismiss()
                             } else {
@@ -713,6 +744,10 @@ internal fun MagicBoxContent(
                                     Toast.LENGTH_LONG,
                                 ).show()
                             }
+                        },
+                        onLongPressApp = { target ->
+                            keyboard?.hide()
+                            appBubbleFlow.showActions(target)
                         },
                         onIncludeAppShortcutsChange = store::updateIncludeAppShortcutsInDiscovery,
                         onRequestContacts = {
@@ -791,7 +826,7 @@ internal fun MagicBoxContent(
             )
         }
 
-        if (!expanded && !smsFlow.sentConfirmationVisible) {
+        if (!expanded && !smsFlow.sentConfirmationVisible && !todoCompletionPending) {
             CollapsedMagicBar(
                 modifier = collapsedModifier.align(Alignment.BottomCenter),
                 minimumHeight = magicBoxMinimumHeight,
@@ -901,6 +936,8 @@ internal fun MagicBoxContent(
         onAllAiApp = ::selectAiApp,
         onDismissAllAi = ::dismissAiPickers,
     )
+
+    MagicAppBubbleDialogHost(appBubbleFlow, actions)
 
     MagicCommunicationDialogHost(
         callRecipient = callFlow.recipientToConfirm,

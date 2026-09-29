@@ -12,6 +12,7 @@ import com.katoaapps.openminilaunch.ui.wellbeing.MinkPauseModeControl
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Send
 import androidx.compose.material.icons.filled.Apps
+import androidx.compose.material.icons.filled.BubbleChart
 import androidx.compose.material.icons.filled.Contacts
 import androidx.compose.material.icons.filled.Forum
 import androidx.compose.material.icons.filled.Lock
@@ -131,6 +132,27 @@ internal fun PermissionsSettingsPage(
             onGrant = actions.requestMedia,
             onManage = actions.manageAppPermissions,
         )
+        if (state.appBubblesSupported) {
+            PermissionCard(
+                title = stringResource(R.string.app_bubbles_beta),
+                description = stringResource(R.string.app_bubbles_permission_description),
+                granted = state.appBubbleNotificationsGranted && state.appBubblesAllowed,
+                icon = Icons.Default.BubbleChart,
+                onGrant = if (state.appBubbleNotificationsGranted) {
+                    actions.manageAppBubbles
+                } else {
+                    actions.requestAppBubbleNotifications
+                },
+                onManage = actions.manageAppBubbles,
+            )
+        } else {
+            SettingsRow(
+                stringResource(R.string.app_bubbles_beta),
+                stringResource(R.string.app_bubbles_requires_android_11),
+                Icons.Default.BubbleChart,
+                enabled = false,
+            ) { }
+        }
         if (state.lockSupported) {
             PermissionCard(
                 title = stringResource(R.string.double_tap_screen_lock),

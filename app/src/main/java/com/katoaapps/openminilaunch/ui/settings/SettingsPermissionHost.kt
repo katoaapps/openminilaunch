@@ -2,6 +2,7 @@ package com.katoaapps.openminilaunch.ui.settings
 
 import android.Manifest
 import android.content.pm.PackageManager
+import android.os.Build
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -49,6 +50,10 @@ internal fun rememberSettingsPermissionHost(
         )
     }
     var mediaGranted by remember { mutableStateOf(hasMediaReadAccess(context)) }
+    var appBubbleNotificationsGranted by remember {
+        mutableStateOf(deviceActions.appBubbleNotificationsGranted())
+    }
+    var appBubblesAllowed by remember { mutableStateOf(deviceActions.appBubblesAllowed()) }
     var callsGranted by remember {
         mutableStateOf(
             ContextCompat.checkSelfPermission(context, Manifest.permission.CALL_PHONE) ==
@@ -76,6 +81,8 @@ internal fun rememberSettingsPermissionHost(
             Manifest.permission.READ_CONTACTS,
         ) == PackageManager.PERMISSION_GRANTED
         mediaGranted = hasMediaReadAccess(context)
+        appBubbleNotificationsGranted = deviceActions.appBubbleNotificationsGranted()
+        appBubblesAllowed = deviceActions.appBubblesAllowed()
         callsGranted = ContextCompat.checkSelfPermission(
             context,
             Manifest.permission.CALL_PHONE,
@@ -131,6 +138,15 @@ internal fun rememberSettingsPermissionHost(
             deviceActions.openAppSettings()
         }
         currentOnMediaPermissionResult()
+    }
+    val appBubbleNotificationPermission = rememberLauncherForActivityResult(
+        ActivityResultContracts.RequestPermission(),
+    ) { granted ->
+        appBubbleNotificationsGranted = deviceActions.appBubbleNotificationsGranted()
+        appBubblesAllowed = deviceActions.appBubblesAllowed()
+        if (!granted && isPermanentlyDenied(context, Manifest.permission.POST_NOTIFICATIONS)) {
+            deviceActions.openAppNotificationSettings()
+        }
     }
     val lockServiceSettings = rememberLauncherForActivityResult(
         ActivityResultContracts.StartActivityForResult(),
@@ -206,6 +222,9 @@ internal fun rememberSettingsPermissionHost(
             assistantRoleHeld = assistantRoleHeld,
             smsGranted = smsGranted,
             mediaGranted = mediaGranted,
+            appBubblesSupported = deviceActions.supportsAppBubbles(),
+            appBubbleNotificationsGranted = appBubbleNotificationsGranted,
+            appBubblesAllowed = appBubblesAllowed,
             lockSupported = deviceActions.supportsLockScreenAction(),
             lockServiceEnabled = lockServiceEnabled,
         ),
@@ -220,6 +239,20 @@ internal fun rememberSettingsPermissionHost(
             requestCalls = { callPermission.launch(Manifest.permission.CALL_PHONE) },
             requestSms = { smsPermission.launch(Manifest.permission.SEND_SMS) },
             requestMedia = { mediaPermission.launch(mediaReadPermissions()) },
+            requestAppBubbleNotifications = {
+                val canRequestRuntimePermission = Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU &&
+                    ContextCompat.checkSelfPermission(
+                        context,
+                        Manifest.permission.POST_NOTIFICATIONS,
+                    ) != PackageManager.PERMISSION_GRANTED
+                if (canRequestRuntimePermission) {
+                    appBubbleNotificationPermission.launch(Manifest.permission.POST_NOTIFICATIONS)
+                } else {
+                    deviceActions.openAppNotificationSettings()
+                }
+            },
+            manageAppBubbleNotifications = deviceActions::openAppNotificationSettings,
+            manageAppBubbles = deviceActions::openAppBubbleSettings,
             manageAppPermissions = deviceActions::openAppSettings,
             requestLockService = { showLockDisclosure = true },
             manageLockService = deviceActions::openLockAccessibilitySettings,

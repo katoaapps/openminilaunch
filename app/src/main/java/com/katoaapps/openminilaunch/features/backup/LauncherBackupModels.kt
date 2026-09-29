@@ -48,6 +48,7 @@ internal data class LauncherBackupSettings(
     val iconAppearance: IconAppearance,
     val openSoftwareKeyboardOnHome: Boolean,
     val includeAppShortcutsInDiscovery: Boolean,
+    val automaticAppBubbleTargets: List<String>,
     val sendMessagesAutomatically: Boolean,
     val preferredMessagingPackage: String?,
     val preferredAiPackage: String?,

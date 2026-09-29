@@ -10,6 +10,7 @@ import com.katoaapps.openminilaunch.features.updates.isNewerRelease
 import com.katoaapps.openminilaunch.platform.DeviceActions
 import com.katoaapps.openminilaunch.ui.magic.HomeMagicBox
 import com.katoaapps.openminilaunch.ui.magic.MagicBoxSessionState
+import com.katoaapps.openminilaunch.ui.components.TodoFlightChip
 import com.katoaapps.openminilaunch.ui.settings.LockAccessibilityDisclosureDialog
 import com.katoaapps.openminilaunch.ui.settings.SettingsDestination
 import com.katoaapps.openminilaunch.ui.theme.Dimens

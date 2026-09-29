@@ -70,7 +70,10 @@ internal fun dispatchMagicCommand(
             if (it) store.addSearchQuery(rawText)
         }
     }
-    if (handled && prefix != '@') {
+    // Todo completion is owned by the UI host. Home can dismiss immediately while its
+    // widget animation continues; Assistant keeps its window alive until its feedback
+    // animation has finished.
+    if (handled && prefix != '@' && prefix != '-') {
         if (keepDraftAfterExternalHandoff) onExternalDraftOpened() else onDismiss()
     }
 }

@@ -325,6 +325,13 @@ internal fun OnboardingScreen(store: LauncherStore, actions: DeviceActions, onFi
                             OnboardingPoint(Icons.Default.Sms, stringResource(R.string.direct_sms), stringResource(R.string.direct_sms_onboarding_permission_description))
                             OnboardingPoint(Icons.Default.Lock, stringResource(R.string.double_tap_lock), stringResource(R.string.double_tap_lock_onboarding_description))
                             OnboardingPoint(Icons.Default.PhotoLibrary, stringResource(R.string.media), stringResource(R.string.media_onboarding_description))
+                            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                                OnboardingPoint(
+                                    Icons.Default.BubbleChart,
+                                    stringResource(R.string.app_bubbles_beta),
+                                    stringResource(R.string.app_bubbles_permission_description),
+                                )
+                            }
                             OnboardingPoint(Icons.Default.SystemUpdateAlt, stringResource(R.string.github_update_checks), stringResource(R.string.github_updates_onboarding_description, appName))
                             OnboardingPoint(Icons.Default.Forum, stringResource(R.string.conversation_access), stringResource(R.string.conversation_access_onboarding_description))
                             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {

@@ -11,6 +11,7 @@ internal enum class SettingsDestination {
     SHORTCUTS,
     PIN_SHORTCUT_REQUESTS,
     MAGIC_BOX,
+    APP_BUBBLES,
     MINK_ASSISTANT,
     MESSAGING,
     FILE_SEARCH,
@@ -57,6 +58,11 @@ internal fun settingsPathTo(destination: SettingsDestination): List<SettingsDest
         SettingsDestination.MAGIC_BOX,
         SettingsDestination.FILE_SEARCH,
     )
+    SettingsDestination.APP_BUBBLES -> listOf(
+        SettingsDestination.OVERVIEW,
+        SettingsDestination.MAGIC_BOX,
+        SettingsDestination.APP_BUBBLES,
+    )
     SettingsDestination.MINK_ASSISTANT,
     SettingsDestination.MESSAGING,
     SettingsDestination.MINK_DAY,
@@ -75,11 +81,15 @@ internal data class SettingsPermissionState(
     val assistantRoleHeld: Boolean,
     val smsGranted: Boolean,
     val mediaGranted: Boolean,
+    val appBubblesSupported: Boolean,
+    val appBubbleNotificationsGranted: Boolean,
+    val appBubblesAllowed: Boolean,
     val lockSupported: Boolean,
     val lockServiceEnabled: Boolean,
 ) {
     val supportedCount: Int
-        get() = 4 + directCallsSupported.toInt() + directSmsSupported.toInt() + lockSupported.toInt()
+        get() = 4 + directCallsSupported.toInt() + directSmsSupported.toInt() +
+            appBubblesSupported.toInt() + lockSupported.toInt()
 
     val activeCount: Int
         get() = listOf(
@@ -90,6 +100,7 @@ internal data class SettingsPermissionState(
         ).count { it } +
             (directCallsSupported && callsGranted).toInt() +
             (directSmsSupported && smsGranted).toInt() +
+            (appBubblesSupported && appBubbleNotificationsGranted && appBubblesAllowed).toInt() +
             (lockSupported && lockServiceEnabled).toInt()
 }
 
@@ -104,6 +115,9 @@ internal data class SettingsPermissionActions(
     val requestCalls: () -> Unit,
     val requestSms: () -> Unit,
     val requestMedia: () -> Unit,
+    val requestAppBubbleNotifications: () -> Unit,
+    val manageAppBubbleNotifications: () -> Unit,
+    val manageAppBubbles: () -> Unit,
     val manageAppPermissions: () -> Unit,
     val requestLockService: () -> Unit,
     val manageLockService: () -> Unit,

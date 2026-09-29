@@ -1,19 +1,25 @@
 package com.katoaapps.openminilaunch.features.iconpacks
 
-import android.content.pm.PackageManager
+import android.content.Context
 import android.graphics.drawable.Drawable
+import androidx.core.content.ContextCompat
 import java.time.LocalDate
 
 /** Turns a parsed icon-pack mapping into today's Android drawable. */
 internal class IconPackDrawableLoader(
-    private val packageManager: PackageManager,
+    context: Context,
     private val currentDayOfMonth: () -> Int = { LocalDate.now().dayOfMonth },
 ) {
+    private val appContext = context.applicationContext
+
     fun load(packageName: String, icon: IconPackDrawable): Drawable? = runCatching {
-        val resources = packageManager.getResourcesForApplication(packageName)
+        val packContext = appContext.createPackageContext(packageName, Context.CONTEXT_IGNORE_SECURITY)
+        val resources = packContext.resources
         val drawableName = icon.drawableName(currentDayOfMonth())
         val resourceId = resources.getIdentifier(drawableName, "drawable", packageName)
-        resourceId.takeIf { it != 0 }?.let { resources.getDrawable(it, null) }
+            .takeIf { it != 0 }
+            ?: resources.getIdentifier(drawableName, "mipmap", packageName).takeIf { it != 0 }
+        resourceId?.let { ContextCompat.getDrawable(packContext, it) }
     }.getOrNull()
 }
 

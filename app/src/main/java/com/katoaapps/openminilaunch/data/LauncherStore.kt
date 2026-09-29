@@ -28,6 +28,7 @@ class LauncherStore private constructor(context: Context) {
     private val updatePreferences = UpdatePreferenceStore(prefs)
     private val pinShortcutPreferences = PinShortcutPreferenceStore(prefs)
     private val appDiscoveryPreferences = AppDiscoveryPreferenceStore(prefs)
+    private val appBubblePreferences = AppBubblePreferenceStore(prefs)
     private val homeWallpaperRepository = HomeWallpaperRepository(appContext)
     internal val profileRepository = ProfileRepository(appContext)
     private val demoPreferences: DemoPreferenceStore = DemoPreferenceStore(appContext, prefs, todoStore)
@@ -81,6 +82,7 @@ class LauncherStore private constructor(context: Context) {
     val latestGitHubReleaseTag get() = updatePreferences.latestReleaseTag
     val pinShortcutRequestPresentation get() = pinShortcutPreferences.requestPresentation
     val includeAppShortcutsInDiscovery get() = appDiscoveryPreferences.includeAppShortcuts
+    val automaticAppBubbleTargets get() = appBubblePreferences.automaticTargetKeys
     val effectiveHomePanelColorArgb: Int
         get() = demoPreferences.effectivePanelColor(homePanelColorArgb)
     val watermelonModeEnabled: Boolean
@@ -206,6 +208,14 @@ class LauncherStore private constructor(context: Context) {
 
     fun updateIncludeAppShortcutsInDiscovery(enabled: Boolean) {
         appDiscoveryPreferences.updateIncludeAppShortcuts(enabled)
+    }
+
+    fun setAppBubbleAutomatic(targetKey: String, enabled: Boolean) {
+        appBubblePreferences.setAutomatic(targetKey, enabled)
+    }
+
+    internal fun replaceAutomaticAppBubbleTargets(targetKeys: Collection<String>) {
+        appBubblePreferences.replaceAutomaticTargets(targetKeys)
     }
 
     /** Converts package-only settings to personal-profile activity keys without assigning work copies. */

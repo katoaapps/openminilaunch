@@ -20,6 +20,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Chat
 import androidx.compose.material.icons.filled.Assistant
+import androidx.compose.material.icons.filled.BubbleChart
 import androidx.compose.material.icons.filled.AutoAwesome
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.CreateNewFolder
@@ -48,6 +49,7 @@ internal fun MagicBoxSettingsPage(
     onPickWeb: () -> Unit,
     onPickAi: () -> Unit,
     onOpenFileSearch: () -> Unit,
+    onOpenAppBubbles: () -> Unit,
     goBack: () -> Unit,
 ) {
     SettingsPage(stringResource(R.string.magic_box), goBack) {
@@ -57,6 +59,15 @@ internal fun MagicBoxSettingsPage(
             subtitle = stringResource(R.string.open_keyboard_on_home_description),
             checked = store.openSoftwareKeyboardOnHome,
             onCheckedChange = store::updateOpenSoftwareKeyboardOnHome,
+        )
+        SettingsRow(
+            stringResource(R.string.app_bubbles_beta),
+            stringResource(
+                R.string.selected_count,
+                store.automaticAppBubbleTargets.size,
+            ),
+            Icons.Default.BubbleChart,
+            onClick = onOpenAppBubbles,
         )
         HorizontalDivider(color = Sage)
         SectionLabel(stringResource(R.string.search))

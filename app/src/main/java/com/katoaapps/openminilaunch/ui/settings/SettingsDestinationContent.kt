@@ -69,6 +69,14 @@ internal fun SettingsDestinationContent(
             onPickWeb = onPickWeb,
             onPickAi = onPickAi,
             onOpenFileSearch = { onNavigate(SettingsDestination.FILE_SEARCH) },
+            onOpenAppBubbles = { onNavigate(SettingsDestination.APP_BUBBLES) },
+            goBack = onNavigateBack,
+        )
+        SettingsDestination.APP_BUBBLES -> AppBubbleSettingsPage(
+            store = store,
+            actions = actions,
+            permissionState = permissionState,
+            permissionActions = permissionActions,
             goBack = onNavigateBack,
         )
         SettingsDestination.MINK_ASSISTANT -> MinkAssistantSettingsPage(

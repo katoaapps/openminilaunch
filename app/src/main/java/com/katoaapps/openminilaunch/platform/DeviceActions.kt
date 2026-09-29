@@ -2,6 +2,8 @@ package com.katoaapps.openminilaunch.platform
 
 import com.katoaapps.openminilaunch.R
 import com.katoaapps.openminilaunch.features.calendar.model.CalendarDraft
+import com.katoaapps.openminilaunch.features.bubbles.AppBubbleLaunchResult
+import com.katoaapps.openminilaunch.features.bubbles.AppBubbleManager
 import com.katoaapps.openminilaunch.features.ai.AiHandoffMode
 import com.katoaapps.openminilaunch.features.ai.AiHandoffResult
 import com.katoaapps.openminilaunch.features.ai.AiProviderCatalog
@@ -45,6 +47,7 @@ import android.telephony.PhoneNumberUtils
 import kotlinx.coroutines.flow.StateFlow
 
 class DeviceActions(private val context: Context) {
+    private val appBubbleManager = AppBubbleManager.get(context)
     private val launcherAppRepository = LauncherAppRepository.get(context)
     private val launcherShortcutRepository = LauncherShortcutRepository.get(context)
     private val legacyShortcutRepository = LegacyLauncherShortcutRepository.get(context)
@@ -206,6 +209,23 @@ class DeviceActions(private val context: Context) {
 
     fun launchLauncherSelection(selectionKey: String): Boolean =
         launchLauncherTarget(resolveLauncherSelection(selectionKey))
+
+    fun supportsAppBubbles(): Boolean = appBubbleManager.isSupported()
+
+    fun appBubbleNotificationsGranted(): Boolean = appBubbleManager.notificationsGranted()
+
+    fun appBubblesAllowed(): Boolean = appBubbleManager.bubblesAllowed()
+
+    internal fun launchAppBubble(target: LauncherAppTarget): AppBubbleLaunchResult =
+        appBubbleManager.launch(target)
+
+    fun appNotificationSettingsIntent(): Intent = appBubbleManager.notificationSettingsIntent()
+
+    fun appBubbleSettingsIntent(): Intent = appBubbleManager.bubbleSettingsIntent()
+
+    fun openAppNotificationSettings(): Boolean = start(appNotificationSettingsIntent())
+
+    fun openAppBubbleSettings(): Boolean = start(appBubbleSettingsIntent())
 
     fun openLauncherTargetAppInfo(target: LauncherTarget): Boolean {
         if (launcherAppRepository.openAppDetails(target)) return true

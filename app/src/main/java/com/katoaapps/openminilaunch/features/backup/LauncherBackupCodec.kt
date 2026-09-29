@@ -113,6 +113,7 @@ internal object LauncherBackupCodec {
         put("magicBox", JSONObject().apply {
             put("openSoftwareKeyboardOnHome", settings.openSoftwareKeyboardOnHome)
             put("includeAppShortcutsInDiscovery", settings.includeAppShortcutsInDiscovery)
+            put("automaticAppBubbleTargets", settings.automaticAppBubbleTargets.stringsJsonArray())
             putNullable("preferredAiPackage", settings.preferredAiPackage)
             putNullable("preferredWebPackage", settings.preferredWebPackage)
         })
@@ -160,6 +161,7 @@ internal object LauncherBackupCodec {
             ),
             openSoftwareKeyboardOnHome = magicBox.optBoolean("openSoftwareKeyboardOnHome", true),
             includeAppShortcutsInDiscovery = magicBox.optBoolean("includeAppShortcutsInDiscovery", false),
+            automaticAppBubbleTargets = magicBox.optJSONArray("automaticAppBubbleTargets").safeTargets(),
             sendMessagesAutomatically = messaging.optBoolean("sendMessagesAutomatically", false),
             preferredMessagingPackage = messaging.optNullableString("preferredMessagingPackage")?.safePackage(),
             preferredAiPackage = magicBox.optNullableString("preferredAiPackage")?.safePackage(),

@@ -40,6 +40,7 @@ import com.katoaapps.openminilaunch.features.magic.MAGIC_COMMAND_PREFIXES
 import com.katoaapps.openminilaunch.model.ContactResult
 import com.katoaapps.openminilaunch.model.FileSearchResult
 import com.katoaapps.openminilaunch.model.LauncherTarget
+import com.katoaapps.openminilaunch.model.LauncherAppTarget
 import com.katoaapps.openminilaunch.model.LauncherShortcutTarget
 import com.katoaapps.openminilaunch.platform.DeviceActions
 import com.katoaapps.openminilaunch.ui.components.LauncherTargetIcon
@@ -79,6 +80,7 @@ internal fun MagicResultsPanel(
     onSelectRecentConversation: (LauncherShortcutTarget) -> Unit,
     onSelectForcedRecipient: (String) -> Unit,
     onSelectApp: (LauncherTarget) -> Unit,
+    onLongPressApp: (LauncherAppTarget) -> Unit,
     onIncludeAppShortcutsChange: (Boolean) -> Unit,
     onRequestContacts: () -> Unit,
     onClearMessage: () -> Unit,
@@ -118,6 +120,7 @@ internal fun MagicResultsPanel(
                 onSelectRecentConversation = onSelectRecentConversation,
                 onSelectForcedRecipient = onSelectForcedRecipient,
                 onSelectApp = onSelectApp,
+                onLongPressApp = onLongPressApp,
                 onIncludeAppShortcutsChange = onIncludeAppShortcutsChange,
                 onRequestContacts = onRequestContacts,
             )
@@ -168,6 +171,7 @@ internal fun MagicResultsContent(
     onSelectRecentConversation: (LauncherShortcutTarget) -> Unit,
     onSelectForcedRecipient: (String) -> Unit,
     onSelectApp: (LauncherTarget) -> Unit,
+    onLongPressApp: (LauncherAppTarget) -> Unit,
     onIncludeAppShortcutsChange: (Boolean) -> Unit,
     onRequestContacts: () -> Unit,
 ) {
@@ -288,6 +292,9 @@ internal fun MagicResultsContent(
         SuggestionRow(
             text = launcherDiscoveryLabel(app, actions::appLabel),
             leadingContent = { LauncherTargetIcon(app, actions, Dimens.dp26) },
+            onLongClick = (app as? LauncherAppTarget)?.let { target ->
+                { onLongPressApp(target) }
+            },
         ) { onSelectApp(app) }
     }
     if (prefix in listOf('@', '#') && !canSearchContacts) {

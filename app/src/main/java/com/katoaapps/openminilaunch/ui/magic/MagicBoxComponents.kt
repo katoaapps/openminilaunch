@@ -15,6 +15,8 @@ import com.katoaapps.openminilaunch.ui.theme.*
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -306,18 +308,27 @@ internal fun CommandChip(
 }
 
 @Composable
+@OptIn(ExperimentalFoundationApi::class)
 internal fun SuggestionRow(
     text: String,
     icon: ImageVector? = null,
     leadingContent: (@Composable () -> Unit)? = null,
     supportingText: String? = null,
+    onLongClick: (() -> Unit)? = null,
     onClick: () -> Unit,
 ) {
     val contentColor = MaterialTheme.colorScheme.onSurface
     Row(
         Modifier.fillMaxWidth().clip(RoundedCornerShape(Dimens.dp14))
             .background(MaterialTheme.colorScheme.surfaceContainerLow)
-            .clickable(onClick = onClick).padding(Dimens.dp12),
+            .then(
+                if (onLongClick == null) {
+                    Modifier.clickable(onClick = onClick)
+                } else {
+                    Modifier.combinedClickable(onClick = onClick, onLongClick = onLongClick)
+                },
+            )
+            .padding(Dimens.dp12),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         if (leadingContent != null) leadingContent() else icon?.let {

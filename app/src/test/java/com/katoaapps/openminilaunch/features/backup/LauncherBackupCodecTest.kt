@@ -82,6 +82,7 @@ class LauncherBackupCodecTest {
             iconAppearance = IconAppearance(),
             openSoftwareKeyboardOnHome = true,
             includeAppShortcutsInDiscovery = false,
+            automaticAppBubbleTargets = listOf("app:0:com.example/.MainActivity"),
             sendMessagesAutomatically = false,
             preferredMessagingPackage = null,
             preferredAiPackage = null,
