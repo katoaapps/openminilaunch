@@ -492,7 +492,90 @@ internal fun MagicBoxContent(
         refocus()
     }
 
+    fun selectContact(contact: ContactResult) {
+        if (prefix == '#') {
+            callFlow.requestConfirmation(contact.toCommunicationRecipient())
+            collapseForDialog()
+        } else {
+            lockedPrefix = prefix
+            selectedRecipient = SelectedMessageRecipient.AddressRecipient(
+                contact.toCommunicationRecipient(),
+            )
+            text = TextFieldValue()
+            refocus()
+        }
+    }
+
+    fun selectRecentConversation(conversation: LauncherShortcutTarget) {
+        handleRecentConversationTap(
+            context = context,
+            shortcut = conversation,
+            canSearchContacts = canSearchContacts,
+            actions = actions,
+            onShortcutDraft = { shortcut ->
+                lockedPrefix = '@'
+                selectedRecipient = SelectedMessageRecipient.ConversationRecipient(shortcut)
+                text = TextFieldValue()
+                refocus()
+            },
+            onDraftRecipient = { contact, packageName ->
+                lockedPrefix = '@'
+                selectedRecipient = SelectedMessageRecipient.AddressRecipient(
+                    recipient = contact.toCommunicationRecipient(),
+                    providerPackage = packageName,
+                )
+                text = TextFieldValue()
+                refocus()
+            },
+            onDirectOpen = ::dismiss,
+        )
+    }
+
+    fun selectApp(app: LauncherTarget) {
+        if (app is LauncherAppTarget && appBubbleFlow.opensAutomatically(app)) {
+            appBubbleFlow.launchInBubble(app)
+        } else if (actions.launchLauncherTarget(app)) {
+            store.addSearchQuery("?${app.label}")
+            dismiss()
+        } else {
+            val displayLabel = launcherDiscoveryLabel(app, actions::appLabel)
+            Toast.makeText(
+                context,
+                context.getString(R.string.launcher_app_unavailable, displayLabel),
+                Toast.LENGTH_LONG,
+            ).show()
+        }
+    }
+
+    fun showAppActions(target: LauncherAppTarget) {
+        keyboard?.hide()
+        appBubbleFlow.showActions(target)
+    }
+
+    fun selectFirstCommandResult(): Boolean {
+        when (prefix) {
+            '@', '#' -> {
+                contactResults.firstOrNull()?.let {
+                    selectContact(it)
+                    return true
+                }
+                if (prefix == '@') {
+                    visibleRecentConversations.firstOrNull()?.let {
+                        selectRecentConversation(it)
+                        return true
+                    }
+                }
+            }
+            '?' -> visibleAppResults.firstOrNull()?.let {
+                selectApp(it)
+                return true
+            }
+        }
+        return false
+    }
+
     fun submit() {
+        if (selectFirstCommandResult()) return
         if (prefix == '+') {
             when (val result = calendarParseResult) {
                 is CalendarParseResult.Success,
@@ -681,44 +764,8 @@ internal fun MagicBoxContent(
                         onRequestFolder = { showFileScopeChoice = true },
                         onSubmitWeb = ::submit,
                         onSubmitAi = ::submitAi,
-                        onSelectContact = { contact ->
-                            if (prefix == '#') {
-                                callFlow.requestConfirmation(contact.toCommunicationRecipient())
-                                collapseForDialog()
-                            } else {
-                                lockedPrefix = prefix
-                                selectedRecipient = SelectedMessageRecipient.AddressRecipient(
-                                    contact.toCommunicationRecipient(),
-                                )
-                                text = TextFieldValue()
-                                refocus()
-                            }
-                        },
-                        onSelectRecentConversation = { conversation ->
-                            handleRecentConversationTap(
-                                context = context,
-                                shortcut = conversation,
-                                canSearchContacts = canSearchContacts,
-                                actions = actions,
-                                onShortcutDraft = { shortcut ->
-                                    lockedPrefix = '@'
-                                    selectedRecipient =
-                                        SelectedMessageRecipient.ConversationRecipient(shortcut)
-                                    text = TextFieldValue()
-                                    refocus()
-                                },
-                                onDraftRecipient = { contact, packageName ->
-                                    lockedPrefix = '@'
-                                    selectedRecipient = SelectedMessageRecipient.AddressRecipient(
-                                        recipient = contact.toCommunicationRecipient(),
-                                        providerPackage = packageName,
-                                    )
-                                    text = TextFieldValue()
-                                    refocus()
-                                },
-                                onDirectOpen = ::dismiss,
-                            )
-                        },
+                        onSelectContact = ::selectContact,
+                        onSelectRecentConversation = ::selectRecentConversation,
                         onSelectForcedRecipient = { identifier ->
                             val recipient = userEnteredRecipient(identifier)
                             if (prefix == '#') {
@@ -738,25 +785,8 @@ internal fun MagicBoxContent(
                                 refocus()
                             }
                         },
-                        onSelectApp = { app ->
-                            if (app is LauncherAppTarget && appBubbleFlow.opensAutomatically(app)) {
-                                appBubbleFlow.launchInBubble(app)
-                            } else if (actions.launchLauncherTarget(app)) {
-                                store.addSearchQuery("?${app.label}")
-                                dismiss()
-                            } else {
-                                val displayLabel = launcherDiscoveryLabel(app, actions::appLabel)
-                                Toast.makeText(
-                                    context,
-                                    context.getString(R.string.launcher_app_unavailable, displayLabel),
-                                    Toast.LENGTH_LONG,
-                                ).show()
-                            }
-                        },
-                        onLongPressApp = { target ->
-                            keyboard?.hide()
-                            appBubbleFlow.showActions(target)
-                        },
+                        onSelectApp = ::selectApp,
+                        onLongPressApp = ::showAppActions,
                         onIncludeAppShortcutsChange = store::updateIncludeAppShortcutsInDiscovery,
                         onRequestContacts = {
                             permissionLauncher.launch(Manifest.permission.READ_CONTACTS)

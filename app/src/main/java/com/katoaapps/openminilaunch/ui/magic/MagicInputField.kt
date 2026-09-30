@@ -36,6 +36,9 @@ import com.katoaapps.openminilaunch.features.magic.MAGIC_NOTE_PREFIX
 import com.katoaapps.openminilaunch.ui.theme.MinkTransparent
 import com.katoaapps.openminilaunch.ui.theme.Muted
 
+private val SEND_IME_PREFIXES = setOf('@', '#', '-', '+', '?')
+private val HARDWARE_SUBMIT_PREFIXES = setOf('@', '#', '-', '?')
+
 internal data class MagicActionVisuals(
     val color: Color,
     val icon: ImageVector,
@@ -73,7 +76,7 @@ internal fun MagicInputField(
         showKeyboardOnFocus = false,
         imeAction = when {
             prefix == MAGIC_NOTE_PREFIX -> ImeAction.Default
-            prefix in listOf('@', '#', '-', '+', '?') -> ImeAction.Send
+            prefix in SEND_IME_PREFIXES -> ImeAction.Send
             else -> ImeAction.Search
         },
     )
@@ -92,7 +95,7 @@ internal fun MagicInputField(
                 if (event.type == KeyEventType.KeyUp) {
                     onHardwareKeyUp(nativeEvent.keyCode)
                 }
-                if (prefix == '-' && event.key == Key.Enter) {
+                if (prefix in HARDWARE_SUBMIT_PREFIXES && event.key == Key.Enter) {
                     if (event.type == KeyEventType.KeyUp) onSubmit()
                     true
                 } else {
