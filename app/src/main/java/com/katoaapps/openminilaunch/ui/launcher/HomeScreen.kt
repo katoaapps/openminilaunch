@@ -55,6 +55,7 @@ internal fun HomeScreen(
     paneModifier: Modifier = Modifier.fillMaxSize(),
     collapsedBarMaxWidth: androidx.compose.ui.unit.Dp = Dimens.dp620,
     collapsedBarOffsetX: androidx.compose.ui.unit.Dp = Dimens.dp0,
+    twoPanelLayout: Boolean = false,
     onPaneInteracted: () -> Unit = {},
     onHorizontalDrag: ((Float) -> Unit)? = null,
     onHorizontalDragFinished: ((Float, Long) -> Unit)? = null,
@@ -132,7 +133,11 @@ internal fun HomeScreen(
             val homeHorizontalPadding = if (qwertyHome) Dimens.dp14 else Dimens.dp22
             val headerActionSize = if (qwertyHome) Dimens.dp40 else Dimens.dp48
             val headerIconSize = if (qwertyHome) Dimens.dp21 else Dimens.dp24
-            val focusPanelHeight = (maxWidth * .78f).coerceIn(Dimens.dp310, Dimens.dp350)
+            val focusPanelHeight = if (twoPanelLayout) {
+                (maxHeight * .7f).coerceIn(Dimens.dp350, Dimens.dp420)
+            } else {
+                (maxWidth * .78f).coerceIn(Dimens.dp310, Dimens.dp350)
+            }
             val imeBottom = WindowInsets.ime.asPaddingValues().calculateBottomPadding()
             val navigationBottom = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()
             val softInputRowHeight = if (magicExpanded) {
@@ -174,6 +179,7 @@ internal fun HomeScreen(
                             actions = actions,
                             appAccessState = appAccessState,
                             qwertyHome = qwertyHome,
+                            expandToAvailableHeight = qwertyHome && !twoPanelLayout,
                             availableHeight = maxHeight,
                             focusPanelHeight = focusPanelHeight,
                             todoJumpToken = todoJumpToken,

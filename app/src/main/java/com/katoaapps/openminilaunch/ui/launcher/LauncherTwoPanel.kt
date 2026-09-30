@@ -123,6 +123,7 @@ internal fun LauncherTwoPanel(
                     .width(paneWidth).fillMaxHeight(),
                 collapsedBarMaxWidth = minOf(paneWidth, Dimens.dp620),
                 collapsedBarOffsetX = collapsedBarOffset,
+                twoPanelLayout = true,
                 onPaneInteracted = { onFocusPage(HOME_PAGE) },
                 onHorizontalDrag = { amount -> listState.dispatchRawDelta(-amount) },
                 onHorizontalDragFinished = { draggedPx, elapsedMillis ->

@@ -38,6 +38,7 @@ internal fun BoxScope.HomeFocusPanel(
     actions: DeviceActions,
     appAccessState: MinkAppAccessState,
     qwertyHome: Boolean,
+    expandToAvailableHeight: Boolean,
     availableHeight: Dp,
     focusPanelHeight: Dp,
     todoJumpToken: Int,
@@ -63,7 +64,11 @@ internal fun BoxScope.HomeFocusPanel(
     } else {
         com.katoaapps.openminilaunch.ui.theme.MinkWhite.copy(alpha = .24f)
     }
-    val panelHeight = if (qwertyHome) availableHeight else minOf(availableHeight, focusPanelHeight)
+    val panelHeight = if (expandToAvailableHeight) {
+        availableHeight
+    } else {
+        minOf(availableHeight, focusPanelHeight)
+    }
     val itemsPerPage = visibleTodoItemsForHeight(panelHeight.value)
     val todoTextMetrics = homeTodoTextMetrics(
         largeDisplay = configuration.smallestScreenWidthDp >= 600,
@@ -72,7 +77,7 @@ internal fun BoxScope.HomeFocusPanel(
         itemsPerPage = itemsPerPage,
         fontScale = fontScale,
     )
-    val focusModifier = if (qwertyHome) {
+    val focusModifier = if (expandToAvailableHeight) {
         Modifier.fillMaxSize()
     } else {
         Modifier.fillMaxWidth().height(focusPanelHeight).align(
