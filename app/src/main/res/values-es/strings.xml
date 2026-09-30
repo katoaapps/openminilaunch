@@ -648,6 +648,14 @@
     <string name="apps">Aplicaciones</string>
     <string name="app_shortcuts">Atajos</string>
     <string name="work_profile">Perfil de trabajo</string>
+    <string name="work_apps">Aplicaciones de trabajo</string>
+    <string name="work_apps_description">Las aplicaciones administradas por tu organización permanecen en este cajón separado. Se pueden buscar en Magic Box y fijar cuando las elijas.</string>
+    <string name="work_profile_active">Perfil de trabajo activo</string>
+    <string name="work_profile_paused">Perfil de trabajo pausado</string>
+    <string name="work_profile_control_description">Android y tu organización controlan este perfil.</string>
+    <string name="work_profile_paused_description">Vuelve a activar el perfil de trabajo para ver y abrir sus aplicaciones.</string>
+    <string name="work_apps_empty">No hay aplicaciones de trabajo disponibles.</string>
+    <string name="work_profile_state_change_failed">Android no pudo cambiar el estado del perfil de trabajo.</string>
     <string name="no_app_shortcuts_found">No se encontraron accesos directos a aplicaciones. Se debe seleccionar MinkLauncher como su aplicación Inicio y las aplicaciones deben publicar accesos directos antes de que puedan aparecer aquí.</string>
     <string name="add_to_home_requests">AÑADIR A PETICIONES A DOMICILIO</string>
     <string name="add_to_home_confirmation">Agregar a la confirmación de inicio</string>

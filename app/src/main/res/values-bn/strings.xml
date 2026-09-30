@@ -648,6 +648,14 @@
     <string name="apps">অ্যাপস</string>
     <string name="app_shortcuts">শর্টকাট</string>
     <string name="work_profile">কাজের প্রোফাইল</string>
+    <string name="work_apps">কাজের অ্যাপ</string>
+    <string name="work_apps_description">আপনার প্রতিষ্ঠান পরিচালিত অ্যাপগুলো এই আলাদা ড্রয়ারে থাকে। এগুলো Magic Box-এ খোঁজা যায় এবং বেছে নিয়ে পিন করা যায়।</string>
+    <string name="work_profile_active">কাজের প্রোফাইল সক্রিয়</string>
+    <string name="work_profile_paused">কাজের প্রোফাইল বিরতিতে</string>
+    <string name="work_profile_control_description">Android এবং আপনার প্রতিষ্ঠান এই প্রোফাইল নিয়ন্ত্রণ করে।</string>
+    <string name="work_profile_paused_description">অ্যাপ দেখতে ও খুলতে কাজের প্রোফাইল আবার চালু করুন।</string>
+    <string name="work_apps_empty">কোনো কাজের অ্যাপ পাওয়া যায়নি।</string>
+    <string name="work_profile_state_change_failed">Android কাজের প্রোফাইলের অবস্থা পরিবর্তন করতে পারেনি।</string>
     <string name="no_app_shortcuts_found">কোনো অ্যাপ শর্টকাট পাওয়া যায়নি। MinkLauncher আপনার হোম অ্যাপ হিসেবে বেছে নিতে হবে এবং অ্যাপগুলি এখানে উপস্থিত হওয়ার আগে শর্টকাট প্রকাশ করতে হবে।</string>
     <string name="add_to_home_requests">হোম অনুরোধ যোগ করুন</string>
     <string name="add_to_home_confirmation">হোম নিশ্চিতকরণ যোগ করুন</string>

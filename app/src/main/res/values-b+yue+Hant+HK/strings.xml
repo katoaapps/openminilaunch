@@ -648,6 +648,14 @@
     <string name="apps">應用程式</string>
     <string name="app_shortcuts">捷徑</string>
     <string name="work_profile">工作簡介</string>
+    <string name="work_apps">工作應用程式</string>
+    <string name="work_apps_description">由你嘅機構管理嘅應用程式會保留喺呢個獨立抽屜。你仍然可以喺 Magic Box 搜尋，亦可以喺揀選後固定。</string>
+    <string name="work_profile_active">工作設定檔已啟用</string>
+    <string name="work_profile_paused">工作設定檔已暫停</string>
+    <string name="work_profile_control_description">Android 同你嘅機構共同管理呢個設定檔。</string>
+    <string name="work_profile_paused_description">重新開啟工作設定檔以查看同開啟入面嘅應用程式。</string>
+    <string name="work_apps_empty">冇可用嘅工作應用程式。</string>
+    <string name="work_profile_state_change_failed">Android 無法更改工作設定檔狀態。</string>
     <string name="no_app_shortcuts_found">搵唔到應用程式捷徑。 MinkLauncher 必須被選為你嘅主頁應用程式，而應用程式必須發佈捷徑先可以喺呢度顯示。</string>
     <string name="add_to_home_requests">加入家居要求</string>
     <string name="add_to_home_confirmation">加入主頁確認</string>

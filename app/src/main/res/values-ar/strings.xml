@@ -656,6 +656,14 @@
     <string name="apps">تطبيقات</string>
     <string name="app_shortcuts">الاختصارات</string>
     <string name="work_profile">الملف الشخصي للعمل</string>
+    <string name="work_apps">تطبيقات العمل</string>
+    <string name="work_apps_description">تبقى التطبيقات التي تديرها مؤسستك في هذا الدرج المنفصل. ويمكن البحث عنها في Magic Box وتثبيتها عند اختيارها.</string>
+    <string name="work_profile_active">الملف الشخصي للعمل نشط</string>
+    <string name="work_profile_paused">الملف الشخصي للعمل متوقف مؤقتًا</string>
+    <string name="work_profile_control_description">يتحكم Android ومؤسستك في هذا الملف الشخصي.</string>
+    <string name="work_profile_paused_description">أعد تشغيل الملف الشخصي للعمل لعرض تطبيقاته وفتحها.</string>
+    <string name="work_apps_empty">لا تتوفر تطبيقات عمل.</string>
+    <string name="work_profile_state_change_failed">تعذر على Android تغيير حالة الملف الشخصي للعمل.</string>
     <string name="no_app_shortcuts_found">لم يتم العثور على اختصارات للتطبيق. يجب تحديد MinkLauncher كتطبيق Home، ويجب أن تنشر التطبيقات الاختصارات قبل أن تظهر هنا.</string>
     <string name="add_to_home_requests">أضف إلى طلبات المنزل</string>
     <string name="add_to_home_confirmation">إضافة إلى تأكيد الصفحة الرئيسية</string>

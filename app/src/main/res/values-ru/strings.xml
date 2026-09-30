@@ -652,6 +652,14 @@
     <string name="apps">Приложения</string>
     <string name="app_shortcuts">Ярлыки</string>
     <string name="work_profile">Профиль работы</string>
+    <string name="work_apps">Рабочие приложения</string>
+    <string name="work_apps_description">Приложения, управляемые вашей организацией, находятся в отдельном списке. Их по-прежнему можно искать в Magic Box и закреплять после выбора.</string>
+    <string name="work_profile_active">Рабочий профиль активен</string>
+    <string name="work_profile_paused">Рабочий профиль приостановлен</string>
+    <string name="work_profile_control_description">Этим профилем управляют Android и ваша организация.</string>
+    <string name="work_profile_paused_description">Снова включите рабочий профиль, чтобы просматривать и открывать его приложения.</string>
+    <string name="work_apps_empty">Нет доступных рабочих приложений.</string>
+    <string name="work_profile_state_change_failed">Android не удалось изменить состояние рабочего профиля.</string>
     <string name="no_app_shortcuts_found">Ярлыки приложений не найдены. MinkLauncher должен быть выбран в качестве домашнего приложения, а приложения должны публиковать ярлыки, прежде чем они смогут появиться здесь.</string>
     <string name="add_to_home_requests">ДОБАВИТЬ В ГЛАВНЫЕ ЗАПРОСЫ</string>
     <string name="add_to_home_confirmation">Добавить на главную подтверждение</string>

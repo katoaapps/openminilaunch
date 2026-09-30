@@ -648,6 +648,14 @@
     <string name="apps">ऐप्स</string>
     <string name="app_shortcuts">शॉर्टकट</string>
     <string name="work_profile">कार्य प्रोफ़ाइल</string>
+    <string name="work_apps">कार्य ऐप्स</string>
+    <string name="work_apps_description">आपके संगठन द्वारा प्रबंधित ऐप्स इस अलग ड्रॉअर में रहते हैं। इन्हें Magic Box में खोजा जा सकता है और चुने जाने पर पिन किया जा सकता है।</string>
+    <string name="work_profile_active">कार्य प्रोफ़ाइल सक्रिय है</string>
+    <string name="work_profile_paused">कार्य प्रोफ़ाइल रोकी गई है</string>
+    <string name="work_profile_control_description">Android और आपका संगठन इस प्रोफ़ाइल को नियंत्रित करते हैं।</string>
+    <string name="work_profile_paused_description">ऐप्स देखने और खोलने के लिए कार्य प्रोफ़ाइल फिर से चालू करें।</string>
+    <string name="work_apps_empty">कोई कार्य ऐप उपलब्ध नहीं है।</string>
+    <string name="work_profile_state_change_failed">Android कार्य प्रोफ़ाइल की स्थिति नहीं बदल सका।</string>
     <string name="no_app_shortcuts_found">कोई ऐप शॉर्टकट नहीं मिला. MinkLauncher को आपके होम ऐप के रूप में चुना जाना चाहिए, और ऐप्स को यहां प्रदर्शित होने से पहले शॉर्टकट प्रकाशित करने होंगे।</string>
     <string name="add_to_home_requests">घरेलू अनुरोधों में जोड़ें</string>
     <string name="add_to_home_confirmation">होम पुष्टिकरण में जोड़ें</string>

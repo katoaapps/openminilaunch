@@ -292,6 +292,8 @@ internal fun MagicResultsContent(
         SuggestionRow(
             text = launcherDiscoveryLabel(app, actions::appLabel),
             leadingContent = { LauncherTargetIcon(app, actions, Dimens.dp26) },
+            supportingText = stringResource(R.string.work_profile)
+                .takeIf { app.isWorkProfile },
             onLongClick = (app as? LauncherAppTarget)?.let { target ->
                 { onLongPressApp(target) }
             },

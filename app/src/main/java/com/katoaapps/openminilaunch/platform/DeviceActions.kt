@@ -12,6 +12,8 @@ import com.katoaapps.openminilaunch.features.apps.LauncherAppRepository
 import com.katoaapps.openminilaunch.features.apps.LauncherShortcutRepository
 import com.katoaapps.openminilaunch.features.apps.LegacyLauncherShortcutRepository
 import com.katoaapps.openminilaunch.features.privatespace.PrivateSpaceRepository
+import com.katoaapps.openminilaunch.features.workprofile.WorkProfileRepository
+import com.katoaapps.openminilaunch.features.workprofile.WorkProfileSnapshot
 import com.katoaapps.openminilaunch.features.conversations.NotificationHub
 import com.katoaapps.openminilaunch.features.magic.normalizedWebUrl
 import com.katoaapps.openminilaunch.features.messaging.MessagingDeviceActions
@@ -24,6 +26,7 @@ import com.katoaapps.openminilaunch.features.updates.FDROID_PACKAGE_URL
 import com.katoaapps.openminilaunch.model.*
 import com.katoaapps.openminilaunch.ui.apps.AllAppsActivity
 import com.katoaapps.openminilaunch.ui.apps.PrivateAppsActivity
+import com.katoaapps.openminilaunch.ui.apps.work.WorkAppsActivity
 
 import android.Manifest
 import android.app.ActivityOptions
@@ -54,6 +57,7 @@ class DeviceActions(private val context: Context) {
     private val launcherShortcutRepository = LauncherShortcutRepository.get(context)
     private val legacyShortcutRepository = LegacyLauncherShortcutRepository.get(context)
     private val privateSpaceRepository = PrivateSpaceRepository.get(context)
+    private val workProfileRepository = WorkProfileRepository.get(context)
     val launcherAppsRevision: StateFlow<Long> = launcherAppRepository.revision
     val launcherShortcutsRevision: StateFlow<Long> = launcherShortcutRepository.revision
     private val labelCache = mutableMapOf<String, String>()
@@ -246,6 +250,15 @@ class DeviceActions(private val context: Context) {
     fun openAllApps() = start(Intent(context, AllAppsActivity::class.java))
 
     fun openPrivateApps() = start(Intent(context, PrivateAppsActivity::class.java))
+
+    fun openWorkApps() = start(Intent(context, WorkAppsActivity::class.java))
+
+    internal fun workProfileSnapshot(): WorkProfileSnapshot = workProfileRepository.snapshot()
+
+    fun workProfileAvailable(): Boolean = workProfileRepository.snapshot().available
+
+    fun setWorkProfilePaused(paused: Boolean): Boolean =
+        workProfileRepository.setPaused(paused)
 
     fun privateContainerEntryPointAvailable(userGatewaySelectionKey: String?): Boolean =
         privateSpaceRepository.isEntryPointAvailable() ||

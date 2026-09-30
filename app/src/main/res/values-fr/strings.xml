@@ -648,6 +648,14 @@
     <string name="apps">Applications</string>
     <string name="app_shortcuts">Raccourcis</string>
     <string name="work_profile">Profil de travail</string>
+    <string name="work_apps">Applications professionnelles</string>
+    <string name="work_apps_description">Les applications gérées par votre organisation restent dans ce tiroir séparé. Elles restent accessibles dans Magic Box et peuvent être épinglées lorsque vous les choisissez.</string>
+    <string name="work_profile_active">Profil professionnel actif</string>
+    <string name="work_profile_paused">Profil professionnel suspendu</string>
+    <string name="work_profile_control_description">Android et votre organisation contrôlent ce profil.</string>
+    <string name="work_profile_paused_description">Réactivez le profil professionnel pour afficher et ouvrir ses applications.</string>
+    <string name="work_apps_empty">Aucune application professionnelle n’est disponible.</string>
+    <string name="work_profile_state_change_failed">Android n’a pas pu modifier l’état du profil professionnel.</string>
     <string name="no_app_shortcuts_found">Aucun raccourci d\'application trouvé. MinkLauncher doit être sélectionné comme application Accueil et les applications doivent publier des raccourcis avant de pouvoir apparaître ici.</string>
     <string name="add_to_home_requests">AJOUTER AUX DEMANDES DE MAISON</string>
     <string name="add_to_home_confirmation">Confirmation Ajouter à l\'accueil</string>

@@ -648,6 +648,14 @@
     <string name="apps">アプリ</string>
     <string name="app_shortcuts">ショートカット</string>
     <string name="work_profile">仕事用プロファイル</string>
+    <string name="work_apps">仕事用アプリ</string>
+    <string name="work_apps_description">組織が管理するアプリは、この別のドロワーに表示されます。Magic Box で検索でき、選択して固定することもできます。</string>
+    <string name="work_profile_active">仕事用プロファイルは有効です</string>
+    <string name="work_profile_paused">仕事用プロファイルは一時停止中です</string>
+    <string name="work_profile_control_description">Android と組織がこのプロファイルを管理します。</string>
+    <string name="work_profile_paused_description">仕事用プロファイルを再開すると、アプリを表示して開けます。</string>
+    <string name="work_apps_empty">利用できる仕事用アプリはありません。</string>
+    <string name="work_profile_state_change_failed">Android は仕事用プロファイルの状態を変更できませんでした。</string>
     <string name="no_app_shortcuts_found">アプリのショートカットが見つかりません。 MinkLauncher をホーム アプリとして選択する必要があり、アプリがここに表示される前にショートカットを公開する必要があります。</string>
     <string name="add_to_home_requests">ホームリクエストに追加</string>
     <string name="add_to_home_confirmation">ホームに追加の確認</string>

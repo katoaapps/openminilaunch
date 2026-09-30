@@ -167,6 +167,12 @@
             android:launchMode="singleTop"
             android:theme="@style/Theme.MiniLaunch" />
         <activity
+            android:name=".ui.apps.work.WorkAppsActivity"
+            android:excludeFromRecents="true"
+            android:exported="false"
+            android:launchMode="singleTop"
+            android:theme="@style/Theme.MiniLaunch" />
+        <activity
             android:name=".ui.shortcuts.PinShortcutActivity"
             android:excludeFromRecents="true"
             android:exported="true"

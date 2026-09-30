@@ -648,6 +648,14 @@
     <string name="apps">ایپس</string>
     <string name="app_shortcuts">شارٹ کٹس</string>
     <string name="work_profile">ورک پروفائل</string>
+    <string name="work_apps">ورک ایپس</string>
+    <string name="work_apps_description">آپ کی تنظیم کے زیر انتظام ایپس اس الگ دراز میں رہتی ہیں۔ انہیں Magic Box میں تلاش اور منتخب کر کے پن کیا جا سکتا ہے۔</string>
+    <string name="work_profile_active">ورک پروفائل فعال ہے</string>
+    <string name="work_profile_paused">ورک پروفائل موقوف ہے</string>
+    <string name="work_profile_control_description">Android اور آپ کی تنظیم اس پروفائل کو کنٹرول کرتے ہیں۔</string>
+    <string name="work_profile_paused_description">ایپس دیکھنے اور کھولنے کے لیے ورک پروفائل دوبارہ فعال کریں۔</string>
+    <string name="work_apps_empty">کوئی ورک ایپ دستیاب نہیں ہے۔</string>
+    <string name="work_profile_state_change_failed">Android ورک پروفائل کی حالت تبدیل نہیں کر سکا۔</string>
     <string name="no_app_shortcuts_found">کوئی ایپ شارٹ کٹ نہیں ملا۔ MinkLauncher کو آپ کی ہوم ایپ کے بطور منتخب کیا جانا چاہیے، اور ایپس کو یہاں ظاہر ہونے سے پہلے شارٹ کٹس شائع کرنا چاہیے۔</string>
     <string name="add_to_home_requests">گھریلو درخواستوں میں شامل کریں۔</string>
     <string name="add_to_home_confirmation">ہوم تصدیق میں شامل کریں۔</string>

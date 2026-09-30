@@ -190,7 +190,9 @@ internal fun AllAppsScreen(
     val installedTargets = targetsState.orEmpty()
     val apps = remember(installedTargets, appAccessState) {
         if (appAccessState.isResolved) {
-            installedTargets.filterNot(appAccessState::isPaused)
+            installedTargets
+                .filterNot(LauncherTarget::isWorkProfile)
+                .filterNot(appAccessState::isPaused)
         } else {
             emptyList()
         }

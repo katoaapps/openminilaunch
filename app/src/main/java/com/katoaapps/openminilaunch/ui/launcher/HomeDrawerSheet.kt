@@ -1,4 +1,7 @@
-@file:OptIn(androidx.compose.material3.ExperimentalMaterial3Api::class)
+@file:OptIn(
+    androidx.compose.material3.ExperimentalMaterial3Api::class,
+    androidx.compose.foundation.layout.ExperimentalLayoutApi::class,
+)
 
 package com.katoaapps.openminilaunch.ui.launcher
 
@@ -7,6 +10,7 @@ import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
@@ -22,6 +26,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowForward
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Apps
+import androidx.compose.material.icons.filled.BusinessCenter
 import androidx.compose.material.icons.filled.Shield
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
@@ -92,11 +97,15 @@ internal fun HomeDrawerSheet(
                 onLaunched = onDismiss,
             )
         }
-        Row(
+        FlowRow(
             Modifier.fillMaxWidth().padding(horizontal = Dimens.dp18, vertical = Dimens.dp4),
             horizontalArrangement = Arrangement.spacedBy(Dimens.dp8, Alignment.End),
+            verticalArrangement = Arrangement.spacedBy(Dimens.dp8),
         ) {
-            if (actions.privateContainerEntryPointAvailable(store.privateContainerGatewaySelectionKey)) {
+            if (
+                store.demoSearchDataEnabled ||
+                actions.privateContainerEntryPointAvailable(store.privateContainerGatewaySelectionKey)
+            ) {
                 FilledTonalButton(
                     onClick = {
                         onDismiss()
@@ -106,6 +115,20 @@ internal fun HomeDrawerSheet(
                     Icon(Icons.Default.Shield, null)
                     Text(
                         stringResource(R.string.privacy_apps),
+                        modifier = Modifier.padding(start = Dimens.dp6),
+                    )
+                }
+            }
+            if (store.demoSearchDataEnabled || actions.workProfileAvailable()) {
+                FilledTonalButton(
+                    onClick = {
+                        onDismiss()
+                        actions.openWorkApps()
+                    },
+                ) {
+                    Icon(Icons.Default.BusinessCenter, null)
+                    Text(
+                        stringResource(R.string.work_apps),
                         modifier = Modifier.padding(start = Dimens.dp6),
                     )
                 }

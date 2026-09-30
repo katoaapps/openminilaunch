@@ -648,6 +648,14 @@
     <string name="apps">Aplikasi</string>
     <string name="app_shortcuts">Jalan pintas</string>
     <string name="work_profile">Profil kerja</string>
+    <string name="work_apps">Aplikasi kerja</string>
+    <string name="work_apps_description">Aplikasi yang dikelola organisasi Anda berada di laci terpisah ini. Aplikasi tetap dapat dicari di Magic Box dan disematkan saat Anda memilihnya.</string>
+    <string name="work_profile_active">Profil kerja aktif</string>
+    <string name="work_profile_paused">Profil kerja dijeda</string>
+    <string name="work_profile_control_description">Android dan organisasi Anda mengontrol profil ini.</string>
+    <string name="work_profile_paused_description">Aktifkan kembali profil kerja untuk melihat dan membuka aplikasinya.</string>
+    <string name="work_apps_empty">Tidak ada aplikasi kerja yang tersedia.</string>
+    <string name="work_profile_state_change_failed">Android tidak dapat mengubah status profil kerja.</string>
     <string name="no_app_shortcuts_found">Tidak ada pintasan aplikasi yang ditemukan. MinkLauncher harus dipilih sebagai aplikasi Beranda Anda, dan aplikasi harus memublikasikan pintasan sebelum dapat muncul di sini.</string>
     <string name="add_to_home_requests">TAMBAHKAN KE PERMINTAAN RUMAH</string>
     <string name="add_to_home_confirmation">Konfirmasi Tambahkan ke Beranda</string>

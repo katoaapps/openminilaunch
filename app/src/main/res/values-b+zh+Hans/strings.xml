@@ -648,6 +648,14 @@
     <string name="apps">应用程序</string>
     <string name="app_shortcuts">快捷方式</string>
     <string name="work_profile">工作简介</string>
+    <string name="work_apps">工作应用</string>
+    <string name="work_apps_description">由你的组织管理的应用会保留在这个独立抽屉中。它们仍可在 Magic Box 中搜索，也可以在你选择后固定。</string>
+    <string name="work_profile_active">工作资料已启用</string>
+    <string name="work_profile_paused">工作资料已暂停</string>
+    <string name="work_profile_control_description">Android 和你的组织共同管理此资料。</string>
+    <string name="work_profile_paused_description">重新开启工作资料以查看和打开其中的应用。</string>
+    <string name="work_apps_empty">没有可用的工作应用。</string>
+    <string name="work_profile_state_change_failed">Android 无法更改工作资料状态。</string>
     <string name="no_app_shortcuts_found">未找到应用程序快捷方式。必须选择 MinkLauncher 作为您的家庭应用程序，并且应用程序必须发布快捷方式才能显示在此处。</string>
     <string name="add_to_home_requests">添加到主页请求</string>
     <string name="add_to_home_confirmation">添加到主页确认</string>

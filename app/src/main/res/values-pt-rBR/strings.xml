@@ -648,6 +648,14 @@
     <string name="apps">Aplicativos</string>
     <string name="app_shortcuts">Atalhos</string>
     <string name="work_profile">Perfil de trabalho</string>
+    <string name="work_apps">Apps de trabalho</string>
+    <string name="work_apps_description">Os apps gerenciados pela sua organização ficam nesta gaveta separada. Eles continuam pesquisáveis na Magic Box e podem ser fixados quando você os escolher.</string>
+    <string name="work_profile_active">Perfil de trabalho ativo</string>
+    <string name="work_profile_paused">Perfil de trabalho pausado</string>
+    <string name="work_profile_control_description">O Android e sua organização controlam este perfil.</string>
+    <string name="work_profile_paused_description">Ative novamente o perfil de trabalho para ver e abrir os apps.</string>
+    <string name="work_apps_empty">Nenhum app de trabalho está disponível.</string>
+    <string name="work_profile_state_change_failed">O Android não conseguiu alterar o estado do perfil de trabalho.</string>
     <string name="no_app_shortcuts_found">Nenhum atalho de aplicativo encontrado. MinkLauncher deve ser selecionado como seu aplicativo Home, e os aplicativos devem publicar atalhos antes que possam aparecer aqui.</string>
     <string name="add_to_home_requests">ADICIONAR AOS PEDIDOS DE CASA</string>
     <string name="add_to_home_confirmation">Confirmação de Adicionar à página inicial</string>
