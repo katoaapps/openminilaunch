@@ -9,6 +9,7 @@ internal enum class SettingsDestination {
     LAUNCHER,
     APPEARANCE,
     SHORTCUTS,
+    PRIVACY_APPS,
     PIN_SHORTCUT_REQUESTS,
     MAGIC_BOX,
     APP_BUBBLES,
@@ -41,7 +42,8 @@ internal fun settingsPathTo(destination: SettingsDestination): List<SettingsDest
     )
     SettingsDestination.LAUNCHER -> listOf(SettingsDestination.OVERVIEW, SettingsDestination.LAUNCHER)
     SettingsDestination.APPEARANCE,
-    SettingsDestination.SHORTCUTS -> listOf(
+    SettingsDestination.SHORTCUTS,
+    SettingsDestination.PRIVACY_APPS -> listOf(
         SettingsDestination.OVERVIEW,
         SettingsDestination.LAUNCHER,
         destination,

@@ -38,7 +38,9 @@ internal fun SettingsScreen(
     var appListRefresh by remember { mutableIntStateOf(0) }
     val launcherAppsRevision by actions.launcherAppsRevision.collectAsState()
     val launcherShortcutsRevision by actions.launcherShortcutsRevision.collectAsState()
-    val loadLauncherTargets = picker is SettingsPicker.ShortcutApp || picker == SettingsPicker.DrawerApps
+    val loadLauncherTargets = picker is SettingsPicker.ShortcutApp ||
+        picker == SettingsPicker.DrawerApps ||
+        picker == SettingsPicker.PrivateContainerGateway
     val installedApps by produceState(
         LauncherAppListLoadState(),
         loadLauncherTargets,
@@ -146,6 +148,23 @@ internal fun SettingsScreen(
         }
     }
     LaunchedEffect(
+        installedApps.loaded,
+        installedApps.apps,
+        installedShortcuts.loaded,
+        installedShortcuts.shortcuts,
+        store.privateContainerGatewaySelectionKey,
+    ) {
+        val savedGateway = store.privateContainerGatewaySelectionKey ?: return@LaunchedEffect
+        if (
+            installedApps.loaded && installedShortcuts.loaded &&
+            installedApps.apps.none { it.selectionKey == savedGateway } &&
+            installedShortcuts.shortcuts.none { it.selectionKey == savedGateway }
+        ) {
+            store.clearPrivateContainerGateway()
+            actions.syncPinnedLauncherShortcuts(store.pinnedLauncherSelectionKeys)
+        }
+    }
+    LaunchedEffect(
         messagingProviders.loaded,
         messagingProviders.options,
         store.preferredMessagingPackage,
@@ -212,6 +231,9 @@ internal fun SettingsScreen(
                 onIconStyleApplied = onIconStyleApplied,
                 onPickShortcut = { picker = SettingsPicker.ShortcutApp(it) },
                 onPickDrawer = { picker = SettingsPicker.DrawerApps },
+                onPickPrivateContainerGateway = {
+                    picker = SettingsPicker.PrivateContainerGateway
+                },
                 onPickWeb = { picker = SettingsPicker.WebApp },
                 onPickAi = { picker = SettingsPicker.CuratedAiApp },
                 onPickMessagingApp = { picker = SettingsPicker.MessagingApp },

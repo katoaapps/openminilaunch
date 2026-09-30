@@ -31,6 +31,7 @@ import androidx.compose.material.icons.filled.GridView
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Palette
 import androidx.compose.material.icons.filled.Restore
+import androidx.compose.material.icons.filled.Shield
 import androidx.compose.material.icons.filled.Translate
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Text
@@ -98,6 +99,11 @@ internal fun LauncherSettingsPage(
             ),
             Icons.Default.GridView,
         ) { onNavigate(SettingsDestination.SHORTCUTS) }
+        SettingsRow(
+            stringResource(R.string.privacy_apps),
+            stringResource(R.string.privacy_apps_settings_summary),
+            Icons.Default.Shield,
+        ) { onNavigate(SettingsDestination.PRIVACY_APPS) }
     }
 }
 

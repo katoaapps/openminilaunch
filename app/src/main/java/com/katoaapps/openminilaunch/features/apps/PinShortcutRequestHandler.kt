@@ -14,6 +14,8 @@ import android.os.UserManager
 import com.katoaapps.openminilaunch.model.LegacyLauncherShortcutTarget
 import com.katoaapps.openminilaunch.model.LauncherTarget
 import com.katoaapps.openminilaunch.model.LauncherShortcutTarget
+import com.katoaapps.openminilaunch.features.privatespace.AndroidProfileClassifier
+import com.katoaapps.openminilaunch.features.privatespace.AndroidProfileKind
 import java.util.UUID
 
 const val LEGACY_INSTALL_SHORTCUT_ACTION = "com.android.launcher.action.INSTALL_SHORTCUT"
@@ -24,6 +26,7 @@ internal class PinShortcutRequestHandler(context: Context) {
     private val launcherApps = appContext.getSystemService(LauncherApps::class.java)
     private val legacyRepository = LegacyLauncherShortcutRepository.get(appContext)
     private val userManager = appContext.getSystemService(UserManager::class.java)
+    private val profileClassifier = AndroidProfileClassifier(launcherApps)
     private val personalSerial = userManager?.getSerialNumberForUser(Process.myUserHandle()) ?: 0L
     private val densityDpi = appContext.resources.displayMetrics.densityDpi
 
@@ -43,6 +46,11 @@ internal class PinShortcutRequestHandler(context: Context) {
         val request = runCatching { service.getPinItemRequest(intent) }.getOrNull() ?: return null
         if (request.requestType != LauncherApps.PinItemRequest.REQUEST_TYPE_SHORTCUT) return null
         val info = request.shortcutInfo ?: return null
+        val profileKind = profileClassifier.classify(info.userHandle)
+        if (
+            profileKind == AndroidProfileKind.PRIVATE ||
+            profileKind == AndroidProfileKind.UNKNOWN
+        ) return null
         val userSerial = userManager?.getSerialNumberForUser(info.userHandle)?.takeIf { it >= 0 }
             ?: return null
         val appLabel = publisherLabel(service, info)

@@ -22,6 +22,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowForward
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Apps
+import androidx.compose.material.icons.filled.Shield
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.FilledTonalButton
@@ -93,8 +94,22 @@ internal fun HomeDrawerSheet(
         }
         Row(
             Modifier.fillMaxWidth().padding(horizontal = Dimens.dp18, vertical = Dimens.dp4),
-            horizontalArrangement = Arrangement.End,
+            horizontalArrangement = Arrangement.spacedBy(Dimens.dp8, Alignment.End),
         ) {
+            if (actions.privateContainerEntryPointAvailable(store.privateContainerGatewaySelectionKey)) {
+                FilledTonalButton(
+                    onClick = {
+                        onDismiss()
+                        actions.openPrivateApps()
+                    },
+                ) {
+                    Icon(Icons.Default.Shield, null)
+                    Text(
+                        stringResource(R.string.privacy_apps),
+                        modifier = Modifier.padding(start = Dimens.dp6),
+                    )
+                }
+            }
             FilledTonalButton(
                 onClick = {
                     onDismiss()

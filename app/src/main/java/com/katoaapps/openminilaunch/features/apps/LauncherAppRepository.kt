@@ -3,6 +3,8 @@ package com.katoaapps.openminilaunch.features.apps
 import com.katoaapps.openminilaunch.model.LauncherAppTarget
 import com.katoaapps.openminilaunch.model.LauncherTarget
 import com.katoaapps.openminilaunch.model.launcherAppIdentity
+import com.katoaapps.openminilaunch.features.privatespace.AndroidProfileClassifier
+import com.katoaapps.openminilaunch.features.privatespace.AndroidProfileKind
 
 import android.content.ComponentName
 import android.content.Context
@@ -23,6 +25,7 @@ internal class LauncherAppRepository private constructor(context: Context) {
     private val launcherApps = appContext.getSystemService(LauncherApps::class.java)
     private val userManager = appContext.getSystemService(UserManager::class.java)
     private val personalUser = Process.myUserHandle()
+    private val profileClassifier = AndroidProfileClassifier(launcherApps)
     private val personalSerial = userManager?.getSerialNumberForUser(personalUser) ?: 0L
     private val densityDpi = appContext.resources.displayMetrics.densityDpi
     private val dynamicCalendarIcons = DynamicCalendarIconResolver(appContext, densityDpi)
@@ -52,11 +55,11 @@ internal class LauncherAppRepository private constructor(context: Context) {
             targetsCache?.let { return@synchronized it }
             val service = launcherApps ?: return@synchronized emptyList()
             activityCache.clear()
-            val discovered = accessibleProfiles(service).flatMap { user ->
+            val discovered = ordinaryProfiles(service).flatMap { user ->
                 val serial = userManager?.getSerialNumberForUser(user)?.takeIf { it >= 0 }
                     ?: return@flatMap emptyList()
-                // LauncherApps exposes the current profile plus managed profiles. A different
-                // serial therefore identifies a work-profile copy, even when packages match.
+                // Private Space is filtered before this point. Other non-personal profiles retain
+                // OpenMink's existing work-style presentation and isolation behavior.
                 val workProfile = serial != personalSerial
                 val quiet = runCatching { userManager?.isQuietModeEnabled(user) == true }.getOrDefault(false)
                 runCatching { service.getActivityList(null, user) }.getOrDefault(emptyList()).map { info ->
@@ -154,6 +157,13 @@ internal class LauncherAppRepository private constructor(context: Context) {
     private fun accessibleProfiles(service: LauncherApps): List<UserHandle> = runCatching {
         service.profiles
     }.getOrDefault(emptyList()).ifEmpty { listOf(personalUser) }
+
+    private fun ordinaryProfiles(service: LauncherApps): List<UserHandle> =
+        accessibleProfiles(service).filter { user ->
+            profileClassifier.classify(user).let { kind ->
+                kind != AndroidProfileKind.PRIVATE && kind != AndroidProfileKind.UNKNOWN
+            }
+        }
 
     private fun activityInfo(selectionKey: String): LauncherActivityInfo? {
         synchronized(cacheLock) { activityCache[selectionKey]?.let { return it } }

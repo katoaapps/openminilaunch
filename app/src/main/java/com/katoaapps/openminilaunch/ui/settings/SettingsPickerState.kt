@@ -10,6 +10,7 @@ import com.katoaapps.openminilaunch.model.Shortcut
 internal sealed interface SettingsPicker {
     data class ShortcutApp(val shortcut: Shortcut) : SettingsPicker
     data object DrawerApps : SettingsPicker
+    data object PrivateContainerGateway : SettingsPicker
     data object CuratedAiApp : SettingsPicker
     data object CompatibleAiApp : SettingsPicker
     data object WebApp : SettingsPicker

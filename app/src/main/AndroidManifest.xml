@@ -9,6 +9,8 @@
     <uses-permission android:name="android.permission.SEND_SMS" />
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
     <uses-permission android:name="android.permission.EXPAND_STATUS_BAR" />
+    <!-- Normal permission used by the default launcher to discover Android 15 Private Space. -->
+    <uses-permission android:name="android.permission.ACCESS_HIDDEN_PROFILES" />
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" android:maxSdkVersion="32" />
     <uses-permission android:name="android.permission.READ_MEDIA_IMAGES" />
     <uses-permission android:name="android.permission.READ_MEDIA_VIDEO" />
@@ -76,6 +78,10 @@
         <package android:name="com.viber.voip" />
         <package android:name="com.facebook.orca" />
         <package android:name="com.Slack" />
+        <!-- Samsung exposes Secure Folder as an OEM-owned container gateway. -->
+        <package android:name="com.samsung.knox.securefolder" />
+        <!-- Motorola documents Moto Secure as the public entrance to Secure Folder. -->
+        <package android:name="com.motorola.securityhub" />
         <package android:name="com.microsoft.teams" />
         <package android:name="com.discord" />
         <package android:name="com.snapchat.android" />
@@ -150,6 +156,12 @@
             android:targetActivity=".ui.magic.AssistantActivity" />
         <activity
             android:name=".ui.apps.AllAppsActivity"
+            android:excludeFromRecents="true"
+            android:exported="false"
+            android:launchMode="singleTop"
+            android:theme="@style/Theme.MiniLaunch" />
+        <activity
+            android:name=".ui.apps.PrivateAppsActivity"
             android:excludeFromRecents="true"
             android:exported="false"
             android:launchMode="singleTop"

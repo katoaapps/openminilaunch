@@ -23,6 +23,7 @@ internal fun SettingsDestinationContent(
     onIconStyleApplied: () -> Unit,
     onPickShortcut: (Shortcut) -> Unit,
     onPickDrawer: () -> Unit,
+    onPickPrivateContainerGateway: () -> Unit,
     onPickWeb: () -> Unit,
     onPickAi: () -> Unit,
     onPickMessagingApp: () -> Unit,
@@ -56,6 +57,12 @@ internal fun SettingsDestinationContent(
             onPickShortcut = onPickShortcut,
             onPickDrawer = onPickDrawer,
             onNavigate = onNavigate,
+            goBack = onNavigateBack,
+        )
+        SettingsDestination.PRIVACY_APPS -> PrivacyAppsSettingsPage(
+            store = store,
+            actions = actions,
+            onPickGateway = onPickPrivateContainerGateway,
             goBack = onNavigateBack,
         )
         SettingsDestination.PIN_SHORTCUT_REQUESTS -> PinShortcutRequestsSettingsPage(

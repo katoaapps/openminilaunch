@@ -10,6 +10,8 @@ import android.os.UserHandle
 import android.os.UserManager
 import com.katoaapps.openminilaunch.model.LauncherShortcutTarget
 import com.katoaapps.openminilaunch.model.launcherShortcutIdentity
+import com.katoaapps.openminilaunch.features.privatespace.AndroidProfileClassifier
+import com.katoaapps.openminilaunch.features.privatespace.AndroidProfileKind
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -21,6 +23,7 @@ internal class LauncherShortcutRepository private constructor(context: Context) 
     private val launcherApps = appContext.getSystemService(LauncherApps::class.java)
     private val userManager = appContext.getSystemService(UserManager::class.java)
     private val personalUser = Process.myUserHandle()
+    private val profileClassifier = AndroidProfileClassifier(launcherApps)
     private val personalSerial = userManager?.getSerialNumberForUser(personalUser) ?: 0L
     private val densityDpi = appContext.resources.displayMetrics.densityDpi
     private val revisionState = MutableStateFlow(0L)
@@ -63,7 +66,7 @@ internal class LauncherShortcutRepository private constructor(context: Context) 
                     LauncherApps.ShortcutQuery.FLAG_MATCH_PINNED or
                     LauncherApps.ShortcutQuery.FLAG_MATCH_CACHED,
             )
-            val discovered = accessibleProfiles(service).flatMap { user ->
+            val discovered = ordinaryProfiles(service).flatMap { user ->
                 val serial = userManager?.getSerialNumberForUser(user)?.takeIf { it >= 0 }
                     ?: return@flatMap emptyList()
                 val workProfile = serial != personalSerial
@@ -187,6 +190,13 @@ internal class LauncherShortcutRepository private constructor(context: Context) 
     private fun accessibleProfiles(service: LauncherApps): List<UserHandle> = runCatching {
         service.profiles
     }.getOrDefault(emptyList()).ifEmpty { listOf(personalUser) }
+
+    private fun ordinaryProfiles(service: LauncherApps): List<UserHandle> =
+        accessibleProfiles(service).filter { user ->
+            profileClassifier.classify(user).let { kind ->
+                kind != AndroidProfileKind.PRIVATE && kind != AndroidProfileKind.UNKNOWN
+            }
+        }
 
     private fun packageLabel(packageName: String): String = runCatching {
         val info = appContext.packageManager.getApplicationInfo(packageName, 0)

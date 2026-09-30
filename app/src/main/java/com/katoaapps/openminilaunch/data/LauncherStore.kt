@@ -29,6 +29,7 @@ class LauncherStore private constructor(context: Context) {
     private val pinShortcutPreferences = PinShortcutPreferenceStore(prefs)
     private val appDiscoveryPreferences = AppDiscoveryPreferenceStore(prefs)
     private val appBubblePreferences = AppBubblePreferenceStore(prefs)
+    private val privateContainerPreferences = PrivateContainerPreferenceStore(prefs)
     private val homeWallpaperRepository = HomeWallpaperRepository(appContext)
     internal val profileRepository = ProfileRepository(appContext)
     private val demoPreferences: DemoPreferenceStore = DemoPreferenceStore(appContext, prefs, todoStore)
@@ -44,7 +45,10 @@ class LauncherStore private constructor(context: Context) {
     /** App-published shortcuts shown in Magic Box search and the All Apps carousel. */
     val libraryShortcutTargets get() = launcherSelections.libraryShortcutTargets
     val pinnedLauncherSelectionKeys: List<String>
-        get() = (shortcutTargets.values + drawerTargets + libraryShortcutTargets).distinct()
+        get() = (
+            shortcutTargets.values + drawerTargets + libraryShortcutTargets +
+                listOfNotNull(privateContainerGatewaySelectionKey)
+            ).distinct()
     val searchFolders get() = searchStore.folders
     val searchHistory get() = searchStore.history
     val widgetIds get() = widgetStore.ids
@@ -83,6 +87,7 @@ class LauncherStore private constructor(context: Context) {
     val pinShortcutRequestPresentation get() = pinShortcutPreferences.requestPresentation
     val includeAppShortcutsInDiscovery get() = appDiscoveryPreferences.includeAppShortcuts
     val automaticAppBubbleTargets get() = appBubblePreferences.automaticTargetKeys
+    val privateContainerGatewaySelectionKey get() = privateContainerPreferences.gatewaySelectionKey
     val effectiveHomePanelColorArgb: Int
         get() = demoPreferences.effectivePanelColor(homePanelColorArgb)
     val watermelonModeEnabled: Boolean
@@ -212,6 +217,14 @@ class LauncherStore private constructor(context: Context) {
 
     fun setAppBubbleAutomatic(targetKey: String, enabled: Boolean) {
         appBubblePreferences.setAutomatic(targetKey, enabled)
+    }
+
+    fun setPrivateContainerGateway(selectionKey: String) {
+        privateContainerPreferences.setGateway(selectionKey)
+    }
+
+    fun clearPrivateContainerGateway() {
+        privateContainerPreferences.clearGateway()
     }
 
     internal fun replaceAutomaticAppBubbleTargets(targetKeys: Collection<String>) {

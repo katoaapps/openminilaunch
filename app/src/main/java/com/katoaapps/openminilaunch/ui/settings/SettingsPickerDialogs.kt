@@ -53,6 +53,28 @@ internal fun SettingsPickerDialogs(
             installedShortcuts = installedShortcuts,
             onDismiss = { onPickerChange(null) },
         )
+        SettingsPicker.PrivateContainerGateway -> LauncherTargetPickerDialog(
+            title = stringResource(R.string.choose_private_container_gateway),
+            apps = installedApps.apps.filterNot { it.isWorkProfile },
+            shortcuts = installedShortcuts.shortcuts.filterNot { it.isWorkProfile },
+            selected = setOfNotNull(store.privateContainerGatewaySelectionKey),
+            actions = actions,
+            appsLoading = !installedApps.loaded,
+            shortcutsLoading = !installedShortcuts.loaded,
+            supportingText = stringResource(R.string.private_container_gateway_picker_description),
+            onTarget = { target ->
+                store.setPrivateContainerGateway(target.selectionKey)
+                actions.syncPinnedSelectionsFrom(store)
+                onPickerChange(null)
+            },
+            onReset = {
+                store.clearPrivateContainerGateway()
+                actions.syncPinnedSelectionsFrom(store)
+                onPickerChange(null)
+            },
+            resetLabel = stringResource(R.string.remove_private_container_gateway),
+            onDismiss = { onPickerChange(null) },
+        )
         SettingsPicker.CuratedAiApp -> AiProviderPickerDialog(
             title = stringResource(R.string.choose_ai_app_title),
             options = aiProviders.options,
