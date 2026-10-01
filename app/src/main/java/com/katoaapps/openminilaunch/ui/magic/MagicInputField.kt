@@ -32,6 +32,7 @@ import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.TextFieldValue
 import com.katoaapps.openminilaunch.R
+import com.katoaapps.openminilaunch.features.magic.MAGIC_AI_PREFIX
 import com.katoaapps.openminilaunch.features.magic.MAGIC_NOTE_PREFIX
 import com.katoaapps.openminilaunch.ui.theme.MinkTransparent
 import com.katoaapps.openminilaunch.ui.theme.Muted
@@ -75,7 +76,7 @@ internal fun MagicInputField(
     val keyboardOptions = KeyboardOptions(
         showKeyboardOnFocus = false,
         imeAction = when {
-            prefix == MAGIC_NOTE_PREFIX -> ImeAction.Default
+            prefix == MAGIC_NOTE_PREFIX || prefix == MAGIC_AI_PREFIX -> ImeAction.Default
             prefix in SEND_IME_PREFIXES -> ImeAction.Send
             else -> ImeAction.Search
         },

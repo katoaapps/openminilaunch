@@ -74,7 +74,9 @@ class LauncherStore private constructor(context: Context) {
     val homePanelTransparency get() = appearancePreferences.homePanelTransparency
     val appBackgroundColorArgb get() = appearancePreferences.appBackgroundColorArgb
     val appBackgroundImageEnabled: Boolean
-        get() = appearancePreferences.appBackgroundImageEnabled && homeWallpaperRepository.hasWallpaper()
+        get() = !demoPreferences.enabled &&
+            appearancePreferences.appBackgroundImageEnabled &&
+            homeWallpaperRepository.hasWallpaper()
     val appBackgroundImageRevision get() = appearancePreferences.appBackgroundImageRevision
     internal val appBackgroundImageFile get() = homeWallpaperRepository.wallpaperFile
     val iconAppearance get() = iconAppearancePreferences.appearance

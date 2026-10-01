@@ -317,6 +317,7 @@ internal fun MagicBoxContent(
         }
     }
     val plainQuery = parsedInput.plainQuery
+    val aiQuery = if (prefix == MAGIC_AI_PREFIX) text.text.drop(1).trim() else plainQuery
     val noteMode = expanded && prefix == MAGIC_NOTE_PREFIX
     val hasTextDraft = expanded && hasMagicBoxDraftText(text.text, lockedPrefix)
     val hasNoteDraft = noteMode && hasTextDraft
@@ -345,6 +346,7 @@ internal fun MagicBoxContent(
             MagicActionVisuals(MagicEventColor, Icons.Default.Event)
         }
         '?' -> MagicActionVisuals(MagicAppColor, Icons.Default.Apps)
+        MAGIC_AI_PREFIX -> MagicActionVisuals(MinkBlack, Icons.Default.AutoAwesome)
         else -> MagicActionVisuals(
             MaterialTheme.colorScheme.primary,
             Icons.Default.Search,
@@ -454,7 +456,7 @@ internal fun MagicBoxContent(
     }
 
     fun submitAi() {
-        val query = plainQuery
+        val query = aiQuery
         if (query.isBlank()) return
         val preferredPackage = store.preferredAiPackage
         if (!preferredPackage.isNullOrBlank()) {
@@ -577,6 +579,10 @@ internal fun MagicBoxContent(
 
     fun submit() {
         if (selectFirstCommandResult()) return
+        if (prefix == MAGIC_AI_PREFIX) {
+            submitAi()
+            return
+        }
         if (prefix == '+') {
             when (val result = calendarParseResult) {
                 is CalendarParseResult.Success,

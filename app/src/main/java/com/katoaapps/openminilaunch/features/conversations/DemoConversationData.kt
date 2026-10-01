@@ -14,8 +14,29 @@ internal object DemoConversationData {
         val karaConversation = "demo:contact:kara-ellis"
         val priyaConversation = "demo:contact:priya-shah"
         val noahConversation = "demo:contact:noah-williams"
+        val mayConversation = "demo:contact:may-wong"
 
         return listOf(
+            notification(
+                key = "demo-messages-may",
+                conversationId = mayConversation,
+                conversationName = "May Wong",
+                packageName = GOOGLE_MESSAGES_PACKAGE,
+                appName = "Messages",
+                postedAt = now - minutes(2),
+                messages = listOf(
+                    message(
+                        id = "demo-messages-may-1",
+                        conversationId = mayConversation,
+                        notificationKey = "demo-messages-may",
+                        packageName = GOOGLE_MESSAGES_PACKAGE,
+                        appName = "Messages",
+                        text = "How many installs are on the latest GitHub build?",
+                        timestamp = now - minutes(2),
+                        senderName = "May Wong",
+                    ),
+                ),
+            ),
             notification(
                 key = "demo-slack-maya-diaz",
                 conversationId = mayaConversation,

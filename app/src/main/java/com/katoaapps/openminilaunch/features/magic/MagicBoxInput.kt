@@ -3,7 +3,8 @@ package com.katoaapps.openminilaunch.features.magic
 import android.content.res.Configuration
 
 internal const val MAGIC_NOTE_PREFIX = '/'
-internal val MAGIC_COMMAND_PREFIXES = setOf('@', '#', '-', MAGIC_NOTE_PREFIX, '+', '?')
+internal const val MAGIC_AI_PREFIX = '*'
+internal val MAGIC_COMMAND_PREFIXES = setOf('@', '#', '-', MAGIC_NOTE_PREFIX, '+', '?', MAGIC_AI_PREFIX)
 
 internal data class MagicBoxInput(
     val prefix: Char?,

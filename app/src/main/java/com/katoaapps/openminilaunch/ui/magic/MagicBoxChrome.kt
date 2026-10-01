@@ -49,6 +49,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.zIndex
 import com.katoaapps.openminilaunch.R
+import com.katoaapps.openminilaunch.features.magic.MAGIC_AI_PREFIX
 import com.katoaapps.openminilaunch.features.magic.printableHardwareText
 import com.katoaapps.openminilaunch.ui.theme.Dimens
 import com.katoaapps.openminilaunch.ui.theme.Muted
@@ -122,7 +123,7 @@ internal fun MagicEditorSurface(
                             Modifier
                         },
                     ),
-                    maxLines = if (noteMode) Int.MAX_VALUE else 5,
+                    maxLines = if (noteMode || prefix == MAGIC_AI_PREFIX) Int.MAX_VALUE else 5,
                 )
                 if (!noteMode) {
                     FilledIconButton(

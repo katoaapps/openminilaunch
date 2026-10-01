@@ -90,6 +90,14 @@ class MagicBoxInputTest {
     }
 
     @Test
+    fun starPrefixProducesAiCommandWithoutPlainSearch() {
+        val input = parseMagicBoxInput("*Summarize this release")
+
+        assertEquals(MAGIC_AI_PREFIX, input.prefix)
+        assertEquals("", input.plainQuery)
+    }
+
+    @Test
     fun dollarPrefixIsNowPlainSearchText() {
         val input = parseMagicBoxInput("\$quarterly revenue")
 
@@ -117,6 +125,7 @@ class MagicBoxInputTest {
     fun commandAndPlainTextAreConsideredDrafts() {
         assertEquals(true, hasMagicBoxDraftText("-Book train tickets"))
         assertEquals(true, hasMagicBoxDraftText("+Dinner Friday at 7"))
+        assertEquals(true, hasMagicBoxDraftText("*Summarize this release"))
         assertEquals(true, hasMagicBoxDraftText("quarterly budget"))
     }
 

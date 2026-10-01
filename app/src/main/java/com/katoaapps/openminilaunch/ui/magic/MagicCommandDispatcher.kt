@@ -1,6 +1,7 @@
 package com.katoaapps.openminilaunch.ui.magic
 
 import com.katoaapps.openminilaunch.data.LauncherStore
+import com.katoaapps.openminilaunch.features.magic.MAGIC_AI_PREFIX
 import com.katoaapps.openminilaunch.features.magic.MAGIC_NOTE_PREFIX
 import com.katoaapps.openminilaunch.features.messaging.MessageDraft
 import com.katoaapps.openminilaunch.features.messaging.ConversationShortcutDraft
@@ -65,7 +66,7 @@ internal fun dispatchMagicCommand(
                 }
             }
         }
-        '#', '?' -> false
+        '#', '?', MAGIC_AI_PREFIX -> false
         else -> rawText.isNotBlank() && actions.webSearch(rawText, store.preferredWebPackage).also {
             if (it) store.addSearchQuery(rawText)
         }
