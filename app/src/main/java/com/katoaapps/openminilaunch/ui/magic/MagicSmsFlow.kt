@@ -21,8 +21,8 @@ import com.katoaapps.openminilaunch.features.messaging.MessageDraft
 import com.katoaapps.openminilaunch.platform.DirectSmsResult
 import com.katoaapps.openminilaunch.features.messaging.PreferredMessageDraftResult
 import com.katoaapps.openminilaunch.platform.DeviceActions
-import com.katoaapps.openminilaunch.ui.launcher.isPermanentlyDenied
-import com.katoaapps.openminilaunch.ui.launcher.supportsDirectSms
+import com.katoaapps.openminilaunch.platform.isPermanentlyDenied
+import com.katoaapps.openminilaunch.platform.supportsDirectSms
 import kotlinx.coroutines.delay
 
 @Stable

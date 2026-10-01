@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="mink_space_mini_apps">MinkSpace Mini-Apps</string>
+    <string name="mink_space_settings_summary">Choose and arrange what lives inside the Home pill</string>
+    <string name="mink_space_settings_description">Swipe up or down inside MinkSpace to switch enabled mini-apps. Swipe left or right to move between pages inside the current mini-app.</string>
+    <string name="mini_apps">Mini-apps</string>
+    <string name="calculator">Calculator</string>
+    <string name="recorder">Recorder</string>
+    <string name="music_player">Music player</string>
+    <string name="swipe_vertically_to_switch">Enabled · Swipe vertically to switch</string>
+    <string name="preview">Preview</string>
+    <string name="open_calculator_lab">Open Calculator Lab</string>
+    <string name="mink_space_lab">MinkSpace Lab</string>
+    <string name="calculator_history">History</string>
+    <string name="clear_history">Clear history</string>
+    <string name="calculator_invalid_expression">Check the expression and try again</string>
+    <string name="delete_last_character">Delete last character</string>
+    <string name="calculator_history_empty">Completed calculations will appear here.</string>
+    <string name="always_enabled">Always enabled</string>
+    <string name="coming_later">Coming later</string>
+    <string name="open_media_lab">Open Media Lab</string>
+    <string name="media_lab">Media Lab</string>
+    <string name="add_media">Add media</string>
+    <string name="media_empty">Add images, GIFs, or videos to preview them here.</string>
+    <string name="media_preview_unavailable">Preview unavailable</string>
+    <string name="open_video">Open video</string>
+    <string name="media_open_failed">No installed app can open this item.</string>
+    <string name="remove_media_title">Remove this media?</string>
+    <string name="remove_media_description">“%1$s” will be removed from MinkSpace. The original file will not be deleted.</string>
+    <string name="video">Video</string>
+    <string name="image_or_gif">Image or GIF</string>
+</resources>

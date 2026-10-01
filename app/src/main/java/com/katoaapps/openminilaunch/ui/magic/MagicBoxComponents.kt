@@ -8,7 +8,6 @@ import com.katoaapps.openminilaunch.features.calendar.*
 import com.katoaapps.openminilaunch.features.conversations.*
 import com.katoaapps.openminilaunch.features.files.*
 import com.katoaapps.openminilaunch.features.magic.*
-import com.katoaapps.openminilaunch.features.todos.*
 import com.katoaapps.openminilaunch.ui.components.*
 import com.katoaapps.openminilaunch.ui.theme.*
 

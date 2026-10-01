@@ -19,16 +19,15 @@ import com.katoaapps.openminilaunch.features.conversations.*
 import com.katoaapps.openminilaunch.features.files.*
 import com.katoaapps.openminilaunch.features.magic.*
 import com.katoaapps.openminilaunch.features.messaging.*
-import com.katoaapps.openminilaunch.features.todos.*
 import com.katoaapps.openminilaunch.features.wellbeing.MinkAppAccessState
 import com.katoaapps.openminilaunch.ui.components.*
 import com.katoaapps.openminilaunch.ui.theme.*
-import com.katoaapps.openminilaunch.ui.launcher.hasMediaReadAccess
-import com.katoaapps.openminilaunch.ui.launcher.isPermanentlyDenied
-import com.katoaapps.openminilaunch.ui.launcher.mediaPermissionPermanentlyDenied
-import com.katoaapps.openminilaunch.ui.launcher.mediaReadPermissions
-import com.katoaapps.openminilaunch.ui.launcher.supportsDirectCalls
-import com.katoaapps.openminilaunch.ui.launcher.supportsDirectSms
+import com.katoaapps.openminilaunch.platform.hasMediaReadAccess
+import com.katoaapps.openminilaunch.platform.isPermanentlyDenied
+import com.katoaapps.openminilaunch.platform.mediaPermissionPermanentlyDenied
+import com.katoaapps.openminilaunch.platform.mediaReadPermissions
+import com.katoaapps.openminilaunch.platform.supportsDirectCalls
+import com.katoaapps.openminilaunch.platform.supportsDirectSms
 import com.katoaapps.openminilaunch.ui.wellbeing.rememberMinkAppAccessState
 
 import android.Manifest

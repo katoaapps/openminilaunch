@@ -32,8 +32,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.LayoutDirection
 import com.katoaapps.openminilaunch.R
-import com.katoaapps.openminilaunch.ui.launcher.currentFoldLayoutFeature
-import com.katoaapps.openminilaunch.ui.launcher.twoPanelGeometry
+import com.katoaapps.openminilaunch.ui.launcher.layout.currentFoldLayoutFeature
+import com.katoaapps.openminilaunch.ui.launcher.layout.twoPanelGeometry
 import com.katoaapps.openminilaunch.ui.theme.Dimens
 import com.katoaapps.openminilaunch.ui.theme.Muted
 

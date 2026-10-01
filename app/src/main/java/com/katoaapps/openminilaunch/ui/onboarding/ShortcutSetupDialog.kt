@@ -55,9 +55,9 @@ import com.katoaapps.openminilaunch.model.Shortcut
 import com.katoaapps.openminilaunch.model.configurableShortcuts
 import com.katoaapps.openminilaunch.platform.DeviceActions
 import com.katoaapps.openminilaunch.ui.components.minkDialogWidth
-import com.katoaapps.openminilaunch.ui.launcher.ShortcutAssignmentRow
-import com.katoaapps.openminilaunch.ui.launcher.displayLabel
-import com.katoaapps.openminilaunch.ui.launcher.displaySlotLabel
+import com.katoaapps.openminilaunch.ui.shortcuts.ShortcutAssignmentRow
+import com.katoaapps.openminilaunch.ui.shortcuts.displayLabel
+import com.katoaapps.openminilaunch.ui.shortcuts.displaySlotLabel
 import com.katoaapps.openminilaunch.ui.settings.LauncherTargetPickerDialog
 import com.katoaapps.openminilaunch.ui.theme.Dimens
 import com.katoaapps.openminilaunch.ui.theme.LightInk

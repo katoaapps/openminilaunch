@@ -3,8 +3,8 @@ package com.katoaapps.openminilaunch.features.demo
 import androidx.annotation.ColorRes
 import androidx.annotation.StringRes
 import com.katoaapps.openminilaunch.R
+import com.katoaapps.openminilaunch.features.minkspace.todo.TodoItem
 import com.katoaapps.openminilaunch.model.Shortcut
-import com.katoaapps.openminilaunch.model.TodoItem
 
 internal enum class DemoHomeProfile(
     @param:StringRes val labelRes: Int,

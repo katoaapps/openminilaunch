@@ -1,10 +1,10 @@
 package com.katoaapps.openminilaunch.data
 
 import android.content.SharedPreferences
+import com.katoaapps.openminilaunch.features.minkspace.todo.TodoItem
 import com.katoaapps.openminilaunch.model.MAX_DRAWER_APPS
 import com.katoaapps.openminilaunch.model.SearchFolder
 import com.katoaapps.openminilaunch.model.Shortcut
-import com.katoaapps.openminilaunch.model.TodoItem
 import com.katoaapps.openminilaunch.model.WidgetGridSize
 import com.katoaapps.openminilaunch.model.configurableShortcuts
 import com.katoaapps.openminilaunch.model.shortcutFromStoredName

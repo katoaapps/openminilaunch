@@ -11,7 +11,7 @@ import com.katoaapps.openminilaunch.model.Shortcut
 import com.katoaapps.openminilaunch.model.configurableShortcuts
 import com.katoaapps.openminilaunch.model.shortcutFromStoredName
 import com.katoaapps.openminilaunch.model.ThemePreference
-import com.katoaapps.openminilaunch.model.TodoItem
+import com.katoaapps.openminilaunch.features.minkspace.todo.TodoItem
 import org.json.JSONArray
 import org.json.JSONObject
 

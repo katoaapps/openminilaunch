@@ -7,7 +7,7 @@ import com.katoaapps.openminilaunch.platform.*
 import com.katoaapps.openminilaunch.ui.components.*
 import com.katoaapps.openminilaunch.ui.theme.*
 import com.katoaapps.openminilaunch.ui.launcher.MainActivity
-import com.katoaapps.openminilaunch.ui.launcher.launcherBackgroundContentColor
+import com.katoaapps.openminilaunch.ui.launcher.home.launcherBackgroundContentColor
 
 import android.app.Activity
 import android.appwidget.AppWidgetManager

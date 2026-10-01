@@ -3,7 +3,10 @@ package com.katoaapps.openminilaunch.data
 import com.katoaapps.openminilaunch.features.appearance.HomeWallpaperRepository
 import com.katoaapps.openminilaunch.features.appearance.WATERMELON_PILL_COLOR_ARGB
 import com.katoaapps.openminilaunch.features.demo.DemoHomeProfile
+import com.katoaapps.openminilaunch.features.minkspace.todo.TodoItem
+import com.katoaapps.openminilaunch.features.minkspace.todo.TodoStore
 import com.katoaapps.openminilaunch.features.profile.ProfileRepository
+import com.katoaapps.openminilaunch.features.minkspace.MinkSpaceMiniApp
 import com.katoaapps.openminilaunch.model.*
 
 import android.content.Context
@@ -30,6 +33,7 @@ class LauncherStore private constructor(context: Context) {
     private val appDiscoveryPreferences = AppDiscoveryPreferenceStore(prefs)
     private val appBubblePreferences = AppBubblePreferenceStore(prefs)
     private val privateContainerPreferences = PrivateContainerPreferenceStore(prefs)
+    private val minkSpacePreferences = MinkSpacePreferenceStore(prefs)
     private val homeWallpaperRepository = HomeWallpaperRepository(appContext)
     internal val profileRepository = ProfileRepository(appContext)
     private val demoPreferences: DemoPreferenceStore = DemoPreferenceStore(appContext, prefs, todoStore)
@@ -88,6 +92,8 @@ class LauncherStore private constructor(context: Context) {
     val includeAppShortcutsInDiscovery get() = appDiscoveryPreferences.includeAppShortcuts
     val automaticAppBubbleTargets get() = appBubblePreferences.automaticTargetKeys
     val privateContainerGatewaySelectionKey get() = privateContainerPreferences.gatewaySelectionKey
+    internal val minkSpaceMiniAppOrder get() = minkSpacePreferences.order
+    internal val enabledMinkSpaceMiniApps get() = minkSpacePreferences.enabledMiniApps
     val effectiveHomePanelColorArgb: Int
         get() = demoPreferences.effectivePanelColor(homePanelColorArgb)
     val watermelonModeEnabled: Boolean
@@ -330,6 +336,14 @@ class LauncherStore private constructor(context: Context) {
 
     fun updateUse24HourClock(enabled: Boolean) {
         appearancePreferences.updateUse24HourClock(enabled)
+    }
+
+    internal fun setMinkSpaceMiniAppEnabled(miniApp: MinkSpaceMiniApp, enabled: Boolean) {
+        minkSpacePreferences.setEnabled(miniApp, enabled)
+    }
+
+    internal fun moveMinkSpaceMiniApp(miniApp: MinkSpaceMiniApp, direction: Int) {
+        minkSpacePreferences.move(miniApp, direction)
     }
 
     fun setHomePanelColor(argb: Int) {

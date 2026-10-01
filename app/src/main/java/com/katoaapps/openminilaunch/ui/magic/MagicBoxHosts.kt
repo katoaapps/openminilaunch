@@ -13,7 +13,8 @@ import androidx.compose.ui.Modifier
 import com.katoaapps.openminilaunch.data.LauncherStore
 import com.katoaapps.openminilaunch.features.wellbeing.MinkAppAccessState
 import com.katoaapps.openminilaunch.platform.DeviceActions
-import com.katoaapps.openminilaunch.ui.components.todoFlightAnimationSpec
+import com.katoaapps.openminilaunch.ui.minkspace.todo.AssistantTodoFlightChip
+import com.katoaapps.openminilaunch.ui.minkspace.todo.todoFlightAnimationSpec
 
 /** Home owns a persistent session and can present the collapsed keyboard-first entry bar. */
 @Composable

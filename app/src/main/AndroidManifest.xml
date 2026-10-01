@@ -173,6 +173,18 @@
             android:launchMode="singleTop"
             android:theme="@style/Theme.MiniLaunch" />
         <activity
+            android:name=".ui.minkspace.calculator.CalculatorLabActivity"
+            android:excludeFromRecents="false"
+            android:exported="false"
+            android:launchMode="singleTop"
+            android:theme="@style/Theme.MiniLaunch" />
+        <activity
+            android:name=".ui.minkspace.media.MediaLabActivity"
+            android:excludeFromRecents="false"
+            android:exported="false"
+            android:launchMode="singleTop"
+            android:theme="@style/Theme.MiniLaunch" />
+        <activity
             android:name=".ui.shortcuts.PinShortcutActivity"
             android:excludeFromRecents="true"
             android:exported="true"

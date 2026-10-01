@@ -17,8 +17,8 @@ import com.katoaapps.openminilaunch.features.wellbeing.UsageInsightsRepository
 import com.katoaapps.openminilaunch.model.MAX_DRAWER_APPS
 import com.katoaapps.openminilaunch.model.LauncherTarget
 import com.katoaapps.openminilaunch.platform.DeviceActions
-import com.katoaapps.openminilaunch.ui.launcher.displayLabel
-import com.katoaapps.openminilaunch.ui.launcher.displaySlotLabel
+import com.katoaapps.openminilaunch.ui.shortcuts.displayLabel
+import com.katoaapps.openminilaunch.ui.shortcuts.displaySlotLabel
 import com.katoaapps.openminilaunch.ui.wellbeing.SocialAppsDialog
 
 @Composable

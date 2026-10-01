@@ -51,6 +51,11 @@ internal fun SettingsDestinationContent(
             goBack = onNavigateBack,
             onIconStyleApplied = onIconStyleApplied,
         )
+        SettingsDestination.MINK_SPACE -> MinkSpaceSettingsPage(
+            store = store,
+            actions = actions,
+            goBack = onNavigateBack,
+        )
         SettingsDestination.SHORTCUTS -> ShortcutsSettingsPage(
             store = store,
             actions = actions,

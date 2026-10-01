@@ -18,8 +18,8 @@ import com.katoaapps.openminilaunch.R
 import com.katoaapps.openminilaunch.model.CommunicationRecipient
 import com.katoaapps.openminilaunch.model.looksLikePhoneRecipient
 import com.katoaapps.openminilaunch.platform.DeviceActions
-import com.katoaapps.openminilaunch.ui.launcher.isPermanentlyDenied
-import com.katoaapps.openminilaunch.ui.launcher.supportsDirectCalls
+import com.katoaapps.openminilaunch.platform.isPermanentlyDenied
+import com.katoaapps.openminilaunch.platform.supportsDirectCalls
 
 @Stable
 internal class MagicCallFlow internal constructor() {

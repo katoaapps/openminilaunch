@@ -8,6 +8,7 @@ internal enum class SettingsDestination {
     LANGUAGE,
     LAUNCHER,
     APPEARANCE,
+    MINK_SPACE,
     SHORTCUTS,
     PRIVACY_APPS,
     PIN_SHORTCUT_REQUESTS,
@@ -42,6 +43,7 @@ internal fun settingsPathTo(destination: SettingsDestination): List<SettingsDest
     )
     SettingsDestination.LAUNCHER -> listOf(SettingsDestination.OVERVIEW, SettingsDestination.LAUNCHER)
     SettingsDestination.APPEARANCE,
+    SettingsDestination.MINK_SPACE,
     SettingsDestination.SHORTCUTS,
     SettingsDestination.PRIVACY_APPS -> listOf(
         SettingsDestination.OVERVIEW,

@@ -11,8 +11,8 @@ import com.katoaapps.openminilaunch.platform.DeviceActions
 import com.katoaapps.openminilaunch.ui.components.SectionLabel
 import com.katoaapps.openminilaunch.ui.components.SettingsRow
 import com.katoaapps.openminilaunch.ui.components.SettingsSwitchRow
-import com.katoaapps.openminilaunch.ui.launcher.ShortcutAssignmentRow
-import com.katoaapps.openminilaunch.ui.launcher.displayLabel
+import com.katoaapps.openminilaunch.ui.shortcuts.ShortcutAssignmentRow
+import com.katoaapps.openminilaunch.ui.shortcuts.displayLabel
 import com.katoaapps.openminilaunch.ui.profile.openVirtualContactCard
 import com.katoaapps.openminilaunch.ui.theme.Dimens
 import com.katoaapps.openminilaunch.ui.theme.Muted
@@ -29,6 +29,7 @@ import androidx.compose.material.icons.filled.Apps
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.GridView
 import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.ViewCarousel
 import androidx.compose.material.icons.filled.Palette
 import androidx.compose.material.icons.filled.Restore
 import androidx.compose.material.icons.filled.Shield
@@ -89,6 +90,11 @@ internal fun LauncherSettingsPage(
             stringResource(R.string.appearance_summary, stringResource(store.themePreference.labelRes)),
             Icons.Default.Palette,
         ) { onNavigate(SettingsDestination.APPEARANCE) }
+        SettingsRow(
+            stringResource(R.string.mink_space_mini_apps),
+            stringResource(R.string.mink_space_settings_summary),
+            Icons.Default.ViewCarousel,
+        ) { onNavigate(SettingsDestination.MINK_SPACE) }
         SettingsRow(
             stringResource(R.string.shortcuts_and_drawer),
             pluralStringResource(

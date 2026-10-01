@@ -11,9 +11,9 @@ import com.katoaapps.openminilaunch.features.messaging.MessagingProviderOption
 import com.katoaapps.openminilaunch.features.messaging.MessagingProviderCatalog
 import com.katoaapps.openminilaunch.features.wellbeing.*
 import com.katoaapps.openminilaunch.ui.components.*
-import com.katoaapps.openminilaunch.ui.launcher.ShortcutAssignmentRow
-import com.katoaapps.openminilaunch.ui.launcher.displayLabel
-import com.katoaapps.openminilaunch.ui.launcher.displaySlotLabel
+import com.katoaapps.openminilaunch.ui.shortcuts.ShortcutAssignmentRow
+import com.katoaapps.openminilaunch.ui.shortcuts.displayLabel
+import com.katoaapps.openminilaunch.ui.shortcuts.displaySlotLabel
 import com.katoaapps.openminilaunch.ui.theme.*
 import com.katoaapps.openminilaunch.R
 import com.katoaapps.openminilaunch.ui.settings.AiProviderPickerDialog

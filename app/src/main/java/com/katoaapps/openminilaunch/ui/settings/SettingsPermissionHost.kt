@@ -20,12 +20,12 @@ import androidx.lifecycle.LifecycleEventObserver
 import com.katoaapps.openminilaunch.features.conversations.NotificationHub
 import com.katoaapps.openminilaunch.features.wellbeing.UsageInsightsRepository
 import com.katoaapps.openminilaunch.platform.DeviceActions
-import com.katoaapps.openminilaunch.ui.launcher.hasMediaReadAccess
-import com.katoaapps.openminilaunch.ui.launcher.isPermanentlyDenied
-import com.katoaapps.openminilaunch.ui.launcher.mediaPermissionPermanentlyDenied
-import com.katoaapps.openminilaunch.ui.launcher.mediaReadPermissions
-import com.katoaapps.openminilaunch.ui.launcher.supportsDirectCalls
-import com.katoaapps.openminilaunch.ui.launcher.supportsDirectSms
+import com.katoaapps.openminilaunch.platform.hasMediaReadAccess
+import com.katoaapps.openminilaunch.platform.isPermanentlyDenied
+import com.katoaapps.openminilaunch.platform.mediaPermissionPermanentlyDenied
+import com.katoaapps.openminilaunch.platform.mediaReadPermissions
+import com.katoaapps.openminilaunch.platform.supportsDirectCalls
+import com.katoaapps.openminilaunch.platform.supportsDirectSms
 import com.katoaapps.openminilaunch.ui.onboarding.UsageAccessDisclosureDialog
 
 internal data class SettingsPermissionHostState(

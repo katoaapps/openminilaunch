@@ -5,7 +5,7 @@ import com.katoaapps.openminilaunch.data.LauncherStore
 import com.katoaapps.openminilaunch.features.bubbles.AppBubbleLaunchResult
 import com.katoaapps.openminilaunch.model.LauncherAppTarget
 import com.katoaapps.openminilaunch.platform.DeviceActions
-import com.katoaapps.openminilaunch.ui.launcher.isPermanentlyDenied
+import com.katoaapps.openminilaunch.platform.isPermanentlyDenied
 
 import android.Manifest
 import android.content.pm.PackageManager

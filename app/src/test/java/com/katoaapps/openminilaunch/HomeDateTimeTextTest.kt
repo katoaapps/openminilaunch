@@ -1,6 +1,6 @@
 package com.katoaapps.openminilaunch
 
-import com.katoaapps.openminilaunch.ui.launcher.formatHomeDateTime
+import com.katoaapps.openminilaunch.ui.launcher.home.formatHomeDateTime
 import org.junit.Assert.assertEquals
 import org.junit.Test
 import java.time.LocalDateTime
