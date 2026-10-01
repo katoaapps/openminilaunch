@@ -81,6 +81,7 @@ internal fun MagicBoxContent(
     },
     onSessionComplete: () -> Unit = {},
     onBubblePublished: () -> Unit = {},
+    appBubbleHost: MagicAppBubbleHost = MagicAppBubbleHost.HOME,
     appAccessState: MinkAppAccessState? = null,
 ) {
     val magicBoxMinimumHeight = Dimens.dp64
@@ -401,6 +402,7 @@ internal fun MagicBoxContent(
     val appBubbleFlow = rememberMagicAppBubbleFlow(
         store = store,
         actions = actions,
+        host = appBubbleHost,
         onBubblePublished = { target ->
             completeAppHandoff(target)
             onBubblePublished()

@@ -95,6 +95,7 @@
     <string name="app_bubbles_disabled_toast">Mink کے لیے ببلز کی اجازت دیں، پھر دوبارہ کوشش کریں۔</string>
     <string name="app_bubble_work_profile_unsupported">پہلے ایپ ببل بیٹا میں ورک پروفائل ایپس سپورٹ نہیں ہوتیں۔</string>
     <string name="app_bubble_launch_failed">یہ ایپ ببل میں نہیں کھل سکی۔ اسے معمول کے مطابق کھولنے کی کوشش کریں۔</string>
+    <string name="app_bubble_opened_normally">%1$s معمول کے مطابق کھلی۔ ممکن ہے یہ ایپ ایپ ببلز کو سپورٹ نہ کرے۔</string>
     <string name="keyboard">کی بورڈ</string>
     <string name="open_keyboard_on_home">ہوم پر کی بورڈ کھولیں۔</string>
     <string name="open_keyboard_on_home_description">فزیکل کی بورڈ کے بغیر فون پر، باقاعدہ ہوم اسکرین کے نیچے سافٹ ویئر کی بورڈ دکھائیں۔</string>

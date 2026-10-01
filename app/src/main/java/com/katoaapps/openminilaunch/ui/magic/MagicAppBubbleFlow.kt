@@ -10,10 +10,12 @@ import com.katoaapps.openminilaunch.platform.isPermanentlyDenied
 import android.Manifest
 import android.content.pm.PackageManager
 import android.os.Build
+import android.os.SystemClock
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -22,6 +24,20 @@ import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.core.content.ContextCompat
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
+import androidx.lifecycle.compose.LocalLifecycleOwner
+import kotlinx.coroutines.delay
+
+internal enum class MagicAppBubbleHost {
+    HOME,
+    ASSISTANT,
+}
+
+private data class PendingHomeBubbleLaunch(
+    val target: LauncherAppTarget,
+    val publishedAtElapsedRealtime: Long,
+)
 
 /** State and Android permission flow for the experimental Magic Box app-bubble route. */
 internal class MagicAppBubbleFlow internal constructor(
@@ -55,17 +71,44 @@ internal class MagicAppBubbleFlow internal constructor(
 internal fun rememberMagicAppBubbleFlow(
     store: LauncherStore,
     actions: DeviceActions,
+    host: MagicAppBubbleHost,
     onBubblePublished: (LauncherAppTarget) -> Unit,
     onAppOpenedNormally: (LauncherAppTarget) -> Unit,
     onRefocus: () -> Unit,
 ): MagicAppBubbleFlow {
     val context = LocalContext.current
+    val lifecycleOwner = LocalLifecycleOwner.current
     val currentOnBubblePublished by rememberUpdatedState(onBubblePublished)
     val currentOnAppOpenedNormally by rememberUpdatedState(onAppOpenedNormally)
     val currentOnRefocus by rememberUpdatedState(onRefocus)
     var actionTarget by remember { mutableStateOf<LauncherAppTarget?>(null) }
     var pendingPermissionTarget by remember { mutableStateOf<LauncherAppTarget?>(null) }
     var grantedPermissionTarget by remember { mutableStateOf<LauncherAppTarget?>(null) }
+    var pendingHomeBubbleLaunch by remember { mutableStateOf<PendingHomeBubbleLaunch?>(null) }
+
+    DisposableEffect(lifecycleOwner, host) {
+        val observer = LifecycleEventObserver { _, event ->
+            if (host != MagicAppBubbleHost.HOME || event != Lifecycle.Event.ON_STOP) {
+                return@LifecycleEventObserver
+            }
+            val pendingLaunch = pendingHomeBubbleLaunch ?: return@LifecycleEventObserver
+            val elapsed = SystemClock.elapsedRealtime() - pendingLaunch.publishedAtElapsedRealtime
+            if (elapsed <= HOME_FULLSCREEN_FALLBACK_WINDOW_MS) {
+                actions.dismissAppBubble(pendingLaunch.target)
+                Toast.makeText(
+                    context.applicationContext,
+                    context.getString(
+                        R.string.app_bubble_opened_normally,
+                        pendingLaunch.target.label,
+                    ),
+                    Toast.LENGTH_LONG,
+                ).show()
+            }
+            pendingHomeBubbleLaunch = null
+        }
+        lifecycleOwner.lifecycle.addObserver(observer)
+        onDispose { lifecycleOwner.lifecycle.removeObserver(observer) }
+    }
 
     val permissionLauncher = rememberLauncherForActivityResult(
         ActivityResultContracts.RequestPermission(),
@@ -89,7 +132,15 @@ internal fun rememberMagicAppBubbleFlow(
 
     fun launchInBubble(target: LauncherAppTarget) {
         when (actions.launchAppBubble(target)) {
-            AppBubbleLaunchResult.PUBLISHED -> currentOnBubblePublished(target)
+            AppBubbleLaunchResult.PUBLISHED -> {
+                if (host == MagicAppBubbleHost.HOME) {
+                    pendingHomeBubbleLaunch = PendingHomeBubbleLaunch(
+                        target = target,
+                        publishedAtElapsedRealtime = SystemClock.elapsedRealtime(),
+                    )
+                }
+                currentOnBubblePublished(target)
+            }
             AppBubbleLaunchResult.NOTIFICATION_PERMISSION_REQUIRED -> {
                 pendingPermissionTarget = target
                 val canRequestRuntimePermission = Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU &&
@@ -139,6 +190,14 @@ internal fun rememberMagicAppBubbleFlow(
         }
     }
 
+    LaunchedEffect(pendingHomeBubbleLaunch) {
+        val pendingLaunch = pendingHomeBubbleLaunch ?: return@LaunchedEffect
+        delay(HOME_FULLSCREEN_FALLBACK_WINDOW_MS)
+        if (pendingHomeBubbleLaunch == pendingLaunch) {
+            pendingHomeBubbleLaunch = null
+        }
+    }
+
     return MagicAppBubbleFlow(
         actionTarget = actionTarget,
         automaticTargetKeys = store.automaticAppBubbleTargets,
@@ -166,3 +225,5 @@ internal fun rememberMagicAppBubbleFlow(
         },
     )
 }
+
+private const val HOME_FULLSCREEN_FALLBACK_WINDOW_MS = 3_000L

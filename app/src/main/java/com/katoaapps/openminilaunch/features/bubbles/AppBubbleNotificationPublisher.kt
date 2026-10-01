@@ -25,6 +25,7 @@ internal class AppBubbleNotificationPublisher(context: Context) {
     private val notificationManager = appContext.getSystemService(NotificationManager::class.java)
     private val shortcutManager = appContext.getSystemService(ShortcutManager::class.java)
     private val appRepository = LauncherAppRepository.get(appContext)
+    private val publicationVerifier = AppBubblePublicationVerifier(appContext)
 
     @RequiresApi(Build.VERSION_CODES.R)
     fun ensureChannel() {
@@ -52,8 +53,22 @@ internal class AppBubbleNotificationPublisher(context: Context) {
 
         val bubbleIntent = targetPendingIntent(target)
         val notification = buildNotification(target, shortcutId, bubbleIcon, bubbleIntent)
-        notificationManager.notify(notificationTag(target), NOTIFICATION_ID, notification)
+        val notificationTag = notificationTag(target)
+        notificationManager.notify(notificationTag, NOTIFICATION_ID, notification)
+        publicationVerifier.verify(
+            target = target,
+            notificationTag = notificationTag,
+            notificationId = NOTIFICATION_ID,
+            onRejected = {
+                notificationManager.cancel(notificationTag, NOTIFICATION_ID)
+            },
+        )
         return true
+    }
+
+    fun dismiss(target: LauncherAppTarget) {
+        publicationVerifier.cancel(target)
+        notificationManager.cancel(notificationTag(target), NOTIFICATION_ID)
     }
 
     private fun targetPendingIntent(target: LauncherAppTarget): PendingIntent =

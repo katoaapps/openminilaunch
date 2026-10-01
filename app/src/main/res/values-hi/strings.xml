@@ -95,6 +95,7 @@
     <string name="app_bubbles_disabled_toast">Mink के लिए बबल की अनुमति दें, फिर कोशिश करें।</string>
     <string name="app_bubble_work_profile_unsupported">पहले ऐप बबल बीटा में वर्क प्रोफ़ाइल ऐप समर्थित नहीं हैं।</string>
     <string name="app_bubble_launch_failed">यह ऐप बबल में नहीं खुल सका। इसे सामान्य रूप से खोलकर देखें।</string>
+    <string name="app_bubble_opened_normally">%1$s सामान्य रूप से खुला। हो सकता है कि यह ऐप ऐप बबल का समर्थन न करे।</string>
     <string name="keyboard">कीबोर्ड</string>
     <string name="open_keyboard_on_home">होम पर कीबोर्ड खोलें</string>
     <string name="open_keyboard_on_home_description">बिना भौतिक कीबोर्ड वाले फोन पर, नियमित होम स्क्रीन के नीचे सॉफ्टवेयर कीबोर्ड दिखाएं।</string>

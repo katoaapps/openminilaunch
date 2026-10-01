@@ -95,6 +95,7 @@
     <string name="app_bubbles_disabled_toast">Permita bolhas para o Mink e tente novamente.</string>
     <string name="app_bubble_work_profile_unsupported">Apps do perfil de trabalho não são compatíveis com a primeira versão beta.</string>
     <string name="app_bubble_launch_failed">Não foi possível abrir este app em uma bolha. Tente abri-lo normalmente.</string>
+    <string name="app_bubble_opened_normally">%1$s abriu normalmente. Talvez não seja compatível com bolhas de apps.</string>
     <string name="keyboard">TECLADO</string>
     <string name="open_keyboard_on_home">Abra o teclado na página inicial</string>
     <string name="open_keyboard_on_home_description">Em telefones sem teclado físico, mostre o teclado do software abaixo da tela inicial normal.</string>

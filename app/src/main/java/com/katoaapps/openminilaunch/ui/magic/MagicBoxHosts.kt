@@ -83,6 +83,7 @@ internal fun AssistantMagicBox(
             },
             onSessionComplete = onSessionComplete,
             onBubblePublished = onBubblePublished,
+            appBubbleHost = MagicAppBubbleHost.ASSISTANT,
         )
         todoFeedback?.let { feedback ->
             AssistantTodoFlightChip(

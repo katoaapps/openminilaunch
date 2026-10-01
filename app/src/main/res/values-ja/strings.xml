@@ -95,6 +95,7 @@
     <string name="app_bubbles_disabled_toast">Mink のバブルを許可してから、もう一度お試しください。</string>
     <string name="app_bubble_work_profile_unsupported">最初のアプリバブルベータ版は仕事用プロファイルのアプリに対応していません。</string>
     <string name="app_bubble_launch_failed">このアプリをバブルで開けませんでした。通常どおり開いてみてください。</string>
+    <string name="app_bubble_opened_normally">%1$s は通常どおり開きました。このアプリはアプリバブルに対応していない可能性があります。</string>
     <string name="keyboard">キーボード</string>
     <string name="open_keyboard_on_home">ホームでキーボードを開く</string>
     <string name="open_keyboard_on_home_description">物理キーボードのない携帯電話では、通常のホーム画面の下にソフトウェア キーボードが表示されます。</string>

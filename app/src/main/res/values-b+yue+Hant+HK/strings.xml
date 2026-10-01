@@ -95,6 +95,7 @@
     <string name="app_bubbles_disabled_toast">請允許 Mink 使用氣泡，然後再試。</string>
     <string name="app_bubble_work_profile_unsupported">首個應用程式氣泡測試版唔支援工作設定檔應用程式。</string>
     <string name="app_bubble_launch_failed">無法喺氣泡開啟呢個應用程式。請嘗試正常開啟。</string>
+    <string name="app_bubble_opened_normally">%1$s 已正常開啟。呢個應用程式可能唔支援應用程式氣泡。</string>
     <string name="keyboard">鍵盤</string>
     <string name="open_keyboard_on_home">喺主頁打開鍵盤</string>
     <string name="open_keyboard_on_home_description">喺冇實體鍵盤嘅手機上面，喺普通主畫面下面顯示軟件鍵盤。</string>

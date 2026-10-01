@@ -95,6 +95,7 @@
     <string name="app_bubbles_disabled_toast">Autorisez les bulles pour Mink, puis réessayez.</string>
     <string name="app_bubble_work_profile_unsupported">Les apps du profil professionnel ne sont pas prises en charge dans la première bêta.</string>
     <string name="app_bubble_launch_failed">Impossible d’ouvrir cette app dans une bulle. Essayez de l’ouvrir normalement.</string>
+    <string name="app_bubble_opened_normally">%1$s s’est ouverte normalement. Cette app ne prend peut-être pas en charge les bulles d’app.</string>
     <string name="keyboard">CLAVIER</string>
     <string name="open_keyboard_on_home">Ouvrir le clavier sur Accueil</string>
     <string name="open_keyboard_on_home_description">Sur les téléphones sans clavier physique, affichez le clavier logiciel sous l\'écran d\'accueil standard.</string>

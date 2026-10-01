@@ -95,6 +95,7 @@
     <string name="app_bubbles_disabled_toast">Allow bubbles for Mink, then try again.</string>
     <string name="app_bubble_work_profile_unsupported">Work-profile apps are not supported in the first app bubble beta.</string>
     <string name="app_bubble_launch_failed">This app could not be opened in a bubble. Try opening it normally.</string>
+    <string name="app_bubble_opened_normally">%1$s opened normally. It may not support app bubbles.</string>
     <string name="keyboard">KEYBOARD</string>
     <string name="open_keyboard_on_home">Open keyboard on Home</string>
     <string name="open_keyboard_on_home_description">On phones without a physical keyboard, show the software keyboard beneath the regular Home screen.</string>

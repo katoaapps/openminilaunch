@@ -95,6 +95,7 @@
     <string name="app_bubbles_disabled_toast">Permite las burbujas para Mink y vuelve a intentarlo.</string>
     <string name="app_bubble_work_profile_unsupported">Las apps del perfil de trabajo no son compatibles con la primera beta.</string>
     <string name="app_bubble_launch_failed">No se pudo abrir esta app en una burbuja. Prueba a abrirla normalmente.</string>
+    <string name="app_bubble_opened_normally">%1$s se abrió normalmente. Es posible que no admita burbujas de apps.</string>
     <string name="keyboard">TECLADO</string>
     <string name="open_keyboard_on_home">Abrir teclado en Inicio</string>
     <string name="open_keyboard_on_home_description">En teléfonos sin teclado físico, muestre el teclado del software debajo de la pantalla de inicio normal.</string>

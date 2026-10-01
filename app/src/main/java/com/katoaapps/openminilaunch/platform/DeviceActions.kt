@@ -229,6 +229,9 @@ class DeviceActions(private val context: Context) {
     internal fun launchAppBubble(target: LauncherAppTarget): AppBubbleLaunchResult =
         appBubbleManager.launch(target)
 
+    internal fun dismissAppBubble(target: LauncherAppTarget) =
+        appBubbleManager.dismiss(target)
+
     fun appNotificationSettingsIntent(): Intent = appBubbleManager.notificationSettingsIntent()
 
     fun appBubbleSettingsIntent(): Intent = appBubbleManager.bubbleSettingsIntent()

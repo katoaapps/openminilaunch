@@ -23,6 +23,9 @@ import com.katoaapps.openminilaunch.ui.theme.MinkTransparent
 /** Keyboard-first system assistant entry point. ACTION_ASSIST context is deliberately ignored. */
 class AssistantActivity : ComponentActivity() {
     private var finishAfterLeavingForeground = false
+    private val finishBubbleHandoff = Runnable {
+        if (!isFinishing && !isDestroyed) finish()
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -55,7 +58,7 @@ class AssistantActivity : ComponentActivity() {
                         actions = actions,
                         modifier = Modifier.fillMaxSize(),
                         onSessionComplete = ::finish,
-                        onBubblePublished = { finishAfterLeavingForeground = true },
+                        onBubblePublished = ::finishAfterBubbleHandoff,
                     )
                 }
             }
@@ -64,6 +67,24 @@ class AssistantActivity : ComponentActivity() {
 
     override fun onStop() {
         super.onStop()
-        if (finishAfterLeavingForeground) finish()
+        if (finishAfterLeavingForeground) {
+            window.decorView.removeCallbacks(finishBubbleHandoff)
+            finish()
+        }
+    }
+
+    override fun onDestroy() {
+        window.decorView.removeCallbacks(finishBubbleHandoff)
+        super.onDestroy()
+    }
+
+    private fun finishAfterBubbleHandoff() {
+        finishAfterLeavingForeground = true
+        window.decorView.removeCallbacks(finishBubbleHandoff)
+        window.decorView.postDelayed(finishBubbleHandoff, BUBBLE_HANDOFF_FINISH_DELAY_MS)
+    }
+
+    private companion object {
+        const val BUBBLE_HANDOFF_FINISH_DELAY_MS = 500L
     }
 }

@@ -76,6 +76,10 @@ internal class AppBubbleManager private constructor(context: Context) {
         return publishBubble(target)
     }
 
+    fun dismiss(target: LauncherAppTarget) {
+        if (isSupported()) publisher.dismiss(target)
+    }
+
     @RequiresApi(Build.VERSION_CODES.R)
     private fun publishBubble(target: LauncherAppTarget): AppBubbleLaunchResult {
         if (!bubblesAllowedBySystem()) return AppBubbleLaunchResult.BUBBLES_DISABLED

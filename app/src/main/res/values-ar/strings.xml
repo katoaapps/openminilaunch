@@ -95,6 +95,7 @@
     <string name="app_bubbles_disabled_toast">اسمح بالفقاعات لـ Mink ثم حاول مرة أخرى.</string>
     <string name="app_bubble_work_profile_unsupported">تطبيقات ملف العمل غير مدعومة في الإصدار التجريبي الأول لفقاعات التطبيقات.</string>
     <string name="app_bubble_launch_failed">تعذر فتح هذا التطبيق في فقاعة. جرّب فتحه بشكل عادي.</string>
+    <string name="app_bubble_opened_normally">تم فتح %1$s بشكل عادي. قد لا يدعم التطبيق فقاعات التطبيقات.</string>
     <string name="keyboard">لوحة المفاتيح</string>
     <string name="open_keyboard_on_home">افتح لوحة المفاتيح على الصفحة الرئيسية</string>
     <string name="open_keyboard_on_home_description">على الهواتف التي لا تحتوي على لوحة مفاتيح فعلية، اعرض لوحة المفاتيح البرمجية أسفل الشاشة الرئيسية العادية.</string>

@@ -95,6 +95,7 @@
     <string name="app_bubbles_disabled_toast">Разрешите пузыри для Mink и повторите попытку.</string>
     <string name="app_bubble_work_profile_unsupported">Рабочие приложения не поддерживаются в первой бета-версии пузырей.</string>
     <string name="app_bubble_launch_failed">Не удалось открыть приложение в пузыре. Попробуйте открыть его обычно.</string>
+    <string name="app_bubble_opened_normally">%1$s открылось в обычном режиме. Возможно, приложение не поддерживает пузыри.</string>
     <string name="keyboard">КЛАВИАТУРА</string>
     <string name="open_keyboard_on_home">Открыть клавиатуру на главном экране</string>
     <string name="open_keyboard_on_home_description">На телефонах без физической клавиатуры отображайте программную клавиатуру под обычным главным экраном.</string>

@@ -95,6 +95,7 @@
     <string name="app_bubbles_disabled_toast">Mink-এর জন্য বাবল অনুমোদন করে আবার চেষ্টা করুন।</string>
     <string name="app_bubble_work_profile_unsupported">প্রথম অ্যাপ বাবল বিটায় কাজের প্রোফাইলের অ্যাপ সমর্থিত নয়।</string>
     <string name="app_bubble_launch_failed">এই অ্যাপটি বাবলে খোলা যায়নি। স্বাভাবিকভাবে খোলার চেষ্টা করুন।</string>
+    <string name="app_bubble_opened_normally">%1$s স্বাভাবিকভাবে খুলেছে। এটি অ্যাপ বাবল সমর্থন নাও করতে পারে।</string>
     <string name="keyboard">কীবোর্ড</string>
     <string name="open_keyboard_on_home">হোমে কীবোর্ড খুলুন</string>
     <string name="open_keyboard_on_home_description">ফিজিক্যাল কীবোর্ড ছাড়া ফোনে, নিয়মিত হোম স্ক্রিনের নিচে সফ্টওয়্যার কীবোর্ড দেখান।</string>

@@ -95,6 +95,7 @@
     <string name="app_bubbles_disabled_toast">请允许 Mink 使用气泡，然后重试。</string>
     <string name="app_bubble_work_profile_unsupported">首个应用气泡测试版不支持工作资料应用。</string>
     <string name="app_bubble_launch_failed">无法在气泡中打开此应用。请尝试正常打开。</string>
+    <string name="app_bubble_opened_normally">%1$s 已正常打开。它可能不支持应用气泡。</string>
     <string name="keyboard">键盘</string>
     <string name="open_keyboard_on_home">在主页上打开键盘</string>
     <string name="open_keyboard_on_home_description">在没有物理键盘的手机上，在常规主屏幕下方显示软件键盘。</string>

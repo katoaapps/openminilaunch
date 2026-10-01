@@ -95,6 +95,7 @@
     <string name="app_bubbles_disabled_toast">Mink의 버블을 허용한 후 다시 시도하세요.</string>
     <string name="app_bubble_work_profile_unsupported">첫 앱 버블 베타에서는 직장 프로필 앱을 지원하지 않습니다.</string>
     <string name="app_bubble_launch_failed">이 앱을 버블로 열 수 없습니다. 일반 방식으로 열어 보세요.</string>
+    <string name="app_bubble_opened_normally">%1$s 앱이 일반 방식으로 열렸습니다. 앱 버블을 지원하지 않을 수 있습니다.</string>
     <string name="keyboard">키보드</string>
     <string name="open_keyboard_on_home">홈에서 키보드 열기</string>
     <string name="open_keyboard_on_home_description">실제 키보드가 없는 휴대폰에서는 일반 홈 화면 아래에 소프트웨어 키보드를 표시합니다.</string>

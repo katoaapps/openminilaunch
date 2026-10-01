@@ -95,6 +95,7 @@
     <string name="app_bubbles_disabled_toast">Izinkan gelembung untuk Mink, lalu coba lagi.</string>
     <string name="app_bubble_work_profile_unsupported">Aplikasi profil kerja belum didukung dalam beta pertama.</string>
     <string name="app_bubble_launch_failed">Aplikasi ini tidak dapat dibuka dalam gelembung. Coba buka secara normal.</string>
+    <string name="app_bubble_opened_normally">%1$s dibuka secara normal. Aplikasi ini mungkin tidak mendukung gelembung aplikasi.</string>
     <string name="keyboard">PAPAN KEYBOARD</string>
     <string name="open_keyboard_on_home">Buka keyboard di Beranda</string>
     <string name="open_keyboard_on_home_description">Pada ponsel tanpa keyboard fisik, tampilkan keyboard perangkat lunak di bawah layar Utama biasa.</string>
