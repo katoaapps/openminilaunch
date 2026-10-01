@@ -14,6 +14,7 @@ import com.katoaapps.openminilaunch.features.minkspace.MinkSpaceMiniApp
 import com.katoaapps.openminilaunch.ui.launcher.home.HomeTodoTextMetrics
 import com.katoaapps.openminilaunch.ui.minkspace.calculator.CalculatorMiniAppPage
 import com.katoaapps.openminilaunch.ui.minkspace.media.MediaMiniAppPage
+import com.katoaapps.openminilaunch.ui.minkspace.music.MusicMiniAppPage
 import com.katoaapps.openminilaunch.ui.minkspace.todo.TodoMiniAppPage
 
 /** Hosts enabled mini-apps and owns only the vertical switching axis inside MinkSpace. */
@@ -29,6 +30,7 @@ internal fun MinkSpaceHost(
     mutedContentColor: Color,
     insetColor: Color,
     openMediaLab: () -> Unit,
+    presentationState: MinkSpacePresentationState,
     modifier: Modifier = Modifier,
 ) {
     val activeMiniApps = store.minkSpaceMiniAppOrder.filter { miniApp ->
@@ -49,11 +51,15 @@ internal fun MinkSpaceHost(
             }
         }
     }
+    LaunchedEffect(pagerState.currentPage, activeMiniApps, presentationState.expandedMiniApp) {
+        val currentMiniApp = activeMiniApps.getOrNull(pagerState.currentPage)
+        presentationState.retainOnly(currentMiniApp)
+    }
 
     VerticalPager(
         state = pagerState,
         modifier = modifier,
-        userScrollEnabled = activeMiniApps.size > 1,
+        userScrollEnabled = activeMiniApps.size > 1 && !presentationState.isExpanded,
         beyondViewportPageCount = 1,
     ) { page ->
         when (activeMiniApps[page]) {
@@ -84,8 +90,13 @@ internal fun MinkSpaceHost(
                 onManageMedia = openMediaLab,
                 modifier = Modifier.fillMaxSize(),
             )
-            MinkSpaceMiniApp.RECORDER,
-            MinkSpaceMiniApp.MUSIC -> Unit
+            MinkSpaceMiniApp.MUSIC -> MusicMiniAppPage(
+                compact = compact,
+                containerColor = insetColor,
+                presentationState = presentationState,
+                modifier = Modifier.fillMaxSize(),
+            )
+            MinkSpaceMiniApp.RECORDER -> Unit
         }
     }
 }

@@ -10,7 +10,7 @@ internal enum class MinkSpaceMiniApp(
     CALCULATOR("calculator", readyForHome = true),
     MEDIA("media", readyForHome = true),
     RECORDER("recorder", readyForHome = false),
-    MUSIC("music", readyForHome = false),
+    MUSIC("music", readyForHome = true),
     ;
 
     companion object {

@@ -28,6 +28,7 @@ internal data class MinkSpaceMiniAppSpec(
 internal enum class MinkSpacePreviewDestination {
     CALCULATOR,
     MEDIA,
+    MUSIC,
 }
 
 internal object MinkSpaceMiniAppCatalog {
@@ -60,6 +61,8 @@ internal object MinkSpaceMiniAppCatalog {
             miniApp = MinkSpaceMiniApp.MUSIC,
             labelRes = R.string.music_player,
             icon = Icons.Default.MusicNote,
+            preview = MinkSpacePreviewDestination.MUSIC,
+            previewLabelRes = R.string.open_music_player_preview,
         ),
     )
 

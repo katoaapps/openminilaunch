@@ -64,6 +64,7 @@ internal fun MinkSpaceSettingsPage(
                     when (destination) {
                         MinkSpacePreviewDestination.CALCULATOR -> actions.openCalculatorLab()
                         MinkSpacePreviewDestination.MEDIA -> actions.openMediaLab()
+                        MinkSpacePreviewDestination.MUSIC -> actions.openMusicLab()
                     }
                 },
             )

@@ -7,6 +7,8 @@
     <string name="calculator">Calculator</string>
     <string name="recorder">Recorder</string>
     <string name="music_player">Music player</string>
+    <string name="music_player_preview">Music player preview</string>
+    <string name="open_music_player_preview">Open Music Player preview</string>
     <string name="swipe_vertically_to_switch">Enabled · Swipe vertically to switch</string>
     <string name="preview">Preview</string>
     <string name="open_calculator_lab">Open Calculator Lab</string>
@@ -29,4 +31,19 @@
     <string name="remove_media_description">“%1$s” will be removed from MinkSpace. The original file will not be deleted.</string>
     <string name="video">Video</string>
     <string name="image_or_gif">Image or GIF</string>
+    <string name="music_nothing_playing">Nothing playing</string>
+    <string name="music_start_playback_hint">Tap to open a music app and start listening.</string>
+    <string name="music_access_required">Connect your media controls</string>
+    <string name="music_access_description">Android requires Notification access before Mink can find active media sessions. This is the same optional access used by Conversations, and media details stay on this device.</string>
+    <string name="music_open_notification_access">Open notification access</string>
+    <string name="music_open_player">Open the player app</string>
+    <string name="music_open_music_app">Open a music app</string>
+    <string name="music_play">Play</string>
+    <string name="music_pause">Pause</string>
+    <string name="music_hide_controls">Hide controls and show artwork</string>
+    <string name="music_show_controls">Show media controls</string>
+    <string name="music_expand_player">Expand media controls</string>
+    <string name="music_collapse_player">Collapse media controls</string>
+    <string name="music_back_control_description">Back 10 seconds; multiple taps offer restart and previous media</string>
+    <string name="music_forward_control_description">Forward 10 seconds; multiple taps offer next media and shuffle</string>
 </resources>

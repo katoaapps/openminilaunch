@@ -38,6 +38,10 @@ feature-specific controls there.
 7. Add localized strings and focused tests under the matching `features/minkspace/<name>` test
    package.
 
+Mini-apps backed by Android system state should keep platform controllers, callbacks, and command
+capability checks in their feature repository. The Home-facing Page owns that repository's
+lifecycle, while the UI consumes a small immutable state model. Music is the reference example.
+
 ## Interaction rules
 
 - Vertical paging belongs to MinkSpace. A mini-app may use horizontal paging for its own items.
@@ -46,3 +50,10 @@ feature-specific controls there.
 - Do not intercept launcher gestures outside the mini-app bounds.
 - Use the shared content, muted-content, and container colors supplied by the Home page.
 - Keep runtime permissions and destructive confirmations inside the owning mini-app feature.
+- Multi-tap controls must resolve the complete tap sequence before firing the single-tap action;
+  otherwise double- and triple-taps also execute the single-tap command.
+- System-backed commands must honor the active provider's advertised capabilities. Do not invent
+  a fallback command when Android or the provider exposes no compatible operation.
+- Mini-apps that need the entire Home pill use `MinkSpacePresentationState`. The mini-app requests
+  expansion for its stable identity; the shared shell owns shortcut visibility, padding, gesture
+  locking, saved state, and cleanup when the visible mini-app changes.

@@ -29,6 +29,7 @@ import com.katoaapps.openminilaunch.ui.apps.PrivateAppsActivity
 import com.katoaapps.openminilaunch.ui.apps.work.WorkAppsActivity
 import com.katoaapps.openminilaunch.ui.minkspace.calculator.CalculatorLabActivity
 import com.katoaapps.openminilaunch.ui.minkspace.media.MediaLabActivity
+import com.katoaapps.openminilaunch.ui.minkspace.music.MusicLabActivity
 
 import android.Manifest
 import android.app.ActivityOptions
@@ -258,6 +259,8 @@ class DeviceActions(private val context: Context) {
     fun openCalculatorLab() = start(Intent(context, CalculatorLabActivity::class.java))
 
     fun openMediaLab() = start(Intent(context, MediaLabActivity::class.java))
+
+    fun openMusicLab() = start(Intent(context, MusicLabActivity::class.java))
 
     internal fun workProfileSnapshot(): WorkProfileSnapshot = workProfileRepository.snapshot()
 

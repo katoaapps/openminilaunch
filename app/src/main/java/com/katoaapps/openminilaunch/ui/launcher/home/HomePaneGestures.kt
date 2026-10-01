@@ -20,6 +20,7 @@ import com.katoaapps.openminilaunch.ui.theme.Dimens
 @Composable
 internal fun Modifier.homePaneGestures(
     magicExpanded: Boolean,
+    verticalGesturesEnabled: Boolean,
     onPaneInteracted: () -> Unit,
     onHorizontalDrag: ((Float) -> Unit)?,
     onHorizontalDragFinished: ((Float, Long) -> Unit)?,
@@ -76,18 +77,20 @@ internal fun Modifier.homePaneGestures(
                 currentPaneInteracted()
             }
         }
-        .pointerInput(verticalSwipeThresholdPx, magicExpanded) {
-            var verticalDistance = 0f
-            detectVerticalDragGestures(
-                onDragStart = { verticalDistance = 0f },
-                onVerticalDrag = { _, amount -> verticalDistance += amount },
-                onDragEnd = {
-                    when {
-                        verticalDistance >= verticalSwipeThresholdPx -> currentSwipeDown()
-                        verticalDistance <= -verticalSwipeThresholdPx && !magicExpanded -> currentSwipeUp()
-                    }
-                },
-            )
+        .pointerInput(verticalSwipeThresholdPx, magicExpanded, verticalGesturesEnabled) {
+            if (verticalGesturesEnabled) {
+                var verticalDistance = 0f
+                detectVerticalDragGestures(
+                    onDragStart = { verticalDistance = 0f },
+                    onVerticalDrag = { _, amount -> verticalDistance += amount },
+                    onDragEnd = {
+                        when {
+                            verticalDistance >= verticalSwipeThresholdPx -> currentSwipeDown()
+                            verticalDistance <= -verticalSwipeThresholdPx && !magicExpanded -> currentSwipeUp()
+                        }
+                    },
+                )
+            }
         }
         .pointerInput(magicExpanded) {
             if (!magicExpanded) detectTapGestures(onDoubleTap = { currentDoubleTap() })

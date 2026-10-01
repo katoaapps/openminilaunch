@@ -28,10 +28,11 @@ import com.katoaapps.openminilaunch.R
 import com.katoaapps.openminilaunch.data.LauncherStore
 import com.katoaapps.openminilaunch.features.wellbeing.MinkAppAccessState
 import com.katoaapps.openminilaunch.platform.DeviceActions
-import com.katoaapps.openminilaunch.ui.theme.Dimens
-import com.katoaapps.openminilaunch.ui.theme.readableContentColor
-import com.katoaapps.openminilaunch.ui.theme.compositeColor
 import com.katoaapps.openminilaunch.ui.minkspace.core.MinkSpaceHost
+import com.katoaapps.openminilaunch.ui.minkspace.core.MinkSpacePresentationState
+import com.katoaapps.openminilaunch.ui.theme.Dimens
+import com.katoaapps.openminilaunch.ui.theme.compositeColor
+import com.katoaapps.openminilaunch.ui.theme.readableContentColor
 
 @Composable
 internal fun BoxScope.HomeFocusPanel(
@@ -43,6 +44,7 @@ internal fun BoxScope.HomeFocusPanel(
     availableHeight: Dp,
     focusPanelHeight: Dp,
     todoJumpToken: Int,
+    minkSpacePresentation: MinkSpacePresentationState,
     profileFlipResetKey: Int,
     openTodos: () -> Unit,
     openVCardSettings: () -> Unit,
@@ -50,6 +52,7 @@ internal fun BoxScope.HomeFocusPanel(
     onPausedApp: (String) -> Unit,
     onOpenDrawer: () -> Unit,
 ) {
+    val minkSpaceExpanded = minkSpacePresentation.isExpanded
     val context = LocalContext.current
     val configuration = LocalConfiguration.current
     val fontScale = LocalDensity.current.fontScale
@@ -107,7 +110,17 @@ internal fun BoxScope.HomeFocusPanel(
             openVCardSettings = openVCardSettings,
         ) { showVCard ->
             Row(
-                Modifier.fillMaxSize().padding(if (qwertyHome) Dimens.dp10 else Dimens.dp14),
+                Modifier
+                    .fillMaxSize()
+                    .padding(
+                        if (minkSpaceExpanded) {
+                            Dimens.dp0
+                        } else if (qwertyHome) {
+                            Dimens.dp10
+                        } else {
+                            Dimens.dp14
+                        },
+                    ),
                 horizontalArrangement = Arrangement.spacedBy(if (qwertyHome) Dimens.dp8 else Dimens.dp12),
             ) {
                 MinkSpaceHost(
@@ -121,6 +134,7 @@ internal fun BoxScope.HomeFocusPanel(
                     mutedContentColor = mutedColor,
                     insetColor = insetColor,
                     openMediaLab = actions::openMediaLab,
+                    presentationState = minkSpacePresentation,
                     modifier = Modifier.weight(2f).fillMaxHeight().onGloballyPositioned { coordinates ->
                         val origin = coordinates.positionInRoot()
                         onTodoCenterChanged(
@@ -128,25 +142,27 @@ internal fun BoxScope.HomeFocusPanel(
                         )
                     },
                 )
-                ShortcutGrid(
-                    store = store,
-                    actions = actions,
-                    appAccessState = appAccessState,
-                    onPausedApp = onPausedApp,
-                    onUnavailableApp = { label ->
-                        Toast.makeText(
-                            context,
-                            context.getString(R.string.launcher_app_unavailable, label),
-                            Toast.LENGTH_LONG,
-                        ).show()
-                    },
-                    showVCard = showVCard,
-                    compact = qwertyHome,
-                    contentColor = contentColor,
-                    itemContainerColor = contentColor.copy(alpha = .09f),
-                    modifier = Modifier.weight(1f).fillMaxHeight(),
-                    openDrawer = onOpenDrawer,
-                )
+                if (!minkSpaceExpanded) {
+                    ShortcutGrid(
+                        store = store,
+                        actions = actions,
+                        appAccessState = appAccessState,
+                        onPausedApp = onPausedApp,
+                        onUnavailableApp = { label ->
+                            Toast.makeText(
+                                context,
+                                context.getString(R.string.launcher_app_unavailable, label),
+                                Toast.LENGTH_LONG,
+                            ).show()
+                        },
+                        showVCard = showVCard,
+                        compact = qwertyHome,
+                        contentColor = contentColor,
+                        itemContainerColor = contentColor.copy(alpha = .09f),
+                        modifier = Modifier.weight(1f).fillMaxHeight(),
+                        openDrawer = onOpenDrawer,
+                    )
+                }
             }
         }
     }

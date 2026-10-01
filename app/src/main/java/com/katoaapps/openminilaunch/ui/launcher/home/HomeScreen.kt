@@ -8,10 +8,11 @@ import com.katoaapps.openminilaunch.data.LauncherStore
 import com.katoaapps.openminilaunch.features.updates.GitHubReleaseChecker
 import com.katoaapps.openminilaunch.features.updates.isNewerRelease
 import com.katoaapps.openminilaunch.platform.DeviceActions
-import com.katoaapps.openminilaunch.ui.minkspace.todo.TodoFlightChip
-import com.katoaapps.openminilaunch.ui.minkspace.todo.todoFlightAnimationSpec
 import com.katoaapps.openminilaunch.ui.magic.HomeMagicBox
 import com.katoaapps.openminilaunch.ui.magic.MagicBoxSessionState
+import com.katoaapps.openminilaunch.ui.minkspace.core.rememberMinkSpacePresentationState
+import com.katoaapps.openminilaunch.ui.minkspace.todo.TodoFlightChip
+import com.katoaapps.openminilaunch.ui.minkspace.todo.todoFlightAnimationSpec
 import com.katoaapps.openminilaunch.ui.settings.LockAccessibilityDisclosureDialog
 import com.katoaapps.openminilaunch.ui.settings.SettingsDestination
 import com.katoaapps.openminilaunch.ui.theme.Dimens
@@ -67,6 +68,7 @@ internal fun HomeScreen(
     var flightActive by remember { mutableStateOf(false) }
     var widgetCenter by remember { mutableStateOf(Offset.Zero) }
     var magicCenter by remember { mutableStateOf(Offset.Zero) }
+    val minkSpacePresentation = rememberMinkSpacePresentationState()
     val magicExpanded = magicBoxSessionState.expanded
     var showLockDisclosure by remember { mutableStateOf(false) }
     var showUpdateConfirmation by remember { mutableStateOf(false) }
@@ -121,6 +123,7 @@ internal fun HomeScreen(
         BoxWithConstraints(
             paneModifier.homePaneGestures(
                 magicExpanded = magicExpanded,
+                verticalGesturesEnabled = !minkSpacePresentation.isExpanded,
                 onPaneInteracted = onPaneInteracted,
                 onHorizontalDrag = onHorizontalDrag,
                 onHorizontalDragFinished = onHorizontalDragFinished,
@@ -183,6 +186,7 @@ internal fun HomeScreen(
                             availableHeight = maxHeight,
                             focusPanelHeight = focusPanelHeight,
                             todoJumpToken = todoJumpToken,
+                            minkSpacePresentation = minkSpacePresentation,
                             profileFlipResetKey = profileFlipResetKey,
                             openTodos = openTodos,
                             openVCardSettings = openVCardSettings,
