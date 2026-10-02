@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="update_notice_200_minkspace_heading">आपका होम पैनल अधिक कार्य करता है</string>
+    <string name="update_notice_200_minkspace_title">MinkSpace मिनी-ऐप्स</string>
+    <string name="update_notice_200_minkspace_description">कार्य, कैलकुलेटर, मीडिया और संगीत के बीच जाने के लिए होम पैनल के अंदर लंबवत स्वाइप करें। सेटिंग्स में उन्हें चुनें और व्यवस्थित करें; कार्य हमेशा उपलब्ध रहते हैं।</string>
+    <string name="update_notice_200_media_title">आपका चयनित मीडिया, अभी भी आपका है</string>
+    <string name="update_notice_200_media_description">Android के पिकर के माध्यम से चित्र, GIF या वीडियो जोड़ें। मिंक एक स्थानीय संदर्भ संग्रहीत करता है और आपके द्वारा चुने गए ऐप में मूल आइटम खोलता है।</string>
+    <string name="update_notice_200_music_title">सक्रिय मीडिया नियंत्रण</string>
+    <string name="update_notice_200_music_description">वैकल्पिक अधिसूचना पहुंच के साथ, संगीत Android के सक्रिय मीडिया सत्र को दिखा सकता है और केवल वही नियंत्रण भेज सकता है जो उसके प्रदाता द्वारा समर्थित है। मिंक न तो ऑडियो रिकॉर्ड करता है और न ही सुनने का इतिहास रखता है।</string>
+    <string name="update_notice_200_bubbles_heading">तेज़ स्विचिंग · बीटा</string>
+    <string name="update_notice_200_bubbles_title">Android बबल में ऐप्स आज़माएं</string>
+    <string name="update_notice_200_bubbles_description">Magic Box ऐप परिणाम को देर तक दबाकर रखें या सेटिंग्स में स्वचालित ऐप्स चुनें। संगतता Android और लक्ष्य ऐप से संबंधित है, इसलिए इसके बजाय असमर्थित ऐप्स सामान्य रूप से खुल सकते हैं।</string>
+    <string name="update_notice_200_spaces_heading">प्रत्येक स्थान का अपना स्थान होता है</string>
+    <string name="update_notice_200_work_title">एक अलग कार्य ऐप्स ड्रॉअर</string>
+    <string name="update_notice_200_work_description">सुलभ कार्य ऐप्स Android के कार्य बैज और प्रोफ़ाइल नियंत्रणों के साथ जुड़े रहते हैं।</string>
+    <string name="update_notice_200_privacy_title">गोपनीयता स्थान अलग रहता है</string>
+    <string name="update_notice_200_privacy_description">Android प्राइवेट स्पेस ऐप्स कभी भी नियमित खोज, शॉर्टकट या सभी देखें में दिखाई नहीं देते हैं। Android या आपके डिवाइस निर्माता के पास प्रमाणीकरण और सुरक्षा जारी रहेगी।</string>
+    <string name="update_notice_200_smaller_title">अधिक कीबोर्ड-प्रथम परिशोधन</string>
+    <string name="update_notice_200_smaller_description">Nextcloud Talk मैसेजिंग एकीकरण से जुड़ता है, प्रथम-मैच एंटर क्रियाएँ तेज़ होती हैं, और बड़े-डिस्प्ले लेआउट अधिक आरामदायक होते हैं।</string>
+    <string name="open_minkspace_settings">MinkSpace सेटिंग्स खोलें</string>
+    <string name="mink_space_onboarding_description">कार्य हमेशा उपलब्ध रहते हैं। कैलकुलेटर, मीडिया और संगीत को सक्षम और व्यवस्थित करें, फिर स्विच करने के लिए होम पैनल के अंदर लंबवत स्वाइप करें।</string>
+    <string name="work_apps_onboarding_description">कार्य-प्रोफ़ाइल ऐप्स एक समर्पित दराज में रहते हैं। Android और आपका संगठन नियंत्रित करते हैं कि वह प्रोफ़ाइल उपलब्ध है या रुकी हुई है।</string>
+    <string name="privacy_space_onboarding_description">Android प्राइवेट स्पेस और डिवाइस-निर्माता निजी क्षेत्र नियमित खोज, शॉर्टकट और सभी देखें से बाहर रहते हैं। आपका उपकरण प्रमाणीकरण को नियंत्रित करता है।</string>
+    <string name="backup_minkspace_description">MinkSpace ऑर्डर और सक्षम मिनी-ऐप शामिल हैं। कैलकुलेटर इतिहास, चयनित मीडिया और उसके Android अनुदान, सक्रिय मीडिया सत्र, कार्य और गोपनीयता स्थान स्थिति, डिवाइस गेटवे और सक्रिय बबल सूचनाएं इस डिवाइस के साथ रहती हैं।</string>
+</resources>

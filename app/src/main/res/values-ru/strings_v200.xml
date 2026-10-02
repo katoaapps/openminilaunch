@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="update_notice_200_minkspace_heading">Ваша домашняя панель делает больше</string>
+    <string name="update_notice_200_minkspace_title">MinkSpace Мини-приложения</string>
+    <string name="update_notice_200_minkspace_description">Проведите по вертикали внутри главной панели для перемещения между списками дел, калькулятором, мультимедиа и музыкой. Выбирайте и располагайте их в Настройках; Дела всегда остаются доступными.</string>
+    <string name="update_notice_200_media_title">Выбранные вами медиа остаются вашими</string>
+    <string name="update_notice_200_media_description">Добавляйте изображения, GIF-файлы или видео с помощью средства выбора Android. Mink сохраняет локальную ссылку и открывает исходный элемент в выбранном вами приложении.</string>
+    <string name="update_notice_200_music_title">Активный контроль мультимедиа</string>
+    <string name="update_notice_200_music_description">Благодаря дополнительному доступу к уведомлениям Music может отображать активный медиа-сеанс Android и отправлять только те элементы управления, которые поддерживает его провайдер. Mink не записывает звук и не ведет историю прослушивания.</string>
+    <string name="update_notice_200_bubbles_heading">Более быстрое переключение · БЕТА</string>
+    <string name="update_notice_200_bubbles_title">Попробуйте приложения в пузырьках Android</string>
+    <string name="update_notice_200_bubbles_description">Нажмите и удерживайте результат приложения Magic Box или выберите автоматические приложения в настройках. Совместимость принадлежит Android и целевому приложению, поэтому неподдерживаемые приложения могут вместо этого открываться нормально.</string>
+    <string name="update_notice_200_spaces_heading">Каждое пространство имеет свое место</string>
+    <string name="update_notice_200_work_title">Отдельный ящик рабочих приложений.</string>
+    <string name="update_notice_200_work_description">Доступные рабочие приложения остаются вместе с рабочим значком и элементами управления профилем Android.</string>
+    <string name="update_notice_200_privacy_title">Пространство конфиденциальности остается отдельным</string>
+    <string name="update_notice_200_privacy_description">Приложения Android Private Space никогда не отображаются в обычном поиске, ярлыках или разделе «Просмотреть все». Android или производитель вашего устройства продолжают владеть аутентификацией и защитой.</string>
+    <string name="update_notice_200_smaller_title">Больше усовершенствований для клавиатуры</string>
+    <string name="update_notice_200_smaller_description">Nextcloud Talk присоединяется к интеграции обмена сообщениями, действия по вводу при первом совпадении выполняются быстрее, а макеты с большим экраном становятся более удобными.</string>
+    <string name="open_minkspace_settings">Открыть настройки MinkSpace</string>
+    <string name="mink_space_onboarding_description">Дела всегда остаются доступными. Включите и расположите «Калькулятор», «Мультимедиа» и «Музыку», затем проведите по вертикали внутри главной панели для переключения.</string>
+    <string name="work_apps_onboarding_description">Приложения рабочего профиля хранятся в специальном ящике. Android и ваша организация контролируют, доступен ли этот профиль или приостановлен.</string>
+    <string name="privacy_space_onboarding_description">Android Частное пространство и личные области производителей устройств остаются за пределами обычного поиска, ярлыков и просмотра всех. Ваше устройство контролирует аутентификацию.</string>
+    <string name="backup_minkspace_description">Порядок MinkSpace и включенные мини-приложения включены. История калькулятора, выбранные медиафайлы и их разрешения Android, активные медиасеансы, состояние рабочего и конфиденциального пространства, шлюзы устройств и активные всплывающие уведомления остаются на этом устройстве.</string>
+</resources>

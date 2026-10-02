@@ -17,6 +17,8 @@ SOURCE_FILES = (
     "strings_calendar.xml",
     "strings_demo.xml",
     "strings_localization.xml",
+    "strings_minkspace.xml",
+    "strings_v200.xml",
 )
 LOCALE_DIRECTORIES = (
     "values-en-rGB",
@@ -43,6 +45,8 @@ PROTECTED_TERMS = (
     "Mink's Day",
     "Mink",
     "Magic Box",
+    "MinkSpace",
+    "Media Lab",
     "Katoa Apps",
 )
 COMMAND_SYMBOLS = ("@", "#", "+")

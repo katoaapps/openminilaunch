@@ -348,6 +348,13 @@ class LauncherStore private constructor(context: Context) {
         minkSpacePreferences.move(miniApp, direction)
     }
 
+    internal fun replaceMinkSpacePreferencesFromBackup(
+        order: List<MinkSpaceMiniApp>,
+        enabledMiniApps: Set<MinkSpaceMiniApp>,
+    ) {
+        minkSpacePreferences.replaceFromBackup(order, enabledMiniApps)
+    }
+
     fun setHomePanelColor(argb: Int) {
         val opaqueArgb = argb or 0xFF000000.toInt()
         if (demoPreferences.setPanelColor(opaqueArgb)) return

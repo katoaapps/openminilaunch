@@ -1,0 +1,7 @@
+MinkLauncher OpenSource 2.0 introduces MinkSpace, a configurable set of mini-apps inside the Home pill. Swipe between To-dos, Calculator, selected images/GIFs/videos, and Android’s active media player while keeping each mini-app’s own pages and drafts intact.
+
+This release also adds App Bubbles as an explicitly experimental Android 11+ feature, separates Work Apps and Privacy Space from the personal app drawer, supports Android 15 Private Space and optional device-maker private-area gateways, and adds Nextcloud Talk to messaging integrations.
+
+Portable backups now include MinkSpace order and enablement. Calculator history, selected media grants, active media sessions, Work/Privacy Space state, and device-specific gateways remain device-local and are intentionally excluded.
+
+Additional improvements refine physical-keyboard Enter actions, large-display Home sizing, app-bubble failure recovery, and general launcher behavior.

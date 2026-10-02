@@ -33,6 +33,8 @@ internal fun LauncherStore.createPortableBackup(appVersion: String): LauncherBac
             openSoftwareKeyboardOnHome = openSoftwareKeyboardOnHome,
             includeAppShortcutsInDiscovery = includeAppShortcutsInDiscovery,
             automaticAppBubbleTargets = automaticAppBubbleTargets.toList(),
+            minkSpaceMiniAppOrder = minkSpaceMiniAppOrder.filter { it.readyForHome },
+            enabledMinkSpaceMiniApps = enabledMinkSpaceMiniApps.filterTo(mutableSetOf()) { it.readyForHome },
             sendMessagesAutomatically = sendMessagesAutomatically,
             preferredMessagingPackage = preferredMessagingPackage,
             preferredAiPackage = preferredAiPackage,
@@ -87,6 +89,12 @@ internal fun LauncherStore.restorePortableBackup(backup: LauncherBackup) {
     updateOpenSoftwareKeyboardOnHome(settings.openSoftwareKeyboardOnHome)
     updateIncludeAppShortcutsInDiscovery(settings.includeAppShortcutsInDiscovery)
     replaceAutomaticAppBubbleTargets(settings.automaticAppBubbleTargets)
+    if (settings.minkSpaceMiniAppOrder != null && settings.enabledMinkSpaceMiniApps != null) {
+        replaceMinkSpacePreferencesFromBackup(
+            order = settings.minkSpaceMiniAppOrder,
+            enabledMiniApps = settings.enabledMinkSpaceMiniApps,
+        )
+    }
     updateSendMessagesAutomatically(settings.sendMessagesAutomatically)
     settings.preferredMessagingPackage?.let(::setPreferredMessagingApp)
         ?: resetPreferredMessagingApp()

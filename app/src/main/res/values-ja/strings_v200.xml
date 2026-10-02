@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="update_notice_200_minkspace_heading">ホームパネルにはさらに多くの機能があります</string>
+    <string name="update_notice_200_minkspace_title">MinkSpace ミニアプリ</string>
+    <string name="update_notice_200_minkspace_description">ホーム パネル内で垂直にスワイプして、To-Do、電卓、メディア、音楽の間を移動します。 [設定] でそれらを選択して配置します。 To-Do は常に利用可能な状態のままです。</string>
+    <string name="update_notice_200_media_title">選択したメディアはそのままあなたのものになります</string>
+    <string name="update_notice_200_media_description">Android のピッカーを使用して画像、GIF、またはビデオを追加します。 Mink はローカル参照を保存し、選択したアプリで元のアイテムを開きます。</string>
+    <string name="update_notice_200_music_title">アクティブなメディアコントロール</string>
+    <string name="update_notice_200_music_description">オプションの通知アクセスを使用すると、ミュージックは Android のアクティブなメディア セッションを表示し、プロバイダーがサポートするコントロールのみを送信できます。 Mink は音声を録音したり、視聴履歴を保持したりしません。</string>
+    <string name="update_notice_200_bubbles_heading">より高速な切り替え・ベータ版</string>
+    <string name="update_notice_200_bubbles_title">Android バブルでアプリを試す</string>
+    <string name="update_notice_200_bubbles_description">Magic Box アプリの結果を長押しするか、設定で自動アプリを選択します。互換性は Android とターゲット アプリに属する​​ため、サポートされていないアプリは代わりに正常に開く可能性があります。</string>
+    <string name="update_notice_200_spaces_heading">それぞれの空間にはそれぞれの場所がある</string>
+    <string name="update_notice_200_work_title">独立した Work Apps ドロワー</string>
+    <string name="update_notice_200_work_description">アクセス可能な仕事用アプリは、Android の仕事用バッジとプロファイル コントロールと連携したままになります。</string>
+    <string name="update_notice_200_privacy_title">プライバシースペースは独立したまま</string>
+    <string name="update_notice_200_privacy_description">Android Private Space アプリは、通常の検索、ショートカット、または「すべて表示」に表示されません。 Android またはデバイス メーカーが引き続き認証と保護を所有します。</string>
+    <string name="update_notice_200_smaller_title">キーボードファーストのさらなる改良</string>
+    <string name="update_notice_200_smaller_description">Nextcloud Talk がメッセージング統合に参加し、最初に一致する Enter アクションが高速になり、大画面レイアウトがより快適になりました。</string>
+    <string name="open_minkspace_settings">MinkSpace設定を開く</string>
+    <string name="mink_space_onboarding_description">To-Do は常に利用可能な状態のままです。電卓、メディア、音楽を有効にして配置し、ホーム パネル内で垂直にスワイプして切り替えます。</string>
+    <string name="work_apps_onboarding_description">仕事用プロファイル アプリは専用のドロワーに保存されます。 Android とあなたの組織は、そのプロファイルを利用可能にするか一時停止するかを制御します。</string>
+    <string name="privacy_space_onboarding_description">Android プライベート スペースとデバイス メーカーのプライベート エリアは、通常の検索、ショートカット、すべて表示の範囲外にあります。デバイスが認証を制御します。</string>
+    <string name="backup_minkspace_description">MinkSpace の注文と有効なミニアプリが含まれています。電卓の履歴、選択したメディアとその Android 許可、アクティブなメディア セッション、ワークスペースとプライバシー スペースの状態、デバイス ゲートウェイ、およびアクティブなバブル通知は、このデバイスに残ります。</string>
+</resources>

@@ -61,7 +61,6 @@ import com.katoaapps.openminilaunch.ui.onboarding.FeatureUpdateDialog
 import com.katoaapps.openminilaunch.ui.onboarding.OnboardingScreen
 import com.katoaapps.openminilaunch.ui.onboarding.ShortcutSetupDialog
 import com.katoaapps.openminilaunch.ui.onboarding.UsageAccessDisclosureDialog
-import com.katoaapps.openminilaunch.ui.profile.openVirtualContactCard
 import com.katoaapps.openminilaunch.ui.settings.NotificationAccessDisclosureDialog
 import com.katoaapps.openminilaunch.ui.settings.SettingsDestination
 import com.katoaapps.openminilaunch.ui.settings.SettingsScreen
@@ -78,8 +77,9 @@ import com.katoaapps.openminilaunch.ui.theme.MinkWhite
 import com.katoaapps.openminilaunch.ui.theme.Rust
 import com.katoaapps.openminilaunch.ui.theme.withAppBackground
 import com.katoaapps.openminilaunch.ui.minkspace.todo.TodosScreen
+import com.katoaapps.openminilaunch.ui.profile.openVirtualContactCard
 
-private const val FEATURE_UPDATE_ID = "v154_whats_new_v1"
+private const val FEATURE_UPDATE_ID = "v200_whats_new_v1"
 
 @Composable
 internal fun MiniLaunchApp(
@@ -373,10 +373,11 @@ internal fun MiniLaunchApp(
         }
         if (showUpdateNotice && !showTutorial) {
             FeatureUpdateDialog(
-                onOpenVCardSettings = {
+                onOpenMinkSpaceSettings = {
                     store.markUpdateSeen(FEATURE_UPDATE_ID)
                     showUpdateNotice = false
-                    openVirtualContactCard(context)
+                    screen = Screen.SETTINGS
+                    settingsDestination = SettingsDestination.MINK_SPACE
                 },
                 onReviewTutorial = {
                     store.markUpdateSeen(FEATURE_UPDATE_ID)

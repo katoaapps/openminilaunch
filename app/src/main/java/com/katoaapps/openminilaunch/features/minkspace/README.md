@@ -3,6 +3,10 @@
 MinkSpace mini-apps are built-in launcher features, not dynamically loaded plugins. This keeps
 their data private, their behavior reviewable, and the Home pager predictable on small devices.
 
+OpenMink 2.0 ships Todo, Calculator, Media, and Music. Recorder keeps a reserved internal stable ID
+for future migration safety, but it is not a released mini-app, is hidden from user-facing settings,
+and must not be enabled until its permission, privacy, UI, and release plan are explicitly approved.
+
 ## Package shape
 
 Use the same two-package structure as Calculator, Media, and Todo:

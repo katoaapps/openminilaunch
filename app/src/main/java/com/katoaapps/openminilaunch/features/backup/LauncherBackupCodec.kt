@@ -12,6 +12,7 @@ import com.katoaapps.openminilaunch.model.configurableShortcuts
 import com.katoaapps.openminilaunch.model.shortcutFromStoredName
 import com.katoaapps.openminilaunch.model.ThemePreference
 import com.katoaapps.openminilaunch.features.minkspace.todo.TodoItem
+import com.katoaapps.openminilaunch.features.minkspace.MinkSpaceMiniApp
 import org.json.JSONArray
 import org.json.JSONObject
 
@@ -44,7 +45,7 @@ internal object LauncherBackupCodec {
     fun decode(json: String): LauncherBackup {
         val root = JSONObject(json)
         require(root.optString("format") == LAUNCHER_BACKUP_FORMAT) { "Not an OpenMink backup" }
-        require(root.optInt("schemaVersion", -1) in 1..LAUNCHER_BACKUP_SCHEMA_VERSION) {
+        require(root.optInt("schemaVersion", -1) in 1..LAUNCHER_BACKUP_MAX_READABLE_SCHEMA_VERSION) {
             "Unsupported OpenMink backup version"
         }
         val profile = root.optJSONObject("profile")?.let(ProfileBackupCodec::decode)
@@ -117,6 +118,18 @@ internal object LauncherBackupCodec {
             putNullable("preferredAiPackage", settings.preferredAiPackage)
             putNullable("preferredWebPackage", settings.preferredWebPackage)
         })
+        settings.minkSpaceMiniAppOrder?.let { order ->
+            put("minkSpace", JSONObject().apply {
+                put("order", order.map(MinkSpaceMiniApp::stableId).stringsJsonArray())
+                put(
+                    "enabled",
+                    settings.enabledMinkSpaceMiniApps
+                        .orEmpty()
+                        .map(MinkSpaceMiniApp::stableId)
+                        .stringsJsonArray(),
+                )
+            })
+        }
         put("messaging", JSONObject().apply {
             put("sendMessagesAutomatically", settings.sendMessagesAutomatically)
             putNullable("preferredMessagingPackage", settings.preferredMessagingPackage)
@@ -136,6 +149,7 @@ internal object LauncherBackupCodec {
         val magicBox = json.getJSONObject("magicBox")
         val messaging = json.getJSONObject("messaging")
         val minkDay = json.getJSONObject("minkDay")
+        val minkSpace = json.optJSONObject("minkSpace")
 
         return LauncherBackupSettings(
             themePreference = appearance.enumValue("theme", ThemePreference.SYSTEM),
@@ -162,6 +176,10 @@ internal object LauncherBackupCodec {
             openSoftwareKeyboardOnHome = magicBox.optBoolean("openSoftwareKeyboardOnHome", true),
             includeAppShortcutsInDiscovery = magicBox.optBoolean("includeAppShortcutsInDiscovery", false),
             automaticAppBubbleTargets = magicBox.optJSONArray("automaticAppBubbleTargets").safeTargets(),
+            minkSpaceMiniAppOrder = minkSpace?.optJSONArray("order")?.minkSpaceMiniApps(),
+            enabledMinkSpaceMiniApps = minkSpace?.optJSONArray("enabled")
+                ?.minkSpaceMiniApps()
+                ?.toSet(),
             sendMessagesAutomatically = messaging.optBoolean("sendMessagesAutomatically", false),
             preferredMessagingPackage = messaging.optNullableString("preferredMessagingPackage")?.safePackage(),
             preferredAiPackage = magicBox.optNullableString("preferredAiPackage")?.safePackage(),
@@ -215,6 +233,15 @@ internal object LauncherBackupCodec {
 
     private fun JSONArray?.safeTargets(): List<String> = safeStrings(MAX_TARGET_LENGTH)
 
+    private fun JSONArray?.minkSpaceMiniApps(): List<MinkSpaceMiniApp> = buildList {
+        val source = this@minkSpaceMiniApps ?: return@buildList
+        repeat(minOf(source.length(), MAX_ENUM_VALUES)) { index ->
+            MinkSpaceMiniApp.fromStableId(source.optString(index))?.let { miniApp ->
+                if (miniApp.readyForHome && miniApp !in this) add(miniApp)
+            }
+        }
+    }
+
     private fun JSONArray?.safePackages(): List<String> = safeStrings(255)
 
     private fun JSONArray?.safeStrings(maxLength: Int): List<String> = buildList {
@@ -257,6 +284,12 @@ internal object LauncherBackupCodec {
         "recentQueryHistory",
         "demoData",
         "profilePhoto",
+        "minkSpaceCalculatorHistory",
+        "minkSpaceMediaSelectionsAndUriGrants",
+        "activeMediaSessions",
+        "workAndPrivateProfileState",
+        "devicePrivateAreaGateway",
+        "activeBubbleNotifications",
         "updateCacheAndReminders",
     )
 

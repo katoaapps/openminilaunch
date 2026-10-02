@@ -6,11 +6,16 @@ import com.katoaapps.openminilaunch.model.PinShortcutRequestPresentation
 import com.katoaapps.openminilaunch.model.Shortcut
 import com.katoaapps.openminilaunch.model.ThemePreference
 import com.katoaapps.openminilaunch.features.minkspace.todo.TodoItem
+import com.katoaapps.openminilaunch.features.minkspace.MinkSpaceMiniApp
 import com.katoaapps.openminilaunch.features.profile.ProfileCard
 import com.katoaapps.openminilaunch.features.profile.ProfileLink
 
 internal const val LAUNCHER_BACKUP_FORMAT = "minklauncher-open-backup"
+// Keep schema 3 while new fields remain optional. OpenMink 1.5.5 ignores unknown JSON keys,
+// which lets a 2.0 export restore there without losing fields that version understands.
 internal const val LAUNCHER_BACKUP_SCHEMA_VERSION = 3
+// Interim 2.0 development builds wrote schema 4 before downgrade compatibility was restored.
+internal const val LAUNCHER_BACKUP_MAX_READABLE_SCHEMA_VERSION = 4
 
 /** Portable state that is safe to move between OpenMink distributions on the same device. */
 internal data class LauncherBackup(
@@ -49,6 +54,10 @@ internal data class LauncherBackupSettings(
     val openSoftwareKeyboardOnHome: Boolean,
     val includeAppShortcutsInDiscovery: Boolean,
     val automaticAppBubbleTargets: List<String>,
+    /** Null means this backup predates portable MinkSpace preferences. */
+    val minkSpaceMiniAppOrder: List<MinkSpaceMiniApp>?,
+    /** Null means this backup predates portable MinkSpace preferences. */
+    val enabledMinkSpaceMiniApps: Set<MinkSpaceMiniApp>?,
     val sendMessagesAutomatically: Boolean,
     val preferredMessagingPackage: String?,
     val preferredAiPackage: String?,

@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="update_notice_200_minkspace_heading">您的主页面板功能更多</string>
+    <string name="update_notice_200_minkspace_title">MinkSpace小程序</string>
+    <string name="update_notice_200_minkspace_description">在主页面板内垂直滑动可在待办事项、计算器、媒体和音乐之间移动。在“设置”中选择并排列它们；待办事项始终可用。</string>
+    <string name="update_notice_200_media_title">您选择的媒体仍然是您的</string>
+    <string name="update_notice_200_media_description">通过 Android 的选择器添加图像、GIF 或视频。 Mink 存储本地参考并在您选择的应用程序中打开原始项目。</string>
+    <string name="update_notice_200_music_title">主动媒体控制</string>
+    <string name="update_notice_200_music_description">通过可选的通知访问，音乐可以显示 Android 的活动媒体会话，并仅发送其提供商支持的控件。 Mink 不会录制音频或保留收听历史记录。</string>
+    <string name="update_notice_200_bubbles_heading">更快的切换·测试版</string>
+    <string name="update_notice_200_bubbles_title">尝试Android气泡中的应用程序</string>
+    <string name="update_notice_200_bubbles_description">长按 Magic Box 应用程序结果或在“设置”中选择自动应用程序。兼容性属于Android和目标应用程序，因此不支持的应用程序可能会正常打开。</string>
+    <string name="update_notice_200_spaces_heading">每个空间都有它的位置</string>
+    <string name="update_notice_200_work_title">单独的工作应用程序抽屉</string>
+    <string name="update_notice_200_work_description">可访问的工作应用程序与 Android 的工作徽章和个人资料控件保持在一起。</string>
+    <string name="update_notice_200_privacy_title">隐私空间保持独立</string>
+    <string name="update_notice_200_privacy_description">Android 私人空间应用程序永远不会出现在常规搜索、快捷方式或“查看全部”中。 Android 或您的设备制造商继续拥有身份验证和保护。</string>
+    <string name="update_notice_200_smaller_title">更多键盘优先的改进</string>
+    <string name="update_notice_200_smaller_description">Nextcloud Talk加入消息集成，首匹配输入动作更快，大屏布局更舒适。</string>
+    <string name="open_minkspace_settings">打开MinkSpace设置</string>
+    <string name="mink_space_onboarding_description">待办事项始终可用。启用并排列计算器、媒体和音乐，然后在主页面板内垂直滑动进行切换。</string>
+    <string name="work_apps_onboarding_description">工作配置文件应用程序位于专用抽屉中。 Android 和您的组织控制该配置文件是否可用或暂停。</string>
+    <string name="privacy_space_onboarding_description">Android 私人空间和设备制造商私人区域位于常规搜索、快捷方式和查看全部之外。您的设备控制身份验证。</string>
+    <string name="backup_minkspace_description">包括 MinkSpace 订单和启用的小应用程序。计算器历史记录、所选媒体及其 Android 授权、活动媒体会话、工作和隐私空间状态、设备网关和活动气泡通知均保留在该设备上。</string>
+</resources>

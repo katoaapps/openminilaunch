@@ -169,6 +169,11 @@ internal fun NotificationAccessDisclosureDialog(
                         color = Muted,
                         fontSize = Dimens.sp12,
                     )
+                    Text(
+                        stringResource(R.string.notification_access_music_disclosure),
+                        color = Muted,
+                        fontSize = Dimens.sp12,
+                    )
                     Text(stringResource(R.string.conversations_disclosure_three), color = Muted, fontSize = Dimens.sp12)
                 }
                 Row(

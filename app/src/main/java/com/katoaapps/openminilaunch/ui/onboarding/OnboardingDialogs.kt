@@ -12,19 +12,17 @@ import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.EventNote
 import androidx.compose.material.icons.filled.Apps
+import androidx.compose.material.icons.filled.BubbleChart
+import androidx.compose.material.icons.filled.Calculate
 import androidx.compose.material.icons.filled.Folder
 import androidx.compose.material.icons.filled.FolderOpen
+import androidx.compose.material.icons.filled.Lock
+import androidx.compose.material.icons.filled.MusicNote
 import androidx.compose.material.icons.filled.Pets
-import androidx.compose.material.icons.filled.QrCode2
+import androidx.compose.material.icons.filled.PhotoLibrary
 import androidx.compose.material.icons.filled.Security
-import androidx.compose.material.icons.filled.TouchApp
-import androidx.compose.material.icons.filled.Checklist
-import androidx.compose.material.icons.filled.TabletAndroid
-import androidx.compose.material.icons.filled.Translate
-import androidx.compose.material.icons.filled.Visibility
-import androidx.compose.material.icons.filled.WarningAmber
+import androidx.compose.material.icons.filled.Work
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
@@ -47,7 +45,7 @@ import com.katoaapps.openminilaunch.ui.theme.Rust
 
 @Composable
 internal fun FeatureUpdateDialog(
-    onOpenVCardSettings: () -> Unit,
+    onOpenMinkSpaceSettings: () -> Unit,
     onReviewTutorial: () -> Unit,
     onNotNow: () -> Unit,
 ) {
@@ -63,61 +61,65 @@ internal fun FeatureUpdateDialog(
                 verticalArrangement = Arrangement.spacedBy(Dimens.dp14),
             ) {
                 Text(
-                    stringResource(R.string.update_notice_profile_heading),
+                    stringResource(R.string.update_notice_200_minkspace_heading),
                     fontSize = Dimens.sp18,
                     fontWeight = FontWeight.Bold,
                 )
                 UpdatePoint(
-                    Icons.Default.QrCode2,
-                    stringResource(R.string.update_notice_profile_title),
-                    stringResource(R.string.update_notice_profile_description),
+                    Icons.Default.Calculate,
+                    stringResource(R.string.update_notice_200_minkspace_title),
+                    stringResource(R.string.update_notice_200_minkspace_description),
                 )
                 UpdatePoint(
-                    Icons.Default.Security,
-                    stringResource(R.string.vcard_private_title),
-                    stringResource(R.string.vcard_private_description) + " " +
-                        stringResource(R.string.vcard_no_account_description),
+                    Icons.Default.PhotoLibrary,
+                    stringResource(R.string.update_notice_200_media_title),
+                    stringResource(R.string.update_notice_200_media_description),
                 )
                 UpdatePoint(
-                    Icons.Default.TouchApp,
-                    stringResource(R.string.update_notice_profile_flip_title),
-                    stringResource(R.string.update_notice_profile_flip_description),
-                )
-                UpdatePoint(
-                    Icons.Default.Checklist,
-                    stringResource(R.string.update_notice_profile_todo_title),
-                    stringResource(R.string.update_notice_profile_todo_description),
+                    Icons.Default.MusicNote,
+                    stringResource(R.string.update_notice_200_music_title),
+                    stringResource(R.string.update_notice_200_music_description),
                 )
                 Text(
-                    stringResource(R.string.update_notice_calendar_heading),
-                    fontSize = Dimens.sp18,
-                    fontWeight = FontWeight.Bold,
-                )
-                UpdatePoint(Icons.Default.Translate, stringResource(R.string.update_notice_calendar_language_title), stringResource(R.string.update_notice_calendar_language_description))
-                UpdatePoint(Icons.Default.Visibility, stringResource(R.string.update_notice_calendar_preview_title), stringResource(R.string.update_notice_calendar_preview_description))
-                UpdatePoint(Icons.Default.WarningAmber, stringResource(R.string.update_notice_calendar_review_title), stringResource(R.string.update_notice_calendar_review_description))
-                UpdatePoint(Icons.AutoMirrored.Filled.EventNote, stringResource(R.string.update_notice_calendar_local_title), stringResource(R.string.update_notice_calendar_local_description))
-                Text(
-                    stringResource(R.string.update_notice_two_panel_heading),
+                    stringResource(R.string.update_notice_200_bubbles_heading),
                     fontSize = Dimens.sp18,
                     fontWeight = FontWeight.Bold,
                 )
                 UpdatePoint(
-                    Icons.Default.TabletAndroid,
-                    stringResource(R.string.update_notice_two_panel_title),
-                    stringResource(R.string.update_notice_two_panel_description),
+                    Icons.Default.BubbleChart,
+                    stringResource(R.string.update_notice_200_bubbles_title),
+                    stringResource(R.string.update_notice_200_bubbles_description),
+                )
+                Text(
+                    stringResource(R.string.update_notice_200_spaces_heading),
+                    fontSize = Dimens.sp18,
+                    fontWeight = FontWeight.Bold,
+                )
+                UpdatePoint(
+                    Icons.Default.Work,
+                    stringResource(R.string.update_notice_200_work_title),
+                    stringResource(R.string.update_notice_200_work_description),
+                )
+                UpdatePoint(
+                    Icons.Default.Lock,
+                    stringResource(R.string.update_notice_200_privacy_title),
+                    stringResource(R.string.update_notice_200_privacy_description),
                 )
                 UpdatePoint(
                     Icons.Default.Apps,
-                    stringResource(R.string.update_notice_smaller_improvements_title),
-                    stringResource(R.string.update_notice_smaller_improvements_description),
+                    stringResource(R.string.update_notice_200_smaller_title),
+                    stringResource(R.string.update_notice_200_smaller_description),
                 )
                 TextButton(onClick = onReviewTutorial, contentPadding = PaddingValues(Dimens.dp0)) {
                     Text(stringResource(R.string.review_updated_tutorial))
                 }
             }
         },
-        confirmButton = { Button(onClick = onOpenVCardSettings) { Text(stringResource(R.string.open_profile)) } },
+        confirmButton = {
+            Button(onClick = onOpenMinkSpaceSettings) {
+                Text(stringResource(R.string.open_minkspace_settings))
+            }
+        },
         dismissButton = { TextButton(onClick = onNotNow) { Text(stringResource(R.string.not_now)) } },
     )
 }

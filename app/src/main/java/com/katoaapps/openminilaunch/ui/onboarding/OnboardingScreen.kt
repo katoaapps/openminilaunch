@@ -293,9 +293,12 @@ internal fun OnboardingScreen(store: LauncherStore, actions: DeviceActions, onFi
                         }
                         6 -> Column(verticalArrangement = Arrangement.spacedBy(Dimens.dp18)) {
                             Text(stringResource(R.string.spaces_onboarding_intro), fontSize = Dimens.sp18)
+                            OnboardingPoint(Icons.Default.ViewCarousel, stringResource(R.string.mink_space_mini_apps), stringResource(R.string.mink_space_onboarding_description))
                             OnboardingPoint(Icons.Default.Forum, stringResource(R.string.conversations), stringResource(R.string.conversations_onboarding_description))
                             OnboardingPoint(Icons.Default.Widgets, stringResource(R.string.widget_page), stringResource(R.string.widget_page_onboarding_description))
                             OnboardingPoint(Icons.Default.Pets, stringResource(R.string.mink_day), stringResource(R.string.mink_day_onboarding_short_description))
+                            OnboardingPoint(Icons.Default.Work, stringResource(R.string.work_apps), stringResource(R.string.work_apps_onboarding_description))
+                            OnboardingPoint(Icons.Default.Lock, stringResource(R.string.privacy_apps), stringResource(R.string.privacy_space_onboarding_description))
                             OnboardingPoint(Icons.Default.TabletAndroid, stringResource(R.string.two_panel_onboarding_title), stringResource(R.string.two_panel_onboarding_description))
                             OnboardingPoint(Icons.Default.Apps, stringResource(R.string.six_shortcuts_any_apps), stringResource(R.string.six_shortcuts_any_apps_description))
                             OnboardingPoint(Icons.Default.DragIndicator, stringResource(R.string.arrange_grid), stringResource(R.string.arrange_grid_description))
@@ -334,6 +337,7 @@ internal fun OnboardingScreen(store: LauncherStore, actions: DeviceActions, onFi
                             }
                             OnboardingPoint(Icons.Default.SystemUpdateAlt, stringResource(R.string.github_update_checks), stringResource(R.string.github_updates_onboarding_description, appName))
                             OnboardingPoint(Icons.Default.Forum, stringResource(R.string.conversation_access), stringResource(R.string.conversation_access_onboarding_description))
+                            OnboardingPoint(Icons.Default.MusicNote, stringResource(R.string.music_player), stringResource(R.string.music_access_description))
                             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
                                 OnboardingPoint(
                                     Icons.Default.AdminPanelSettings,

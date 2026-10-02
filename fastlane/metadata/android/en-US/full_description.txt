@@ -1,6 +1,8 @@
 MinkLauncher OpenSource is a focused Android home-screen launcher and keyboard-first assistant designed around fast input and low visual noise.
 
-The responsive Home panel combines a preview of up to five to-dos with eight configurable icon shortcuts. Home slots and the compact drawer can open apps or actions published by apps, while every installed launcher app remains one keyboard search away. Accessible work-profile apps and shortcuts appear with a work badge and stay outside Mink’s Day limits.
+The responsive Home panel combines MinkSpace Mini-Apps with eight configurable icon shortcuts. Swipe vertically between To-dos, Calculator, selected Media, and Android’s active Music session. To-dos stay enabled, while other mini-apps can be enabled and arranged in Settings. Swipe horizontally inside a mini-app to move through its own pages.
+
+Home slots and the compact drawer can open apps or actions published by apps, while every personal app remains one keyboard search away. Work Apps use a separate badged drawer. Android 15 Private Space apps stay in their own locked container outside regular search, shortcuts, and See All; supported device-maker private areas can be opened through an optional gateway without exposing their contained apps to MinkLauncher.
 
 Appearance settings can use Mink’s monochrome treatment, original app icons, or an installed Nova/ADW-compatible icon pack. Icon-pack mappings and previews are read locally, and apps not covered by the selected pack retain their original icon.
 
@@ -14,7 +16,10 @@ Magic Box commands:
 • / — create a multiline note through an installed notes app
 • + — create a calendar event
 • ? — find and immediately launch an installed app
+• * — hand a multiline prompt to the selected AI provider
 • Plain text — search local filenames, open a web search, or hand the query to a selected compatible AI app
+
+On Android 11 or newer, App Bubbles (Beta) can try to open a personal app in Android’s notification bubble stack. Long-press a Magic Box app result for one launch or choose automatic apps in Settings. Compatibility is controlled by Android and the target app, so unsupported apps may open normally instead.
 
 To-dos can be added, checked, edited, confirmed before deletion, and reordered by drag. Local file results are grouped into photos, videos, documents, and audio, with thumbnails where Android provides them. Document search uses only folders you explicitly select through Android's system folder picker.
 
@@ -24,9 +29,15 @@ Optional spaces remain one swipe away:
 • Mink’s Day measures foreground time and launch counts for the Android Social-category apps or custom apps the user chooses to include. Set a collective limit from 0 to 23 whole hours, then pause those apps in MinkLauncher all the time, only after the limit, or never. Paused apps are hidden from Magic Box and app drawers while shortcut tiles remain visible with a reminder. This is a launcher barrier, not a system app suspension or parental-control feature. Other apps never enter Mink’s Day totals.
 • Widgets hosts up to eight Android widgets with grouped provider previews, correct responsive sizing, reordering, and removal.
 
+MinkSpace details:
+
+• Calculator accepts touch or physical-keyboard input and keeps a clearable local history
+• Media Lab uses Android’s picker for specific images, GIFs, and videos; it stores references rather than copying or uploading the original files
+• Music uses optional Notification access to read Android’s active media session and sends only controls advertised by the provider; it does not record audio or keep listening history
+
 When another app requests Add to Home screen, MinkLauncher can place its shortcut in a Home slot or Top 8. Choose a stable full page or a faster confirmation sheet in Settings. Legacy shortcut requests are also supported for older apps and devices.
 
-Backup & restore exports a versioned local JSON file containing portable launcher settings, layout, app choices, icon preferences, Mink’s Day configuration, and to-dos. This makes it possible to move between F-Droid and GitHub installs. Android-managed permissions, roles, widgets, accessibility and notification access, and document-folder grants must be configured again after reinstalling.
+Backup & restore exports a versioned local JSON file containing portable launcher settings, layout, app choices, icon preferences, MinkSpace order and enablement, Mink’s Day configuration, to-dos, and Virtual Contact Card details. This makes it possible to move between F-Droid and GitHub installs. Calculator history, selected media, active sessions, profile state, Android-managed permissions and roles, widgets, accessibility and notification access, and document-folder grants must be configured again after reinstalling.
 
 Integrated messaging:
 
@@ -36,12 +47,13 @@ Integrated messaging:
 • Other integrations carry the message and let you choose the contact in the receiving app
 • Returning to Mink keeps your selected contact and message until you send or clear it
 • Conversation replies still use the reply action supplied by the notification’s source app
+• Nextcloud Talk can surface locally published recent conversations so families and teams using their own server can continue an existing chat quickly
 
 Privacy is a core feature:
 
 • No accounts, ads, analytics, trackers, or application server
 • An optional, twice-daily GitHub release-metadata check shows a clear update card and a persistent Home header icon; GitHub receives normal connection metadata but no launcher content, and the app never downloads or installs APKs
-• Queries, to-dos, settings, conversations, usage analysis, and filename indexing stay on the device
+• Queries, to-dos, settings, calculator history, media references, conversations, usage analysis, and filename indexing stay on the device
 • Android cloud backup is disabled
 • Portable backups are created only when requested and stay in the location selected through Android’s document picker
 • Notification, Usage, Accessibility, and Assistant special access are optional and explained before Android Settings opens

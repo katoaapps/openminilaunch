@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="update_notice_200_minkspace_heading">Votre panneau d\'accueil fait plus</string>
+    <string name="update_notice_200_minkspace_title">Mini-applications MinkSpace</string>
+    <string name="update_notice_200_minkspace_description">Faites glisser votre doigt verticalement à l\'intérieur du panneau d\'accueil pour vous déplacer entre les tâches, la calculatrice, les médias et la musique. Choisissez-les et organisez-les dans Paramètres ; Les tâches restent toujours disponibles.</string>
+    <string name="update_notice_200_media_title">Votre média sélectionné, toujours le vôtre</string>
+    <string name="update_notice_200_media_description">Ajoutez des images, des GIF ou des vidéos via le sélecteur de Android. Mink stocke une référence locale et ouvre l\'élément d\'origine dans l\'application de votre choix.</string>
+    <string name="update_notice_200_music_title">Contrôles multimédias actifs</string>
+    <string name="update_notice_200_music_description">Avec l\'accès optionnel aux notifications, Music peut afficher la session multimédia active de Android et envoyer uniquement les commandes prises en charge par son fournisseur. Mink n\'enregistre pas l\'audio et ne conserve pas l\'historique d\'écoute.</string>
+    <string name="update_notice_200_bubbles_heading">Commutation plus rapide · BÊTA</string>
+    <string name="update_notice_200_bubbles_title">Essayez les applications dans les bulles Android</string>
+    <string name="update_notice_200_bubbles_description">Appuyez longuement sur le résultat d\'une application Magic Box ou choisissez des applications automatiques dans Paramètres. La compatibilité appartient à Android et à l\'application cible, donc les applications non prises en charge peuvent s\'ouvrir normalement à la place.</string>
+    <string name="update_notice_200_spaces_heading">Chaque espace a sa place</string>
+    <string name="update_notice_200_work_title">Un tiroir Work Apps séparé</string>
+    <string name="update_notice_200_work_description">Les applications professionnelles accessibles restent ensemble grâce au badge de travail et aux contrôles de profil de Android.</string>
+    <string name="update_notice_200_privacy_title">L\'espace de confidentialité reste séparé</string>
+    <string name="update_notice_200_privacy_description">Les applications Android Private Space n\'apparaissent jamais dans la recherche normale, les raccourcis ou Tout afficher. Android ou le fabricant de votre appareil continue de détenir l\'authentification et la protection.</string>
+    <string name="update_notice_200_smaller_title">Plus d\'améliorations axées sur le clavier</string>
+    <string name="update_notice_200_smaller_description">Nextcloud Talk rejoint les intégrations de messagerie, les actions Enter de première correspondance sont plus rapides et les dispositions sur grand écran sont plus confortables.</string>
+    <string name="open_minkspace_settings">Ouvrir les paramètres MinkSpace</string>
+    <string name="mink_space_onboarding_description">Les tâches restent toujours disponibles. Activez et organisez la Calculatrice, les Médias et la Musique, puis faites glisser votre doigt verticalement à l\'intérieur du panneau d\'accueil pour basculer.</string>
+    <string name="work_apps_onboarding_description">Les applications de profil professionnel se trouvent dans un tiroir dédié. Android et votre organisation contrôlent si ce profil est disponible ou suspendu.</string>
+    <string name="privacy_space_onboarding_description">L\'espace privé Android et les zones privées du fabricant d\'appareils restent en dehors de la recherche habituelle, des raccourcis et de tout afficher. Votre appareil contrôle l\'authentification.</string>
+    <string name="backup_minkspace_description">La commande MinkSpace et les mini-applications activées sont incluses. L\'historique de la calculatrice, les médias sélectionnés et leurs subventions Android, les sessions multimédias actives, l\'état de l\'espace travail et confidentialité, les passerelles de l\'appareil et les notifications par bulles actives restent avec cet appareil.</string>
+</resources>

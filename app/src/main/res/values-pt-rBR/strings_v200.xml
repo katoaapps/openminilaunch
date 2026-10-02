@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="update_notice_200_minkspace_heading">Seu painel inicial faz mais</string>
+    <string name="update_notice_200_minkspace_title">Miniaplicativos MinkSpace</string>
+    <string name="update_notice_200_minkspace_description">Deslize verticalmente dentro do painel inicial para alternar entre Tarefas, Calculadora, Mídia e Música. Escolha e organize-os em Configurações; As tarefas sempre permanecem disponíveis.</string>
+    <string name="update_notice_200_media_title">Sua mídia selecionada, ainda sua</string>
+    <string name="update_notice_200_media_description">Adicione imagens, GIFs ou vídeos por meio do seletor Android. Mink armazena uma referência local e abre o item original no aplicativo que você escolher.</string>
+    <string name="update_notice_200_music_title">Controles de mídia ativos</string>
+    <string name="update_notice_200_music_description">Com acesso opcional à notificação, o Music pode mostrar a sessão de mídia ativa do Android e enviar apenas os controles suportados pelo seu provedor. Mink não grava áudio nem mantém histórico de audição.</string>
+    <string name="update_notice_200_bubbles_heading">Troca mais rápida · BETA</string>
+    <string name="update_notice_200_bubbles_title">Experimente aplicativos em bolhas Android</string>
+    <string name="update_notice_200_bubbles_description">Mantenha pressionado o resultado do aplicativo Magic Box ou escolha aplicativos automáticos em Configurações. A compatibilidade pertence a Android e ao aplicativo de destino, portanto, aplicativos não suportados podem abrir normalmente.</string>
+    <string name="update_notice_200_spaces_heading">Cada espaço tem seu lugar</string>
+    <string name="update_notice_200_work_title">Uma gaveta separada de aplicativos de trabalho</string>
+    <string name="update_notice_200_work_description">Os aplicativos de trabalho acessíveis permanecem juntos com o crachá de trabalho e os controles de perfil do Android.</string>
+    <string name="update_notice_200_privacy_title">O espaço de privacidade permanece separado</string>
+    <string name="update_notice_200_privacy_description">Os aplicativos Android Private Space nunca aparecem na pesquisa regular, nos atalhos ou em Ver tudo. Android ou o fabricante do seu dispositivo continua a possuir autenticação e proteção.</string>
+    <string name="update_notice_200_smaller_title">Mais refinamentos no teclado</string>
+    <string name="update_notice_200_smaller_description">Nextcloud Talk junta-se a integrações de mensagens, as ações Enter na primeira correspondência são mais rápidas e os layouts de tela grande são mais confortáveis.</string>
+    <string name="open_minkspace_settings">Abra as configurações MinkSpace</string>
+    <string name="mink_space_onboarding_description">As tarefas sempre permanecem disponíveis. Ative e organize Calculadora, Mídia e Música e deslize verticalmente dentro do painel inicial para alternar.</string>
+    <string name="work_apps_onboarding_description">Os aplicativos de perfil de trabalho ficam em uma gaveta dedicada. Android e sua organização controlam se esse perfil está disponível ou pausado.</string>
+    <string name="privacy_space_onboarding_description">Android O espaço privado e as áreas privadas do fabricante do dispositivo ficam fora da pesquisa regular, dos atalhos e de Ver tudo. Seu dispositivo controla a autenticação.</string>
+    <string name="backup_minkspace_description">O pedido MinkSpace e miniaplicativos habilitados estão incluídos. O histórico da calculadora, a mídia selecionada e suas concessões Android, as sessões de mídia ativas, o estado do espaço de trabalho e privacidade, os gateways do dispositivo e as notificações de bolha ativas permanecem com este dispositivo.</string>
+</resources>

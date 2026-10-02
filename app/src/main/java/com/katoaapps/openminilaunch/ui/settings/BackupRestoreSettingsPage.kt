@@ -109,6 +109,12 @@ internal fun BackupRestoreSettingsPage(
             modifier = Modifier.padding(top = Dimens.dp4),
         )
         Text(
+            stringResource(R.string.backup_minkspace_description),
+            color = Muted,
+            fontSize = Dimens.sp11,
+            modifier = Modifier.padding(top = Dimens.dp4),
+        )
+        Text(
             stringResource(R.string.profile_backup_privacy_warning),
             color = Muted,
             fontSize = Dimens.sp11,

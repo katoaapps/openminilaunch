@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="update_notice_200_minkspace_heading">لوحة الصفحة الرئيسية الخاصة بك تفعل المزيد</string>
+    <string name="update_notice_200_minkspace_title">MinkSpace التطبيقات المصغرة</string>
+    <string name="update_notice_200_minkspace_description">قم بالتمرير عموديًا داخل اللوحة الرئيسية للتنقل بين المهام والآلة الحاسبة والوسائط والموسيقى. اخترها ورتبها في الإعدادات؛ تظل المهام متاحة دائمًا.</string>
+    <string name="update_notice_200_media_title">الوسائط التي اخترتها، لا تزال ملكك</string>
+    <string name="update_notice_200_media_description">أضف صورًا أو صور GIF أو مقاطع فيديو من خلال منتقي Android. يقوم Mink بتخزين مرجع محلي ويفتح العنصر الأصلي في التطبيق الذي تختاره.</string>
+    <string name="update_notice_200_music_title">عناصر التحكم النشطة في الوسائط</string>
+    <string name="update_notice_200_music_description">من خلال الوصول الاختياري للإشعارات، يمكن للموسيقى عرض جلسة الوسائط النشطة لـ Android وإرسال عناصر التحكم التي يدعمها مزودها فقط. لا يقوم Mink بتسجيل الصوت أو الاحتفاظ بسجل الاستماع.</string>
+    <string name="update_notice_200_bubbles_heading">تبديل أسرع · بيتا</string>
+    <string name="update_notice_200_bubbles_title">جرب التطبيقات في فقاعات Android</string>
+    <string name="update_notice_200_bubbles_description">اضغط لفترة طويلة على نتيجة تطبيق Magic Box أو اختر التطبيقات التلقائية في الإعدادات. التوافق ينتمي إلى Android والتطبيق المستهدف، لذلك قد يتم فتح التطبيقات غير المدعومة بشكل طبيعي بدلاً من ذلك.</string>
+    <string name="update_notice_200_spaces_heading">كل مساحة لها مكانها</string>
+    <string name="update_notice_200_work_title">درج منفصل لتطبيقات العمل</string>
+    <string name="update_notice_200_work_description">تبقى تطبيقات العمل التي يمكن الوصول إليها مع شارة العمل وعناصر التحكم في الملف الشخصي في Android.</string>
+    <string name="update_notice_200_privacy_title">تظل مساحة الخصوصية منفصلة</string>
+    <string name="update_notice_200_privacy_description">لا تظهر تطبيقات Android Private Space مطلقًا في البحث العادي أو الاختصارات أو رؤية الكل. يستمر Android أو صانع جهازك في امتلاك المصادقة والحماية.</string>
+    <string name="update_notice_200_smaller_title">المزيد من التحسينات على لوحة المفاتيح أولاً</string>
+    <string name="update_notice_200_smaller_description">ينضم Nextcloud Talk إلى عمليات تكامل الرسائل، وتكون إجراءات إدخال المطابقة الأولى أسرع، وتكون تخطيطات العرض الكبيرة أكثر راحة.</string>
+    <string name="open_minkspace_settings">افتح إعدادات MinkSpace</string>
+    <string name="mink_space_onboarding_description">تظل المهام متاحة دائمًا. قم بتمكين الحاسبة والوسائط والموسيقى وترتيبها، ثم قم بالتمرير عموديًا داخل اللوحة الرئيسية للتبديل.</string>
+    <string name="work_apps_onboarding_description">توجد تطبيقات الملف الشخصي للعمل في درج مخصص. يتحكم Android ومؤسستك فيما إذا كان ملف التعريف هذا متاحًا أو متوقفًا مؤقتًا.</string>
+    <string name="privacy_space_onboarding_description">تبقى المساحة الخاصة Android والمناطق الخاصة بصانع الأجهزة خارج البحث العادي والاختصارات ورؤية الكل. يتحكم جهازك في المصادقة.</string>
+    <string name="backup_minkspace_description">تم تضمين طلب MinkSpace والتطبيقات المصغرة الممكّنة. يظل سجل الآلة الحاسبة والوسائط المحددة ومنح Android وجلسات الوسائط النشطة وحالة مساحة العمل والخصوصية وبوابات الجهاز وإشعارات الفقاعات النشطة مع هذا الجهاز.</string>
+</resources>

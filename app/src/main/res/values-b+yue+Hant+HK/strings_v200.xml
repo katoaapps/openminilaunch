@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="update_notice_200_minkspace_heading">你嘅主頁面板可以做多啲嘢</string>
+    <string name="update_notice_200_minkspace_title">MinkSpace 迷你應用程式</string>
+    <string name="update_notice_200_minkspace_description">喺主頁面板入面垂直滑動，就可以喺待辦事項、計算機、媒體同音樂之間移動。喺「設定」入面揀同排列佢哋；待辦事項永遠都可以用。</string>
+    <string name="update_notice_200_media_title">你所選嘅媒體，仍然係你嘅</string>
+    <string name="update_notice_200_media_description">透過 Android 嘅選取器加入圖片、 GIF 或者影片。 Mink 會儲存本地參考資料，然後喺你所選擇嘅應用程式入面打開原始項目。</string>
+    <string name="update_notice_200_music_title">主動媒體控制項</string>
+    <string name="update_notice_200_music_description">透過可選嘅通知存取權，音樂可以顯示 Android 嘅活躍媒體工作階段，同埋只發送佢嘅供應商支援嘅控制項。 Mink 唔會錄音或者保留收聽記錄。</string>
+    <string name="update_notice_200_bubbles_heading">更快嘅切換 · 測試版</string>
+    <string name="update_notice_200_bubbles_title">試下 Android 泡泡入面嘅應用程式</string>
+    <string name="update_notice_200_bubbles_description">長按 Magic Box 應用程式結果，或者喺設定入面揀自動應用程式。兼容性屬於 Android 同目標應用程式，所以唔支援嘅應用程式可能會正常開啟。</string>
+    <string name="update_notice_200_spaces_heading">每個空間都有佢嘅地方</string>
+    <string name="update_notice_200_work_title">獨立嘅工作應用程式抽屜</string>
+    <string name="update_notice_200_work_description">冇障礙工作應用程式會同 Android 嘅工作徽章同個人檔案控制項一齊使用。</string>
+    <string name="update_notice_200_privacy_title">私隱空間保持分開</string>
+    <string name="update_notice_200_privacy_description">Android 私人空間應用程式從來都唔會喺常規搜尋、捷徑或者睇晒所有嘢入面出現。 Android 或者你嘅裝置製造商繼續擁有認證同保護。</string>
+    <string name="update_notice_200_smaller_title">更多以鍵盤為先嘅改進</string>
+    <string name="update_notice_200_smaller_description">Nextcloud Talk 加入訊息整合，首匹配 Enter 動作更快，大顯示版布局更舒適。</string>
+    <string name="open_minkspace_settings">打開 MinkSpace 設置</string>
+    <string name="mink_space_onboarding_description">待辦事項永遠都可以用。啟用同排列計算器、媒體同音樂，然後喺主頁面板入面垂直滑動嚟切換。</string>
+    <string name="work_apps_onboarding_description">工作簡介應用程式會放喺專用嘅抽屜入面。 Android 同你嘅機構控制嗰個個人檔案係咪可用定係暫停。</string>
+    <string name="privacy_space_onboarding_description">Android 私人空間同裝置製造商私人區域會喺常規搜尋、捷徑同埋睇晒所有嘢之外。你嘅裝置控制驗證。</string>
+    <string name="backup_minkspace_description">包括 MinkSpace 訂單同埋啟用嘅迷你應用程式。計算機記錄、所選媒體同埋佢嘅 Android 資助、有效媒體工作階段、工作同私隱空間狀態、裝置閘道同埋有效嘅氣泡通知都會保留喺呢部裝置入面。</string>
+</resources>

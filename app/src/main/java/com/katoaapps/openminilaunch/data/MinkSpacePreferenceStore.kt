@@ -36,6 +36,26 @@ internal class MinkSpacePreferenceStore(private val prefs: SharedPreferences) {
         prefs.edit { putString(KEY_ORDER, order.joinToString(",") { it.stableId }) }
     }
 
+    fun replaceFromBackup(
+        restoredOrder: List<MinkSpaceMiniApp>,
+        restoredEnabledMiniApps: Set<MinkSpaceMiniApp>,
+    ) {
+        val readyMiniApps = MinkSpaceMiniApp.entries.filter(MinkSpaceMiniApp::readyForHome)
+        val normalizedReadyOrder = restoredOrder
+            .filter(MinkSpaceMiniApp::readyForHome)
+            .distinct() + readyMiniApps.filterNot(restoredOrder::contains)
+
+        order = normalizedReadyOrder + MinkSpaceMiniApp.entries.filterNot(MinkSpaceMiniApp::readyForHome)
+        enabledMiniApps = restoredEnabledMiniApps
+            .filterTo(mutableSetOf(), MinkSpaceMiniApp::readyForHome)
+            .withRequiredMiniApps()
+
+        prefs.edit {
+            putString(KEY_ORDER, order.joinToString(",") { it.stableId })
+            putStringSet(KEY_ENABLED, enabledMiniApps.mapTo(mutableSetOf()) { it.stableId })
+        }
+    }
+
     private fun loadOrder(): List<MinkSpaceMiniApp> {
         val saved = prefs.getString(KEY_ORDER, null)
             ?.split(',')

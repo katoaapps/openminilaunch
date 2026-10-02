@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="update_notice_200_minkspace_heading">Panel Beranda Anda melakukan lebih banyak hal</string>
+    <string name="update_notice_200_minkspace_title">Aplikasi Mini MinkSpace</string>
+    <string name="update_notice_200_minkspace_description">Gesek secara vertikal di dalam panel Beranda untuk berpindah antara Agenda, Kalkulator, Media, dan Musik. Pilih dan atur di Pengaturan; Agenda selalu tersedia.</string>
+    <string name="update_notice_200_media_title">Media pilihan Anda, tetap milik Anda</string>
+    <string name="update_notice_200_media_description">Tambahkan gambar, GIF, atau video melalui pemilih Android. Mink menyimpan referensi lokal dan membuka item asli di aplikasi yang Anda pilih.</string>
+    <string name="update_notice_200_music_title">Kontrol media aktif</string>
+    <string name="update_notice_200_music_description">Dengan akses Notifikasi opsional, Musik dapat menampilkan sesi media aktif Android dan hanya mengirimkan kontrol yang didukung penyedianya. Mink tidak merekam audio atau menyimpan riwayat mendengarkan.</string>
+    <string name="update_notice_200_bubbles_heading">Peralihan lebih cepat · BETA</string>
+    <string name="update_notice_200_bubbles_title">Coba aplikasi dalam gelembung Android</string>
+    <string name="update_notice_200_bubbles_description">Tekan lama hasil aplikasi Magic Box atau pilih aplikasi otomatis di Pengaturan. Kompatibilitas adalah milik Android dan aplikasi target, sehingga aplikasi yang tidak didukung mungkin terbuka secara normal.</string>
+    <string name="update_notice_200_spaces_heading">Setiap ruang mempunyai tempatnya masing-masing</string>
+    <string name="update_notice_200_work_title">Laci Aplikasi Kerja terpisah</string>
+    <string name="update_notice_200_work_description">Aplikasi kerja yang dapat diakses tetap bersama dengan lencana kerja dan kontrol profil Android.</string>
+    <string name="update_notice_200_privacy_title">Ruang Privasi tetap terpisah</string>
+    <string name="update_notice_200_privacy_description">Aplikasi Android Private Space tidak pernah muncul dalam pencarian biasa, pintasan, atau Lihat Semua. Android atau pembuat perangkat Anda tetap memiliki autentikasi dan perlindungan.</string>
+    <string name="update_notice_200_smaller_title">Lebih banyak penyempurnaan yang mengutamakan keyboard</string>
+    <string name="update_notice_200_smaller_description">Nextcloud Talk bergabung dengan integrasi perpesanan, tindakan Enter pada pencocokan pertama lebih cepat, dan tata letak layar besar lebih nyaman.</string>
+    <string name="open_minkspace_settings">Buka pengaturan MinkSpace</string>
+    <string name="mink_space_onboarding_description">Agenda selalu tersedia. Aktifkan dan atur Kalkulator, Media, dan Musik, lalu usap secara vertikal di dalam panel Beranda untuk beralih.</string>
+    <string name="work_apps_onboarding_description">Aplikasi profil kerja ada di laci khusus. Android dan organisasi Anda mengontrol apakah profil tersebut tersedia atau dijeda.</string>
+    <string name="privacy_space_onboarding_description">Android Ruang Pribadi dan area pribadi pembuat perangkat tetap berada di luar penelusuran reguler, pintasan, dan Lihat Semua. Perangkat Anda mengontrol autentikasi.</string>
+    <string name="backup_minkspace_description">Pesanan MinkSpace dan aplikasi mini yang diaktifkan disertakan. Riwayat kalkulator, media yang dipilih dan pemberian Android, sesi media aktif, status Ruang Kerja dan Privasi, gateway perangkat, dan pemberitahuan gelembung aktif tetap ada di perangkat ini.</string>
+</resources>

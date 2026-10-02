@@ -42,7 +42,7 @@ internal fun MinkSpaceSettingsPage(
         )
         SectionLabel(stringResource(R.string.mini_apps))
         val implementedOrder = store.minkSpaceMiniAppOrder.filter { it.readyForHome }
-        store.minkSpaceMiniAppOrder.forEach { miniApp ->
+        implementedOrder.forEach { miniApp ->
             val implementedIndex = implementedOrder.indexOf(miniApp)
             MinkSpaceMiniAppRow(
                 spec = MinkSpaceMiniAppCatalog.get(miniApp),
@@ -97,8 +97,6 @@ private fun MinkSpaceMiniAppRow(
     onMove: (Int) -> Unit,
 ) {
     val miniApp = spec.miniApp
-    val implemented = miniApp.readyForHome
-    val toggleEnabled = implemented && !miniApp.alwaysEnabled
     Row(
         modifier = Modifier
             .fillMaxWidth()
@@ -118,22 +116,21 @@ private fun MinkSpaceMiniAppRow(
             Text(
                 text = when {
                     miniApp.alwaysEnabled -> stringResource(R.string.always_enabled)
-                    !implemented -> stringResource(R.string.coming_later)
                     else -> stringResource(R.string.swipe_vertically_to_switch)
                 },
                 color = Muted,
                 style = MaterialTheme.typography.bodySmall,
             )
         }
-        IconButton(onClick = { onMove(-1) }, enabled = implemented && !first) {
+        IconButton(onClick = { onMove(-1) }, enabled = !first) {
             Icon(Icons.Default.KeyboardArrowUp, stringResource(R.string.move_up))
         }
-        IconButton(onClick = { onMove(1) }, enabled = implemented && !last) {
+        IconButton(onClick = { onMove(1) }, enabled = !last) {
             Icon(Icons.Default.KeyboardArrowDown, stringResource(R.string.move_down))
         }
         Switch(
             checked = enabled,
-            enabled = toggleEnabled,
+            enabled = !miniApp.alwaysEnabled,
             onCheckedChange = onEnabledChange,
         )
     }

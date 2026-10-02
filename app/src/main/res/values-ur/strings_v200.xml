@@ -1,0 +1,25 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="update_notice_200_minkspace_heading">آپ کا ہوم پینل مزید کام کرتا ہے۔</string>
+    <string name="update_notice_200_minkspace_title">MinkSpace منی ایپس</string>
+    <string name="update_notice_200_minkspace_description">ٹو ڈاس، کیلکولیٹر، میڈیا اور موسیقی کے درمیان جانے کے لیے ہوم پینل کے اندر عمودی طور پر سوائپ کریں۔ انہیں ترتیبات میں منتخب کریں اور ترتیب دیں۔ کرنے کے کام ہمیشہ دستیاب رہتے ہیں۔</string>
+    <string name="update_notice_200_media_title">آپ کا منتخب میڈیا، اب بھی آپ کا</string>
+    <string name="update_notice_200_media_description">Android کے چنندہ کے ذریعے تصاویر، GIFs یا ویڈیوز شامل کریں۔ منک ایک مقامی حوالہ اسٹور کرتا ہے اور آپ کی منتخب کردہ ایپ میں اصل آئٹم کو کھولتا ہے۔</string>
+    <string name="update_notice_200_music_title">فعال میڈیا کنٹرولز</string>
+    <string name="update_notice_200_music_description">اختیاری اطلاع تک رسائی کے ساتھ، میوزک Android کا فعال میڈیا سیشن دکھا سکتا ہے اور صرف وہی کنٹرول بھیج سکتا ہے جو اس کا فراہم کنندہ سپورٹ کرتا ہے۔ منک آڈیو ریکارڈ نہیں کرتا اور نہ ہی تاریخ سنتا رہتا ہے۔</string>
+    <string name="update_notice_200_bubbles_heading">تیز تر سوئچنگ · BETA</string>
+    <string name="update_notice_200_bubbles_title">Android بلبلوں میں ایپس آزمائیں۔</string>
+    <string name="update_notice_200_bubbles_description">Magic Box ایپ کے نتیجے کو دیر تک دبائیں یا ترتیبات میں خودکار ایپس کا انتخاب کریں۔ مطابقت کا تعلق Android اور ٹارگٹ ایپ سے ہے، لہذا غیر تعاون یافتہ ایپس اس کی بجائے عام طور پر کھل سکتی ہیں۔</string>
+    <string name="update_notice_200_spaces_heading">ہر جگہ کی اپنی جگہ ہے۔</string>
+    <string name="update_notice_200_work_title">ایک علیحدہ ورک ایپس دراز</string>
+    <string name="update_notice_200_work_description">قابل رسائی کام ایپس Android کے ورک بیج اور پروفائل کنٹرولز کے ساتھ ساتھ رہتی ہیں۔</string>
+    <string name="update_notice_200_privacy_title">رازداری کی جگہ الگ رہتی ہے۔</string>
+    <string name="update_notice_200_privacy_description">Android پرائیویٹ اسپیس ایپس کبھی بھی باقاعدہ تلاش، شارٹ کٹس، یا سب دیکھیں میں ظاہر نہیں ہوتی ہیں۔ Android یا آپ کا آلہ بنانے والا تصدیق اور تحفظ کا مالک ہے۔</string>
+    <string name="update_notice_200_smaller_title">مزید کی بورڈ-پہلی اصلاحات</string>
+    <string name="update_notice_200_smaller_description">Nextcloud Talk پیغام رسانی کے انضمام میں شامل ہوتا ہے، پہلے میچ کے Enter ایکشنز تیز تر ہوتے ہیں، اور بڑے ڈسپلے والے لے آؤٹ زیادہ آرام دہ ہوتے ہیں۔</string>
+    <string name="open_minkspace_settings">MinkSpace ترتیبات کھولیں۔</string>
+    <string name="mink_space_onboarding_description">کرنے کے کام ہمیشہ دستیاب رہتے ہیں۔ کیلکولیٹر، میڈیا اور موسیقی کو فعال اور ترتیب دیں، پھر سوئچ کرنے کے لیے ہوم پینل کے اندر عمودی طور پر سوائپ کریں۔</string>
+    <string name="work_apps_onboarding_description">ورک پروفائل ایپس ایک سرشار دراز میں رہتی ہیں۔ Android اور آپ کی تنظیم کنٹرول کرتی ہے کہ آیا وہ پروفائل دستیاب ہے یا موقوف ہے۔</string>
+    <string name="privacy_space_onboarding_description">Android پرائیویٹ اسپیس اور ڈیوائس بنانے والے نجی علاقے باقاعدہ تلاش، شارٹ کٹس، اور سب دیکھیں سے باہر رہتے ہیں۔ آپ کا آلہ تصدیق کو کنٹرول کرتا ہے۔</string>
+    <string name="backup_minkspace_description">MinkSpace آرڈر اور فعال منی ایپس شامل ہیں۔ کیلکولیٹر کی سرگزشت، منتخب میڈیا اور اس کے Android گرانٹس، فعال میڈیا سیشنز، کام اور رازداری کی جگہ کی حالت، ڈیوائس کے گیٹ ویز، اور فعال بلبلے کی اطلاعات اس ڈیوائس کے ساتھ رہتی ہیں۔</string>
+</resources>
