@@ -2,6 +2,7 @@ package com.katoaapps.openminilaunch.features.workprofile
 
 import android.content.Context
 import android.content.pm.LauncherApps
+import android.os.Build
 import android.os.Process
 import android.os.UserHandle
 import android.os.UserManager
@@ -28,6 +29,7 @@ internal class WorkProfileRepository private constructor(context: Context) {
     }
 
     fun setPaused(paused: Boolean): Boolean {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.P) return false
         val profiles = workProfiles()
         if (profiles.isEmpty()) return false
         return profiles.all { profile ->

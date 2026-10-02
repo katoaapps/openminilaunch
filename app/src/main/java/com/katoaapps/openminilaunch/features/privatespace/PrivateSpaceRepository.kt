@@ -3,6 +3,7 @@ package com.katoaapps.openminilaunch.features.privatespace
 import android.app.role.RoleManager
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.os.Build
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
@@ -12,7 +13,6 @@ import kotlinx.coroutines.flow.update
 /** Standard Private Space and certified OEM gateways, isolated from the normal app library. */
 internal class PrivateSpaceRepository private constructor(context: Context) {
     private val appContext = context.applicationContext
-    private val roleManager = appContext.getSystemService(RoleManager::class.java)
     private val oemGateways = OemPrivateContainerGatewayResolver(appContext)
     private val platform = AndroidPrivateSpacePlatform(appContext)
     private val revisionState = MutableStateFlow(0L)
@@ -20,7 +20,7 @@ internal class PrivateSpaceRepository private constructor(context: Context) {
     private val changeMonitor = PrivateSpaceChangeMonitor(appContext, ::refresh)
 
     fun snapshot(): PrivateSpaceSnapshot {
-        if (roleManager?.isRoleHeld(RoleManager.ROLE_HOME) != true) {
+        if (!isHomeLauncher()) {
             return PrivateSpaceSnapshot(PrivateSpaceStatus.HOME_ROLE_REQUIRED)
         }
 
@@ -39,7 +39,7 @@ internal class PrivateSpaceRepository private constructor(context: Context) {
      * Android contract while suppressing setup, so a settings IntentSender alone is not proof.
      */
     fun isEntryPointAvailable(): Boolean {
-        if (roleManager?.isRoleHeld(RoleManager.ROLE_HOME) != true) return false
+        if (!isHomeLauncher()) return false
         if (oemGateways.resolve() != null) return true
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.VANILLA_ICE_CREAM) return false
         return platform.isConfigured()
@@ -61,6 +61,19 @@ internal class PrivateSpaceRepository private constructor(context: Context) {
 
     fun refresh() {
         revisionState.update { it + 1 }
+    }
+
+    private fun isHomeLauncher(): Boolean {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+            return appContext.getSystemService(RoleManager::class.java)
+                ?.isRoleHeld(RoleManager.ROLE_HOME) == true
+        }
+
+        val homeIntent = Intent(Intent.ACTION_MAIN).addCategory(Intent.CATEGORY_HOME)
+        return appContext.packageManager
+            .resolveActivity(homeIntent, PackageManager.MATCH_DEFAULT_ONLY)
+            ?.activityInfo
+            ?.packageName == appContext.packageName
     }
 
     companion object {
