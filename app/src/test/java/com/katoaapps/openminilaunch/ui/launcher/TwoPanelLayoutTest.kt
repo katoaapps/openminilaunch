@@ -4,6 +4,7 @@ import android.content.res.Configuration
 import com.katoaapps.openminilaunch.ui.launcher.layout.FoldLayoutFeature
 import com.katoaapps.openminilaunch.ui.launcher.layout.HOME_PAGE
 import com.katoaapps.openminilaunch.ui.launcher.layout.MINK_DAY_PAGE
+import com.katoaapps.openminilaunch.ui.launcher.layout.TwoPanelGeometry
 import com.katoaapps.openminilaunch.ui.launcher.layout.WIDGET_PAGE
 import com.katoaapps.openminilaunch.ui.launcher.layout.newlyRevealedPage
 import com.katoaapps.openminilaunch.ui.launcher.layout.pairForFocusedPage
