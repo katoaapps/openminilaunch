@@ -155,13 +155,19 @@ internal class MusicSessionRepository private constructor(context: Context) {
 
     fun openPlayerApp(): Boolean {
         val activeController = controller
-        if (activeController != null && send(activeController.sessionActivity)) return true
-        val launchIntent = activeController?.let {
+        val packageLaunchIntent = activeController?.let {
             appContext.packageManager.getLaunchIntentForPackage(it.packageName)
-        } ?: Intent.makeMainSelectorActivity(Intent.ACTION_MAIN, Intent.CATEGORY_APP_MUSIC)
-        launchIntent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
+        }
+        if (start(packageLaunchIntent)) return true
+        if (activeController != null && send(activeController.sessionActivity)) return true
+        return start(Intent.makeMainSelectorActivity(Intent.ACTION_MAIN, Intent.CATEGORY_APP_MUSIC))
+    }
+
+    private fun start(intent: Intent?): Boolean {
+        intent ?: return false
+        intent.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK)
         return runCatching {
-            appContext.startActivity(launchIntent)
+            appContext.startActivity(intent)
             true
         }.getOrDefault(false)
     }

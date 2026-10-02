@@ -38,6 +38,7 @@ internal fun MusicControls(
     onRestart: () -> Unit,
     onPrevious: () -> Unit,
     onTogglePlayback: () -> Unit,
+    onOpenPlayer: () -> Unit,
     onHideForeground: () -> Unit,
     onSeekToFraction: (Float) -> Unit,
     onSeekForward: () -> Unit,
@@ -77,6 +78,7 @@ internal fun MusicControls(
                 state = state,
                 showCircularProgress = !expanded,
                 onTogglePlayback = onTogglePlayback,
+                onOpenPlayer = onOpenPlayer,
                 onHideForeground = onHideForeground,
             )
             MultiTapControl(
@@ -129,23 +131,28 @@ private fun PlaybackControl(
     state: MusicPlaybackState,
     showCircularProgress: Boolean,
     onTogglePlayback: () -> Unit,
+    onOpenPlayer: () -> Unit,
     onHideForeground: () -> Unit,
 ) {
-    val enabled = state.hasSession && state.canTogglePlayback
+    val canTogglePlayback = state.hasSession && state.canTogglePlayback
     val description = stringResource(
-        if (state.isPlaying) R.string.music_pause else R.string.music_play,
+        when {
+            !canTogglePlayback -> R.string.music_open_player
+            state.isPlaying -> R.string.music_pause
+            else -> R.string.music_play
+        },
     )
     Box(
         modifier = Modifier
             .size(if (showCircularProgress) Dimens.dp64 else Dimens.dp58)
-            .alpha(if (enabled) 1f else 0.5f)
+            .alpha(if (canTogglePlayback) 1f else 0.5f)
             .clip(CircleShape)
             .background(Color.White.copy(alpha = 0.96f))
             .combinedClickable(
                 enabled = state.hasSession,
                 onClickLabel = description,
                 onLongClickLabel = stringResource(R.string.music_hide_controls),
-                onClick = onTogglePlayback,
+                onClick = if (canTogglePlayback) onTogglePlayback else onOpenPlayer,
                 onLongClick = onHideForeground,
             ),
         contentAlignment = Alignment.Center,

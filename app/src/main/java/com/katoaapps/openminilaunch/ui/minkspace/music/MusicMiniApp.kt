@@ -102,6 +102,7 @@ internal fun MusicMiniApp(
             onRestart = onRestart,
             onPrevious = onPrevious,
             onTogglePlayback = onTogglePlayback,
+            onOpenPlayer = onOpenPlayer,
             onHideForeground = { onForegroundVisibleChanged(false) },
             onSeekToFraction = onSeekToFraction,
             onSeekForward = onSeekForward,
