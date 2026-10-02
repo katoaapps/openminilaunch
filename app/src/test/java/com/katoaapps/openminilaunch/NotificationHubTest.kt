@@ -25,19 +25,22 @@ class NotificationHubTest {
     }
 
     @Test
-    fun demoFeedKeepsSlackAndGmailThreadsEasyToRead() {
+    fun demoFeedKeepsMessagesSlackAndGmailThreadsEasyToRead() {
         val conversations = NotificationHub.buildConversations(
             sourceNotifications = DemoConversationData.notifications(now = 1_000_000L),
             replies = emptyList(),
         )
 
-        assertEquals(5, conversations.size)
+        assertEquals(6, conversations.size)
+        val may = conversations.firstOrNull { it.name == "May Wong" }
         val maya = conversations.firstOrNull { it.name == "Maya Diaz" }
         val priya = conversations.firstOrNull { it.name == "Priya Shah" }
         val noah = conversations.firstOrNull { it.name == "Noah Williams" }
+        assertNotNull(may)
         assertNotNull(maya)
         assertNotNull(priya)
         assertNotNull(noah)
+        assertEquals(listOf(DemoConversationData.GOOGLE_MESSAGES_PACKAGE), may!!.sourcePackages)
         assertEquals(listOf(DemoConversationData.SLACK_PACKAGE), maya!!.sourcePackages)
         assertEquals(listOf(DemoConversationData.GMAIL_PACKAGE), priya!!.sourcePackages)
         assertEquals(listOf(DemoConversationData.GOOGLE_MESSAGES_PACKAGE), noah!!.sourcePackages)
