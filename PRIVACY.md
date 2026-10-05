@@ -52,6 +52,43 @@ another photo is selected.
 
 ## Permissions and special access
 
+### MinkPad Beta
+
+MinkPad is optional and starts only when you choose Start Bluetooth session. Android 12 or newer
+requires Nearby devices access for native HID connection and Android's system discoverability
+prompt. MinkPad sends keyboard, pointer, and media-control reports through Android's public
+Bluetooth HID Device profile. Its output counters stay in memory, are excluded from backups,
+and contain no input payloads. It does not rename the phone's Bluetooth adapter, create a second
+custom BLE identity, or automatically remove existing pairings. It does not use app-level
+nearby-device scanning, request location, or read input from other apps. Android 9 or newer and
+a compatible OEM Bluetooth HID Device stack are required.
+
+While the controller is visible, keyboard and pointer commands are sent directly to the
+single connected Bluetooth host. The host can receive everything you type there, including
+passwords. Check the receiving device before typing. MinkPad does not save typed text, create
+input logs, or send input to Mink servers. In-progress IME composition and queued input exist
+only in memory. Leaving the controller releases held keys and buttons. Stop sends release
+reports, unregisters MinkPad's native HID application, closes its profile proxy, and ends the
+session service. Android retains the user's system pairing unless the user removes it in
+Bluetooth settings. No control resumes until the user starts MinkPad again.
+Your chosen Android keyboard still processes input under its own privacy settings. MinkPad asks
+the keyboard not to use this field for personalized learning and disables autofill for the field.
+
+Controller preferences, user-selected per-host system presets, and the most recently used host's
+Bluetooth address and timestamp are stored in app-private preferences. Those records contain no
+input or pairing keys and are removed from MinkPad history when Android reports that pairing was
+removed. Start asks the last successfully used, still-paired host to reconnect through the native
+HID profile. Host names are read from Android's paired-device records. Portable
+backups include controller preferences but exclude host addresses, per-host system presets,
+connection history, typed text, and active sessions. Forget history removes a MinkPad timestamp
+and its system preset; unpairing must be done
+in Android Bluetooth settings. Clearing app storage removes MinkPad's preferences and history,
+but does not erase Android's Bluetooth pairings.
+
+The user-started connected-device foreground service keeps a session notification with Open,
+Reconnect, and Stop actions. Notification permission is optional and does not grant notification
+reading. The session is not automatically restarted after process termination or device reboot.
+
 Optional permissions and special access are used as follows:
 
 - **Contacts:** Searches contact names and labelled phone numbers locally for `@` messaging and `#`

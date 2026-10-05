@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Beta controller intentionally uses English fallback until its full locale pass. -->
+<resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
+    <string name="minkpad_name" translatable="false">MinkPad</string>
+    <string name="minkpad_up">Up</string>
+    <string name="minkpad_down">Down</string>
+    <string name="minkpad_left">Left</string>
+    <string name="minkpad_right">Right</string>
+    <string name="minkpad_enter">Enter</string>
+    <string name="minkpad_escape">Esc</string>
+    <string name="minkpad_tab">Tab</string>
+    <string name="minkpad_backspace">Backspace</string>
+    <string name="minkpad_delete">Delete</string>
+</resources>

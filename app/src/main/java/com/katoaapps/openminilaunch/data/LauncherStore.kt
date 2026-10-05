@@ -36,6 +36,7 @@ class LauncherStore private constructor(context: Context) {
     private val minkSpacePreferences = MinkSpacePreferenceStore(prefs)
     private val homeWallpaperRepository = HomeWallpaperRepository(appContext)
     internal val profileRepository = ProfileRepository(appContext)
+    internal val minkPadPreferences = com.katoaapps.openminilaunch.features.minkpad.MinkPadRepository.get(appContext).preferences
     private val demoPreferences: DemoPreferenceStore = DemoPreferenceStore(appContext, prefs, todoStore)
     internal val demoHomeProfile get() = demoPreferences.profile
     val todos get() = todoStore.items

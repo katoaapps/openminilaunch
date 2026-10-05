@@ -68,6 +68,7 @@ internal class AppBubbleManager private constructor(context: Context) {
     }
 
     fun launch(target: LauncherAppTarget): AppBubbleLaunchResult {
+        if (target.selectionKey == com.katoaapps.openminilaunch.features.minkpad.MinkPadLauncherEntry.KEY) return AppBubbleLaunchResult.UNSUPPORTED
         if (!isSupported()) return AppBubbleLaunchResult.UNSUPPORTED
         if (!target.isAvailable) return AppBubbleLaunchResult.APP_UNAVAILABLE
         if (target.isWorkProfile) return AppBubbleLaunchResult.WORK_PROFILE_UNSUPPORTED

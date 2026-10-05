@@ -8,6 +8,8 @@ import com.katoaapps.openminilaunch.features.privatespace.AndroidProfileKind
 
 import android.content.ComponentName
 import android.content.Context
+import com.katoaapps.openminilaunch.features.minkpad.MinkPadLauncherEntry
+import com.katoaapps.openminilaunch.R
 import android.content.pm.LauncherActivityInfo
 import android.content.pm.LauncherApps
 import android.graphics.drawable.Drawable
@@ -78,6 +80,7 @@ internal class LauncherAppRepository private constructor(context: Context) {
                     }
                 }
             }.filterNot { it.packageName == appContext.packageName }
+                .plus(MinkPadLauncherEntry.target(appContext, personalSerial))
                 .distinctBy(LauncherAppTarget::selectionKey)
                 .sortedWith(
                     compareBy<LauncherAppTarget, String>(String.CASE_INSENSITIVE_ORDER) { it.label }
@@ -110,11 +113,13 @@ internal class LauncherAppRepository private constructor(context: Context) {
     }
 
     fun normalizedSelectionKey(selectionKey: String): String? {
+        if (selectionKey == MinkPadLauncherEntry.KEY) return selectionKey
         if (launcherAppIdentity(selectionKey) != null) return selectionKey
         return targets().firstOrNull { !it.isWorkProfile && it.packageName == selectionKey }?.selectionKey
     }
 
     fun icon(target: LauncherAppTarget): Drawable? {
+        if (target.selectionKey == MinkPadLauncherEntry.KEY) return appContext.getDrawable(R.drawable.ic_minkpad_notification)
         dynamicCalendarIcons.iconFor(target)?.let { return it }
         val info = activityInfo(target.selectionKey)
         if (info != null) return runCatching { info.getBadgedIcon(densityDpi) }.getOrNull()
@@ -123,6 +128,7 @@ internal class LauncherAppRepository private constructor(context: Context) {
     }
 
     fun launch(target: LauncherAppTarget): Boolean {
+        if (target.selectionKey == MinkPadLauncherEntry.KEY) return MinkPadLauncherEntry.open(appContext)
         if (!target.isAvailable) return false
         val service = launcherApps ?: return false
         val user = userManager?.getUserForSerialNumber(target.userSerial) ?: return false
@@ -133,6 +139,7 @@ internal class LauncherAppRepository private constructor(context: Context) {
     }
 
     fun openAppDetails(target: LauncherTarget): Boolean {
+        if (target.selectionKey == MinkPadLauncherEntry.KEY) return MinkPadLauncherEntry.open(appContext)
         val service = launcherApps ?: return false
         val user = userManager?.getUserForSerialNumber(target.userSerial) ?: return false
         val component = appDetailsComponent(target, targets()) ?: return false

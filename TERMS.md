@@ -58,6 +58,19 @@ calling features and follow local emergency-service instructions.
 
 ## 4. MinkSpace media and controls
 
+### MinkPad Beta
+
+MinkPad sends keyboard, pointer, and media-control commands to a Bluetooth host you pair and
+connect. You are responsible for choosing the correct receiving device and checking where
+input will be entered before typing or issuing commands. Commands can affect files, purchases,
+accounts, playback, or other actions on that device. MinkPad is not suitable for safety-critical
+control. Disconnect or Stop before handing the phone to someone else.
+
+Compatibility, keyboard layouts, pointer behavior and latency depend on Android,
+the phone manufacturer, Bluetooth hardware, and the receiving host. Connections may fail or
+end, and commands may be ignored or interpreted differently. MinkPad does not guarantee that
+every key, gesture, release report, device, or host application will behave as expected.
+
 Media Lab references files selected through Android rather than copying them. Moving or deleting an
 original file, revoking its grant, changing its provider, or uninstalling its source may make it
 unavailable. Opening media hands it to another installed app under that app’s terms.

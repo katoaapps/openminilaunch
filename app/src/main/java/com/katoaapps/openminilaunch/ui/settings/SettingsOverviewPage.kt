@@ -22,6 +22,9 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.platform.LocalContext
+import androidx.compose.material.icons.filled.Keyboard
+import com.katoaapps.openminilaunch.features.minkpad.MinkPadLauncherEntry
 
 @Composable
 internal fun SettingsOverviewPage(
@@ -32,6 +35,7 @@ internal fun SettingsOverviewPage(
     goBack: () -> Unit,
 ) {
     val appName = stringResource(R.string.app_name)
+    val context = LocalContext.current
     SettingsPage(stringResource(R.string.settings), goBack) {
         Text(
             stringResource(R.string.settings_overview_description, appName),
@@ -82,6 +86,12 @@ internal fun SettingsOverviewPage(
             status = stringResource(R.string.backup_local_file),
             icon = Icons.Default.ImportExport,
         ) { onNavigate(SettingsDestination.BACKUP_RESTORE) }
+        SettingsCategoryRow(
+            title = "MinkPad",
+            subtitle = "BLE keyboard and trackpad",
+            status = "Beta",
+            icon = Icons.Default.Keyboard,
+        ) { MinkPadLauncherEntry.open(context) }
         SettingsCategoryRow(
             title = stringResource(R.string.permissions),
             subtitle = stringResource(R.string.settings_permissions_summary),

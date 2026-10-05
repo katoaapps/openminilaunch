@@ -45,6 +45,7 @@ internal fun LauncherStore.createPortableBackup(appVersion: String): LauncherBac
             minkAppPauseMode = minkAppPauseMode,
             githubUpdateChecksEnabled = githubUpdateChecksEnabled,
             pinShortcutRequestPresentation = pinShortcutRequestPresentation,
+            minkPadPreferences = minkPadPreferences.state.value,
         ),
         todos = savedTodosForBackup,
         profile = profile?.card?.copy(hasPortrait = false),
@@ -108,4 +109,5 @@ internal fun LauncherStore.restorePortableBackup(backup: LauncherBackup) {
 
     setGitHubUpdateChecksEnabled(settings.githubUpdateChecksEnabled)
     setPinShortcutRequestPresentation(settings.pinShortcutRequestPresentation)
+    settings.minkPadPreferences?.let(minkPadPreferences::update)
 }

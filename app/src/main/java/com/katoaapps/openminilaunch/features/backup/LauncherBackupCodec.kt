@@ -142,6 +142,7 @@ internal object LauncherBackupCodec {
         })
         put("githubUpdateChecksEnabled", settings.githubUpdateChecksEnabled)
         put("pinShortcutRequestPresentation", settings.pinShortcutRequestPresentation.name)
+        settings.minkPadPreferences?.let { put("minkPad", MinkPadBackupCodec.encode(it)) }
     }
 
     private fun decodeSettings(json: JSONObject): LauncherBackupSettings {
@@ -194,6 +195,7 @@ internal object LauncherBackupCodec {
                 "pinShortcutRequestPresentation",
                 PinShortcutRequestPresentation.FULL_PAGE,
             ),
+            minkPadPreferences = json.optJSONObject("minkPad")?.let(MinkPadBackupCodec::decode),
         )
     }
 
@@ -291,6 +293,7 @@ internal object LauncherBackupCodec {
         "devicePrivateAreaGateway",
         "activeBubbleNotifications",
         "updateCacheAndReminders",
+        "minkPadHostsAndSession",
     )
 
     private const val MAX_ENUM_VALUES = 100
