@@ -49,6 +49,10 @@ internal fun MinkPadHostsDialog(repository: MinkPadRepository, state: MinkPadSes
                             TextButton(onClick = { repository.disconnect(); onDismiss() }) { Text("Disconnect") }
                         current && state.status == MinkPadStatus.WAITING_FOR_HOST ->
                             TextButton(onClick = repository::cancelPairing) { Text("Close pairing") }
+                        current && state.status in setOf(
+                            MinkPadStatus.CONNECTING,
+                            MinkPadStatus.DISCONNECTING,
+                        ) -> TextButton(onClick = repository::cancelConnection) { Text("Cancel") }
                         else -> TextButton(
                             onClick = { repository.connect(host.address); onDismiss() },
                             enabled = state.canChooseHost,

@@ -15,6 +15,7 @@ import android.os.SystemClock
 import android.provider.Settings
 import androidx.core.content.ContextCompat
 import com.katoaapps.openminilaunch.features.minkpad.connection.MinkPadBluetoothMonitor
+import com.katoaapps.openminilaunch.features.minkpad.connection.MinkPadPairingGate
 import com.katoaapps.openminilaunch.features.minkpad.connection.classic.MinkPadClassicProfile
 import com.katoaapps.openminilaunch.features.minkpad.persistence.MinkPadPreferenceStore
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -36,7 +37,10 @@ internal class MinkPadRepository private constructor(private val context: Contex
     private var pendingConnectAddress: String? = null
     private var pendingConnectAttempts = 0
     private var pendingConnectScheduled = false
-    private var pairingReleasedAddress: String? = null
+    private var pendingConnectSequence = 0L
+    private var connectionAttempt = 0L
+    private val suppressedHosts = mutableSetOf<String>()
+    private val pairingGate = MinkPadPairingGate()
     private var serviceRunning = false
     private var disconnectAttempt = 0L
     private val monitor = MinkPadBluetoothMonitor(
@@ -73,7 +77,10 @@ internal class MinkPadRepository private constructor(private val context: Contex
             fail("Turn on Bluetooth to start MinkPad.")
             return
         }
-        restoreExperimentalAdapterName()
+        if (!prepareAdapterName()) {
+            fail("Android could not apply MinkPad's temporary Bluetooth name. Try again after restarting Bluetooth.")
+            return
+        }
         if (serviceRunning) {
             startProfile()
             return
@@ -81,8 +88,25 @@ internal class MinkPadRepository private constructor(private val context: Contex
         runCatching {
             ContextCompat.startForegroundService(context, Intent(context, MinkPadSessionService::class.java))
         }.onFailure {
+            restoreExperimentalAdapterName()
             fail("Android could not start the Bluetooth session. Open MinkPad and try again.")
         }
+    }
+
+    /** Repairs a temporary compatibility name after an abrupt process stop. */
+    fun restoreAdapterNameIfIdle() {
+        if (!serviceRunning) restoreExperimentalAdapterName()
+    }
+
+    /** Reapplies the compatibility identity before Android opens its pairing surface. */
+    fun preparePairingIdentity(): Boolean {
+        if (serviceRunning && prepareAdapterName()) return true
+        if (!serviceRunning) {
+            fail("Start MinkPad before pairing a new receiving device.")
+        } else {
+            fail("Android could not apply MinkPad's temporary Bluetooth name. Pause and try again after restarting Bluetooth.")
+        }
+        return false
     }
 
     fun onServiceStarted() {
@@ -105,6 +129,11 @@ internal class MinkPadRepository private constructor(private val context: Contex
         val controller = MinkPadClassicProfile(
             context = context,
             initialHost = rememberedHost(),
+            shouldReconnect = { device ->
+                preferences.lastUsed(device.address) > 0 &&
+                    device.address !in suppressedHosts &&
+                    !pairingGate.active
+            },
             onRegistered = { ready ->
                 if (generation == epoch && serviceRunning) {
                     registered = ready
@@ -146,15 +175,20 @@ internal class MinkPadRepository private constructor(private val context: Contex
     /** Called only after Android confirms that the phone is discoverable. */
     fun beginClassicPairing(durationSeconds: Int) {
         if (!registered || !mutable.value.canChooseHost) return
-        pendingConnectAddress = null
-        pendingConnectAttempts = 0
-        pendingConnectScheduled = false
-        if (mutable.value.status == MinkPadStatus.CONNECTED) {
-            pairingReleasedAddress = mutable.value.host?.address
+        clearPendingConnect()
+        invalidateConnectionAttempt()
+        pairingGate.begin()
+        if (mutable.value.status in setOf(
+                MinkPadStatus.CONNECTING,
+                MinkPadStatus.CONNECTED,
+                MinkPadStatus.DISCONNECTING,
+            )) {
+            val previousAddress = mutable.value.host?.address
             releaseInput()
+            previousAddress
+                ?.let { runCatching { adapter?.getRemoteDevice(it) }.getOrNull() }
+                ?.let { profile?.disconnect(it) }
             profile?.disconnect()
-        } else {
-            pairingReleasedAddress = null
         }
         val duration = durationSeconds.coerceAtLeast(1)
         val pairing = ++pairingGeneration
@@ -189,7 +223,7 @@ internal class MinkPadRepository private constructor(private val context: Contex
     }
 
     private fun finishPairing(message: String) {
-        pairingReleasedAddress = null
+        pairingGate.finish()
         update(mutable.value.copy(
             status = MinkPadStatus.READY,
             host = null,
@@ -204,28 +238,103 @@ internal class MinkPadRepository private constructor(private val context: Contex
     private fun advertisedName(): String = if (!permissionsGranted()) "this phone" else
         runCatching { adapter?.name }.getOrNull()?.takeIf(String::isNotBlank) ?: "this phone"
 
-    /** Repairs the adapter name left behind by an unreleased raw-BLE development build. */
+    fun classicLatencyExperimentEnabled(): Boolean = preferences.classicLatencyExperimentEnabled()
+
+    /**
+     * Diagnostic-only host compatibility experiment. Android's HID host gives device names that
+     * begin with "Pro Controller" an 11.25 ms sniff limit through its interop database. Nothing
+     * else about MinkPad's descriptor, reports, or connection flow changes.
+     */
     @SuppressLint("MissingPermission")
-    private fun restoreExperimentalAdapterName() {
-        if (!permissionsGranted()) return
-        val bluetooth = adapter ?: return
-        val current = runCatching { bluetooth.name }.getOrNull() ?: return
-        if (!LEGACY_EXPERIMENTAL_NAME.matches(current)) return
-        val deviceName = Settings.Global.getString(context.contentResolver, Settings.Global.DEVICE_NAME)
-            ?.trim()
-            ?.takeIf { it.isNotEmpty() && !LEGACY_EXPERIMENTAL_NAME.matches(it) }
-            ?: Build.MODEL.trim().takeIf(String::isNotEmpty)
-            ?: return
-        runCatching { bluetooth.name = deviceName }
+    fun setClassicLatencyExperiment(enabled: Boolean): String {
+        if (!permissionsGranted()) return "Allow Nearby devices before changing the Bluetooth test identity."
+        val bluetooth = adapter ?: return "Bluetooth is unavailable on this phone."
+        val current = runCatching { bluetooth.name }.getOrNull()?.trim().orEmpty()
+
+        if (enabled) {
+            val original = current.takeUnless(::isExperimentalAdapterName)
+                ?: configuredDeviceName()
+                ?: Build.MODEL.trim().takeIf(String::isNotEmpty)
+                ?: return "MinkPad could not determine the Bluetooth name to restore after the test."
+            if (!preferences.classicLatencyExperimentEnabled()) {
+                preferences.enableClassicLatencyExperiment(original)
+            }
+            return "Compatibility identity enabled. Start MinkPad to use $CLASSIC_LATENCY_EXPERIMENT_NAME; Pause restores $original."
+        }
+
+        stop()
+        if (restoreExperimentalAdapterName()) {
+            preferences.disableClassicLatencyExperiment()
+            return "Compatibility identity disabled. MinkPad will use the phone's normal Bluetooth name."
+        }
+        if (!isExperimentalAdapterName(current)) {
+            preferences.disableClassicLatencyExperiment()
+            return "Compatibility identity disabled."
+        }
+        return "Android did not restore the Bluetooth name. Pause MinkPad and try again."
     }
+
+    @SuppressLint("MissingPermission")
+    private fun prepareAdapterName(): Boolean {
+        if (preferences.classicLatencyExperimentEnabled()) {
+            val bluetooth = adapter ?: return false
+            if (runCatching { bluetooth.name }.getOrNull() == CLASSIC_LATENCY_EXPERIMENT_NAME) return true
+            return runCatching { bluetooth.setName(CLASSIC_LATENCY_EXPERIMENT_NAME) }.getOrDefault(false)
+        }
+        return restoreExperimentalAdapterName()
+    }
+
+    /** Repairs an adapter name left behind by an interrupted MinkPad experiment. */
+    @SuppressLint("MissingPermission")
+    private fun restoreExperimentalAdapterName(): Boolean {
+        if (!permissionsGranted()) return false
+        val bluetooth = adapter ?: return false
+        val current = runCatching { bluetooth.name }.getOrNull() ?: return false
+        if (!isExperimentalAdapterName(current)) return true
+        val deviceName = preferences.originalBluetoothName()
+            ?.trim()
+            ?.takeIf { it.isNotEmpty() && !isExperimentalAdapterName(it) }
+            ?: configuredDeviceName()
+            ?: Build.MODEL.trim().takeIf(String::isNotEmpty)
+            ?: return false
+        return runCatching { bluetooth.setName(deviceName) }.getOrDefault(false)
+    }
+
+    private fun configuredDeviceName(): String? =
+        Settings.Global.getString(context.contentResolver, Settings.Global.DEVICE_NAME)
+            ?.trim()
+            ?.takeIf { it.isNotEmpty() && !isExperimentalAdapterName(it) }
+
+    private fun isExperimentalAdapterName(value: String): Boolean =
+        value == CLASSIC_LATENCY_EXPERIMENT_NAME ||
+            value == LEGACY_CLASSIC_LATENCY_EXPERIMENT_NAME ||
+            LEGACY_EXPERIMENTAL_NAME.matches(value)
 
     @SuppressLint("MissingPermission")
     private fun handleConnection(device: BluetoothDevice, status: Int) {
         when (status) {
             BluetoothProfile.STATE_CONNECTED -> {
+                if (pairingGate.blocks(device.address)) {
+                    profile?.disconnect(device)
+                    if (mutable.value.status == MinkPadStatus.WAITING_FOR_HOST) {
+                        update(mutable.value.copy(host = null, hosts = hosts()))
+                    }
+                    return
+                }
+                if (device.address in suppressedHosts) {
+                    profile?.disconnect(device)
+                    if (mutable.value.host?.address == device.address) {
+                        update(MinkPadSessionState(
+                            status = MinkPadStatus.READY,
+                            hosts = hosts(),
+                            message = "That connection was cancelled. Choose a saved device or start pairing.",
+                        ))
+                    }
+                    return
+                }
                 val switchingTo = pendingConnectAddress
                 if (switchingTo != null && device.address != switchingTo) {
-                    profile?.disconnect()
+                    profile?.disconnect(device)
                     update(mutable.value.copy(
                         status = MinkPadStatus.DISCONNECTING,
                         host = host(device),
@@ -233,17 +342,11 @@ internal class MinkPadRepository private constructor(private val context: Contex
                     ))
                     return
                 }
-                if (mutable.value.status == MinkPadStatus.WAITING_FOR_HOST &&
-                    pairingReleasedAddress == device.address) {
-                    profile?.disconnect()
-                    update(mutable.value.copy(host = null))
-                    return
-                }
                 pairingGeneration++
-                pendingConnectAddress = null
-                pendingConnectAttempts = 0
-                pendingConnectScheduled = false
-                pairingReleasedAddress = null
+                invalidateConnectionAttempt()
+                clearPendingConnect()
+                pairingGate.finish()
+                suppressedHosts.remove(device.address)
                 preferences.rememberHost(device.address)
                 update(MinkPadSessionState(
                     status = MinkPadStatus.CONNECTED,
@@ -252,11 +355,27 @@ internal class MinkPadRepository private constructor(private val context: Contex
                     message = "Native Bluetooth keyboard, mouse, and media controls are connected.",
                 ))
             }
-            BluetoothProfile.STATE_CONNECTING -> update(mutable.value.copy(
-                status = MinkPadStatus.CONNECTING,
-                host = host(device),
-                message = "Connecting the native Bluetooth input profile…",
-            ))
+            BluetoothProfile.STATE_CONNECTING -> {
+                if (pairingGate.blocks(device.address)) {
+                    profile?.disconnect(device)
+                    return
+                }
+                if (device.address in suppressedHosts) {
+                    profile?.disconnect(device)
+                    return
+                }
+                if (!prepareAdapterName()) {
+                    profile?.disconnect(device)
+                    fail("Android could not apply MinkPad's temporary Bluetooth name. Pause and try again after restarting Bluetooth.")
+                    return
+                }
+                update(mutable.value.copy(
+                    status = MinkPadStatus.CONNECTING,
+                    host = host(device),
+                    message = "Connecting the native Bluetooth input profile…",
+                ))
+                armConnectionTimeout(device)
+            }
             BluetoothProfile.STATE_DISCONNECTING -> {
                 if (mutable.value.status != MinkPadStatus.WAITING_FOR_HOST) {
                     update(mutable.value.copy(
@@ -267,12 +386,34 @@ internal class MinkPadRepository private constructor(private val context: Contex
                 }
             }
             BluetoothProfile.STATE_DISCONNECTED -> {
+                if (pairingGate.blocks(device.address)) {
+                    if (mutable.value.status == MinkPadStatus.WAITING_FOR_HOST) {
+                        update(mutable.value.copy(host = null, hosts = hosts()))
+                    }
+                    return
+                }
+                val next = pendingConnectAddress
+                if (next != null && device.address != next &&
+                    mutable.value.status == MinkPadStatus.CONNECTING &&
+                    mutable.value.host?.address == next) {
+                    // A cancelled host can report DISCONNECTED after the replacement request has begun.
+                    return
+                }
+                invalidateConnectionAttempt()
+                if (device.address in suppressedHosts && pendingConnectAddress == null) {
+                    update(MinkPadSessionState(
+                        status = if (registered) MinkPadStatus.READY else MinkPadStatus.IDLE,
+                        hosts = hosts(),
+                        message = mutable.value.message,
+                    ))
+                    restoreNameAfterHostLoss()
+                    return
+                }
                 if (mutable.value.status == MinkPadStatus.CONNECTED &&
                     mutable.value.host?.address != device.address) {
                     refreshHosts()
                     return
                 }
-                val next = pendingConnectAddress
                 if (mutable.value.status == MinkPadStatus.WAITING_FOR_HOST &&
                     mutable.value.pairingDeadlineElapsedRealtime != null) {
                     update(mutable.value.copy(host = null, hosts = hosts()))
@@ -286,8 +427,18 @@ internal class MinkPadRepository private constructor(private val context: Contex
                     message = if (next == null) "Not connected. Reconnect a saved device or start pairing."
                         else "Switching receiving devices…",
                 ))
-                if (next != null) schedulePendingConnect(next)
+                if (next != null) {
+                    schedulePendingConnect(next)
+                } else restoreNameAfterHostLoss()
             }
+        }
+    }
+
+    private fun restoreNameAfterHostLoss() {
+        if (!restoreExperimentalAdapterName()) {
+            update(mutable.value.copy(
+                message = "Not connected. Android did not restore the phone's Bluetooth name; Pause and try again after restarting Bluetooth.",
+            ))
         }
     }
 
@@ -295,7 +446,9 @@ internal class MinkPadRepository private constructor(private val context: Contex
     private fun schedulePendingConnect(address: String) {
         if (pendingConnectScheduled || pendingConnectAddress != address) return
         pendingConnectScheduled = true
+        val sequence = ++pendingConnectSequence
         main.postDelayed({
+            if (sequence != pendingConnectSequence) return@postDelayed
             pendingConnectScheduled = false
             if (!serviceRunning || !registered || pendingConnectAddress != address) return@postDelayed
             val device = runCatching { adapter?.getRemoteDevice(address) }.getOrNull()
@@ -306,11 +459,8 @@ internal class MinkPadRepository private constructor(private val context: Contex
             }
             pendingConnectAttempts++
             if (profile?.connect(device) == true) {
-                update(mutable.value.copy(
-                    status = MinkPadStatus.CONNECTING,
-                    host = host(device),
-                    message = "Finishing connection to ${host(device).name}…",
-                ))
+                handleConnection(device, BluetoothProfile.STATE_CONNECTING)
+                update(mutable.value.copy(message = "Finishing connection to ${host(device).name}…"))
             } else if (pendingConnectAttempts < HOST_SWITCH_ATTEMPTS) {
                 schedulePendingConnect(address)
             } else {
@@ -325,11 +475,47 @@ internal class MinkPadRepository private constructor(private val context: Contex
         if (Build.VERSION.SDK_INT < 28 || !registered || !permissionsGranted()) return
         val device = runCatching { adapter?.getRemoteDevice(address) }.getOrNull() ?: return
         if (!mutable.value.canChooseHost || device.bondState != BluetoothDevice.BOND_BONDED) return
+        if (!prepareAdapterName()) {
+            fail("Android could not apply MinkPad's temporary Bluetooth name. Pause and try again after restarting Bluetooth.")
+            return
+        }
+        if (pairingGate.active) {
+            pairingGeneration++
+            pairingGate.finish()
+        }
+        suppressedHosts.remove(address)
+        val currentAddress = mutable.value.host?.address
+        if (mutable.value.status == MinkPadStatus.CONNECTING) {
+            if (currentAddress == address) return
+            currentAddress?.let { oldAddress ->
+                suppressedHosts.add(oldAddress)
+                runCatching { adapter?.getRemoteDevice(oldAddress) }.getOrNull()
+                    ?.let { profile?.disconnect(it) }
+            }
+            invalidateConnectionAttempt()
+            clearPendingConnect()
+            pendingConnectAddress = address
+            update(mutable.value.copy(
+                status = MinkPadStatus.CONNECTING,
+                host = host(device),
+                message = "Switching connection to ${host(device).name}…",
+            ))
+            schedulePendingConnect(address)
+            return
+        }
+        if (mutable.value.status == MinkPadStatus.DISCONNECTING) {
+            clearPendingConnect()
+            pendingConnectAddress = address
+            update(mutable.value.copy(
+                host = host(device),
+                message = "Switching connection to ${host(device).name}…",
+            ))
+            return
+        }
         if (mutable.value.status == MinkPadStatus.CONNECTED) {
             if (mutable.value.host?.address == address) return
+            clearPendingConnect()
             pendingConnectAddress = address
-            pendingConnectAttempts = 0
-            pendingConnectScheduled = false
             releaseInput()
             if (profile?.disconnect() == true) {
                 update(mutable.value.copy(
@@ -342,6 +528,8 @@ internal class MinkPadRepository private constructor(private val context: Contex
             }
             return
         }
+        invalidateConnectionAttempt()
+        clearPendingConnect()
         if (profile?.connect(device) == true) handleConnection(device, BluetoothProfile.STATE_CONNECTING)
         else fail("Android rejected the reconnect request. Confirm the device is still paired and try again.")
     }
@@ -349,15 +537,48 @@ internal class MinkPadRepository private constructor(private val context: Contex
     @SuppressLint("MissingPermission")
     fun onBondStateChanged(device: BluetoothDevice) {
         when (device.bondState) {
+            BluetoothDevice.BOND_BONDING -> {
+                if (pairingGate.active) {
+                    pairingGate.admit(device.address)
+                    suppressedHosts.remove(device.address)
+                    update(mutable.value.copy(
+                        host = host(device),
+                        message = "Pairing with ${host(device).name}…",
+                    ))
+                }
+            }
             BluetoothDevice.BOND_BONDED -> {
-                if (mutable.value.status == MinkPadStatus.WAITING_FOR_HOST && mutable.value.host == null) {
-                    pendingConnectAddress = device.address
-                    pendingConnectAttempts = 0
-                    schedulePendingConnect(device.address)
+                if (pairingGate.active) {
+                    pairingGate.admit(device.address)
+                    suppressedHosts.remove(device.address)
+                    preferences.rememberHost(device.address)
+                    if (mutable.value.status == MinkPadStatus.WAITING_FOR_HOST) {
+                        pendingConnectAddress = device.address
+                        pendingConnectAttempts = 0
+                        update(mutable.value.copy(
+                            host = host(device),
+                            hosts = hosts(),
+                            message = "Paired with ${host(device).name}. Finishing keyboard and mouse connection…",
+                        ))
+                        schedulePendingConnect(device.address)
+                    }
                 }
             }
             BluetoothDevice.BOND_NONE -> {
                 preferences.forgetHost(device.address)
+                if (pairingGate.active && pairingGate.targetAddress == device.address) {
+                    invalidateConnectionAttempt()
+                    clearPendingConnect()
+                    pairingGate.begin()
+                    suppressedHosts.remove(device.address)
+                    update(mutable.value.copy(
+                        status = MinkPadStatus.WAITING_FOR_HOST,
+                        host = null,
+                        hosts = hosts(),
+                        message = "Pairing failed. If the device was paired before, forget it on both devices and try again.",
+                    ))
+                    return
+                }
                 if (mutable.value.host?.address == device.address) {
                     update(MinkPadSessionState(
                         status = if (registered) MinkPadStatus.READY else MinkPadStatus.IDLE,
@@ -380,7 +601,25 @@ internal class MinkPadRepository private constructor(private val context: Contex
 
     fun forget(address: String) {
         preferences.forgetHost(address)
-        refreshHosts()
+        suppressedHosts.add(address)
+        val cancelling = pendingConnectAddress == address ||
+            (mutable.value.host?.address == address && mutable.value.status in setOf(
+                MinkPadStatus.CONNECTING,
+                MinkPadStatus.DISCONNECTING,
+            ))
+        if (cancelling) {
+            invalidateConnectionAttempt()
+            clearPendingConnect()
+            runCatching { adapter?.getRemoteDevice(address) }.getOrNull()
+                ?.let { profile?.disconnect(it) }
+            update(MinkPadSessionState(
+                status = if (registered) MinkPadStatus.READY else MinkPadStatus.IDLE,
+                hosts = hosts(),
+                message = "Forgotten. MinkPad will not reconnect to that device automatically.",
+            ))
+        } else {
+            refreshHosts()
+        }
     }
 
     @SuppressLint("MissingPermission")
@@ -406,9 +645,8 @@ internal class MinkPadRepository private constructor(private val context: Contex
 
     fun disconnect() {
         disconnectAttempt++
-        pendingConnectAddress = null
-        pendingConnectAttempts = 0
-        pendingConnectScheduled = false
+        invalidateConnectionAttempt()
+        clearPendingConnect()
         if (Build.VERSION.SDK_INT < 28 || profile?.disconnect() != true) {
             fail("Android did not accept the disconnect request.")
             return
@@ -429,6 +667,26 @@ internal class MinkPadRepository private constructor(private val context: Contex
     fun releaseInput() {
         inputResetState.value++
         if (Build.VERSION.SDK_INT >= 28) profile?.releaseInput()
+    }
+
+    /** Cancels setup without pausing the entire MinkPad session. */
+    @SuppressLint("MissingPermission")
+    fun cancelConnection() {
+        if (mutable.value.status !in setOf(MinkPadStatus.CONNECTING, MinkPadStatus.DISCONNECTING)) return
+        val addresses = listOfNotNull(mutable.value.host?.address, pendingConnectAddress).distinct()
+        suppressedHosts.addAll(addresses)
+        pairingGeneration++
+        pairingGate.finish()
+        invalidateConnectionAttempt()
+        clearPendingConnect()
+        addresses.mapNotNull { runCatching { adapter?.getRemoteDevice(it) }.getOrNull() }
+            .forEach { profile?.disconnect(it) }
+        profile?.disconnect()
+        update(MinkPadSessionState(
+            status = if (registered) MinkPadStatus.READY else MinkPadStatus.IDLE,
+            hosts = hosts(),
+            message = "Connection attempt cancelled. Choose another saved device or start pairing.",
+        ))
     }
 
     @androidx.annotation.ChecksSdkIntAtLeast(api = 28)
@@ -480,12 +738,20 @@ internal class MinkPadRepository private constructor(private val context: Contex
         if (serviceRunning) {
             update(mutable.value.copy(status = MinkPadStatus.STOPPING, message = "Stopping Bluetooth input…"))
             context.stopService(Intent(context, MinkPadSessionService::class.java))
-        } else if (mutable.value.status != MinkPadStatus.IDLE) closeProfile()
+        } else {
+            if (mutable.value.status != MinkPadStatus.IDLE) closeProfile()
+            if (!restoreExperimentalAdapterName()) {
+                update(mutable.value.copy(message = "MinkPad stopped, but Android did not restore the phone's Bluetooth name. Start and Pause again after restarting Bluetooth."))
+            }
+        }
     }
 
     fun onServiceDestroyed() {
         serviceRunning = false
         closeProfile()
+        if (!restoreExperimentalAdapterName()) {
+            update(mutable.value.copy(message = "MinkPad stopped, but Android did not restore the phone's Bluetooth name. Start and Pause again after restarting Bluetooth."))
+        }
     }
 
     private fun closeProfile() {
@@ -494,10 +760,10 @@ internal class MinkPadRepository private constructor(private val context: Contex
         pairingGeneration++
         generation++
         registered = false
-        pendingConnectAddress = null
-        pendingConnectAttempts = 0
-        pendingConnectScheduled = false
-        pairingReleasedAddress = null
+        invalidateConnectionAttempt()
+        clearPendingConnect()
+        pairingGate.finish()
+        suppressedHosts.clear()
         if (Build.VERSION.SDK_INT >= 28) profile?.close()
         profile = null
         mutable.value = MinkPadSessionState(hosts = hosts())
@@ -521,11 +787,45 @@ internal class MinkPadRepository private constructor(private val context: Contex
         }
     }
 
+    @SuppressLint("MissingPermission")
+    private fun armConnectionTimeout(device: BluetoothDevice) {
+        val attempt = ++connectionAttempt
+        main.postDelayed({
+            if (attempt != connectionAttempt || !serviceRunning ||
+                mutable.value.status != MinkPadStatus.CONNECTING ||
+                mutable.value.host?.address != device.address) return@postDelayed
+            pairingGeneration++
+            pairingGate.finish()
+            suppressedHosts.add(device.address)
+            clearPendingConnect()
+            profile?.disconnect(device)
+            update(MinkPadSessionState(
+                status = if (registered) MinkPadStatus.READY else MinkPadStatus.IDLE,
+                hosts = hosts(),
+                message = "${host(device).name} did not respond. Choose another saved device or retry.",
+            ))
+        }, CONNECTION_TIMEOUT_MS)
+    }
+
+    private fun invalidateConnectionAttempt() {
+        connectionAttempt++
+    }
+
+    private fun clearPendingConnect() {
+        pendingConnectAddress = null
+        pendingConnectAttempts = 0
+        pendingConnectScheduled = false
+        pendingConnectSequence++
+    }
+
     companion object {
         private const val REGISTRATION_TIMEOUT_MS = 12_000L
         private const val DISCONNECT_TIMEOUT_MS = 10_000L
+        private const val CONNECTION_TIMEOUT_MS = 12_000L
         private const val HOST_SWITCH_SETTLE_MS = 800L
         private const val HOST_SWITCH_ATTEMPTS = 3
+        private const val CLASSIC_LATENCY_EXPERIMENT_NAME = "Pro Controller - MinkPad"
+        private const val LEGACY_CLASSIC_LATENCY_EXPERIMENT_NAME = "Pro Controller"
         private val LEGACY_EXPERIMENTAL_NAME = Regex("^MinkPad [0-9A-F]{8}$", RegexOption.IGNORE_CASE)
         @Volatile private var instance: MinkPadRepository? = null
         fun get(context: Context): MinkPadRepository = instance ?: synchronized(this) {

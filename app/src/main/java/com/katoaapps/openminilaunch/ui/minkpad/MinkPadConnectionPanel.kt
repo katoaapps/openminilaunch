@@ -87,6 +87,10 @@ internal fun MinkPadConnectionPanel(
                         pairing || state.status == MinkPadStatus.WAITING_FOR_HOST ->
                             TextButton(onClick = repository::cancelPairing) { Text("Close pairing") }
 
+                        state.status == MinkPadStatus.CONNECTING ||
+                            state.status == MinkPadStatus.DISCONNECTING ->
+                            TextButton(onClick = repository::cancelConnection) { Text("Cancel connection") }
+
                         state.status == MinkPadStatus.DISCONNECTED && state.host != null -> {
                             Button(onClick = { repository.connect(state.host.address) }) {
                                 Text("Reconnect")

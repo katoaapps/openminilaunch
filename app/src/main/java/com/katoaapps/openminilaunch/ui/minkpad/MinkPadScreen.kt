@@ -110,7 +110,7 @@ internal fun MinkPadScreen(
         }
     }
     when (dialog) {
-        MinkPadDialog.SETTINGS -> MinkPadSettingsDialog(preferences, repository.preferences::update,
+        MinkPadDialog.SETTINGS -> MinkPadSettingsDialog(repository, preferences, repository.preferences::update,
             state.host, platform, setPlatform = { value -> state.host?.let { repository.preferences.setHostPlatform(it.address, value) } },
             close = { dialog = null })
         MinkPadDialog.HELP -> MinkPadHelpDialog(platform, onSettings = { dialog = MinkPadDialog.SETTINGS }, close = { dialog = null })

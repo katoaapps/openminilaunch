@@ -40,6 +40,7 @@ class MinkPadActivity : ComponentActivity() {
     }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        repository.restoreAdapterNameIfIdle()
         enableEdgeToEdge()
         val store = LauncherStore.get(this)
         setContent {
@@ -55,6 +56,7 @@ class MinkPadActivity : ComponentActivity() {
     }
 
     private fun requestPairing() {
+        if (!repository.preparePairingIdentity()) return
         makeDiscoverable.launch(
             Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE)
                 .putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, PAIRING_SECONDS),

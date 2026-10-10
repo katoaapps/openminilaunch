@@ -30,7 +30,8 @@ internal data class MinkPadSessionState(
 
 internal val MinkPadSessionState.canChooseHost: Boolean
     get() = status == MinkPadStatus.READY || status == MinkPadStatus.WAITING_FOR_HOST ||
-        status == MinkPadStatus.DISCONNECTED || status == MinkPadStatus.CONNECTED
+        status == MinkPadStatus.CONNECTING || status == MinkPadStatus.CONNECTED ||
+        status == MinkPadStatus.DISCONNECTING || status == MinkPadStatus.DISCONNECTED
 
 internal data class MinkPadPreferences(
     val keepAwake: Boolean = true,

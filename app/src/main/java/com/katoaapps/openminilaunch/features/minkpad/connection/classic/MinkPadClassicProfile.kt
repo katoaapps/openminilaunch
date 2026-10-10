@@ -22,6 +22,7 @@ import java.util.concurrent.Executors
 internal class MinkPadClassicProfile(
     context: Context,
     private val initialHost: BluetoothDevice?,
+    private val shouldReconnect: (BluetoothDevice) -> Boolean,
     private val onRegistered: (Boolean) -> Unit,
     private val onConnection: (BluetoothDevice, Int) -> Unit,
     private val onFailure: (String) -> Unit,
@@ -75,7 +76,7 @@ internal class MinkPadClassicProfile(
                 onRegistered(registered)
                 onInputAvailability()
                 if (!registered) return@post
-                reconnect(pluggedDevice ?: initialHost)
+                reconnect(listOfNotNull(pluggedDevice, initialHost).firstOrNull(shouldReconnect))
             }
         }
 
@@ -142,8 +143,12 @@ internal class MinkPadClassicProfile(
 
     fun disconnect(): Boolean {
         val device = connectedHost ?: return false
-        return runCatching { hid?.disconnect(device) == true }.getOrDefault(false)
+        return disconnect(device)
     }
+
+    /** Also cancels a connection that Android has accepted but has not completed yet. */
+    fun disconnect(device: BluetoothDevice): Boolean =
+        runCatching { hid?.disconnect(device) == true }.getOrDefault(false)
 
     fun releaseInput() = sender.releaseAll()
 

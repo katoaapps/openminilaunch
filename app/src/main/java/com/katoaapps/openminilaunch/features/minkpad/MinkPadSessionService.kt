@@ -45,7 +45,7 @@ class MinkPadSessionService : Service() {
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         when (intent?.action) {
-            ACTION_STOP -> stopSelf()
+            ACTION_STOP -> repository.stop()
             ACTION_RECONNECT -> repository.state.value.host?.let { repository.connect(it.address) }
         }
         return START_NOT_STICKY
@@ -69,10 +69,20 @@ class MinkPadSessionService : Service() {
 
     @android.annotation.SuppressLint("MissingPermission")
     private fun notifyState() { getSystemService(NotificationManager::class.java).notify(NOTIFICATION_ID, notification()) }
+
+    override fun onTaskRemoved(rootIntent: Intent?) {
+        repository.stop()
+        super.onTaskRemoved(rootIntent)
+    }
+
     override fun onDestroy() {
-        if (receiverRegistered) { unregisterReceiver(updates) }
+        if (receiverRegistered) {
+            unregisterReceiver(updates)
+            receiverRegistered = false
+        }
         if (sessionStarted) repository.onServiceDestroyed()
         ServiceCompat.stopForeground(this, ServiceCompat.STOP_FOREGROUND_REMOVE)
+        getSystemService(NotificationManager::class.java).cancel(NOTIFICATION_ID)
         super.onDestroy()
     }
     override fun onBind(intent: Intent?): IBinder? = null
