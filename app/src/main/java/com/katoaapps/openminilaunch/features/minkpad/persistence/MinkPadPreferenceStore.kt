@@ -55,26 +55,20 @@ internal class MinkPadPreferenceStore(context: Context) {
         mutablePlatforms.value = readPlatforms()
     }
 
-    fun classicLatencyExperimentEnabled(): Boolean = prefs.getBoolean(CLASSIC_LATENCY_EXPERIMENT, false)
-
     fun originalBluetoothName(): String? = prefs.getString(ORIGINAL_BLUETOOTH_NAME, null)
+        ?: prefs.getString(LEGACY_ORIGINAL_BLUETOOTH_NAME, null)
 
-    fun enableClassicLatencyExperiment(originalBluetoothName: String) {
+    fun rememberOriginalBluetoothName(originalBluetoothName: String) {
         prefs.edit()
-            .putBoolean(CLASSIC_LATENCY_EXPERIMENT, true)
             .putString(ORIGINAL_BLUETOOTH_NAME, originalBluetoothName)
-            .apply()
-    }
-
-    fun disableClassicLatencyExperiment() {
-        prefs.edit()
-            .remove(CLASSIC_LATENCY_EXPERIMENT)
-            .remove(ORIGINAL_BLUETOOTH_NAME)
+            .remove(LEGACY_CLASSIC_LATENCY_EXPERIMENT)
+            .remove(LEGACY_ORIGINAL_BLUETOOTH_NAME)
             .apply()
     }
 
     private companion object {
-        const val CLASSIC_LATENCY_EXPERIMENT = "classic_latency_experiment"
-        const val ORIGINAL_BLUETOOTH_NAME = "classic_latency_original_name"
+        const val LEGACY_CLASSIC_LATENCY_EXPERIMENT = "classic_latency_experiment"
+        const val LEGACY_ORIGINAL_BLUETOOTH_NAME = "classic_latency_original_name"
+        const val ORIGINAL_BLUETOOTH_NAME = "original_bluetooth_name"
     }
 }

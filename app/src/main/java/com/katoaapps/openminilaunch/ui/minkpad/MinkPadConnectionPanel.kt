@@ -74,7 +74,8 @@ internal fun MinkPadConnectionPanel(
                         Text("Start MinkPad")
                     }
 
-                !running -> TextButton(onClick = repository::stop) { Text("Pause session") }
+                !running && state.status == MinkPadStatus.ERROR ->
+                    TextButton(onClick = repository::stop) { Text("Reset MinkPad") }
 
                 state.status != MinkPadStatus.STOPPING -> FlowRow(
                     horizontalArrangement = Arrangement.spacedBy(8.dp),
@@ -107,7 +108,7 @@ internal fun MinkPadConnectionPanel(
                             hosts = true
                         }) { Text("Saved devices") }
                     }
-                    TextButton(onClick = repository::stop) { Text("Pause") }
+                    TextButton(onClick = repository::stop) { Text("Stop MinkPad") }
                 }
             }
 
@@ -124,7 +125,7 @@ internal fun MinkPadConnectionPanel(
                 )
                 Text(
                     "Add device temporarily releases this connection and opens system pairing. Saved devices lets you switch hosts. " +
-                        "Pause closes MinkPad's native HID session; Start asks the most recently used device to reconnect.",
+                        "Close MinkPad ends the native HID session and returns to the landing screen.",
                     style = MaterialTheme.typography.bodySmall,
                 )
             }
@@ -176,13 +177,14 @@ private fun PairingInstructions(state: MinkPadSessionState) {
             }
             Text("1. On the device you want to control, open its Bluetooth settings.")
             Text(
-                "2. Select “${state.advertisedName ?: "this phone"}”. This is the phone's normal " +
-                    "Bluetooth identity; MinkPad does not create a second BLE device.",
+                "2. Select “${state.advertisedName ?: "this phone"}”. This is MinkPad's temporary " +
+                    "compatibility name on the phone's regular Bluetooth adapter.",
             )
             Text("3. Accept the pairing request on both devices. MinkPad will change to Connected automatically.")
             Text(
                 "Android controls this discoverability timer. If the receiving device still has an older " +
-                    "MinkPad prototype pairing, remove that older entry before testing this native profile.",
+                    "MinkPad pairing, remove that older entry before pairing again. Stopping MinkPad restores " +
+                    "this phone's usual Bluetooth name.",
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onPrimaryContainer,
             )
@@ -203,7 +205,7 @@ private fun MinkPadSessionState.title(): String = when (status) {
     MinkPadStatus.CONNECTED -> "Connected${host?.let { " · ${it.name}" } ?: ""}"
     MinkPadStatus.DISCONNECTING -> "Disconnecting"
     MinkPadStatus.DISCONNECTED -> "Disconnected${host?.let { " · ${it.name}" } ?: ""}"
-    MinkPadStatus.STOPPING -> "Pausing MinkPad"
+    MinkPadStatus.STOPPING -> "Closing MinkPad"
     MinkPadStatus.UNSUPPORTED -> "MinkPad is unavailable"
     MinkPadStatus.ERROR -> "MinkPad needs attention"
 }

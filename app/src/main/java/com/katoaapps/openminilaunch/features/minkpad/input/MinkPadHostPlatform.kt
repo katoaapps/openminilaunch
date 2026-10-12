@@ -12,6 +12,20 @@ internal enum class MinkPadHostPlatform(val label: String) {
     WINDOWS("Windows"), APPLE_MOBILE("iPhone / iPad"),
 }
 
+/** Uses only explicit host-name signals. The Bluetooth phone class is handled by the repository. */
+internal fun minkPadHostPlatformHint(name: String?): MinkPadHostPlatform? {
+    val normalized = name?.trim()?.lowercase().orEmpty()
+    if (normalized.isEmpty()) return null
+    return when {
+        listOf("iphone", "ipad").any(normalized::contains) -> APPLE_MOBILE
+        listOf("macbook", "imac", "mac mini", "mac studio", "mac pro").any(normalized::contains) -> MAC
+        listOf("windows", "surface pro", "surface laptop").any(normalized::contains) -> WINDOWS
+        listOf("android", "google tv", "chromecast", "pixel", "galaxy", "shield tv")
+            .any(normalized::contains) -> ANDROID
+        else -> null
+    }
+}
+
 internal enum class MinkPadGestureAction {
     BACK, OVERVIEW, DISMISS_OVERVIEW, PREVIOUS_APP, NEXT_APP, APP_LIST, ZOOM_IN, ZOOM_OUT,
 }

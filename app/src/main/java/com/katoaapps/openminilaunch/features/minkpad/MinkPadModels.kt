@@ -1,5 +1,7 @@
 package com.katoaapps.openminilaunch.features.minkpad
 
+import com.katoaapps.openminilaunch.features.minkpad.input.MinkPadHostPlatform
+
 internal enum class MinkPadStatus {
     IDLE,
     REGISTERING,
@@ -13,7 +15,12 @@ internal enum class MinkPadStatus {
     UNSUPPORTED,
     ERROR,
 }
-internal data class MinkPadHost(val address: String, val name: String, val remembered: Boolean)
+internal data class MinkPadHost(
+    val address: String,
+    val name: String,
+    val remembered: Boolean,
+    val platformHint: MinkPadHostPlatform? = null,
+)
 internal data class MinkPadSessionState(
     val status: MinkPadStatus = MinkPadStatus.IDLE,
     val host: MinkPadHost? = null,

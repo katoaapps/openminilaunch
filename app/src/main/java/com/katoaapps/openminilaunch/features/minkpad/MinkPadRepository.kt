@@ -2,6 +2,7 @@ package com.katoaapps.openminilaunch.features.minkpad
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.bluetooth.BluetoothClass
 import android.bluetooth.BluetoothDevice
 import android.bluetooth.BluetoothManager
 import android.bluetooth.BluetoothProfile
@@ -17,6 +18,8 @@ import androidx.core.content.ContextCompat
 import com.katoaapps.openminilaunch.features.minkpad.connection.MinkPadBluetoothMonitor
 import com.katoaapps.openminilaunch.features.minkpad.connection.MinkPadPairingGate
 import com.katoaapps.openminilaunch.features.minkpad.connection.classic.MinkPadClassicProfile
+import com.katoaapps.openminilaunch.features.minkpad.input.MinkPadHostPlatform
+import com.katoaapps.openminilaunch.features.minkpad.input.minkPadHostPlatformHint
 import com.katoaapps.openminilaunch.features.minkpad.persistence.MinkPadPreferenceStore
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -88,14 +91,14 @@ internal class MinkPadRepository private constructor(private val context: Contex
         runCatching {
             ContextCompat.startForegroundService(context, Intent(context, MinkPadSessionService::class.java))
         }.onFailure {
-            restoreExperimentalAdapterName()
+            restoreAdapterName()
             fail("Android could not start the Bluetooth session. Open MinkPad and try again.")
         }
     }
 
     /** Repairs a temporary compatibility name after an abrupt process stop. */
     fun restoreAdapterNameIfIdle() {
-        if (!serviceRunning) restoreExperimentalAdapterName()
+        if (!serviceRunning) restoreAdapterName()
     }
 
     /** Reapplies the compatibility identity before Android opens its pairing surface. */
@@ -104,7 +107,7 @@ internal class MinkPadRepository private constructor(private val context: Contex
         if (!serviceRunning) {
             fail("Start MinkPad before pairing a new receiving device.")
         } else {
-            fail("Android could not apply MinkPad's temporary Bluetooth name. Pause and try again after restarting Bluetooth.")
+            fail("Android could not apply MinkPad's temporary Bluetooth name. Stop MinkPad and try again after restarting Bluetooth.")
         }
         return false
     }
@@ -238,62 +241,33 @@ internal class MinkPadRepository private constructor(private val context: Contex
     private fun advertisedName(): String = if (!permissionsGranted()) "this phone" else
         runCatching { adapter?.name }.getOrNull()?.takeIf(String::isNotBlank) ?: "this phone"
 
-    fun classicLatencyExperimentEnabled(): Boolean = preferences.classicLatencyExperimentEnabled()
-
-    /**
-     * Diagnostic-only host compatibility experiment. Android's HID host gives device names that
-     * begin with "Pro Controller" an 11.25 ms sniff limit through its interop database. Nothing
-     * else about MinkPad's descriptor, reports, or connection flow changes.
-     */
-    @SuppressLint("MissingPermission")
-    fun setClassicLatencyExperiment(enabled: Boolean): String {
-        if (!permissionsGranted()) return "Allow Nearby devices before changing the Bluetooth test identity."
-        val bluetooth = adapter ?: return "Bluetooth is unavailable on this phone."
-        val current = runCatching { bluetooth.name }.getOrNull()?.trim().orEmpty()
-
-        if (enabled) {
-            val original = current.takeUnless(::isExperimentalAdapterName)
-                ?: configuredDeviceName()
-                ?: Build.MODEL.trim().takeIf(String::isNotEmpty)
-                ?: return "MinkPad could not determine the Bluetooth name to restore after the test."
-            if (!preferences.classicLatencyExperimentEnabled()) {
-                preferences.enableClassicLatencyExperiment(original)
-            }
-            return "Compatibility identity enabled. Start MinkPad to use $CLASSIC_LATENCY_EXPERIMENT_NAME; Pause restores $original."
-        }
-
-        stop()
-        if (restoreExperimentalAdapterName()) {
-            preferences.disableClassicLatencyExperiment()
-            return "Compatibility identity disabled. MinkPad will use the phone's normal Bluetooth name."
-        }
-        if (!isExperimentalAdapterName(current)) {
-            preferences.disableClassicLatencyExperiment()
-            return "Compatibility identity disabled."
-        }
-        return "Android did not restore the Bluetooth name. Pause MinkPad and try again."
-    }
-
+    /** Applies the standard MinkPad HID identity for responsive Android-host pointer timing. */
     @SuppressLint("MissingPermission")
     private fun prepareAdapterName(): Boolean {
-        if (preferences.classicLatencyExperimentEnabled()) {
-            val bluetooth = adapter ?: return false
-            if (runCatching { bluetooth.name }.getOrNull() == CLASSIC_LATENCY_EXPERIMENT_NAME) return true
-            return runCatching { bluetooth.setName(CLASSIC_LATENCY_EXPERIMENT_NAME) }.getOrDefault(false)
-        }
-        return restoreExperimentalAdapterName()
+        val bluetooth = adapter ?: return false
+        val current = runCatching { bluetooth.name }.getOrNull()?.trim().orEmpty()
+        val original = current.takeIf { it.isNotEmpty() && !isMinkPadAdapterName(it) }
+            ?: preferences.originalBluetoothName()
+                ?.trim()
+                ?.takeIf { it.isNotEmpty() && !isMinkPadAdapterName(it) }
+            ?: configuredDeviceName()
+            ?: Build.MODEL.trim().takeIf(String::isNotEmpty)
+            ?: return false
+        preferences.rememberOriginalBluetoothName(original)
+        if (current == MINKPAD_BLUETOOTH_NAME) return true
+        return runCatching { bluetooth.setName(MINKPAD_BLUETOOTH_NAME) }.getOrDefault(false)
     }
 
-    /** Repairs an adapter name left behind by an interrupted MinkPad experiment. */
+    /** Restores the phone identity after MinkPad stops or loses its receiving host. */
     @SuppressLint("MissingPermission")
-    private fun restoreExperimentalAdapterName(): Boolean {
+    private fun restoreAdapterName(): Boolean {
         if (!permissionsGranted()) return false
         val bluetooth = adapter ?: return false
         val current = runCatching { bluetooth.name }.getOrNull() ?: return false
-        if (!isExperimentalAdapterName(current)) return true
+        if (!isMinkPadAdapterName(current)) return true
         val deviceName = preferences.originalBluetoothName()
             ?.trim()
-            ?.takeIf { it.isNotEmpty() && !isExperimentalAdapterName(it) }
+            ?.takeIf { it.isNotEmpty() && !isMinkPadAdapterName(it) }
             ?: configuredDeviceName()
             ?: Build.MODEL.trim().takeIf(String::isNotEmpty)
             ?: return false
@@ -303,12 +277,12 @@ internal class MinkPadRepository private constructor(private val context: Contex
     private fun configuredDeviceName(): String? =
         Settings.Global.getString(context.contentResolver, Settings.Global.DEVICE_NAME)
             ?.trim()
-            ?.takeIf { it.isNotEmpty() && !isExperimentalAdapterName(it) }
+            ?.takeIf { it.isNotEmpty() && !isMinkPadAdapterName(it) }
 
-    private fun isExperimentalAdapterName(value: String): Boolean =
-        value == CLASSIC_LATENCY_EXPERIMENT_NAME ||
-            value == LEGACY_CLASSIC_LATENCY_EXPERIMENT_NAME ||
-            LEGACY_EXPERIMENTAL_NAME.matches(value)
+    private fun isMinkPadAdapterName(value: String): Boolean =
+        value == MINKPAD_BLUETOOTH_NAME ||
+            value == LEGACY_MINKPAD_BLUETOOTH_NAME ||
+            LEGACY_MINKPAD_NAME.matches(value)
 
     @SuppressLint("MissingPermission")
     private fun handleConnection(device: BluetoothDevice, status: Int) {
@@ -366,7 +340,7 @@ internal class MinkPadRepository private constructor(private val context: Contex
                 }
                 if (!prepareAdapterName()) {
                     profile?.disconnect(device)
-                    fail("Android could not apply MinkPad's temporary Bluetooth name. Pause and try again after restarting Bluetooth.")
+                    fail("Android could not apply MinkPad's temporary Bluetooth name. Stop MinkPad and try again after restarting Bluetooth.")
                     return
                 }
                 update(mutable.value.copy(
@@ -435,9 +409,9 @@ internal class MinkPadRepository private constructor(private val context: Contex
     }
 
     private fun restoreNameAfterHostLoss() {
-        if (!restoreExperimentalAdapterName()) {
+        if (!restoreAdapterName()) {
             update(mutable.value.copy(
-                message = "Not connected. Android did not restore the phone's Bluetooth name; Pause and try again after restarting Bluetooth.",
+                message = "Not connected. Android did not restore the phone's Bluetooth name; stop MinkPad and try again after restarting Bluetooth.",
             ))
         }
     }
@@ -476,7 +450,7 @@ internal class MinkPadRepository private constructor(private val context: Contex
         val device = runCatching { adapter?.getRemoteDevice(address) }.getOrNull() ?: return
         if (!mutable.value.canChooseHost || device.bondState != BluetoothDevice.BOND_BONDED) return
         if (!prepareAdapterName()) {
-            fail("Android could not apply MinkPad's temporary Bluetooth name. Pause and try again after restarting Bluetooth.")
+            fail("Android could not apply MinkPad's temporary Bluetooth name. Stop MinkPad and try again after restarting Bluetooth.")
             return
         }
         if (pairingGate.active) {
@@ -627,6 +601,12 @@ internal class MinkPadRepository private constructor(private val context: Contex
         device.address,
         device.name ?: "Bluetooth device",
         preferences.lastUsed(device.address) > 0,
+        platformHint = minkPadHostPlatformHint(device.name) ?: when (
+            runCatching { device.bluetoothClass?.majorDeviceClass }.getOrNull()
+        ) {
+            BluetoothClass.Device.Major.PHONE -> MinkPadHostPlatform.ANDROID
+            else -> null
+        },
     )
 
     @SuppressLint("MissingPermission")
@@ -669,7 +649,7 @@ internal class MinkPadRepository private constructor(private val context: Contex
         if (Build.VERSION.SDK_INT >= 28) profile?.releaseInput()
     }
 
-    /** Cancels setup without pausing the entire MinkPad session. */
+    /** Cancels setup without stopping the entire MinkPad session. */
     @SuppressLint("MissingPermission")
     fun cancelConnection() {
         if (mutable.value.status !in setOf(MinkPadStatus.CONNECTING, MinkPadStatus.DISCONNECTING)) return
@@ -740,8 +720,8 @@ internal class MinkPadRepository private constructor(private val context: Contex
             context.stopService(Intent(context, MinkPadSessionService::class.java))
         } else {
             if (mutable.value.status != MinkPadStatus.IDLE) closeProfile()
-            if (!restoreExperimentalAdapterName()) {
-                update(mutable.value.copy(message = "MinkPad stopped, but Android did not restore the phone's Bluetooth name. Start and Pause again after restarting Bluetooth."))
+            if (!restoreAdapterName()) {
+                update(mutable.value.copy(message = "MinkPad stopped, but Android did not restore the phone's Bluetooth name. Start and stop MinkPad again after restarting Bluetooth."))
             }
         }
     }
@@ -749,8 +729,8 @@ internal class MinkPadRepository private constructor(private val context: Contex
     fun onServiceDestroyed() {
         serviceRunning = false
         closeProfile()
-        if (!restoreExperimentalAdapterName()) {
-            update(mutable.value.copy(message = "MinkPad stopped, but Android did not restore the phone's Bluetooth name. Start and Pause again after restarting Bluetooth."))
+        if (!restoreAdapterName()) {
+            update(mutable.value.copy(message = "MinkPad stopped, but Android did not restore the phone's Bluetooth name. Start and stop MinkPad again after restarting Bluetooth."))
         }
     }
 
@@ -824,9 +804,9 @@ internal class MinkPadRepository private constructor(private val context: Contex
         private const val CONNECTION_TIMEOUT_MS = 12_000L
         private const val HOST_SWITCH_SETTLE_MS = 800L
         private const val HOST_SWITCH_ATTEMPTS = 3
-        private const val CLASSIC_LATENCY_EXPERIMENT_NAME = "Pro Controller - MinkPad"
-        private const val LEGACY_CLASSIC_LATENCY_EXPERIMENT_NAME = "Pro Controller"
-        private val LEGACY_EXPERIMENTAL_NAME = Regex("^MinkPad [0-9A-F]{8}$", RegexOption.IGNORE_CASE)
+        private const val MINKPAD_BLUETOOTH_NAME = "Pro Controller - MinkPad"
+        private const val LEGACY_MINKPAD_BLUETOOTH_NAME = "Pro Controller"
+        private val LEGACY_MINKPAD_NAME = Regex("^MinkPad [0-9A-F]{8}$", RegexOption.IGNORE_CASE)
         @Volatile private var instance: MinkPadRepository? = null
         fun get(context: Context): MinkPadRepository = instance ?: synchronized(this) {
             instance ?: MinkPadRepository(context.applicationContext).also { instance = it }

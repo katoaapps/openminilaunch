@@ -139,15 +139,18 @@ the existing app first and clears MinkLauncher OpenSource's local data.
 MinkPad turns the phone into a native Bluetooth keyboard and trackpad for one connected host.
 Open **Settings → MinkPad** or search `?minkpad`. It can also be assigned to a configurable
 Home shortcut or the drawer. Start a session and pair from the receiving device's Bluetooth
-settings using the phone's current Bluetooth name. **Start 2-minute pairing** opens Android's
-system discoverability prompt. MinkPad registers one native keyboard-and-mouse profile and does
-not create a second custom BLE identity. The saved receiving device can be reconnected from the
-MinkPad screen or session notification. MinkPad never removes Android pairings automatically.
+settings using **Pro Controller - MinkPad**. MinkPad temporarily applies that compatibility name
+while its session is active and restores the phone's original Bluetooth name when the session
+ends. **Start 2-minute pairing** opens Android's system discoverability prompt. MinkPad registers
+one native keyboard-and-mouse profile and does not create a second custom BLE identity. Saved
+receiving devices can be switched from the connected trackpad dock or reconnected from the session
+notification. MinkPad never removes Android pairings automatically.
 
 - Android 9 or newer and an OEM Bluetooth stack with HID Device support are required.
 - The native profile uses one combo HID descriptor for keyboard, relative mouse, horizontal and
   vertical scrolling, and media controls. The outgoing L2CAP QoS matches Android's CTS HID-device
-  baseline: an 800-byte/sec token rate, 9-byte bucket, and 11.25 ms latency target.
+  baseline: an 800-byte/sec token rate, 9-byte bucket, and 11.25 ms latency target. The temporary
+  compatibility identity also lets Android receiving devices apply their responsive HID timing.
 - Android 12 and newer ask for Nearby devices access only when you start MinkPad. There is no
   scanning, location permission, accessibility capture, account, or network service.
 - Keyboard mode sends physical key presses, modifiers, arrows, and live software-keyboard text.
@@ -160,17 +163,17 @@ MinkPad screen or session notification. MinkPad never removes Android pairings a
   Touch-only phones use Type to reveal the software input field. A top toggle switches between
   Traditional and TV remote without changing the Bluetooth connection. The remote sends keyboard
   navigation and host-enabled volume/playback reports; phone volume buttons keep their normal behavior.
-- Traditional mode has a 4×3 keyboard-control grid and paginated Help in the pad's top-right corner.
-  Overflow contains controller settings and the optional pointer checker. Choose a per-host system
-  preset for three-/four-finger shortcuts. Unsupported mappings send no command and are explained in Help.
-- A user-started foreground session provides Open, Reconnect, and Pause notification actions.
+- The connected view is a full-screen trackpad with expandable top and bottom controls. The top
+  dock switches receiving devices, pairs a new device, selects Trackpad or Remote mode, and shows
+  the saved or inferred host-system preset. The bottom tray provides a 4×3 keyboard-control grid.
+  Unsupported gesture mappings send no command and are explained in Help.
+- A user-started foreground session provides Open, Reconnect, and Stop notification actions.
   Stop releases held input, unregisters the native HID app, and ends the service. Leaving
   the controller releases held input, without capturing keys from other phone apps.
 - Controller preferences are included in portable backups. Bluetooth addresses, paired-host
   history, per-host system presets, active sessions, and typed text are excluded. Android owns the pairing records.
-- Gaming mode is not included. Host compatibility is experimental; this is not a promise that
-  every Apple, Windows, Android, TV, or phone model will work. The first-pass controller uses
-  English labels pending localization.
+- Gaming mode is not included. Host behavior still varies across Apple, Windows, Android, TV, and
+  phone Bluetooth stacks. MinkPad uses English labels pending localization.
 
 Open the folder in Android Studio or build from the terminal:
 

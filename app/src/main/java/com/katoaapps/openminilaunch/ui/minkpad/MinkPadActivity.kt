@@ -46,7 +46,7 @@ class MinkPadActivity : ComponentActivity() {
         setContent {
             MinkLauncherTheme(store) {
                 MinkPadScreen(repository, onStart = ::startSession,
-                    onDiscover = ::requestPairing, onClose = ::finish,
+                    onDiscover = ::requestPairing,
                     onHardwareCaptureChanged = {
                         captureHardwareInput = it
                         if (!it) hardware.reset()

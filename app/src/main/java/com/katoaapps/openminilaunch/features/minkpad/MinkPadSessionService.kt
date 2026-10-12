@@ -64,7 +64,7 @@ class MinkPadSessionService : Service() {
             .setContentIntent(open).setOngoing(true).setSilent(true)
             .addAction(0, "Open", open)
             .apply { if (state.status == MinkPadStatus.DISCONNECTED && state.host != null) addAction(0, "Reconnect", command(ACTION_RECONNECT, 1)) }
-            .addAction(0, "Pause", command(ACTION_STOP, 2)).build()
+            .addAction(0, "Stop", command(ACTION_STOP, 2)).build()
     }
 
     @android.annotation.SuppressLint("MissingPermission")
