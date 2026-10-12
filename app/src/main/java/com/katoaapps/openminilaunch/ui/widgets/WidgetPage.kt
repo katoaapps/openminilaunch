@@ -99,6 +99,7 @@ internal fun WidgetPage(store: LauncherStore, actions: DeviceActions, goHome: ()
     var widgetInfoRevision by remember { mutableIntStateOf(0) }
     val widgetListState = rememberLazyListState()
     val headerContentColor = launcherBackgroundContentColor(store, header = true)
+    val backgroundContentColor = launcherBackgroundContentColor(store)
 
     fun abandonPendingWidget() {
         if (pendingId != AppWidgetManager.INVALID_APPWIDGET_ID) host.deleteAppWidgetId(pendingId)
@@ -263,16 +264,22 @@ internal fun WidgetPage(store: LauncherStore, actions: DeviceActions, goHome: ()
                 verticalArrangement = Arrangement.Center,
                 horizontalAlignment = Alignment.CenterHorizontally,
             ) {
-                Icon(Icons.Default.Widgets, null, Modifier.size(Dimens.dp58), tint = Sage)
+                Icon(
+                    Icons.Default.Widgets,
+                    null,
+                    Modifier.size(Dimens.dp58),
+                    tint = backgroundContentColor.copy(alpha = .72f),
+                )
                 Text(
                     stringResource(R.string.your_widget_page),
+                    color = backgroundContentColor,
                     fontSize = Dimens.sp24,
                     fontWeight = FontWeight.Black,
                     modifier = Modifier.padding(top = Dimens.dp16),
                 )
                 Text(
                     stringResource(R.string.your_widget_page_description),
-                    color = Muted,
+                    color = backgroundContentColor.copy(alpha = .68f),
                     modifier = Modifier.padding(vertical = Dimens.dp12),
                 )
                 Button(onClick = { showPicker = true }) {

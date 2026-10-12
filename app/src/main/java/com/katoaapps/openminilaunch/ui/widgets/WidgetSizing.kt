@@ -9,8 +9,11 @@ import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.verticalScroll
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Button
 import androidx.compose.material3.FilterChip
@@ -73,37 +76,45 @@ internal fun WidgetSizeDialog(
     }
     Dialog(onDismissRequest = onDismiss, properties = MinkDialogDefaults.properties) {
         Surface(
-            Modifier.minkDialogWidth(),
+            Modifier.minkDialogWidth().fillMaxHeight(.94f),
             shape = RoundedCornerShape(Dimens.dp26),
             color = MaterialTheme.colorScheme.background,
         ) {
-            Column(Modifier.padding(Dimens.dp22), verticalArrangement = Arrangement.spacedBy(Dimens.dp14)) {
-                Text(stringResource(R.string.widget_size), fontSize = Dimens.sp22, fontWeight = FontWeight.Black)
-                Text(info.loadLabel(context.packageManager), color = Muted, fontSize = Dimens.sp13)
-                Text(
-                    selected.displayLabel(),
-                    fontSize = Dimens.sp32,
-                    fontWeight = FontWeight.Black,
-                    color = MaterialTheme.colorScheme.primary,
-                )
-                SizeSelector(
-                    label = stringResource(R.string.width),
-                    range = range.minColumns..range.maxColumns,
-                    selected = selected.columns,
-                    onSelect = { selected = selected.copy(columns = it) },
-                )
-                SizeSelector(
-                    label = stringResource(R.string.height),
-                    range = range.minRows..range.maxRows,
-                    selected = selected.rows,
-                    onSelect = { selected = selected.copy(rows = it) },
-                )
-                Text(
-                    stringResource(R.string.widget_grid_description, stringResource(R.string.app_name)),
-                    color = Muted,
-                    fontSize = Dimens.sp12,
-                )
-                Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
+            Column(Modifier.padding(Dimens.dp22)) {
+                Column(
+                    Modifier.weight(1f).verticalScroll(rememberScrollState()),
+                    verticalArrangement = Arrangement.spacedBy(Dimens.dp14),
+                ) {
+                    Text(stringResource(R.string.widget_size), fontSize = Dimens.sp22, fontWeight = FontWeight.Black)
+                    Text(info.loadLabel(context.packageManager), color = Muted, fontSize = Dimens.sp13)
+                    Text(
+                        selected.displayLabel(),
+                        fontSize = Dimens.sp32,
+                        fontWeight = FontWeight.Black,
+                        color = MaterialTheme.colorScheme.primary,
+                    )
+                    SizeSelector(
+                        label = stringResource(R.string.width),
+                        range = range.minColumns..range.maxColumns,
+                        selected = selected.columns,
+                        onSelect = { selected = selected.copy(columns = it) },
+                    )
+                    SizeSelector(
+                        label = stringResource(R.string.height),
+                        range = range.minRows..range.maxRows,
+                        selected = selected.rows,
+                        onSelect = { selected = selected.copy(rows = it) },
+                    )
+                    Text(
+                        stringResource(R.string.widget_grid_description, stringResource(R.string.app_name)),
+                        color = Muted,
+                        fontSize = Dimens.sp12,
+                    )
+                }
+                Row(
+                    Modifier.fillMaxWidth().padding(top = Dimens.dp14),
+                    horizontalArrangement = Arrangement.End,
+                ) {
                     TextButton(onClick = onDismiss) { Text(stringResource(R.string.cancel)) }
                     Button(
                         onClick = { onConfirm(selected) },

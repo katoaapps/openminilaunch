@@ -38,7 +38,8 @@ internal class HomeWallpaperRepository(context: Context) {
         }
     }
 
-    fun apply(bitmap: Bitmap): Result<HomeWallpaperAppearance> = runCatching {
+    /** Saves Mink's private copy before Android is asked to change the system wallpaper. */
+    fun save(bitmap: Bitmap): Result<HomeWallpaperAppearance> = runCatching {
         val appearance = HomeWallpaperAppearanceAnalyzer.analyze(bitmap)
         wallpaperDirectory.mkdirs()
         val pendingFile = File(wallpaperDirectory, "home-wallpaper.pending.jpg")
@@ -47,18 +48,7 @@ internal class HomeWallpaperRepository(context: Context) {
                 "Unable to encode wallpaper"
             }
         }
-
         try {
-            val wallpaperManager = WallpaperManager.getInstance(appContext)
-            runCatching { wallpaperManager.suggestDesiredDimensions(bitmap.width, bitmap.height) }
-            pendingFile.inputStream().buffered().use { input ->
-                wallpaperManager.setStream(
-                    input,
-                    null,
-                    false,
-                    WallpaperManager.FLAG_SYSTEM,
-                )
-            }
             check(
                 pendingFile.renameTo(wallpaperFile) ||
                     pendingFile.copyTo(wallpaperFile, overwrite = true).exists(),
@@ -69,5 +59,23 @@ internal class HomeWallpaperRepository(context: Context) {
             pendingFile.delete()
         }
         appearance
+    }
+
+    fun applyToSystem(): Result<Unit> = runCatching {
+        check(hasWallpaper()) { "No saved wallpaper to apply" }
+        val bounds = BitmapFactory.Options().apply { inJustDecodeBounds = true }
+        BitmapFactory.decodeFile(wallpaperFile.absolutePath, bounds)
+        val wallpaperManager = WallpaperManager.getInstance(appContext)
+        if (bounds.outWidth > 0 && bounds.outHeight > 0) {
+            runCatching { wallpaperManager.suggestDesiredDimensions(bounds.outWidth, bounds.outHeight) }
+        }
+        wallpaperFile.inputStream().buffered().use { input ->
+            wallpaperManager.setStream(
+                input,
+                null,
+                false,
+                WallpaperManager.FLAG_SYSTEM,
+            )
+        }
     }
 }

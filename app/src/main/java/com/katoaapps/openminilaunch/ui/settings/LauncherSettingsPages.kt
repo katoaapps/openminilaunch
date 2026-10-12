@@ -167,9 +167,12 @@ internal fun AppearanceSettingsPage(
     wallpaperToCrop?.let { uri ->
         WallpaperCropDialog(
             imageUri = uri,
-            applyWallpaper = wallpaperRepository::apply,
-            onApplied = { wallpaper ->
+            saveWallpaper = wallpaperRepository::save,
+            applySystemWallpaper = wallpaperRepository::applyToSystem,
+            onWallpaperSaved = { wallpaper ->
                 store.useAppBackgroundImage(wallpaper)
+            },
+            onApplied = {
                 wallpaperToCrop = null
                 onIconStyleApplied()
             },

@@ -78,6 +78,8 @@ class LauncherStore private constructor(context: Context) {
             appearancePreferences.appBackgroundImageEnabled &&
             homeWallpaperRepository.hasWallpaper()
     val appBackgroundImageRevision get() = appearancePreferences.appBackgroundImageRevision
+    val useSystemHomeWallpaper: Boolean
+        get() = !demoPreferences.enabled && appearancePreferences.useSystemHomeWallpaper
     internal val appBackgroundImageFile get() = homeWallpaperRepository.wallpaperFile
     val iconAppearance get() = iconAppearancePreferences.appearance
     val sendMessagesAutomatically get() = messagingPreferences.sendMessagesAutomatically
