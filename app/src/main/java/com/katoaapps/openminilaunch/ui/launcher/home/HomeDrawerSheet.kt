@@ -9,7 +9,6 @@ import android.widget.Toast
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -17,7 +16,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
@@ -28,7 +26,6 @@ import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Apps
 import androidx.compose.material.icons.filled.BusinessCenter
 import androidx.compose.material.icons.filled.Shield
-import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.Icon
@@ -52,6 +49,7 @@ import com.katoaapps.openminilaunch.data.LauncherStore
 import com.katoaapps.openminilaunch.features.wellbeing.MinkAppAccessState
 import com.katoaapps.openminilaunch.model.LauncherTarget
 import com.katoaapps.openminilaunch.platform.DeviceActions
+import com.katoaapps.openminilaunch.ui.components.CenteredActionPrompt
 import com.katoaapps.openminilaunch.ui.components.LauncherTargetIcon
 import com.katoaapps.openminilaunch.ui.settings.SettingsDestination
 import com.katoaapps.openminilaunch.ui.theme.Dimens
@@ -153,27 +151,17 @@ internal fun HomeDrawerSheet(
 
 @Composable
 private fun EmptyDrawer(onChooseApps: () -> Unit) {
-    Column(
-        Modifier.fillMaxWidth().padding(horizontal = Dimens.dp28, vertical = Dimens.dp24),
-        horizontalAlignment = Alignment.CenterHorizontally,
-    ) {
-        Icon(Icons.Default.Apps, null, Modifier.size(Dimens.dp48), tint = Sage)
-        Text(
-            stringResource(R.string.empty_drawer),
-            fontSize = Dimens.sp22,
-            fontWeight = FontWeight.Black,
-            modifier = Modifier.padding(top = Dimens.dp14),
-        )
-        Text(
-            stringResource(R.string.choose_drawer_apps),
-            color = Muted,
-            modifier = Modifier.padding(vertical = Dimens.dp10),
-        )
-        Button(onClick = onChooseApps) {
-            Icon(Icons.Default.Add, null)
-            Text(stringResource(R.string.choose_apps), Modifier.padding(start = Dimens.dp8))
-        }
-    }
+    CenteredActionPrompt(
+        icon = Icons.Default.Apps,
+        title = stringResource(R.string.empty_drawer),
+        description = stringResource(R.string.choose_drawer_apps),
+        actionLabel = stringResource(R.string.choose_apps),
+        actionIcon = Icons.Default.Add,
+        onAction = onChooseApps,
+        iconColor = Sage,
+        mutedContentColor = Muted,
+        modifier = Modifier.fillMaxWidth(),
+    )
 }
 
 @Composable

@@ -29,14 +29,12 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.navigationBarsPadding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Widgets
-import androidx.compose.material3.Button
 import androidx.compose.material3.FilledTonalIconButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -259,34 +257,16 @@ internal fun WidgetPage(store: LauncherStore, actions: DeviceActions, goHome: ()
         }
 
         if (store.widgetIds.isEmpty()) {
-            Column(
-                Modifier.fillMaxSize().padding(Dimens.dp28),
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally,
-            ) {
-                Icon(
-                    Icons.Default.Widgets,
-                    null,
-                    Modifier.size(Dimens.dp58),
-                    tint = backgroundContentColor.copy(alpha = .72f),
-                )
-                Text(
-                    stringResource(R.string.your_widget_page),
-                    color = backgroundContentColor,
-                    fontSize = Dimens.sp24,
-                    fontWeight = FontWeight.Black,
-                    modifier = Modifier.padding(top = Dimens.dp16),
-                )
-                Text(
-                    stringResource(R.string.your_widget_page_description),
-                    color = backgroundContentColor.copy(alpha = .68f),
-                    modifier = Modifier.padding(vertical = Dimens.dp12),
-                )
-                Button(onClick = { showPicker = true }) {
-                    Icon(Icons.Default.Add, null)
-                    Text(stringResource(R.string.add_widget), Modifier.padding(start = Dimens.dp8))
-                }
-            }
+            CenteredActionPrompt(
+                icon = Icons.Default.Widgets,
+                title = stringResource(R.string.your_widget_page),
+                description = stringResource(R.string.your_widget_page_description),
+                actionLabel = stringResource(R.string.add_widget),
+                actionIcon = Icons.Default.Add,
+                onAction = { showPicker = true },
+                contentColor = backgroundContentColor,
+                modifier = Modifier.fillMaxSize(),
+            )
         } else {
             Box(Modifier.fillMaxSize()) {
                 LazyColumn(

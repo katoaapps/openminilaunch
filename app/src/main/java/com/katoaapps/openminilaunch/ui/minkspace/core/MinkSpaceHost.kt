@@ -17,7 +17,7 @@ import com.katoaapps.openminilaunch.ui.minkspace.media.MediaMiniAppPage
 import com.katoaapps.openminilaunch.ui.minkspace.music.MusicMiniAppPage
 import com.katoaapps.openminilaunch.ui.minkspace.todo.TodoMiniAppPage
 
-/** Hosts enabled mini-apps and owns only the vertical switching axis inside MinkSpace. */
+/** Hosts enabled mini-apps, the settings shortcut, and MinkSpace's vertical switching axis. */
 @Composable
 internal fun MinkSpaceHost(
     store: LauncherStore,
@@ -30,17 +30,19 @@ internal fun MinkSpaceHost(
     mutedContentColor: Color,
     insetColor: Color,
     openMediaLab: () -> Unit,
+    openMinkSpaceSettings: () -> Unit,
     presentationState: MinkSpacePresentationState,
     modifier: Modifier = Modifier,
 ) {
     val activeMiniApps = store.minkSpaceMiniAppOrder.filter { miniApp ->
         miniApp.readyForHome && miniApp in store.enabledMinkSpaceMiniApps
     }
-    val pagerState = rememberPagerState(pageCount = { activeMiniApps.size })
+    val settingsPage = activeMiniApps.size
+    val pagerState = rememberPagerState(pageCount = { activeMiniApps.size + 1 })
 
     LaunchedEffect(activeMiniApps) {
-        if (pagerState.currentPage > activeMiniApps.lastIndex) {
-            pagerState.scrollToPage(activeMiniApps.lastIndex.coerceAtLeast(0))
+        if (pagerState.currentPage > settingsPage) {
+            pagerState.scrollToPage(settingsPage)
         }
     }
     LaunchedEffect(todoJumpToken, activeMiniApps) {
@@ -59,10 +61,10 @@ internal fun MinkSpaceHost(
     VerticalPager(
         state = pagerState,
         modifier = modifier,
-        userScrollEnabled = activeMiniApps.size > 1 && !presentationState.isExpanded,
+        userScrollEnabled = !presentationState.isExpanded,
         beyondViewportPageCount = 1,
     ) { page ->
-        when (activeMiniApps[page]) {
+        when (activeMiniApps.getOrNull(page)) {
             MinkSpaceMiniApp.TODO -> TodoMiniAppPage(
                 store = store,
                 openTodos = openTodos,
@@ -97,6 +99,14 @@ internal fun MinkSpaceHost(
                 modifier = Modifier.fillMaxSize(),
             )
             MinkSpaceMiniApp.RECORDER -> Unit
+            null -> MinkSpaceSettingsShortcutPage(
+                compact = compact,
+                contentColor = contentColor,
+                mutedContentColor = mutedContentColor,
+                containerColor = insetColor,
+                onOpenSettings = openMinkSpaceSettings,
+                modifier = Modifier.fillMaxSize(),
+            )
         }
     }
 }

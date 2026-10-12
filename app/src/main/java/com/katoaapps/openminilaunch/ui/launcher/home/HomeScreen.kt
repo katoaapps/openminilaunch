@@ -190,6 +190,7 @@ internal fun HomeScreen(
                             profileFlipResetKey = profileFlipResetKey,
                             openTodos = openTodos,
                             openVCardSettings = openVCardSettings,
+                            openMinkSpaceSettings = { openSettings(SettingsDestination.MINK_SPACE) },
                             onTodoCenterChanged = { widgetCenter = it },
                             onPausedApp = { pausedAppPackage = it },
                             onOpenDrawer = { drawerOpen = true },
