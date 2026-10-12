@@ -180,7 +180,7 @@ private fun MinkPadSetupContent(
     ) {
         Column {
             Text("MinkPad · Beta", style = MaterialTheme.typography.headlineSmall, fontWeight = FontWeight.Bold)
-            Text("Your pocket, everyboard.", style = MaterialTheme.typography.bodyMedium)
+            Text("Your pocket everyboard.", style = MaterialTheme.typography.bodyMedium)
         }
         MinkPadConnectionPanel(repository, state, onStart, onDiscover, onHostDialogStateChanged)
         Surface(

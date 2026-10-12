@@ -7,7 +7,7 @@ import org.junit.Test
 class MinkPadHostPlatformTest {
     @Test
     fun `infers platforms only from explicit host names`() {
-        assertEquals(MinkPadHostPlatform.MAC, minkPadHostPlatformHint("Alex's MacBook Pro"))
+        assertEquals(MinkPadHostPlatform.MAC, minkPadHostPlatformHint("Mink's MacBook Pro"))
         assertEquals(MinkPadHostPlatform.APPLE_MOBILE, minkPadHostPlatformHint("Mink's iPad"))
         assertEquals(MinkPadHostPlatform.WINDOWS, minkPadHostPlatformHint("Surface Laptop"))
         assertEquals(MinkPadHostPlatform.ANDROID, minkPadHostPlatformHint("Living Room Google TV"))
