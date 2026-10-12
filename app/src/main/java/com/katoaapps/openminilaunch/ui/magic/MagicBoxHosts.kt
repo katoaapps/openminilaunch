@@ -38,6 +38,7 @@ internal fun HomeMagicBox(
         collapsedModifier = collapsedModifier,
         keyboardInputEnabled = keyboardInputEnabled,
         autoOpenSoftwareKeyboardOnHome = autoOpenSoftwareKeyboardOnHome,
+        captureActivityCommandHotkeys = true,
         homeRequestToken = homeRequestToken,
         onTodoAdded = { text, animationFinished ->
             onTodoAdded(text)

@@ -206,6 +206,9 @@ internal fun AllAppsScreen(
     }
 
     val focusedApp = apps.getOrNull(pagerState.currentPage)
+    val availableLetters = remember(apps) {
+        apps.mapNotNull { letterForLauncherTarget(it) }.toSet()
+    }
     val fallbackAccent = Color(store.effectiveHomePanelColorArgb)
     val targetAccent = remember(focusedApp?.selectionKey, fallbackAccent) {
         focusedApp?.let { dominantAppColor(actions.launcherTargetIcon(it)) } ?: fallbackAccent
@@ -219,8 +222,38 @@ internal fun AllAppsScreen(
     val edgeColor = lerpColor(accent, Color.Black, .68f)
     val density = LocalDensity.current
 
+    fun openApp(app: LauncherTarget) {
+        if (!actions.launchLauncherTarget(app)) {
+            Toast.makeText(
+                context,
+                context.getString(
+                    R.string.launcher_app_unavailable,
+                    launcherDiscoveryLabel(app, actions::appLabel),
+                ),
+                Toast.LENGTH_LONG,
+            ).show()
+        }
+    }
+
     BoxWithConstraints(
-        Modifier.fillMaxSize().dismissAllAppsOnSwipeDown(onSwipeDown),
+        Modifier.fillMaxSize()
+            .navigateAllAppsWithDpad(
+                enabled = apps.isNotEmpty(),
+                onStep = { step ->
+                    val currentLetter = letterForLauncherTarget(
+                        apps.getOrNull(pagerState.targetPage),
+                    )
+                    adjacentAvailableAppLetter(availableLetters, currentLetter, step)
+                        ?.let { letter -> launcherTargetIndexForLetter(apps, letter) }
+                        ?.let { targetPage ->
+                            if (targetPage != pagerState.targetPage) {
+                                scope.launch { pagerState.animateScrollToPage(targetPage) }
+                            }
+                        }
+                },
+                onSelect = { focusedApp?.let(::openApp) },
+            )
+            .dismissAllAppsOnSwipeDown(onSwipeDown),
     ) {
         val compact = maxHeight < Dimens.dp560
         val availableWidth = maxWidth
@@ -325,16 +358,7 @@ internal fun AllAppsScreen(
                             focused = page == pagerState.currentPage,
                             onClick = {
                                 if (page == pagerState.currentPage) {
-                                    if (!actions.launchLauncherTarget(app)) {
-                                        Toast.makeText(
-                                            context,
-                                            context.getString(
-                                                R.string.launcher_app_unavailable,
-                                                displayLabel,
-                                            ),
-                                            Toast.LENGTH_LONG,
-                                        ).show()
-                                    }
+                                    openApp(app)
                                 } else {
                                     scope.launch { pagerState.animateScrollToPage(page) }
                                 }
@@ -343,9 +367,7 @@ internal fun AllAppsScreen(
                         )
                     }
                     LetterArc(
-                        availableLetters = remember(apps) {
-                            apps.mapNotNull { letterForLauncherTarget(it) }.toSet()
-                        },
+                        availableLetters = availableLetters,
                         selectedLetter = letterForLauncherTarget(focusedApp),
                         selectedContentColor = edgeColor,
                         compact = compact,

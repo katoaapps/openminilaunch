@@ -33,6 +33,19 @@ internal fun initialLauncherTargetsIndex(targets: List<LauncherTarget>): Int =
 internal fun letterForLauncherTarget(target: LauncherTarget?): Char? =
     target?.let { initialLetter(it, LauncherTarget::label) }
 
+internal fun adjacentAvailableAppLetter(
+    availableLetters: Set<Char>,
+    currentLetter: Char?,
+    step: Int,
+): Char? {
+    require(step == -1 || step == 1)
+    val orderedLetters = ALL_APP_LETTERS.filter(availableLetters::contains)
+    if (orderedLetters.isEmpty()) return null
+    val currentIndex = orderedLetters.indexOf(currentLetter?.uppercaseChar())
+    if (currentIndex < 0) return if (step > 0) orderedLetters.first() else orderedLetters.last()
+    return orderedLetters[(currentIndex + step).coerceIn(orderedLetters.indices)]
+}
+
 private fun <T> indexForLetter(apps: List<T>, letter: Char, label: (T) -> String): Int? =
     apps.indexOfFirst { app -> label(app).firstOrNull()?.uppercaseChar() == letter.uppercaseChar() }
         .takeIf { it >= 0 }

@@ -75,6 +75,7 @@ internal fun MagicBoxContent(
     initiallyExpanded: Boolean = false,
     showSoftwareKeyboardOnStart: Boolean = false,
     autoOpenSoftwareKeyboardOnHome: Boolean = false,
+    captureActivityCommandHotkeys: Boolean = false,
     homeRequestToken: Int = 0,
     onTodoAdded: (String, onAnimationFinished: () -> Unit) -> Unit = { _, finished ->
         finished()
@@ -364,6 +365,15 @@ internal fun MagicBoxContent(
         selectedRecipient = null
         lockedPrefix = null
         pendingCalendarReview = null
+    }
+
+    fun beginCollapsedHardwareInput(typedText: String, keyCode: Int) {
+        if (expanded) return
+        clearCommand()
+        initialHardwareKeyCorrection.begin(typedText, keyCode)
+        text = TextFieldValue(typedText, selection = TextRange(typedText.length))
+        expanded = true
+        refocus(showSoftwareKeyboard = false)
     }
 
     fun requestClearMessageDraft() {
@@ -713,6 +723,15 @@ internal fun MagicBoxContent(
         }
     }
 
+    MagicHardwareCommandHotkeyEffect(
+        enabled = captureActivityCommandHotkeys &&
+            keyboardInputEnabled &&
+            !expanded &&
+            !smsFlow.sentConfirmationVisible &&
+            !todoCompletionPending,
+        onCommand = ::beginCollapsedHardwareInput,
+    )
+
     BackHandler(enabled = expanded) { requestDismiss() }
 
     Box(modifier) {
@@ -879,11 +898,7 @@ internal fun MagicBoxContent(
                 onArmedPlaced = { armedTargetPlaced = true },
                 onPrintableKeyDown = { typedText, keyCode ->
                     if (!expanded) {
-                        clearCommand()
-                        initialHardwareKeyCorrection.begin(typedText, keyCode)
-                        text = TextFieldValue(typedText, selection = TextRange(typedText.length))
-                        expanded = true
-                        refocus(showSoftwareKeyboard = false)
+                        beginCollapsedHardwareInput(typedText, keyCode)
                     } else {
                         val updatedText = text.text + typedText
                         text = TextFieldValue(updatedText, selection = TextRange(updatedText.length))
