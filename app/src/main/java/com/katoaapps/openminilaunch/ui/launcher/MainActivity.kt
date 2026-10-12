@@ -8,6 +8,7 @@ import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
+import android.view.KeyEvent
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
@@ -39,16 +40,16 @@ class MainActivity : ComponentActivity(), MagicHardwareHotkeyHost {
     internal var widgetConfigurationResult by mutableStateOf<Pair<Int, Boolean>?>(null)
         private set
     private lateinit var actions: DeviceActions
-    private var magicHardwareHotkeyHandler: ((android.view.KeyEvent) -> Boolean)? = null
+    private var magicHardwareHotkeyHandler: ((KeyEvent) -> Boolean)? = null
 
     @SuppressLint("RestrictedApi")
-    override fun dispatchKeyEvent(event: android.view.KeyEvent): Boolean {
+    override fun dispatchKeyEvent(event: KeyEvent): Boolean {
         if (magicHardwareHotkeyHandler?.invoke(event) == true) return true
         return super.dispatchKeyEvent(event)
     }
 
     override fun registerMagicHardwareHotkeyHandler(
-        handler: (android.view.KeyEvent) -> Boolean,
+        handler: (KeyEvent) -> Boolean,
     ): () -> Unit {
         magicHardwareHotkeyHandler = handler
         return {

@@ -4,13 +4,38 @@ import android.app.WallpaperManager
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.os.Build
+import android.os.Handler
+import android.os.Looper
+import androidx.compose.runtime.mutableStateOf
 import com.katoaapps.openminilaunch.model.HomeWallpaperAppearance
 import java.io.File
 
 internal class HomeWallpaperRepository(context: Context) {
     private val appContext = context.applicationContext
     private val wallpaperDirectory = File(appContext.filesDir, "appearance")
+    private val wallpaperManager = WallpaperManager.getInstance(appContext)
+    private val systemWallpaperAppearanceState = mutableStateOf(readSystemWallpaperAppearance())
     val wallpaperFile = File(wallpaperDirectory, "home-wallpaper.jpg")
+    val systemWallpaperAppearance: HomeWallpaperAppearance?
+        get() = systemWallpaperAppearanceState.value
+
+    init {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O_MR1) {
+            runCatching {
+                wallpaperManager.addOnColorsChangedListener(
+                    { colors, which ->
+                        if (which and WallpaperManager.FLAG_SYSTEM != 0) {
+                            systemWallpaperAppearanceState.value = colors?.primaryColor
+                                ?.toArgb()
+                                ?.let(::singleColorAppearance)
+                        }
+                    },
+                    Handler(Looper.getMainLooper()),
+                )
+            }
+        }
+    }
 
     fun hasWallpaper(): Boolean = wallpaperFile.isFile && wallpaperFile.length() > 0L
 
@@ -65,7 +90,6 @@ internal class HomeWallpaperRepository(context: Context) {
         check(hasWallpaper()) { "No saved wallpaper to apply" }
         val bounds = BitmapFactory.Options().apply { inJustDecodeBounds = true }
         BitmapFactory.decodeFile(wallpaperFile.absolutePath, bounds)
-        val wallpaperManager = WallpaperManager.getInstance(appContext)
         if (bounds.outWidth > 0 && bounds.outHeight > 0) {
             runCatching { wallpaperManager.suggestDesiredDimensions(bounds.outWidth, bounds.outHeight) }
         }
@@ -78,4 +102,17 @@ internal class HomeWallpaperRepository(context: Context) {
             )
         }
     }
+
+    private fun readSystemWallpaperAppearance(): HomeWallpaperAppearance? {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O_MR1) return null
+        return runCatching {
+            wallpaperManager.getWallpaperColors(WallpaperManager.FLAG_SYSTEM)
+                ?.primaryColor
+                ?.toArgb()
+                ?.let(::singleColorAppearance)
+        }.getOrNull()
+    }
+
+    private fun singleColorAppearance(argb: Int): HomeWallpaperAppearance =
+        HomeWallpaperAppearance(averageColorArgb = argb, headerColorArgb = argb)
 }

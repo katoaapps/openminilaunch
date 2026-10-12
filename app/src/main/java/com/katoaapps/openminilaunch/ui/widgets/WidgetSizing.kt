@@ -1,3 +1,5 @@
+@file:OptIn(androidx.compose.foundation.layout.ExperimentalLayoutApi::class)
+
 package com.katoaapps.openminilaunch.ui.widgets
 
 import android.appwidget.AppWidgetHostView
@@ -8,7 +10,7 @@ import android.util.SizeF
 import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
@@ -26,6 +28,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -111,15 +114,15 @@ internal fun WidgetSizeDialog(
                         fontSize = Dimens.sp12,
                     )
                 }
-                Row(
+                FlowRow(
                     Modifier.fillMaxWidth().padding(top = Dimens.dp14),
-                    horizontalArrangement = Arrangement.End,
+                    horizontalArrangement = Arrangement.spacedBy(Dimens.dp8, Alignment.End),
+                    verticalArrangement = Arrangement.spacedBy(Dimens.dp8),
                 ) {
                     TextButton(onClick = onDismiss) { Text(stringResource(R.string.cancel)) }
-                    Button(
-                        onClick = { onConfirm(selected) },
-                        modifier = Modifier.padding(start = Dimens.dp8),
-                    ) { Text(stringResource(confirmLabelRes)) }
+                    Button(onClick = { onConfirm(selected) }) {
+                        Text(stringResource(confirmLabelRes))
+                    }
                 }
             }
         }
@@ -140,7 +143,10 @@ private fun SizeSelector(
         fontWeight = FontWeight.Bold,
         letterSpacing = Dimens.sp1,
     )
-    Row(horizontalArrangement = Arrangement.spacedBy(Dimens.dp8)) {
+    FlowRow(
+        horizontalArrangement = Arrangement.spacedBy(Dimens.dp8),
+        verticalArrangement = Arrangement.spacedBy(Dimens.dp8),
+    ) {
         range.forEach { value ->
             FilterChip(
                 selected = selected == value,

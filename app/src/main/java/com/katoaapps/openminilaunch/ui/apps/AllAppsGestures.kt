@@ -55,7 +55,7 @@ internal fun Modifier.navigateAllAppsWithDpad(
     return focusRequester(focusRequester)
         .onPreviewKeyEvent { event ->
             val keyCode = event.nativeKeyEvent.keyCode
-            val step = allAppsDpadPageStep(keyCode)
+            val step = allAppsDpadLetterStep(keyCode)
             when {
                 step != null -> {
                     if (event.type == KeyEventType.KeyDown) currentOnStep(step)
@@ -71,7 +71,7 @@ internal fun Modifier.navigateAllAppsWithDpad(
         .focusable(enabled = enabled)
 }
 
-internal fun allAppsDpadPageStep(keyCode: Int): Int? = when (keyCode) {
+internal fun allAppsDpadLetterStep(keyCode: Int): Int? = when (keyCode) {
     AndroidKeyEvent.KEYCODE_DPAD_LEFT,
     AndroidKeyEvent.KEYCODE_DPAD_UP,
     -> -1

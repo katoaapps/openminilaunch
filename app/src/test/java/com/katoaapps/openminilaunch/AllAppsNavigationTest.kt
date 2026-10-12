@@ -2,7 +2,7 @@ package com.katoaapps.openminilaunch
 
 import com.katoaapps.openminilaunch.features.apps.*
 import com.katoaapps.openminilaunch.model.*
-import com.katoaapps.openminilaunch.ui.apps.allAppsDpadPageStep
+import com.katoaapps.openminilaunch.ui.apps.allAppsDpadLetterStep
 import com.katoaapps.openminilaunch.ui.apps.isAllAppsDpadSelectKey
 
 import android.view.KeyEvent
@@ -61,11 +61,11 @@ class AllAppsNavigationTest {
 
     @Test
     fun directionalTrackpadMapsToPreviousAndNextLetters() {
-        assertEquals(-1, allAppsDpadPageStep(KeyEvent.KEYCODE_DPAD_LEFT))
-        assertEquals(-1, allAppsDpadPageStep(KeyEvent.KEYCODE_DPAD_UP))
-        assertEquals(1, allAppsDpadPageStep(KeyEvent.KEYCODE_DPAD_RIGHT))
-        assertEquals(1, allAppsDpadPageStep(KeyEvent.KEYCODE_DPAD_DOWN))
-        assertNull(allAppsDpadPageStep(KeyEvent.KEYCODE_ENTER))
+        assertEquals(-1, allAppsDpadLetterStep(KeyEvent.KEYCODE_DPAD_LEFT))
+        assertEquals(-1, allAppsDpadLetterStep(KeyEvent.KEYCODE_DPAD_UP))
+        assertEquals(1, allAppsDpadLetterStep(KeyEvent.KEYCODE_DPAD_RIGHT))
+        assertEquals(1, allAppsDpadLetterStep(KeyEvent.KEYCODE_DPAD_DOWN))
+        assertNull(allAppsDpadLetterStep(KeyEvent.KEYCODE_ENTER))
         assertEquals(true, isAllAppsDpadSelectKey(KeyEvent.KEYCODE_DPAD_CENTER))
         assertEquals(true, isAllAppsDpadSelectKey(KeyEvent.KEYCODE_ENTER))
         assertEquals(false, isAllAppsDpadSelectKey(KeyEvent.KEYCODE_SPACE))

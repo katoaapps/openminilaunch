@@ -107,12 +107,16 @@ class LauncherStore private constructor(context: Context) {
     val visibleAppBackgroundColorArgb: Int?
         get() = if (appBackgroundImageEnabled) {
             appearancePreferences.appBackgroundImageAppearance?.averageColorArgb
+        } else if (useSystemHomeWallpaper) {
+            homeWallpaperRepository.systemWallpaperAppearance?.averageColorArgb
         } else {
             effectiveAppBackgroundColorArgb
         }
     val visibleAppHeaderColorArgb: Int?
         get() = if (appBackgroundImageEnabled) {
             appearancePreferences.appBackgroundImageAppearance?.headerColorArgb
+        } else if (useSystemHomeWallpaper) {
+            homeWallpaperRepository.systemWallpaperAppearance?.headerColorArgb
         } else {
             effectiveAppBackgroundColorArgb
         }
