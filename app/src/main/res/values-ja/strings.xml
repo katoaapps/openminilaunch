@@ -380,7 +380,7 @@
     <string name="take_list_with_you">リストを持ち歩きましょう</string>
     <string name="take_list_with_you_description">現在のチェックリストをメモ アプリにエクスポートするか、PDF として保存します。</string>
     <string name="keep_context">コンテキストを維持する</string>
-    <string name="keep_context_description">新しい Magic Box タスクが最新の To Do ページにアニメーション化されます。</string>
+    <string name="keep_context_description">To-Do を MinkSpace で非表示にしても、新しい Magic Box タスクは完全な To-Do リストに残ります。</string>
     <string name="search_onboarding_intro">通常は Magic Box と入力して、ローカル ファイルを検索したり、Web を検索したり、選択した AI アプリにクエリを渡したりします。</string>
     <string name="links_stay_links">リンクはリンクのまま</string>
     <string name="links_stay_links_description">Web アドレスを入力して直接開きます。他のプレーンテキストは Web または AI クエリのままです。</string>
@@ -779,6 +779,9 @@
     <string name="todo_export_filename">MinkLauncher-OpenSource-todos-%1$s.pdf</string>
     <string name="todo_export_title">%1$s やることリスト</string>
     <string name="widget_configuration_failed">このウィジェットは設定できませんでした</string>
+    <string name="widget_setup_confirmation_title">%1$s を使用しますか?</string>
+    <string name="widget_setup_confirmation_description">ウィジェットの設定は完了しましたが、アプリから変更が保存されたかどうかの確認がありませんでした。設定に問題がなければ使用し、そうでなければ破棄して現在のウィジェットをそのまま残してください。</string>
+    <string name="use_widget">ウィジェットを使用</string>
     <string name="widgets">ウィジェット</string>
     <string name="widget_count">%1$d/%2$d</string>
     <plurals name="maximum_widgets">
@@ -787,7 +790,7 @@
     </plurals>
     <string name="add_widget">ウィジェットを追加する</string>
     <string name="your_widget_page">ウィジェットページ</string>
-    <string name="your_widget_page_description">最大 4 つの Android ウィジェットを追加します。彼らのアプリは、表示するコンテンツを制御します。</string>
+    <string name="your_widget_page_description">最大 8 つの Android ウィジェットを追加します。彼らのアプリは、表示するコンテンツを制御します。</string>
     <string name="widget_options">ウィジェットのオプション</string>
     <string name="widget_temporarily_unavailable">ウィジェットは一時的に利用できなくなります</string>
     <string name="widget_temporarily_unavailable_description">MinkLauncher はこのウィジェットを所定の位置に保持しました。アプリまたは Android の読み込みが完了してから再試行するか、手動で削除してください。</string>

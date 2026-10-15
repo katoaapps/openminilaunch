@@ -34,6 +34,7 @@ class LauncherStore private constructor(context: Context) {
     private val appBubblePreferences = AppBubblePreferenceStore(prefs)
     private val privateContainerPreferences = PrivateContainerPreferenceStore(prefs)
     private val minkSpacePreferences = MinkSpacePreferenceStore(prefs)
+    private val minkSpaceWidgetStore = MinkSpaceWidgetStore(prefs)
     private val homeWallpaperRepository = HomeWallpaperRepository(appContext)
     internal val profileRepository = ProfileRepository(appContext)
     private val demoPreferences: DemoPreferenceStore = DemoPreferenceStore(appContext, prefs, todoStore)
@@ -98,6 +99,7 @@ class LauncherStore private constructor(context: Context) {
     val privateContainerGatewaySelectionKey get() = privateContainerPreferences.gatewaySelectionKey
     internal val minkSpaceMiniAppOrder get() = minkSpacePreferences.order
     internal val enabledMinkSpaceMiniApps get() = minkSpacePreferences.enabledMiniApps
+    internal val minkSpaceWidgetId get() = minkSpaceWidgetStore.appWidgetId
     val effectiveHomePanelColorArgb: Int
         get() = demoPreferences.effectivePanelColor(homePanelColorArgb)
     val watermelonModeEnabled: Boolean
@@ -359,6 +361,14 @@ class LauncherStore private constructor(context: Context) {
         enabledMiniApps: Set<MinkSpaceMiniApp>,
     ) {
         minkSpacePreferences.replaceFromBackup(order, enabledMiniApps)
+    }
+
+    internal fun setMinkSpaceWidget(appWidgetId: Int) {
+        minkSpaceWidgetStore.replace(appWidgetId)
+    }
+
+    internal fun clearMinkSpaceWidget() {
+        minkSpaceWidgetStore.clear()
     }
 
     fun setHomePanelColor(argb: Int) {

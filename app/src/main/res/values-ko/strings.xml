@@ -380,7 +380,7 @@
     <string name="take_list_with_you">목록을 가지고 가세요</string>
     <string name="take_list_with_you_description">현재 체크리스트를 메모 앱으로 내보내거나 PDF로 저장하세요.</string>
     <string name="keep_context">맥락을 유지하라</string>
-    <string name="keep_context_description">새로운 Magic Box 작업이 최신 할 일 페이지에 애니메이션으로 표시됩니다.</string>
+    <string name="keep_context_description">할 일이 MinkSpace에서 숨겨져 있어도 새 Magic Box 작업은 전체 할 일 목록에 남습니다.</string>
     <string name="search_onboarding_intro">로컬 파일을 찾거나, 웹을 검색하거나, 선택한 AI 앱에 쿼리를 전달하려면 Magic Box에 정상적으로 입력하세요.</string>
     <string name="links_stay_links">링크는 링크로 유지됩니다.</string>
     <string name="links_stay_links_description">직접 열려면 웹 주소를 입력하세요. 다른 일반 텍스트는 웹 또는 AI 쿼리로 유지됩니다.</string>
@@ -779,6 +779,9 @@
     <string name="todo_export_filename">MinkLauncher-OpenSource-todos-%1$s.pdf</string>
     <string name="todo_export_title">%1$s 할 일 목록</string>
     <string name="widget_configuration_failed">이 위젯을 구성할 수 없습니다.</string>
+    <string name="widget_setup_confirmation_title">%1$s을(를) 사용하시겠습니까?</string>
+    <string name="widget_setup_confirmation_description">위젯 설정은 완료되었지만 앱에서 변경사항이 저장되었는지 확인하지 않았습니다. 설정이 올바르게 보이면 사용하고, 그렇지 않으면 현재 위젯을 그대로 유지하도록 삭제하세요.</string>
+    <string name="use_widget">위젯 사용</string>
     <string name="widgets">위젯</string>
     <string name="widget_count">%2$d의 %1$d</string>
     <plurals name="maximum_widgets">
@@ -787,7 +790,7 @@
     </plurals>
     <string name="add_widget">위젯 추가</string>
     <string name="your_widget_page">귀하의 위젯 페이지</string>
-    <string name="your_widget_page_description">최대 4개의 Android 위젯을 추가하세요. 그들의 앱은 그들이 표시하는 콘텐츠를 제어합니다.</string>
+    <string name="your_widget_page_description">최대 8개의 Android 위젯을 추가하세요. 그들의 앱은 그들이 표시하는 콘텐츠를 제어합니다.</string>
     <string name="widget_options">위젯 옵션</string>
     <string name="widget_temporarily_unavailable">위젯을 일시적으로 사용할 수 없습니다.</string>
     <string name="widget_temporarily_unavailable_description">MinkLauncher는 이 위젯을 그대로 유지했습니다. 앱 또는 Android 로드가 완료된 후 다시 시도하거나 수동으로 제거하세요.</string>

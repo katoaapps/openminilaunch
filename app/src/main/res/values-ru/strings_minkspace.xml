@@ -2,15 +2,17 @@
 <resources>
     <string name="mink_space_mini_apps">MinkSpace Мини-приложения</string>
     <string name="mink_space_settings_summary">Выбирайте и организуйте то, что находится внутри главной панели.</string>
-    <string name="mink_space_settings_description">Проведите пальцем вверх или вниз по MinkSpace, чтобы переключить включенные мини-приложения. Проведите пальцем влево или вправо для перемещения между страницами текущего мини-приложения.</string>
-    <string name="mini_apps">Мини-приложения</string>
+    <string name="mink_space_settings_description">Проведите пальцем вверх или вниз по MinkSpace, чтобы переключить отображаемые мини-приложения. Проведите пальцем влево или вправо для перемещения между страницами текущего мини-приложения.</string>
+    <string name="show_in_mink_space">Показывать в MinkSpace</string>
+    <string name="todo_added">Дело добавлено</string>
+    <string name="open_todos">Открыть дела</string>
     <string name="calculator">Калькулятор</string>
     <string name="recorder">Регистратор</string>
     <string name="music_player">Музыкальный плеер</string>
     <string name="music_player_preview">Предварительный просмотр музыкального проигрывателя</string>
     <string name="open_music_player_preview">Открыть предварительный просмотр музыкального проигрывателя</string>
-    <string name="swipe_vertically_to_switch">Включено · Проведите вертикально, чтобы переключиться.</string>
-    <string name="preview">Предварительный просмотр</string>
+    <string name="swipe_vertically_to_switch">Проведите вертикально, чтобы переключиться</string>
+    <string name="open_and_manage">Открыть и управлять</string>
     <string name="open_calculator_lab">Открыть предварительный просмотр калькулятора</string>
     <string name="mink_space_lab">MinkSpace Лаборатория</string>
     <string name="calculator_history">История</string>
@@ -18,7 +20,6 @@
     <string name="calculator_invalid_expression">Проверьте выражение и повторите попытку.</string>
     <string name="delete_last_character">Удалить последний символ</string>
     <string name="calculator_history_empty">Здесь появятся завершенные расчеты.</string>
-    <string name="always_enabled">Всегда включено</string>
     <string name="coming_later">Скоро</string>
     <string name="open_media_lab">Открыть Media Lab</string>
     <string name="media_lab">Media Lab</string>
@@ -47,4 +48,14 @@
     <string name="music_collapse_player">Свернуть элементы управления мультимедиа</string>
     <string name="music_back_control_description">Назад на 10 секунд; несколько нажатий предлагают перезапуск и предыдущий носитель</string>
     <string name="music_forward_control_description">Вперед 10 секунд; несколько нажатий предлагают следующий медиафайл и перемешивают</string>
+    <string name="mink_space_widget_description">Добавьте один виджет установленного приложения в MinkSpace.</string>
+    <string name="mink_space_widget_picker_description">Виджеты предоставляются установленными приложениями. Mink показывает вероятную совместимость, но итоговым макетом и доступными действиями управляет поставщик.</string>
+    <string name="mink_space_widget_compact_warning">Некоторые виджеты не рассчитаны на компактное пространство и могут выглядеть или работать здесь иначе.</string>
+    <string name="replace_widget">Заменить виджет</string>
+    <string name="interact_with_widget">Взаимодействовать с виджетом</string>
+    <string name="widget_fits_mink_space">Подходит для MinkSpace</string>
+    <string name="widget_fits_expanded">Подходит в развернутом виде</string>
+    <string name="widget_may_be_cramped">Может быть тесно</string>
+    <string name="widget_fit_unknown">Совместимость неизвестна</string>
+    <string name="widget_needs_setup">Требуется настройка</string>
 </resources>

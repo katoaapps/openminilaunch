@@ -380,7 +380,7 @@
     <string name="take_list_with_you">Возьмите список с собой</string>
     <string name="take_list_with_you_description">Экспортируйте текущий контрольный список в приложение для заметок или сохраните его в формате PDF.</string>
     <string name="keep_context">Сохраняйте контекст</string>
-    <string name="keep_context_description">Новые задачи Magic Box анимируются на новейшей странице дел.</string>
+    <string name="keep_context_description">Новые задачи Magic Box остаются в полном списке дел, даже когда «Дела» скрыты в MinkSpace.</string>
     <string name="search_onboarding_intro">Обычно введите Magic Box, чтобы найти локальные файлы, выполнить поиск в Интернете или передать запрос выбранному вами приложению AI.</string>
     <string name="links_stay_links">Ссылки остаются ссылками</string>
     <string name="links_stay_links_description">Введите веб-адрес, чтобы открыть его напрямую; другой простой текст остается веб-запросом или запросом AI.</string>
@@ -791,6 +791,9 @@
     <string name="todo_export_filename">MinkLauncher-OpenSource-todos-%1$s.pdf</string>
     <string name="todo_export_title">%1$s Список дел</string>
     <string name="widget_configuration_failed">Этот виджет не удалось настроить</string>
+    <string name="widget_setup_confirmation_title">Использовать %1$s?</string>
+    <string name="widget_setup_confirmation_description">Настройка виджета завершена, но приложение не подтвердило сохранение изменений. Используйте его, если настройка выглядит правильно, или удалите, чтобы оставить текущие виджеты без изменений.</string>
+    <string name="use_widget">Использовать виджет</string>
     <string name="widgets">Виджеты</string>
     <string name="widget_count">%1$d из %2$d</string>
     <plurals name="maximum_widgets">
@@ -801,7 +804,7 @@
     </plurals>
     <string name="add_widget">Добавить виджет</string>
     <string name="your_widget_page">Страница вашего виджета</string>
-    <string name="your_widget_page_description">Добавьте до четырех виджетов Android. Их приложения контролируют отображаемый контент.</string>
+    <string name="your_widget_page_description">Добавьте до восьми виджетов Android. Их приложения контролируют отображаемый контент.</string>
     <string name="widget_options">Параметры виджета</string>
     <string name="widget_temporarily_unavailable">Виджет временно недоступен</string>
     <string name="widget_temporarily_unavailable_description">MinkLauncher оставил этот виджет на месте. Повторите попытку после завершения загрузки приложения или Android или удалите его вручную.</string>

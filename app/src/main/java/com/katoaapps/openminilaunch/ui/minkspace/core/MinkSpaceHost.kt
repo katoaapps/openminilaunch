@@ -11,16 +11,19 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import com.katoaapps.openminilaunch.data.LauncherStore
 import com.katoaapps.openminilaunch.features.minkspace.MinkSpaceMiniApp
+import com.katoaapps.openminilaunch.platform.DeviceActions
 import com.katoaapps.openminilaunch.ui.launcher.home.HomeTodoTextMetrics
 import com.katoaapps.openminilaunch.ui.minkspace.calculator.CalculatorMiniAppPage
 import com.katoaapps.openminilaunch.ui.minkspace.media.MediaMiniAppPage
 import com.katoaapps.openminilaunch.ui.minkspace.music.MusicMiniAppPage
 import com.katoaapps.openminilaunch.ui.minkspace.todo.TodoMiniAppPage
+import com.katoaapps.openminilaunch.ui.minkspace.widget.WidgetMiniAppPage
 
-/** Hosts enabled mini-apps, the settings shortcut, and MinkSpace's vertical switching axis. */
+/** Hosts visible mini-apps, the settings shortcut, and MinkSpace's vertical switching axis. */
 @Composable
 internal fun MinkSpaceHost(
     store: LauncherStore,
+    actions: DeviceActions,
     openTodos: () -> Unit,
     todoJumpToken: Int,
     todoItemsPerPage: Int,
@@ -94,6 +97,16 @@ internal fun MinkSpaceHost(
             )
             MinkSpaceMiniApp.MUSIC -> MusicMiniAppPage(
                 compact = compact,
+                containerColor = insetColor,
+                presentationState = presentationState,
+                modifier = Modifier.fillMaxSize(),
+            )
+            MinkSpaceMiniApp.WIDGET -> WidgetMiniAppPage(
+                store = store,
+                actions = actions,
+                compact = compact,
+                contentColor = contentColor,
+                mutedContentColor = mutedContentColor,
                 containerColor = insetColor,
                 presentationState = presentationState,
                 modifier = Modifier.fillMaxSize(),

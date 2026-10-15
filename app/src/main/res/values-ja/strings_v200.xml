@@ -2,7 +2,7 @@
 <resources>
     <string name="update_notice_200_minkspace_heading">ホームパネルにはさらに多くの機能があります</string>
     <string name="update_notice_200_minkspace_title">MinkSpace ミニアプリ</string>
-    <string name="update_notice_200_minkspace_description">ホーム パネル内で垂直にスワイプして、To-Do、電卓、メディア、音楽の間を移動します。 [設定] でそれらを選択して配置します。 To-Do は常に利用可能な状態のままです。</string>
+    <string name="update_notice_200_minkspace_description">ホームパネル内で垂直にスワイプして、ミニアプリ間を移動します。［設定］で表示するアプリを選び、To-Do、電卓、メディア、音楽、ウィジェットを並べ替えます。</string>
     <string name="update_notice_200_media_title">選択したメディアはそのままあなたのものになります</string>
     <string name="update_notice_200_media_description">Android のピッカーを使用して画像、GIF、またはビデオを追加します。 Mink はローカル参照を保存し、選択したアプリで元のアイテムを開きます。</string>
     <string name="update_notice_200_music_title">アクティブなメディアコントロール</string>
@@ -18,8 +18,8 @@
     <string name="update_notice_200_smaller_title">キーボードファーストのさらなる改良</string>
     <string name="update_notice_200_smaller_description">Nextcloud Talk がメッセージング統合に参加し、最初に一致する Enter アクションが高速になり、大画面レイアウトがより快適になりました。</string>
     <string name="open_minkspace_settings">MinkSpace設定を開く</string>
-    <string name="mink_space_onboarding_description">To-Do は常に利用可能な状態のままです。電卓、メディア、音楽を有効にして配置し、ホーム パネル内で垂直にスワイプして切り替えます。</string>
+    <string name="mink_space_onboarding_description">表示する項目を選び、To-Do、電卓、メディア、音楽、ウィジェットを並べ替えてから、ホームパネル内で垂直にスワイプして切り替えます。ウィジェットをタップすると操作できます。</string>
     <string name="work_apps_onboarding_description">仕事用プロファイル アプリは専用のドロワーに保存されます。 Android とあなたの組織は、そのプロファイルを利用可能にするか一時停止するかを制御します。</string>
     <string name="privacy_space_onboarding_description">Android プライベート スペースとデバイス メーカーのプライベート エリアは、通常の検索、ショートカット、すべて表示の範囲外にあります。デバイスが認証を制御します。</string>
-    <string name="backup_minkspace_description">MinkSpace の注文と有効なミニアプリが含まれています。電卓の履歴、選択したメディアとその Android 許可、アクティブなメディア セッション、ワークスペースとプライバシー スペースの状態、デバイス ゲートウェイ、およびアクティブなバブル通知は、このデバイスに残ります。</string>
+    <string name="backup_minkspace_description">MinkSpace の順序と表示設定が含まれます。Android ウィジェットのバインド、電卓の履歴、選択したメディアとその Android 権限、アクティブなメディアセッション、ワークスペースとプライバシースペースの状態、デバイスゲートウェイ、アクティブなバブル通知はこのデバイスに残ります。</string>
 </resources>

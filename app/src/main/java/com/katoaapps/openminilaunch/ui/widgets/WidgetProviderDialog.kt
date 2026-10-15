@@ -1,26 +1,23 @@
 package com.katoaapps.openminilaunch.ui.widgets
 
+import android.appwidget.AppWidgetManager
 import android.appwidget.AppWidgetProviderInfo
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
+import android.content.pm.PackageManager
+import androidx.annotation.StringRes
 import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Search
-import androidx.compose.material.icons.filled.Widgets
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
@@ -28,20 +25,16 @@ import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.asImageBitmap
-import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.window.Dialog
-import androidx.core.graphics.drawable.toBitmap
 import com.katoaapps.openminilaunch.R
 import com.katoaapps.openminilaunch.platform.DeviceActions
 import com.katoaapps.openminilaunch.ui.components.AppIcon
@@ -49,8 +42,7 @@ import com.katoaapps.openminilaunch.ui.components.MinkDialogDefaults
 import com.katoaapps.openminilaunch.ui.components.minkDialogWidth
 import com.katoaapps.openminilaunch.ui.theme.Dimens
 import com.katoaapps.openminilaunch.ui.theme.Muted
-import com.katoaapps.openminilaunch.ui.theme.displayLabel
-import kotlin.math.roundToInt
+import java.util.Locale
 
 @Composable
 internal fun WidgetProviderDialog(
@@ -58,34 +50,38 @@ internal fun WidgetProviderDialog(
     actions: DeviceActions,
     onSelect: (AppWidgetProviderInfo) -> Unit,
     onDismiss: () -> Unit,
+    presentation: WidgetPickerPresentation = WidgetPickerPresentation(),
 ) {
     val context = LocalContext.current
+    val locale = Locale.getDefault()
     var query by remember { mutableStateOf("") }
-    val allGroups = remember(providers) {
+    val allGroups = remember(providers, locale) {
         providers.groupBy { it.provider.packageName }
             .map { (packageName, appProviders) ->
                 WidgetAppGroup(
                     packageName = packageName,
                     appName = actions.appLabel(packageName),
                     providers = appProviders.sortedBy {
-                        it.loadLabel(context.packageManager).toString().lowercase()
+                        it.loadLabel(context.packageManager).toString().lowercase(locale)
                     },
                 )
             }
-            .sortedBy { it.appName.lowercase() }
+            .sortedBy { it.appName.lowercase(locale) }
     }
-    val groups = remember(allGroups, query) {
-        val search = query.trim().lowercase()
+    val groups = remember(allGroups, query, locale) {
+        val search = query.trim().lowercase(locale)
         if (search.isEmpty()) {
             allGroups
         } else {
             allGroups.mapNotNull { group ->
-                if (group.appName.lowercase().contains(search)) {
+                if (group.appName.lowercase(locale).contains(search)) {
                     group
                 } else {
                     group.copy(
                         providers = group.providers.filter {
-                            it.loadLabel(context.packageManager).toString().lowercase().contains(search)
+                            it.loadLabel(context.packageManager).toString()
+                                .lowercase(locale)
+                                .contains(search)
                         },
                     ).takeIf { it.providers.isNotEmpty() }
                 }
@@ -102,7 +98,7 @@ internal fun WidgetProviderDialog(
             Column(Modifier.fillMaxSize().padding(Dimens.dp16)) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Text(
-                        stringResource(R.string.add_a_widget),
+                        stringResource(presentation.titleRes),
                         Modifier.weight(1f),
                         fontSize = Dimens.sp22,
                         fontWeight = FontWeight.Black,
@@ -110,6 +106,14 @@ internal fun WidgetProviderDialog(
                     IconButton(onClick = onDismiss) {
                         Icon(Icons.Default.Close, stringResource(R.string.close))
                     }
+                }
+                presentation.descriptionRes?.let { descriptionRes ->
+                    Text(
+                        stringResource(descriptionRes),
+                        color = Muted,
+                        fontSize = Dimens.sp12,
+                        modifier = Modifier.padding(bottom = Dimens.dp10),
+                    )
                 }
                 OutlinedTextField(
                     value = query,
@@ -128,6 +132,7 @@ internal fun WidgetProviderDialog(
                     groups = groups,
                     query = query,
                     actions = actions,
+                    badgesFor = presentation.badgesFor,
                     onSelect = onSelect,
                 )
             }
@@ -135,11 +140,34 @@ internal fun WidgetProviderDialog(
     }
 }
 
+internal data class WidgetProviderBadges(
+    @param:StringRes val fitLabelRes: Int,
+    val needsSetup: Boolean,
+)
+
+internal data class WidgetPickerPresentation(
+    @param:StringRes val titleRes: Int = R.string.add_a_widget,
+    @param:StringRes val descriptionRes: Int? = null,
+    val badgesFor: ((AppWidgetProviderInfo) -> WidgetProviderBadges)? = null,
+)
+
+internal fun AppWidgetManager.homeScreenProviders(
+    packageManager: PackageManager,
+): List<AppWidgetProviderInfo> = installedProviders
+    .filter { info ->
+        info.widgetCategory == 0 ||
+            info.widgetCategory and AppWidgetProviderInfo.WIDGET_CATEGORY_HOME_SCREEN != 0
+    }
+    .sortedBy { info ->
+        info.loadLabel(packageManager).toString().lowercase(Locale.getDefault())
+    }
+
 @Composable
 private fun WidgetProviderList(
     groups: List<WidgetAppGroup>,
     query: String,
     actions: DeviceActions,
+    badgesFor: ((AppWidgetProviderInfo) -> WidgetProviderBadges)?,
     onSelect: (AppWidgetProviderInfo) -> Unit,
 ) {
     LazyColumn(
@@ -162,7 +190,13 @@ private fun WidgetProviderList(
             ) { rowProviders ->
                 Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(Dimens.dp10)) {
                     rowProviders.forEach { info ->
-                        WidgetPreviewCard(info, actions, Modifier.weight(1f)) { onSelect(info) }
+                        WidgetPreviewCard(
+                            info = info,
+                            actions = actions,
+                            modifier = Modifier.weight(1f),
+                            badges = badgesFor?.invoke(info),
+                            onClick = { onSelect(info) },
+                        )
                     }
                     if (rowProviders.size == 1) Spacer(Modifier.weight(1f))
                 }
@@ -176,75 +210,6 @@ private fun WidgetProviderList(
                     modifier = Modifier.padding(Dimens.dp12),
                 )
             }
-        }
-    }
-}
-
-@Composable
-internal fun WidgetPreviewCard(
-    info: AppWidgetProviderInfo,
-    actions: DeviceActions,
-    modifier: Modifier = Modifier,
-    onClick: () -> Unit,
-) {
-    val context = LocalContext.current
-    val density = context.resources.displayMetrics.densityDpi
-    val launcherAppsRevision by actions.launcherAppsRevision.collectAsState()
-    val sizeRange = remember(info.provider, info.minWidth, info.minHeight) {
-        widgetSizeRange(info, context.resources.displayMetrics.density)
-    }
-    val bitmap = remember(info.provider, info.previewImage, density, launcherAppsRevision) {
-        val drawable = runCatching { info.loadPreviewImage(context, density) }.getOrNull()
-            ?: runCatching { info.loadIcon(context, density) }.getOrNull()
-            ?: actions.appIcon(info.provider.packageName)
-        drawable?.let {
-            runCatching {
-                val sourceWidth = it.intrinsicWidth.coerceAtLeast(1)
-                val sourceHeight = it.intrinsicHeight.coerceAtLeast(1)
-                val scale = minOf(360f / sourceWidth, 220f / sourceHeight, 1f)
-                it.toBitmap(
-                    width = (sourceWidth * scale).roundToInt().coerceAtLeast(1),
-                    height = (sourceHeight * scale).roundToInt().coerceAtLeast(1),
-                ).asImageBitmap()
-            }.getOrNull()
-        }
-    }
-    Surface(
-        onClick = onClick,
-        modifier = modifier,
-        shape = RoundedCornerShape(Dimens.dp16),
-        color = MaterialTheme.colorScheme.surfaceContainerLow,
-    ) {
-        Column(Modifier.fillMaxWidth().padding(Dimens.dp10)) {
-            Box(
-                Modifier.fillMaxWidth().height(Dimens.dp116)
-                    .background(MaterialTheme.colorScheme.surfaceVariant, RoundedCornerShape(Dimens.dp12))
-                    .padding(Dimens.dp8),
-                contentAlignment = Alignment.Center,
-            ) {
-                if (bitmap != null) {
-                    Image(bitmap, null, Modifier.fillMaxSize(), contentScale = ContentScale.Fit)
-                } else {
-                    Icon(Icons.Default.Widgets, null, Modifier.size(Dimens.dp42), tint = Muted)
-                }
-            }
-            Text(
-                info.loadLabel(context.packageManager),
-                modifier = Modifier.padding(top = Dimens.dp8),
-                fontSize = Dimens.sp12,
-                fontWeight = FontWeight.SemiBold,
-                maxLines = 2,
-            )
-            Text(
-                if (sizeRange.isResizable) {
-                    stringResource(R.string.widget_resizable, sizeRange.preferred.displayLabel())
-                } else {
-                    sizeRange.preferred.displayLabel()
-                },
-                color = Muted,
-                fontSize = Dimens.sp10,
-                modifier = Modifier.padding(top = Dimens.dp3),
-            )
         }
     }
 }

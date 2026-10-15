@@ -80,6 +80,7 @@ internal fun MagicBoxContent(
     onTodoAdded: (String, onAnimationFinished: () -> Unit) -> Unit = { _, finished ->
         finished()
     },
+    onOpenTodos: (() -> Unit)? = null,
     onSessionComplete: () -> Unit = {},
     onBubblePublished: () -> Unit = {},
     appBubbleHost: MagicAppBubbleHost = MagicAppBubbleHost.HOME,
@@ -393,6 +394,12 @@ internal fun MagicBoxContent(
         onSessionComplete()
     }
 
+    fun openTodos() {
+        val callback = onOpenTodos ?: return
+        dismiss()
+        callback()
+    }
+
     fun beginTodoCompletion(todo: String) {
         clearCommand()
         keyboard?.hide()
@@ -588,6 +595,10 @@ internal fun MagicBoxContent(
     }
 
     fun submit() {
+        if (onOpenTodos != null && isOpenTodosCommand(text.text, lockedPrefix)) {
+            openTodos()
+            return
+        }
         if (selectFirstCommandResult()) return
         if (prefix == MAGIC_AI_PREFIX) {
             submitAi()
@@ -790,6 +801,7 @@ internal fun MagicBoxContent(
                         onRequestFolder = { showFileScopeChoice = true },
                         onSubmitWeb = ::submit,
                         onSubmitAi = ::submitAi,
+                        onOpenTodos = onOpenTodos?.let { { openTodos() } },
                         onSelectContact = ::selectContact,
                         onSelectRecentConversation = ::selectRecentConversation,
                         onSelectForcedRecipient = { identifier ->

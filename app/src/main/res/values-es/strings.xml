@@ -380,7 +380,7 @@
     <string name="take_list_with_you">Lleva la lista contigo</string>
     <string name="take_list_with_you_description">Exporte la lista de verificación actual a una aplicación de notas o guárdela como PDF.</string>
     <string name="keep_context">Mantenga el contexto</string>
-    <string name="keep_context_description">Las nuevas tareas Magic Box se animan en la página de tareas pendientes más nueva.</string>
+    <string name="keep_context_description">Las nuevas tareas de Magic Box permanecen en la lista completa de tareas pendientes, incluso cuando Tareas está oculto en MinkSpace.</string>
     <string name="search_onboarding_intro">Escriba normalmente Magic Box para buscar archivos locales, buscar en la web o entregar la consulta a una aplicación de inteligencia artificial que elija.</string>
     <string name="links_stay_links">Los enlaces permanecen enlaces</string>
     <string name="links_stay_links_description">Escriba una dirección web para abrirla directamente; el resto del texto sin formato sigue siendo una consulta web o de IA.</string>
@@ -779,6 +779,9 @@
     <string name="todo_export_filename">MinkLauncher-OpenSource-todos-%1$s.pdf</string>
     <string name="todo_export_title">%1$s Lista de tareas pendientes</string>
     <string name="widget_configuration_failed">Este widget no se pudo configurar</string>
+    <string name="widget_setup_confirmation_title">¿Usar %1$s?</string>
+    <string name="widget_setup_confirmation_description">El widget terminó de configurarse, pero su aplicación no confirmó si se guardaron los cambios. Úsalo si la configuración parece correcta o descártalo para mantener tus widgets actuales sin cambios.</string>
+    <string name="use_widget">Usar widget</string>
     <string name="widgets">widgets</string>
     <string name="widget_count">%1$d de %2$d</string>
     <plurals name="maximum_widgets">
@@ -787,7 +790,7 @@
     </plurals>
     <string name="add_widget">Agregar widget</string>
     <string name="your_widget_page">Tu página de widgets</string>
-    <string name="your_widget_page_description">Agregue hasta cuatro widgets Android. Sus aplicaciones controlan el contenido que muestran.</string>
+    <string name="your_widget_page_description">Agregue hasta ocho widgets Android. Sus aplicaciones controlan el contenido que muestran.</string>
     <string name="widget_options">Opciones de widgets</string>
     <string name="widget_temporarily_unavailable">Widget no disponible temporalmente</string>
     <string name="widget_temporarily_unavailable_description">MinkLauncher mantuvo este widget en su lugar. Vuelva a intentarlo después de que su aplicación o Android termine de cargarse, o elimínelo manualmente.</string>

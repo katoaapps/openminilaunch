@@ -62,6 +62,7 @@ internal fun LauncherHomePager(
     var initialized by remember { mutableStateOf(false) }
     var previousModeWasTwoPanel by remember { mutableStateOf(false) }
     var profileFlipResetToken by remember { mutableIntStateOf(0) }
+    var minkSpaceExpanded by remember { mutableStateOf(false) }
     val magicBoxExpanded = magicBoxSessionState.expanded
 
     LaunchedEffect(focusedPage) {
@@ -175,6 +176,7 @@ internal fun LauncherHomePager(
                 listState = twoPanelState,
                 homeStateHolder = homeStateHolder,
                 magicBoxExpanded = magicBoxExpanded,
+                minkSpaceExpanded = minkSpaceExpanded,
                 homeRequestToken = homeRequestToken,
                 profileFlipResetKey = profileFlipResetToken,
                 magicBoxSessionState = magicBoxSessionState,
@@ -185,13 +187,14 @@ internal fun LauncherHomePager(
                 openTodos = openTodos,
                 openVCardSettings = openVCardSettings,
                 openHub = openHub,
+                onMinkSpaceExpandedChange = { minkSpaceExpanded = it },
                 modifier = Modifier.fillMaxSize(),
             )
         } else {
             HorizontalPager(
                 state = pagerState,
                 modifier = Modifier.fillMaxSize(),
-                userScrollEnabled = !magicBoxExpanded,
+                userScrollEnabled = !magicBoxExpanded && !minkSpaceExpanded,
             ) { page ->
                 when (page) {
                     MINK_DAY_PAGE -> MinkDayScreen(
@@ -210,6 +213,7 @@ internal fun LauncherHomePager(
                             openMinkDay = goToMinkDay,
                             minkStatusActive = pagerState.currentPage == HOME_PAGE,
                             onMagicExpandedChange = {},
+                            onMinkSpaceExpandedChange = { minkSpaceExpanded = it },
                             keyboardInputEnabled = keyboardInputEnabled,
                             homeRequestToken = homeRequestToken,
                             profileFlipResetKey = profileFlipResetToken,

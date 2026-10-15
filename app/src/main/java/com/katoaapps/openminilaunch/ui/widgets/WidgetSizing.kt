@@ -211,3 +211,33 @@ internal fun reportWidgetSize(view: AppWidgetHostView, size: IntSize, density: F
         )
     }
 }
+
+@Suppress("DEPRECATION")
+internal fun reportWidgetSizes(
+    view: AppWidgetHostView,
+    sizes: List<IntSize>,
+    density: Float,
+) {
+    if (density <= 0f) return
+    val validSizes = sizes
+        .filter { it.width > 0 && it.height > 0 }
+        .distinct()
+    if (validSizes.isEmpty()) return
+
+    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+        view.updateAppWidgetSize(
+            Bundle(),
+            validSizes.map { SizeF(it.width / density, it.height / density) },
+        )
+    } else {
+        val widths = validSizes.map { (it.width / density).roundToInt() }
+        val heights = validSizes.map { (it.height / density).roundToInt() }
+        view.updateAppWidgetSize(
+            null,
+            widths.minOrNull() ?: return,
+            heights.minOrNull() ?: return,
+            widths.maxOrNull() ?: return,
+            heights.maxOrNull() ?: return,
+        )
+    }
+}

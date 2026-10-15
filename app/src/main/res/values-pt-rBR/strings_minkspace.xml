@@ -2,15 +2,17 @@
 <resources>
     <string name="mink_space_mini_apps">Miniaplicativos MinkSpace</string>
     <string name="mink_space_settings_summary">Escolha e organize o que fica dentro do painel inicial</string>
-    <string name="mink_space_settings_description">Deslize para cima ou para baixo em MinkSpace para alternar os miniaplicativos habilitados. Deslize para a esquerda ou para a direita para navegar entre as páginas do miniaplicativo atual.</string>
-    <string name="mini_apps">Miniaplicativos</string>
+    <string name="mink_space_settings_description">Deslize para cima ou para baixo em MinkSpace para alternar os miniaplicativos exibidos. Deslize para a esquerda ou para a direita para navegar entre as páginas do miniaplicativo atual.</string>
+    <string name="show_in_mink_space">Mostrar no MinkSpace</string>
+    <string name="todo_added">Tarefa adicionada</string>
+    <string name="open_todos">Abrir Tarefas</string>
     <string name="calculator">Calculadora</string>
     <string name="recorder">Gravador</string>
     <string name="music_player">Leitor de música</string>
     <string name="music_player_preview">Visualização do reprodutor de música</string>
     <string name="open_music_player_preview">Visualização do Open Music Player</string>
-    <string name="swipe_vertically_to_switch">Ativado · Deslize verticalmente para alternar</string>
-    <string name="preview">Visualização</string>
+    <string name="swipe_vertically_to_switch">Deslize verticalmente para alternar</string>
+    <string name="open_and_manage">Abrir e gerenciar</string>
     <string name="open_calculator_lab">Abrir visualização da calculadora</string>
     <string name="mink_space_lab">Laboratório MinkSpace</string>
     <string name="calculator_history">História</string>
@@ -18,7 +20,6 @@
     <string name="calculator_invalid_expression">Verifique a expressão e tente novamente</string>
     <string name="delete_last_character">Excluir último caractere</string>
     <string name="calculator_history_empty">Os cálculos concluídos aparecerão aqui.</string>
-    <string name="always_enabled">Sempre ativado</string>
     <string name="coming_later">Vindo mais tarde</string>
     <string name="open_media_lab">Abra Media Lab</string>
     <string name="media_lab">Media Lab</string>
@@ -47,4 +48,14 @@
     <string name="music_collapse_player">Recolher controles de mídia</string>
     <string name="music_back_control_description">Voltar 10 segundos; vários toques oferecem reinicialização e mídia anterior</string>
     <string name="music_forward_control_description">Avançar 10 segundos; vários toques oferecem a próxima mídia e reprodução aleatória</string>
+    <string name="mink_space_widget_description">Adicione um widget de um aplicativo instalado ao MinkSpace.</string>
+    <string name="mink_space_widget_picker_description">Os widgets são fornecidos por aplicativos instalados. O Mink mostra o ajuste provável, mas o provedor controla o layout final e as ações disponíveis.</string>
+    <string name="mink_space_widget_compact_warning">Alguns widgets não foram projetados para espaços compactos e podem ter aparência ou comportamento diferente aqui.</string>
+    <string name="replace_widget">Substituir widget</string>
+    <string name="interact_with_widget">Interagir com o widget</string>
+    <string name="widget_fits_mink_space">Cabe no MinkSpace</string>
+    <string name="widget_fits_expanded">Cabe quando expandido</string>
+    <string name="widget_may_be_cramped">Pode ficar apertado</string>
+    <string name="widget_fit_unknown">Ajuste desconhecido</string>
+    <string name="widget_needs_setup">Precisa de configuração</string>
 </resources>

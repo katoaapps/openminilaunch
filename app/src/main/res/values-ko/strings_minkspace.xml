@@ -2,15 +2,17 @@
 <resources>
     <string name="mink_space_mini_apps">MinkSpace 미니앱</string>
     <string name="mink_space_settings_summary">홈 패널 내부에 있는 항목을 선택하고 정렬합니다.</string>
-    <string name="mink_space_settings_description">활성화된 미니 앱을 전환하려면 MinkSpace에서 위나 아래로 스와이프하세요. 현재 미니 앱 내 페이지 사이를 이동하려면 왼쪽이나 오른쪽으로 스와이프하세요.</string>
-    <string name="mini_apps">미니앱</string>
+    <string name="mink_space_settings_description">표시되는 미니 앱을 전환하려면 MinkSpace에서 위나 아래로 스와이프하세요. 현재 미니 앱 내 페이지 사이를 이동하려면 왼쪽이나 오른쪽으로 스와이프하세요.</string>
+    <string name="show_in_mink_space">MinkSpace에 표시</string>
+    <string name="todo_added">할 일이 추가되었습니다</string>
+    <string name="open_todos">할 일 열기</string>
     <string name="calculator">계산기</string>
     <string name="recorder">레코더</string>
     <string name="music_player">뮤직 플레이어</string>
     <string name="music_player_preview">뮤직 플레이어 미리보기</string>
     <string name="open_music_player_preview">뮤직 플레이어 미리보기 열기</string>
-    <string name="swipe_vertically_to_switch">활성화됨 · 전환하려면 수직으로 스와이프하세요.</string>
-    <string name="preview">미리보기</string>
+    <string name="swipe_vertically_to_switch">전환하려면 수직으로 스와이프하세요.</string>
+    <string name="open_and_manage">열기 및 관리</string>
     <string name="open_calculator_lab">계산기 미리보기 열기</string>
     <string name="mink_space_lab">MinkSpace 연구실</string>
     <string name="calculator_history">역사</string>
@@ -18,7 +20,6 @@
     <string name="calculator_invalid_expression">표현식을 확인하고 다시 시도하세요.</string>
     <string name="delete_last_character">마지막 문자 삭제</string>
     <string name="calculator_history_empty">완료된 계산이 여기에 표시됩니다.</string>
-    <string name="always_enabled">항상 활성화됨</string>
     <string name="coming_later">나중에 제공</string>
     <string name="open_media_lab">Media Lab 열기</string>
     <string name="media_lab">Media Lab</string>
@@ -47,4 +48,14 @@
     <string name="music_collapse_player">미디어 컨트롤 접기</string>
     <string name="music_back_control_description">10초 뒤로; 여러 번 탭하면 다시 시작 및 이전 미디어 제공</string>
     <string name="music_forward_control_description">10초 앞으로; 여러 번 탭하면 다음 미디어 및 셔플이 제공됩니다.</string>
+    <string name="mink_space_widget_description">설치된 앱의 위젯 하나를 MinkSpace에 추가합니다.</string>
+    <string name="mink_space_widget_picker_description">위젯은 설치된 앱에서 제공합니다. Mink는 예상 호환성을 표시하지만 최종 레이아웃과 사용 가능한 동작은 제공 앱에서 결정합니다.</string>
+    <string name="mink_space_widget_compact_warning">일부 위젯은 작은 공간용으로 설계되지 않아 여기에서 모양이나 동작이 다를 수 있습니다.</string>
+    <string name="replace_widget">위젯 교체</string>
+    <string name="interact_with_widget">위젯과 상호작용</string>
+    <string name="widget_fits_mink_space">MinkSpace에 맞음</string>
+    <string name="widget_fits_expanded">확장하면 맞음</string>
+    <string name="widget_may_be_cramped">비좁을 수 있음</string>
+    <string name="widget_fit_unknown">호환성 알 수 없음</string>
+    <string name="widget_needs_setup">설정 필요</string>
 </resources>

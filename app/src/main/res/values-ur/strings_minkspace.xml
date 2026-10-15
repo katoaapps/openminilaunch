@@ -2,15 +2,17 @@
 <resources>
     <string name="mink_space_mini_apps">MinkSpace منی ایپس</string>
     <string name="mink_space_settings_summary">ہوم پینل کے اندر موجود چیزوں کو منتخب کریں اور ترتیب دیں۔</string>
-    <string name="mink_space_settings_description">فعال منی ایپس کو سوئچ کرنے کے لیے MinkSpace میں اوپر یا نیچے سوائپ کریں۔ موجودہ منی ایپ کے اندر صفحات کے درمیان جانے کے لیے بائیں یا دائیں سوائپ کریں۔</string>
-    <string name="mini_apps">منی ایپس</string>
+    <string name="mink_space_settings_description">دکھائی جانے والی منی ایپس کو سوئچ کرنے کے لیے MinkSpace میں اوپر یا نیچے سوائپ کریں۔ موجودہ منی ایپ کے اندر صفحات کے درمیان جانے کے لیے بائیں یا دائیں سوائپ کریں۔</string>
+    <string name="show_in_mink_space">MinkSpace میں دکھائیں</string>
+    <string name="todo_added">کرنے کا کام شامل ہو گیا</string>
+    <string name="open_todos">کرنے کے کام کھولیں</string>
     <string name="calculator">کیلکولیٹر</string>
     <string name="recorder">ریکارڈر</string>
     <string name="music_player">میوزک پلیئر</string>
     <string name="music_player_preview">میوزک پلیئر کا پیش نظارہ</string>
     <string name="open_music_player_preview">میوزک پلیئر کا پیش نظارہ کھولیں۔</string>
-    <string name="swipe_vertically_to_switch">فعال · سوئچ کرنے کے لیے عمودی طور پر سوائپ کریں۔</string>
-    <string name="preview">پیش نظارہ</string>
+    <string name="swipe_vertically_to_switch">سوئچ کرنے کے لیے عمودی طور پر سوائپ کریں۔</string>
+    <string name="open_and_manage">کھولیں اور منظم کریں</string>
     <string name="open_calculator_lab">کیلکولیٹر کا پیش نظارہ کھولیں۔</string>
     <string name="mink_space_lab">MinkSpace لیب</string>
     <string name="calculator_history">تاریخ</string>
@@ -18,7 +20,6 @@
     <string name="calculator_invalid_expression">اظہار کو چیک کریں اور دوبارہ کوشش کریں۔</string>
     <string name="delete_last_character">آخری کردار کو حذف کریں۔</string>
     <string name="calculator_history_empty">مکمل حسابات یہاں ظاہر ہوں گے۔</string>
-    <string name="always_enabled">ہمیشہ فعال</string>
     <string name="coming_later">بعد میں آرہا ہے۔</string>
     <string name="open_media_lab">Media Lab کھولیں۔</string>
     <string name="media_lab">Media Lab</string>
@@ -47,4 +48,14 @@
     <string name="music_collapse_player">میڈیا کنٹرولز کو سکیڑیں۔</string>
     <string name="music_back_control_description">واپس 10 سیکنڈ؛ متعدد نلکیاں دوبارہ شروع اور پچھلا میڈیا پیش کرتی ہیں۔</string>
     <string name="music_forward_control_description">آگے 10 سیکنڈ؛ متعدد ٹیپس اگلے میڈیا اور شفل کی پیشکش کرتے ہیں۔</string>
+    <string name="mink_space_widget_description">انسٹال کردہ ایپ سے ایک ویجیٹ MinkSpace میں شامل کریں۔</string>
+    <string name="mink_space_widget_picker_description">ویجیٹس انسٹال کردہ ایپس فراہم کرتی ہیں۔ Mink ممکنہ مطابقت دکھاتا ہے، لیکن آخری لے آؤٹ اور دستیاب اعمال فراہم کنندہ کنٹرول کرتا ہے۔</string>
+    <string name="mink_space_widget_compact_warning">کچھ ویجیٹس چھوٹی جگہوں کے لیے نہیں بنائے گئے اور یہاں مختلف نظر آ سکتے ہیں یا مختلف طرح کام کر سکتے ہیں۔</string>
+    <string name="replace_widget">ویجیٹ تبدیل کریں</string>
+    <string name="interact_with_widget">ویجیٹ استعمال کریں</string>
+    <string name="widget_fits_mink_space">MinkSpace میں فٹ ہے</string>
+    <string name="widget_fits_expanded">پھیلانے پر فٹ ہے</string>
+    <string name="widget_may_be_cramped">جگہ تنگ ہو سکتی ہے</string>
+    <string name="widget_fit_unknown">مطابقت نامعلوم ہے</string>
+    <string name="widget_needs_setup">سیٹ اپ درکار ہے</string>
 </resources>

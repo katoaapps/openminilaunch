@@ -122,6 +122,15 @@ class MagicBoxInputTest {
     }
 
     @Test
+    fun emptyTodoCommandOpensTodoList() {
+        assertEquals(true, isOpenTodosCommand("-"))
+        assertEquals(true, isOpenTodosCommand("-   "))
+        assertEquals(false, isOpenTodosCommand("-Buy milk"))
+        assertEquals(false, isOpenTodosCommand("Buy milk"))
+        assertEquals(false, isOpenTodosCommand("-", lockedPrefix = '@'))
+    }
+
+    @Test
     fun commandAndPlainTextAreConsideredDrafts() {
         assertEquals(true, hasMagicBoxDraftText("-Book train tickets"))
         assertEquals(true, hasMagicBoxDraftText("+Dinner Friday at 7"))

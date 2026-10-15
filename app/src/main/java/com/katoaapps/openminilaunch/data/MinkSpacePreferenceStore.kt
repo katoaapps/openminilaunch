@@ -7,7 +7,7 @@ import androidx.compose.runtime.setValue
 import androidx.core.content.edit
 import com.katoaapps.openminilaunch.features.minkspace.MinkSpaceMiniApp
 
-/** Owns MinkSpace ordering and enablement invariants independently of its UI host. */
+/** Owns MinkSpace ordering and visibility independently of its UI host. */
 internal class MinkSpacePreferenceStore(private val prefs: SharedPreferences) {
     var order by mutableStateOf(loadOrder())
         private set
@@ -16,12 +16,11 @@ internal class MinkSpacePreferenceStore(private val prefs: SharedPreferences) {
         private set
 
     fun setEnabled(miniApp: MinkSpaceMiniApp, enabled: Boolean) {
-        if (miniApp.alwaysEnabled && !enabled) return
         enabledMiniApps = if (enabled) {
             enabledMiniApps + miniApp
         } else {
             enabledMiniApps - miniApp
-        }.withRequiredMiniApps()
+        }
         saveEnabledMiniApps()
     }
 
@@ -48,7 +47,6 @@ internal class MinkSpacePreferenceStore(private val prefs: SharedPreferences) {
         order = normalizedReadyOrder + MinkSpaceMiniApp.entries.filterNot(MinkSpaceMiniApp::readyForHome)
         enabledMiniApps = restoredEnabledMiniApps
             .filterTo(mutableSetOf(), MinkSpaceMiniApp::readyForHome)
-            .withRequiredMiniApps()
 
         prefs.edit {
             putString(KEY_ORDER, order.joinToString(",") { it.stableId })
@@ -65,12 +63,8 @@ internal class MinkSpacePreferenceStore(private val prefs: SharedPreferences) {
         return saved + MinkSpaceMiniApp.defaultOrder.filterNot(saved::contains)
     }
 
-    private fun loadEnabledMiniApps(): Set<MinkSpaceMiniApp> = prefs
-        .getStringSet(KEY_ENABLED, null)
-        ?.mapNotNull(MinkSpaceMiniApp::fromStableId)
-        ?.toSet()
-        .orEmpty()
-        .withRequiredMiniApps()
+    private fun loadEnabledMiniApps(): Set<MinkSpaceMiniApp> =
+        enabledMinkSpaceMiniAppsFromStableIds(prefs.getStringSet(KEY_ENABLED, null))
 
     private fun saveEnabledMiniApps() {
         prefs.edit {
@@ -78,11 +72,15 @@ internal class MinkSpacePreferenceStore(private val prefs: SharedPreferences) {
         }
     }
 
-    private fun Set<MinkSpaceMiniApp>.withRequiredMiniApps(): Set<MinkSpaceMiniApp> =
-        this + MinkSpaceMiniApp.entries.filter(MinkSpaceMiniApp::alwaysEnabled)
-
     private companion object {
         const val KEY_ORDER = "mink_space_mini_app_order"
         const val KEY_ENABLED = "mink_space_enabled_mini_apps"
     }
 }
+
+internal fun enabledMinkSpaceMiniAppsFromStableIds(
+    savedStableIds: Set<String>?,
+): Set<MinkSpaceMiniApp> = savedStableIds
+    ?.mapNotNull(MinkSpaceMiniApp::fromStableId)
+    ?.filterTo(mutableSetOf(), MinkSpaceMiniApp::readyForHome)
+    ?: MinkSpaceMiniApp.defaultEnabled

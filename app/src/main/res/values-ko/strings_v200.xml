@@ -2,7 +2,7 @@
 <resources>
     <string name="update_notice_200_minkspace_heading">홈 패널에서 더 많은 일을 할 수 있습니다</string>
     <string name="update_notice_200_minkspace_title">MinkSpace 미니앱</string>
-    <string name="update_notice_200_minkspace_description">할 일, 계산기, 미디어, 음악 사이를 이동하려면 홈 패널 내에서 수직으로 스와이프하세요. 설정에서 선택하고 정리하세요. 할 일은 항상 사용할 수 있는 상태로 유지됩니다.</string>
+    <string name="update_notice_200_minkspace_description">미니 앱 사이를 이동하려면 홈 패널 내에서 수직으로 스와이프하세요. 설정에서 표시할 앱을 선택하고 할 일, 계산기, 미디어, 음악, 위젯을 정리하세요.</string>
     <string name="update_notice_200_media_title">귀하가 선택한 미디어는 여전히 귀하의 것입니다</string>
     <string name="update_notice_200_media_description">Android의 선택기를 통해 이미지, GIF 또는 비디오를 추가하세요. Mink는 로컬 참조를 저장하고 선택한 앱에서 원본 항목을 엽니다.</string>
     <string name="update_notice_200_music_title">활성 미디어 제어</string>
@@ -18,8 +18,8 @@
     <string name="update_notice_200_smaller_title">더 많은 키보드 중심 개선</string>
     <string name="update_notice_200_smaller_description">Nextcloud Talk는 메시징 통합에 합류하고 첫 번째 일치 Enter 작업이 더 빨라지고 대형 디스플레이 레이아웃이 더 편안해졌습니다.</string>
     <string name="open_minkspace_settings">MinkSpace 설정 열기</string>
-    <string name="mink_space_onboarding_description">할 일은 항상 사용할 수 있는 상태로 유지됩니다. 계산기, 미디어, 음악을 활성화하고 정렬한 다음 홈 패널 내에서 수직으로 스와이프하여 전환하세요.</string>
+    <string name="mink_space_onboarding_description">표시할 항목을 선택하고 할 일, 계산기, 미디어, 음악, 위젯을 정렬한 다음 홈 패널 내에서 수직으로 스와이프하여 전환하세요. 위젯을 탭하여 상호작용하세요.</string>
     <string name="work_apps_onboarding_description">직장 프로필 앱은 전용 서랍에 있습니다. Android 및 조직은 해당 프로필의 사용 가능 여부 또는 일시 중지 여부를 제어합니다.</string>
     <string name="privacy_space_onboarding_description">Android 개인 공간 및 기기 제조사의 개인 영역은 일반 검색, 바로가기, 모두 보기 외부에 있습니다. 장치가 인증을 제어합니다.</string>
-    <string name="backup_minkspace_description">MinkSpace 주문 및 활성화된 미니앱이 포함되어 있습니다. 계산기 기록, 선택한 미디어 및 해당 Android 부여, 활성 미디어 세션, 작업 및 개인 정보 보호 공간 상태, 장치 게이트웨이 및 활성 버블 알림이 이 장치에 유지됩니다.</string>
+    <string name="backup_minkspace_description">MinkSpace 순서와 표시 설정이 포함됩니다. Android 위젯 바인딩, 계산기 기록, 선택한 미디어와 Android 권한, 활성 미디어 세션, 작업 및 개인 정보 보호 공간 상태, 장치 게이트웨이, 활성 버블 알림은 이 장치에 남습니다.</string>
 </resources>

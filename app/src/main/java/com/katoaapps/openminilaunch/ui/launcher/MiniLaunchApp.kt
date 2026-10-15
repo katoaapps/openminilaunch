@@ -330,6 +330,7 @@ internal fun MiniLaunchApp(
                             animateHomeEntrance = true
                             screen = Screen.HOME
                         },
+                        openTodos = { screen = Screen.TODOS },
                         goBack = {
                             settingsDestination = SettingsDestination.OVERVIEW
                             screen = Screen.HOME

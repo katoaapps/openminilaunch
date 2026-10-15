@@ -126,6 +126,7 @@ internal fun BoxScope.HomeFocusPanel(
             ) {
                 MinkSpaceHost(
                     store = store,
+                    actions = actions,
                     openTodos = openTodos,
                     todoJumpToken = todoJumpToken,
                     todoItemsPerPage = itemsPerPage,

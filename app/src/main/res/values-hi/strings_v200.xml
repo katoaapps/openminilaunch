@@ -2,7 +2,7 @@
 <resources>
     <string name="update_notice_200_minkspace_heading">आपका होम पैनल अधिक कार्य करता है</string>
     <string name="update_notice_200_minkspace_title">MinkSpace मिनी-ऐप्स</string>
-    <string name="update_notice_200_minkspace_description">कार्य, कैलकुलेटर, मीडिया और संगीत के बीच जाने के लिए होम पैनल के अंदर लंबवत स्वाइप करें। सेटिंग्स में उन्हें चुनें और व्यवस्थित करें; कार्य हमेशा उपलब्ध रहते हैं।</string>
+    <string name="update_notice_200_minkspace_description">मिनी-ऐप्स के बीच जाने के लिए होम पैनल के अंदर लंबवत स्वाइप करें। सेटिंग्स में चुनें कि कौन-से दिखें और कार्य, कैलकुलेटर, मीडिया, संगीत व विजेट व्यवस्थित करें।</string>
     <string name="update_notice_200_media_title">आपका चयनित मीडिया, अभी भी आपका है</string>
     <string name="update_notice_200_media_description">Android के पिकर के माध्यम से चित्र, GIF या वीडियो जोड़ें। मिंक एक स्थानीय संदर्भ संग्रहीत करता है और आपके द्वारा चुने गए ऐप में मूल आइटम खोलता है।</string>
     <string name="update_notice_200_music_title">सक्रिय मीडिया नियंत्रण</string>
@@ -18,8 +18,8 @@
     <string name="update_notice_200_smaller_title">अधिक कीबोर्ड-प्रथम परिशोधन</string>
     <string name="update_notice_200_smaller_description">Nextcloud Talk मैसेजिंग एकीकरण से जुड़ता है, प्रथम-मैच एंटर क्रियाएँ तेज़ होती हैं, और बड़े-डिस्प्ले लेआउट अधिक आरामदायक होते हैं।</string>
     <string name="open_minkspace_settings">MinkSpace सेटिंग्स खोलें</string>
-    <string name="mink_space_onboarding_description">कार्य हमेशा उपलब्ध रहते हैं। कैलकुलेटर, मीडिया और संगीत को सक्षम और व्यवस्थित करें, फिर स्विच करने के लिए होम पैनल के अंदर लंबवत स्वाइप करें।</string>
+    <string name="mink_space_onboarding_description">चुनें कि क्या दिखे और कार्य, कैलकुलेटर, मीडिया, संगीत व विजेट व्यवस्थित करें, फिर स्विच करने के लिए होम पैनल के अंदर लंबवत स्वाइप करें। विजेट से इंटरैक्ट करने के लिए उस पर टैप करें।</string>
     <string name="work_apps_onboarding_description">कार्य-प्रोफ़ाइल ऐप्स एक समर्पित दराज में रहते हैं। Android और आपका संगठन नियंत्रित करते हैं कि वह प्रोफ़ाइल उपलब्ध है या रुकी हुई है।</string>
     <string name="privacy_space_onboarding_description">Android प्राइवेट स्पेस और डिवाइस-निर्माता निजी क्षेत्र नियमित खोज, शॉर्टकट और सभी देखें से बाहर रहते हैं। आपका उपकरण प्रमाणीकरण को नियंत्रित करता है।</string>
-    <string name="backup_minkspace_description">MinkSpace ऑर्डर और सक्षम मिनी-ऐप शामिल हैं। कैलकुलेटर इतिहास, चयनित मीडिया और उसके Android अनुदान, सक्रिय मीडिया सत्र, कार्य और गोपनीयता स्थान स्थिति, डिवाइस गेटवे और सक्रिय बबल सूचनाएं इस डिवाइस के साथ रहती हैं।</string>
+    <string name="backup_minkspace_description">MinkSpace का क्रम और दृश्यता शामिल हैं। Android विजेट बाइंडिंग, कैलकुलेटर इतिहास, चयनित मीडिया और उसकी Android अनुमतियाँ, सक्रिय मीडिया सत्र, कार्य और गोपनीयता स्पेस की स्थिति, डिवाइस गेटवे और सक्रिय बबल सूचनाएँ इसी डिवाइस पर रहती हैं।</string>
 </resources>

@@ -2,7 +2,7 @@
 <resources>
     <string name="update_notice_200_minkspace_heading">Seu painel inicial faz mais</string>
     <string name="update_notice_200_minkspace_title">Miniaplicativos MinkSpace</string>
-    <string name="update_notice_200_minkspace_description">Deslize verticalmente dentro do painel inicial para alternar entre Tarefas, Calculadora, Mídia e Música. Escolha e organize-os em Configurações; As tarefas sempre permanecem disponíveis.</string>
+    <string name="update_notice_200_minkspace_description">Deslize verticalmente dentro do painel inicial para alternar entre os miniaplicativos. Escolha quais aparecem e organize Tarefas, Calculadora, Mídia, Música e Widget em Configurações.</string>
     <string name="update_notice_200_media_title">Sua mídia selecionada, ainda sua</string>
     <string name="update_notice_200_media_description">Adicione imagens, GIFs ou vídeos por meio do seletor Android. Mink armazena uma referência local e abre o item original no aplicativo que você escolher.</string>
     <string name="update_notice_200_music_title">Controles de mídia ativos</string>
@@ -18,8 +18,8 @@
     <string name="update_notice_200_smaller_title">Mais refinamentos no teclado</string>
     <string name="update_notice_200_smaller_description">Nextcloud Talk junta-se a integrações de mensagens, as ações Enter na primeira correspondência são mais rápidas e os layouts de tela grande são mais confortáveis.</string>
     <string name="open_minkspace_settings">Abra as configurações MinkSpace</string>
-    <string name="mink_space_onboarding_description">As tarefas sempre permanecem disponíveis. Ative e organize Calculadora, Mídia e Música e deslize verticalmente dentro do painel inicial para alternar.</string>
+    <string name="mink_space_onboarding_description">Escolha o que aparece e organize Tarefas, Calculadora, Mídia, Música e Widget; depois deslize verticalmente dentro do painel inicial para alternar. Toque em um widget para interagir com ele.</string>
     <string name="work_apps_onboarding_description">Os aplicativos de perfil de trabalho ficam em uma gaveta dedicada. Android e sua organização controlam se esse perfil está disponível ou pausado.</string>
     <string name="privacy_space_onboarding_description">Android O espaço privado e as áreas privadas do fabricante do dispositivo ficam fora da pesquisa regular, dos atalhos e de Ver tudo. Seu dispositivo controla a autenticação.</string>
-    <string name="backup_minkspace_description">O pedido MinkSpace e miniaplicativos habilitados estão incluídos. O histórico da calculadora, a mídia selecionada e suas concessões Android, as sessões de mídia ativas, o estado do espaço de trabalho e privacidade, os gateways do dispositivo e as notificações de bolha ativas permanecem com este dispositivo.</string>
+    <string name="backup_minkspace_description">A ordem e a visibilidade do MinkSpace estão incluídas. Os vínculos de widgets do Android, o histórico da calculadora, a mídia selecionada e suas permissões do Android, as sessões de mídia ativas, o estado dos espaços de Trabalho e Privacidade, os gateways do dispositivo e as notificações de bolha ativas permanecem neste dispositivo.</string>
 </resources>

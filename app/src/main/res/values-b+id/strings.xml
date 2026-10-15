@@ -380,7 +380,7 @@
     <string name="take_list_with_you">Bawalah daftar itu bersama Anda</string>
     <string name="take_list_with_you_description">Ekspor daftar periksa saat ini ke aplikasi catatan atau simpan sebagai PDF.</string>
     <string name="keep_context">Pertahankan konteksnya</string>
-    <string name="keep_context_description">Tugas Magic Box baru dianimasikan ke halaman tugas terbaru.</string>
+    <string name="keep_context_description">Tugas Magic Box baru tetap ada di daftar Agenda lengkap, bahkan saat Agenda disembunyikan dari MinkSpace.</string>
     <string name="search_onboarding_intro">Ketik Magic Box secara normal untuk menemukan file lokal, menelusuri web, atau menyerahkan kueri ke aplikasi AI yang Anda pilih.</string>
     <string name="links_stay_links">Tautan tetaplah tautan</string>
     <string name="links_stay_links_description">Ketikkan alamat web untuk membukanya secara langsung; teks biasa lainnya tetap berupa kueri web atau AI.</string>
@@ -779,6 +779,9 @@
     <string name="todo_export_filename">MinkLauncher-OpenSource-todos-%1$s.pdf</string>
     <string name="todo_export_title">Daftar Tugas %1$s</string>
     <string name="widget_configuration_failed">Widget ini tidak dapat dikonfigurasi</string>
+    <string name="widget_setup_confirmation_title">Gunakan %1$s?</string>
+    <string name="widget_setup_confirmation_description">Penyiapan widget selesai, tetapi aplikasinya tidak mengonfirmasi apakah perubahan telah disimpan. Gunakan jika penyiapannya terlihat benar, atau buang agar widget Anda saat ini tetap tidak berubah.</string>
+    <string name="use_widget">Gunakan widget</string>
     <string name="widgets">Widget</string>
     <string name="widget_count">%1$d dari %2$d</string>
     <plurals name="maximum_widgets">
@@ -787,7 +790,7 @@
     </plurals>
     <string name="add_widget">Tambahkan widget</string>
     <string name="your_widget_page">Halaman widget Anda</string>
-    <string name="your_widget_page_description">Tambahkan hingga empat widget Android. Aplikasi mereka mengontrol konten yang mereka tampilkan.</string>
+    <string name="your_widget_page_description">Tambahkan hingga delapan widget Android. Aplikasi mereka mengontrol konten yang mereka tampilkan.</string>
     <string name="widget_options">Opsi widget</string>
     <string name="widget_temporarily_unavailable">Widget untuk sementara tidak tersedia</string>
     <string name="widget_temporarily_unavailable_description">MinkLauncher menyimpan widget ini di tempatnya. Coba lagi setelah aplikasinya atau Android selesai dimuat, atau hapus secara manual.</string>

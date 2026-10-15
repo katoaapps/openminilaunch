@@ -6,6 +6,8 @@ import android.appwidget.AppWidgetProviderInfo
 import android.content.Context
 import android.view.MotionEvent
 
+internal const val MINK_WIDGET_HOST_ID = 0x4D494E4B
+
 /**
  * Keeps gestures that start inside a widget with that widget. This lets RemoteViews lists and
  * calendars consume vertical drags before the surrounding Compose list considers them.

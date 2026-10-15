@@ -24,6 +24,8 @@ import com.katoaapps.openminilaunch.data.LauncherStore
 import com.katoaapps.openminilaunch.platform.DeviceActions
 import com.katoaapps.openminilaunch.ui.components.applyLargeDisplayOrientation
 import com.katoaapps.openminilaunch.ui.magic.MagicHardwareHotkeyHost
+import com.katoaapps.openminilaunch.ui.widgets.InteractiveAppWidgetHost
+import com.katoaapps.openminilaunch.ui.widgets.MINK_WIDGET_HOST_ID
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -41,6 +43,9 @@ class MainActivity : ComponentActivity(), MagicHardwareHotkeyHost {
         private set
     private lateinit var actions: DeviceActions
     private var magicHardwareHotkeyHandler: ((KeyEvent) -> Boolean)? = null
+    internal val appWidgetHost by lazy {
+        InteractiveAppWidgetHost(this, MINK_WIDGET_HOST_ID)
+    }
 
     @SuppressLint("RestrictedApi")
     override fun dispatchKeyEvent(event: KeyEvent): Boolean {
@@ -85,7 +90,13 @@ class MainActivity : ComponentActivity(), MagicHardwareHotkeyHost {
 
     override fun onStart() {
         super.onStart()
+        runCatching { appWidgetHost.startListening() }
         actions.refreshDynamicLauncherIcons()
+    }
+
+    override fun onStop() {
+        runCatching { appWidgetHost.stopListening() }
+        super.onStop()
     }
 
     override fun onNewIntent(intent: Intent) {

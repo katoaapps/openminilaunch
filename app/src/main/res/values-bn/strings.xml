@@ -380,7 +380,7 @@
     <string name="take_list_with_you">আপনার সাথে তালিকা নিন</string>
     <string name="take_list_with_you_description">একটি নোট অ্যাপে বর্তমান চেকলিস্ট রপ্তানি করুন বা পিডিএফ হিসাবে সংরক্ষণ করুন।</string>
     <string name="keep_context">প্রসঙ্গ রাখুন</string>
-    <string name="keep_context_description">নতুন Magic Box কাজগুলি নতুন করণীয় পৃষ্ঠায় অ্যানিমেট করে৷</string>
+    <string name="keep_context_description">MinkSpace থেকে করণীয় লুকানো থাকলেও নতুন Magic Box কাজগুলি আপনার সম্পূর্ণ করণীয় তালিকায় থাকে।</string>
     <string name="search_onboarding_intro">স্থানীয় ফাইলগুলি খুঁজতে, ওয়েবে অনুসন্ধান করতে বা আপনার বেছে নেওয়া একটি AI অ্যাপের কাছে কোয়েরি হস্তান্তর করতে সাধারণত Magic Box-এ টাইপ করুন৷</string>
     <string name="links_stay_links">লিংক লিংক থাকে</string>
     <string name="links_stay_links_description">এটি সরাসরি খুলতে একটি ওয়েব ঠিকানা টাইপ করুন; অন্যান্য প্লেইন টেক্সট একটি ওয়েব বা এআই কোয়েরি থেকে যায়।</string>
@@ -779,6 +779,9 @@
     <string name="todo_export_filename">MinkLauncher-OpenSource-todos-%1$s.pdf</string>
     <string name="todo_export_title">%1$s করণীয় তালিকা</string>
     <string name="widget_configuration_failed">এই উইজেটটি কনফিগার করা যায়নি</string>
+    <string name="widget_setup_confirmation_title">%1$s ব্যবহার করবেন?</string>
+    <string name="widget_setup_confirmation_description">উইজেট সেটআপ শেষ হয়েছে, কিন্তু পরিবর্তনগুলি সংরক্ষিত হয়েছে কি না অ্যাপটি নিশ্চিত করেনি। সেটআপটি ঠিক মনে হলে এটি ব্যবহার করুন, নতুবা আপনার বর্তমান উইজেট অপরিবর্তিত রাখতে এটি বাতিল করুন।</string>
+    <string name="use_widget">উইজেট ব্যবহার করুন</string>
     <string name="widgets">উইজেট</string>
     <string name="widget_count">%2$d এর %1$d</string>
     <plurals name="maximum_widgets">
@@ -787,7 +790,7 @@
     </plurals>
     <string name="add_widget">উইজেট যোগ করুন</string>
     <string name="your_widget_page">আপনার উইজেট পাতা</string>
-    <string name="your_widget_page_description">চারটি পর্যন্ত Android উইজেট যোগ করুন। তাদের অ্যাপ্লিকেশানগুলি তাদের প্রদর্শিত সামগ্রী নিয়ন্ত্রণ করে৷</string>
+    <string name="your_widget_page_description">আটটি পর্যন্ত Android উইজেট যোগ করুন। তাদের অ্যাপ্লিকেশানগুলি তাদের প্রদর্শিত সামগ্রী নিয়ন্ত্রণ করে৷</string>
     <string name="widget_options">উইজেট বিকল্প</string>
     <string name="widget_temporarily_unavailable">উইজেট সাময়িকভাবে অনুপলব্ধ৷</string>
     <string name="widget_temporarily_unavailable_description">MinkLauncher এই উইজেটটিকে যথাস্থানে রেখেছে। এটির অ্যাপ বা Android লোডিং শেষ হওয়ার পরে আবার চেষ্টা করুন, অথবা ম্যানুয়ালি সরিয়ে দিন।</string>

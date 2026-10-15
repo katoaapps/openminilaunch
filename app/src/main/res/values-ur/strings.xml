@@ -380,7 +380,7 @@
     <string name="take_list_with_you">فہرست اپنے ساتھ لے جائیں۔</string>
     <string name="take_list_with_you_description">موجودہ چیک لسٹ کو نوٹس ایپ میں ایکسپورٹ کریں یا اسے پی ڈی ایف کے بطور محفوظ کریں۔</string>
     <string name="keep_context">سیاق و سباق رکھیں</string>
-    <string name="keep_context_description">نئے Magic Box ٹاسک نئے ٹو ڈو صفحہ میں متحرک ہوتے ہیں۔</string>
+    <string name="keep_context_description">MinkSpace سے ٹو ڈوز چھپے ہونے پر بھی نئے Magic Box ٹاسک آپ کی مکمل ٹو ڈوز فہرست میں رہتے ہیں۔</string>
     <string name="search_onboarding_intro">مقامی فائلیں تلاش کرنے، ویب پر تلاش کرنے، یا آپ کے منتخب کردہ AI ایپ کو سوال دینے کے لیے عام طور پر Magic Box میں ٹائپ کریں۔</string>
     <string name="links_stay_links">روابط روابط رہتے ہیں۔</string>
     <string name="links_stay_links_description">اسے براہ راست کھولنے کے لیے ایک ویب ایڈریس ٹائپ کریں۔ دوسرا سادہ متن ایک ویب یا AI استفسار رہتا ہے۔</string>
@@ -779,6 +779,9 @@
     <string name="todo_export_filename">MinkLauncher-OpenSource-todos-%1$s.pdf</string>
     <string name="todo_export_title">%1$s کرنے کی فہرست</string>
     <string name="widget_configuration_failed">اس ویجیٹ کو کنفیگر نہیں کیا جا سکا</string>
+    <string name="widget_setup_confirmation_title">%1$s استعمال کریں؟</string>
+    <string name="widget_setup_confirmation_description">ویجیٹ سیٹ اپ مکمل ہو گیا، لیکن اس کی ایپ نے اس بات کی تصدیق نہیں کی کہ تبدیلیاں محفوظ ہوئیں یا نہیں۔ اگر سیٹ اپ درست لگتا ہے تو اسے استعمال کریں، ورنہ اپنے موجودہ ویجیٹس کو برقرار رکھنے کے لیے اسے رد کر دیں۔</string>
+    <string name="use_widget">ویجیٹ استعمال کریں</string>
     <string name="widgets">وجیٹس</string>
     <string name="widget_count">%1$d از %2$d</string>
     <plurals name="maximum_widgets">
@@ -787,7 +790,7 @@
     </plurals>
     <string name="add_widget">ویجیٹ شامل کریں۔</string>
     <string name="your_widget_page">آپ کا ویجیٹ صفحہ</string>
-    <string name="your_widget_page_description">چار Android وجیٹس تک شامل کریں۔ ان کی ایپس ان کے دکھائے جانے والے مواد کو کنٹرول کرتی ہیں۔</string>
+    <string name="your_widget_page_description">آٹھ Android وجیٹس تک شامل کریں۔ ان کی ایپس ان کے دکھائے جانے والے مواد کو کنٹرول کرتی ہیں۔</string>
     <string name="widget_options">ویجیٹ کے اختیارات</string>
     <string name="widget_temporarily_unavailable">ویجیٹ عارضی طور پر دستیاب نہیں ہے۔</string>
     <string name="widget_temporarily_unavailable_description">MinkLauncher نے اس ویجیٹ کو اپنی جگہ پر رکھا۔ اس کی ایپ کے بعد دوبارہ کوشش کریں یا Android لوڈنگ مکمل ہو جائے، یا اسے دستی طور پر ہٹا دیں۔</string>

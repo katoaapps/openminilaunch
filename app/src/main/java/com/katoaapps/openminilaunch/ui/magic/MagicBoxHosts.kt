@@ -26,6 +26,7 @@ internal fun HomeMagicBox(
     autoOpenSoftwareKeyboardOnHome: Boolean,
     homeRequestToken: Int,
     onTodoAdded: (String) -> Unit,
+    onOpenTodos: () -> Unit,
     appAccessState: MinkAppAccessState,
     modifier: Modifier = Modifier,
     collapsedModifier: Modifier = Modifier,
@@ -44,6 +45,7 @@ internal fun HomeMagicBox(
             onTodoAdded(text)
             animationFinished()
         },
+        onOpenTodos = onOpenTodos,
         appAccessState = appAccessState,
     )
 }

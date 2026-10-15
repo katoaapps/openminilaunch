@@ -32,6 +32,9 @@ internal fun hasMagicBoxDraftText(text: String, lockedPrefix: Char? = null): Boo
     return content.isNotBlank()
 }
 
+internal fun isOpenTodosCommand(text: String, lockedPrefix: Char? = null): Boolean =
+    lockedPrefix == null && text.firstOrNull() == '-' && text.drop(1).isBlank()
+
 internal fun printableHardwareText(unicodeCodePoint: Int): String? {
     if (
         unicodeCodePoint == 0 ||
