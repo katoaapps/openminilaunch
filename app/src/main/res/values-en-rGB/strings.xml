@@ -380,7 +380,7 @@
     <string name="take_list_with_you">Take the list with you</string>
     <string name="take_list_with_you_description">Export the current checklist to a notes app or save it as a PDF.</string>
     <string name="keep_context">Keep the context</string>
-    <string name="keep_context_description">New Magic Box tasks animate into the newest to-do page.</string>
+    <string name="keep_context_description">New Magic Box tasks stay in your full To-dos list, even when To-dos is hidden from MinkSpace.</string>
     <string name="search_onboarding_intro">Type normally in the Magic Box to find local files, search the web, or hand the query to an AI app you choose.</string>
     <string name="links_stay_links">Links stay links</string>
     <string name="links_stay_links_description">Type a web address to open it directly; other plain text remains a web or AI query.</string>
@@ -779,6 +779,9 @@
     <string name="todo_export_filename">MinkLauncher-OpenSource-todos-%1$s.pdf</string>
     <string name="todo_export_title">%1$s To-do List</string>
     <string name="widget_configuration_failed">This widget couldn’t be configured</string>
+    <string name="widget_setup_confirmation_title">Use %1$s?</string>
+    <string name="widget_setup_confirmation_description">The widget finished setup, but its app did not confirm whether the changes were saved. Use it if the setup looked right, or discard it to keep your current widgets unchanged.</string>
+    <string name="use_widget">Use widget</string>
     <string name="widgets">Widgets</string>
     <string name="widget_count">%1$d of %2$d</string>
     <plurals name="maximum_widgets">
@@ -787,7 +790,7 @@
     </plurals>
     <string name="add_widget">Add widget</string>
     <string name="your_widget_page">Your widget page</string>
-    <string name="your_widget_page_description">Add up to four Android widgets. Their apps control the content they display.</string>
+    <string name="your_widget_page_description">Add up to eight Android widgets. Their apps control the content they display.</string>
     <string name="widget_options">Widget options</string>
     <string name="widget_temporarily_unavailable">Widget temporarily unavailable</string>
     <string name="widget_temporarily_unavailable_description">MinkLauncher kept this widget in place. Retry after its app or Android finishes loading, or remove it manually.</string>

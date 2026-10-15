@@ -380,7 +380,7 @@
     <string name="take_list_with_you">随身携带清单</string>
     <string name="take_list_with_you_description">将当前清单导出到笔记应用程序或将其另存为 PDF。</string>
     <string name="keep_context">保留上下文</string>
-    <string name="keep_context_description">新的 Magic Box 任务以动画方式显示到最新的待办事项页面。</string>
+    <string name="keep_context_description">即使待办事项已从 MinkSpace 隐藏，新的 Magic Box 任务仍会保留在完整的待办事项列表中。</string>
     <string name="search_onboarding_intro">在 Magic Box 中正常键入以查找本地文件、搜索网络或将查询交给您选择的 AI 应用程序。</string>
     <string name="links_stay_links">链接保持链接</string>
     <string name="links_stay_links_description">输入网址直接打开；其他纯文本仍然是网络或人工智能查询。</string>
@@ -779,6 +779,9 @@
     <string name="todo_export_filename">MinkLauncher-OpenSource-todos-%1$s.pdf</string>
     <string name="todo_export_title">%1$s 待办事项列表</string>
     <string name="widget_configuration_failed">无法配置此小部件</string>
+    <string name="widget_setup_confirmation_title">使用 %1$s？</string>
+    <string name="widget_setup_confirmation_description">小部件已完成设置，但其应用未确认更改是否已保存。如果设置看起来正确，请使用它；否则请将其丢弃，以保持当前小部件不变。</string>
+    <string name="use_widget">使用小部件</string>
     <string name="widgets">小部件</string>
     <string name="widget_count">%1$d 之 %2$d</string>
     <plurals name="maximum_widgets">
@@ -787,7 +790,7 @@
     </plurals>
     <string name="add_widget">添加小部件</string>
     <string name="your_widget_page">您的小部件页面</string>
-    <string name="your_widget_page_description">最多添加四个 Android 小部件。他们的应用程序控制他们显示的内容。</string>
+    <string name="your_widget_page_description">最多添加八个 Android 小部件。他们的应用程序控制他们显示的内容。</string>
     <string name="widget_options">小工具选项</string>
     <string name="widget_temporarily_unavailable">小部件暂时不可用</string>
     <string name="widget_temporarily_unavailable_description">MinkLauncher 将此小部件保留在适当的位置。其应用程序或 Android 完成加载后重试，或手动将其删除。</string>

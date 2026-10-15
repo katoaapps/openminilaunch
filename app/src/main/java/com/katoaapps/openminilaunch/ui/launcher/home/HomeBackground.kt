@@ -53,8 +53,10 @@ internal fun HomeBackground(store: LauncherStore, modifier: Modifier = Modifier)
             contentScale = ContentScale.Crop,
             modifier = modifier.fillMaxSize(),
         )
-    } else {
+    } else if (!store.useSystemHomeWallpaper) {
         Box(modifier.fillMaxSize().background(MaterialTheme.colorScheme.background))
+    } else {
+        Box(modifier.fillMaxSize())
     }
 }
 

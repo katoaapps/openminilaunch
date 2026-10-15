@@ -4,17 +4,18 @@ package com.katoaapps.openminilaunch.features.minkspace
 internal enum class MinkSpaceMiniApp(
     val stableId: String,
     val readyForHome: Boolean,
-    val alwaysEnabled: Boolean = false,
 ) {
-    TODO("todo", readyForHome = true, alwaysEnabled = true),
+    TODO("todo", readyForHome = true),
     CALCULATOR("calculator", readyForHome = true),
     MEDIA("media", readyForHome = true),
     RECORDER("recorder", readyForHome = false),
     MUSIC("music", readyForHome = true),
+    WIDGET("widget", readyForHome = true),
     ;
 
     companion object {
         val defaultOrder: List<MinkSpaceMiniApp> = entries
+        val defaultEnabled: Set<MinkSpaceMiniApp> = setOf(TODO)
 
         fun fromStableId(stableId: String): MinkSpaceMiniApp? =
             entries.firstOrNull { it.stableId == stableId }

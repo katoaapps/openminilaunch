@@ -1,22 +1,9 @@
 package com.katoaapps.openminilaunch.ui.widgets
 
-import com.katoaapps.openminilaunch.R
-import com.katoaapps.openminilaunch.data.*
-import com.katoaapps.openminilaunch.model.*
-import com.katoaapps.openminilaunch.platform.*
-import com.katoaapps.openminilaunch.ui.components.*
-import com.katoaapps.openminilaunch.ui.theme.*
-import com.katoaapps.openminilaunch.ui.launcher.MainActivity
-import com.katoaapps.openminilaunch.ui.launcher.home.launcherBackgroundContentColor
-
-import android.app.Activity
 import android.appwidget.AppWidgetManager
 import android.appwidget.AppWidgetProviderInfo
-import android.content.Intent
 import android.os.Bundle
 import android.widget.Toast
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -26,22 +13,20 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
-import androidx.compose.foundation.layout.navigationBarsPadding
-import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Widgets
-import androidx.compose.material3.Button
 import androidx.compose.material3.FilledTonalIconButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
@@ -56,13 +41,17 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.lifecycle.Lifecycle
-import androidx.lifecycle.LifecycleEventObserver
+import com.katoaapps.openminilaunch.R
+import com.katoaapps.openminilaunch.data.LauncherStore
+import com.katoaapps.openminilaunch.model.WidgetGridSize
+import com.katoaapps.openminilaunch.platform.DeviceActions
+import com.katoaapps.openminilaunch.ui.components.CenteredActionPrompt
+import com.katoaapps.openminilaunch.ui.launcher.MainActivity
+import com.katoaapps.openminilaunch.ui.launcher.home.launcherBackgroundContentColor
+import com.katoaapps.openminilaunch.ui.theme.Dimens
 import kotlin.math.roundToInt
 
-private const val MINK_WIDGET_HOST_ID = 0x4D494E4B
-
-private enum class WidgetBindingStage { IDLE, BOUND, CONFIGURING }
+private const val MAX_WIDGETS = 8
 
 internal data class WidgetAppGroup(
     val packageName: String,
@@ -88,49 +77,46 @@ internal fun WidgetPage(store: LauncherStore, actions: DeviceActions, goHome: ()
     val density = LocalDensity.current.density
     val widgetHorizontalPaddingDp = Dimens.dp20.value + Dimens.dp48.value
     val manager = remember { AppWidgetManager.getInstance(context) }
-    val host = remember { InteractiveAppWidgetHost(context, MINK_WIDGET_HOST_ID) }
+    val host = activity.appWidgetHost
     var showPicker by remember { mutableStateOf(false) }
     var sizingProvider by remember { mutableStateOf<AppWidgetProviderInfo?>(null) }
-    var pendingId by rememberSaveable { mutableIntStateOf(AppWidgetManager.INVALID_APPWIDGET_ID) }
     var pendingColumns by rememberSaveable { mutableIntStateOf(0) }
     var pendingRows by rememberSaveable { mutableIntStateOf(0) }
-    var bindingStage by rememberSaveable { mutableStateOf(WidgetBindingStage.IDLE) }
     var paneWidthPx by remember { mutableIntStateOf(0) }
     var widgetInfoRevision by remember { mutableIntStateOf(0) }
+    val launcherAppsRevision by actions.launcherAppsRevision.collectAsState()
     val widgetListState = rememberLazyListState()
     val headerContentColor = launcherBackgroundContentColor(store, header = true)
+    val backgroundContentColor = launcherBackgroundContentColor(store)
 
-    fun abandonPendingWidget() {
-        if (pendingId != AppWidgetManager.INVALID_APPWIDGET_ID) host.deleteAppWidgetId(pendingId)
-        pendingId = AppWidgetManager.INVALID_APPWIDGET_ID
-        pendingColumns = 0
-        pendingRows = 0
-        bindingStage = WidgetBindingStage.IDLE
-    }
-
-    fun finishPendingWidget() {
-        if (pendingId != AppWidgetManager.INVALID_APPWIDGET_ID) {
+    val bindingController = rememberWidgetBindingController(
+        onBound = { appWidgetId, info ->
             val size = if (pendingColumns > 0 && pendingRows > 0) {
                 WidgetGridSize(pendingColumns, pendingRows)
-            } else manager.getAppWidgetInfo(pendingId)?.let {
-                widgetSizeRange(it, context.resources.displayMetrics.density).preferred
+            } else {
+                widgetSizeRange(info, context.resources.displayMetrics.density).preferred
             }
-            if (size != null) store.addWidget(pendingId, size)
-        }
-        pendingId = AppWidgetManager.INVALID_APPWIDGET_ID
-        pendingColumns = 0
-        pendingRows = 0
-        bindingStage = WidgetBindingStage.IDLE
-    }
-
-    val bindLauncher = rememberLauncherForActivityResult(ActivityResultContracts.StartActivityForResult()) { result ->
-        if (result.resultCode == Activity.RESULT_OK) bindingStage = WidgetBindingStage.BOUND else abandonPendingWidget()
-    }
+            store.addWidget(appWidgetId, size)
+            pendingColumns = 0
+            pendingRows = 0
+        },
+        onFailed = { failure ->
+            pendingColumns = 0
+            pendingRows = 0
+            if (failure == WidgetBindingFailure.BIND_LAUNCH_FAILED ||
+                failure == WidgetBindingFailure.CONFIGURATION_LAUNCH_FAILED
+            ) {
+                Toast.makeText(
+                    context,
+                    context.getString(R.string.widget_configuration_failed),
+                    Toast.LENGTH_SHORT,
+                ).show()
+            }
+        },
+    )
 
     fun beginWidgetBinding(info: AppWidgetProviderInfo, size: WidgetGridSize) {
         if (paneWidthPx <= 0) return
-        val id = host.allocateAppWidgetId()
-        pendingId = id
         pendingColumns = size.columns
         pendingRows = size.rows
         val contentWidthDp = paneWidthPx / density - widgetHorizontalPaddingDp
@@ -142,75 +128,10 @@ internal fun WidgetPage(store: LauncherStore, actions: DeviceActions, goHome: ()
             putInt(AppWidgetManager.OPTION_APPWIDGET_MIN_HEIGHT, dimensions.heightDp.roundToInt())
             putInt(AppWidgetManager.OPTION_APPWIDGET_MAX_HEIGHT, dimensions.heightDp.roundToInt())
         }
-        if (manager.bindAppWidgetIdIfAllowed(id, info.profile, info.provider, options)) {
-            bindingStage = WidgetBindingStage.BOUND
-        } else {
-            bindLauncher.launch(
-                Intent(AppWidgetManager.ACTION_APPWIDGET_BIND)
-                    .putExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, id)
-                    .putExtra(AppWidgetManager.EXTRA_APPWIDGET_PROVIDER, info.provider)
-                    .putExtra(AppWidgetManager.EXTRA_APPWIDGET_PROVIDER_PROFILE, info.profile)
-                    .putExtra(AppWidgetManager.EXTRA_APPWIDGET_OPTIONS, options),
-            )
-        }
+        bindingController.begin(info, options)
     }
 
-    // Widget binding and provider configuration are separate Android activities. Keep the
-    // allocated ID pending until both stages succeed so cancelled setup leaves no orphan ID.
-    LaunchedEffect(bindingStage, pendingId) {
-        if (bindingStage != WidgetBindingStage.BOUND || pendingId == AppWidgetManager.INVALID_APPWIDGET_ID) return@LaunchedEffect
-        val info = manager.getAppWidgetInfo(pendingId)
-        if (info == null) {
-            abandonPendingWidget()
-        } else if (info.configure != null) {
-            bindingStage = WidgetBindingStage.CONFIGURING
-            val launched = activity.configureAppWidget(host, pendingId)
-            if (!launched) {
-                abandonPendingWidget()
-                Toast.makeText(context, context.getString(R.string.widget_configuration_failed), Toast.LENGTH_SHORT).show()
-            }
-        } else {
-            finishPendingWidget()
-        }
-    }
-
-    // Android can recreate Home while a provider's setup screen is open. The Activity keeps
-    // its result keyed by widget ID until this restored page consumes it.
-    val configurationResult = activity.widgetConfigurationResult
-    LaunchedEffect(configurationResult, pendingId) {
-        if (configurationResult?.first != pendingId) return@LaunchedEffect
-        if (activity.consumeWidgetConfigurationResult(pendingId) == true) {
-            finishPendingWidget()
-        } else {
-            abandonPendingWidget()
-        }
-    }
-
-    // AppWidgetHost only receives RemoteViews updates while listening. Mirror the activity
-    // lifecycle rather than leaving the host active when this page is no longer visible.
-    DisposableEffect(activity, host) {
-        val observer = LifecycleEventObserver { _, event ->
-            when (event) {
-                Lifecycle.Event.ON_START -> {
-                    runCatching { host.startListening() }
-                    widgetInfoRevision++
-                }
-                Lifecycle.Event.ON_STOP -> host.stopListening()
-                else -> Unit
-            }
-        }
-        activity.lifecycle.addObserver(observer)
-        if (activity.lifecycle.currentState.isAtLeast(Lifecycle.State.STARTED)) {
-            runCatching { host.startListening() }
-            widgetInfoRevision++
-        }
-        onDispose {
-            activity.lifecycle.removeObserver(observer)
-            host.stopListening()
-        }
-    }
-
-    LaunchedEffect(widgetInfoRevision, store.widgetIds.size) {
+    LaunchedEffect(widgetInfoRevision, launcherAppsRevision, store.widgetIds.size) {
         store.widgetIds.toList().forEach { id ->
             val info = manager.getAppWidgetInfo(id)
             if (info != null && store.widgetSizes[id] == null) {
@@ -236,7 +157,7 @@ internal fun WidgetPage(store: LauncherStore, actions: DeviceActions, goHome: ()
                 )
                 if (store.widgetIds.isNotEmpty()) {
                     Text(
-                        stringResource(R.string.widget_count, store.widgetIds.size, 8),
+                        stringResource(R.string.widget_count, store.widgetIds.size, MAX_WIDGETS),
                         color = headerContentColor.copy(alpha = .64f),
                         fontSize = Dimens.sp12,
                     )
@@ -244,10 +165,14 @@ internal fun WidgetPage(store: LauncherStore, actions: DeviceActions, goHome: ()
             }
             FilledTonalIconButton(
                 onClick = {
-                    if (store.widgetIds.size >= 8) {
+                    if (store.widgetIds.size >= MAX_WIDGETS) {
                         Toast.makeText(
                             context,
-                            context.resources.getQuantityString(R.plurals.maximum_widgets, 8, 8),
+                            context.resources.getQuantityString(
+                                R.plurals.maximum_widgets,
+                                MAX_WIDGETS,
+                                MAX_WIDGETS,
+                            ),
                             Toast.LENGTH_SHORT,
                         ).show()
                     } else {
@@ -258,28 +183,16 @@ internal fun WidgetPage(store: LauncherStore, actions: DeviceActions, goHome: ()
         }
 
         if (store.widgetIds.isEmpty()) {
-            Column(
-                Modifier.fillMaxSize().padding(Dimens.dp28),
-                verticalArrangement = Arrangement.Center,
-                horizontalAlignment = Alignment.CenterHorizontally,
-            ) {
-                Icon(Icons.Default.Widgets, null, Modifier.size(Dimens.dp58), tint = Sage)
-                Text(
-                    stringResource(R.string.your_widget_page),
-                    fontSize = Dimens.sp24,
-                    fontWeight = FontWeight.Black,
-                    modifier = Modifier.padding(top = Dimens.dp16),
-                )
-                Text(
-                    stringResource(R.string.your_widget_page_description),
-                    color = Muted,
-                    modifier = Modifier.padding(vertical = Dimens.dp12),
-                )
-                Button(onClick = { showPicker = true }) {
-                    Icon(Icons.Default.Add, null)
-                    Text(stringResource(R.string.add_widget), Modifier.padding(start = Dimens.dp8))
-                }
-            }
+            CenteredActionPrompt(
+                icon = Icons.Default.Widgets,
+                title = stringResource(R.string.your_widget_page),
+                description = stringResource(R.string.your_widget_page_description),
+                actionLabel = stringResource(R.string.add_widget),
+                actionIcon = Icons.Default.Add,
+                onAction = { showPicker = true },
+                contentColor = backgroundContentColor,
+                modifier = Modifier.fillMaxSize(),
+            )
         } else {
             Box(Modifier.fillMaxSize()) {
                 LazyColumn(
@@ -288,7 +201,9 @@ internal fun WidgetPage(store: LauncherStore, actions: DeviceActions, goHome: ()
                     verticalArrangement = Arrangement.spacedBy(Dimens.dp20),
                 ) {
                     itemsIndexed(store.widgetIds, key = { _, id -> id }) { index, id ->
-                        val info = remember(id, widgetInfoRevision) { manager.getAppWidgetInfo(id) }
+                        val info = remember(id, widgetInfoRevision, launcherAppsRevision) {
+                            manager.getAppWidgetInfo(id)
+                        }
                         if (info != null) {
                             WidgetPanel(
                                 host = host,
@@ -335,9 +250,7 @@ internal fun WidgetPage(store: LauncherStore, actions: DeviceActions, goHome: ()
 
     if (showPicker) {
         WidgetProviderDialog(
-            providers = manager.installedProviders
-                .filter { it.widgetCategory == 0 || it.widgetCategory and AppWidgetProviderInfo.WIDGET_CATEGORY_HOME_SCREEN != 0 }
-                .sortedBy { it.loadLabel(context.packageManager).toString().lowercase() },
+            providers = manager.homeScreenProviders(context.packageManager),
             actions = actions,
             onSelect = { info ->
                 showPicker = false
@@ -358,6 +271,13 @@ internal fun WidgetPage(store: LauncherStore, actions: DeviceActions, goHome: ()
                 beginWidgetBinding(info, size)
             },
             onDismiss = { sizingProvider = null },
+        )
+    }
+    bindingController.configurationToConfirm?.let { info ->
+        WidgetConfigurationConfirmationDialog(
+            info = info,
+            onUseWidget = bindingController::useConfiguredWidget,
+            onDiscard = bindingController::discardConfiguredWidget,
         )
     }
 }

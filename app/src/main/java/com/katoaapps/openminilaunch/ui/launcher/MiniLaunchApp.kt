@@ -252,7 +252,11 @@ internal fun MiniLaunchApp(
                 (twoPanelActive || launcherPagerState.currentPage == HOME_PAGE) && !imeVisible,
         ) { }
 
-        Surface(Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
+        val revealSystemWallpaper = !showTutorial && screen == Screen.HOME && store.useSystemHomeWallpaper
+        Surface(
+            Modifier.fillMaxSize(),
+            color = if (revealSystemWallpaper) MinkTransparent else MaterialTheme.colorScheme.background,
+        ) {
             if (showTutorial) {
                 key(tutorialRun) {
                     OnboardingScreen(
@@ -326,6 +330,7 @@ internal fun MiniLaunchApp(
                             animateHomeEntrance = true
                             screen = Screen.HOME
                         },
+                        openTodos = { screen = Screen.TODOS },
                         goBack = {
                             settingsDestination = SettingsDestination.OVERVIEW
                             screen = Screen.HOME

@@ -2,15 +2,17 @@
 <resources>
     <string name="mink_space_mini_apps">MinkSpace 迷你應用程式</string>
     <string name="mink_space_settings_summary">揀同安排主頁面板入面嘅嘢</string>
-    <string name="mink_space_settings_description">喺 MinkSpace 入面向上或者向下滑動嚟切換啟用咗嘅迷你應用程式。向左或者向右滑動就可以喺當前迷你應用程式入面嘅頁面之間移動。</string>
-    <string name="mini_apps">迷你應用程式</string>
+    <string name="mink_space_settings_description">喺 MinkSpace 入面向上或者向下滑動嚟切換顯示嘅迷你應用程式。向左或者向右滑動就可以喺當前迷你應用程式入面嘅頁面之間移動。</string>
+    <string name="show_in_mink_space">喺 MinkSpace 顯示</string>
+    <string name="todo_added">已加入待辦事項</string>
+    <string name="open_todos">開啟待辦事項</string>
     <string name="calculator">計算機</string>
     <string name="recorder">錄音機</string>
     <string name="music_player">音樂播放器</string>
     <string name="music_player_preview">音樂播放器預覽</string>
     <string name="open_music_player_preview">打開音樂播放器預覽</string>
-    <string name="swipe_vertically_to_switch">啟用 · 垂直滑動就可以切換</string>
-    <string name="preview">預覽</string>
+    <string name="swipe_vertically_to_switch">垂直滑動就可以切換</string>
+    <string name="open_and_manage">開啟同管理</string>
     <string name="open_calculator_lab">打開計算機預覽</string>
     <string name="mink_space_lab">MinkSpace 實驗室</string>
     <string name="calculator_history">歷史</string>
@@ -18,7 +20,6 @@
     <string name="calculator_invalid_expression">檢查個表達式，然後試多一次</string>
     <string name="delete_last_character">刪除最後一個字元</string>
     <string name="calculator_history_empty">完成嘅計算會喺呢度顯示。</string>
-    <string name="always_enabled">一直都啟用緊</string>
     <string name="coming_later">遲啲先嚟</string>
     <string name="open_media_lab">打開 Media Lab</string>
     <string name="media_lab">Media Lab</string>
@@ -47,4 +48,14 @@
     <string name="music_collapse_player">收合媒體控制項</string>
     <string name="music_back_control_description">返10秒；多個撳可以重新啟動同埋之前嘅媒體</string>
     <string name="music_forward_control_description">向前10秒；多個撳一下就可以提供下一個媒體同隨機播放</string>
+    <string name="mink_space_widget_description">將已安裝應用程式嘅一個小工具加入 MinkSpace。</string>
+    <string name="mink_space_widget_picker_description">小工具由已安裝嘅應用程式提供。Mink 會顯示預計配合程度，但最終版面同可用操作由提供者控制。</string>
+    <string name="mink_space_widget_compact_warning">部分小工具唔係為細小空間設計，喺呢度嘅外觀或者操作可能會唔同。</string>
+    <string name="replace_widget">更換小工具</string>
+    <string name="interact_with_widget">操作小工具</string>
+    <string name="widget_fits_mink_space">適合 MinkSpace</string>
+    <string name="widget_fits_expanded">展開後適合</string>
+    <string name="widget_may_be_cramped">可能比較迫</string>
+    <string name="widget_fit_unknown">配合程度未知</string>
+    <string name="widget_needs_setup">需要設定</string>
 </resources>

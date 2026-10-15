@@ -2,15 +2,17 @@
 <resources>
     <string name="mink_space_mini_apps">MinkSpace Mini-Apps</string>
     <string name="mink_space_settings_summary">Choose and arrange what lives inside the Home panel</string>
-    <string name="mink_space_settings_description">Swipe up or down in MinkSpace to switch enabled mini-apps. Swipe left or right to move between pages inside the current mini-app.</string>
-    <string name="mini_apps">Mini-apps</string>
+    <string name="mink_space_settings_description">Swipe up or down in MinkSpace to switch mini-apps that are shown. Swipe left or right to move between pages inside the current mini-app.</string>
+    <string name="show_in_mink_space">Show in MinkSpace</string>
+    <string name="todo_added">To-do added</string>
+    <string name="open_todos">Open To-dos</string>
     <string name="calculator">Calculator</string>
     <string name="recorder">Recorder</string>
     <string name="music_player">Music player</string>
     <string name="music_player_preview">Music player preview</string>
     <string name="open_music_player_preview">Open Music Player preview</string>
-    <string name="swipe_vertically_to_switch">Enabled · Swipe vertically to switch</string>
-    <string name="preview">Preview</string>
+    <string name="swipe_vertically_to_switch">Swipe vertically to switch</string>
+    <string name="open_and_manage">Open and manage</string>
     <string name="open_calculator_lab">Open calculator preview</string>
     <string name="mink_space_lab">MinkSpace Lab</string>
     <string name="calculator_history">History</string>
@@ -18,7 +20,6 @@
     <string name="calculator_invalid_expression">Check the expression and try again</string>
     <string name="delete_last_character">Delete last character</string>
     <string name="calculator_history_empty">Completed calculations will appear here.</string>
-    <string name="always_enabled">Always enabled</string>
     <string name="coming_later">Coming later</string>
     <string name="open_media_lab">Open Media Lab</string>
     <string name="media_lab">Media Lab</string>
@@ -47,4 +48,14 @@
     <string name="music_collapse_player">Collapse media controls</string>
     <string name="music_back_control_description">Back 10 seconds; multiple taps offer restart and previous media</string>
     <string name="music_forward_control_description">Forward 10 seconds; multiple taps offer next media and shuffle</string>
+    <string name="mink_space_widget_description">Add one widget from an installed app to MinkSpace.</string>
+    <string name="mink_space_widget_picker_description">Widgets are supplied by installed apps. Mink shows their likely fit, but the provider controls the final layout and available actions.</string>
+    <string name="mink_space_widget_compact_warning">Some widgets are not designed for compact spaces and may look or behave differently here.</string>
+    <string name="replace_widget">Replace widget</string>
+    <string name="interact_with_widget">Interact with widget</string>
+    <string name="widget_fits_mink_space">Fits MinkSpace</string>
+    <string name="widget_fits_expanded">Fits when expanded</string>
+    <string name="widget_may_be_cramped">May be cramped</string>
+    <string name="widget_fit_unknown">Unknown fit</string>
+    <string name="widget_needs_setup">Needs setup</string>
 </resources>

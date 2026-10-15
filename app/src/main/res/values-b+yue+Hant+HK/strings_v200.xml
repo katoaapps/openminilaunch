@@ -2,7 +2,7 @@
 <resources>
     <string name="update_notice_200_minkspace_heading">你嘅主頁面板可以做多啲嘢</string>
     <string name="update_notice_200_minkspace_title">MinkSpace 迷你應用程式</string>
-    <string name="update_notice_200_minkspace_description">喺主頁面板入面垂直滑動，就可以喺待辦事項、計算機、媒體同音樂之間移動。喺「設定」入面揀同排列佢哋；待辦事項永遠都可以用。</string>
+    <string name="update_notice_200_minkspace_description">喺主頁面板入面垂直滑動，就可以喺迷你應用程式之間切換。喺「設定」入面揀選要顯示嘅項目，並排列待辦事項、計算機、媒體、音樂同小工具。</string>
     <string name="update_notice_200_media_title">你所選嘅媒體，仍然係你嘅</string>
     <string name="update_notice_200_media_description">透過 Android 嘅選取器加入圖片、 GIF 或者影片。 Mink 會儲存本地參考資料，然後喺你所選擇嘅應用程式入面打開原始項目。</string>
     <string name="update_notice_200_music_title">主動媒體控制項</string>
@@ -18,8 +18,8 @@
     <string name="update_notice_200_smaller_title">更多以鍵盤為先嘅改進</string>
     <string name="update_notice_200_smaller_description">Nextcloud Talk 加入訊息整合，首匹配 Enter 動作更快，大顯示版布局更舒適。</string>
     <string name="open_minkspace_settings">打開 MinkSpace 設置</string>
-    <string name="mink_space_onboarding_description">待辦事項永遠都可以用。啟用同排列計算器、媒體同音樂，然後喺主頁面板入面垂直滑動嚟切換。</string>
+    <string name="mink_space_onboarding_description">揀選要顯示嘅項目並排列待辦事項、計算機、媒體、音樂同小工具，然後喺主頁面板入面垂直滑動嚟切換。撳小工具即可互動。</string>
     <string name="work_apps_onboarding_description">工作簡介應用程式會放喺專用嘅抽屜入面。 Android 同你嘅機構控制嗰個個人檔案係咪可用定係暫停。</string>
     <string name="privacy_space_onboarding_description">Android 私人空間同裝置製造商私人區域會喺常規搜尋、捷徑同埋睇晒所有嘢之外。你嘅裝置控制驗證。</string>
-    <string name="backup_minkspace_description">包括 MinkSpace 訂單同埋啟用嘅迷你應用程式。計算機記錄、所選媒體同埋佢嘅 Android 資助、有效媒體工作階段、工作同私隱空間狀態、裝置閘道同埋有效嘅氣泡通知都會保留喺呢部裝置入面。</string>
+    <string name="backup_minkspace_description">備份包括 MinkSpace 次序同顯示設定。Android 小工具綁定、計算機記錄、所選媒體同其 Android 權限、有效媒體工作階段、工作同私隱空間狀態、裝置閘道同有效氣泡通知都會保留喺呢部裝置。</string>
 </resources>

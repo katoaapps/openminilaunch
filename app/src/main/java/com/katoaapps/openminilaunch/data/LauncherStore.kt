@@ -34,6 +34,7 @@ class LauncherStore private constructor(context: Context) {
     private val appBubblePreferences = AppBubblePreferenceStore(prefs)
     private val privateContainerPreferences = PrivateContainerPreferenceStore(prefs)
     private val minkSpacePreferences = MinkSpacePreferenceStore(prefs)
+    private val minkSpaceWidgetStore = MinkSpaceWidgetStore(prefs)
     private val homeWallpaperRepository = HomeWallpaperRepository(appContext)
     internal val profileRepository = ProfileRepository(appContext)
     internal val minkPadPreferences = com.katoaapps.openminilaunch.features.minkpad.MinkPadRepository.get(appContext).preferences
@@ -79,6 +80,8 @@ class LauncherStore private constructor(context: Context) {
             appearancePreferences.appBackgroundImageEnabled &&
             homeWallpaperRepository.hasWallpaper()
     val appBackgroundImageRevision get() = appearancePreferences.appBackgroundImageRevision
+    val useSystemHomeWallpaper: Boolean
+        get() = !demoPreferences.enabled && appearancePreferences.useSystemHomeWallpaper
     internal val appBackgroundImageFile get() = homeWallpaperRepository.wallpaperFile
     val iconAppearance get() = iconAppearancePreferences.appearance
     val sendMessagesAutomatically get() = messagingPreferences.sendMessagesAutomatically
@@ -97,6 +100,7 @@ class LauncherStore private constructor(context: Context) {
     val privateContainerGatewaySelectionKey get() = privateContainerPreferences.gatewaySelectionKey
     internal val minkSpaceMiniAppOrder get() = minkSpacePreferences.order
     internal val enabledMinkSpaceMiniApps get() = minkSpacePreferences.enabledMiniApps
+    internal val minkSpaceWidgetId get() = minkSpaceWidgetStore.appWidgetId
     val effectiveHomePanelColorArgb: Int
         get() = demoPreferences.effectivePanelColor(homePanelColorArgb)
     val watermelonModeEnabled: Boolean
@@ -106,12 +110,16 @@ class LauncherStore private constructor(context: Context) {
     val visibleAppBackgroundColorArgb: Int?
         get() = if (appBackgroundImageEnabled) {
             appearancePreferences.appBackgroundImageAppearance?.averageColorArgb
+        } else if (useSystemHomeWallpaper) {
+            homeWallpaperRepository.systemWallpaperAppearance?.averageColorArgb
         } else {
             effectiveAppBackgroundColorArgb
         }
     val visibleAppHeaderColorArgb: Int?
         get() = if (appBackgroundImageEnabled) {
             appearancePreferences.appBackgroundImageAppearance?.headerColorArgb
+        } else if (useSystemHomeWallpaper) {
+            homeWallpaperRepository.systemWallpaperAppearance?.headerColorArgb
         } else {
             effectiveAppBackgroundColorArgb
         }
@@ -354,6 +362,14 @@ class LauncherStore private constructor(context: Context) {
         enabledMiniApps: Set<MinkSpaceMiniApp>,
     ) {
         minkSpacePreferences.replaceFromBackup(order, enabledMiniApps)
+    }
+
+    internal fun setMinkSpaceWidget(appWidgetId: Int) {
+        minkSpaceWidgetStore.replace(appWidgetId)
+    }
+
+    internal fun clearMinkSpaceWidget() {
+        minkSpaceWidgetStore.clear()
     }
 
     fun setHomePanelColor(argb: Int) {

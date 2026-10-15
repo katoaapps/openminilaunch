@@ -75,10 +75,12 @@ internal fun MagicBoxContent(
     initiallyExpanded: Boolean = false,
     showSoftwareKeyboardOnStart: Boolean = false,
     autoOpenSoftwareKeyboardOnHome: Boolean = false,
+    captureActivityCommandHotkeys: Boolean = false,
     homeRequestToken: Int = 0,
     onTodoAdded: (String, onAnimationFinished: () -> Unit) -> Unit = { _, finished ->
         finished()
     },
+    onOpenTodos: (() -> Unit)? = null,
     onSessionComplete: () -> Unit = {},
     onBubblePublished: () -> Unit = {},
     appBubbleHost: MagicAppBubbleHost = MagicAppBubbleHost.HOME,
@@ -366,6 +368,15 @@ internal fun MagicBoxContent(
         pendingCalendarReview = null
     }
 
+    fun beginCollapsedHardwareInput(typedText: String, keyCode: Int) {
+        if (expanded) return
+        clearCommand()
+        initialHardwareKeyCorrection.begin(typedText, keyCode)
+        text = TextFieldValue(typedText, selection = TextRange(typedText.length))
+        expanded = true
+        refocus(showSoftwareKeyboard = false)
+    }
+
     fun requestClearMessageDraft() {
         if (text.text.isBlank()) {
             clearCommand()
@@ -381,6 +392,12 @@ internal fun MagicBoxContent(
         keyboard?.hide()
         expanded = false
         onSessionComplete()
+    }
+
+    fun openTodos() {
+        val callback = onOpenTodos ?: return
+        dismiss()
+        callback()
     }
 
     fun beginTodoCompletion(todo: String) {
@@ -578,6 +595,10 @@ internal fun MagicBoxContent(
     }
 
     fun submit() {
+        if (onOpenTodos != null && isOpenTodosCommand(text.text, lockedPrefix)) {
+            openTodos()
+            return
+        }
         if (selectFirstCommandResult()) return
         if (prefix == MAGIC_AI_PREFIX) {
             submitAi()
@@ -713,6 +734,15 @@ internal fun MagicBoxContent(
         }
     }
 
+    MagicHardwareCommandHotkeyEffect(
+        enabled = captureActivityCommandHotkeys &&
+            keyboardInputEnabled &&
+            !expanded &&
+            !smsFlow.sentConfirmationVisible &&
+            !todoCompletionPending,
+        onCommand = ::beginCollapsedHardwareInput,
+    )
+
     BackHandler(enabled = expanded) { requestDismiss() }
 
     Box(modifier) {
@@ -771,6 +801,7 @@ internal fun MagicBoxContent(
                         onRequestFolder = { showFileScopeChoice = true },
                         onSubmitWeb = ::submit,
                         onSubmitAi = ::submitAi,
+                        onOpenTodos = onOpenTodos?.let { { openTodos() } },
                         onSelectContact = ::selectContact,
                         onSelectRecentConversation = ::selectRecentConversation,
                         onSelectForcedRecipient = { identifier ->
@@ -879,11 +910,7 @@ internal fun MagicBoxContent(
                 onArmedPlaced = { armedTargetPlaced = true },
                 onPrintableKeyDown = { typedText, keyCode ->
                     if (!expanded) {
-                        clearCommand()
-                        initialHardwareKeyCorrection.begin(typedText, keyCode)
-                        text = TextFieldValue(typedText, selection = TextRange(typedText.length))
-                        expanded = true
-                        refocus(showSoftwareKeyboard = false)
+                        beginCollapsedHardwareInput(typedText, keyCode)
                     } else {
                         val updatedText = text.text + typedText
                         text = TextFieldValue(updatedText, selection = TextRange(updatedText.length))

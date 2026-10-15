@@ -44,6 +44,7 @@ internal fun LauncherTwoPanel(
     listState: LazyListState,
     homeStateHolder: SaveableStateHolder,
     magicBoxExpanded: Boolean,
+    minkSpaceExpanded: Boolean,
     homeRequestToken: Int,
     profileFlipResetKey: Int,
     magicBoxSessionState: MagicBoxSessionState,
@@ -54,6 +55,7 @@ internal fun LauncherTwoPanel(
     openTodos: () -> Unit,
     openVCardSettings: () -> Unit,
     openHub: () -> Unit,
+    onMinkSpaceExpandedChange: (Boolean) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val density = LocalDensity.current
@@ -82,7 +84,7 @@ internal fun LauncherTwoPanel(
             horizontalArrangement = Arrangement.spacedBy(gap),
             contentPadding = PaddingValues(start = outerLeft, end = outerRight),
             flingBehavior = rememberSnapFlingBehavior(listState, snapPosition = SnapPosition.Start),
-            userScrollEnabled = !magicBoxExpanded,
+            userScrollEnabled = !magicBoxExpanded && !minkSpaceExpanded,
         ) {
             item(key = "mink-day") {
                 Box(Modifier.width(paneWidth).fillMaxHeight().focusPane { onFocusPage(MINK_DAY_PAGE) }) {
@@ -116,6 +118,7 @@ internal fun LauncherTwoPanel(
                 onMagicExpandedChange = { expanded ->
                     if (expanded) onFocusPage(HOME_PAGE)
                 },
+                onMinkSpaceExpandedChange = onMinkSpaceExpandedChange,
                 keyboardInputEnabled = true,
                 homeRequestToken = homeRequestToken,
                 profileFlipResetKey = profileFlipResetKey,

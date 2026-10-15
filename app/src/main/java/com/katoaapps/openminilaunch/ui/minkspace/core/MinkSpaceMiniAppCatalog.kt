@@ -7,6 +7,7 @@ import androidx.compose.material.icons.filled.Checklist
 import androidx.compose.material.icons.filled.Mic
 import androidx.compose.material.icons.filled.MusicNote
 import androidx.compose.material.icons.filled.PhotoLibrary
+import androidx.compose.material.icons.filled.Widgets
 import androidx.compose.ui.graphics.vector.ImageVector
 import com.katoaapps.openminilaunch.R
 import com.katoaapps.openminilaunch.features.minkspace.MinkSpaceMiniApp
@@ -21,11 +22,12 @@ internal data class MinkSpaceMiniAppSpec(
     val miniApp: MinkSpaceMiniApp,
     @param:StringRes val labelRes: Int,
     val icon: ImageVector,
-    val preview: MinkSpacePreviewDestination? = null,
-    @param:StringRes val previewLabelRes: Int? = null,
+    val manager: MinkSpaceManagerDestination? = null,
+    @param:StringRes val managerLabelRes: Int? = null,
 )
 
-internal enum class MinkSpacePreviewDestination {
+internal enum class MinkSpaceManagerDestination {
+    TODO,
     CALCULATOR,
     MEDIA,
     MUSIC,
@@ -37,20 +39,22 @@ internal object MinkSpaceMiniAppCatalog {
             miniApp = MinkSpaceMiniApp.TODO,
             labelRes = R.string.todo_page_title,
             icon = Icons.Default.Checklist,
+            manager = MinkSpaceManagerDestination.TODO,
+            managerLabelRes = R.string.open_todos,
         ),
         MinkSpaceMiniAppSpec(
             miniApp = MinkSpaceMiniApp.CALCULATOR,
             labelRes = R.string.calculator,
             icon = Icons.Default.Calculate,
-            preview = MinkSpacePreviewDestination.CALCULATOR,
-            previewLabelRes = R.string.open_calculator_lab,
+            manager = MinkSpaceManagerDestination.CALCULATOR,
+            managerLabelRes = R.string.open_calculator_lab,
         ),
         MinkSpaceMiniAppSpec(
             miniApp = MinkSpaceMiniApp.MEDIA,
             labelRes = R.string.media,
             icon = Icons.Default.PhotoLibrary,
-            preview = MinkSpacePreviewDestination.MEDIA,
-            previewLabelRes = R.string.open_media_lab,
+            manager = MinkSpaceManagerDestination.MEDIA,
+            managerLabelRes = R.string.open_media_lab,
         ),
         MinkSpaceMiniAppSpec(
             miniApp = MinkSpaceMiniApp.RECORDER,
@@ -61,8 +65,13 @@ internal object MinkSpaceMiniAppCatalog {
             miniApp = MinkSpaceMiniApp.MUSIC,
             labelRes = R.string.music_player,
             icon = Icons.Default.MusicNote,
-            preview = MinkSpacePreviewDestination.MUSIC,
-            previewLabelRes = R.string.open_music_player_preview,
+            manager = MinkSpaceManagerDestination.MUSIC,
+            managerLabelRes = R.string.open_music_player_preview,
+        ),
+        MinkSpaceMiniAppSpec(
+            miniApp = MinkSpaceMiniApp.WIDGET,
+            labelRes = R.string.widgets,
+            icon = Icons.Default.Widgets,
         ),
     )
 

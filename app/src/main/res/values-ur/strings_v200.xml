@@ -2,7 +2,7 @@
 <resources>
     <string name="update_notice_200_minkspace_heading">آپ کا ہوم پینل مزید کام کرتا ہے۔</string>
     <string name="update_notice_200_minkspace_title">MinkSpace منی ایپس</string>
-    <string name="update_notice_200_minkspace_description">ٹو ڈاس، کیلکولیٹر، میڈیا اور موسیقی کے درمیان جانے کے لیے ہوم پینل کے اندر عمودی طور پر سوائپ کریں۔ انہیں ترتیبات میں منتخب کریں اور ترتیب دیں۔ کرنے کے کام ہمیشہ دستیاب رہتے ہیں۔</string>
+    <string name="update_notice_200_minkspace_description">منی ایپس کے درمیان جانے کے لیے ہوم پینل کے اندر عمودی طور پر سوائپ کریں۔ ترتیبات میں منتخب کریں کہ کون سی دکھائی جائیں اور ٹو ڈوز، کیلکولیٹر، میڈیا، موسیقی اور ویجیٹ کو ترتیب دیں۔</string>
     <string name="update_notice_200_media_title">آپ کا منتخب میڈیا، اب بھی آپ کا</string>
     <string name="update_notice_200_media_description">Android کے چنندہ کے ذریعے تصاویر، GIFs یا ویڈیوز شامل کریں۔ منک ایک مقامی حوالہ اسٹور کرتا ہے اور آپ کی منتخب کردہ ایپ میں اصل آئٹم کو کھولتا ہے۔</string>
     <string name="update_notice_200_music_title">فعال میڈیا کنٹرولز</string>
@@ -18,8 +18,8 @@
     <string name="update_notice_200_smaller_title">مزید کی بورڈ-پہلی اصلاحات</string>
     <string name="update_notice_200_smaller_description">Nextcloud Talk پیغام رسانی کے انضمام میں شامل ہوتا ہے، پہلے میچ کے Enter ایکشنز تیز تر ہوتے ہیں، اور بڑے ڈسپلے والے لے آؤٹ زیادہ آرام دہ ہوتے ہیں۔</string>
     <string name="open_minkspace_settings">MinkSpace ترتیبات کھولیں۔</string>
-    <string name="mink_space_onboarding_description">کرنے کے کام ہمیشہ دستیاب رہتے ہیں۔ کیلکولیٹر، میڈیا اور موسیقی کو فعال اور ترتیب دیں، پھر سوئچ کرنے کے لیے ہوم پینل کے اندر عمودی طور پر سوائپ کریں۔</string>
+    <string name="mink_space_onboarding_description">منتخب کریں کہ کیا دکھائی دے اور ٹو ڈوز، کیلکولیٹر، میڈیا، موسیقی اور ویجیٹ کو ترتیب دیں، پھر سوئچ کرنے کے لیے ہوم پینل کے اندر عمودی طور پر سوائپ کریں۔ ویجیٹ سے تعامل کرنے کے لیے اس پر ٹیپ کریں۔</string>
     <string name="work_apps_onboarding_description">ورک پروفائل ایپس ایک سرشار دراز میں رہتی ہیں۔ Android اور آپ کی تنظیم کنٹرول کرتی ہے کہ آیا وہ پروفائل دستیاب ہے یا موقوف ہے۔</string>
     <string name="privacy_space_onboarding_description">Android پرائیویٹ اسپیس اور ڈیوائس بنانے والے نجی علاقے باقاعدہ تلاش، شارٹ کٹس، اور سب دیکھیں سے باہر رہتے ہیں۔ آپ کا آلہ تصدیق کو کنٹرول کرتا ہے۔</string>
-    <string name="backup_minkspace_description">MinkSpace آرڈر اور فعال منی ایپس شامل ہیں۔ کیلکولیٹر کی سرگزشت، منتخب میڈیا اور اس کے Android گرانٹس، فعال میڈیا سیشنز، کام اور رازداری کی جگہ کی حالت، ڈیوائس کے گیٹ ویز، اور فعال بلبلے کی اطلاعات اس ڈیوائس کے ساتھ رہتی ہیں۔</string>
+    <string name="backup_minkspace_description">MinkSpace کی ترتیب اور دکھائی دینے کی ترتیبات شامل ہیں۔ Android ویجیٹ بائنڈنگز، کیلکولیٹر کی سرگزشت، منتخب میڈیا اور اس کی Android اجازتیں، فعال میڈیا سیشنز، کام اور رازداری کی جگہ کی حالت، ڈیوائس گیٹ ویز اور فعال ببل اطلاعات اسی ڈیوائس پر رہتی ہیں۔</string>
 </resources>

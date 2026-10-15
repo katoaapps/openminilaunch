@@ -2,15 +2,17 @@
 <resources>
     <string name="mink_space_mini_apps">MinkSpace ミニアプリ</string>
     <string name="mink_space_settings_summary">ホームパネル内にあるものを選択して配置します</string>
-    <string name="mink_space_settings_description">MinkSpace で上下にスワイプして、有効なミニアプリを切り替えます。左または右にスワイプして、現在のミニアプリ内のページ間を移動します。</string>
-    <string name="mini_apps">ミニアプリ</string>
+    <string name="mink_space_settings_description">MinkSpace で上下にスワイプして、表示中のミニアプリを切り替えます。左または右にスワイプして、現在のミニアプリ内のページ間を移動します。</string>
+    <string name="show_in_mink_space">MinkSpace に表示</string>
+    <string name="todo_added">To-Do を追加しました</string>
+    <string name="open_todos">To-Do を開く</string>
     <string name="calculator">電卓</string>
     <string name="recorder">レコーダー</string>
     <string name="music_player">音楽プレーヤー</string>
     <string name="music_player_preview">音楽プレーヤーのプレビュー</string>
     <string name="open_music_player_preview">音楽プレーヤーのプレビューを開く</string>
-    <string name="swipe_vertically_to_switch">有効 · 垂直にスワイプして切り替えます</string>
-    <string name="preview">プレビュー</string>
+    <string name="swipe_vertically_to_switch">垂直にスワイプして切り替えます</string>
+    <string name="open_and_manage">開いて管理</string>
     <string name="open_calculator_lab">電卓のプレビューを開く</string>
     <string name="mink_space_lab">MinkSpace ラボ</string>
     <string name="calculator_history">歴史</string>
@@ -18,7 +20,6 @@
     <string name="calculator_invalid_expression">式を確認して再試行してください</string>
     <string name="delete_last_character">最後の文字を削除</string>
     <string name="calculator_history_empty">完了した計算がここに表示されます。</string>
-    <string name="always_enabled">常に有効</string>
     <string name="coming_later">後で来ます</string>
     <string name="open_media_lab">Media Lab を開く</string>
     <string name="media_lab">Media Lab</string>
@@ -47,4 +48,14 @@
     <string name="music_collapse_player">メディア コントロールを折りたたむ</string>
     <string name="music_back_control_description">10秒前に戻ります。複数回タップすると再起動と前のメディアが表示されます</string>
     <string name="music_forward_control_description">10 秒送ります。複数回タップすると次のメディアが提供され、シャッフルされます</string>
+    <string name="mink_space_widget_description">インストール済みアプリのウィジェットを 1 つ MinkSpace に追加します。</string>
+    <string name="mink_space_widget_picker_description">ウィジェットはインストール済みアプリから提供されます。Mink は適合の目安を表示しますが、最終的なレイアウトと操作は提供元が制御します。</string>
+    <string name="mink_space_widget_compact_warning">一部のウィジェットはコンパクトな領域向けではなく、ここでは表示や動作が異なる場合があります。</string>
+    <string name="replace_widget">ウィジェットを置き換える</string>
+    <string name="interact_with_widget">ウィジェットを操作する</string>
+    <string name="widget_fits_mink_space">MinkSpace に収まります</string>
+    <string name="widget_fits_expanded">展開時に収まります</string>
+    <string name="widget_may_be_cramped">窮屈になる可能性があります</string>
+    <string name="widget_fit_unknown">適合は不明です</string>
+    <string name="widget_needs_setup">設定が必要です</string>
 </resources>

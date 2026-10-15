@@ -48,6 +48,7 @@ internal fun BoxScope.HomeFocusPanel(
     profileFlipResetKey: Int,
     openTodos: () -> Unit,
     openVCardSettings: () -> Unit,
+    openMinkSpaceSettings: () -> Unit,
     onTodoCenterChanged: (Offset) -> Unit,
     onPausedApp: (String) -> Unit,
     onOpenDrawer: () -> Unit,
@@ -125,6 +126,7 @@ internal fun BoxScope.HomeFocusPanel(
             ) {
                 MinkSpaceHost(
                     store = store,
+                    actions = actions,
                     openTodos = openTodos,
                     todoJumpToken = todoJumpToken,
                     todoItemsPerPage = itemsPerPage,
@@ -134,6 +136,7 @@ internal fun BoxScope.HomeFocusPanel(
                     mutedContentColor = mutedColor,
                     insetColor = insetColor,
                     openMediaLab = actions::openMediaLab,
+                    openMinkSpaceSettings = openMinkSpaceSettings,
                     presentationState = minkSpacePresentation,
                     modifier = Modifier.weight(2f).fillMaxHeight().onGloballyPositioned { coordinates ->
                         val origin = coordinates.positionInRoot()

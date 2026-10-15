@@ -39,12 +39,13 @@ the existing app first and clears MinkLauncher OpenSource's local data.
 - Replayable onboarding from Settings, including permission setup
 - A responsive raised Home panel with a two-thirds to-do area and a one-third icon-only shortcut grid
 - A responsive, horizontally snapping preview of up to five to-dos with unfinished tasks first
-- **MinkSpace Mini-Apps** inside the Home pill. Swipe vertically between enabled mini-apps and horizontally within the active mini-app:
+- **MinkSpace Mini-Apps** inside the Home pill. Swipe vertically between visible mini-apps and horizontally within the active mini-app:
   - To-dos remain enabled at all times and retain their snapping pages and full manager
   - Calculator supports physical-keyboard number entry, implicit multiplication, and a local, clearable history
   - Media displays user-selected images, animated GIFs, and video thumbnails without copying the source files; tapping an item opens its original URI in an installed app
   - Music reads Android’s active media session with optional Notification access, shows provider artwork and metadata, and sends only playback, seek, skip, or shuffle actions advertised by that provider
-  - Mini-app order and enablement are managed in Settings and included in portable backups; calculator history, selected media references, and active media sessions are deliberately excluded
+  - Widget hosts one widget from an installed app. Tap it to enter interaction mode so lists, buttons, and provider gestures stay inside the widget; press Back or close to return to vertical mini-app navigation
+  - Mini-app order and visibility are managed in Settings and included in portable backups; Android widget bindings, calculator history, selected media references, and active media sessions are deliberately excluded
 - Optional two-panel layouts on tablets and unfolded foldables, pairing Mink’s Day with Home or Home with Widgets while preserving the active page and Magic Box draft across display changes. Settings uses the same large-display mode with its section list beside one active detail page.
 - Eight home shortcuts: six generic slots that accept apps or app-published shortcuts, with built-in Note, Calendar, Weather, Call, Messenger, and Files defaults, plus vCard and Top 8
 - An encrypted on-device **Virtual Contact Card** with an optional contact photo, reusable contact/social/payment links, and a standards-based vCard QR. Tap the fixed vCard shortcut to flip between the regular to-do/shortcut face and the contact card; without a selected photo, the Mink icon is used. An optional display setting can include selected link names and values on the Home card. vCard content is never uploaded.
@@ -111,7 +112,7 @@ the existing app first and clears MinkLauncher OpenSource's local data.
 - AI setup includes a visible catalog of Mink-reviewed providers: ChatGPT, Claude, Perplexity, Microsoft Copilot, DeepSeek, Meta AI, Google Gemini, and Lumo. Installed providers use their Android label and icon; unavailable providers use bundled identification artwork and link to the provider's own website instead of assuming Google Play is the only installation source. An explicit fallback list also exposes other installed apps accepting shared text.
 - Android exposes the selected system assistant role, but not a universal "AI app" capability. Most AI handoffs therefore use Android's `ACTION_SEND` text-sharing contract. Lumo's Play and no-GMS builds do not expose that contract, so Mink clearly labels them as copy-and-paste providers: tapping AI copies the query to Android's system clipboard and opens Lumo for the user to paste it manually.
 - AI handoff does not call AI APIs, submit prompts silently, or render responses inside MinkLauncher OpenSource
-- A versioned local JSON backup can move portable settings, launcher layout, app choices, icon preferences, MinkSpace order and enablement, Mink’s Day configuration, to-dos, and vCard contact details/links between F-Droid and GitHub installs. Exported backup JSON is readable and can contain those contact details; the encrypted local contact photo is deliberately excluded. Calculator history, selected MinkSpace media and URI grants, active media sessions, Work/Privacy Space state, device-specific private-area gateways, active bubble notifications, Android permissions and roles, accessibility or notification access, widgets, and document-folder grants are also excluded and must be configured again.
+- A versioned local JSON backup can move portable settings, launcher layout, app choices, icon preferences, MinkSpace order and visibility, Mink’s Day configuration, to-dos, and vCard contact details/links between F-Droid and GitHub installs. Exported backup JSON is readable and can contain those contact details; the encrypted local contact photo is deliberately excluded. Calculator history, selected MinkSpace media and URI grants, active media sessions, Work/Privacy Space state, device-specific private-area gateways, active bubble notifications, Android permissions and roles, accessibility or notification access, widgets, and document-folder grants are also excluded and must be configured again.
 - Full to-do management: add, check, edit, delete, reorder, send to a notes app, or save as PDF through Android’s document picker
 - Delete confirmation to protect against accidental taps and back-swipe gestures
 - Animated Magic Box to-do delivery into the newest widget page
@@ -206,14 +207,14 @@ Android's Contacts importer opens so the developer can confirm the destination a
 
 - `ui/launcher/home/` and `ui/launcher/layout/`: Home, gestures, responsive single/two-panel layouts, shortcuts, and wallpaper presentation
 - `ui/magic/` and `features/magic/`: shared Home/Assistant Magic Box UI, input interpretation, result actions, and app-bubble flow
-- `ui/minkspace/` and `features/minkspace/`: mini-app shell plus focused Todo, Calculator, Media, and Music packages
+- `ui/minkspace/` and `features/minkspace/`: mini-app shell plus focused Todo, Calculator, Media, Music, and optional Widget packages
 - `ui/apps/`, `features/apps/`, `features/workprofile/`, and `features/privatespace/`: personal, work, and private app discovery and drawers
 - `ui/settings/` and `data/`: adaptive Settings pages and focused preference stores
 - `ui/onboarding/`: first-run setup, feature update notice, and replayable tutorial
 - `features/backup/`: versioned portable backup models, JSON codec, migration, and restore boundaries
 - `features/profile/` and `ui/profile/`: encrypted Virtual Contact Card storage, editor, vCard generation, and QR presentation
 - `features/conversations/` and `ui/conversations/`: transient notification conversations and provider-owned replies
-- `features/widgets/` and `ui/widgets/`: Android widget hosting, binding, configuration, lifecycle, and presentation
+- `features/widgets/` and `ui/widgets/`: shared Android widget hosting, binding, configuration, lifecycle, and full-page presentation
 - `features/wellbeing/` and `ui/wellbeing/`: local Mink’s Day usage analysis and presentation
 - `platform/DeviceActions.kt`: Android intents and device integrations that do not belong to a focused feature repository
 

@@ -2,7 +2,7 @@
 <resources>
     <string name="update_notice_200_minkspace_heading">لوحة الصفحة الرئيسية الخاصة بك تفعل المزيد</string>
     <string name="update_notice_200_minkspace_title">MinkSpace التطبيقات المصغرة</string>
-    <string name="update_notice_200_minkspace_description">قم بالتمرير عموديًا داخل اللوحة الرئيسية للتنقل بين المهام والآلة الحاسبة والوسائط والموسيقى. اخترها ورتبها في الإعدادات؛ تظل المهام متاحة دائمًا.</string>
+    <string name="update_notice_200_minkspace_description">مرّر عموديًا داخل اللوحة الرئيسية للتنقل بين التطبيقات المصغّرة. اختر ما يظهر منها ورتّب المهام والآلة الحاسبة والوسائط والموسيقى والأداة في الإعدادات.</string>
     <string name="update_notice_200_media_title">الوسائط التي اخترتها، لا تزال ملكك</string>
     <string name="update_notice_200_media_description">أضف صورًا أو صور GIF أو مقاطع فيديو من خلال منتقي Android. يقوم Mink بتخزين مرجع محلي ويفتح العنصر الأصلي في التطبيق الذي تختاره.</string>
     <string name="update_notice_200_music_title">عناصر التحكم النشطة في الوسائط</string>
@@ -18,8 +18,8 @@
     <string name="update_notice_200_smaller_title">المزيد من التحسينات على لوحة المفاتيح أولاً</string>
     <string name="update_notice_200_smaller_description">ينضم Nextcloud Talk إلى عمليات تكامل الرسائل، وتكون إجراءات إدخال المطابقة الأولى أسرع، وتكون تخطيطات العرض الكبيرة أكثر راحة.</string>
     <string name="open_minkspace_settings">افتح إعدادات MinkSpace</string>
-    <string name="mink_space_onboarding_description">تظل المهام متاحة دائمًا. قم بتمكين الحاسبة والوسائط والموسيقى وترتيبها، ثم قم بالتمرير عموديًا داخل اللوحة الرئيسية للتبديل.</string>
+    <string name="mink_space_onboarding_description">اختر ما يظهر ورتّب المهام والآلة الحاسبة والوسائط والموسيقى والأداة، ثم مرّر عموديًا داخل اللوحة الرئيسية للتبديل. اضغط على الأداة للتفاعل معها.</string>
     <string name="work_apps_onboarding_description">توجد تطبيقات الملف الشخصي للعمل في درج مخصص. يتحكم Android ومؤسستك فيما إذا كان ملف التعريف هذا متاحًا أو متوقفًا مؤقتًا.</string>
     <string name="privacy_space_onboarding_description">تبقى المساحة الخاصة Android والمناطق الخاصة بصانع الأجهزة خارج البحث العادي والاختصارات ورؤية الكل. يتحكم جهازك في المصادقة.</string>
-    <string name="backup_minkspace_description">تم تضمين طلب MinkSpace والتطبيقات المصغرة الممكّنة. يظل سجل الآلة الحاسبة والوسائط المحددة ومنح Android وجلسات الوسائط النشطة وحالة مساحة العمل والخصوصية وبوابات الجهاز وإشعارات الفقاعات النشطة مع هذا الجهاز.</string>
+    <string name="backup_minkspace_description">يتم تضمين ترتيب MinkSpace وإعدادات الظهور. تظل روابط أدوات Android وسجل الآلة الحاسبة والوسائط المحددة وأذونات Android وجلسات الوسائط النشطة وحالة مساحة العمل والخصوصية وبوابات الجهاز وإشعارات الفقاعات النشطة على هذا الجهاز.</string>
 </resources>

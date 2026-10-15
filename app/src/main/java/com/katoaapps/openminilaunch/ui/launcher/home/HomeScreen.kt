@@ -5,6 +5,7 @@ package com.katoaapps.openminilaunch.ui.launcher.home
 import com.katoaapps.openminilaunch.BuildConfig
 import com.katoaapps.openminilaunch.R
 import com.katoaapps.openminilaunch.data.LauncherStore
+import com.katoaapps.openminilaunch.features.minkspace.MinkSpaceMiniApp
 import com.katoaapps.openminilaunch.features.updates.GitHubReleaseChecker
 import com.katoaapps.openminilaunch.features.updates.isNewerRelease
 import com.katoaapps.openminilaunch.platform.DeviceActions
@@ -27,6 +28,7 @@ import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.animation.core.Animatable
 import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.blur
 import androidx.compose.ui.geometry.Offset
@@ -36,6 +38,7 @@ import androidx.compose.ui.layout.positionInRoot
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.zIndex
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 @Composable
@@ -49,6 +52,7 @@ internal fun HomeScreen(
     openMinkDay: () -> Unit,
     minkStatusActive: Boolean,
     onMagicExpandedChange: (Boolean) -> Unit,
+    onMinkSpaceExpandedChange: (Boolean) -> Unit = {},
     keyboardInputEnabled: Boolean,
     homeRequestToken: Int,
     profileFlipResetKey: Int,
@@ -74,6 +78,8 @@ internal fun HomeScreen(
     var showUpdateConfirmation by remember { mutableStateOf(false) }
     var pausedAppPackage by remember { mutableStateOf<String?>(null) }
     val appAccessState by rememberMinkAppAccessState(store, minkStatusActive)
+    val todoSnackbarHostState = remember { SnackbarHostState() }
+    val coroutineScope = rememberCoroutineScope()
     val releaseChecker = remember { GitHubReleaseChecker() }
     val updateAvailable = store.githubUpdateChecksEnabled &&
         store.latestGitHubReleaseTag?.let { isNewerRelease(BuildConfig.VERSION_NAME, it) } == true
@@ -82,6 +88,9 @@ internal fun HomeScreen(
         if (actions.isLockServiceEnabled()) actions.lockDevice()
     }
     LaunchedEffect(magicExpanded) { onMagicExpandedChange(magicExpanded) }
+    LaunchedEffect(minkSpacePresentation.isExpanded) {
+        onMinkSpaceExpandedChange(minkSpacePresentation.isExpanded)
+    }
 
     fun lockFromHome() {
         if (!actions.supportsLockScreenAction()) {
@@ -124,6 +133,7 @@ internal fun HomeScreen(
             paneModifier.homePaneGestures(
                 magicExpanded = magicExpanded,
                 verticalGesturesEnabled = !minkSpacePresentation.isExpanded,
+                horizontalGesturesEnabled = !minkSpacePresentation.isExpanded,
                 onPaneInteracted = onPaneInteracted,
                 onHorizontalDrag = onHorizontalDrag,
                 onHorizontalDragFinished = onHorizontalDragFinished,
@@ -190,6 +200,7 @@ internal fun HomeScreen(
                             profileFlipResetKey = profileFlipResetKey,
                             openTodos = openTodos,
                             openVCardSettings = openVCardSettings,
+                            openMinkSpaceSettings = { openSettings(SettingsDestination.MINK_SPACE) },
                             onTodoCenterChanged = { widgetCenter = it },
                             onPausedApp = { pausedAppPackage = it },
                             onOpenDrawer = { drawerOpen = true },
@@ -226,10 +237,33 @@ internal fun HomeScreen(
             autoOpenSoftwareKeyboardOnHome = store.openSoftwareKeyboardOnHome,
             homeRequestToken = homeRequestToken,
             onTodoAdded = { text ->
-                flyingTodo = text
-                todoJumpToken++
+                if (MinkSpaceMiniApp.TODO in store.enabledMinkSpaceMiniApps) {
+                    flyingTodo = text
+                    todoJumpToken++
+                } else {
+                    coroutineScope.launch {
+                        todoSnackbarHostState.currentSnackbarData?.dismiss()
+                        val result = todoSnackbarHostState.showSnackbar(
+                            message = context.getString(R.string.todo_added),
+                            actionLabel = context.getString(R.string.open_todos),
+                            duration = SnackbarDuration.Long,
+                        )
+                        if (result == SnackbarResult.ActionPerformed) openTodos()
+                    }
+                }
             },
+            onOpenTodos = openTodos,
             appAccessState = appAccessState,
+        )
+        SnackbarHost(
+            hostState = todoSnackbarHostState,
+            modifier = Modifier
+                .align(Alignment.BottomCenter)
+                .navigationBarsPadding()
+                .imePadding()
+                .padding(horizontal = Dimens.dp16)
+                .padding(bottom = Dimens.dp88)
+                .zIndex(30f),
         )
     }
 

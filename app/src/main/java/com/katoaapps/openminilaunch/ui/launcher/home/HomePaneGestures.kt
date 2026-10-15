@@ -21,6 +21,7 @@ import com.katoaapps.openminilaunch.ui.theme.Dimens
 internal fun Modifier.homePaneGestures(
     magicExpanded: Boolean,
     verticalGesturesEnabled: Boolean,
+    horizontalGesturesEnabled: Boolean,
     onPaneInteracted: () -> Unit,
     onHorizontalDrag: ((Float) -> Unit)?,
     onHorizontalDragFinished: ((Float, Long) -> Unit)?,
@@ -37,7 +38,9 @@ internal fun Modifier.homePaneGestures(
     val currentSwipeDown by rememberUpdatedState(onSwipeDown)
     val currentDoubleTap by rememberUpdatedState(onDoubleTap)
 
-    val horizontalDragModifier = if (onHorizontalDrag != null && !magicExpanded) {
+    val horizontalDragModifier = if (
+        onHorizontalDrag != null && !magicExpanded && horizontalGesturesEnabled
+    ) {
         Modifier.pointerInput(Unit) {
             var draggedPx = 0f
             var startedAtMillis = 0L

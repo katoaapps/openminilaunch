@@ -70,8 +70,20 @@ internal class AppearancePreferenceStore(
         ),
     )
         private set
+    var useSystemHomeWallpaper by mutableStateOf(
+        prefs.getBoolean(
+            USE_SYSTEM_HOME_WALLPAPER_KEY,
+            isFreshInstall &&
+                !prefs.contains(APP_BACKGROUND_COLOR_KEY) &&
+                !prefs.getBoolean(APP_BACKGROUND_IMAGE_ENABLED_KEY, false),
+        ),
+    )
+        private set
 
     init {
+        if (!prefs.contains(USE_SYSTEM_HOME_WALLPAPER_KEY)) {
+            prefs.edit().putBoolean(USE_SYSTEM_HOME_WALLPAPER_KEY, useSystemHomeWallpaper).apply()
+        }
         if (!prefs.contains(TWO_PANEL_MODE_FOR_LARGE_DISPLAYS_KEY) &&
             (isFreshInstall || prefs.getBoolean(TWO_PANEL_AUTO_PENDING_KEY, false))
         ) {
@@ -155,10 +167,12 @@ internal class AppearancePreferenceStore(
     fun setAppBackgroundColor(argb: Int?) {
         appBackgroundColorArgb = argb?.or(0xFF000000.toInt())
         appBackgroundImageEnabled = false
+        useSystemHomeWallpaper = false
         prefs.edit().apply {
             appBackgroundColorArgb?.let { putInt(APP_BACKGROUND_COLOR_KEY, it) }
                 ?: remove(APP_BACKGROUND_COLOR_KEY)
             putBoolean(APP_BACKGROUND_IMAGE_ENABLED_KEY, false)
+            putBoolean(USE_SYSTEM_HOME_WALLPAPER_KEY, false)
         }.apply()
     }
 
@@ -168,12 +182,14 @@ internal class AppearancePreferenceStore(
             headerColorArgb = appearance.headerColorArgb or 0xFF000000.toInt(),
         )
         appBackgroundImageEnabled = true
+        useSystemHomeWallpaper = false
         appBackgroundImageRevision++
         appBackgroundImageAppearance = savedAppearance
         prefs.edit()
             .putBoolean(APP_BACKGROUND_IMAGE_ENABLED_KEY, true)
             .putInt(APP_BACKGROUND_IMAGE_AVERAGE_COLOR_KEY, savedAppearance.averageColorArgb)
             .putInt(APP_BACKGROUND_IMAGE_HEADER_COLOR_KEY, savedAppearance.headerColorArgb)
+            .putBoolean(USE_SYSTEM_HOME_WALLPAPER_KEY, false)
             .apply()
     }
 
@@ -192,6 +208,7 @@ internal class AppearancePreferenceStore(
         const val THEME_PREFERENCE_KEY = "theme_preference"
         const val TWO_PANEL_AUTO_PENDING_KEY = "two_panel_auto_pending"
         const val TWO_PANEL_MODE_FOR_LARGE_DISPLAYS_KEY = "two_panel_mode_for_large_displays"
+        const val USE_SYSTEM_HOME_WALLPAPER_KEY = "use_system_home_wallpaper"
         const val USE_24_HOUR_CLOCK_KEY = "use_24_hour_clock"
         const val WATERMELON_MODE_KEY = "watermelon_mode"
     }

@@ -20,6 +20,7 @@ internal fun SettingsDestinationContent(
     onOverviewNavigate: (SettingsDestination) -> Unit,
     onNavigateBack: () -> Unit,
     onExitSettings: () -> Unit,
+    onOpenTodos: () -> Unit,
     onIconStyleApplied: () -> Unit,
     onPickShortcut: (Shortcut) -> Unit,
     onPickDrawer: () -> Unit,
@@ -54,6 +55,7 @@ internal fun SettingsDestinationContent(
         SettingsDestination.MINK_SPACE -> MinkSpaceSettingsPage(
             store = store,
             actions = actions,
+            openTodos = onOpenTodos,
             goBack = onNavigateBack,
         )
         SettingsDestination.SHORTCUTS -> ShortcutsSettingsPage(

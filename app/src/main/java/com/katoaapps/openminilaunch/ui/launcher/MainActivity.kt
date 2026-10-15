@@ -1,5 +1,6 @@
 package com.katoaapps.openminilaunch.ui.launcher
 
+import android.annotation.SuppressLint
 import android.app.Activity
 import android.app.role.RoleManager
 import android.appwidget.AppWidgetHost
@@ -7,6 +8,7 @@ import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
+import android.view.KeyEvent
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
@@ -21,6 +23,9 @@ import androidx.lifecycle.lifecycleScope
 import com.katoaapps.openminilaunch.data.LauncherStore
 import com.katoaapps.openminilaunch.platform.DeviceActions
 import com.katoaapps.openminilaunch.ui.components.applyLargeDisplayOrientation
+import com.katoaapps.openminilaunch.ui.magic.MagicHardwareHotkeyHost
+import com.katoaapps.openminilaunch.ui.widgets.InteractiveAppWidgetHost
+import com.katoaapps.openminilaunch.ui.widgets.MINK_WIDGET_HOST_ID
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
@@ -30,13 +35,32 @@ private const val STATE_CONFIGURING_WIDGET_ID = "configuring_widget_id"
 private const val STATE_WIDGET_RESULT_ID = "widget_result_id"
 private const val STATE_WIDGET_RESULT_OK = "widget_result_ok"
 
-class MainActivity : ComponentActivity() {
+class MainActivity : ComponentActivity(), MagicHardwareHotkeyHost {
     private val homeRoleLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { }
     private var homeRequestToken by mutableIntStateOf(0)
     private var configuringWidgetId: Int? = null
     internal var widgetConfigurationResult by mutableStateOf<Pair<Int, Boolean>?>(null)
         private set
     private lateinit var actions: DeviceActions
+    private var magicHardwareHotkeyHandler: ((KeyEvent) -> Boolean)? = null
+    internal val appWidgetHost by lazy {
+        InteractiveAppWidgetHost(this, MINK_WIDGET_HOST_ID)
+    }
+
+    @SuppressLint("RestrictedApi")
+    override fun dispatchKeyEvent(event: KeyEvent): Boolean {
+        if (magicHardwareHotkeyHandler?.invoke(event) == true) return true
+        return super.dispatchKeyEvent(event)
+    }
+
+    override fun registerMagicHardwareHotkeyHandler(
+        handler: (KeyEvent) -> Boolean,
+    ): () -> Unit {
+        magicHardwareHotkeyHandler = handler
+        return {
+            if (magicHardwareHotkeyHandler === handler) magicHardwareHotkeyHandler = null
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -66,7 +90,13 @@ class MainActivity : ComponentActivity() {
 
     override fun onStart() {
         super.onStart()
+        runCatching { appWidgetHost.startListening() }
         actions.refreshDynamicLauncherIcons()
+    }
+
+    override fun onStop() {
+        runCatching { appWidgetHost.stopListening() }
+        super.onStop()
     }
 
     override fun onNewIntent(intent: Intent) {

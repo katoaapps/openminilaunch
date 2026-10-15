@@ -13,6 +13,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AutoAwesome
 import androidx.compose.material.icons.filled.ChevronRight
+import androidx.compose.material.icons.filled.Checklist
 import androidx.compose.material.icons.filled.FolderOff
 import androidx.compose.material.icons.filled.DeleteOutline
 import androidx.compose.material.icons.filled.Person
@@ -76,6 +77,7 @@ internal fun MagicResultsPanel(
     onRequestFolder: () -> Unit,
     onSubmitWeb: () -> Unit,
     onSubmitAi: () -> Unit,
+    onOpenTodos: (() -> Unit)?,
     onSelectContact: (ContactResult) -> Unit,
     onSelectRecentConversation: (LauncherShortcutTarget) -> Unit,
     onSelectForcedRecipient: (String) -> Unit,
@@ -116,6 +118,7 @@ internal fun MagicResultsPanel(
                 onRequestFolder = onRequestFolder,
                 onSubmitWeb = onSubmitWeb,
                 onSubmitAi = onSubmitAi,
+                onOpenTodos = onOpenTodos,
                 onSelectContact = onSelectContact,
                 onSelectRecentConversation = onSelectRecentConversation,
                 onSelectForcedRecipient = onSelectForcedRecipient,
@@ -167,6 +170,7 @@ internal fun MagicResultsContent(
     onRequestFolder: () -> Unit,
     onSubmitWeb: () -> Unit,
     onSubmitAi: () -> Unit,
+    onOpenTodos: (() -> Unit)?,
     onSelectContact: (ContactResult) -> Unit,
     onSelectRecentConversation: (LauncherShortcutTarget) -> Unit,
     onSelectForcedRecipient: (String) -> Unit,
@@ -175,6 +179,13 @@ internal fun MagicResultsContent(
     onIncludeAppShortcutsChange: (Boolean) -> Unit,
     onRequestContacts: () -> Unit,
 ) {
+    if (onOpenTodos != null && prefix == '-' && rawText.drop(1).isBlank() && lockedPrefix == null) {
+        SuggestionRow(
+            text = stringResource(R.string.open_todos),
+            icon = Icons.Default.Checklist,
+            onClick = onOpenTodos,
+        )
+    }
     if (rawText.isBlank() && lockedPrefix == null && store.searchHistory.isNotEmpty()) {
         SearchHistoryList(
             queries = store.searchHistory,

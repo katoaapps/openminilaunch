@@ -380,7 +380,7 @@
     <string name="take_list_with_you">सूची अपने साथ ले जाएं</string>
     <string name="take_list_with_you_description">वर्तमान चेकलिस्ट को नोट्स ऐप में निर्यात करें या इसे पीडीएफ के रूप में सहेजें।</string>
     <string name="keep_context">संदर्भ रखें</string>
-    <string name="keep_context_description">नए Magic Box कार्य नवीनतम कार्य पृष्ठ में एनिमेट होते हैं।</string>
+    <string name="keep_context_description">MinkSpace से कार्य छिपे होने पर भी नए Magic Box कार्य आपकी पूरी कार्य सूची में रहते हैं।</string>
     <string name="search_onboarding_intro">स्थानीय फ़ाइलें ढूंढने, वेब पर खोज करने, या अपने द्वारा चुने गए AI ऐप को क्वेरी सौंपने के लिए सामान्य रूप से Magic Box टाइप करें।</string>
     <string name="links_stay_links">लिंक लिंक ही रहते हैं</string>
     <string name="links_stay_links_description">इसे सीधे खोलने के लिए एक वेब पता टाइप करें; अन्य सादा पाठ एक वेब या एआई क्वेरी बना हुआ है।</string>
@@ -779,6 +779,9 @@
     <string name="todo_export_filename">MinkLauncher-OpenSource-todos-%1$s.pdf</string>
     <string name="todo_export_title">%1$s कार्य सूची</string>
     <string name="widget_configuration_failed">यह विजेट कॉन्फ़िगर नहीं किया जा सका</string>
+    <string name="widget_setup_confirmation_title">%1$s का उपयोग करें?</string>
+    <string name="widget_setup_confirmation_description">विजेट सेटअप पूरा हो गया, लेकिन उसके ऐप ने यह पुष्टि नहीं की कि बदलाव सहेजे गए हैं या नहीं। यदि सेटअप सही दिखता है तो इसका उपयोग करें, या अपने मौजूदा विजेट को अपरिवर्तित रखने के लिए इसे त्याग दें।</string>
+    <string name="use_widget">विजेट का उपयोग करें</string>
     <string name="widgets">विजेट्स</string>
     <string name="widget_count">%2$d का %1$d</string>
     <plurals name="maximum_widgets">
@@ -787,7 +790,7 @@
     </plurals>
     <string name="add_widget">विजेट जोड़ें</string>
     <string name="your_widget_page">आपका विजेट पृष्ठ</string>
-    <string name="your_widget_page_description">अधिकतम चार Android विजेट जोड़ें। उनके ऐप्स उनके द्वारा प्रदर्शित सामग्री को नियंत्रित करते हैं।</string>
+    <string name="your_widget_page_description">अधिकतम आठ Android विजेट जोड़ें। उनके ऐप्स उनके द्वारा प्रदर्शित सामग्री को नियंत्रित करते हैं।</string>
     <string name="widget_options">विजेट विकल्प</string>
     <string name="widget_temporarily_unavailable">विजेट अस्थायी रूप से अनुपलब्ध है</string>
     <string name="widget_temporarily_unavailable_description">MinkLauncher ने इस विजेट को यथास्थान रखा। इसके ऐप या Android के लोड होने के बाद पुनः प्रयास करें, या इसे मैन्युअल रूप से हटा दें।</string>

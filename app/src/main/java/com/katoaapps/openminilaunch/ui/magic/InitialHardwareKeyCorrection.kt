@@ -44,6 +44,24 @@ internal class InitialHardwareKeyCorrection(
         val appendedText = value.text.removePrefix(pending.text)
         if (appendedText.isEmpty() || appendedText.startsWith(pending.text)) return value
 
+        // A few physical-keyboard IMEs automatically commit a separator after punctuation.
+        // The captured punctuation is already the complete Magic Box command prefix, so do not
+        // mistake that separator for the IME replacing a long-pressed key.
+        if (appendedText.all(Char::isWhitespace)) {
+            clear()
+            return TextFieldValue(
+                text = pending.text,
+                selection = TextRange(pending.text.length),
+            )
+        }
+
+        // Long-press replacement is a single character. Preserve any larger edit rather than
+        // deleting the captured prefix based on a coincidental first update from the real editor.
+        if (appendedText.codePointCount(0, appendedText.length) != 1) {
+            clear()
+            return value
+        }
+
         clear()
         return TextFieldValue(
             text = appendedText,

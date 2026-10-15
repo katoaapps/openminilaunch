@@ -380,7 +380,7 @@
     <string name="take_list_with_you">帶埋張清單去</string>
     <string name="take_list_with_you_description">將目前嘅檢查清單匯出去筆記應用程式，或者將佢儲存為 PDF 。</string>
     <string name="keep_context">保留上下文</string>
-    <string name="keep_context_description">新嘅 Magic Box 任務會動畫化到最新嘅待辦事項頁面。</string>
+    <string name="keep_context_description">即使待辦事項喺 MinkSpace 隱藏，新嘅 Magic Box 任務都會保留喺完整待辦清單。</string>
     <string name="search_onboarding_intro">喺 Magic Box 入面正常輸入，就可以搵本地檔案、搜尋網絡，或者將查詢交畀你揀嘅 AI 應用程式。</string>
     <string name="links_stay_links">連結會保持連結</string>
     <string name="links_stay_links_description">輸入個網址就可以直接打開佢；其他純文字仍然係網絡或者人工智能查詢。</string>
@@ -779,6 +779,9 @@
     <string name="todo_export_filename">MinkLauncher-OpenSource-托多斯-%1$s . pdf</string>
     <string name="todo_export_title">%1$s 待辦事項清單</string>
     <string name="widget_configuration_failed">呢個小工具配置唔到</string>
+    <string name="widget_setup_confirmation_title">使用 %1$s？</string>
+    <string name="widget_setup_confirmation_description">小工具已完成設定，但個應用程式未確認變更係咪已儲存。如果設定睇落正確，請使用佢；否則請棄置，以保留目前嘅小工具不變。</string>
+    <string name="use_widget">使用小工具</string>
     <string name="widgets">小工具</string>
     <string name="widget_count">%2$d 嘅 %1$d</string>
     <plurals name="maximum_widgets">
@@ -787,7 +790,7 @@
     </plurals>
     <string name="add_widget">加入小工具</string>
     <string name="your_widget_page">你嘅小工具頁面</string>
-    <string name="your_widget_page_description">最多加四個 Android 小工具。佢哋嘅應用程式控制佢哋顯示嘅內容。</string>
+    <string name="your_widget_page_description">最多加八個 Android 小工具。佢哋嘅應用程式控制佢哋顯示嘅內容。</string>
     <string name="widget_options">小工具選項</string>
     <string name="widget_temporarily_unavailable">小工具暫時唔可用</string>
     <string name="widget_temporarily_unavailable_description">MinkLauncher 將呢個小工具保留喺原位。喺佢嘅應用程式或者 Android 載入完之後重試，或者手動移除佢。</string>

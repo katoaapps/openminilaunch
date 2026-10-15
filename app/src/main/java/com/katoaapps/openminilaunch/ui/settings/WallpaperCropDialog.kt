@@ -58,8 +58,10 @@ private const val WALLPAPER_APPLYING_FEEDBACK_MILLIS = 1_000L
 @Composable
 internal fun WallpaperCropDialog(
     imageUri: Uri,
-    applyWallpaper: (Bitmap) -> Result<HomeWallpaperAppearance>,
-    onApplied: (HomeWallpaperAppearance) -> Unit,
+    saveWallpaper: (Bitmap) -> Result<HomeWallpaperAppearance>,
+    applySystemWallpaper: () -> Result<Unit>,
+    onWallpaperSaved: (HomeWallpaperAppearance) -> Unit,
+    onApplied: () -> Unit,
     onDismiss: () -> Unit,
 ) {
     val context = LocalContext.current
@@ -206,7 +208,7 @@ internal fun WallpaperCropDialog(
                                     applyFailed = false
                                     scope.launch {
                                         val feedbackStartedAt = SystemClock.elapsedRealtime()
-                                        val result = withContext(Dispatchers.IO) {
+                                        val saved = withContext(Dispatchers.IO) {
                                             runCatching {
                                                 WallpaperImageProcessor.useRenderedCrop(
                                                     source = bitmap,
@@ -214,14 +216,25 @@ internal fun WallpaperCropDialog(
                                                     target = targetSize,
                                                     zoom = zoom,
                                                     offset = offset,
-                                                ) { crop -> applyWallpaper(crop).getOrThrow() }
+                                                ) { crop -> saveWallpaper(crop).getOrThrow() }
                                             }
                                         }
+                                        val result = saved.fold(
+                                            onSuccess = { appearance ->
+                                                // Persist Mink's image choice before WallpaperManager can
+                                                // trigger a dynamic-color Activity recreation on Pixel devices.
+                                                onWallpaperSaved(appearance)
+                                                withContext(Dispatchers.IO) {
+                                                    applySystemWallpaper()
+                                                }
+                                            },
+                                            onFailure = { Result.failure(it) },
+                                        )
                                         val remainingFeedbackTime = WALLPAPER_APPLYING_FEEDBACK_MILLIS -
                                             (SystemClock.elapsedRealtime() - feedbackStartedAt)
                                         if (remainingFeedbackTime > 0) delay(remainingFeedbackTime)
                                         applying = false
-                                        result.fold(onSuccess = onApplied) { applyFailed = true }
+                                        result.fold(onSuccess = { onApplied() }) { applyFailed = true }
                                     }
                                 },
                                 enabled = sourceBitmap != null && viewportSize != IntSize.Zero,

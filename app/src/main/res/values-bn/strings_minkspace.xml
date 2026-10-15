@@ -2,15 +2,17 @@
 <resources>
     <string name="mink_space_mini_apps">MinkSpace মিনি-অ্যাপস</string>
     <string name="mink_space_settings_summary">হোম প্যানেলের ভিতরে যা থাকে তা বেছে নিন এবং সাজান</string>
-    <string name="mink_space_settings_description">সক্ষম মিনি-অ্যাপগুলি স্যুইচ করতে MinkSpace-এ উপরে বা নীচে সোয়াইপ করুন৷ বর্তমান মিনি-অ্যাপের ভিতরে পৃষ্ঠাগুলির মধ্যে সরাতে বাম বা ডানদিকে সোয়াইপ করুন।</string>
-    <string name="mini_apps">মিনি-অ্যাপস</string>
+    <string name="mink_space_settings_description">দেখানো মিনি-অ্যাপগুলি স্যুইচ করতে MinkSpace-এ উপরে বা নীচে সোয়াইপ করুন৷ বর্তমান মিনি-অ্যাপের ভিতরে পৃষ্ঠাগুলির মধ্যে সরাতে বাম বা ডানদিকে সোয়াইপ করুন।</string>
+    <string name="show_in_mink_space">MinkSpace-এ দেখান</string>
+    <string name="todo_added">করণীয় যোগ করা হয়েছে</string>
+    <string name="open_todos">করণীয় খুলুন</string>
     <string name="calculator">ক্যালকুলেটর</string>
     <string name="recorder">রেকর্ডার</string>
     <string name="music_player">মিউজিক প্লেয়ার</string>
     <string name="music_player_preview">মিউজিক প্লেয়ার প্রিভিউ</string>
     <string name="open_music_player_preview">মিউজিক প্লেয়ার প্রিভিউ খুলুন</string>
-    <string name="swipe_vertically_to_switch">সক্রিয় · সুইচ করতে উল্লম্বভাবে সোয়াইপ করুন</string>
-    <string name="preview">পূর্বরূপ</string>
+    <string name="swipe_vertically_to_switch">সুইচ করতে উল্লম্বভাবে সোয়াইপ করুন</string>
+    <string name="open_and_manage">খুলুন এবং পরিচালনা করুন</string>
     <string name="open_calculator_lab">ক্যালকুলেটর প্রিভিউ খুলুন</string>
     <string name="mink_space_lab">MinkSpace ল্যাব</string>
     <string name="calculator_history">ইতিহাস</string>
@@ -18,7 +20,6 @@
     <string name="calculator_invalid_expression">অভিব্যক্তি পরীক্ষা করুন এবং আবার চেষ্টা করুন</string>
     <string name="delete_last_character">শেষ অক্ষর মুছুন</string>
     <string name="calculator_history_empty">সম্পূর্ণ গণনা এখানে প্রদর্শিত হবে.</string>
-    <string name="always_enabled">সর্বদা সক্রিয়</string>
     <string name="coming_later">পরে আসছে</string>
     <string name="open_media_lab">Media Lab খুলুন</string>
     <string name="media_lab">Media Lab</string>
@@ -47,4 +48,14 @@
     <string name="music_collapse_player">মিডিয়া নিয়ন্ত্রণ সঙ্কুচিত করুন</string>
     <string name="music_back_control_description">10 সেকেন্ড পিছনে; একাধিক ট্যাপ রিস্টার্ট এবং পূর্ববর্তী মিডিয়া অফার করে</string>
     <string name="music_forward_control_description">10 সেকেন্ড ফরোয়ার্ড করুন; একাধিক ট্যাপ পরবর্তী মিডিয়া এবং শাফেল অফার করে</string>
+    <string name="mink_space_widget_description">ইনস্টল করা অ্যাপ থেকে একটি উইজেট MinkSpace-এ যোগ করুন।</string>
+    <string name="mink_space_widget_picker_description">ইনস্টল করা অ্যাপগুলি উইজেট সরবরাহ করে। Mink সম্ভাব্য মানানসই অবস্থা দেখায়, তবে চূড়ান্ত লেআউট ও উপলভ্য কাজগুলি প্রদানকারী নিয়ন্ত্রণ করে।</string>
+    <string name="mink_space_widget_compact_warning">কিছু উইজেট ছোট জায়গার জন্য তৈরি নয় এবং এখানে ভিন্ন দেখাতে বা কাজ করতে পারে।</string>
+    <string name="replace_widget">উইজেট বদলান</string>
+    <string name="interact_with_widget">উইজেট ব্যবহার করুন</string>
+    <string name="widget_fits_mink_space">MinkSpace-এ মানায়</string>
+    <string name="widget_fits_expanded">বড় করলে মানায়</string>
+    <string name="widget_may_be_cramped">জায়গা কম হতে পারে</string>
+    <string name="widget_fit_unknown">মানানসই অবস্থা অজানা</string>
+    <string name="widget_needs_setup">সেটআপ প্রয়োজন</string>
 </resources>

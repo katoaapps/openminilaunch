@@ -3,7 +3,7 @@
 MinkSpace mini-apps are built-in launcher features, not dynamically loaded plugins. This keeps
 their data private, their behavior reviewable, and the Home pager predictable on small devices.
 
-OpenMink 2.0 ships Todo, Calculator, Media, and Music. Recorder keeps a reserved internal stable ID
+OpenMink ships Todo, Calculator, Media, Music, and Widget. Recorder keeps a reserved internal stable ID
 for future migration safety, but it is not a released mini-app, is hidden from user-facing settings,
 and must not be enabled until its permission, privacy, UI, and release plan are explicitly approved.
 
@@ -30,8 +30,8 @@ feature-specific controls there.
 ## Registration checklist
 
 1. Add a stable identity to `MinkSpaceMiniApp`. Never rename a shipped `stableId`; it is persisted.
-2. Mark `readyForHome` only after the Home UI is usable. Use `alwaysEnabled` only for a required
-   mini-app such as Todo.
+2. Mark `readyForHome` only after the Home UI is usable. Add a mini-app to `defaultEnabled` only
+   when it should appear for new users; released mini-apps remain user-hideable.
 3. Add label, icon, and optional manager metadata to `MinkSpaceMiniAppCatalog`.
 4. Expose one `<Name>MiniAppPage` composable from the mini-app's UI package. It owns repository
    lookup and uses `MinkSpaceMiniAppSurface` for the common Home container.
@@ -61,3 +61,9 @@ lifecycle, while the UI consumes a small immutable state model. Music is the ref
 - Mini-apps that need the entire Home pill use `MinkSpacePresentationState`. The mini-app requests
   expansion for its stable identity; the shared shell owns shortcut visibility, padding, gesture
   locking, saved state, and cleanup when the visible mini-app changes.
+- Mini-apps that host arbitrary Android views must use an explicit interaction state instead of
+  guessing whether the child can scroll. Widget is the reference: browsing gestures stay with
+  MinkSpace, while tapping the widget expands the pill and gives the provider exclusive gestures.
+- Platform integration can reuse `ui/widgets` host and binding infrastructure, but MinkSpace
+  placement, sizing, and UI stay in `ui/minkspace/widget` so forks can omit the mini-app without
+  rewriting the full widget page.
