@@ -47,4 +47,5 @@ internal data class MinkPadPreferences(
     val naturalScroll: Boolean = true,
     val tapToClick: Boolean = true,
     val haptics: Boolean = true,
+    val advancedHostGestures: Boolean = true,
 )

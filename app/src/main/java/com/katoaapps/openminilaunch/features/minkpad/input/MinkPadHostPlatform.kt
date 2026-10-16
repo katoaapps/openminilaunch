@@ -8,7 +8,7 @@ import com.katoaapps.openminilaunch.features.minkpad.input.MinkPadHostPlatform.W
 
 /** User-selected per-host preset. Standard HID does not expose the receiving operating system. */
 internal enum class MinkPadHostPlatform(val label: String) {
-    GENERIC("Choose host system"), ANDROID("Android / Google TV"), MAC("Mac"),
+    GENERIC("Choose Operating System"), ANDROID("Android / Google TV"), MAC("Mac"),
     WINDOWS("Windows"), APPLE_MOBILE("iPhone / iPad"),
 }
 
@@ -52,7 +52,8 @@ internal fun MinkPadHostPlatform.shortcut(action: MinkPadGestureAction): MinkPad
         }
         MinkPadGestureAction.DISMISS_OVERVIEW -> when (this) {
             ANDROID -> MinkPadShortcut(41, meta, "Dismiss overview · Meta + Esc")
-            MAC, WINDOWS -> MinkPadShortcut(41, 0, "Dismiss overview · Esc")
+            MAC -> MinkPadShortcut(81, ctrl, "App Exposé · Control + Down")
+            WINDOWS -> MinkPadShortcut(41, 0, "Dismiss Task View · Esc")
             else -> null
         }
         MinkPadGestureAction.NEXT_APP, MinkPadGestureAction.PREVIOUS_APP -> {

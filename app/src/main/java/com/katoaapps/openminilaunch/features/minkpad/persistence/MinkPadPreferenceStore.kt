@@ -33,6 +33,7 @@ internal class MinkPadPreferenceStore(context: Context) {
         naturalScroll = prefs.getBoolean("natural", true),
         tapToClick = prefs.getBoolean("tap", true),
         haptics = prefs.getBoolean("haptics", true),
+        advancedHostGestures = prefs.getBoolean("advancedHostGestures", true),
     )
 
     fun update(value: MinkPadPreferences) {
@@ -41,7 +42,9 @@ internal class MinkPadPreferenceStore(context: Context) {
         prefs.edit().remove("mode").putBoolean("awake", normalized.keepAwake)
             .putFloat("pointer", normalized.pointerSensitivity).putFloat("scroll", normalized.scrollSensitivity)
             .putBoolean("natural", normalized.naturalScroll).putBoolean("tap", normalized.tapToClick)
-            .putBoolean("haptics", normalized.haptics).remove("unbufferedTouch").apply()
+            .putBoolean("haptics", normalized.haptics)
+            .putBoolean("advancedHostGestures", normalized.advancedHostGestures)
+            .remove("unbufferedTouch").apply()
         mutable.value = normalized
     }
 

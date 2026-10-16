@@ -25,6 +25,7 @@ import androidx.compose.material.icons.filled.Keyboard
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material3.FilledTonalIconButton
+import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SnackbarHost
@@ -68,7 +69,6 @@ internal fun MinkPadConnectedSurface(
     onFeedback: (String?) -> Unit,
     onFeedbackConsumed: () -> Unit,
     onMode: (MinkPadControllerMode) -> Unit,
-    onPlatform: (MinkPadHostPlatform) -> Unit,
     onConnect: (String) -> Unit,
     onModifiers: (Int) -> Unit,
     onHelp: () -> Unit,
@@ -155,10 +155,8 @@ internal fun MinkPadConnectedSurface(
                 MinkPadTopDock(
                     state = state,
                     mode = mode,
-                    platform = platform,
                     menu = menu,
                     onMode = onMode,
-                    onPlatform = onPlatform,
                     onMenu = { menu = it },
                     onConnect = onConnect,
                     onHosts = onHosts,
@@ -201,8 +199,14 @@ internal fun MinkPadConnectedSurface(
                 ) {
                     Column(
                         Modifier.padding(start = 16.dp, top = 18.dp, end = 16.dp, bottom = 14.dp),
-                        verticalArrangement = Arrangement.spacedBy(4.dp),
+                        verticalArrangement = Arrangement.spacedBy(12.dp),
                     ) {
+                        MinkPadHostShortcutGrid(
+                            platform = platform,
+                            enabled = keyboardEnabled,
+                            onAction = onAction,
+                        )
+                        HorizontalDivider()
                         MinkPadLiveTextInput(
                             enabled = keyboardEnabled,
                             onText = {
@@ -230,7 +234,8 @@ internal fun MinkPadConnectedSurface(
             ) {
                 Icon(
                     if (bottomExpanded) Icons.Default.KeyboardArrowDown else Icons.Default.Keyboard,
-                    contentDescription = if (bottomExpanded) "Hide keyboard controls" else "Show keyboard controls",
+                    contentDescription = if (bottomExpanded) "Hide keyboard and host controls"
+                    else "Show keyboard and host controls",
                 )
             }
 

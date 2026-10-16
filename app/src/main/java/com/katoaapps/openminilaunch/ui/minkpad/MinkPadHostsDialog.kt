@@ -4,7 +4,9 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.FlowRow
 import androidx.compose.foundation.layout.ExperimentalLayoutApi
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.rememberScrollState
+import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.MaterialTheme
@@ -17,6 +19,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.window.DialogProperties
 import com.katoaapps.openminilaunch.features.minkpad.MinkPadHost
 import com.katoaapps.openminilaunch.features.minkpad.MinkPadRepository
 import com.katoaapps.openminilaunch.features.minkpad.MinkPadSessionState
@@ -26,12 +29,22 @@ import com.katoaapps.openminilaunch.features.minkpad.canChooseHost
 /** Receiving devices that have successfully connected to MinkPad. */
 @OptIn(ExperimentalLayoutApi::class)
 @Composable
-internal fun MinkPadHostsDialog(repository: MinkPadRepository, state: MinkPadSessionState, onDismiss: () -> Unit) {
+internal fun MinkPadHostsDialog(
+    repository: MinkPadRepository,
+    state: MinkPadSessionState,
+    onPairNew: (() -> Unit)? = null,
+    onDismiss: () -> Unit,
+) {
     var forget by remember { mutableStateOf<MinkPadHost?>(null) }
-    AlertDialog(onDismissRequest = onDismiss, title = { Text("Saved devices") }, text = {
+    AlertDialog(
+        onDismissRequest = onDismiss,
+        modifier = Modifier.widthIn(max = 720.dp).fillMaxWidth(.96f),
+        properties = DialogProperties(usePlatformDefaultWidth = false),
+        title = { Text("Receiving devices") },
+        text = {
         Column(Modifier.verticalScroll(rememberScrollState()), verticalArrangement = Arrangement.spacedBy(8.dp)) {
             if (state.hosts.isEmpty()) {
-                Text("MinkPad has not saved a receiving device yet. Close this window and start the two-minute pairing flow.")
+                Text("MinkPad has not saved a receiving device yet.")
             }
             state.hosts.forEach { host ->
                 val current = state.host?.address == host.address
@@ -61,21 +74,33 @@ internal fun MinkPadHostsDialog(repository: MinkPadRepository, state: MinkPadSes
                     if (host.remembered) TextButton(onClick = { forget = host }) { Text("Forget history") }
                 }
             }
-            Text(
-                "Reconnect asks Android's native keyboard and mouse profile to resume this pairing. " +
-                    "The receiving device may still require you to tap Connect in its Bluetooth settings.",
-                style = MaterialTheme.typography.bodySmall,
-            )
-            Text(
-                "Forgetting removes MinkPad's connection history, not the Bluetooth pairing stored by either device.",
-                style = MaterialTheme.typography.bodySmall,
-            )
+            onPairNew?.let { pairNew ->
+                TextButton(onClick = pairNew) { Text("Pair new device") }
+            }
+            if (state.hosts.isNotEmpty()) {
+                Text(
+                    "Reconnect asks Android's native keyboard and mouse profile to resume this pairing. " +
+                        "The receiving device may still require you to tap Connect in its Bluetooth settings.",
+                    style = MaterialTheme.typography.bodySmall,
+                )
+                Text(
+                    "Forgetting removes MinkPad's connection history, not the Bluetooth pairing stored by either device.",
+                    style = MaterialTheme.typography.bodySmall,
+                )
+            }
         }
-    }, confirmButton = { TextButton(onClick = onDismiss) { Text("Close") } })
+    },
+        confirmButton = { TextButton(onClick = onDismiss) { Text("Close") } },
+    )
     forget?.let { host ->
-        AlertDialog(onDismissRequest = { forget = null }, title = { Text("Forget ${host.name}?") },
+        AlertDialog(
+            onDismissRequest = { forget = null },
+            modifier = Modifier.widthIn(max = 640.dp).fillMaxWidth(.92f),
+            properties = DialogProperties(usePlatformDefaultWidth = false),
+            title = { Text("Forget ${host.name}?") },
             text = { Text("Remove this device from MinkPad's connection history?") },
             confirmButton = { TextButton(onClick = { repository.forget(host.address); forget = null }) { Text("Forget") } },
-            dismissButton = { TextButton(onClick = { forget = null }) { Text("Cancel") } })
+            dismissButton = { TextButton(onClick = { forget = null }) { Text("Cancel") } },
+        )
     }
 }

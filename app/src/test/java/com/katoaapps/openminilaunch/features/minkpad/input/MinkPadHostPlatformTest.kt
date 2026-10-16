@@ -20,4 +20,15 @@ class MinkPadHostPlatformTest {
         assertNull(minkPadHostPlatformHint("master tv"))
         assertNull(minkPadHostPlatformHint(null))
     }
+
+    @Test
+    fun `maps Mac vertical overview gestures to Mission Control and App Expose`() {
+        val swipeUp = MinkPadHostPlatform.MAC.shortcut(MinkPadGestureAction.OVERVIEW)
+        val swipeDown = MinkPadHostPlatform.MAC.shortcut(MinkPadGestureAction.DISMISS_OVERVIEW)
+
+        assertEquals(82, swipeUp?.usage)
+        assertEquals(1, swipeUp?.modifiers)
+        assertEquals(81, swipeDown?.usage)
+        assertEquals(1, swipeDown?.modifiers)
+    }
 }

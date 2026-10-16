@@ -127,9 +127,6 @@ internal fun MinkPadScreen(
                     onFeedback = { feedback = it },
                     onFeedbackConsumed = { feedback = null },
                     onMode = { mode = it; feedback = null },
-                    onPlatform = { value ->
-                        state.host?.let { repository.preferences.setHostPlatform(it.address, value) }
-                    },
                     onConnect = repository::connect,
                     onModifiers = { modifiers = it; repository.modifiers(it) },
                     onHelp = { dialog = MinkPadDialog.HELP },
@@ -183,44 +180,44 @@ private fun MinkPadSetupContent(
             Text("Your pocket everyboard.", style = MaterialTheme.typography.bodyMedium)
         }
         MinkPadConnectionPanel(repository, state, onStart, onDiscover, onHostDialogStateChanged)
-        Surface(
-            shape = MaterialTheme.shapes.large,
-            color = MaterialTheme.colorScheme.surfaceContainerLow,
+        if (state.status in stableSetupStatuses) MinkPadSetupOverview()
+    }
+}
+
+@Composable
+private fun MinkPadSetupOverview() {
+    Surface(
+        shape = MaterialTheme.shapes.large,
+        color = MaterialTheme.colorScheme.surfaceContainerLow,
+    ) {
+        Column(
+            Modifier.fillMaxWidth().padding(16.dp),
+            verticalArrangement = Arrangement.spacedBy(8.dp),
         ) {
-            Column(
-                Modifier.fillMaxWidth().padding(16.dp),
-                verticalArrangement = Arrangement.spacedBy(8.dp),
-            ) {
-                Text("What's MinkPad?", style = MaterialTheme.typography.titleMedium)
-                Text(
-                    "MinkPad turns this phone into a Bluetooth keyboard, trackpad, and media remote for another device. Start it, pair from the device you want to control, then use the full-screen controller.",
-                    style = MaterialTheme.typography.bodyMedium,
-                )
-                Text(
-                    "Keyboard and pointer input travel over the Bluetooth connection. MinkPad does not save what you type.",
-                    style = MaterialTheme.typography.bodySmall,
-                )
-                HorizontalDivider(Modifier.padding(vertical = 4.dp))
-                Text("Pair a device", style = MaterialTheme.typography.titleSmall)
-                Text(
-                    "1. Tap Start MinkPad, then Start 2-minute pairing.\n" +
-                        "2. Open Bluetooth settings on the device you want to control.\n" +
-                        "3. Select Pro Controller - MinkPad and confirm the matching code on both devices.",
-                    style = MaterialTheme.typography.bodySmall,
-                )
-                Text(
-                    "While MinkPad is running, this phone temporarily uses the Bluetooth name Pro Controller - MinkPad. Its usual name returns when MinkPad closes. Headphones, speakers, watches, cars, and other paired accessories may disconnect or need to reconnect when the name changes.",
-                    style = MaterialTheme.typography.bodySmall,
-                    color = MaterialTheme.colorScheme.onSurfaceVariant,
-                )
-                Text("Switch between saved devices", style = MaterialTheme.typography.titleSmall)
-                Text(
-                    "While connected, open the top controls and tap the current device name. Choose another saved device, or select Pair new device. The receiving device must be nearby with Bluetooth on.",
-                    style = MaterialTheme.typography.bodySmall,
-                )
-            }
+            Text("What's MinkPad?", style = MaterialTheme.typography.titleMedium)
+            Text(
+                "MinkPad turns this phone into a Bluetooth keyboard, trackpad, and media remote for another device.",
+                style = MaterialTheme.typography.bodyMedium,
+            )
+            Text(
+                "Keyboard and pointer input travel directly over Bluetooth. MinkPad does not save what you type.",
+                style = MaterialTheme.typography.bodySmall,
+            )
+            Text(
+                "During a session, this phone temporarily appears to receiving devices as Pro Controller - MinkPad. Its usual Bluetooth name returns when MinkPad closes.",
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+            )
         }
     }
 }
+
+private val stableSetupStatuses = setOf(
+    MinkPadStatus.IDLE,
+    MinkPadStatus.READY,
+    MinkPadStatus.DISCONNECTED,
+    MinkPadStatus.UNSUPPORTED,
+    MinkPadStatus.ERROR,
+)
 
 private const val CONNECTED_FEEDBACK_MILLIS = 900L

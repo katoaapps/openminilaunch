@@ -9,6 +9,7 @@ internal object MinkPadBackupCodec {
         put("keepAwake", value.keepAwake)
         put("pointerSensitivity", value.pointerSensitivity); put("scrollSensitivity", value.scrollSensitivity)
         put("naturalScroll", value.naturalScroll); put("tapToClick", value.tapToClick); put("haptics", value.haptics)
+        put("advancedHostGestures", value.advancedHostGestures)
     }
     fun decode(json: JSONObject) = MinkPadPreferences(
         // Old mode and experimental touch-delivery values are intentionally ignored.
@@ -18,6 +19,7 @@ internal object MinkPadBackupCodec {
         naturalScroll = json.optBoolean("naturalScroll", true),
         tapToClick = json.optBoolean("tapToClick", true),
         haptics = json.optBoolean("haptics", true),
+        advancedHostGestures = json.optBoolean("advancedHostGestures", true),
     )
     private fun sensitivity(json: JSONObject, key: String): Float = json.optDouble(key, 1.0)
         .takeIf { it.isFinite() }?.toFloat()?.coerceIn(.25f, 3f) ?: 1f

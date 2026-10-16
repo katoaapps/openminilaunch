@@ -14,15 +14,10 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.outlined.HelpOutline
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Android
 import androidx.compose.material.icons.filled.Check
-import androidx.compose.material.icons.filled.DesktopMac
-import androidx.compose.material.icons.filled.DesktopWindows
-import androidx.compose.material.icons.filled.DevicesOther
 import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Mouse
-import androidx.compose.material.icons.filled.PhoneIphone
 import androidx.compose.material.icons.filled.SettingsRemote
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
@@ -43,18 +38,15 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.katoaapps.openminilaunch.features.minkpad.MinkPadSessionState
-import com.katoaapps.openminilaunch.features.minkpad.input.MinkPadHostPlatform
 
-internal enum class MinkPadConnectedMenu { HOSTS, SYSTEM, MORE }
+internal enum class MinkPadConnectedMenu { HOSTS, MORE }
 
 @Composable
 internal fun MinkPadTopDock(
     state: MinkPadSessionState,
     mode: MinkPadControllerMode,
-    platform: MinkPadHostPlatform,
     menu: MinkPadConnectedMenu?,
     onMode: (MinkPadControllerMode) -> Unit,
-    onPlatform: (MinkPadHostPlatform) -> Unit,
     onMenu: (MinkPadConnectedMenu?) -> Unit,
     onConnect: (String) -> Unit,
     onHosts: () -> Unit,
@@ -145,33 +137,6 @@ internal fun MinkPadTopDock(
                 onClick = { onMode(MinkPadControllerMode.REMOTE) },
                 icon = { Icon(Icons.Default.SettingsRemote, contentDescription = "Remote control mode") },
             )
-            Box {
-                IconButton(
-                    onClick = { onMenu(MinkPadConnectedMenu.SYSTEM) },
-                    modifier = Modifier.size(40.dp),
-                    colors = IconButtonDefaults.iconButtonColors(
-                        containerColor = MaterialTheme.colorScheme.surfaceContainerHigh,
-                        contentColor = MaterialTheme.colorScheme.onSurfaceVariant,
-                    ),
-                ) {
-                    MinkPadHostSystemIcon(platform)
-                }
-                DropdownMenu(
-                    expanded = menu == MinkPadConnectedMenu.SYSTEM,
-                    onDismissRequest = { onMenu(null) },
-                ) {
-                    MinkPadHostPlatform.entries.forEach { option ->
-                        DropdownMenuItem(
-                            text = { Text(option.label) },
-                            onClick = { onMenu(null); onPlatform(option) },
-                            leadingIcon = { MinkPadHostSystemIcon(option, contentDescription = null) },
-                            trailingIcon = if (platform == option) {
-                                { Icon(Icons.Default.Check, contentDescription = "Selected") }
-                            } else null,
-                        )
-                    }
-                }
-            }
             IconButton(onClick = onHelp, modifier = Modifier.size(40.dp)) {
                 Icon(Icons.AutoMirrored.Outlined.HelpOutline, contentDescription = "Trackpad help")
             }
@@ -198,21 +163,6 @@ internal fun MinkPadTopDock(
             }
         }
     }
-}
-
-@Composable
-private fun MinkPadHostSystemIcon(
-    platform: MinkPadHostPlatform,
-    contentDescription: String? = "Host system: ${platform.label}",
-) {
-    val icon = when (platform) {
-        MinkPadHostPlatform.ANDROID -> Icons.Default.Android
-        MinkPadHostPlatform.MAC -> Icons.Default.DesktopMac
-        MinkPadHostPlatform.APPLE_MOBILE -> Icons.Default.PhoneIphone
-        MinkPadHostPlatform.WINDOWS -> Icons.Default.DesktopWindows
-        MinkPadHostPlatform.GENERIC -> Icons.Default.DevicesOther
-    }
-    Icon(icon, contentDescription)
 }
 
 @Composable

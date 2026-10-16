@@ -109,8 +109,10 @@ internal fun Modifier.minkPadTrackpadGestures(
             when {
                 maxFingers == 1 && isTap && preferences.tapToClick && !held -> onClick(1)
                 maxFingers == 2 && isTap && preferences.tapToClick -> onClick(2)
-                maxFingers == 3 && isTap -> onAction(MinkPadGestureAction.BACK)
-                maxFingers == 3 && motion.getDistance() >= viewConfiguration.touchSlop * 3 -> {
+                preferences.advancedHostGestures && maxFingers == 3 && isTap ->
+                    onAction(MinkPadGestureAction.BACK)
+                preferences.advancedHostGestures && maxFingers == 3 &&
+                    motion.getDistance() >= viewConfiguration.touchSlop * 3 -> {
                     val action = if (abs(motion.x) > abs(motion.y)) {
                         if (motion.x < 0) MinkPadGestureAction.NEXT_APP else MinkPadGestureAction.PREVIOUS_APP
                     } else {
@@ -118,7 +120,8 @@ internal fun Modifier.minkPadTrackpadGestures(
                     }
                     onAction(action)
                 }
-                maxFingers == 4 && isTap -> onAction(MinkPadGestureAction.APP_LIST)
+                preferences.advancedHostGestures && maxFingers == 4 && isTap ->
+                    onAction(MinkPadGestureAction.APP_LIST)
             }
             lastTapTime = if (maxFingers == 1 && isTap && !doubleTap && !held) endedAt else 0
             lastTapPosition = first.position

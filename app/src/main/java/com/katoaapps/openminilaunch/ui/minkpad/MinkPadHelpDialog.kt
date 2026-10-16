@@ -34,10 +34,10 @@ internal fun MinkPadHelpDialog(platform: MinkPadHostPlatform, onSettings: () -> 
     ) {
         BoxWithConstraints(
             Modifier.fillMaxSize().pointerInput(close) { detectTapGestures { close() } }
-                .safeDrawingPadding().padding(12.dp),
+                .safeDrawingPadding().padding(8.dp),
             contentAlignment = Alignment.Center,
         ) {
-            val dialogWidth = (maxWidth * .96f).coerceAtMost(840.dp)
+            val dialogWidth = (maxWidth * .98f).coerceAtMost(960.dp)
             val dialogHeight = (maxHeight * .94f).coerceAtMost(760.dp)
             val compactHeader = maxHeight < 480.dp || fontScale > 1.5f
             // Outside taps dismiss; the inner teaching surface consumes its own background taps.
@@ -58,12 +58,12 @@ internal fun MinkPadHelpDialog(platform: MinkPadHostPlatform, onSettings: () -> 
                             if (compactHeader) Text(platform.label, style = MaterialTheme.typography.labelMedium)
                         }
                         if (compactHeader) IconButton(onClick = onSettings) {
-                            Icon(Icons.Default.Settings, contentDescription = "Choose host system / settings")
+                            Icon(Icons.Default.Settings, contentDescription = "Choose operating system or open settings")
                         }
                         IconButton(onClick = close) { Icon(Icons.Default.Close, contentDescription = "Close help") }
                     }
                     if (!compactHeader) TextButton(onClick = onSettings, modifier = Modifier.padding(horizontal = 12.dp)) {
-                        Text("Host system · ${platform.label} · Change")
+                        Text("Operating System · ${platform.label} · Change")
                     }
                     HorizontalDivider()
                     HorizontalPager(
