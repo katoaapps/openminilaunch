@@ -56,15 +56,27 @@ internal fun MinkPadHostPlatform.shortcut(action: MinkPadGestureAction): MinkPad
             WINDOWS -> MinkPadShortcut(41, 0, "Dismiss Task View · Esc")
             else -> null
         }
-        MinkPadGestureAction.NEXT_APP, MinkPadGestureAction.PREVIOUS_APP -> {
-            val modifier = when (this) {
-                ANDROID, WINDOWS -> alt
-                MAC, APPLE_MOBILE -> meta
-                GENERIC -> return null
-            } or (if (action == MinkPadGestureAction.PREVIOUS_APP) shift else 0)
-            MinkPadShortcut(43, modifier, "Switch app · " +
-                (if (this == MAC || this == APPLE_MOBILE) "Command" else "Alt") +
-                (if (action == MinkPadGestureAction.PREVIOUS_APP) " + Shift" else "") + " + Tab")
+        MinkPadGestureAction.NEXT_APP, MinkPadGestureAction.PREVIOUS_APP -> when (this) {
+            MAC -> {
+                val previous = action == MinkPadGestureAction.PREVIOUS_APP
+                MinkPadShortcut(
+                    usage = if (previous) 80 else 79,
+                    modifiers = ctrl,
+                    description = (if (previous) "Previous" else "Next") + " Space · Control + " +
+                        if (previous) "Left" else "Right",
+                )
+            }
+            ANDROID, WINDOWS, APPLE_MOBILE -> {
+                val previous = action == MinkPadGestureAction.PREVIOUS_APP
+                val modifier = (if (this == APPLE_MOBILE) meta else alt) or (if (previous) shift else 0)
+                MinkPadShortcut(
+                    usage = 43,
+                    modifiers = modifier,
+                    description = "Switch app · " + (if (this == APPLE_MOBILE) "Command" else "Alt") +
+                        (if (previous) " + Shift" else "") + " + Tab",
+                )
+            }
+            GENERIC -> null
         }
         MinkPadGestureAction.APP_LIST -> when (this) {
             ANDROID -> MinkPadShortcut(0, meta, "App list / search · Meta (host-dependent)")

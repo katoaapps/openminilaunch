@@ -31,4 +31,15 @@ class MinkPadHostPlatformTest {
         assertEquals(81, swipeDown?.usage)
         assertEquals(1, swipeDown?.modifiers)
     }
+
+    @Test
+    fun `maps Mac horizontal swipes to adjacent Spaces`() {
+        val swipeLeft = MinkPadHostPlatform.MAC.shortcut(MinkPadGestureAction.NEXT_APP)
+        val swipeRight = MinkPadHostPlatform.MAC.shortcut(MinkPadGestureAction.PREVIOUS_APP)
+
+        assertEquals(79, swipeLeft?.usage)
+        assertEquals(1, swipeLeft?.modifiers)
+        assertEquals(80, swipeRight?.usage)
+        assertEquals(1, swipeRight?.modifiers)
+    }
 }

@@ -65,8 +65,8 @@ private fun MinkPadHostPlatform.shortLabel(action: MinkPadGestureAction): String
         MinkPadHostPlatform.WINDOWS -> "Close view"
         else -> "Dismiss view"
     }
-    MinkPadGestureAction.PREVIOUS_APP -> "Previous app"
-    MinkPadGestureAction.NEXT_APP -> "Next app"
+    MinkPadGestureAction.PREVIOUS_APP -> if (this == MinkPadHostPlatform.MAC) "Previous Space" else "Previous app"
+    MinkPadGestureAction.NEXT_APP -> if (this == MinkPadHostPlatform.MAC) "Next Space" else "Next app"
     MinkPadGestureAction.APP_LIST -> when (this) {
         MinkPadHostPlatform.WINDOWS -> "Start"
         else -> "App list"

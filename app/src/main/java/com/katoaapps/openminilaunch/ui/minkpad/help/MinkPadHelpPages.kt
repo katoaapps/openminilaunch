@@ -51,8 +51,8 @@ internal fun minkPadHelpPages(platform: MinkPadHostPlatform): List<MinkPadHelpPa
                 example("Swipe up", 3, MinkPadGestureMotion.UP, action(MinkPadGestureAction.OVERVIEW)),
                 example("Swipe down", 3, MinkPadGestureMotion.DOWN, action(MinkPadGestureAction.DISMISS_OVERVIEW)),
             )),
-        MinkPadHelpPage("Switch apps and app list",
-            "Swipe three fingers left or right to switch apps. Tap four fingers for the available app-list equivalent. Some host systems do not have a mapping.",
+        MinkPadHelpPage("Switch apps or Spaces",
+            "Swipe three fingers left or right to move between Spaces and full-screen apps on Mac, or switch apps on other supported systems. Tap four fingers for the available app-list equivalent. Some host systems do not have a mapping.",
             listOf(
                 example("Swipe left", 3, MinkPadGestureMotion.LEFT, action(MinkPadGestureAction.NEXT_APP)),
                 example("Swipe right", 3, MinkPadGestureMotion.RIGHT, action(MinkPadGestureAction.PREVIOUS_APP)),
