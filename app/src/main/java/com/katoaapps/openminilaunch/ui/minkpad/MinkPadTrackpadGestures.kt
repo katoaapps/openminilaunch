@@ -5,6 +5,7 @@ import androidx.compose.foundation.gestures.awaitEachGesture
 import androidx.compose.foundation.gestures.awaitFirstDown
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.input.pointer.PointerInputChange
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.input.pointer.positionChange
 import com.katoaapps.openminilaunch.features.minkpad.MinkPadPreferences
@@ -23,7 +24,7 @@ internal fun Modifier.minkPadTrackpadGestures(
     onClick: (Int) -> Unit,
     onHold: () -> Unit,
     onAction: (MinkPadGestureAction) -> Unit,
-    onPosition: (Offset) -> Unit,
+    onTouches: (List<Offset>) -> Unit,
 ): Modifier = pointerInput(enabled, preferences, inputReset, platform) {
     if (!enabled) return@pointerInput
     var lastTapTime = 0L
@@ -31,6 +32,7 @@ internal fun Modifier.minkPadTrackpadGestures(
     awaitEachGesture {
         val first = awaitFirstDown()
         val initialFingers = currentEvent.changes.filter { it.pressed }
+        onTouches(initialFingers.normalizedPositions(size.width, size.height))
         currentEvent.changes.forEach { it.consume() }
         val doubleTap = initialFingers.size == 1 && preferences.tapToClick &&
             first.uptimeMillis - lastTapTime in 1..viewConfiguration.doubleTapTimeoutMillis &&
@@ -61,6 +63,7 @@ internal fun Modifier.minkPadTrackpadGestures(
                 }
                 val fingers = event.changes.filter { it.pressed }
                 val count = fingers.size
+                onTouches(fingers.normalizedPositions(size.width, size.height))
                 endedAt = event.changes.maxOf { it.uptimeMillis }
                 val previousMax = maxFingers
                 maxFingers = maxOf(maxFingers, count)
@@ -73,7 +76,6 @@ internal fun Modifier.minkPadTrackpadGestures(
                 if (count > 0 && count == previousCount && count == maxFingers) {
                     travel += delta.getDistance()
                     motion += delta
-                    onPosition(Offset(fingers.first().position.x / size.width, fingers.first().position.y / size.height))
                     when (count) {
                         1 -> {
                             repository.pointer(delta.x * preferences.pointerSensitivity, delta.y * preferences.pointerSensitivity)
@@ -127,7 +129,22 @@ internal fun Modifier.minkPadTrackpadGestures(
             lastTapPosition = first.position
         } finally {
             if (held) repository.mouseButton(1, false)
+            onTouches(emptyList())
         }
+    }
+}
+
+private fun List<PointerInputChange>.normalizedPositions(
+    width: Int,
+    height: Int,
+): List<Offset> {
+    val safeWidth = width.coerceAtLeast(1).toFloat()
+    val safeHeight = height.coerceAtLeast(1).toFloat()
+    return map { pointer ->
+        Offset(
+            x = (pointer.position.x / safeWidth).coerceIn(0f, 1f),
+            y = (pointer.position.y / safeHeight).coerceIn(0f, 1f),
+        )
     }
 }
 

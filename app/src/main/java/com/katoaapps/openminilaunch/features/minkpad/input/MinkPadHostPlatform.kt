@@ -1,5 +1,6 @@
 package com.katoaapps.openminilaunch.features.minkpad.input
 
+import android.bluetooth.BluetoothClass
 import com.katoaapps.openminilaunch.features.minkpad.input.MinkPadHostPlatform.ANDROID
 import com.katoaapps.openminilaunch.features.minkpad.input.MinkPadHostPlatform.APPLE_MOBILE
 import com.katoaapps.openminilaunch.features.minkpad.input.MinkPadHostPlatform.GENERIC
@@ -25,6 +26,25 @@ internal fun minkPadHostPlatformHint(name: String?): MinkPadHostPlatform? {
         else -> null
     }
 }
+
+/** Uses the receiving device's advertised identity only to choose the initial controller surface. */
+internal fun minkPadRemoteControlsHint(name: String?, deviceClass: Int?): Boolean {
+    if (deviceClass in remoteControlDeviceClasses) return true
+    val normalized = name?.trim()?.lowercase().orEmpty()
+    if (normalized.isEmpty()) return false
+    return remoteControlNames.any(normalized::contains) || tvNameToken.containsMatchIn(normalized)
+}
+
+private val remoteControlDeviceClasses = setOf(
+    BluetoothClass.Device.AUDIO_VIDEO_SET_TOP_BOX,
+    BluetoothClass.Device.AUDIO_VIDEO_VIDEO_CONFERENCING,
+    BluetoothClass.Device.AUDIO_VIDEO_VIDEO_DISPLAY_AND_LOUDSPEAKER,
+    BluetoothClass.Device.AUDIO_VIDEO_VIDEO_MONITOR,
+)
+private val remoteControlNames = listOf(
+    "android tv", "apple tv", "chromecast", "fire tv", "google tv", "shield tv", "smart tv", "television",
+)
+private val tvNameToken = Regex("(^|\\W)tv($|\\W)")
 
 internal enum class MinkPadGestureAction {
     BACK, OVERVIEW, DISMISS_OVERVIEW, PREVIOUS_APP, NEXT_APP, APP_LIST, ZOOM_IN, ZOOM_OUT,

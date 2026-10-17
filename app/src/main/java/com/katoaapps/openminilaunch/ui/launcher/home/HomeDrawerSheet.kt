@@ -6,6 +6,8 @@
 package com.katoaapps.openminilaunch.ui.launcher.home
 
 import android.widget.Toast
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -14,12 +16,15 @@ import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowForward
 import androidx.compose.material.icons.filled.Add
@@ -28,6 +33,7 @@ import androidx.compose.material.icons.filled.BusinessCenter
 import androidx.compose.material.icons.filled.Shield
 import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.FilledTonalButton
+import androidx.compose.material3.FilledTonalIconButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.ListItem
 import androidx.compose.material3.ListItemDefaults
@@ -40,12 +46,16 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import com.katoaapps.openminilaunch.R
 import com.katoaapps.openminilaunch.data.LauncherStore
+import com.katoaapps.openminilaunch.features.minkpad.MinkPadLauncherEntry
 import com.katoaapps.openminilaunch.features.wellbeing.MinkAppAccessState
 import com.katoaapps.openminilaunch.model.LauncherTarget
 import com.katoaapps.openminilaunch.platform.DeviceActions
@@ -95,57 +105,98 @@ internal fun HomeDrawerSheet(
                 onLaunched = onDismiss,
             )
         }
-        FlowRow(
+        Row(
             Modifier.fillMaxWidth().padding(horizontal = Dimens.dp18, vertical = Dimens.dp4),
-            horizontalArrangement = Arrangement.spacedBy(Dimens.dp8, Alignment.End),
-            verticalArrangement = Arrangement.spacedBy(Dimens.dp8),
+            horizontalArrangement = Arrangement.spacedBy(Dimens.dp8),
+            verticalAlignment = Alignment.Bottom,
         ) {
-            if (
-                store.demoSearchDataEnabled ||
-                actions.privateContainerEntryPointAvailable(store.privateContainerGatewaySelectionKey)
-            ) {
-                FilledTonalButton(
-                    onClick = {
-                        onDismiss()
-                        actions.openPrivateApps()
-                    },
-                ) {
-                    Icon(Icons.Default.Shield, null)
-                    Text(
-                        stringResource(R.string.privacy_apps),
-                        modifier = Modifier.padding(start = Dimens.dp6),
-                    )
-                }
-            }
-            if (store.demoSearchDataEnabled || actions.workProfileAvailable()) {
-                FilledTonalButton(
-                    onClick = {
-                        onDismiss()
-                        actions.openWorkApps()
-                    },
-                ) {
-                    Icon(Icons.Default.BusinessCenter, null)
-                    Text(
-                        stringResource(R.string.work_apps),
-                        modifier = Modifier.padding(start = Dimens.dp6),
-                    )
-                }
-            }
-            FilledTonalButton(
+            FilledTonalIconButton(
                 onClick = {
                     onDismiss()
-                    actions.openAllApps()
+                    MinkPadLauncherEntry.open(context)
                 },
             ) {
-                Text(stringResource(R.string.see_all_apps))
-                Icon(
-                    Icons.AutoMirrored.Filled.ArrowForward,
-                    null,
-                    modifier = Modifier.padding(start = Dimens.dp6),
-                )
+                MinkPadDrawerIcon()
+            }
+            FlowRow(
+                Modifier.weight(1f),
+                horizontalArrangement = Arrangement.spacedBy(Dimens.dp8, Alignment.End),
+                verticalArrangement = Arrangement.spacedBy(Dimens.dp8),
+            ) {
+                if (
+                    store.demoSearchDataEnabled ||
+                    actions.privateContainerEntryPointAvailable(store.privateContainerGatewaySelectionKey)
+                ) {
+                    FilledTonalButton(
+                        onClick = {
+                            onDismiss()
+                            actions.openPrivateApps()
+                        },
+                    ) {
+                        Icon(Icons.Default.Shield, null)
+                        Text(
+                            stringResource(R.string.privacy_apps),
+                            modifier = Modifier.padding(start = Dimens.dp6),
+                        )
+                    }
+                }
+                if (store.demoSearchDataEnabled || actions.workProfileAvailable()) {
+                    FilledTonalButton(
+                        onClick = {
+                            onDismiss()
+                            actions.openWorkApps()
+                        },
+                    ) {
+                        Icon(Icons.Default.BusinessCenter, null)
+                        Text(
+                            stringResource(R.string.work_apps),
+                            modifier = Modifier.padding(start = Dimens.dp6),
+                        )
+                    }
+                }
+                FilledTonalButton(
+                    onClick = {
+                        onDismiss()
+                        actions.openAllApps()
+                    },
+                ) {
+                    Text(stringResource(R.string.see_all_apps))
+                    Icon(
+                        Icons.AutoMirrored.Filled.ArrowForward,
+                        null,
+                        modifier = Modifier.padding(start = Dimens.dp6),
+                    )
+                }
             }
         }
         Spacer(Modifier.height(Dimens.dp28))
+    }
+}
+
+@Composable
+private fun MinkPadDrawerIcon() {
+    Box(Modifier.size(Dimens.dp28)) {
+        Icon(
+            painterResource(R.drawable.ic_minkpad_notification),
+            stringResource(R.string.minkpad_name),
+            modifier = Modifier.size(Dimens.dp24).align(Alignment.TopStart),
+        )
+        Box(
+            Modifier
+                .size(Dimens.dp14)
+                .align(Alignment.BottomEnd)
+                .clip(CircleShape)
+                .background(MaterialTheme.colorScheme.surface),
+        ) {
+            Image(
+                painter = painterResource(R.drawable.ic_launcher_foreground),
+                contentDescription = null,
+                contentScale = ContentScale.Fit,
+                modifier = Modifier
+                    .fillMaxSize()
+                    .graphicsLayer(scaleX = 1.55f, scaleY = 1.55f),
+            )
+        }
     }
 }
 

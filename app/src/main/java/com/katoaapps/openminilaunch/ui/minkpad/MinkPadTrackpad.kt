@@ -32,8 +32,8 @@ internal fun MinkPadTrackpad(
     showHint: Boolean = true,
     showGridOutline: Boolean = false,
 ) {
-    val position = remember { mutableStateOf<Offset?>(null) }
-    var hasMoved by remember { mutableStateOf(false) }
+    var touchPositions by remember { mutableStateOf(emptyList<Offset>()) }
+    var hasInteracted by remember { mutableStateOf(false) }
     val inputReset by repository.inputReset.collectAsState()
     val markerColor = MaterialTheme.colorScheme.primary
     val haptic = LocalHapticFeedback.current
@@ -48,11 +48,15 @@ internal fun MinkPadTrackpad(
                 Modifier.fillMaxSize().minkPadTrackpadGestures(
                     repository, preferences, enabled, inputReset, platform,
                     onClick = { repository.click(it); vibrate() }, onHold = ::vibrate,
-                    onAction = onAction, onPosition = { position.value = it; hasMoved = true },
+                    onAction = onAction,
+                    onTouches = {
+                        touchPositions = it
+                        if (it.isNotEmpty()) hasInteracted = true
+                    },
                 ),
                 contentAlignment = Alignment.Center,
             ) {
-                if (showHint && !hasMoved) Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                if (showHint && !hasInteracted) Column(horizontalAlignment = Alignment.CenterHorizontally) {
                     Text("Trackpad", style = MaterialTheme.typography.titleLarge)
                     Text("Move a finger · Tap to click", style = MaterialTheme.typography.bodyMedium)
                 }
@@ -81,19 +85,35 @@ internal fun MinkPadTrackpad(
                         strokeWidth = strokeWidth,
                     )
                 }
-                Canvas(Modifier.fillMaxSize()) {
-                    position.value?.let {
-                        val point = Offset(size.width * it.x, size.height * it.y)
-                        drawCircle(markerColor.copy(alpha = .15f), 28.dp.toPx(), point)
-                        drawCircle(markerColor, 7.dp.toPx(), point)
-                    }
-                }
+                MinkPadTouchIndicators(touchPositions, markerColor)
             }
             if (showHelp) {
                 IconButton(onClick = onHelp, modifier = Modifier.align(Alignment.TopEnd).padding(8.dp)) {
                     Icon(Icons.AutoMirrored.Outlined.HelpOutline, contentDescription = "Trackpad help")
                 }
             }
+        }
+    }
+}
+
+@Composable
+private fun MinkPadTouchIndicators(positions: List<Offset>, color: Color) {
+    Canvas(Modifier.fillMaxSize()) {
+        val multiTouch = positions.size > 1
+        positions.forEach { position ->
+            val center = Offset(size.width * position.x, size.height * position.y)
+            drawCircle(
+                color = color.copy(alpha = if (multiTouch) .22f else .12f),
+                radius = 30.dp.toPx(),
+                center = center,
+            )
+            drawCircle(
+                color = color.copy(alpha = if (multiTouch) .9f else .65f),
+                radius = 20.dp.toPx(),
+                center = center,
+                style = Stroke(width = 2.dp.toPx()),
+            )
+            drawCircle(color, 5.dp.toPx(), center)
         }
     }
 }

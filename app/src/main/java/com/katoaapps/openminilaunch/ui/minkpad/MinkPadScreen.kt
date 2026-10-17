@@ -32,6 +32,7 @@ private enum class MinkPadScreenPhase { SETUP, CONNECTED_FEEDBACK, CONTROLLER }
 @Composable
 internal fun MinkPadScreen(
     repository: MinkPadRepository, onStart: () -> Unit, onDiscover: () -> Unit,
+    onBrowseNearby: () -> Unit,
     onHardwareCaptureChanged: (Boolean) -> Unit,
 ) {
     val state by repository.state.collectAsState()
@@ -56,6 +57,11 @@ internal fun MinkPadScreen(
     LaunchedEffect(connected, state.host?.address) {
         controllerReady = false
         if (connected) {
+            mode = if (state.host?.prefersRemoteControls == true) {
+                MinkPadControllerMode.REMOTE
+            } else {
+                MinkPadControllerMode.TRADITIONAL
+            }
             delay(CONNECTED_FEEDBACK_MILLIS)
             controllerReady = true
         }
@@ -104,6 +110,7 @@ internal fun MinkPadScreen(
                     state = state,
                     onStart = onStart,
                     onDiscover = onDiscover,
+                    onBrowseNearby = onBrowseNearby,
                     onHostDialogStateChanged = { hostDialogOpen = it },
                 )
 
@@ -169,6 +176,7 @@ private fun MinkPadSetupContent(
     state: MinkPadSessionState,
     onStart: () -> Unit,
     onDiscover: () -> Unit,
+    onBrowseNearby: () -> Unit,
     onHostDialogStateChanged: (Boolean) -> Unit,
 ) {
     Column(
@@ -179,7 +187,7 @@ private fun MinkPadSetupContent(
             Text("MinkPad · Beta", style = MaterialTheme.typography.headlineSmall, fontWeight = FontWeight.Bold)
             Text("Your pocket everyboard.", style = MaterialTheme.typography.bodyMedium)
         }
-        MinkPadConnectionPanel(repository, state, onStart, onDiscover, onHostDialogStateChanged)
+        MinkPadConnectionPanel(repository, state, onStart, onDiscover, onBrowseNearby, onHostDialogStateChanged)
         if (state.status in stableSetupStatuses) MinkPadSetupOverview()
     }
 }
@@ -204,7 +212,7 @@ private fun MinkPadSetupOverview() {
                 style = MaterialTheme.typography.bodySmall,
             )
             Text(
-                "During a session, this phone temporarily appears to receiving devices as Pro Controller - MinkPad. Its usual Bluetooth name returns when MinkPad closes.",
+                "During a session, this phone temporarily appears as Pro Controller - MinkPad followed by its usual device name. Its usual Bluetooth name returns when MinkPad closes.",
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )

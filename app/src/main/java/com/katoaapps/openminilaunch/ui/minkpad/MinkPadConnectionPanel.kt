@@ -24,6 +24,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import com.katoaapps.openminilaunch.features.minkpad.MinkPadRepository
 import com.katoaapps.openminilaunch.features.minkpad.MinkPadSessionState
@@ -38,10 +39,12 @@ internal fun MinkPadConnectionPanel(
     state: MinkPadSessionState,
     onStart: () -> Unit,
     onDiscover: () -> Unit,
+    onBrowseNearby: () -> Unit,
     onDialogStateChanged: (Boolean) -> Unit,
 ) {
     var hostsOpen by remember { mutableStateOf(false) }
-    LaunchedEffect(hostsOpen) { onDialogStateChanged(hostsOpen) }
+    var nearbyDevicesOpen by remember { mutableStateOf(false) }
+    LaunchedEffect(hostsOpen, nearbyDevicesOpen) { onDialogStateChanged(hostsOpen || nearbyDevicesOpen) }
     val supported = repository.supported()
     val pairing = state.status == MinkPadStatus.WAITING_FOR_HOST
     val busy = state.status in busyStatuses || pairing && state.host != null
@@ -73,7 +76,13 @@ internal fun MinkPadConnectionPanel(
                 Text("Requires Android 9 or later and a phone with Bluetooth HID Device support.")
             }
 
-            if (pairing) PairingInstructions(state)
+            if (pairing) PairingInstructions(
+                state = state,
+                onBrowseNearby = {
+                    if (repository.supportsNearbyDiscovery()) nearbyDevicesOpen = true
+                    onBrowseNearby()
+                },
+            )
 
             FlowRow(
                 horizontalArrangement = Arrangement.spacedBy(8.dp),
@@ -137,10 +146,19 @@ internal fun MinkPadConnectionPanel(
         },
         onDismiss = { hostsOpen = false },
     )
+    if (nearbyDevicesOpen) MinkPadNearbyDevicesDialog(
+        repository = repository,
+        onRefresh = onBrowseNearby,
+        onDismiss = {
+            repository.stopNearbyDiscovery()
+            nearbyDevicesOpen = false
+        },
+    )
 }
 
 @Composable
-private fun PairingInstructions(state: MinkPadSessionState) {
+private fun PairingInstructions(state: MinkPadSessionState, onBrowseNearby: () -> Unit) {
+    val context = LocalContext.current
     val deadline = state.pairingDeadlineElapsedRealtime
     var remaining by remember(deadline) { mutableIntStateOf(deadline.remainingSeconds()) }
     LaunchedEffect(deadline) {
@@ -170,9 +188,29 @@ private fun PairingInstructions(state: MinkPadSessionState) {
                 ?.takeIf { state.host != null || it.startsWith("Pairing failed") }
                 ?.let { Text(it, style = MaterialTheme.typography.bodySmall) }
             if (state.host == null) {
+                Surface(
+                    shape = MaterialTheme.shapes.medium,
+                    color = MaterialTheme.colorScheme.surface,
+                ) {
+                    Column(
+                        Modifier.fillMaxWidth().padding(12.dp),
+                        verticalArrangement = Arrangement.spacedBy(4.dp),
+                    ) {
+                        Text("Pair from this phone", style = MaterialTheme.typography.titleSmall)
+                        Text("Search for nearby receiving devices.", style = MaterialTheme.typography.bodySmall)
+                        TextButton(onClick = onBrowseNearby) { Text("See nearby devices") }
+                    }
+                }
                 Text("1. Open Bluetooth settings on the device you want to control.")
                 Text("2. Select “${state.advertisedName ?: "this phone"}”.")
                 Text("3. Confirm the matching pairing code on both devices.")
+                Text(
+                    "Can't find MinkPad? Some TVs require this phone to start pairing instead.",
+                    style = MaterialTheme.typography.bodySmall,
+                )
+                TextButton(onClick = {
+                    context.openMinkPadBluetoothSettings()
+                }) { Text("Open this phone's Bluetooth settings") }
             } else {
                 Text(
                     "Confirm the matching pairing code on both devices. MinkPad will open the controller when keyboard and mouse input are ready.",

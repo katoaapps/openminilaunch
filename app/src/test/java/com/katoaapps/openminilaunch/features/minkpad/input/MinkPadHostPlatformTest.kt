@@ -1,7 +1,10 @@
 package com.katoaapps.openminilaunch.features.minkpad.input
 
+import android.bluetooth.BluetoothClass
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNull
+import org.junit.Assert.assertTrue
 import org.junit.Test
 
 class MinkPadHostPlatformTest {
@@ -19,6 +22,20 @@ class MinkPadHostPlatformTest {
         assertNull(minkPadHostPlatformHint("Office computer"))
         assertNull(minkPadHostPlatformHint("master tv"))
         assertNull(minkPadHostPlatformHint(null))
+    }
+
+    @Test
+    fun `recognizes TV hosts without treating every audio video device as a remote`() {
+        assertTrue(minkPadRemoteControlsHint("Living Room Google TV", null))
+        assertTrue(minkPadRemoteControlsHint("master tv", null))
+        assertTrue(minkPadRemoteControlsHint(null, BluetoothClass.Device.AUDIO_VIDEO_SET_TOP_BOX))
+        assertFalse(minkPadRemoteControlsHint("Living Room speaker", BluetoothClass.Device.AUDIO_VIDEO_LOUDSPEAKER))
+        assertFalse(minkPadRemoteControlsHint("Activity tracker", null))
+    }
+
+    @Test
+    fun `uses Android HID consumer back for remote controls`() {
+        assertEquals(0x224, MinkPadConsumerAction.BACK.usage)
     }
 
     @Test

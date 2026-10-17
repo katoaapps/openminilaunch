@@ -8,6 +8,9 @@
     <uses-permission android:name="android.permission.BLUETOOTH_ADMIN" android:maxSdkVersion="30" />
     <uses-permission android:name="android.permission.BLUETOOTH_CONNECT" />
     <uses-permission android:name="android.permission.BLUETOOTH_ADVERTISE" />
+    <uses-permission
+        android:name="android.permission.BLUETOOTH_SCAN"
+        android:usesPermissionFlags="neverForLocation" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE" />
     <uses-permission android:name="android.permission.FOREGROUND_SERVICE_CONNECTED_DEVICE" />
     <uses-feature android:name="android.hardware.bluetooth" android:required="false" />
@@ -195,7 +198,8 @@
             android:launchMode="singleTop"
             android:resizeableActivity="true"
             android:taskAffinity="${applicationId}.minkpad"
-            android:theme="@style/Theme.MiniLaunch" />
+            android:theme="@style/Theme.MiniLaunch"
+            android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".ui.minkspace.media.MediaLabActivity"
             android:excludeFromRecents="false"

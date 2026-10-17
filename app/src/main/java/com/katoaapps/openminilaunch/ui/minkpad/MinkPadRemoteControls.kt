@@ -14,7 +14,7 @@ import com.katoaapps.openminilaunch.features.minkpad.input.MinkPadConsumerAction
 internal fun MinkPadRemoteControls(repository: MinkPadRepository, keyboardEnabled: Boolean, mediaEnabled: Boolean) {
     Column(Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(8.dp)) {
         Text("TV remote", style = MaterialTheme.typography.titleLarge)
-        Text("D-pad uses keyboard arrows and Enter. Back uses Esc. TV and app support varies.", style = MaterialTheme.typography.bodySmall)
+        Text("D-pad uses keyboard arrows and Enter. Back uses the standard TV/browser Back command.", style = MaterialTheme.typography.bodySmall)
         Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.Center) {
             FilledTonalButton({ repository.perform(MinkPadAction.UP) }, enabled = keyboardEnabled,
                 modifier = Modifier.width(88.dp).heightIn(min = 56.dp)) { Text("↑") }
@@ -24,8 +24,14 @@ internal fun MinkPadRemoteControls(repository: MinkPadRepository, keyboardEnable
             FilledTonalButton({ repository.perform(MinkPadAction.DOWN) }, enabled = keyboardEnabled,
                 modifier = Modifier.width(88.dp).heightIn(min = 56.dp)) { Text("↓") }
         }
-        TextButton({ repository.perform(MinkPadAction.ESCAPE) }, enabled = keyboardEnabled) { Text("Back") }
-        MinkPadConsumerAction.entries.chunked(3).forEach { row ->
+        TextButton(
+            onClick = {
+                if (mediaEnabled) repository.consumer(MinkPadConsumerAction.BACK.usage)
+                else repository.perform(MinkPadAction.ESCAPE)
+            },
+            enabled = mediaEnabled || keyboardEnabled,
+        ) { Text("Back") }
+        MinkPadConsumerAction.entries.filterNot { it == MinkPadConsumerAction.BACK }.chunked(3).forEach { row ->
             Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                 row.forEach { action ->
                     FilledTonalButton({ repository.consumer(action.usage) }, enabled = mediaEnabled,

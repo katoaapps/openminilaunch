@@ -56,8 +56,11 @@ internal class MinkPadInputEditor(context: Context) : EditText(context) {
         post {
             // A pending focus/IME request must not reactivate input after a dialog or disconnect.
             if (!isEnabled || !hasWindowFocus()) return@post
-            requestFocus()
-            if (softwareInput) inputMethod?.showSoftInput(this, 0)
+            requestFocusFromTouch()
+            if (softwareInput) {
+                inputMethod?.restartInput(this)
+                inputMethod?.showSoftInput(this, InputMethodManager.SHOW_IMPLICIT)
+            }
         }
     }
 

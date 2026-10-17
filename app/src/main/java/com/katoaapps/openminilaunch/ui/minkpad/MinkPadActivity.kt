@@ -30,6 +30,9 @@ class MinkPadActivity : ComponentActivity() {
             startActivity(Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS, Uri.parse("package:$packageName")))
         }
     }
+    private val nearbyDiscoveryPermission = registerForActivityResult(ActivityResultContracts.RequestPermission()) { granted ->
+        if (granted) repository.startNearbyDiscovery() else repository.nearbyDiscoveryPermissionDenied()
+    }
     private val notificationRequest = registerForActivityResult(ActivityResultContracts.RequestPermission()) { repository.start() }
     private val enableBluetooth = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {
         if (repository.bluetoothEnabled()) startSession()
@@ -47,6 +50,7 @@ class MinkPadActivity : ComponentActivity() {
             MinkLauncherTheme(store) {
                 MinkPadScreen(repository, onStart = ::startSession,
                     onDiscover = ::requestPairing,
+                    onBrowseNearby = ::browseNearbyDevices,
                     onHardwareCaptureChanged = {
                         captureHardwareInput = it
                         if (!it) hardware.reset()
@@ -61,6 +65,15 @@ class MinkPadActivity : ComponentActivity() {
             Intent(BluetoothAdapter.ACTION_REQUEST_DISCOVERABLE)
                 .putExtra(BluetoothAdapter.EXTRA_DISCOVERABLE_DURATION, PAIRING_SECONDS),
         )
+    }
+
+    private fun browseNearbyDevices() {
+        if (Build.VERSION.SDK_INT < 31) {
+            openMinkPadBluetoothSettings()
+            return
+        }
+        if (repository.nearbyDiscoveryPermissionGranted()) repository.startNearbyDiscovery()
+        else nearbyDiscoveryPermission.launch(Manifest.permission.BLUETOOTH_SCAN)
     }
 
     private fun startSession() {

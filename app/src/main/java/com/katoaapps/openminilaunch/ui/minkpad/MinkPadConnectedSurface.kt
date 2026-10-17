@@ -1,5 +1,6 @@
 package com.katoaapps.openminilaunch.ui.minkpad
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.animateDpAsState
 import androidx.compose.animation.fadeIn
@@ -8,10 +9,13 @@ import androidx.compose.animation.slideInVertically
 import androidx.compose.animation.slideOutVertically
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.heightIn
+import androidx.compose.foundation.layout.imePadding
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.safeDrawing
@@ -96,6 +100,9 @@ internal fun MinkPadConnectedSurface(
         label = "MinkPad bottom control offset",
     )
     val snackbarHost = remember { SnackbarHostState() }
+    val bottomControlsScroll = rememberScrollState()
+
+    BackHandler(enabled = bottomExpanded) { bottomExpanded = false }
 
     LaunchedEffect(menu) { onMenuStateChanged(menu != null) }
     DisposableEffect(Unit) { onDispose { onMenuStateChanged(false) } }
@@ -141,11 +148,13 @@ internal fun MinkPadConnectedSurface(
             }
         }
 
-        Box(
+        BoxWithConstraints(
             Modifier
                 .fillMaxSize()
-                .windowInsetsPadding(WindowInsets.safeDrawing),
+                .windowInsetsPadding(WindowInsets.safeDrawing)
+                .imePadding(),
         ) {
+            val bottomTrayMaxHeight = (maxHeight - 72.dp).coerceAtLeast(200.dp)
             AnimatedVisibility(
                 visible = topExpanded,
                 modifier = Modifier.align(Alignment.TopCenter),
@@ -191,6 +200,7 @@ internal fun MinkPadConnectedSurface(
                 Surface(
                     modifier = Modifier
                         .fillMaxWidth()
+                        .heightIn(max = bottomTrayMaxHeight)
                         .onGloballyPositioned { bottomTrayHeightPx = it.size.height },
                     shape = RoundedCornerShape(topStart = 28.dp, topEnd = 28.dp),
                     color = MaterialTheme.colorScheme.surfaceContainer,
@@ -198,7 +208,9 @@ internal fun MinkPadConnectedSurface(
                     shadowElevation = 12.dp,
                 ) {
                     Column(
-                        Modifier.padding(start = 16.dp, top = 18.dp, end = 16.dp, bottom = 14.dp),
+                        Modifier
+                            .verticalScroll(bottomControlsScroll)
+                            .padding(start = 16.dp, top = 18.dp, end = 16.dp, bottom = 14.dp),
                         verticalArrangement = Arrangement.spacedBy(12.dp),
                     ) {
                         MinkPadHostShortcutGrid(

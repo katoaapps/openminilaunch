@@ -20,6 +20,7 @@ internal data class MinkPadHost(
     val name: String,
     val remembered: Boolean,
     val platformHint: MinkPadHostPlatform? = null,
+    val prefersRemoteControls: Boolean = false,
 )
 internal data class MinkPadSessionState(
     val status: MinkPadStatus = MinkPadStatus.IDLE,

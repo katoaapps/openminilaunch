@@ -16,10 +16,12 @@ import android.os.SystemClock
 import android.provider.Settings
 import androidx.core.content.ContextCompat
 import com.katoaapps.openminilaunch.features.minkpad.connection.MinkPadBluetoothMonitor
+import com.katoaapps.openminilaunch.features.minkpad.connection.MinkPadNearbyDiscovery
 import com.katoaapps.openminilaunch.features.minkpad.connection.MinkPadPairingGate
 import com.katoaapps.openminilaunch.features.minkpad.connection.classic.MinkPadClassicProfile
 import com.katoaapps.openminilaunch.features.minkpad.input.MinkPadHostPlatform
 import com.katoaapps.openminilaunch.features.minkpad.input.minkPadHostPlatformHint
+import com.katoaapps.openminilaunch.features.minkpad.input.minkPadRemoteControlsHint
 import com.katoaapps.openminilaunch.features.minkpad.persistence.MinkPadPreferenceStore
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
@@ -44,6 +46,8 @@ internal class MinkPadRepository private constructor(private val context: Contex
     private var connectionAttempt = 0L
     private val suppressedHosts = mutableSetOf<String>()
     private val pairingGate = MinkPadPairingGate()
+    private val nearbyDiscovery = MinkPadNearbyDiscovery(context) { adapter }
+    val nearbyDevices = nearbyDiscovery.state
     private var serviceRunning = false
     private var disconnectAttempt = 0L
     private val monitor = MinkPadBluetoothMonitor(
@@ -55,6 +59,9 @@ internal class MinkPadRepository private constructor(private val context: Contex
     private val adapter get() = context.getSystemService(BluetoothManager::class.java)?.adapter
 
     fun supported(): Boolean = Build.VERSION.SDK_INT >= 28 && adapter != null
+    fun supportsNearbyDiscovery(): Boolean = Build.VERSION.SDK_INT >= 31
+    fun nearbyDiscoveryPermissionGranted(): Boolean = Build.VERSION.SDK_INT >= 31 &&
+        ContextCompat.checkSelfPermission(context, Manifest.permission.BLUETOOTH_SCAN) == PackageManager.PERMISSION_GRANTED
     fun permissionsGranted(): Boolean = Build.VERSION.SDK_INT < 31 ||
         listOf(Manifest.permission.BLUETOOTH_CONNECT, Manifest.permission.BLUETOOTH_ADVERTISE).all {
             ContextCompat.checkSelfPermission(context, it) == PackageManager.PERMISSION_GRANTED
@@ -221,11 +228,13 @@ internal class MinkPadRepository private constructor(private val context: Contex
 
     fun cancelPairing() {
         if (mutable.value.status != MinkPadStatus.WAITING_FOR_HOST) return
+        stopNearbyDiscovery()
         pairingGeneration++
         finishPairing("Pairing instructions closed. Android may keep the phone discoverable until its system timer ends.")
     }
 
     private fun finishPairing(message: String) {
+        stopNearbyDiscovery()
         pairingGate.finish()
         update(mutable.value.copy(
             status = MinkPadStatus.READY,
@@ -246,16 +255,17 @@ internal class MinkPadRepository private constructor(private val context: Contex
     private fun prepareAdapterName(): Boolean {
         val bluetooth = adapter ?: return false
         val current = runCatching { bluetooth.name }.getOrNull()?.trim().orEmpty()
-        val original = current.takeIf { it.isNotEmpty() && !isMinkPadAdapterName(it) }
+        val original = current.takeIf { it.isNotEmpty() && !isMinkPadBluetoothName(it) }
             ?: preferences.originalBluetoothName()
                 ?.trim()
-                ?.takeIf { it.isNotEmpty() && !isMinkPadAdapterName(it) }
+                ?.takeIf { it.isNotEmpty() && !isMinkPadBluetoothName(it) }
             ?: configuredDeviceName()
             ?: Build.MODEL.trim().takeIf(String::isNotEmpty)
             ?: return false
         preferences.rememberOriginalBluetoothName(original)
-        if (current == MINKPAD_BLUETOOTH_NAME) return true
-        return runCatching { bluetooth.setName(MINKPAD_BLUETOOTH_NAME) }.getOrDefault(false)
+        val minkPadName = minkPadBluetoothName(original)
+        if (current == minkPadName) return true
+        return runCatching { bluetooth.setName(minkPadName) }.getOrDefault(false)
     }
 
     /** Restores the phone identity after MinkPad stops or loses its receiving host. */
@@ -264,10 +274,10 @@ internal class MinkPadRepository private constructor(private val context: Contex
         if (!permissionsGranted()) return false
         val bluetooth = adapter ?: return false
         val current = runCatching { bluetooth.name }.getOrNull() ?: return false
-        if (!isMinkPadAdapterName(current)) return true
+        if (!isMinkPadBluetoothName(current)) return true
         val deviceName = preferences.originalBluetoothName()
             ?.trim()
-            ?.takeIf { it.isNotEmpty() && !isMinkPadAdapterName(it) }
+            ?.takeIf { it.isNotEmpty() && !isMinkPadBluetoothName(it) }
             ?: configuredDeviceName()
             ?: Build.MODEL.trim().takeIf(String::isNotEmpty)
             ?: return false
@@ -277,12 +287,7 @@ internal class MinkPadRepository private constructor(private val context: Contex
     private fun configuredDeviceName(): String? =
         Settings.Global.getString(context.contentResolver, Settings.Global.DEVICE_NAME)
             ?.trim()
-            ?.takeIf { it.isNotEmpty() && !isMinkPadAdapterName(it) }
-
-    private fun isMinkPadAdapterName(value: String): Boolean =
-        value == MINKPAD_BLUETOOTH_NAME ||
-            value == LEGACY_MINKPAD_BLUETOOTH_NAME ||
-            LEGACY_MINKPAD_NAME.matches(value)
+            ?.takeIf { it.isNotEmpty() && !isMinkPadBluetoothName(it) }
 
     @SuppressLint("MissingPermission")
     private fun handleConnection(device: BluetoothDevice, status: Int) {
@@ -573,17 +578,61 @@ internal class MinkPadRepository private constructor(private val context: Contex
         mutable.value = mutable.value.copy(hosts = hosts())
     }
 
+    fun startNearbyDiscovery() {
+        if (!supportsNearbyDiscovery()) return
+        if (!nearbyDiscoveryPermissionGranted()) {
+            nearbyDiscovery.fail("Allow Nearby devices access to search from MinkPad.")
+            return
+        }
+        if (mutable.value.status != MinkPadStatus.WAITING_FOR_HOST || mutable.value.host != null) {
+            nearbyDiscovery.fail("Start a new pairing window before searching for nearby devices.")
+            return
+        }
+        nearbyDiscovery.start()
+    }
+
+    fun nearbyDiscoveryPermissionDenied() {
+        nearbyDiscovery.fail("Nearby-device search was not allowed. You can still use Bluetooth settings.")
+    }
+
+    fun stopNearbyDiscovery(clear: Boolean = true) {
+        if (supportsNearbyDiscovery()) nearbyDiscovery.stop(clear)
+    }
+
+    @SuppressLint("MissingPermission")
+    fun pairNearbyDevice(address: String): Boolean {
+        if (!nearbyDiscoveryPermissionGranted() || mutable.value.status != MinkPadStatus.WAITING_FOR_HOST) return false
+        val device = runCatching { adapter?.getRemoteDevice(address) }.getOrNull() ?: return false
+        val selectedHost = host(device)
+        stopNearbyDiscovery(clear = false)
+        pairingGate.admit(address)
+        update(mutable.value.copy(
+            host = selectedHost,
+            message = "Pairing with ${selectedHost.name}…",
+        ))
+        return runCatching { device.createBond() }.getOrDefault(false).also { started ->
+            if (!started) {
+                pairingGate.begin()
+                update(mutable.value.copy(host = null, message = "Android could not start pairing. Try Bluetooth settings instead."))
+                nearbyDiscovery.fail("Android could not start pairing. Try Bluetooth settings instead.")
+            }
+        }
+    }
+
     fun forget(address: String) {
         preferences.forgetHost(address)
         suppressedHosts.add(address)
-        val cancelling = pendingConnectAddress == address ||
-            (mutable.value.host?.address == address && mutable.value.status in setOf(
+        val isActiveHost = mutable.value.host?.address == address
+        val shouldDisconnect = pendingConnectAddress == address ||
+            (isActiveHost && mutable.value.status in setOf(
+                MinkPadStatus.CONNECTED,
                 MinkPadStatus.CONNECTING,
                 MinkPadStatus.DISCONNECTING,
             ))
-        if (cancelling) {
+        if (shouldDisconnect) {
             invalidateConnectionAttempt()
             clearPendingConnect()
+            if (isActiveHost) releaseInput()
             runCatching { adapter?.getRemoteDevice(address) }.getOrNull()
                 ?.let { profile?.disconnect(it) }
             update(MinkPadSessionState(
@@ -597,17 +646,20 @@ internal class MinkPadRepository private constructor(private val context: Contex
     }
 
     @SuppressLint("MissingPermission")
-    private fun host(device: BluetoothDevice) = MinkPadHost(
-        device.address,
-        device.name ?: "Bluetooth device",
-        preferences.lastUsed(device.address) > 0,
-        platformHint = minkPadHostPlatformHint(device.name) ?: when (
-            runCatching { device.bluetoothClass?.majorDeviceClass }.getOrNull()
-        ) {
-            BluetoothClass.Device.Major.PHONE -> MinkPadHostPlatform.ANDROID
-            else -> null
-        },
-    )
+    private fun host(device: BluetoothDevice): MinkPadHost {
+        val name = device.name
+        val bluetoothClass = runCatching { device.bluetoothClass }.getOrNull()
+        return MinkPadHost(
+            device.address,
+            name ?: "Bluetooth device",
+            preferences.lastUsed(device.address) > 0,
+            platformHint = minkPadHostPlatformHint(name) ?: when (bluetoothClass?.majorDeviceClass) {
+                BluetoothClass.Device.Major.PHONE -> MinkPadHostPlatform.ANDROID
+                else -> null
+            },
+            prefersRemoteControls = minkPadRemoteControlsHint(name, bluetoothClass?.deviceClass),
+        )
+    }
 
     @SuppressLint("MissingPermission")
     private fun hosts(): List<MinkPadHost> = if (!permissionsGranted()) emptyList() else runCatching {
@@ -713,6 +765,7 @@ internal class MinkPadRepository private constructor(private val context: Contex
     fun perform(action: com.katoaapps.openminilaunch.features.minkpad.input.MinkPadAction) = tapKey(action.usage)
 
     fun stop() {
+        stopNearbyDiscovery()
         releaseInput()
         pairingGeneration++
         if (serviceRunning) {
@@ -735,6 +788,7 @@ internal class MinkPadRepository private constructor(private val context: Contex
     }
 
     private fun closeProfile() {
+        stopNearbyDiscovery()
         monitor.stop()
         disconnectAttempt++
         pairingGeneration++
@@ -804,9 +858,6 @@ internal class MinkPadRepository private constructor(private val context: Contex
         private const val CONNECTION_TIMEOUT_MS = 12_000L
         private const val HOST_SWITCH_SETTLE_MS = 800L
         private const val HOST_SWITCH_ATTEMPTS = 3
-        private const val MINKPAD_BLUETOOTH_NAME = "Pro Controller - MinkPad"
-        private const val LEGACY_MINKPAD_BLUETOOTH_NAME = "Pro Controller"
-        private val LEGACY_MINKPAD_NAME = Regex("^MinkPad [0-9A-F]{8}$", RegexOption.IGNORE_CASE)
         @Volatile private var instance: MinkPadRepository? = null
         fun get(context: Context): MinkPadRepository = instance ?: synchronized(this) {
             instance ?: MinkPadRepository(context.applicationContext).also { instance = it }
