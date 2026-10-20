@@ -79,6 +79,8 @@ class LauncherStore private constructor(context: Context) {
         get() = !demoPreferences.enabled &&
             appearancePreferences.appBackgroundImageEnabled &&
             homeWallpaperRepository.hasWallpaper()
+    val hasSavedAppBackgroundImage: Boolean
+        get() = !demoPreferences.enabled && homeWallpaperRepository.hasWallpaper()
     val appBackgroundImageRevision get() = appearancePreferences.appBackgroundImageRevision
     val useSystemHomeWallpaper: Boolean
         get() = !demoPreferences.enabled && appearancePreferences.useSystemHomeWallpaper

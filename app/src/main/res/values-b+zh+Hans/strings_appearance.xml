@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="appearance_wallpaper_title">壁纸与背景</string>
+    <string name="appearance_wallpaper_summary">主屏幕壁纸、你的照片和纯色</string>
+    <string name="appearance_theme_colors_title">主题与颜色</string>
+    <string name="appearance_theme_colors_summary">浅色模式与主屏幕面板颜色</string>
+    <string name="appearance_icons_summary">图标样式、图标包与 Mink 图标颜色</string>
+    <string name="appearance_layout_clock_title">布局与时钟</string>
+    <string name="appearance_layout_clock_summary">日期、状态栏、面板位置与大屏幕</string>
+    <string name="appearance_layout_section">布局与显示</string>
+    <string name="your_photo">你的照片</string>
+</resources>

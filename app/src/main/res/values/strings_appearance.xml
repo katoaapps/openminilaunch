@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="appearance_wallpaper_title">Wallpaper &amp; background</string>
+    <string name="appearance_wallpaper_summary">Home wallpaper, your photos, and solid colors</string>
+    <string name="appearance_theme_colors_title">Theme &amp; colors</string>
+    <string name="appearance_theme_colors_summary">Light mode and Home panel color</string>
+    <string name="appearance_icons_summary">Icon style, icon packs, and Mink icon color</string>
+    <string name="appearance_layout_clock_title">Layout &amp; clock</string>
+    <string name="appearance_layout_clock_summary">Date, status bar, panel position, and large displays</string>
+    <string name="appearance_layout_section">LAYOUT &amp; DISPLAY</string>
+    <string name="your_photo">Your photo</string>
+</resources>

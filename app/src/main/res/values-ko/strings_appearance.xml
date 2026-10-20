@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="appearance_wallpaper_title">배경화면 및 배경</string>
+    <string name="appearance_wallpaper_summary">홈 배경화면, 내 사진 및 단색</string>
+    <string name="appearance_theme_colors_title">테마와 색상</string>
+    <string name="appearance_theme_colors_summary">라이트 모드 및 홈 패널 색상</string>
+    <string name="appearance_icons_summary">아이콘 스타일, 아이콘 팩 및 Mink 아이콘 색상</string>
+    <string name="appearance_layout_clock_title">레이아웃 및 시계</string>
+    <string name="appearance_layout_clock_summary">날짜, 상태 표시줄, 패널 위치 및 대형 화면</string>
+    <string name="appearance_layout_section">레이아웃 및 화면</string>
+    <string name="your_photo">내 사진</string>
+</resources>

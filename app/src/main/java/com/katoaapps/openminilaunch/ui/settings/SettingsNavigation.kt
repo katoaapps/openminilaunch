@@ -8,6 +8,10 @@ internal enum class SettingsDestination {
     LANGUAGE,
     LAUNCHER,
     APPEARANCE,
+    APPEARANCE_WALLPAPER,
+    APPEARANCE_THEME_COLORS,
+    APPEARANCE_ICONS,
+    APPEARANCE_LAYOUT_CLOCK,
     MINK_SPACE,
     SHORTCUTS,
     PRIVACY_APPS,
@@ -48,6 +52,15 @@ internal fun settingsPathTo(destination: SettingsDestination): List<SettingsDest
     SettingsDestination.PRIVACY_APPS -> listOf(
         SettingsDestination.OVERVIEW,
         SettingsDestination.LAUNCHER,
+        destination,
+    )
+    SettingsDestination.APPEARANCE_WALLPAPER,
+    SettingsDestination.APPEARANCE_THEME_COLORS,
+    SettingsDestination.APPEARANCE_ICONS,
+    SettingsDestination.APPEARANCE_LAYOUT_CLOCK -> listOf(
+        SettingsDestination.OVERVIEW,
+        SettingsDestination.LAUNCHER,
+        SettingsDestination.APPEARANCE,
         destination,
     )
     SettingsDestination.PIN_SHORTCUT_REQUESTS -> listOf(

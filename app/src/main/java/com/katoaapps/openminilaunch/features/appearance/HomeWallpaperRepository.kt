@@ -16,6 +16,7 @@ internal class HomeWallpaperRepository(context: Context) {
     private val wallpaperDirectory = File(appContext.filesDir, "appearance")
     private val wallpaperManager = WallpaperManager.getInstance(appContext)
     private val systemWallpaperAppearanceState = mutableStateOf(readSystemWallpaperAppearance())
+    /** The user's retained gallery crop. Bundled wallpaper choices must not replace this file. */
     val wallpaperFile = File(wallpaperDirectory, "home-wallpaper.jpg")
     val systemWallpaperAppearance: HomeWallpaperAppearance?
         get() = systemWallpaperAppearanceState.value

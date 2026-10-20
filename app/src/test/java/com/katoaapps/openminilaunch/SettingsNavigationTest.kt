@@ -45,6 +45,27 @@ class SettingsNavigationTest {
         )
     }
 
+    @Test fun appearanceSectionsNestUnderAppearance() {
+        assertEquals(
+            listOf(
+                SettingsDestination.OVERVIEW,
+                SettingsDestination.LAUNCHER,
+                SettingsDestination.APPEARANCE,
+                SettingsDestination.APPEARANCE_WALLPAPER,
+            ),
+            settingsPathTo(SettingsDestination.APPEARANCE_WALLPAPER),
+        )
+        assertEquals(
+            listOf(
+                SettingsDestination.OVERVIEW,
+                SettingsDestination.LAUNCHER,
+                SettingsDestination.APPEARANCE,
+                SettingsDestination.APPEARANCE_LAYOUT_CLOCK,
+            ),
+            settingsPathTo(SettingsDestination.APPEARANCE_LAYOUT_CLOCK),
+        )
+    }
+
     @Test fun pinShortcutRequestsNestUnderShortcuts() {
         assertEquals(
             listOf(

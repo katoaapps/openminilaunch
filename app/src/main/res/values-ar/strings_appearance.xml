@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="appearance_wallpaper_title">ورق الحائط والخلفية</string>
+    <string name="appearance_wallpaper_summary">ورق حائط الشاشة الرئيسية وصورك والألوان السادة</string>
+    <string name="appearance_theme_colors_title">النسق والألوان</string>
+    <string name="appearance_theme_colors_summary">الوضع الفاتح ولون لوحة الشاشة الرئيسية</string>
+    <string name="appearance_icons_summary">نمط الأيقونات وحزم الأيقونات ولون أيقونات Mink</string>
+    <string name="appearance_layout_clock_title">التخطيط والساعة</string>
+    <string name="appearance_layout_clock_summary">التاريخ وشريط الحالة وموضع اللوحة والشاشات الكبيرة</string>
+    <string name="appearance_layout_section">التخطيط والعرض</string>
+    <string name="your_photo">صورتك</string>
+</resources>

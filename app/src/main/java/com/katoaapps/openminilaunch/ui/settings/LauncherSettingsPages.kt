@@ -2,7 +2,6 @@ package com.katoaapps.openminilaunch.ui.settings
 
 import com.katoaapps.openminilaunch.R
 import com.katoaapps.openminilaunch.data.LauncherStore
-import com.katoaapps.openminilaunch.features.appearance.HomeWallpaperRepository
 import com.katoaapps.openminilaunch.model.MAX_DRAWER_APPS
 import com.katoaapps.openminilaunch.model.PinShortcutRequestPresentation
 import com.katoaapps.openminilaunch.model.Shortcut
@@ -10,7 +9,6 @@ import com.katoaapps.openminilaunch.model.configurableShortcuts
 import com.katoaapps.openminilaunch.platform.DeviceActions
 import com.katoaapps.openminilaunch.ui.components.SectionLabel
 import com.katoaapps.openminilaunch.ui.components.SettingsRow
-import com.katoaapps.openminilaunch.ui.components.SettingsSwitchRow
 import com.katoaapps.openminilaunch.ui.shortcuts.ShortcutAssignmentRow
 import com.katoaapps.openminilaunch.ui.shortcuts.displayLabel
 import com.katoaapps.openminilaunch.ui.profile.openVirtualContactCard
@@ -18,10 +16,7 @@ import com.katoaapps.openminilaunch.ui.theme.Dimens
 import com.katoaapps.openminilaunch.ui.theme.Muted
 import com.katoaapps.openminilaunch.ui.theme.Sage
 
-import android.net.Uri
 import android.widget.Toast
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.AddToHomeScreen
@@ -37,10 +32,6 @@ import androidx.compose.material.icons.filled.Translate
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.pluralStringResource
@@ -110,74 +101,6 @@ internal fun LauncherSettingsPage(
             stringResource(R.string.privacy_apps_settings_summary),
             Icons.Default.Shield,
         ) { onNavigate(SettingsDestination.PRIVACY_APPS) }
-    }
-}
-
-@Composable
-internal fun AppearanceSettingsPage(
-    store: LauncherStore,
-    goBack: () -> Unit,
-    onIconStyleApplied: () -> Unit,
-) {
-    val context = LocalContext.current
-    val wallpaperRepository = remember(context) { HomeWallpaperRepository(context) }
-    var wallpaperToCrop by remember { mutableStateOf<Uri?>(null) }
-    val imagePicker = rememberLauncherForActivityResult(ActivityResultContracts.OpenDocument()) { uri ->
-        wallpaperToCrop = uri
-    }
-    SettingsPage(stringResource(R.string.appearance), goBack) {
-        ClockAppearanceSettings(store)
-        SettingsSwitchRow(
-            title = stringResource(R.string.hide_status_bar),
-            subtitle = stringResource(R.string.hide_status_bar_description),
-            checked = store.hideStatusBar,
-            onCheckedChange = store::updateHideStatusBar,
-        )
-        SettingsSwitchRow(
-            title = stringResource(R.string.align_pill_to_bottom),
-            subtitle = stringResource(R.string.align_pill_to_bottom_description),
-            checked = store.alignHomePanelBottom,
-            onCheckedChange = store::updateAlignHomePanelBottom,
-        )
-        SettingsSwitchRow(
-            title = stringResource(R.string.two_panel_mode_for_large_displays),
-            subtitle = stringResource(R.string.two_panel_mode_for_large_displays_description),
-            checked = store.twoPanelModeForLargeDisplays,
-            onCheckedChange = store::updateTwoPanelModeForLargeDisplays,
-        )
-        SectionLabel(stringResource(R.string.visual_style))
-        IconPackAppearanceSettings(store, onApplied = onIconStyleApplied)
-        ThemeChooser(store.themePreference, store::setTheme)
-        HomePanelColorSetting(
-            selectedArgb = store.effectiveHomePanelColorArgb,
-            transparency = store.homePanelTransparency,
-            onColorSelected = store::setHomePanelColor,
-            onWatermelonSelected = store::activateWatermelonMode,
-            onTransparencyChanged = store::setHomePanelTransparency,
-        )
-        AppBackgroundSetting(
-            selectedArgb = store.effectiveAppBackgroundColorArgb,
-            imageSelected = store.appBackgroundImageEnabled,
-            imageRevision = store.appBackgroundImageRevision,
-            onColorSelected = store::setAppBackgroundColor,
-            onChooseImage = { imagePicker.launch(arrayOf("image/*")) },
-            onUseThemeDefault = { store.setAppBackgroundColor(null) },
-        )
-    }
-    wallpaperToCrop?.let { uri ->
-        WallpaperCropDialog(
-            imageUri = uri,
-            saveWallpaper = wallpaperRepository::save,
-            applySystemWallpaper = wallpaperRepository::applyToSystem,
-            onWallpaperSaved = { wallpaper ->
-                store.useAppBackgroundImage(wallpaper)
-            },
-            onApplied = {
-                wallpaperToCrop = null
-                onIconStyleApplied()
-            },
-            onDismiss = { wallpaperToCrop = null },
-        )
     }
 }
 

@@ -49,8 +49,26 @@ internal fun SettingsDestinationContent(
         )
         SettingsDestination.APPEARANCE -> AppearanceSettingsPage(
             store = store,
+            onNavigate = onNavigate,
             goBack = onNavigateBack,
+        )
+        SettingsDestination.APPEARANCE_WALLPAPER -> WallpaperAndBackgroundSettingsPage(
+            store = store,
             onIconStyleApplied = onIconStyleApplied,
+            goBack = onNavigateBack,
+        )
+        SettingsDestination.APPEARANCE_THEME_COLORS -> ThemeAndColorsSettingsPage(
+            store = store,
+            goBack = onNavigateBack,
+        )
+        SettingsDestination.APPEARANCE_ICONS -> IconSettingsPage(
+            store = store,
+            onIconStyleApplied = onIconStyleApplied,
+            goBack = onNavigateBack,
+        )
+        SettingsDestination.APPEARANCE_LAYOUT_CLOCK -> LayoutAndClockSettingsPage(
+            store = store,
+            goBack = onNavigateBack,
         )
         SettingsDestination.MINK_SPACE -> MinkSpaceSettingsPage(
             store = store,

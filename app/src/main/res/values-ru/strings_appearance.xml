@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="appearance_wallpaper_title">Обои и фон</string>
+    <string name="appearance_wallpaper_summary">Обои главного экрана, ваши фотографии и сплошные цвета</string>
+    <string name="appearance_theme_colors_title">Тема и цвета</string>
+    <string name="appearance_theme_colors_summary">Светлая тема и цвет панели главного экрана</string>
+    <string name="appearance_icons_summary">Стиль, наборы и цвет значков Mink</string>
+    <string name="appearance_layout_clock_title">Макет и часы</string>
+    <string name="appearance_layout_clock_summary">Дата, строка состояния, положение панели и большие экраны</string>
+    <string name="appearance_layout_section">МАКЕТ И ЭКРАН</string>
+    <string name="your_photo">Ваше фото</string>
+</resources>

@@ -6,6 +6,7 @@ import androidx.compose.foundation.border
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
@@ -14,6 +15,7 @@ import androidx.compose.material.icons.filled.Check
 import androidx.compose.material.icons.filled.Wallpaper
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -40,9 +42,11 @@ import kotlinx.coroutines.withContext
 internal fun AppBackgroundSetting(
     selectedArgb: Int?,
     imageSelected: Boolean,
+    savedImageAvailable: Boolean,
     imageRevision: Int,
     onColorSelected: (Int) -> Unit,
     onChooseImage: () -> Unit,
+    onUseSavedImage: () -> Unit,
     onUseThemeDefault: () -> Unit,
 ) {
     val context = LocalContext.current
@@ -61,13 +65,28 @@ internal fun AppBackgroundSetting(
         customDescriptionRes = R.string.custom_background_color_description,
         presets = presets,
         onColorSelected = onColorSelected,
-        selectedValueLabel = stringResource(R.string.background_image).takeIf { imageSelected },
+        selectedValueLabel = stringResource(R.string.your_photo).takeIf { imageSelected },
         presetTrailingContent = {
             BackgroundImageChoice(
                 selected = imageSelected,
+                savedImageAvailable = savedImageAvailable,
                 imageRevision = imageRevision,
-                onClick = onChooseImage,
+                onClick = if (savedImageAvailable) onUseSavedImage else onChooseImage,
             )
+        },
+        extraContent = {
+            if (savedImageAvailable) {
+                OutlinedButton(
+                    onClick = onChooseImage,
+                    modifier = Modifier.fillMaxWidth(),
+                ) {
+                    Icon(Icons.Default.Wallpaper, null, modifier = Modifier.size(Dimens.dp18))
+                    Text(
+                        stringResource(R.string.change_photo),
+                        modifier = Modifier.padding(start = Dimens.dp8),
+                    )
+                }
+            }
         },
         onUseThemeDefault = onUseThemeDefault,
     )
@@ -76,6 +95,7 @@ internal fun AppBackgroundSetting(
 @Composable
 private fun BackgroundImageChoice(
     selected: Boolean,
+    savedImageAvailable: Boolean,
     imageRevision: Int,
     onClick: () -> Unit,
 ) {
@@ -123,7 +143,7 @@ private fun BackgroundImageChoice(
             }
         }
         Text(
-            stringResource(R.string.background_image),
+            stringResource(if (savedImageAvailable) R.string.your_photo else R.string.background_image),
             color = Muted,
             fontSize = Dimens.sp9,
             modifier = Modifier.padding(top = Dimens.dp4),

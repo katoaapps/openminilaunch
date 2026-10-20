@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="appearance_wallpaper_title">Fondo de pantalla y fondo</string>
+    <string name="appearance_wallpaper_summary">Fondo de Inicio, tus fotos y colores sólidos</string>
+    <string name="appearance_theme_colors_title">Tema y colores</string>
+    <string name="appearance_theme_colors_summary">Modo claro y color del panel de Inicio</string>
+    <string name="appearance_icons_summary">Estilo, paquetes y color de iconos de Mink</string>
+    <string name="appearance_layout_clock_title">Diseño y reloj</string>
+    <string name="appearance_layout_clock_summary">Fecha, barra de estado, posición del panel y pantallas grandes</string>
+    <string name="appearance_layout_section">DISEÑO Y PANTALLA</string>
+    <string name="your_photo">Tu foto</string>
+</resources>

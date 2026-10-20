@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="appearance_wallpaper_title">ওয়ালপেপার ও পটভূমি</string>
+    <string name="appearance_wallpaper_summary">হোম ওয়ালপেপার, আপনার ছবি ও সলিড রং</string>
+    <string name="appearance_theme_colors_title">থিম ও রং</string>
+    <string name="appearance_theme_colors_summary">লাইট মোড ও হোম প্যানেলের রং</string>
+    <string name="appearance_icons_summary">আইকন স্টাইল, আইকন প্যাক ও Mink আইকনের রং</string>
+    <string name="appearance_layout_clock_title">লেআউট ও ঘড়ি</string>
+    <string name="appearance_layout_clock_summary">তারিখ, স্ট্যাটাস বার, প্যানেলের অবস্থান ও বড় ডিসপ্লে</string>
+    <string name="appearance_layout_section">লেআউট ও ডিসপ্লে</string>
+    <string name="your_photo">আপনার ছবি</string>
+</resources>
