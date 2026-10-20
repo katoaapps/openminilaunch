@@ -20,13 +20,13 @@ internal object DemoSearchData {
         listOf("Dahlia", "Damon", "Diana"),
         listOf("Elena", "Elias", "Emery", "Example"),
         listOf("Fatima", "Felix", "Freya"),
-        listOf("Gabriela", "George", "Gideon"),
+        listOf("Gabriela", "Gary", "George"),
         listOf("Hana", "Harper", "Hector"),
         listOf("Imani", "Isaac"),
         listOf("Jada", "Jasper", "June", "Julian"),
         listOf("Kai", "Kara", "Keira"),
         listOf("Laila", "Leo", "Lucia"),
-        listOf("Maya", "Mateo", "Mina", "Marcus"),
+        listOf("Maya", "May", "Mina", "Marcus"),
         listOf("Nadia", "Nico", "Noelle"),
         listOf("Omar", "Opal"),
         listOf("Paola", "Parker", "Priya"),
@@ -42,6 +42,10 @@ internal object DemoSearchData {
         listOf("Zahra", "Zoe"),
     )
     private val lastNames = listOf("Adams", "Bennett", "Chen", "Diaz", "Ellis", "Flores")
+    private val scriptedContactNames = mapOf(
+        "Gary" to "Gary Chen",
+        "May" to "May Wong",
+    )
     private val phoneLabelResources = listOf(
         R.string.demo_phone_mobile,
         R.string.demo_phone_work,
@@ -70,10 +74,9 @@ internal object DemoSearchData {
             val id = contactIdOffset + namesForLetter.indexOf(firstName)
             ContactResult(
                 contactUri = "content://com.katoaapps.openminilaunch.demo/contacts/$id",
-                name = if (firstName == "Example") {
-                    "Example Contact"
-                } else {
-                    "$firstName ${lastNames[id % lastNames.size]}"
+                name = scriptedContactNames[firstName] ?: when (firstName) {
+                    "Example" -> "Example Contact"
+                    else -> "$firstName ${lastNames[id % lastNames.size]}"
                 },
                 phone = "+1 202-555-${(100 + id).toString().padStart(4, '0')}",
                 phoneLabel = phoneLabels[index % phoneLabels.size],
