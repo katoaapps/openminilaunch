@@ -31,7 +31,7 @@ internal object DemoConversationData {
                         notificationKey = "demo-messages-may",
                         packageName = GOOGLE_MESSAGES_PACKAGE,
                         appName = "Messages",
-                        text = "How many installs are on the latest GitHub build?",
+                        text = "You can't have Minks as pets in LA",
                         timestamp = now - minutes(2),
                         senderName = "May Wong",
                     ),

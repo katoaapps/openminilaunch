@@ -39,6 +39,12 @@ class MinkPadHostPlatformTest {
     }
 
     @Test
+    fun `uses standard HID consumer usages for channel controls`() {
+        assertEquals(0x9C, MinkPadConsumerAction.CHANNEL_UP.usage)
+        assertEquals(0x9D, MinkPadConsumerAction.CHANNEL_DOWN.usage)
+    }
+
+    @Test
     fun `maps Mac vertical overview gestures to Mission Control and App Expose`() {
         val swipeUp = MinkPadHostPlatform.MAC.shortcut(MinkPadGestureAction.OVERVIEW)
         val swipeDown = MinkPadHostPlatform.MAC.shortcut(MinkPadGestureAction.DISMISS_OVERVIEW)

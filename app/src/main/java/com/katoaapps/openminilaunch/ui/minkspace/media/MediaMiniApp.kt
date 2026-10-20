@@ -23,8 +23,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextOverflow
 import com.katoaapps.openminilaunch.R
 import com.katoaapps.openminilaunch.features.minkspace.media.MediaItem
 import com.katoaapps.openminilaunch.ui.minkspace.core.MinkSpaceTitle
@@ -85,13 +83,6 @@ internal fun MediaMiniApp(
                 title = stringResource(R.string.media),
                 icon = Icons.Default.PhotoLibrary,
                 contentColor = contentColor,
-            )
-            Text(
-                text = items.getOrNull(pagerState.currentPage)?.displayName.orEmpty(),
-                color = contentColor,
-                fontWeight = FontWeight.Bold,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis,
             )
             Text(
                 text = stringResource(R.string.page_of_pages, pagerState.currentPage + 1, items.size),

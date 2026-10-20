@@ -58,6 +58,15 @@ class DemoSearchDataTest {
     }
 
     @Test
+    fun commercialDemoContactsIncludeMayAndGary() {
+        val may = DemoSearchData.searchContacts("May", phoneLabels).single { it.name == "May Wong" }
+        val gary = DemoSearchData.searchContacts("Gary", phoneLabels).single { it.name == "Gary Chen" }
+
+        assertTrue(may.phone.startsWith("+1 202-555-01"))
+        assertTrue(gary.phone.startsWith("+1 202-555-01"))
+    }
+
+    @Test
     fun contactNumbersStayInsideReservedFictionalRange() {
         val results = ('a'..'z').flatMap { DemoSearchData.searchContacts(it.toString(), phoneLabels) }
         assertTrue(results.all { it.phone.startsWith("+1 202-555-01") })

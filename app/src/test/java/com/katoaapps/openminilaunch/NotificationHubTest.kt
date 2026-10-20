@@ -44,6 +44,7 @@ class NotificationHubTest {
         assertEquals(listOf(DemoConversationData.SLACK_PACKAGE), maya!!.sourcePackages)
         assertEquals(listOf(DemoConversationData.GMAIL_PACKAGE), priya!!.sourcePackages)
         assertEquals(listOf(DemoConversationData.GOOGLE_MESSAGES_PACKAGE), noah!!.sourcePackages)
+        assertEquals("You can't have Minks as pets in LA", may.messages.single().text)
         assertEquals(1, maya.messages.size)
         assertTrue(maya.replyTarget?.isDemo == true)
     }
