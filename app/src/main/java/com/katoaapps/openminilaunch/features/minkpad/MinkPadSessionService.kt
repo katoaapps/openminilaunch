@@ -28,7 +28,12 @@ class MinkPadSessionService : Service() {
     override fun onCreate() {
         super.onCreate()
         getSystemService(NotificationManager::class.java).createNotificationChannel(
-            NotificationChannel(CHANNEL, "MinkPad Bluetooth session", NotificationManager.IMPORTANCE_LOW))
+            NotificationChannel(
+                CHANNEL,
+                getString(R.string.minkpad_notification_channel),
+                NotificationManager.IMPORTANCE_LOW,
+            ),
+        )
         try {
             ServiceCompat.startForeground(this, NOTIFICATION_ID, notification(),
                 if (Build.VERSION.SDK_INT >= 29) ServiceInfo.FOREGROUND_SERVICE_TYPE_CONNECTED_DEVICE else 0)
@@ -58,14 +63,33 @@ class MinkPadSessionService : Service() {
             Intent(this, MinkPadSessionService::class.java).setAction(action), PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT)
         return NotificationCompat.Builder(this, CHANNEL)
             .setSmallIcon(R.drawable.ic_minkpad_notification)
-            .setContentTitle("MinkPad Beta")
-            .setContentText(state.host?.name?.let { "${state.status.name.lowercase().replace('_', ' ')} · $it" }
-                ?: "Bluetooth keyboard + mouse · ${state.status.name.lowercase().replace('_', ' ')}")
+            .setContentTitle(getString(R.string.minkpad_notification_title))
+            .setContentText(state.host?.name?.let {
+                getString(R.string.minkpad_notification_with_host, statusText(state.status), it)
+            } ?: getString(R.string.minkpad_notification_without_host, statusText(state.status)))
             .setContentIntent(open).setOngoing(true).setSilent(true)
-            .addAction(0, "Open", open)
-            .apply { if (state.status == MinkPadStatus.DISCONNECTED && state.host != null) addAction(0, "Reconnect", command(ACTION_RECONNECT, 1)) }
-            .addAction(0, "Stop", command(ACTION_STOP, 2)).build()
+            .addAction(0, getString(R.string.minkpad_notification_open), open)
+            .apply {
+                if (state.status == MinkPadStatus.DISCONNECTED && state.host != null) {
+                    addAction(0, getString(R.string.minkpad_reconnect), command(ACTION_RECONNECT, 1))
+                }
+            }
+            .addAction(0, getString(R.string.minkpad_notification_stop), command(ACTION_STOP, 2)).build()
     }
+
+    private fun statusText(status: MinkPadStatus): String = getString(when (status) {
+        MinkPadStatus.IDLE -> R.string.minkpad_notification_status_idle
+        MinkPadStatus.REGISTERING -> R.string.minkpad_notification_status_registering
+        MinkPadStatus.READY -> R.string.minkpad_notification_status_ready
+        MinkPadStatus.WAITING_FOR_HOST -> R.string.minkpad_notification_status_waiting
+        MinkPadStatus.CONNECTING -> R.string.minkpad_notification_status_connecting
+        MinkPadStatus.CONNECTED -> R.string.minkpad_notification_status_connected
+        MinkPadStatus.DISCONNECTING -> R.string.minkpad_notification_status_disconnecting
+        MinkPadStatus.DISCONNECTED -> R.string.minkpad_notification_status_disconnected
+        MinkPadStatus.STOPPING -> R.string.minkpad_notification_status_stopping
+        MinkPadStatus.UNSUPPORTED -> R.string.minkpad_notification_status_unsupported
+        MinkPadStatus.ERROR -> R.string.minkpad_notification_status_error
+    })
 
     @android.annotation.SuppressLint("MissingPermission")
     private fun notifyState() { getSystemService(NotificationManager::class.java).notify(NOTIFICATION_ID, notification()) }

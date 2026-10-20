@@ -16,8 +16,10 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
+import com.katoaapps.openminilaunch.R
 import com.katoaapps.openminilaunch.features.minkpad.MinkPadRepository
 import com.katoaapps.openminilaunch.features.minkpad.MinkPadSessionState
 import com.katoaapps.openminilaunch.features.minkpad.MinkPadStatus
@@ -54,6 +56,12 @@ internal fun MinkPadScreen(
     var modifiers by remember { mutableIntStateOf(0) }
     val inputReset by repository.inputReset.collectAsState()
     val activity = LocalContext.current as Activity
+    val chooseHostOsFeedback = stringResource(R.string.minkpad_choose_host_os_feedback)
+    val unmappedGestureFeedback = stringResource(
+        R.string.minkpad_unmapped_gesture_feedback,
+        stringResource(platform.labelResource),
+    )
+    val shortcutsNotReady = stringResource(R.string.minkpad_shortcuts_not_ready)
     LaunchedEffect(connected, state.host?.address) {
         controllerReady = false
         if (connected) {
@@ -115,9 +123,9 @@ internal fun MinkPadScreen(
                 )
 
                 MinkPadScreenPhase.CONNECTED_FEEDBACK -> AppearanceApplyingScreen(
-                    title = "Connected to…",
-                    selectionLabel = state.host?.name ?: "Receiving device",
-                    description = "Preparing the MinkPad trackpad, keyboard, and remote controls",
+                    title = stringResource(R.string.minkpad_connected_to),
+                    selectionLabel = state.host?.name ?: stringResource(R.string.minkpad_receiving_device),
+                    description = stringResource(R.string.minkpad_preparing_controls),
                 )
 
                 MinkPadScreenPhase.CONTROLLER -> MinkPadConnectedSurface(
@@ -149,10 +157,10 @@ internal fun MinkPadScreen(
                         val shortcut = platform.shortcut(action)
                         feedback = when {
                             shortcut == null -> if (platform == MinkPadHostPlatform.GENERIC)
-                                "Choose the connected host's system in mouse and keyboard settings to enable shortcut gestures."
-                                else "This gesture is not mapped for ${platform.label}. See Trackpad help."
+                                chooseHostOsFeedback
+                                else unmappedGestureFeedback
                             !repository.shortcut(shortcut.usage, shortcut.modifiers) ->
-                                "The host has not enabled keyboard shortcuts yet."
+                                shortcutsNotReady
                             else -> null
                         }
                     },
@@ -184,8 +192,8 @@ private fun MinkPadSetupContent(
         verticalArrangement = Arrangement.spacedBy(16.dp),
     ) {
         Column {
-            Text("MinkPad · Beta", style = MaterialTheme.typography.headlineSmall, fontWeight = FontWeight.Bold)
-            Text("Your pocket everyboard.", style = MaterialTheme.typography.bodyMedium)
+            Text(stringResource(R.string.minkpad_beta), style = MaterialTheme.typography.headlineSmall, fontWeight = FontWeight.Bold)
+            Text(stringResource(R.string.minkpad_tagline), style = MaterialTheme.typography.bodyMedium)
         }
         MinkPadConnectionPanel(repository, state, onStart, onDiscover, onBrowseNearby, onHostDialogStateChanged)
         if (state.status in stableSetupStatuses) MinkPadSetupOverview()
@@ -202,17 +210,17 @@ private fun MinkPadSetupOverview() {
             Modifier.fillMaxWidth().padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp),
         ) {
-            Text("What's MinkPad?", style = MaterialTheme.typography.titleMedium)
+            Text(stringResource(R.string.minkpad_whats_minkpad), style = MaterialTheme.typography.titleMedium)
             Text(
-                "MinkPad turns this phone into a Bluetooth keyboard, trackpad, and media remote for another device.",
+                stringResource(R.string.minkpad_overview),
                 style = MaterialTheme.typography.bodyMedium,
             )
             Text(
-                "Keyboard and pointer input travel directly over Bluetooth. MinkPad does not save what you type.",
+                stringResource(R.string.minkpad_privacy_summary),
                 style = MaterialTheme.typography.bodySmall,
             )
             Text(
-                "During a session, this phone temporarily appears as Pro Controller - MinkPad followed by its usual device name. Its usual Bluetooth name returns when MinkPad closes.",
+                stringResource(R.string.minkpad_identity_summary),
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )

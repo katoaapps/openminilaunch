@@ -19,8 +19,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.DialogProperties
+import com.katoaapps.openminilaunch.R
 import com.katoaapps.openminilaunch.features.minkpad.MinkPadHost
 import com.katoaapps.openminilaunch.features.minkpad.MinkPadRepository
 import com.katoaapps.openminilaunch.features.minkpad.MinkPadSessionState
@@ -42,92 +44,97 @@ internal fun MinkPadHostsDialog(
         onDismissRequest = onDismiss,
         modifier = Modifier.widthIn(max = 720.dp).fillMaxWidth(.96f),
         properties = DialogProperties(usePlatformDefaultWidth = false),
-        title = { Text("Receiving devices") },
+        title = { Text(stringResource(R.string.minkpad_receiving_devices)) },
         text = {
             Column(
                 Modifier.verticalScroll(rememberScrollState()),
                 verticalArrangement = Arrangement.spacedBy(8.dp),
             ) {
                 if (state.hosts.isEmpty()) {
-                    Text("MinkPad has not saved a receiving device yet.")
+                    Text(stringResource(R.string.minkpad_no_saved_devices))
                 }
                 state.hosts.forEach { host ->
                     val current = state.host?.address == host.address
                     Text(host.name, style = MaterialTheme.typography.titleSmall)
                     if (current) when (state.status) {
-                        MinkPadStatus.CONNECTED -> Text("Connected", color = MaterialTheme.colorScheme.primary)
-                        MinkPadStatus.WAITING_FOR_HOST -> Text("Waiting for host…")
-                        MinkPadStatus.CONNECTING -> Text("Connecting…")
-                        MinkPadStatus.DISCONNECTING -> Text("Disconnecting…")
+                        MinkPadStatus.CONNECTED -> Text(
+                            stringResource(R.string.minkpad_state_connected),
+                            color = MaterialTheme.colorScheme.primary,
+                        )
+                        MinkPadStatus.WAITING_FOR_HOST -> Text(stringResource(R.string.minkpad_waiting_for_host))
+                        MinkPadStatus.CONNECTING -> Text(stringResource(R.string.minkpad_connecting_ellipsis))
+                        MinkPadStatus.DISCONNECTING -> Text(stringResource(R.string.minkpad_disconnecting_ellipsis))
                         else -> Unit
                     }
                     FlowRow(horizontalArrangement = Arrangement.spacedBy(8.dp)) {
                         when {
                             current && state.status == MinkPadStatus.CONNECTED ->
-                                TextButton(onClick = { repository.disconnect(); onDismiss() }) { Text("Disconnect") }
+                                TextButton(onClick = { repository.disconnect(); onDismiss() }) {
+                                    Text(stringResource(R.string.minkpad_disconnect))
+                                }
                             current && state.status == MinkPadStatus.WAITING_FOR_HOST ->
-                                TextButton(onClick = repository::cancelPairing) { Text("Close pairing") }
+                                TextButton(onClick = repository::cancelPairing) {
+                                    Text(stringResource(R.string.minkpad_close_pairing))
+                                }
                             current && state.status in setOf(
                                 MinkPadStatus.CONNECTING,
                                 MinkPadStatus.DISCONNECTING,
-                            ) -> TextButton(onClick = repository::cancelConnection) { Text("Cancel") }
+                            ) -> TextButton(onClick = repository::cancelConnection) { Text(stringResource(R.string.cancel)) }
                             else -> TextButton(
                                 onClick = { repository.connect(host.address); onDismiss() },
                                 enabled = state.canChooseHost,
-                            ) { Text("Connect") }
+                            ) { Text(stringResource(R.string.minkpad_connect)) }
                         }
                         if (host.remembered) TextButton(
                             onClick = { forgetPrompt = ForgetDevicePrompt.Confirm(host) },
-                        ) { Text("Forget device") }
+                        ) { Text(stringResource(R.string.minkpad_forget_device)) }
                     }
                 }
                 onPairNew?.let { pairNew ->
-                    TextButton(onClick = pairNew) { Text("Pair new device") }
+                    TextButton(onClick = pairNew) { Text(stringResource(R.string.minkpad_pair_new_device)) }
                 }
                 if (state.hosts.isNotEmpty()) {
                     Text(
-                        "Reconnect asks Android's native keyboard and mouse profile to resume this pairing. " +
-                            "The receiving device may still require you to tap Connect in its Bluetooth settings.",
+                        stringResource(R.string.minkpad_reconnect_explanation),
                         style = MaterialTheme.typography.bodySmall,
                     )
                     Text(
-                        "Android Bluetooth settings complete the final unpairing step.",
+                        stringResource(R.string.minkpad_unpair_explanation),
                         style = MaterialTheme.typography.bodySmall,
                     )
                 }
             }
         },
-        confirmButton = { TextButton(onClick = onDismiss) { Text("Close") } },
+        confirmButton = { TextButton(onClick = onDismiss) { Text(stringResource(R.string.close)) } },
     )
     when (val prompt = forgetPrompt) {
         is ForgetDevicePrompt.Confirm -> AlertDialog(
             onDismissRequest = { forgetPrompt = null },
             modifier = Modifier.widthIn(max = 640.dp).fillMaxWidth(.92f),
             properties = DialogProperties(usePlatformDefaultWidth = false),
-            title = { Text("Forget ${prompt.host.name}?") },
+            title = { Text(stringResource(R.string.minkpad_forget_title, prompt.host.name)) },
             text = {
                 Text(
-                    "MinkPad will disconnect this device and remove it from saved receiving devices. " +
-                        "Android keeps the Bluetooth pairing until you remove it in system settings.",
+                    stringResource(R.string.minkpad_forget_description),
                 )
             },
             confirmButton = {
                 TextButton(onClick = {
                     repository.forget(prompt.host.address)
                     forgetPrompt = ForgetDevicePrompt.OpenSettings(prompt.host)
-                }) { Text("Forget") }
+                }) { Text(stringResource(R.string.minkpad_forget)) }
             },
-            dismissButton = { TextButton(onClick = { forgetPrompt = null }) { Text("Cancel") } },
+            dismissButton = { TextButton(onClick = { forgetPrompt = null }) { Text(stringResource(R.string.cancel)) } },
         )
 
         is ForgetDevicePrompt.OpenSettings -> AlertDialog(
             onDismissRequest = { forgetPrompt = null },
             modifier = Modifier.widthIn(max = 640.dp).fillMaxWidth(.92f),
             properties = DialogProperties(usePlatformDefaultWidth = false),
-            title = { Text("Remove the Bluetooth pairing") },
+            title = { Text(stringResource(R.string.minkpad_remove_pairing_title)) },
             text = {
                 Text(
-                    "To finish forgetting ${prompt.host.name}, open Bluetooth settings, select it, and tap Forget or Unpair.",
+                    stringResource(R.string.minkpad_remove_pairing_description, prompt.host.name),
                 )
             },
             confirmButton = {
@@ -135,10 +142,10 @@ internal fun MinkPadHostsDialog(
                     context.openMinkPadBluetoothSettings()
                     forgetPrompt = null
                     onDismiss()
-                }) { Text("Open Bluetooth settings") }
+                }) { Text(stringResource(R.string.minkpad_open_bluetooth_settings)) }
             },
             dismissButton = {
-                TextButton(onClick = { forgetPrompt = null }) { Text("Not now") }
+                TextButton(onClick = { forgetPrompt = null }) { Text(stringResource(R.string.minkpad_not_now)) }
             },
         )
 

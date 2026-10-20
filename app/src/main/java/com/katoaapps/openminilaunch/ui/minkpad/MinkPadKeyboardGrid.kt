@@ -6,7 +6,9 @@ import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.semantics.selected
 import androidx.compose.ui.semantics.semantics
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.katoaapps.openminilaunch.R
 import com.katoaapps.openminilaunch.features.minkpad.input.MinkPadAction
 
 /** Twelve consistently sized controls; sticky modifiers retain the existing report behavior. */
@@ -17,7 +19,7 @@ internal fun MinkPadKeyboardGrid(
     Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
         MinkPadControlRow(listOf(MinkPadAction.ESCAPE, MinkPadAction.TAB, MinkPadAction.ENTER, MinkPadAction.BACKSPACE), enabled, onInput)
         Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(8.dp)) {
-            listOf("Ctrl" to 1, "Shift" to 2, "Alt" to 4, "Meta" to 8).forEach { (label, bit) ->
+            modifierKeys.forEach { (label, bit) ->
                 val active = modifiers and bit != 0
                 FilledTonalButton(
                     onClick = { onModifiers(modifiers xor bit) }, enabled = enabled,
@@ -26,9 +28,16 @@ internal fun MinkPadKeyboardGrid(
                     colors = ButtonDefaults.filledTonalButtonColors(
                         containerColor = if (active) MaterialTheme.colorScheme.primary else MaterialTheme.colorScheme.secondaryContainer,
                         contentColor = if (active) MaterialTheme.colorScheme.onPrimary else MaterialTheme.colorScheme.onSecondaryContainer),
-                ) { Text(label) }
+                ) { Text(stringResource(label)) }
             }
         }
         MinkPadControlRow(listOf(MinkPadAction.LEFT, MinkPadAction.UP, MinkPadAction.DOWN, MinkPadAction.RIGHT), enabled, onInput)
     }
 }
+
+private val modifierKeys = listOf(
+    R.string.minkpad_control to 1,
+    R.string.minkpad_shift to 2,
+    R.string.minkpad_alt to 4,
+    R.string.minkpad_meta to 8,
+)

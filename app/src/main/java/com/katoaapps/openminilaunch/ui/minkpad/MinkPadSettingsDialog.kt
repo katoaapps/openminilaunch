@@ -14,12 +14,13 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.DialogProperties
+import com.katoaapps.openminilaunch.R
 import com.katoaapps.openminilaunch.features.minkpad.MinkPadHost
 import com.katoaapps.openminilaunch.features.minkpad.input.MinkPadHostPlatform
 import com.katoaapps.openminilaunch.features.minkpad.MinkPadPreferences
-import java.util.Locale
 
 @Composable
 internal fun MinkPadSettingsDialog(
@@ -33,56 +34,60 @@ internal fun MinkPadSettingsDialog(
         onDismissRequest = close,
         modifier = Modifier.widthIn(max = 720.dp).fillMaxWidth(.96f),
         properties = DialogProperties(usePlatformDefaultWidth = false),
-        title = { Text("Controller settings") },
+        title = { Text(stringResource(R.string.minkpad_controller_settings)) },
         text = {
         Column(Modifier.verticalScroll(rememberScrollState()), verticalArrangement = Arrangement.spacedBy(8.dp)) {
-            SettingSwitch("Keep screen awake while connected", value.keepAwake) { update(value.copy(keepAwake = it)) }
-            SettingSwitch("Invert two-finger scrolling", value.naturalScroll) { update(value.copy(naturalScroll = it)) }
-            SettingSwitch("Tap to click", value.tapToClick) { update(value.copy(tapToClick = it)) }
-            SettingSwitch("Click haptics", value.haptics) { update(value.copy(haptics = it)) }
+            SettingSwitch(stringResource(R.string.minkpad_keep_awake), value.keepAwake) { update(value.copy(keepAwake = it)) }
+            SettingSwitch(stringResource(R.string.minkpad_invert_scroll), value.naturalScroll) { update(value.copy(naturalScroll = it)) }
+            SettingSwitch(stringResource(R.string.minkpad_tap_to_click), value.tapToClick) { update(value.copy(tapToClick = it)) }
+            SettingSwitch(stringResource(R.string.minkpad_click_haptics), value.haptics) { update(value.copy(haptics = it)) }
             SettingSwitch(
-                label = "Advanced host gestures",
-                supportingText = "Send operating-system shortcuts for three- and four-finger gestures. Turn this off if the phone uses those gestures for screenshots or system navigation.",
+                label = stringResource(R.string.minkpad_advanced_gestures),
+                supportingText = stringResource(R.string.minkpad_advanced_gestures_description),
                 checked = value.advancedHostGestures,
             ) { update(value.copy(advancedHostGestures = it)) }
-            Text(String.format(Locale.getDefault(), "Pointer sensitivity · %.2f×", value.pointerSensitivity))
+            Text(stringResource(R.string.minkpad_pointer_sensitivity, value.pointerSensitivity))
             Slider(value.pointerSensitivity, { update(value.copy(pointerSensitivity = it)) }, valueRange = .25f..3f)
-            TextButton(onClick = { update(value.copy(pointerSensitivity = .65f)) }) { Text("Gentler pointer · 0.65×") }
+            TextButton(onClick = { update(value.copy(pointerSensitivity = .65f)) }) {
+                Text(stringResource(R.string.minkpad_gentler_pointer))
+            }
             TextButton(onClick = {
                 val candidates = listOf(Settings.ACTION_HARD_KEYBOARD_SETTINGS, Settings.ACTION_INPUT_METHOD_SETTINGS, Settings.ACTION_SETTINGS)
                 val opened = candidates.any { action ->
                     runCatching { context.startActivity(Intent(action)); true }.getOrDefault(false)
                 }
-                if (!opened) Toast.makeText(context, "This device could not open input settings.", Toast.LENGTH_SHORT).show()
-            }) { Text("This phone’s keyboard / input settings") }
-            Text("This opens settings on this phone, not the receiving host. Android does not provide a universal mouse-settings screen. Pointer options may be under your device's input settings.",
+                if (!opened) Toast.makeText(context, context.getString(R.string.minkpad_input_settings_failed), Toast.LENGTH_SHORT).show()
+            }) { Text(stringResource(R.string.minkpad_phone_input_settings)) }
+            Text(stringResource(R.string.minkpad_input_settings_description),
                 style = MaterialTheme.typography.bodySmall)
-            Text(String.format(Locale.getDefault(), "Scroll sensitivity · %.2f×", value.scrollSensitivity))
+            Text(stringResource(R.string.minkpad_scroll_sensitivity, value.scrollSensitivity))
             Slider(value.scrollSensitivity, { update(value.copy(scrollSensitivity = it)) }, valueRange = .25f..3f)
             HorizontalDivider(Modifier.padding(vertical = 8.dp))
-            Text("Operating System", style = MaterialTheme.typography.titleSmall)
+            Text(stringResource(R.string.minkpad_operating_system), style = MaterialTheme.typography.titleSmall)
             host?.let {
-                Text("Saved for ${it.name}", style = MaterialTheme.typography.bodySmall)
+                Text(stringResource(R.string.minkpad_saved_for, it.name), style = MaterialTheme.typography.bodySmall)
             } ?: Text(
-                "Connect a receiving device to save its operating system.",
+                stringResource(R.string.minkpad_connect_to_save_os),
                 style = MaterialTheme.typography.bodySmall,
             )
             Box {
-                TextButton(onClick = { hostMenu = true }, enabled = host != null) { Text(platform.label) }
+                TextButton(onClick = { hostMenu = true }, enabled = host != null) {
+                    Text(stringResource(platform.labelResource))
+                }
                 DropdownMenu(expanded = hostMenu, onDismissRequest = { hostMenu = false }) {
                     MinkPadHostPlatform.entries.forEach { option ->
-                        DropdownMenuItem(text = { Text(option.label) },
+                        DropdownMenuItem(text = { Text(stringResource(option.labelResource)) },
                             onClick = { setPlatform(option); hostMenu = false })
                     }
                 }
             }
             Text(
-                "MinkPad uses a Bluetooth hint when one is available. You can override it here; gesture shortcuts vary by operating system and app.",
+                stringResource(R.string.minkpad_os_hint_description),
                 style = MaterialTheme.typography.bodySmall,
             )
         }
     },
-        confirmButton = { TextButton(onClick = close) { Text("Done") } },
+        confirmButton = { TextButton(onClick = close) { Text(stringResource(R.string.done)) } },
     )
 }
 

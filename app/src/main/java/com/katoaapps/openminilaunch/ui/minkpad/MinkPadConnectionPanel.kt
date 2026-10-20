@@ -25,7 +25,9 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.katoaapps.openminilaunch.R
 import com.katoaapps.openminilaunch.features.minkpad.MinkPadRepository
 import com.katoaapps.openminilaunch.features.minkpad.MinkPadSessionState
 import com.katoaapps.openminilaunch.features.minkpad.MinkPadStatus
@@ -69,11 +71,14 @@ internal fun MinkPadConnectionPanel(
                 horizontalArrangement = Arrangement.spacedBy(10.dp),
             ) {
                 if (busy) CircularProgressIndicator(modifier = Modifier.size(22.dp), strokeWidth = 2.dp)
-                Text(if (supported) state.title() else "MinkPad is unavailable", style = MaterialTheme.typography.titleMedium)
+                Text(
+                    if (supported) state.title() else stringResource(R.string.minkpad_state_unavailable),
+                    style = MaterialTheme.typography.titleMedium,
+                )
             }
             if (!pairing) state.message?.let { Text(it, style = MaterialTheme.typography.bodySmall) }
             if (!supported) {
-                Text("Requires Android 9 or later and a phone with Bluetooth HID Device support.")
+                Text(stringResource(R.string.minkpad_requires_hid))
             }
 
             if (pairing) PairingInstructions(
@@ -91,38 +96,45 @@ internal fun MinkPadConnectionPanel(
                 when (state.status) {
                     MinkPadStatus.IDLE -> if (supported) {
                         Button(onClick = onStart) {
-                            Text("Start MinkPad")
+                            Text(stringResource(R.string.minkpad_start))
                         }
                     }
 
                     MinkPadStatus.READY -> {
                         if (state.hosts.isEmpty()) {
-                            Button(onClick = onDiscover) { Text("Pair a device") }
+                            Button(onClick = onDiscover) { Text(stringResource(R.string.minkpad_pair_device)) }
                         } else {
-                            Button(onClick = ::openHosts) { Text("Choose a device") }
+                            Button(onClick = ::openHosts) { Text(stringResource(R.string.minkpad_choose_device)) }
                         }
                     }
 
                     MinkPadStatus.WAITING_FOR_HOST ->
-                        TextButton(onClick = repository::cancelPairing) { Text("Cancel pairing") }
+                        TextButton(onClick = repository::cancelPairing) {
+                            Text(stringResource(R.string.minkpad_cancel_pairing))
+                        }
 
                     MinkPadStatus.CONNECTING,
                     MinkPadStatus.DISCONNECTING ->
-                        TextButton(onClick = repository::cancelConnection) { Text("Cancel connection") }
+                        TextButton(onClick = repository::cancelConnection) {
+                            Text(stringResource(R.string.minkpad_cancel_connection))
+                        }
 
                     MinkPadStatus.DISCONNECTED -> {
                         state.host?.let { host ->
                             Button(onClick = { repository.connect(host.address) }) {
-                                Text("Reconnect")
+                                Text(stringResource(R.string.minkpad_reconnect))
                             }
                         }
                         TextButton(onClick = ::openHosts) {
-                            Text(if (state.host == null) "Choose a device" else "Choose another device")
+                            Text(stringResource(
+                                if (state.host == null) R.string.minkpad_choose_device
+                                else R.string.minkpad_choose_another_device,
+                            ))
                         }
                     }
 
                     MinkPadStatus.ERROR ->
-                        TextButton(onClick = repository::stop) { Text("Reset MinkPad") }
+                        TextButton(onClick = repository::stop) { Text(stringResource(R.string.minkpad_reset)) }
 
                     MinkPadStatus.REGISTERING,
                     MinkPadStatus.CONNECTED,
@@ -131,7 +143,7 @@ internal fun MinkPadConnectionPanel(
                 }
 
                 if (state.status in closableStatuses) {
-                    TextButton(onClick = repository::stop) { Text("Close MinkPad") }
+                    TextButton(onClick = repository::stop) { Text(stringResource(R.string.minkpad_close)) }
                 }
             }
 
@@ -169,6 +181,7 @@ private fun PairingInstructions(state: MinkPadSessionState, onBrowseNearby: () -
     }
     val minutes = remaining / 60
     val seconds = remaining % 60
+    val pairingFailed = stringResource(R.string.minkpad_pairing_failed)
 
     Surface(
         shape = MaterialTheme.shapes.medium,
@@ -181,11 +194,11 @@ private fun PairingInstructions(state: MinkPadSessionState, onBrowseNearby: () -
             verticalArrangement = Arrangement.spacedBy(8.dp),
         ) {
             Text(
-                "%d:%02d remaining".format(minutes, seconds),
+                stringResource(R.string.minkpad_time_remaining, minutes, seconds),
                 style = MaterialTheme.typography.labelMedium,
             )
             state.message
-                ?.takeIf { state.host != null || it.startsWith("Pairing failed") }
+                ?.takeIf { state.host != null || it.startsWith(pairingFailed) }
                 ?.let { Text(it, style = MaterialTheme.typography.bodySmall) }
             if (state.host == null) {
                 Surface(
@@ -196,28 +209,31 @@ private fun PairingInstructions(state: MinkPadSessionState, onBrowseNearby: () -
                         Modifier.fillMaxWidth().padding(12.dp),
                         verticalArrangement = Arrangement.spacedBy(4.dp),
                     ) {
-                        Text("Pair from this phone", style = MaterialTheme.typography.titleSmall)
-                        Text("Search for nearby receiving devices.", style = MaterialTheme.typography.bodySmall)
-                        TextButton(onClick = onBrowseNearby) { Text("See nearby devices") }
+                        Text(stringResource(R.string.minkpad_pair_from_phone), style = MaterialTheme.typography.titleSmall)
+                        Text(stringResource(R.string.minkpad_search_nearby_description), style = MaterialTheme.typography.bodySmall)
+                        TextButton(onClick = onBrowseNearby) { Text(stringResource(R.string.minkpad_see_nearby_devices)) }
                     }
                 }
-                Text("1. Open Bluetooth settings on the device you want to control.")
-                Text("2. Select “${state.advertisedName ?: "this phone"}”.")
-                Text("3. Confirm the matching pairing code on both devices.")
+                Text(stringResource(R.string.minkpad_pair_step_open_settings))
+                Text(stringResource(
+                    R.string.minkpad_pair_step_select,
+                    state.advertisedName ?: stringResource(R.string.minkpad_this_phone),
+                ))
+                Text(stringResource(R.string.minkpad_pair_step_confirm))
                 Text(
-                    "Can't find MinkPad? Some TVs require this phone to start pairing instead.",
+                    stringResource(R.string.minkpad_pair_tv_hint),
                     style = MaterialTheme.typography.bodySmall,
                 )
                 TextButton(onClick = {
                     context.openMinkPadBluetoothSettings()
-                }) { Text("Open this phone's Bluetooth settings") }
+                }) { Text(stringResource(R.string.minkpad_open_phone_bluetooth_settings)) }
             } else {
                 Text(
-                    "Confirm the matching pairing code on both devices. MinkPad will open the controller when keyboard and mouse input are ready.",
+                    stringResource(R.string.minkpad_pair_confirm_both),
                 )
             }
             Text(
-                "If this device still has an older MinkPad pairing, remove that entry on both devices before trying again.",
+                stringResource(R.string.minkpad_pair_old_entry_hint),
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onPrimaryContainer,
             )
@@ -229,18 +245,29 @@ private fun Long?.remainingSeconds(): Int = this?.let {
     ((it - SystemClock.elapsedRealtime()).coerceAtLeast(0L) / 1_000L).toInt()
 } ?: 0
 
+@Composable
 private fun MinkPadSessionState.title(): String = when (status) {
-    MinkPadStatus.IDLE -> "MinkPad is off"
-    MinkPadStatus.REGISTERING -> "Preparing Bluetooth input"
-    MinkPadStatus.READY -> if (hosts.isEmpty()) "Ready to pair" else "Choose a receiving device"
-    MinkPadStatus.WAITING_FOR_HOST -> if (host == null) "Pair a device" else "Pairing with ${host.name}"
-    MinkPadStatus.CONNECTING -> "Connecting${host?.let { " · ${it.name}" } ?: ""}"
-    MinkPadStatus.CONNECTED -> "Connected${host?.let { " · ${it.name}" } ?: ""}"
-    MinkPadStatus.DISCONNECTING -> "Disconnecting"
-    MinkPadStatus.DISCONNECTED -> "Disconnected${host?.let { " · ${it.name}" } ?: ""}"
-    MinkPadStatus.STOPPING -> "Closing MinkPad"
-    MinkPadStatus.UNSUPPORTED -> "MinkPad is unavailable"
-    MinkPadStatus.ERROR -> "MinkPad needs attention"
+    MinkPadStatus.IDLE -> stringResource(R.string.minkpad_state_off)
+    MinkPadStatus.REGISTERING -> stringResource(R.string.minkpad_state_preparing)
+    MinkPadStatus.READY -> stringResource(
+        if (hosts.isEmpty()) R.string.minkpad_state_ready_to_pair else R.string.minkpad_state_choose_device,
+    )
+    MinkPadStatus.WAITING_FOR_HOST -> host?.let {
+        stringResource(R.string.minkpad_state_pairing_with, it.name)
+    } ?: stringResource(R.string.minkpad_state_pair_device)
+    MinkPadStatus.CONNECTING -> host?.let {
+        stringResource(R.string.minkpad_state_connecting_with, it.name)
+    } ?: stringResource(R.string.minkpad_state_connecting)
+    MinkPadStatus.CONNECTED -> host?.let {
+        stringResource(R.string.minkpad_state_connected_with, it.name)
+    } ?: stringResource(R.string.minkpad_state_connected)
+    MinkPadStatus.DISCONNECTING -> stringResource(R.string.minkpad_state_disconnecting)
+    MinkPadStatus.DISCONNECTED -> host?.let {
+        stringResource(R.string.minkpad_state_disconnected_from, it.name)
+    } ?: stringResource(R.string.minkpad_state_disconnected)
+    MinkPadStatus.STOPPING -> stringResource(R.string.minkpad_state_closing)
+    MinkPadStatus.UNSUPPORTED -> stringResource(R.string.minkpad_state_unavailable)
+    MinkPadStatus.ERROR -> stringResource(R.string.minkpad_state_attention)
 }
 
 private val busyStatuses = setOf(

@@ -11,8 +11,11 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.res.pluralStringResource
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
+import com.katoaapps.openminilaunch.R
 
 /** On wide screens, example and explanation sit side by side; large text favors one column. */
 @OptIn(ExperimentalLayoutApi::class)
@@ -39,7 +42,7 @@ internal fun MinkPadHelpPageContent(page: MinkPadHelpPage, modifier: Modifier = 
                 if (example != null) MinkPadHelpExamples(page.examples, selectedExample, previewHeight) { selectedExample = it }
                 Text(page.description, style = MaterialTheme.typography.bodyLarge)
             }
-            Text("Swipe between pages or use Next. System shortcuts depend on the host and its settings.",
+            Text(stringResource(R.string.minkpad_help_swipe_hint),
                 style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
         }
     }
@@ -51,7 +54,7 @@ private fun MinkPadHelpExamples(
     examples: List<MinkPadGestureExample>, selected: Int, maxPreviewHeight: Dp, onSelect: (Int) -> Unit,
 ) {
     val example = examples[selected]
-    Text("${example.fingers} ${if (example.fingers == 1) "finger" else "fingers"}",
+    Text(pluralStringResource(R.plurals.minkpad_finger_count, example.fingers, example.fingers),
         style = MaterialTheme.typography.labelLarge)
     Box(Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
         MinkPadGestureIllustration(example, Modifier.widthIn(max = maxPreviewHeight * 1.8f).fillMaxWidth())

@@ -8,6 +8,7 @@ import android.content.Context
 import android.content.Intent
 import android.content.IntentFilter
 import androidx.core.content.ContextCompat
+import com.katoaapps.openminilaunch.R
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 
@@ -51,12 +52,12 @@ internal class MinkPadNearbyDiscovery(
         register()
         val bluetooth = adapter()
         if (bluetooth == null || !bluetooth.isEnabled) {
-            fail("Turn on Bluetooth to search for nearby devices.")
+            fail(context.getString(R.string.minkpad_scan_enable_bluetooth))
             return false
         }
         mutable.value = MinkPadNearbyDiscoveryState(scanning = true)
         return runCatching { bluetooth.startDiscovery() }.getOrDefault(false).also { started ->
-            if (!started) fail("Android could not start a nearby-device search. Try Bluetooth settings instead.")
+            if (!started) fail(context.getString(R.string.minkpad_scan_start_failed))
         }
     }
 
@@ -88,14 +89,15 @@ internal class MinkPadNearbyDiscovery(
     @SuppressLint("MissingPermission")
     private fun add(device: BluetoothDevice, discoveredName: String?) {
         if (device.bondState != BluetoothDevice.BOND_NONE) return
+        val fallbackName = context.getString(R.string.minkpad_bluetooth_device)
         val result = MinkPadNearbyDevice(
             address = device.address,
             name = discoveredName?.trim().takeUnless { it.isNullOrEmpty() }
                 ?: device.name?.trim().takeUnless { it.isNullOrEmpty() }
-                ?: "Bluetooth device",
+                ?: fallbackName,
         )
         val devices = (mutable.value.devices.filterNot { it.address == result.address } + result)
-            .sortedWith(compareBy<MinkPadNearbyDevice> { it.name == "Bluetooth device" }.thenBy { it.name.lowercase() })
+            .sortedWith(compareBy<MinkPadNearbyDevice> { it.name == fallbackName }.thenBy { it.name.lowercase() })
         mutable.value = mutable.value.copy(devices = devices)
     }
 

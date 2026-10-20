@@ -8,10 +8,7 @@ import com.katoaapps.openminilaunch.features.minkpad.input.MinkPadHostPlatform.M
 import com.katoaapps.openminilaunch.features.minkpad.input.MinkPadHostPlatform.WINDOWS
 
 /** User-selected per-host preset. Standard HID does not expose the receiving operating system. */
-internal enum class MinkPadHostPlatform(val label: String) {
-    GENERIC("Choose Operating System"), ANDROID("Android / Google TV"), MAC("Mac"),
-    WINDOWS("Windows"), APPLE_MOBILE("iPhone / iPad"),
-}
+internal enum class MinkPadHostPlatform { GENERIC, ANDROID, MAC, WINDOWS, APPLE_MOBILE }
 
 /** Uses only explicit host-name signals. The Bluetooth phone class is handled by the repository. */
 internal fun minkPadHostPlatformHint(name: String?): MinkPadHostPlatform? {
@@ -50,7 +47,7 @@ internal enum class MinkPadGestureAction {
     BACK, OVERVIEW, DISMISS_OVERVIEW, PREVIOUS_APP, NEXT_APP, APP_LIST, ZOOM_IN, ZOOM_OUT,
 }
 
-internal data class MinkPadShortcut(val usage: Int, val modifiers: Int, val description: String)
+internal data class MinkPadShortcut(val usage: Int, val modifiers: Int)
 
 /** HID modifier bits, not Android KeyEvent masks. Missing mappings are intentional no-ops. */
 internal fun MinkPadHostPlatform.shortcut(action: MinkPadGestureAction): MinkPadShortcut? {
@@ -60,20 +57,20 @@ internal fun MinkPadHostPlatform.shortcut(action: MinkPadGestureAction): MinkPad
     val meta = 8
     return when (action) {
         MinkPadGestureAction.BACK -> when (this) {
-            ANDROID -> MinkPadShortcut(41, meta, "Back · Meta + Esc")
-            MAC -> MinkPadShortcut(47, meta, "Back in compatible apps · Command + [")
-            WINDOWS -> MinkPadShortcut(80, alt, "Back in compatible apps · Alt + Left")
+            ANDROID -> MinkPadShortcut(41, meta)
+            MAC -> MinkPadShortcut(47, meta)
+            WINDOWS -> MinkPadShortcut(80, alt)
             else -> null
         }
         MinkPadGestureAction.OVERVIEW -> when (this) {
-            ANDROID, WINDOWS -> MinkPadShortcut(43, meta, if (this == ANDROID) "Recent apps · Meta + Tab" else "Task View · Windows + Tab")
-            MAC -> MinkPadShortcut(82, ctrl, "Mission Control · Control + Up")
+            ANDROID, WINDOWS -> MinkPadShortcut(43, meta)
+            MAC -> MinkPadShortcut(82, ctrl)
             else -> null // Apple's Globe/Fn key needs a different report, not a guessed modifier.
         }
         MinkPadGestureAction.DISMISS_OVERVIEW -> when (this) {
-            ANDROID -> MinkPadShortcut(41, meta, "Dismiss overview · Meta + Esc")
-            MAC -> MinkPadShortcut(81, ctrl, "App Exposé · Control + Down")
-            WINDOWS -> MinkPadShortcut(41, 0, "Dismiss Task View · Esc")
+            ANDROID -> MinkPadShortcut(41, meta)
+            MAC -> MinkPadShortcut(81, ctrl)
+            WINDOWS -> MinkPadShortcut(41, 0)
             else -> null
         }
         MinkPadGestureAction.NEXT_APP, MinkPadGestureAction.PREVIOUS_APP -> when (this) {
@@ -82,8 +79,6 @@ internal fun MinkPadHostPlatform.shortcut(action: MinkPadGestureAction): MinkPad
                 MinkPadShortcut(
                     usage = if (previous) 80 else 79,
                     modifiers = ctrl,
-                    description = (if (previous) "Previous" else "Next") + " Space · Control + " +
-                        if (previous) "Left" else "Right",
                 )
             }
             ANDROID, WINDOWS, APPLE_MOBILE -> {
@@ -92,23 +87,22 @@ internal fun MinkPadHostPlatform.shortcut(action: MinkPadGestureAction): MinkPad
                 MinkPadShortcut(
                     usage = 43,
                     modifiers = modifier,
-                    description = "Switch app · " + (if (this == APPLE_MOBILE) "Command" else "Alt") +
-                        (if (previous) " + Shift" else "") + " + Tab",
                 )
             }
             GENERIC -> null
         }
         MinkPadGestureAction.APP_LIST -> when (this) {
-            ANDROID -> MinkPadShortcut(0, meta, "App list / search · Meta (host-dependent)")
-            WINDOWS -> MinkPadShortcut(0, meta, "Start menu · Windows")
+            ANDROID -> MinkPadShortcut(0, meta)
+            WINDOWS -> MinkPadShortcut(0, meta)
             else -> null // No universal app-drawer shortcut on Mac or iOS.
         }
         MinkPadGestureAction.ZOOM_IN, MinkPadGestureAction.ZOOM_OUT -> when (this) {
             MAC, WINDOWS, ANDROID -> {
                 val zoomIn = action == MinkPadGestureAction.ZOOM_IN
-                MinkPadShortcut(if (zoomIn) 46 else 45,
+                MinkPadShortcut(
+                    if (zoomIn) 46 else 45,
                     (if (this == MAC) meta else ctrl) or (if (zoomIn) shift else 0),
-                    "App zoom · " + (if (this == MAC) "Command" else "Ctrl") + (if (zoomIn) " + Plus" else " + Minus"))
+                )
             }
             else -> null
         }

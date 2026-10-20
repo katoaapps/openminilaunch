@@ -15,7 +15,9 @@ import androidx.compose.ui.graphics.Shape
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalHapticFeedback
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.katoaapps.openminilaunch.R
 import com.katoaapps.openminilaunch.features.minkpad.MinkPadPreferences
 import com.katoaapps.openminilaunch.features.minkpad.MinkPadRepository
 import com.katoaapps.openminilaunch.features.minkpad.input.MinkPadGestureAction
@@ -57,8 +59,8 @@ internal fun MinkPadTrackpad(
                 contentAlignment = Alignment.Center,
             ) {
                 if (showHint && !hasInteracted) Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                    Text("Trackpad", style = MaterialTheme.typography.titleLarge)
-                    Text("Move a finger · Tap to click", style = MaterialTheme.typography.bodyMedium)
+                    Text(stringResource(R.string.minkpad_trackpad), style = MaterialTheme.typography.titleLarge)
+                    Text(stringResource(R.string.minkpad_trackpad_hint), style = MaterialTheme.typography.bodyMedium)
                 }
                 if (showGridOutline) Canvas(
                     Modifier
@@ -89,7 +91,10 @@ internal fun MinkPadTrackpad(
             }
             if (showHelp) {
                 IconButton(onClick = onHelp, modifier = Modifier.align(Alignment.TopEnd).padding(8.dp)) {
-                    Icon(Icons.AutoMirrored.Outlined.HelpOutline, contentDescription = "Trackpad help")
+                    Icon(
+                        Icons.AutoMirrored.Outlined.HelpOutline,
+                        contentDescription = stringResource(R.string.minkpad_trackpad_help),
+                    )
                 }
             }
         }

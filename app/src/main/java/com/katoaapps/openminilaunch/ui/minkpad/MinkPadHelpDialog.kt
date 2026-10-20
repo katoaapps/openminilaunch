@@ -14,9 +14,11 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
+import com.katoaapps.openminilaunch.R
 import com.katoaapps.openminilaunch.features.minkpad.input.MinkPadHostPlatform
 import com.katoaapps.openminilaunch.ui.minkpad.help.MinkPadHelpPageContent
 import com.katoaapps.openminilaunch.ui.minkpad.help.minkPadHelpPages
@@ -54,16 +56,18 @@ internal fun MinkPadHelpDialog(platform: MinkPadHostPlatform, onSettings: () -> 
                         verticalAlignment = Alignment.CenterVertically,
                     ) {
                         Column(Modifier.weight(1f)) {
-                            Text("Trackpad help", style = MaterialTheme.typography.titleLarge)
-                            if (compactHeader) Text(platform.label, style = MaterialTheme.typography.labelMedium)
+                            Text(stringResource(R.string.minkpad_trackpad_help), style = MaterialTheme.typography.titleLarge)
+                            if (compactHeader) Text(stringResource(platform.labelResource), style = MaterialTheme.typography.labelMedium)
                         }
                         if (compactHeader) IconButton(onClick = onSettings) {
-                            Icon(Icons.Default.Settings, contentDescription = "Choose operating system or open settings")
+                            Icon(Icons.Default.Settings, contentDescription = stringResource(R.string.minkpad_help_choose_os))
                         }
-                        IconButton(onClick = close) { Icon(Icons.Default.Close, contentDescription = "Close help") }
+                        IconButton(onClick = close) {
+                            Icon(Icons.Default.Close, contentDescription = stringResource(R.string.minkpad_help_close))
+                        }
                     }
                     if (!compactHeader) TextButton(onClick = onSettings, modifier = Modifier.padding(horizontal = 12.dp)) {
-                        Text("Operating System · ${platform.label} · Change")
+                        Text(stringResource(R.string.minkpad_help_platform, stringResource(platform.labelResource)))
                     }
                     HorizontalDivider()
                     HorizontalPager(
@@ -77,7 +81,7 @@ internal fun MinkPadHelpDialog(platform: MinkPadHostPlatform, onSettings: () -> 
                         Modifier.fillMaxWidth().padding(horizontal = 20.dp, vertical = 4.dp),
                         horizontalArrangement = Arrangement.Center,
                     ) {
-                        Text("${pager.currentPage + 1} of ${pages.size}",
+                        Text(stringResource(R.string.page_of_pages, pager.currentPage + 1, pages.size),
                             style = MaterialTheme.typography.labelMedium)
                     }
                     Row(
@@ -88,14 +92,16 @@ internal fun MinkPadHelpDialog(platform: MinkPadHostPlatform, onSettings: () -> 
                             onClick = { scope.launch { pager.animateScrollToPage(pager.currentPage - 1) } },
                             enabled = pager.currentPage > 0,
                             modifier = Modifier.weight(1f).heightIn(min = 48.dp),
-                        ) { Text("Previous") }
+                        ) { Text(stringResource(R.string.minkpad_help_previous)) }
                         FilledTonalButton(
                             onClick = {
                                 if (pager.currentPage == pages.lastIndex) close()
                                 else scope.launch { pager.animateScrollToPage(pager.currentPage + 1) }
                             },
                             modifier = Modifier.weight(1f).heightIn(min = 48.dp),
-                        ) { Text(if (pager.currentPage == pages.lastIndex) "Done" else "Next") }
+                        ) {
+                            Text(stringResource(if (pager.currentPage == pages.lastIndex) R.string.done else R.string.next))
+                        }
                     }
                 }
             }

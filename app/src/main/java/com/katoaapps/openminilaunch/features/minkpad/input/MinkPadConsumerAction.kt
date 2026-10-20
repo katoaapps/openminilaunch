@@ -1,10 +1,10 @@
 package com.katoaapps.openminilaunch.features.minkpad.input
 
 /** USB HID Consumer page usages. All commands are momentary press/release pairs. */
-internal enum class MinkPadConsumerAction(val usage: Int, val label: String) {
-    BACK(0x224, "Back"),
-    VOLUME_DOWN(0xEA, "Volume −"), VOLUME_UP(0xE9, "Volume +"),
-    CHANNEL_DOWN(0x9D, "Channel −"), CHANNEL_UP(0x9C, "Channel +"),
-    MUTE(0xE2, "Mute"), PLAY_PAUSE(0xCD, "Play / pause"),
-    PREVIOUS(0xB6, "Previous"), NEXT(0xB5, "Next"),
+internal enum class MinkPadConsumerAction(val usage: Int) {
+    BACK(0x224),
+    VOLUME_DOWN(0xEA), VOLUME_UP(0xE9),
+    CHANNEL_DOWN(0x9D), CHANNEL_UP(0x9C),
+    MUTE(0xE2), PLAY_PAUSE(0xCD),
+    PREVIOUS(0xB6), NEXT(0xB5),
 }

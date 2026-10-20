@@ -13,8 +13,10 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.viewinterop.AndroidView
+import com.katoaapps.openminilaunch.R
 
 /** The editor is an explicit software-keyboard bridge. Hardware keys use Activity dispatch only. */
 @Composable
@@ -36,7 +38,7 @@ internal fun MinkPadLiveTextInput(
     Column {
         if (!hardwareKeyboard) {
             TextButton(onClick = { softwareEditorOpen = !softwareEditorOpen }, enabled = enabled) {
-                Text(if (showEditor) "Hide keyboard" else "Type")
+                Text(stringResource(if (showEditor) R.string.minkpad_hide_keyboard else R.string.minkpad_type))
             }
         }
         AndroidView(

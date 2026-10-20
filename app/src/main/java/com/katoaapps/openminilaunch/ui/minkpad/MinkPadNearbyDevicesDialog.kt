@@ -21,8 +21,10 @@ import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.DialogProperties
+import com.katoaapps.openminilaunch.R
 import com.katoaapps.openminilaunch.features.minkpad.MinkPadRepository
 
 @Composable
@@ -42,7 +44,7 @@ internal fun MinkPadNearbyDevicesDialog(
             .widthIn(max = 720.dp)
             .fillMaxWidth(.96f),
         properties = DialogProperties(usePlatformDefaultWidth = false),
-        title = { Text("Nearby devices") },
+        title = { Text(stringResource(R.string.minkpad_nearby_devices)) },
         text = {
             Column(
                 Modifier.verticalScroll(rememberScrollState()),
@@ -54,8 +56,10 @@ internal fun MinkPadNearbyDevicesDialog(
                 ) {
                     if (discovery.scanning) CircularProgressIndicator(Modifier.size(22.dp), strokeWidth = 2.dp)
                     Text(
-                        if (discovery.scanning) "Searching for discoverable devices…"
-                        else "Search finished",
+                        stringResource(
+                            if (discovery.scanning) R.string.minkpad_searching_devices
+                            else R.string.minkpad_search_finished,
+                        ),
                         style = MaterialTheme.typography.bodyMedium,
                     )
                 }
@@ -63,7 +67,7 @@ internal fun MinkPadNearbyDevicesDialog(
                     Text(it, style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.error)
                 }
                 if (discovery.devices.isEmpty() && !discovery.scanning && discovery.message == null) {
-                    Text("No nearby devices found. Make sure the receiving device's pairing screen is open.")
+                    Text(stringResource(R.string.minkpad_no_nearby_devices))
                 }
                 discovery.devices.forEach { device ->
                     TextButton(
@@ -72,11 +76,11 @@ internal fun MinkPadNearbyDevicesDialog(
                         },
                         modifier = Modifier.fillMaxWidth(),
                     ) {
-                        Text("${device.name} · Pair")
+                        Text(stringResource(R.string.minkpad_pair_nearby_device, device.name))
                     }
                 }
                 Text(
-                    "Only devices found during this search are shown. MinkPad does not save or upload scan results.",
+                    stringResource(R.string.minkpad_scan_privacy),
                     style = MaterialTheme.typography.bodySmall,
                 )
                 OutlinedButton(
@@ -85,10 +89,10 @@ internal fun MinkPadNearbyDevicesDialog(
                         onDismiss()
                     },
                     modifier = Modifier.fillMaxWidth(),
-                ) { Text("Open Bluetooth settings") }
+                ) { Text(stringResource(R.string.minkpad_open_bluetooth_settings)) }
             }
         },
-        confirmButton = { TextButton(onClick = onRefresh) { Text("Search again") } },
-        dismissButton = { TextButton(onClick = onDismiss) { Text("Close") } },
+        confirmButton = { TextButton(onClick = onRefresh) { Text(stringResource(R.string.minkpad_search_again)) } },
+        dismissButton = { TextButton(onClick = onDismiss) { Text(stringResource(R.string.close)) } },
     )
 }

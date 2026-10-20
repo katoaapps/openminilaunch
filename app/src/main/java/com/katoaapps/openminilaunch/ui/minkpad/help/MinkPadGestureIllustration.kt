@@ -15,7 +15,9 @@ import androidx.compose.ui.graphics.drawscope.DrawScope
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.semantics.contentDescription
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.katoaapps.openminilaunch.R
 
 internal enum class MinkPadGestureMotion {
     MOVE, TAP, DOUBLE_TAP, HOLD, DRAG, VERTICAL, HORIZONTAL, SPREAD, PINCH, UP, DOWN, LEFT, RIGHT,
@@ -29,9 +31,15 @@ internal data class MinkPadGestureExample(
 @Composable
 internal fun MinkPadGestureIllustration(example: MinkPadGestureExample, modifier: Modifier = Modifier) {
     val color = MaterialTheme.colorScheme.primary
+    val description = stringResource(
+        R.string.minkpad_gesture_description,
+        example.fingers,
+        example.label,
+        example.caption,
+    )
     Surface(
         modifier.clearAndSetSemantics {
-            contentDescription = "${example.fingers}-finger gesture: ${example.label}. ${example.caption}"
+            contentDescription = description
         },
         shape = MaterialTheme.shapes.extraLarge,
         color = MaterialTheme.colorScheme.surfaceContainerHighest,

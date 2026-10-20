@@ -9,6 +9,7 @@ import android.view.inputmethod.InputConnection
 import android.view.inputmethod.InputConnectionWrapper
 import android.view.inputmethod.InputMethodManager
 import android.widget.EditText
+import com.katoaapps.openminilaunch.R
 
 /** Only transient IME composition lives here. Committed host text is immediately cleared. */
 internal class MinkPadInputEditor(context: Context) : EditText(context) {
@@ -23,7 +24,7 @@ internal class MinkPadInputEditor(context: Context) : EditText(context) {
 
     init {
         isEnabled = false
-        hint = "Type directly to the host"
+        hint = context.getString(R.string.minkpad_type_directly_hint)
         // A remote keyboard sends literal input, not locally corrected prose. Some physical
         // IMEs ignore NO_SUGGESTIONS for smart caps/spacing but honor this standard variation.
         inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD or

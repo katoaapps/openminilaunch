@@ -3,6 +3,7 @@ package com.katoaapps.openminilaunch.features.minkpad
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
+import com.katoaapps.openminilaunch.R
 import com.katoaapps.openminilaunch.model.LauncherAppTarget
 import com.katoaapps.openminilaunch.ui.minkpad.MinkPadActivity
 
@@ -10,7 +11,7 @@ import com.katoaapps.openminilaunch.ui.minkpad.MinkPadActivity
 internal object MinkPadLauncherEntry {
     const val KEY = "internal:minkpad"
     fun target(context: Context, userSerial: Long) = LauncherAppTarget(
-        label = "MinkPad", packageName = context.packageName,
+        label = context.getString(R.string.minkpad_name), packageName = context.packageName,
         componentName = ComponentName(context, MinkPadActivity::class.java),
         userSerial = userSerial, isWorkProfile = false, selectionKey = KEY,
     )

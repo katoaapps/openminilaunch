@@ -11,6 +11,7 @@ import android.content.Context
 import android.os.Handler
 import android.os.Looper
 import androidx.annotation.RequiresApi
+import com.katoaapps.openminilaunch.R
 import com.katoaapps.openminilaunch.features.minkpad.hid.MinkPadReportId
 import com.katoaapps.openminilaunch.features.minkpad.hid.MinkPadReportSender
 import java.util.concurrent.ExecutorService
@@ -49,14 +50,14 @@ internal class MinkPadClassicProfile(
         override fun onServiceConnected(profile: Int, proxy: BluetoothProfile) {
             if (profile != BluetoothProfile.HID_DEVICE || closing) return
             val device = proxy as? BluetoothHidDevice ?: run {
-                fail("Android returned an incompatible HID Device profile.")
+                fail(appContext.getString(R.string.minkpad_error_incompatible_hid_profile))
                 return
             }
             hid = device
             val accepted = runCatching {
                 device.registerApp(SDP, null, OUTGOING_QOS, callbackExecutor, callback)
             }.getOrDefault(false)
-            if (!accepted) fail("Android rejected native Bluetooth HID registration. Another input app may already be active.")
+            if (!accepted) fail(appContext.getString(R.string.minkpad_error_hid_registration_rejected))
         }
 
         override fun onServiceDisconnected(profile: Int) {
@@ -64,7 +65,7 @@ internal class MinkPadClassicProfile(
             hid = null
             connectedHost = null
             appRegistered = false
-            if (!closing) fail("Android ended the native Bluetooth HID service.")
+            if (!closing) fail(appContext.getString(R.string.minkpad_error_hid_service_ended))
         }
     }
 

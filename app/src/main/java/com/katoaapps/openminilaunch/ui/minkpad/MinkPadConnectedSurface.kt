@@ -50,7 +50,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.katoaapps.openminilaunch.R
 import com.katoaapps.openminilaunch.features.minkpad.MinkPadPreferences
 import com.katoaapps.openminilaunch.features.minkpad.MinkPadRepository
 import com.katoaapps.openminilaunch.features.minkpad.MinkPadSessionState
@@ -101,6 +103,8 @@ internal fun MinkPadConnectedSurface(
     )
     val snackbarHost = remember { SnackbarHostState() }
     val bottomControlsScroll = rememberScrollState()
+    val capsLockWarning = stringResource(R.string.minkpad_caps_lock_warning)
+    val textNotSent = stringResource(R.string.minkpad_text_not_sent)
 
     BackHandler(enabled = bottomExpanded) { bottomExpanded = false }
 
@@ -112,7 +116,7 @@ internal fun MinkPadConnectedSurface(
         onFeedbackConsumed()
     }
     LaunchedEffect(state.capsLock) {
-        if (state.capsLock) snackbarHost.showSnackbar("Host Caps Lock is on. Turn it off for software text input.")
+        if (state.capsLock) snackbarHost.showSnackbar(capsLockWarning)
     }
 
     Box(Modifier.fillMaxSize()) {
@@ -187,7 +191,9 @@ internal fun MinkPadConnectedSurface(
             ) {
                 Icon(
                     if (topExpanded) Icons.Default.KeyboardArrowUp else Icons.Default.KeyboardArrowDown,
-                    contentDescription = if (topExpanded) "Hide MinkPad controls" else "Show MinkPad controls",
+                    contentDescription = stringResource(
+                        if (topExpanded) R.string.minkpad_hide_controls else R.string.minkpad_show_controls,
+                    ),
                 )
             }
 
@@ -224,7 +230,7 @@ internal fun MinkPadConnectedSurface(
                             onText = {
                                 onFeedback(
                                     if (repository.type(it)) null
-                                    else "Text not sent. Use US-layout characters, or wait for the previous input to finish.",
+                                    else textNotSent,
                                 )
                             },
                             onBackspace = { repository.tapKey(42) },
@@ -246,8 +252,10 @@ internal fun MinkPadConnectedSurface(
             ) {
                 Icon(
                     if (bottomExpanded) Icons.Default.KeyboardArrowDown else Icons.Default.Keyboard,
-                    contentDescription = if (bottomExpanded) "Hide keyboard and host controls"
-                    else "Show keyboard and host controls",
+                    contentDescription = stringResource(
+                        if (bottomExpanded) R.string.minkpad_hide_keyboard_controls
+                        else R.string.minkpad_show_keyboard_controls,
+                    ),
                 )
             }
 

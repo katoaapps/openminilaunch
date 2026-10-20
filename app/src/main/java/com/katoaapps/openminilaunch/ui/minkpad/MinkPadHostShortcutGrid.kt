@@ -11,7 +11,9 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import com.katoaapps.openminilaunch.R
 import com.katoaapps.openminilaunch.features.minkpad.input.MinkPadGestureAction
 import com.katoaapps.openminilaunch.features.minkpad.input.MinkPadHostPlatform
 import com.katoaapps.openminilaunch.features.minkpad.input.shortcut
@@ -24,10 +26,10 @@ internal fun MinkPadHostShortcutGrid(
     onAction: (MinkPadGestureAction) -> Unit,
 ) {
     Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-        Text("Host shortcuts", style = MaterialTheme.typography.titleSmall)
+        Text(stringResource(R.string.minkpad_host_shortcuts), style = MaterialTheme.typography.titleSmall)
         if (platform == MinkPadHostPlatform.GENERIC) {
             Text(
-                "Choose an operating system in controller settings to enable these controls.",
+                stringResource(R.string.minkpad_choose_os_for_shortcuts),
                 style = MaterialTheme.typography.bodySmall,
             )
         }
@@ -40,37 +42,14 @@ internal fun MinkPadHostShortcutGrid(
                         modifier = Modifier.weight(1f).heightIn(min = 52.dp),
                         contentPadding = PaddingValues(horizontal = 6.dp, vertical = 12.dp),
                     ) {
-                        Text(platform.shortLabel(action))
+                        Text(stringResource(platform.shortcutLabelResource(action)))
                     }
                 }
             }
         }
     }
 }
-
 private val hostShortcutRows = listOf(
     listOf(MinkPadGestureAction.BACK, MinkPadGestureAction.OVERVIEW, MinkPadGestureAction.DISMISS_OVERVIEW),
     listOf(MinkPadGestureAction.PREVIOUS_APP, MinkPadGestureAction.NEXT_APP, MinkPadGestureAction.APP_LIST),
 )
-
-private fun MinkPadHostPlatform.shortLabel(action: MinkPadGestureAction): String = when (action) {
-    MinkPadGestureAction.BACK -> "Back"
-    MinkPadGestureAction.OVERVIEW -> when (this) {
-        MinkPadHostPlatform.MAC -> "Mission Control"
-        MinkPadHostPlatform.WINDOWS -> "Task View"
-        else -> "Recent apps"
-    }
-    MinkPadGestureAction.DISMISS_OVERVIEW -> when (this) {
-        MinkPadHostPlatform.MAC -> "App Exposé"
-        MinkPadHostPlatform.WINDOWS -> "Close view"
-        else -> "Dismiss view"
-    }
-    MinkPadGestureAction.PREVIOUS_APP -> if (this == MinkPadHostPlatform.MAC) "Previous Space" else "Previous app"
-    MinkPadGestureAction.NEXT_APP -> if (this == MinkPadHostPlatform.MAC) "Next Space" else "Next app"
-    MinkPadGestureAction.APP_LIST -> when (this) {
-        MinkPadHostPlatform.WINDOWS -> "Start"
-        else -> "App list"
-    }
-    MinkPadGestureAction.ZOOM_IN -> "Zoom in"
-    MinkPadGestureAction.ZOOM_OUT -> "Zoom out"
-}
