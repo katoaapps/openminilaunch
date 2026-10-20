@@ -466,9 +466,6 @@
     <string name="usage_disclosure_body_one">يتيح الوصول إلى استخدام Android لـ %1$s قياس متى تكون التطبيقات المحددة لـ Mink’s Day في المقدمة ومدة وجودها.</string>
     <string name="usage_disclosure_body_two">يستخدم %1$s هذا فقط لحساب حالة Mink والرؤى الموجودة على جهازك اليوم. ولا يقوم بتحميل نشاطك أو بيعه أو الاحتفاظ بقاعدة بيانات منفصلة لسجل الاستخدام.</string>
     <string name="usage_disclosure_body_three">هذا اختياري. لا تزال صفحة Mink تعمل كرفيق خلال اليوم إذا تخطيتها، ويمكنك إلغاء الوصول وقتما تشاء.</string>
-    <string name="settings_overview_description">كل شيء له منزل. اختر قسمًا لجعل %1$s خاصًا بك.</string>
-    <string name="settings_launcher_summary">التطبيق المنزلي والمظهر والاختصارات والدرج</string>
-    <string name="settings_magic_box_summary">لوحة المفاتيح والويب والذكاء الاصطناعي والملفات المحلية</string>
     <string name="settings_assistant_summary">افتح Magic Box عبر تطبيق آخر</string>
     <string name="settings_messaging_summary">اختر كيفية تسليم الرسائل @ لمرة واحدة</string>
     <string name="settings_mink_day_summary">اختر التطبيقات الاجتماعية التي تريد تقييدها</string>

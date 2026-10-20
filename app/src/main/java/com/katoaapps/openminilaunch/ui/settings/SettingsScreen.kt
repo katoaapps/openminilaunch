@@ -187,38 +187,61 @@ internal fun SettingsScreen(
             }
         }
     }
-    var settingsStack by remember(initialDestination) { mutableStateOf(settingsPathTo(initialDestination)) }
+    var settingsStack by remember(initialDestination) {
+        mutableStateOf(settingsRoutesTo(initialDestination))
+    }
     var navigatingBack by remember { mutableStateOf(false) }
     val settingsScrollStates = remember {
         SettingsDestination.entries.associateWith { ScrollState(0) }
     }
-    val destination = settingsStack.last()
+    val overviewScrollStates = remember {
+        SettingsSection.entries.associateWith { ScrollState(0) }
+    }
+    val currentRoute = settingsStack.last()
+    val destination = currentRoute.destination
+    val selectedSection = currentRoute.section
 
     fun navigateTo(next: SettingsDestination) {
+        if (destination == next) return
         navigatingBack = false
-        settingsStack = pushSettingsDestination(settingsStack, next)
+        settingsStack = pushSettingsRoute(settingsStack, SettingsRoute(selectedSection, next))
     }
 
     fun navigateFromOverview(next: SettingsDestination) {
         navigatingBack = false
-        settingsStack = settingsPathTo(next)
+        settingsStack = settingsStack + settingsPathTo(next).drop(1).map { destination ->
+            SettingsRoute(selectedSection, destination)
+        }
+    }
+
+    fun selectSection(next: SettingsSection) {
+        val nextRoute = SettingsRoute(next, SettingsDestination.OVERVIEW)
+        if (currentRoute == nextRoute) return
+        navigatingBack = false
+        settingsStack = pushSettingsRoute(settingsStack, nextRoute)
     }
 
     fun navigateBack() {
         if (settingsStack.size > 1) {
             navigatingBack = true
-            settingsStack = popSettingsDestination(settingsStack)
+            settingsStack = popSettingsRoute(settingsStack)
         } else {
             goBack()
         }
     }
 
-    BackHandler(enabled = settingsStack.size > 1) { navigateBack() }
+    BackHandler { navigateBack() }
 
     val destinationContent: @Composable (SettingsDestination) -> Unit = { page ->
-        CompositionLocalProvider(LocalSettingsScrollState provides settingsScrollStates.getValue(page)) {
+        val scrollState = if (page == SettingsDestination.OVERVIEW) {
+            overviewScrollStates.getValue(selectedSection)
+        } else {
+            settingsScrollStates.getValue(page)
+        }
+        CompositionLocalProvider(LocalSettingsScrollState provides scrollState) {
             SettingsDestinationContent(
                 destination = page,
+                selectedSection = selectedSection,
                 store = store,
                 actions = actions,
                 permissionState = permissionHost.state,
@@ -228,7 +251,7 @@ internal fun SettingsScreen(
                 onNavigate = ::navigateTo,
                 onOverviewNavigate = ::navigateFromOverview,
                 onNavigateBack = ::navigateBack,
-                onExitSettings = goBack,
+                onExitSettings = ::navigateBack,
                 onOpenTodos = openTodos,
                 onIconStyleApplied = onIconStyleApplied,
                 onPickShortcut = { picker = SettingsPicker.ShortcutApp(it) },
@@ -258,8 +281,10 @@ internal fun SettingsScreen(
     SettingsAdaptiveLayout(
         twoPanelEnabled = store.twoPanelModeForLargeDisplays,
         destination = destination,
+        selectedSection = selectedSection,
+        onSectionSelected = ::selectSection,
         navigatingBack = navigatingBack,
-        showDetailBackButton = settingsStack.size > 2,
+        showPageBackButton = settingsStack.size > 1,
         overviewContent = { destinationContent(SettingsDestination.OVERVIEW) },
         destinationContent = destinationContent,
     )

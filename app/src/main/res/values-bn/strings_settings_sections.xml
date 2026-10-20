@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="settings_section_home">হোম</string>
+    <string name="settings_section_advanced">উন্নত ফিচার</string>
+    <string name="settings_tab_advanced">উন্নত</string>
+    <string name="settings_section_more">আরও</string>
+    <string name="settings_launcher_home_summary">হোম অ্যাপ, চেহারা ও ভাষা</string>
+    <string name="minklauncher_community">MinkLauncher কমিউনিটি</string>
+    <string name="minklauncher_community_summary">Reddit-এ r/minklauncher-এ যোগ দিন</string>
+</resources>

@@ -74,7 +74,7 @@ internal fun SettingsPage(
 internal fun SettingsCategoryRow(
     title: String,
     subtitle: String,
-    status: String,
+    status: String? = null,
     icon: ImageVector,
     onClick: () -> Unit,
 ) {
@@ -106,7 +106,9 @@ internal fun SettingsCategoryRow(
             )
         }
         Column(horizontalAlignment = Alignment.End) {
-            Text(status, color = Muted, fontSize = Dimens.sp10, maxLines = 1)
+            status?.takeIf(String::isNotBlank)?.let {
+                Text(it, color = Muted, fontSize = Dimens.sp10, maxLines = 1)
+            }
             Icon(Icons.Default.ChevronRight, null, tint = Muted, modifier = Modifier.size(Dimens.dp20))
         }
     }

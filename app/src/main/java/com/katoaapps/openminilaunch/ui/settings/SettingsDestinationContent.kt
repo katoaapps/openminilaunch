@@ -10,6 +10,7 @@ import com.katoaapps.openminilaunch.platform.DeviceActions
 @Composable
 internal fun SettingsDestinationContent(
     destination: SettingsDestination,
+    selectedSection: SettingsSection,
     store: LauncherStore,
     actions: DeviceActions,
     permissionState: SettingsPermissionState,
@@ -34,9 +35,12 @@ internal fun SettingsDestinationContent(
 ) {
     when (destination) {
         SettingsDestination.OVERVIEW -> SettingsOverviewPage(
+            section = selectedSection,
             store = store,
             actions = actions,
             permissionState = permissionState,
+            onPickWeb = onPickWeb,
+            onPickAi = onPickAi,
             onNavigate = onOverviewNavigate,
             goBack = onExitSettings,
         )
@@ -88,16 +92,6 @@ internal fun SettingsDestinationContent(
         )
         SettingsDestination.PIN_SHORTCUT_REQUESTS -> PinShortcutRequestsSettingsPage(
             store = store,
-            goBack = onNavigateBack,
-        )
-        SettingsDestination.MAGIC_BOX -> MagicBoxSettingsPage(
-            store = store,
-            actions = actions,
-            mediaGranted = permissionState.mediaGranted,
-            onPickWeb = onPickWeb,
-            onPickAi = onPickAi,
-            onOpenFileSearch = { onNavigate(SettingsDestination.FILE_SEARCH) },
-            onOpenAppBubbles = { onNavigate(SettingsDestination.APP_BUBBLES) },
             goBack = onNavigateBack,
         )
         SettingsDestination.APP_BUBBLES -> AppBubbleSettingsPage(

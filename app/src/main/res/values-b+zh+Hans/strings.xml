@@ -466,9 +466,6 @@
     <string name="usage_disclosure_body_one">Android 的使用访问权限允许 %1$s 测量为 Mink’s Day 选择的应用程序何时在前台运行以及持续多长时间。</string>
     <string name="usage_disclosure_body_two">%1$s 仅使用此来计算今天的 Mink 状态和设备上的见解。它不会上传、出售您的活动，也不会保留单独的使用历史数据库。</string>
     <string name="usage_disclosure_body_three">这是可选的。如果您跳过 Mink 的页面，它仍然可以作为一天中的时间伴侣，并且您可以随时撤销访问权限。</string>
-    <string name="settings_overview_description">一切都有一个家。选择一个部分来制作您的 %1$s。</string>
-    <string name="settings_launcher_summary">家庭应用程序、外观、快捷方式和抽屉</string>
-    <string name="settings_magic_box_summary">键盘、Web、AI 和本地文件</string>
     <string name="settings_assistant_summary">通过另一个应用程序打开 Magic Box</string>
     <string name="settings_messaging_summary">选择一次性 @ 消息的传递方式</string>
     <string name="settings_mink_day_summary">选择您要限制的社交应用</string>

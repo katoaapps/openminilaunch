@@ -466,9 +466,6 @@
     <string name="usage_disclosure_body_one">Android کی استعمال تک رسائی %1$s کی پیمائش کرنے دیتی ہے جب Mink’s Day کے لیے منتخب کردہ ایپس پیش منظر میں ہیں اور کتنی دیر تک۔</string>
     <string name="usage_disclosure_body_two">%1$s اسے صرف آج کی Mink حالت اور آپ کے آلے کی بصیرت کا حساب لگانے کے لیے استعمال کرتا ہے۔ یہ آپ کی سرگرمی کو اپ لوڈ نہیں کرتا، اسے فروخت نہیں کرتا، یا استعمال کی تاریخ کا علیحدہ ڈیٹا بیس نہیں رکھتا۔</string>
     <string name="usage_disclosure_body_three">یہ اختیاری ہے۔ اگر آپ اسے چھوڑ دیتے ہیں تو Mink کا صفحہ اب بھی وقت کے ساتھی کے طور پر کام کرتا ہے، اور آپ جب چاہیں رسائی منسوخ کر سکتے ہیں۔</string>
-    <string name="settings_overview_description">ہر چیز کا ایک گھر ہوتا ہے۔ %1$s کو اپنا بنانے کے لیے ایک سیکشن کا انتخاب کریں۔</string>
-    <string name="settings_launcher_summary">ہوم ایپ، ظاہری شکل، شارٹ کٹس اور دراز</string>
-    <string name="settings_magic_box_summary">کی بورڈ، ویب، AI اور مقامی فائلیں۔</string>
     <string name="settings_assistant_summary">Magic Box کو دوسری ایپ پر کھولیں۔</string>
     <string name="settings_messaging_summary">منتخب کریں کہ ایک بار @ پیغامات کیسے بھیجے جاتے ہیں۔</string>
     <string name="settings_mink_day_summary">ان سماجی ایپس کا انتخاب کریں جنہیں آپ محدود کرنا چاہتے ہیں۔</string>

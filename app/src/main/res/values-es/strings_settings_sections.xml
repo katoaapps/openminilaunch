@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="settings_section_home">Inicio</string>
+    <string name="settings_section_advanced">Funciones avanzadas</string>
+    <string name="settings_tab_advanced">Avanzado</string>
+    <string name="settings_section_more">Más</string>
+    <string name="settings_launcher_home_summary">Aplicación de inicio, apariencia e idioma</string>
+    <string name="minklauncher_community">Comunidad de MinkLauncher</string>
+    <string name="minklauncher_community_summary">Únete a r/minklauncher en Reddit</string>
+</resources>

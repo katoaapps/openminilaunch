@@ -15,7 +15,6 @@ internal enum class SettingsDestination {
     SHORTCUTS,
     PRIVACY_APPS,
     PIN_SHORTCUT_REQUESTS,
-    MAGIC_BOX,
     APP_BUBBLES,
     MINK_ASSISTANT,
     MESSAGING,
@@ -26,15 +25,25 @@ internal enum class SettingsDestination {
     ABOUT,
 }
 
+internal data class SettingsRoute(
+    val section: SettingsSection,
+    val destination: SettingsDestination,
+)
+
 internal val LocalSettingsScrollState = staticCompositionLocalOf { ScrollState(0) }
 internal val LocalSettingsShowBackButton = staticCompositionLocalOf { true }
 
-internal fun pushSettingsDestination(
-    stack: List<SettingsDestination>,
-    destination: SettingsDestination,
-): List<SettingsDestination> = if (stack.lastOrNull() == destination) stack else stack + destination
+internal fun settingsRoutesTo(destination: SettingsDestination): List<SettingsRoute> {
+    val section = settingsSectionFor(destination)
+    return settingsPathTo(destination).map { SettingsRoute(section, it) }
+}
 
-internal fun popSettingsDestination(stack: List<SettingsDestination>): List<SettingsDestination> =
+internal fun pushSettingsRoute(
+    stack: List<SettingsRoute>,
+    route: SettingsRoute,
+): List<SettingsRoute> = if (stack.lastOrNull() == route) stack else stack + route
+
+internal fun popSettingsRoute(stack: List<SettingsRoute>): List<SettingsRoute> =
     if (stack.size > 1) stack.dropLast(1) else stack
 
 internal fun settingsPathTo(destination: SettingsDestination): List<SettingsDestination> = when (destination) {
@@ -45,14 +54,14 @@ internal fun settingsPathTo(destination: SettingsDestination): List<SettingsDest
         SettingsDestination.LANGUAGE,
     )
     SettingsDestination.LAUNCHER -> listOf(SettingsDestination.OVERVIEW, SettingsDestination.LAUNCHER)
-    SettingsDestination.APPEARANCE,
-    SettingsDestination.MINK_SPACE,
-    SettingsDestination.SHORTCUTS,
-    SettingsDestination.PRIVACY_APPS -> listOf(
+    SettingsDestination.APPEARANCE -> listOf(
         SettingsDestination.OVERVIEW,
         SettingsDestination.LAUNCHER,
         destination,
     )
+    SettingsDestination.MINK_SPACE,
+    SettingsDestination.SHORTCUTS,
+    SettingsDestination.PRIVACY_APPS -> listOf(SettingsDestination.OVERVIEW, destination)
     SettingsDestination.APPEARANCE_WALLPAPER,
     SettingsDestination.APPEARANCE_ICONS,
     SettingsDestination.APPEARANCE_LAYOUT_CLOCK -> listOf(
@@ -63,19 +72,15 @@ internal fun settingsPathTo(destination: SettingsDestination): List<SettingsDest
     )
     SettingsDestination.PIN_SHORTCUT_REQUESTS -> listOf(
         SettingsDestination.OVERVIEW,
-        SettingsDestination.LAUNCHER,
         SettingsDestination.SHORTCUTS,
         destination,
     )
-    SettingsDestination.MAGIC_BOX -> listOf(SettingsDestination.OVERVIEW, SettingsDestination.MAGIC_BOX)
     SettingsDestination.FILE_SEARCH -> listOf(
         SettingsDestination.OVERVIEW,
-        SettingsDestination.MAGIC_BOX,
         SettingsDestination.FILE_SEARCH,
     )
     SettingsDestination.APP_BUBBLES -> listOf(
         SettingsDestination.OVERVIEW,
-        SettingsDestination.MAGIC_BOX,
         SettingsDestination.APP_BUBBLES,
     )
     SettingsDestination.MINK_ASSISTANT,

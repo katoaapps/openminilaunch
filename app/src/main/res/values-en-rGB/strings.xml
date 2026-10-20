@@ -466,9 +466,6 @@
     <string name="usage_disclosure_body_one">Android’s Usage Access lets %1$s measure when the apps selected for Mink’s Day are in the foreground and for how long.</string>
     <string name="usage_disclosure_body_two">%1$s uses this only to calculate today’s Mink state and insights on your device. It does not upload your activity, sell it, or keep a separate usage-history database.</string>
     <string name="usage_disclosure_body_three">This is optional. Mink’s page still works as a time-of-day companion if you skip it, and you can revoke access whenever you want.</string>
-    <string name="settings_overview_description">Everything has a home. Choose a section to make %1$s yours.</string>
-    <string name="settings_launcher_summary">Home app, appearance, shortcuts and drawer</string>
-    <string name="settings_magic_box_summary">Keyboard, Web, AI and local files</string>
     <string name="settings_assistant_summary">Open the Magic Box over another app</string>
     <string name="settings_messaging_summary">Choose how one-time @ messages are handed off</string>
     <string name="settings_mink_day_summary">Choose the social apps you want to limit</string>

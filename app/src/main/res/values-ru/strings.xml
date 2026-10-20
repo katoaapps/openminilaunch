@@ -466,9 +466,6 @@
     <string name="usage_disclosure_body_one">Доступ к использованию Android позволяет %1$s измерять, когда приложения, выбранные для Mink’s Day, находятся на переднем плане и как долго.</string>
     <string name="usage_disclosure_body_two">%1$s использует это только для расчета текущего состояния Mink и получения информации о вашем устройстве. Он не загружает вашу активность, не продает ее и не хранит отдельную базу данных истории использования.</string>
     <string name="usage_disclosure_body_three">Это необязательно. Страница Mink по-прежнему работает как помощник для определения времени суток, если вы ее пропустите, и вы можете отозвать доступ в любое время.</string>
-    <string name="settings_overview_description">У всего есть дом. Выберите раздел, чтобы сделать %1$s своим.</string>
-    <string name="settings_launcher_summary">Домашнее приложение, внешний вид, ярлыки и ящик</string>
-    <string name="settings_magic_box_summary">Клавиатура, Интернет, AI и локальные файлы</string>
     <string name="settings_assistant_summary">Откройте Magic Box в другом приложении.</string>
     <string name="settings_messaging_summary">Выберите способ передачи одноразовых @-сообщений.</string>
     <string name="settings_mink_day_summary">Выберите социальные приложения, которые вы хотите ограничить.</string>

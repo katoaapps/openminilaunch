@@ -22,6 +22,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Download
+import androidx.compose.material.icons.filled.Forum
 import androidx.compose.material.icons.filled.Gavel
 import androidx.compose.material.icons.filled.Palette
 import androidx.compose.material.icons.filled.PrivacyTip
@@ -90,6 +91,16 @@ internal fun AboutSettingsPage(
             stringResource(R.string.support_email),
             Icons.Default.Email,
             onClick = actions::emailSupport,
+        )
+        SettingsRow(
+            stringResource(R.string.minklauncher_community),
+            stringResource(R.string.minklauncher_community_summary),
+            Icons.Default.Forum,
+            onClick = {
+                if (!actions.openMinkLauncherSubreddit()) {
+                    Toast.makeText(context, R.string.no_browser_available, Toast.LENGTH_SHORT).show()
+                }
+            },
         )
         SettingsRow(
             stringResource(R.string.privacy_policy),

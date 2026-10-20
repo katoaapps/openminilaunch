@@ -466,9 +466,6 @@
     <string name="usage_disclosure_body_one">Android 嘅使用存取權可以畀 %1$s 測量 Mink’s Day 所選擇嘅應用程式幾時喺前景同埋幾耐。</string>
     <string name="usage_disclosure_body_two">%1$s 只會用呢個嚟計算你裝置上面今日嘅 Mink 狀態同埋分析資料。佢唔會上載你嘅活動、出售佢，或者保留一個獨立嘅使用記錄資料庫。</string>
     <string name="usage_disclosure_body_three">呢個係選擇性嘅。如果你略過 Mink 嘅頁面，佢仍然可以作為一日中嘅時間伴侶，而且你可以隨時撤銷存取權。</string>
-    <string name="settings_overview_description">所有嘢都有個家。揀一個部分，將 %1$s 變成你嘅。</string>
-    <string name="settings_launcher_summary">主頁應用程式、外觀、捷徑同抽屜</string>
-    <string name="settings_magic_box_summary">鍵盤、網絡、人工智能同本地檔案</string>
     <string name="settings_assistant_summary">透過另一個應用程式打開 Magic Box</string>
     <string name="settings_messaging_summary">揀一次性 @ 訊息嘅傳遞方式</string>
     <string name="settings_mink_day_summary">揀你想限制嘅社交應用程式</string>

@@ -466,9 +466,6 @@
     <string name="usage_disclosure_body_one">El acceso de uso de Android permite a %1$s medir cuándo las aplicaciones seleccionadas para Mink’s Day están en primer plano y durante cuánto tiempo.</string>
     <string name="usage_disclosure_body_two">%1$s usa esto solo para calcular el estado actual de Mink y la información sobre su dispositivo. No carga su actividad, ni la vende ni mantiene una base de datos de historial de uso separada.</string>
     <string name="usage_disclosure_body_three">Esto es opcional. La página de Mink todavía funciona como complemento de la hora del día si la omites y puedes revocar el acceso cuando lo desees.</string>
-    <string name="settings_overview_description">Todo tiene un hogar. Elige una sección para hacer tuyo %1$s.</string>
-    <string name="settings_launcher_summary">Aplicación de inicio, apariencia, atajos y cajón</string>
-    <string name="settings_magic_box_summary">Teclado, Web, IA y archivos locales</string>
     <string name="settings_assistant_summary">Abra el Magic Box sobre otra aplicación</string>
     <string name="settings_messaging_summary">Elija cómo se entregan los mensajes @ únicos</string>
     <string name="settings_mink_day_summary">Elige las aplicaciones sociales que deseas limitar</string>

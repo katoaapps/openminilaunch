@@ -466,9 +466,6 @@
     <string name="usage_disclosure_body_one">Android の使用状況アクセスを使用すると、%1$s は、Mink’s Day 用に選択されたアプリがいつフォアグラウンドで表示されるかを測定できます。</string>
     <string name="usage_disclosure_body_two">%1$s は、デバイス上の今日の Mink 状態と分析情報を計算するためにのみこれを使用します。アクティビティをアップロードしたり、販売したり、別の使用履歴データベースを保存したりすることはありません。</string>
     <string name="usage_disclosure_body_three">これはオプションです。 Mink のページは、スキップしても時刻コンパニオンとして機能し、いつでもアクセスを取り消すことができます。</string>
-    <string name="settings_overview_description">すべてのものには家があります。 %1$s を自分のものにするセクションを選択してください。</string>
-    <string name="settings_launcher_summary">ホームアプリ、外観、ショートカット、ドロワー</string>
-    <string name="settings_magic_box_summary">キーボード、Web、AI、ローカル ファイル</string>
     <string name="settings_assistant_summary">別のアプリ上で Magic Box を開きます</string>
     <string name="settings_messaging_summary">ワンタイム @ メッセージの受け渡し方法を選択する</string>
     <string name="settings_mink_day_summary">制限したいソーシャルアプリを選択してください</string>

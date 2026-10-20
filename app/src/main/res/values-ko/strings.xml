@@ -466,9 +466,6 @@
     <string name="usage_disclosure_body_one">Android의 사용 액세스를 통해 %1$s는 Mink’s Day용으로 선택된 앱이 포그라운드에 있는 시간과 지속 시간을 측정할 수 있습니다.</string>
     <string name="usage_disclosure_body_two">%1$s는 이를 사용하여 오늘의 Mink 상태와 장치에 대한 통찰력을 계산합니다. 활동을 업로드하거나 판매하거나 별도의 사용 내역 데이터베이스를 유지하지 않습니다.</string>
     <string name="usage_disclosure_body_three">이는 선택 사항입니다. Mink의 페이지는 건너뛰어도 여전히 시간 도우미로 작동하며 원할 때 언제든지 액세스를 취소할 수 있습니다.</string>
-    <string name="settings_overview_description">모든 것에는 집이 있습니다. 섹션을 선택하여 %1$s를 나만의 것으로 만드세요.</string>
-    <string name="settings_launcher_summary">홈 앱, 외관, 바로가기 및 서랍</string>
-    <string name="settings_magic_box_summary">키보드, 웹, AI 및 로컬 파일</string>
     <string name="settings_assistant_summary">다른 앱을 통해 Magic Box를 엽니다.</string>
     <string name="settings_messaging_summary">일회성 @ 메시지를 전달하는 방법을 선택하세요.</string>
     <string name="settings_mink_day_summary">제한하려는 소셜 앱을 선택하세요</string>

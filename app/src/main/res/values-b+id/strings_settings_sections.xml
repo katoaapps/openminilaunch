@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="settings_section_home">Beranda</string>
+    <string name="settings_section_advanced">Fitur lanjutan</string>
+    <string name="settings_tab_advanced">Lanjutan</string>
+    <string name="settings_section_more">Lainnya</string>
+    <string name="settings_launcher_home_summary">Aplikasi Beranda, tampilan, dan bahasa</string>
+    <string name="minklauncher_community">Komunitas MinkLauncher</string>
+    <string name="minklauncher_community_summary">Bergabunglah dengan r/minklauncher di Reddit</string>
+</resources>

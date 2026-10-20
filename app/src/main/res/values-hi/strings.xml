@@ -466,9 +466,6 @@
     <string name="usage_disclosure_body_one">Android का उपयोग एक्सेस %1$s को यह मापने देता है कि Mink’s Day के लिए चयनित ऐप्स अग्रभूमि में कब और कितनी देर तक हैं।</string>
     <string name="usage_disclosure_body_two">%1$s इसका उपयोग केवल आज की Mink स्थिति और आपके डिवाइस पर अंतर्दृष्टि की गणना करने के लिए करता है। यह आपकी गतिविधि को अपलोड नहीं करता है, उसे बेचता नहीं है, या एक अलग उपयोग-इतिहास डेटाबेस नहीं रखता है।</string>
     <string name="usage_disclosure_body_three">यह वैकल्पिक है. यदि आप इसे छोड़ देते हैं तो Mink का पेज अभी भी दिन के समय के साथी के रूप में काम करता है, और आप जब चाहें एक्सेस रद्द कर सकते हैं।</string>
-    <string name="settings_overview_description">हर चीज़ का एक घर होता है. %1$s को अपना बनाने के लिए एक अनुभाग चुनें।</string>
-    <string name="settings_launcher_summary">होम ऐप, उपस्थिति, शॉर्टकट और ड्रॉअर</string>
-    <string name="settings_magic_box_summary">कीबोर्ड, वेब, एआई और स्थानीय फ़ाइलें</string>
     <string name="settings_assistant_summary">किसी अन्य ऐप पर Magic Box खोलें</string>
     <string name="settings_messaging_summary">चुनें कि एक बार के @ संदेश कैसे सौंपे जाएं</string>
     <string name="settings_mink_day_summary">वे सामाजिक ऐप्स चुनें जिन्हें आप सीमित करना चाहते हैं</string>

@@ -497,6 +497,9 @@ class DeviceActions(private val context: Context) {
     fun openFdroidPackagePage(): Boolean =
         start(Intent(Intent.ACTION_VIEW, Uri.parse(FDROID_PACKAGE_URL)))
 
+    fun openMinkLauncherSubreddit(): Boolean =
+        start(Intent(Intent.ACTION_VIEW, Uri.parse(MINKLAUNCHER_SUBREDDIT_URL)))
+
     fun webSearch(query: String, preferredPackage: String? = null): Boolean {
         val clean = query.trim()
         if (clean.isEmpty()) return false
@@ -558,6 +561,7 @@ class DeviceActions(private val context: Context) {
     }
 
     private companion object {
+        const val MINKLAUNCHER_SUBREDDIT_URL = "https://reddit.com/r/minklauncher"
         const val SAMSUNG_CLOCK_PACKAGE = "com.sec.android.app.clockpackage"
         val CLOCK_PACKAGES = listOf(
             SAMSUNG_CLOCK_PACKAGE,

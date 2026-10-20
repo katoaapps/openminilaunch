@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="settings_section_home">الرئيسية</string>
+    <string name="settings_section_advanced">الميزات المتقدمة</string>
+    <string name="settings_tab_advanced">متقدم</string>
+    <string name="settings_section_more">المزيد</string>
+    <string name="settings_launcher_home_summary">تطبيق الشاشة الرئيسية والمظهر واللغة</string>
+    <string name="minklauncher_community">مجتمع MinkLauncher</string>
+    <string name="minklauncher_community_summary">انضم إلى r/minklauncher على Reddit</string>
+</resources>

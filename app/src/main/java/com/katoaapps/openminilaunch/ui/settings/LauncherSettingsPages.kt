@@ -11,7 +11,6 @@ import com.katoaapps.openminilaunch.ui.components.SectionLabel
 import com.katoaapps.openminilaunch.ui.components.SettingsRow
 import com.katoaapps.openminilaunch.ui.shortcuts.ShortcutAssignmentRow
 import com.katoaapps.openminilaunch.ui.shortcuts.displayLabel
-import com.katoaapps.openminilaunch.ui.profile.openVirtualContactCard
 import com.katoaapps.openminilaunch.ui.theme.Dimens
 import com.katoaapps.openminilaunch.ui.theme.Muted
 import com.katoaapps.openminilaunch.ui.theme.Sage
@@ -21,20 +20,16 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.AddToHomeScreen
 import androidx.compose.material.icons.filled.Apps
-import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.GridView
 import androidx.compose.material.icons.filled.Home
-import androidx.compose.material.icons.filled.ViewCarousel
 import androidx.compose.material.icons.filled.Palette
 import androidx.compose.material.icons.filled.Restore
-import androidx.compose.material.icons.filled.Shield
 import androidx.compose.material.icons.filled.Translate
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import com.katoaapps.openminilaunch.features.localization.SupportedAppLanguages
 
@@ -64,11 +59,6 @@ internal fun LauncherSettingsPage(
             Icons.Default.Home,
             onClick = requestHomeRole,
         )
-        SettingsRow(
-            stringResource(R.string.profile),
-            stringResource(R.string.vcard_settings_summary),
-            Icons.Default.AccountCircle,
-        ) { openVirtualContactCard(context) }
         HorizontalDivider(color = Sage)
         SectionLabel(stringResource(R.string.customize))
         SettingsRow(
@@ -81,26 +71,6 @@ internal fun LauncherSettingsPage(
             stringResource(R.string.appearance_summary, stringResource(store.themePreference.labelRes)),
             Icons.Default.Palette,
         ) { onNavigate(SettingsDestination.APPEARANCE) }
-        SettingsRow(
-            stringResource(R.string.mink_space_mini_apps),
-            stringResource(R.string.mink_space_settings_summary),
-            Icons.Default.ViewCarousel,
-        ) { onNavigate(SettingsDestination.MINK_SPACE) }
-        SettingsRow(
-            stringResource(R.string.shortcuts_and_drawer),
-            pluralStringResource(
-                R.plurals.shortcuts_drawer_summary,
-                store.drawerTargets.size,
-                store.drawerTargets.size,
-                MAX_DRAWER_APPS,
-            ),
-            Icons.Default.GridView,
-        ) { onNavigate(SettingsDestination.SHORTCUTS) }
-        SettingsRow(
-            stringResource(R.string.privacy_apps),
-            stringResource(R.string.privacy_apps_settings_summary),
-            Icons.Default.Shield,
-        ) { onNavigate(SettingsDestination.PRIVACY_APPS) }
     }
 }
 

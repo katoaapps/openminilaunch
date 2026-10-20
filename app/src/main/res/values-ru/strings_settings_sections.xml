@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="settings_section_home">Главная</string>
+    <string name="settings_section_advanced">Расширенные функции</string>
+    <string name="settings_tab_advanced">Ещё</string>
+    <string name="settings_section_more">Ещё</string>
+    <string name="settings_launcher_home_summary">Главный экран, оформление и язык</string>
+    <string name="minklauncher_community">Сообщество MinkLauncher</string>
+    <string name="minklauncher_community_summary">Присоединиться к r/minklauncher на Reddit</string>
+</resources>

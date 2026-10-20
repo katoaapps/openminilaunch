@@ -466,9 +466,6 @@
     <string name="usage_disclosure_body_one">Akses Penggunaan Android memungkinkan %1$s mengukur kapan aplikasi yang dipilih untuk Mink’s Day berada di latar depan dan berapa lama.</string>
     <string name="usage_disclosure_body_two">%1$s menggunakan ini hanya untuk menghitung status dan wawasan Mink hari ini di perangkat Anda. Itu tidak mengunggah aktivitas Anda, menjualnya, atau menyimpan database riwayat penggunaan terpisah.</string>
     <string name="usage_disclosure_body_three">Ini opsional. Halaman Mink masih berfungsi sebagai pendamping waktu jika Anda melewatkannya, dan Anda dapat mencabut akses kapan pun Anda mau.</string>
-    <string name="settings_overview_description">Semuanya punya rumah. Pilih bagian untuk menjadikan %1$s milik Anda.</string>
-    <string name="settings_launcher_summary">Aplikasi beranda, tampilan, pintasan, dan laci</string>
-    <string name="settings_magic_box_summary">Keyboard, Web, AI, dan file lokal</string>
     <string name="settings_assistant_summary">Buka Magic Box melalui aplikasi lain</string>
     <string name="settings_messaging_summary">Pilih bagaimana pesan @ satu kali dikirimkan</string>
     <string name="settings_mink_day_summary">Pilih aplikasi sosial yang ingin Anda batasi</string>
