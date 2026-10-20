@@ -107,6 +107,7 @@ internal object LauncherBackupCodec {
             put("watermelonModeEnabled", settings.watermelonModeEnabled)
             put("homePanelTransparency", settings.homePanelTransparency)
             putNullable("appBackgroundColorArgb", settings.appBackgroundColorArgb)
+            putNullable("appBackgroundPresetId", settings.appBackgroundPresetId)
             put("iconSource", settings.iconAppearance.source.name)
             putNullable("iconPackPackage", settings.iconAppearance.iconPackPackage)
             putNullable("minkIconColorArgb", settings.iconAppearance.minkIconColorArgb)
@@ -169,6 +170,8 @@ internal object LauncherBackupCodec {
                 appearance.optDouble("homePanelTransparency", 0.0).toFloat(),
             ),
             appBackgroundColorArgb = appearance.optNullableInt("appBackgroundColorArgb"),
+            appBackgroundPresetId = appearance.optNullableString("appBackgroundPresetId")
+                ?.safeText(80),
             iconAppearance = IconAppearance(
                 source = appearance.enumValue("iconSource", IconSource.MINK),
                 iconPackPackage = appearance.optNullableString("iconPackPackage")?.safePackage(),

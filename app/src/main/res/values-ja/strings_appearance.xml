@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="appearance_wallpaper_title">壁紙と背景</string>
-    <string name="appearance_wallpaper_summary">ホーム壁紙、写真、単色</string>
-    <string name="appearance_theme_colors_title">テーマと色</string>
-    <string name="appearance_theme_colors_summary">ライトモードとホームパネルの色</string>
+    <string name="appearance_wallpaper_summary">ライトモード、背景、ホームパネルの色、写真、壁紙</string>
     <string name="appearance_icons_summary">アイコンスタイル、アイコンパック、Mink アイコンの色</string>
     <string name="appearance_layout_clock_title">レイアウトと時計</string>
     <string name="appearance_layout_clock_summary">日付、ステータスバー、パネル位置、大画面</string>
     <string name="appearance_layout_section">レイアウトとディスプレイ</string>
     <string name="your_photo">あなたの写真</string>
+    <string name="wallpaper_library">壁紙ライブラリ</string>
+    <string name="wallpaper_library_description">Mink の壁紙を選択します。あなたの写真は保存されたままです。</string>
+    <string name="wallpaper_number">壁紙 %1$d</string>
+    <string name="mink_wallpaper">Mink の壁紙</string>
 </resources>

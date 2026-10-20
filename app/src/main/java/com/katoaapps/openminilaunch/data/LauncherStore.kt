@@ -1,5 +1,6 @@
 package com.katoaapps.openminilaunch.data
 
+import com.katoaapps.openminilaunch.features.appearance.BundledWallpaperCatalog
 import com.katoaapps.openminilaunch.features.appearance.HomeWallpaperRepository
 import com.katoaapps.openminilaunch.features.appearance.WATERMELON_PILL_COLOR_ARGB
 import com.katoaapps.openminilaunch.features.demo.DemoHomeProfile
@@ -81,6 +82,9 @@ class LauncherStore private constructor(context: Context) {
             homeWallpaperRepository.hasWallpaper()
     val hasSavedAppBackgroundImage: Boolean
         get() = !demoPreferences.enabled && homeWallpaperRepository.hasWallpaper()
+    internal val appBackgroundPreset
+        get() = if (demoPreferences.enabled) null
+        else BundledWallpaperCatalog.find(appearancePreferences.appBackgroundPresetId)
     val appBackgroundImageRevision get() = appearancePreferences.appBackgroundImageRevision
     val useSystemHomeWallpaper: Boolean
         get() = !demoPreferences.enabled && appearancePreferences.useSystemHomeWallpaper
@@ -112,6 +116,8 @@ class LauncherStore private constructor(context: Context) {
     val visibleAppBackgroundColorArgb: Int?
         get() = if (appBackgroundImageEnabled) {
             appearancePreferences.appBackgroundImageAppearance?.averageColorArgb
+        } else if (appBackgroundPreset != null) {
+            appearancePreferences.appBackgroundPresetAppearance?.averageColorArgb
         } else if (useSystemHomeWallpaper) {
             homeWallpaperRepository.systemWallpaperAppearance?.averageColorArgb
         } else {
@@ -120,6 +126,8 @@ class LauncherStore private constructor(context: Context) {
     val visibleAppHeaderColorArgb: Int?
         get() = if (appBackgroundImageEnabled) {
             appearancePreferences.appBackgroundImageAppearance?.headerColorArgb
+        } else if (appBackgroundPreset != null) {
+            appearancePreferences.appBackgroundPresetAppearance?.headerColorArgb
         } else if (useSystemHomeWallpaper) {
             homeWallpaperRepository.systemWallpaperAppearance?.headerColorArgb
         } else {
@@ -135,6 +143,14 @@ class LauncherStore private constructor(context: Context) {
         ) {
             homeWallpaperRepository.readStoredAppearance()
                 ?.let(appearancePreferences::useAppBackgroundImage)
+        }
+        val savedPreset = BundledWallpaperCatalog.find(appearancePreferences.appBackgroundPresetId)
+        if (savedPreset != null && appearancePreferences.appBackgroundPresetAppearance == null) {
+            homeWallpaperRepository.readBundledAppearance(savedPreset.drawableRes)
+                .getOrNull()
+                ?.let { appearance ->
+                    appearancePreferences.useAppBackgroundPreset(savedPreset.id, appearance)
+                }
         }
         prefs.edit()
             .remove("calendar_input_language")
@@ -398,6 +414,21 @@ class LauncherStore private constructor(context: Context) {
         if (homeWallpaperRepository.hasWallpaper()) {
             appearancePreferences.useAppBackgroundImage(appearance)
         }
+    }
+
+    internal fun useAppBackgroundPreset(id: String, appearance: HomeWallpaperAppearance) {
+        if (BundledWallpaperCatalog.find(id) != null) {
+            appearancePreferences.useAppBackgroundPreset(id, appearance)
+        }
+    }
+
+    internal fun restoreAppBackgroundPreset(id: String): Boolean {
+        val wallpaper = BundledWallpaperCatalog.find(id) ?: return false
+        val appearance = homeWallpaperRepository.readBundledAppearance(wallpaper.drawableRes).getOrNull()
+            ?: return false
+        appearancePreferences.useAppBackgroundPreset(id, appearance)
+        homeWallpaperRepository.applyBundledToSystem(wallpaper.drawableRes)
+        return true
     }
 
     fun useMinkIcons() {

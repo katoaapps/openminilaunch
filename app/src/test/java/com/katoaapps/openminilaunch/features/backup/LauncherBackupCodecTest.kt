@@ -60,6 +60,26 @@ class LauncherBackupCodecTest {
         assertNull(restored.settings.enabledMinkSpaceMiniApps)
     }
 
+    @Test fun bundledWallpaperSelectionSurvivesPortableBackupRoundTrip() {
+        val sample = sampleBackup(twoPanelMode = true)
+        val original = sample.copy(
+            settings = sample.settings.copy(
+                appBackgroundPresetId = "mink-07",
+            ),
+        )
+
+        val restored = LauncherBackupCodec.decode(LauncherBackupCodec.encode(original))
+
+        assertEquals("mink-07", restored.settings.appBackgroundPresetId)
+    }
+
+    @Test fun olderBackupWithoutBundledWallpaperHasNoPresetSelection() {
+        val json = JSONObject(LauncherBackupCodec.encode(sampleBackup(twoPanelMode = true)))
+        json.getJSONObject("settings").getJSONObject("appearance").remove("appBackgroundPresetId")
+
+        assertNull(LauncherBackupCodec.decode(json.toString()).settings.appBackgroundPresetId)
+    }
+
     @Test fun interimSchemaFourBackupStillImports() {
         val json = JSONObject(LauncherBackupCodec.encode(sampleBackup(twoPanelMode = true)))
         json.put("schemaVersion", 4)
@@ -118,6 +138,7 @@ class LauncherBackupCodecTest {
             watermelonModeEnabled = true,
             homePanelTransparency = 0f,
             appBackgroundColorArgb = null,
+            appBackgroundPresetId = null,
             iconAppearance = IconAppearance(),
             openSoftwareKeyboardOnHome = true,
             includeAppShortcutsInDiscovery = false,

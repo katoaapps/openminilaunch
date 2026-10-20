@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="appearance_wallpaper_title">وال پیپر اور پس منظر</string>
-    <string name="appearance_wallpaper_summary">ہوم وال پیپر، آپ کی تصاویر اور ٹھوس رنگ</string>
-    <string name="appearance_theme_colors_title">تھیم اور رنگ</string>
-    <string name="appearance_theme_colors_summary">لائٹ موڈ اور ہوم پینل کا رنگ</string>
+    <string name="appearance_wallpaper_summary">لائٹ موڈ، بیک گراؤنڈ، ہوم پینل کا رنگ، تصاویر اور وال پیپر</string>
     <string name="appearance_icons_summary">آئیکن اسٹائل، آئیکن پیکس اور Mink آئیکن کا رنگ</string>
     <string name="appearance_layout_clock_title">لے آؤٹ اور گھڑی</string>
     <string name="appearance_layout_clock_summary">تاریخ، اسٹیٹس بار، پینل کی جگہ اور بڑی اسکرینیں</string>
     <string name="appearance_layout_section">لے آؤٹ اور ڈسپلے</string>
     <string name="your_photo">آپ کی تصویر</string>
+    <string name="wallpaper_library">وال پیپر لائبریری</string>
+    <string name="wallpaper_library_description">Mink وال پیپر منتخب کریں۔ آپ کی تصویر محفوظ رہے گی۔</string>
+    <string name="wallpaper_number">وال پیپر %1$d</string>
+    <string name="mink_wallpaper">Mink وال پیپر</string>
 </resources>

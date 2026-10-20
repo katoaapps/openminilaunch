@@ -70,6 +70,15 @@ internal class AppearancePreferenceStore(
         ),
     )
         private set
+    var appBackgroundPresetId by mutableStateOf(prefs.getString(APP_BACKGROUND_PRESET_ID_KEY, null))
+        private set
+    var appBackgroundPresetAppearance by mutableStateOf(
+        prefs.homeWallpaperAppearanceOrNull(
+            APP_BACKGROUND_PRESET_AVERAGE_COLOR_KEY,
+            APP_BACKGROUND_PRESET_HEADER_COLOR_KEY,
+        ),
+    )
+        private set
     var useSystemHomeWallpaper by mutableStateOf(
         prefs.getBoolean(
             USE_SYSTEM_HOME_WALLPAPER_KEY,
@@ -167,11 +176,16 @@ internal class AppearancePreferenceStore(
     fun setAppBackgroundColor(argb: Int?) {
         appBackgroundColorArgb = argb?.or(0xFF000000.toInt())
         appBackgroundImageEnabled = false
+        appBackgroundPresetId = null
+        appBackgroundPresetAppearance = null
         useSystemHomeWallpaper = false
         prefs.edit().apply {
             appBackgroundColorArgb?.let { putInt(APP_BACKGROUND_COLOR_KEY, it) }
                 ?: remove(APP_BACKGROUND_COLOR_KEY)
             putBoolean(APP_BACKGROUND_IMAGE_ENABLED_KEY, false)
+            remove(APP_BACKGROUND_PRESET_ID_KEY)
+            remove(APP_BACKGROUND_PRESET_AVERAGE_COLOR_KEY)
+            remove(APP_BACKGROUND_PRESET_HEADER_COLOR_KEY)
             putBoolean(USE_SYSTEM_HOME_WALLPAPER_KEY, false)
         }.apply()
     }
@@ -182,13 +196,36 @@ internal class AppearancePreferenceStore(
             headerColorArgb = appearance.headerColorArgb or 0xFF000000.toInt(),
         )
         appBackgroundImageEnabled = true
+        appBackgroundPresetId = null
+        appBackgroundPresetAppearance = null
         useSystemHomeWallpaper = false
         appBackgroundImageRevision++
         appBackgroundImageAppearance = savedAppearance
         prefs.edit()
             .putBoolean(APP_BACKGROUND_IMAGE_ENABLED_KEY, true)
+            .remove(APP_BACKGROUND_PRESET_ID_KEY)
+            .remove(APP_BACKGROUND_PRESET_AVERAGE_COLOR_KEY)
+            .remove(APP_BACKGROUND_PRESET_HEADER_COLOR_KEY)
             .putInt(APP_BACKGROUND_IMAGE_AVERAGE_COLOR_KEY, savedAppearance.averageColorArgb)
             .putInt(APP_BACKGROUND_IMAGE_HEADER_COLOR_KEY, savedAppearance.headerColorArgb)
+            .putBoolean(USE_SYSTEM_HOME_WALLPAPER_KEY, false)
+            .apply()
+    }
+
+    fun useAppBackgroundPreset(id: String, appearance: HomeWallpaperAppearance) {
+        val savedAppearance = appearance.copy(
+            averageColorArgb = appearance.averageColorArgb or 0xFF000000.toInt(),
+            headerColorArgb = appearance.headerColorArgb or 0xFF000000.toInt(),
+        )
+        appBackgroundImageEnabled = false
+        appBackgroundPresetId = id
+        appBackgroundPresetAppearance = savedAppearance
+        useSystemHomeWallpaper = false
+        prefs.edit()
+            .putBoolean(APP_BACKGROUND_IMAGE_ENABLED_KEY, false)
+            .putString(APP_BACKGROUND_PRESET_ID_KEY, id)
+            .putInt(APP_BACKGROUND_PRESET_AVERAGE_COLOR_KEY, savedAppearance.averageColorArgb)
+            .putInt(APP_BACKGROUND_PRESET_HEADER_COLOR_KEY, savedAppearance.headerColorArgb)
             .putBoolean(USE_SYSTEM_HOME_WALLPAPER_KEY, false)
             .apply()
     }
@@ -199,6 +236,9 @@ internal class AppearancePreferenceStore(
         const val APP_BACKGROUND_IMAGE_ENABLED_KEY = "app_background_image_enabled"
         const val APP_BACKGROUND_IMAGE_AVERAGE_COLOR_KEY = "app_background_image_average_color"
         const val APP_BACKGROUND_IMAGE_HEADER_COLOR_KEY = "app_background_image_header_color"
+        const val APP_BACKGROUND_PRESET_ID_KEY = "app_background_preset_id"
+        const val APP_BACKGROUND_PRESET_AVERAGE_COLOR_KEY = "app_background_preset_average_color"
+        const val APP_BACKGROUND_PRESET_HEADER_COLOR_KEY = "app_background_preset_header_color"
         const val HIDE_STATUS_BAR_KEY = "hide_status_bar"
         const val HOME_PANEL_COLOR_KEY = "home_panel_color"
         const val HOME_PANEL_TRANSPARENCY_KEY = "home_panel_transparency"

@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="appearance_wallpaper_title">वॉलपेपर और बैकग्राउंड</string>
-    <string name="appearance_wallpaper_summary">होम वॉलपेपर, आपकी तस्वीरें और ठोस रंग</string>
-    <string name="appearance_theme_colors_title">थीम और रंग</string>
-    <string name="appearance_theme_colors_summary">लाइट मोड और होम पैनल का रंग</string>
+    <string name="appearance_wallpaper_summary">लाइट मोड, बैकग्राउंड, होम पैनल का रंग, तस्वीरें और वॉलपेपर</string>
     <string name="appearance_icons_summary">आइकन शैली, आइकन पैक और Mink आइकन का रंग</string>
     <string name="appearance_layout_clock_title">लेआउट और घड़ी</string>
     <string name="appearance_layout_clock_summary">तारीख, स्टेटस बार, पैनल की स्थिति और बड़ी स्क्रीन</string>
     <string name="appearance_layout_section">लेआउट और डिस्प्ले</string>
     <string name="your_photo">आपकी फ़ोटो</string>
+    <string name="wallpaper_library">वॉलपेपर लाइब्रेरी</string>
+    <string name="wallpaper_library_description">एक Mink वॉलपेपर चुनें। आपकी फ़ोटो सहेजी रहेगी।</string>
+    <string name="wallpaper_number">वॉलपेपर %1$d</string>
+    <string name="mink_wallpaper">Mink वॉलपेपर</string>
 </resources>

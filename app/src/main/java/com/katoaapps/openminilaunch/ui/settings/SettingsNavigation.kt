@@ -9,7 +9,6 @@ internal enum class SettingsDestination {
     LAUNCHER,
     APPEARANCE,
     APPEARANCE_WALLPAPER,
-    APPEARANCE_THEME_COLORS,
     APPEARANCE_ICONS,
     APPEARANCE_LAYOUT_CLOCK,
     MINK_SPACE,
@@ -55,7 +54,6 @@ internal fun settingsPathTo(destination: SettingsDestination): List<SettingsDest
         destination,
     )
     SettingsDestination.APPEARANCE_WALLPAPER,
-    SettingsDestination.APPEARANCE_THEME_COLORS,
     SettingsDestination.APPEARANCE_ICONS,
     SettingsDestination.APPEARANCE_LAYOUT_CLOCK -> listOf(
         SettingsDestination.OVERVIEW,

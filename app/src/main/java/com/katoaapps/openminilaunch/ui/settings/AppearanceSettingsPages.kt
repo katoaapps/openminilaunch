@@ -7,7 +7,6 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccessTime
 import androidx.compose.material.icons.filled.Apps
-import androidx.compose.material.icons.filled.Palette
 import androidx.compose.material.icons.filled.Wallpaper
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -40,11 +39,6 @@ internal fun AppearanceSettingsPage(
             icon = Icons.Default.Wallpaper,
         ) { onNavigate(SettingsDestination.APPEARANCE_WALLPAPER) }
         SettingsRow(
-            title = stringResource(R.string.appearance_theme_colors_title),
-            subtitle = stringResource(R.string.appearance_theme_colors_summary),
-            icon = Icons.Default.Palette,
-        ) { onNavigate(SettingsDestination.APPEARANCE_THEME_COLORS) }
-        SettingsRow(
             title = stringResource(R.string.icons),
             subtitle = stringResource(R.string.appearance_icons_summary),
             icon = Icons.Default.Apps,
@@ -68,42 +62,94 @@ internal fun WallpaperAndBackgroundSettingsPage(
     val wallpaperRepository = remember(context) { HomeWallpaperRepository(context) }
     val wallpaperApplyFailedMessage = stringResource(R.string.wallpaper_apply_failed)
     var wallpaperToCrop by remember { mutableStateOf<Uri?>(null) }
+    var applyingWallpaperId by remember { mutableStateOf<String?>(null) }
     val imagePicker = rememberLauncherForActivityResult(ActivityResultContracts.OpenDocument()) { uri ->
         wallpaperToCrop = uri
     }
 
     SettingsPage(stringResource(R.string.appearance_wallpaper_title), goBack) {
+        val activeWallpaperLabel = when {
+            store.appBackgroundImageEnabled -> stringResource(R.string.your_photo)
+            store.appBackgroundPreset != null -> stringResource(R.string.mink_wallpaper)
+            else -> null
+        }
         AppBackgroundSetting(
             selectedArgb = store.effectiveAppBackgroundColorArgb,
-            imageSelected = store.appBackgroundImageEnabled,
-            savedImageAvailable = store.hasSavedAppBackgroundImage,
-            imageRevision = store.appBackgroundImageRevision,
+            activeWallpaperLabel = activeWallpaperLabel,
             onColorSelected = store::setAppBackgroundColor,
-            onChooseImage = { imagePicker.launch(arrayOf("image/*")) },
-            onUseSavedImage = {
+            onUseThemeDefault = { store.setAppBackgroundColor(null) },
+        )
+        HomePanelColorSetting(
+            selectedArgb = store.effectiveHomePanelColorArgb,
+            transparency = store.homePanelTransparency,
+            onColorSelected = store::setHomePanelColor,
+            onWatermelonSelected = store::activateWatermelonMode,
+            onTransparencyChanged = store::setHomePanelTransparency,
+        )
+        ThemeChooser(store.themePreference, store::setTheme)
+        WallpaperLibrarySetting(
+            selectedPresetId = store.appBackgroundPreset?.id,
+            customPhotoSelected = store.appBackgroundImageEnabled,
+            savedPhotoAvailable = store.hasSavedAppBackgroundImage,
+            imageRevision = store.appBackgroundImageRevision,
+            applyingSelectionId = applyingWallpaperId,
+            onChoosePhoto = { imagePicker.launch(arrayOf("image/*")) },
+            onUseSavedPhoto = {
+                applyingWallpaperId = CUSTOM_PHOTO_SELECTION_ID
                 scope.launch {
-                    val result = withContext(Dispatchers.IO) {
-                        val appearance = wallpaperRepository.readStoredAppearance()
-                            ?: return@withContext Result.failure(
-                                IllegalStateException("Saved wallpaper is unavailable"),
-                            )
-                        wallpaperRepository.applyToSystem().map { appearance }
+                    val appearanceResult = withContext(Dispatchers.IO) {
+                        runCatching {
+                            checkNotNull(wallpaperRepository.readStoredAppearance()) {
+                                "Saved wallpaper is unavailable"
+                            }
+                        }
                     }
-                    result.fold(
+                    val result = appearanceResult.fold(
                         onSuccess = { appearance ->
+                            // Match the crop flow: save the source before WallpaperManager can
+                            // recreate the Activity after a dynamic color update.
                             store.useAppBackgroundImage(appearance)
+                            withContext(Dispatchers.IO) { wallpaperRepository.applyToSystem() }
                         },
-                        onFailure = {
-                            Toast.makeText(
-                                context,
-                                wallpaperApplyFailedMessage,
-                                Toast.LENGTH_LONG,
-                            ).show()
-                        },
+                        onFailure = { Result.failure(it) },
                     )
+                    applyingWallpaperId = null
+                    result.onFailure {
+                        Toast.makeText(
+                            context,
+                            wallpaperApplyFailedMessage,
+                            Toast.LENGTH_LONG,
+                        ).show()
+                    }
                 }
             },
-            onUseThemeDefault = { store.setAppBackgroundColor(null) },
+            onSelectPreset = { wallpaper ->
+                applyingWallpaperId = wallpaper.id
+                scope.launch {
+                    val appearanceResult = withContext(Dispatchers.IO) {
+                        wallpaperRepository.readBundledAppearance(wallpaper.drawableRes)
+                    }
+                    val result = appearanceResult.fold(
+                        onSuccess = { appearance ->
+                            // Save the source before WallpaperManager can trigger an Activity
+                            // recreation through dynamic color updates on some devices.
+                            store.useAppBackgroundPreset(wallpaper.id, appearance)
+                            withContext(Dispatchers.IO) {
+                                wallpaperRepository.applyBundledToSystem(wallpaper.drawableRes)
+                            }
+                        },
+                        onFailure = { Result.failure(it) },
+                    )
+                    applyingWallpaperId = null
+                    result.onFailure {
+                        Toast.makeText(
+                            context,
+                            wallpaperApplyFailedMessage,
+                            Toast.LENGTH_LONG,
+                        ).show()
+                    }
+                }
+            },
         )
     }
 
@@ -118,20 +164,6 @@ internal fun WallpaperAndBackgroundSettingsPage(
                 onIconStyleApplied()
             },
             onDismiss = { wallpaperToCrop = null },
-        )
-    }
-}
-
-@Composable
-internal fun ThemeAndColorsSettingsPage(store: LauncherStore, goBack: () -> Unit) {
-    SettingsPage(stringResource(R.string.appearance_theme_colors_title), goBack) {
-        ThemeChooser(store.themePreference, store::setTheme)
-        HomePanelColorSetting(
-            selectedArgb = store.effectiveHomePanelColorArgb,
-            transparency = store.homePanelTransparency,
-            onColorSelected = store::setHomePanelColor,
-            onWatermelonSelected = store::activateWatermelonMode,
-            onTransparencyChanged = store::setHomePanelTransparency,
         )
     }
 }

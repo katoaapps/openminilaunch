@@ -7,6 +7,7 @@ import android.graphics.BitmapFactory
 import android.os.Build
 import android.os.Handler
 import android.os.Looper
+import androidx.annotation.DrawableRes
 import androidx.compose.runtime.mutableStateOf
 import com.katoaapps.openminilaunch.model.HomeWallpaperAppearance
 import java.io.File
@@ -40,24 +41,45 @@ internal class HomeWallpaperRepository(context: Context) {
 
     fun hasWallpaper(): Boolean = wallpaperFile.isFile && wallpaperFile.length() > 0L
 
-    fun loadThumbnail(maximumSide: Int): Bitmap? {
-        if (!wallpaperFile.isFile) return null
+    fun loadThumbnail(maximumSide: Int): Bitmap? = if (wallpaperFile.isFile) {
+        decodeSampled(maximumSide) { options ->
+            BitmapFactory.decodeFile(wallpaperFile.absolutePath, options)
+        }
+    } else null
+
+    fun loadBundledThumbnail(@DrawableRes drawableRes: Int, maximumSide: Int): Bitmap? =
+        decodeSampled(maximumSide) { options ->
+            BitmapFactory.decodeResource(appContext.resources, drawableRes, options)
+        }
+
+    private fun decodeSampled(
+        maximumSide: Int,
+        decode: (BitmapFactory.Options) -> Bitmap?,
+    ): Bitmap? {
         val bounds = BitmapFactory.Options().apply { inJustDecodeBounds = true }
-        BitmapFactory.decodeFile(wallpaperFile.absolutePath, bounds)
+        decode(bounds)
         if (bounds.outWidth <= 0 || bounds.outHeight <= 0) return null
         var sampleSize = 1
         while (maxOf(bounds.outWidth, bounds.outHeight) / (sampleSize * 2) >= maximumSide) {
             sampleSize *= 2
         }
-        return BitmapFactory.decodeFile(
-            wallpaperFile.absolutePath,
-            BitmapFactory.Options().apply { inSampleSize = sampleSize },
-        )
+        return decode(BitmapFactory.Options().apply { inSampleSize = sampleSize })
     }
 
     fun readStoredAppearance(): HomeWallpaperAppearance? {
         val thumbnail = loadThumbnail(maximumSide = 256) ?: return null
         return try {
+            HomeWallpaperAppearanceAnalyzer.analyze(thumbnail)
+        } finally {
+            thumbnail.recycle()
+        }
+    }
+
+    fun readBundledAppearance(@DrawableRes drawableRes: Int): Result<HomeWallpaperAppearance> = runCatching {
+        val thumbnail = checkNotNull(loadBundledThumbnail(drawableRes, maximumSide = 256)) {
+            "Unable to decode bundled wallpaper"
+        }
+        try {
             HomeWallpaperAppearanceAnalyzer.analyze(thumbnail)
         } finally {
             thumbnail.recycle()
@@ -95,6 +117,17 @@ internal class HomeWallpaperRepository(context: Context) {
             runCatching { wallpaperManager.suggestDesiredDimensions(bounds.outWidth, bounds.outHeight) }
         }
         wallpaperFile.inputStream().buffered().use { input ->
+            wallpaperManager.setStream(
+                input,
+                null,
+                false,
+                WallpaperManager.FLAG_SYSTEM,
+            )
+        }
+    }
+
+    fun applyBundledToSystem(@DrawableRes drawableRes: Int): Result<Unit> = runCatching {
+        appContext.resources.openRawResource(drawableRes).buffered().use { input ->
             wallpaperManager.setStream(
                 input,
                 null,

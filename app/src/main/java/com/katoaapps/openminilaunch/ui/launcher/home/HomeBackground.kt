@@ -16,6 +16,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.platform.LocalContext
 import com.katoaapps.openminilaunch.data.LauncherStore
 import com.katoaapps.openminilaunch.ui.theme.readableContentColor
 import kotlinx.coroutines.Dispatchers
@@ -23,21 +24,28 @@ import kotlinx.coroutines.withContext
 
 @Composable
 internal fun HomeBackground(store: LauncherStore, modifier: Modifier = Modifier) {
+    val context = LocalContext.current
     val imageEnabled = store.appBackgroundImageEnabled
     val imageRevision = store.appBackgroundImageRevision
     val wallpaperFile = store.appBackgroundImageFile
+    val bundledWallpaper = store.appBackgroundPreset
     val wallpaperBitmap by produceState<Bitmap?>(
         initialValue = null,
         imageEnabled,
         imageRevision,
         wallpaperFile,
+        bundledWallpaper,
     ) {
-        value = if (imageEnabled) {
-            withContext(Dispatchers.IO) {
-                BitmapFactory.decodeFile(wallpaperFile.absolutePath)
+        value = withContext(Dispatchers.IO) {
+            when {
+                imageEnabled -> {
+                    BitmapFactory.decodeFile(wallpaperFile.absolutePath)
+                }
+                bundledWallpaper != null -> {
+                    BitmapFactory.decodeResource(context.resources, bundledWallpaper.drawableRes)
+                }
+                else -> null
             }
-        } else {
-            null
         }
     }
     DisposableEffect(wallpaperBitmap) {

@@ -50,6 +50,7 @@ internal data class LauncherBackupSettings(
     val watermelonModeEnabled: Boolean,
     val homePanelTransparency: Float,
     val appBackgroundColorArgb: Int?,
+    val appBackgroundPresetId: String?,
     val iconAppearance: IconAppearance,
     val openSoftwareKeyboardOnHome: Boolean,
     val includeAppShortcutsInDiscovery: Boolean,

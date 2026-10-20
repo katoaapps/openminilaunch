@@ -57,10 +57,6 @@ internal fun SettingsDestinationContent(
             onIconStyleApplied = onIconStyleApplied,
             goBack = onNavigateBack,
         )
-        SettingsDestination.APPEARANCE_THEME_COLORS -> ThemeAndColorsSettingsPage(
-            store = store,
-            goBack = onNavigateBack,
-        )
         SettingsDestination.APPEARANCE_ICONS -> IconSettingsPage(
             store = store,
             onIconStyleApplied = onIconStyleApplied,

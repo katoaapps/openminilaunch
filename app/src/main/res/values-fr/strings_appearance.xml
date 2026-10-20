@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="appearance_wallpaper_title">Fond d\'écran et arrière-plan</string>
-    <string name="appearance_wallpaper_summary">Fond d\'écran d\'accueil, vos photos et couleurs unies</string>
-    <string name="appearance_theme_colors_title">Thème et couleurs</string>
-    <string name="appearance_theme_colors_summary">Mode clair et couleur du panneau d\'accueil</string>
+    <string name="appearance_wallpaper_summary">Mode clair, arrière-plan, couleur du panneau d\'accueil, photos et fonds d\'écran</string>
     <string name="appearance_icons_summary">Style, packs et couleur des icônes Mink</string>
     <string name="appearance_layout_clock_title">Disposition et horloge</string>
     <string name="appearance_layout_clock_summary">Date, barre d\'état, position du panneau et grands écrans</string>
     <string name="appearance_layout_section">MISE EN PAGE ET AFFICHAGE</string>
     <string name="your_photo">Votre photo</string>
+    <string name="wallpaper_library">Bibliothèque de fonds d\'écran</string>
+    <string name="wallpaper_library_description">Choisissez un fond d\'écran Mink. Votre photo reste enregistrée.</string>
+    <string name="wallpaper_number">Fond d\'écran %1$d</string>
+    <string name="mink_wallpaper">Fond d\'écran Mink</string>
 </resources>

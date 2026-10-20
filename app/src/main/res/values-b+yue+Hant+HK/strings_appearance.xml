@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="appearance_wallpaper_title">牆紙與背景</string>
-    <string name="appearance_wallpaper_summary">主畫面牆紙、你的照片和純色</string>
-    <string name="appearance_theme_colors_title">主題與色彩</string>
-    <string name="appearance_theme_colors_summary">淺色模式與主畫面面板顏色</string>
+    <string name="appearance_wallpaper_summary">淺色模式、背景、主畫面面板顏色、相片與牆紙</string>
     <string name="appearance_icons_summary">圖示樣式、圖示套件與 Mink 圖示顏色</string>
     <string name="appearance_layout_clock_title">版面與時鐘</string>
     <string name="appearance_layout_clock_summary">日期、狀態列、面板位置與大型顯示器</string>
     <string name="appearance_layout_section">版面與顯示</string>
     <string name="your_photo">你嘅相片</string>
+    <string name="wallpaper_library">牆紙庫</string>
+    <string name="wallpaper_library_description">揀一張 Mink 牆紙。你嘅相片會繼續保留。</string>
+    <string name="wallpaper_number">牆紙 %1$d</string>
+    <string name="mink_wallpaper">Mink 牆紙</string>
 </resources>

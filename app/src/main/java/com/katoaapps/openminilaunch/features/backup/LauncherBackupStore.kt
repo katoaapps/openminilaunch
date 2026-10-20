@@ -29,6 +29,7 @@ internal fun LauncherStore.createPortableBackup(appVersion: String): LauncherBac
             watermelonModeEnabled = watermelonModeEnabled,
             homePanelTransparency = homePanelTransparency,
             appBackgroundColorArgb = appBackgroundColorArgb,
+            appBackgroundPresetId = appBackgroundPreset?.id,
             iconAppearance = iconAppearance,
             openSoftwareKeyboardOnHome = openSoftwareKeyboardOnHome,
             includeAppShortcutsInDiscovery = includeAppShortcutsInDiscovery,
@@ -77,7 +78,9 @@ internal fun LauncherStore.restorePortableBackup(backup: LauncherBackup) {
     setHomePanelColor(settings.homePanelColorArgb)
     if (settings.watermelonModeEnabled) activateWatermelonMode()
     setHomePanelTransparency(settings.homePanelTransparency)
-    setAppBackgroundColor(settings.appBackgroundColorArgb)
+    if (settings.appBackgroundPresetId?.let(::restoreAppBackgroundPreset) != true) {
+        setAppBackgroundColor(settings.appBackgroundColorArgb)
+    }
     when (settings.iconAppearance.source) {
         IconSource.MINK -> useMinkIcons()
         IconSource.SYSTEM -> useSystemIcons()

@@ -1,12 +1,14 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="appearance_wallpaper_title">Wallpaper dan latar belakang</string>
-    <string name="appearance_wallpaper_summary">Wallpaper layar utama, foto Anda, dan warna solid</string>
-    <string name="appearance_theme_colors_title">Tema dan warna</string>
-    <string name="appearance_theme_colors_summary">Mode terang dan warna panel Home</string>
+    <string name="appearance_wallpaper_summary">Mode terang, latar belakang, warna pil, foto, dan wallpaper</string>
     <string name="appearance_icons_summary">Gaya ikon, paket ikon, dan warna ikon Mink</string>
     <string name="appearance_layout_clock_title">Tata letak dan jam</string>
     <string name="appearance_layout_clock_summary">Tanggal, bilah status, posisi panel, dan layar besar</string>
     <string name="appearance_layout_section">TATA LETAK DAN TAMPILAN</string>
     <string name="your_photo">Foto Anda</string>
+    <string name="wallpaper_library">Galeri wallpaper</string>
+    <string name="wallpaper_library_description">Pilih wallpaper Mink. Foto Anda tetap tersimpan.</string>
+    <string name="wallpaper_number">Wallpaper %1$d</string>
+    <string name="mink_wallpaper">Wallpaper Mink</string>
 </resources>
