@@ -214,7 +214,7 @@ private fun MessagingProviderRow(
                 Spacer(Modifier.width(Dimens.dp8))
                 Icon(
                     Icons.Default.CheckCircle,
-                    stringResource(R.string.selected),
+                    stringResource(R.string.selected_label),
                     tint = MaterialTheme.colorScheme.primary,
                 )
             }

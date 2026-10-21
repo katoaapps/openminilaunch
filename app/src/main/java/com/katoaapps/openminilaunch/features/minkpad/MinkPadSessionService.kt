@@ -63,7 +63,7 @@ class MinkPadSessionService : Service() {
             Intent(this, MinkPadSessionService::class.java).setAction(action), PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT)
         return NotificationCompat.Builder(this, CHANNEL)
             .setSmallIcon(R.drawable.ic_minkpad_notification)
-            .setContentTitle(getString(R.string.minkpad_notification_title))
+            .setContentTitle(getString(R.string.minkpad_name))
             .setContentText(state.host?.name?.let {
                 getString(R.string.minkpad_notification_with_host, statusText(state.status), it)
             } ?: getString(R.string.minkpad_notification_without_host, statusText(state.status)))

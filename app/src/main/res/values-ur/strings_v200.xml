@@ -4,9 +4,9 @@
     <string name="update_notice_200_minkspace_title">MinkSpace منی ایپس</string>
     <string name="update_notice_200_minkspace_description">منی ایپس کے درمیان جانے کے لیے ہوم پینل کے اندر عمودی طور پر سوائپ کریں۔ ترتیبات میں منتخب کریں کہ کون سی دکھائی جائیں اور ٹو ڈوز، کیلکولیٹر، میڈیا، موسیقی اور ویجیٹ کو ترتیب دیں۔</string>
     <string name="update_notice_200_media_title">آپ کا منتخب میڈیا، اب بھی آپ کا</string>
-    <string name="update_notice_200_media_description">Android کے چنندہ کے ذریعے تصاویر، GIFs یا ویڈیوز شامل کریں۔ منک ایک مقامی حوالہ اسٹور کرتا ہے اور آپ کی منتخب کردہ ایپ میں اصل آئٹم کو کھولتا ہے۔</string>
+    <string name="update_notice_200_media_description">Android کے چنندہ کے ذریعے تصاویر، GIFs یا ویڈیوز شامل کریں۔ Mink ایک مقامی حوالہ اسٹور کرتا ہے اور آپ کی منتخب کردہ ایپ میں اصل آئٹم کو کھولتا ہے۔</string>
     <string name="update_notice_200_music_title">فعال میڈیا کنٹرولز</string>
-    <string name="update_notice_200_music_description">اختیاری اطلاع تک رسائی کے ساتھ، میوزک Android کا فعال میڈیا سیشن دکھا سکتا ہے اور صرف وہی کنٹرول بھیج سکتا ہے جو اس کا فراہم کنندہ سپورٹ کرتا ہے۔ منک آڈیو ریکارڈ نہیں کرتا اور نہ ہی تاریخ سنتا رہتا ہے۔</string>
+    <string name="update_notice_200_music_description">اختیاری اطلاع تک رسائی کے ساتھ، میوزک Android کا فعال میڈیا سیشن دکھا سکتا ہے اور صرف وہی کنٹرول بھیج سکتا ہے جو اس کا فراہم کنندہ سپورٹ کرتا ہے۔ Mink آڈیو ریکارڈ نہیں کرتا اور نہ ہی تاریخ سنتا رہتا ہے۔</string>
     <string name="update_notice_200_bubbles_heading">تیز تر سوئچنگ · BETA</string>
     <string name="update_notice_200_bubbles_title">Android بلبلوں میں ایپس آزمائیں۔</string>
     <string name="update_notice_200_bubbles_description">Magic Box ایپ کے نتیجے کو دیر تک دبائیں یا ترتیبات میں خودکار ایپس کا انتخاب کریں۔ مطابقت کا تعلق Android اور ٹارگٹ ایپ سے ہے، لہذا غیر تعاون یافتہ ایپس اس کی بجائے عام طور پر کھل سکتی ہیں۔</string>

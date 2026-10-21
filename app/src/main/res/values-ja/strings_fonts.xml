@@ -15,7 +15,7 @@
     <string name="custom_font_saved_description">Mink に保存されたインポート済みフォント</string>
     <string name="choose_font_file">.ttf または .otf ファイルを選択</string>
     <string name="custom_font_file_help">Mink はフォントをアプリ専用ストレージにコピーします。元のファイルは後で移動または削除できます。</string>
-    <string name="custom_font_import_failed">このフォントを読み込めませんでした。有効な .ttf または .otf ファイルを選択してください。</string>
+    <string name="custom_font_import_failed">Mink このフォントを読み込めませんでした。有効な .ttf または .otf ファイルを選択してください。</string>
     <string name="font_size">フォントサイズ</string>
     <string name="font_size_description">システムのフォントサイズを変えずにランチャーの文字を調整します。</string>
     <string name="font_size_percent">%1$d%%</string>

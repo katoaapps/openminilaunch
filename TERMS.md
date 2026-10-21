@@ -58,7 +58,7 @@ calling features and follow local emergency-service instructions.
 
 ## 4. MinkSpace media and controls
 
-### MinkPad Beta
+### MinkPad
 
 MinkPad sends keyboard, pointer, and media-control commands to a Bluetooth host you pair and
 connect. You are responsible for choosing the correct receiving device and checking where

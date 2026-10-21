@@ -552,7 +552,7 @@
     <string name="messaging_conditional_support_description">संपर्क और संदेश समर्थन स्थापित संस्करण पर निर्भर करता है</string>
     <string name="see_more_messaging_options">और विकल्प देखें...</string>
     <string name="send_with">साथ भेजें</string>
-    <string name="selected">चयनित</string>
+    <string name="selected_label">चयनित</string>
     <string name="choose_recipient_in_preferred_app">मैसेजिंग ऐप में %1$s चुनें।</string>
     <string name="preferred_messaging_fallback">एकीकृत ऐप अनुपलब्ध है. इसके बजाय सिस्टम संदेश खोले.</string>
     <string name="files_section">फ़ाइलें</string>
@@ -809,7 +809,7 @@
     <string name="previous_widget">पिछला विजेट</string>
     <string name="next_widget">अगला विजेट</string>
     <string name="widget_resizable">%1$s · आकार बदलने योग्य</string>
-    <string name="mink_day_heading">मिंक दिवस</string>
+    <string name="mink_day_heading">MINK’S DAY</string>
     <string name="mink_made_it_home">Mink ने इसे घर बना लिया</string>
     <string name="mink_checking_trail">Mink निशान की जाँच कर रहा है</string>
     <string name="mink_loading_detail">इस डिवाइस पर आज के चुनिंदा ऐप्स को देख रहे हैं...</string>

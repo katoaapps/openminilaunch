@@ -3,7 +3,7 @@ package com.katoaapps.openminilaunch.features.messaging
 import android.content.Intent
 
 /**
- * Direct Share contracts verified against the provider APKs recorded in the integration spike.
+ * Direct Share contracts verified against provider manifests and declared share targets.
  *
  * Android does not expose a conversation shortcut's underlying intent to launchers. Direct Share
  * instead routes an ACTION_SEND to the provider's declared share-target activity and identifies the

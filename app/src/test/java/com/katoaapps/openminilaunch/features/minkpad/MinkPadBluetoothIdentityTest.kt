@@ -9,8 +9,8 @@ class MinkPadBluetoothIdentityTest {
     @Test
     fun compatibilityNameIncludesOriginalDeviceName() {
         assertEquals(
-            "Pro Controller - MinkPad (Titan 2)",
-            minkPadBluetoothName("Titan 2"),
+            "Pro Controller - MinkPad (Example Phone)",
+            minkPadBluetoothName("Example Phone"),
         )
     }
 
@@ -33,10 +33,10 @@ class MinkPadBluetoothIdentityTest {
 
     @Test
     fun recognizesCurrentAndLegacyMinkPadNames() {
-        assertTrue(isMinkPadBluetoothName("Pro Controller - MinkPad (Titan 2)"))
+        assertTrue(isMinkPadBluetoothName("Pro Controller - MinkPad (Example Phone)"))
         assertTrue(isMinkPadBluetoothName("Pro Controller - MinkPad"))
         assertTrue(isMinkPadBluetoothName("Pro Controller"))
-        assertTrue(isMinkPadBluetoothName("MinkPad 3554A64F"))
-        assertFalse(isMinkPadBluetoothName("Titan 2"))
+        assertTrue(isMinkPadBluetoothName("MinkPad ABCD1234"))
+        assertFalse(isMinkPadBluetoothName("Example Phone"))
     }
 }

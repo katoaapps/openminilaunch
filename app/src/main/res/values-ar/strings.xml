@@ -556,7 +556,7 @@
     <string name="messaging_conditional_support_description">يعتمد دعم الاتصال والرسائل على الإصدار المثبت</string>
     <string name="see_more_messaging_options">رؤية المزيد من الخيارات…</string>
     <string name="send_with">أرسل مع</string>
-    <string name="selected">مختارة</string>
+    <string name="selected_label">مختارة</string>
     <string name="choose_recipient_in_preferred_app">اختر %1$s في تطبيق المراسلة.</string>
     <string name="preferred_messaging_fallback">التطبيق المتكامل غير متوفر. فتح رسائل النظام بدلا من ذلك.</string>
     <string name="files_section">الملفات</string>

@@ -6,7 +6,7 @@
     <string name="update_notice_200_media_title">আপনার নির্বাচিত মিডিয়া, এখনও আপনার</string>
     <string name="update_notice_200_media_description">Android পিকারের মাধ্যমে ছবি, GIF বা ভিডিও যোগ করুন। Mink একটি স্থানীয় রেফারেন্স সঞ্চয় করে এবং আপনার বেছে নেওয়া অ্যাপে আসল আইটেমটি খোলে।</string>
     <string name="update_notice_200_music_title">সক্রিয় মিডিয়া নিয়ন্ত্রণ</string>
-    <string name="update_notice_200_music_description">ঐচ্ছিক বিজ্ঞপ্তি অ্যাক্সেসের সাথে, সঙ্গীত Android এর সক্রিয় মিডিয়া সেশন দেখাতে পারে এবং শুধুমাত্র তার প্রদানকারী সমর্থন করে এমন নিয়ন্ত্রণ পাঠাতে পারে। মিঙ্ক অডিও রেকর্ড করে না বা শোনার ইতিহাস রাখে না।</string>
+    <string name="update_notice_200_music_description">ঐচ্ছিক বিজ্ঞপ্তি অ্যাক্সেসের সাথে, সঙ্গীত Android এর সক্রিয় মিডিয়া সেশন দেখাতে পারে এবং শুধুমাত্র তার প্রদানকারী সমর্থন করে এমন নিয়ন্ত্রণ পাঠাতে পারে। Mink অডিও রেকর্ড করে না বা শোনার ইতিহাস রাখে না।</string>
     <string name="update_notice_200_bubbles_heading">দ্রুত স্যুইচিং · বিটা</string>
     <string name="update_notice_200_bubbles_title">Android বুদবুদে অ্যাপ ব্যবহার করে দেখুন</string>
     <string name="update_notice_200_bubbles_description">একটি Magic Box অ্যাপের ফলাফল দীর্ঘক্ষণ প্রেস করুন বা সেটিংস থেকে স্বয়ংক্রিয় অ্যাপ বেছে নিন। সামঞ্জস্য Android এবং টার্গেট অ্যাপের অন্তর্গত, তাই অসমর্থিত অ্যাপগুলি এর পরিবর্তে সাধারণত খুলতে পারে।</string>

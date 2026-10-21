@@ -13,7 +13,6 @@
     <string name="minkpad_shift">移動</string>
     <string name="minkpad_alt">替代</string>
     <string name="minkpad_meta">梅塔</string>
-    <string name="minkpad_beta">MinkPad · Beta</string>
     <string name="minkpad_tagline">你的口袋,所有的板。</string>
     <string name="minkpad_whats_minkpad">What’s MinkPad?</string>
     <string name="minkpad_overview">MinkPad turns this phone into a Bluetooth keyboard, trackpad, and media remote for another device.</string>
@@ -210,7 +209,7 @@
     <string name="minkpad_help_host_title">主機設定與鍵盤</string>
     <string name="minkpad_help_host_description">在控制器設定中選擇接收裝置的系統 。 預置被儲存為對對主機; HID 不可靠地顯示它的操作系統 。 Meta是Apple裝置上的指令,Windows上的Windows上的指令。 軟體文字使用美國版式. 在五金鍵盤手機上, 直播編輯器保持隱藏; 在只觸摸的手機上敲打 Type 。</string>
     <string name="minkpad_help_bluetooth_title">配對和藍牙</string>
-    <string name="minkpad_help_bluetooth_description">Start pairing opens Android’s two-minute discoverability prompt. While the countdown is running, select Pro Controller - MinkPad (your phone’s device name) in the receiving device’s Bluetooth settings and confirm the matching code. Pair new device releases the active connection before pairing another host. Android’s saved pairings are never removed automatically.\n\nWhile MinkPad runs, this phone temporarily adds Pro Controller - MinkPad before its usual Bluetooth name. For example, Titan 2 appears as Pro Controller - MinkPad (Titan 2). This compatibility identity gives Android receiving devices the responsive HID timing used by MinkPad. It uses the phone’s regular Bluetooth adapter, not a second custom BLE device. Existing accessory pairings are not erased, but headphones, watches, cars, and other accessories may disconnect, see the temporary name, or compete for the radio. Closing MinkPad restores the phone’s original Bluetooth name.\n\nOpen the top controls and tap the current receiving device to switch between saved devices. Starting MinkPad asks the most recently used device to reconnect. Manage saved devices includes a troubleshooting Disconnect action.\n\nKeyboard, mouse, and media commands go directly to the receiving device. Mink does not save or upload typed text or pointer coordinates. Nearby devices access is for Bluetooth connection and discoverability, not location. Notifications provide Open, Reconnect, and Stop; denying them does not prevent input.</string>
+    <string name="minkpad_help_bluetooth_description">Start pairing opens Android’s two-minute discoverability prompt. While the countdown is running, select Pro Controller - MinkPad (your phone’s device name) in the receiving device’s Bluetooth settings and confirm the matching code. Pair new device releases the active connection before pairing another host. Android’s saved pairings are never removed automatically.\n\nWhile MinkPad runs, this phone temporarily adds Pro Controller - MinkPad before its usual Bluetooth name. For example, Example Phone appears as Pro Controller - MinkPad (Example Phone). This compatibility identity gives Android receiving devices the responsive HID timing used by MinkPad. It uses the phone’s regular Bluetooth adapter, not a second custom BLE device. Existing accessory pairings are not erased, but headphones, watches, cars, and other accessories may disconnect, see the temporary name, or compete for the radio. Closing MinkPad restores the phone’s original Bluetooth name.\n\nOpen the top controls and tap the current receiving device to switch between saved devices. Starting MinkPad asks the most recently used device to reconnect. Manage saved devices includes a troubleshooting Disconnect action.\n\nKeyboard, mouse, and media commands go directly to the receiving device. Mink does not save or upload typed text or pointer coordinates. Nearby devices access is for Bluetooth connection and discoverability, not location. Notifications provide Open, Reconnect, and Stop; denying them does not prevent input.</string>
     <string name="minkpad_shortcut_back_android">返回 ^ Meta + Esc</string>
     <string name="minkpad_shortcut_back_mac">回到相容的應用程式… command + [</string>
     <string name="minkpad_shortcut_back_windows">回到相容的應用程式 ^ Alt + Left</string>
@@ -228,12 +227,11 @@
     <string name="minkpad_shortcut_next_app_command">切換應用程式… 命令+分頁</string>
     <string name="minkpad_shortcut_app_list_android">App 清單 / 搜尋 ^ Meta (依赖主機)</string>
     <string name="minkpad_shortcut_app_list_windows">開始選單 ^ 視窗</string>
-    <string name="minkpad_shortcut_zoom_in_mac">app 放大 ~ 命令++</string>
+    <string name="minkpad_shortcut_zoom_in_mac">App zoom · Command + Plus</string>
     <string name="minkpad_shortcut_zoom_out_mac">app 放大 \ 命令 + 最小值</string>
     <string name="minkpad_shortcut_zoom_in_control">app 縮放 ~ Ctrl + Plus</string>
     <string name="minkpad_shortcut_zoom_out_control">app 放大 → Ctrl + 最小值</string>
     <string name="minkpad_notification_channel">MinkPad Bluetooth session</string>
-    <string name="minkpad_notification_title">MinkPad Beta</string>
     <string name="minkpad_notification_with_host">%1$s · %2$s</string>
     <string name="minkpad_notification_without_host">Bluetooth keyboard + mouse · %1$s</string>
     <string name="minkpad_notification_open">開啟</string>

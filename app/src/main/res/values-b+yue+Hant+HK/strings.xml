@@ -552,7 +552,7 @@
     <string name="messaging_conditional_support_description">聯絡同訊息支援取決於安裝咗嘅版本</string>
     <string name="see_more_messaging_options">睇多啲選項 …</string>
     <string name="send_with">同發送</string>
-    <string name="selected">揀咗</string>
+    <string name="selected_label">揀咗</string>
     <string name="choose_recipient_in_preferred_app">喺短訊應用程式入面揀 %1$s 。</string>
     <string name="preferred_messaging_fallback">集成應用程式唔可用。而係打開咗系統訊息。</string>
     <string name="files_section">檔案</string>

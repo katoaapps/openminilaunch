@@ -576,7 +576,7 @@
     <string name="messaging_conditional_support_description">Contact and message support depends on the installed version</string>
     <string name="see_more_messaging_options">See more options…</string>
     <string name="send_with">Send with</string>
-    <string name="selected">Selected</string>
+    <string name="selected_label">Selected</string>
     <string name="choose_recipient_in_preferred_app">Choose %1$s in the messaging app.</string>
     <string name="preferred_messaging_fallback">Integrated app unavailable. Opened System Messages instead.</string>
     <string name="provider_whatsapp" translatable="false">WhatsApp</string>

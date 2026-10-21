@@ -35,8 +35,8 @@
     <string name="music_nothing_playing">कोई मीडिया नहीं चल रहा</string>
     <string name="music_start_playback_hint">संगीत ऐप खोलने और सुनना शुरू करने के लिए टैप करें।</string>
     <string name="music_access_required">अपने मीडिया नियंत्रण कनेक्ट करें</string>
-    <string name="music_access_description">मिंक को सक्रिय मीडिया सत्र ढूंढने से पहले Android को अधिसूचना पहुंच की आवश्यकता होती है। यह वही वैकल्पिक पहुंच है जिसका उपयोग कन्वर्सेशन्स द्वारा किया जाता है, और मीडिया विवरण इस डिवाइस पर रहते हैं।</string>
-    <string name="notification_access_music_disclosure">संगीत इस एक्सेस का उपयोग केवल Android से सक्रिय मीडिया सत्र और प्रदाता-समर्थित नियंत्रणों के लिए पूछने के लिए करता है। मिंक न तो ऑडियो रिकॉर्ड करता है और न ही सुनने का इतिहास रखता है।</string>
+    <string name="music_access_description">Mink को सक्रिय मीडिया सत्र ढूंढने से पहले Android को अधिसूचना पहुंच की आवश्यकता होती है। यह वही वैकल्पिक पहुंच है जिसका उपयोग कन्वर्सेशन्स द्वारा किया जाता है, और मीडिया विवरण इस डिवाइस पर रहते हैं।</string>
+    <string name="notification_access_music_disclosure">संगीत इस एक्सेस का उपयोग केवल Android से सक्रिय मीडिया सत्र और प्रदाता-समर्थित नियंत्रणों के लिए पूछने के लिए करता है। Mink न तो ऑडियो रिकॉर्ड करता है और न ही सुनने का इतिहास रखता है।</string>
     <string name="music_open_notification_access">अधिसूचना पहुंच खोलें</string>
     <string name="music_open_player">मीडिया ऐप खोलें</string>
     <string name="music_open_music_app">एक संगीत ऐप खोलें</string>

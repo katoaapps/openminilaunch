@@ -129,7 +129,6 @@ internal fun FontAppearanceSettings(store: LauncherStore) {
         )
     }
 }
-
 @Composable
 private fun FontColorSetting(store: LauncherStore) {
     val context = LocalContext.current
@@ -155,4 +154,3 @@ private fun FontColorSetting(store: LauncherStore) {
         useDefaultLabelRes = R.string.use_automatic_font_color,
     )
 }
-

@@ -52,16 +52,19 @@ another photo is selected.
 
 ## Permissions and special access
 
-### MinkPad Beta
+### MinkPad
 
 MinkPad is optional and starts only when you choose Start Bluetooth session. Android 12 or newer
 requires Nearby devices access for native HID connection and Android's system discoverability
 prompt. MinkPad sends keyboard, pointer, and media-control reports through Android's public
-Bluetooth HID Device profile. Its output counters stay in memory, are excluded from backups,
-and contain no input payloads. It does not rename the phone's Bluetooth adapter, create a second
-custom BLE identity, or automatically remove existing pairings. It does not use app-level
-nearby-device scanning, request location, or read input from other apps. Android 9 or newer and
-a compatible OEM Bluetooth HID Device stack are required.
+Bluetooth HID Device profile. Session state stays in memory and contains no input payloads.
+While a session is active, MinkPad temporarily changes the phone's ordinary Bluetooth name to
+include `Pro Controller - MinkPad`; it restores the saved original name when the session ends.
+This does not create a second custom BLE identity or automatically remove existing pairings.
+On Android 12 or newer, **See nearby devices** starts a user-requested Bluetooth discovery scan
+to list unpaired receiving devices. Discovered names and addresses remain in memory and are cleared
+when that dialog closes. MinkPad does not request location or read input from other apps. Android 9
+or newer and a compatible OEM Bluetooth HID Device stack are required.
 
 While the controller is visible, keyboard and pointer commands are sent directly to the
 single connected Bluetooth host. The host can receive everything you type there, including

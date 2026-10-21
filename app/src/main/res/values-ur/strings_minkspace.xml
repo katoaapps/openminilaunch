@@ -35,8 +35,8 @@
     <string name="music_nothing_playing">کوئی میڈیا نہیں چل رہا ہے۔</string>
     <string name="music_start_playback_hint">میوزک ایپ کھولنے کے لیے تھپتھپائیں اور سننا شروع کریں۔</string>
     <string name="music_access_required">اپنے میڈیا کنٹرولز کو جوڑیں۔</string>
-    <string name="music_access_description">منک کو فعال میڈیا سیشنز تلاش کرنے سے پہلے Android کو اطلاع تک رسائی درکار ہے۔ یہ وہی اختیاری رسائی ہے جسے بات چیت کے ذریعے استعمال کیا جاتا ہے، اور میڈیا کی تفصیلات اس ڈیوائس پر رہتی ہیں۔</string>
-    <string name="notification_access_music_disclosure">موسیقی اس رسائی کا استعمال صرف Android کو فعال میڈیا سیشنز اور فراہم کنندہ کے تعاون یافتہ کنٹرولز کے لیے پوچھنے کے لیے کرتی ہے۔ منک آڈیو ریکارڈ نہیں کرتا اور نہ ہی تاریخ سنتا رہتا ہے۔</string>
+    <string name="music_access_description">Mink کو فعال میڈیا سیشنز تلاش کرنے سے پہلے Android کو اطلاع تک رسائی درکار ہے۔ یہ وہی اختیاری رسائی ہے جسے بات چیت کے ذریعے استعمال کیا جاتا ہے، اور میڈیا کی تفصیلات اس ڈیوائس پر رہتی ہیں۔</string>
+    <string name="notification_access_music_disclosure">موسیقی اس رسائی کا استعمال صرف Android کو فعال میڈیا سیشنز اور فراہم کنندہ کے تعاون یافتہ کنٹرولز کے لیے پوچھنے کے لیے کرتی ہے۔ Mink آڈیو ریکارڈ نہیں کرتا اور نہ ہی تاریخ سنتا رہتا ہے۔</string>
     <string name="music_open_notification_access">اطلاع تک رسائی کھولیں۔</string>
     <string name="music_open_player">میڈیا ایپ کھولیں۔</string>
     <string name="music_open_music_app">میوزک ایپ کھولیں۔</string>

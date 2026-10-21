@@ -552,7 +552,7 @@
     <string name="messaging_conditional_support_description">El soporte de contacto y mensajes depende de la versión instalada.</string>
     <string name="see_more_messaging_options">Ver más opciones…</string>
     <string name="send_with">Enviar con</string>
-    <string name="selected">Seleccionado</string>
+    <string name="selected_label">Seleccionado</string>
     <string name="choose_recipient_in_preferred_app">Elija %1$s en la aplicación de mensajería.</string>
     <string name="preferred_messaging_fallback">Aplicación integrada no disponible. En su lugar, abrió Mensajes del sistema.</string>
     <string name="files_section">ARCHIVOS</string>

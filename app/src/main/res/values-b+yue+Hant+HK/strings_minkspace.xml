@@ -35,7 +35,7 @@
     <string name="music_nothing_playing">冇媒體播放緊</string>
     <string name="music_start_playback_hint">㩒一下就可以打開音樂應用程式，然後開始聽。</string>
     <string name="music_access_required">連接你嘅媒體控制項</string>
-    <string name="music_access_description">Android 需要存取通知先可以搵到有效嘅媒體工作階段。呢個係同「對話」用嘅選擇性存取權，而媒體詳情會保留喺呢部裝置上面。</string>
+    <string name="music_access_description">Mink Android 需要存取通知先可以搵到有效嘅媒體工作階段。呢個係同「對話」用嘅選擇性存取權，而媒體詳情會保留喺呢部裝置上面。</string>
     <string name="notification_access_music_disclosure">音樂只會用呢個存取權嚟要求 Android 提供有效嘅媒體工作階段同埋供應商支援嘅控制項。 Mink 唔會錄音或者保留收聽記錄。</string>
     <string name="music_open_notification_access">打開通知存取權</string>
     <string name="music_open_player">打開媒體應用程式</string>

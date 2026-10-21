@@ -2,7 +2,7 @@
 
 A focused, keyboard-first Android home-screen launcher and digital assistant built with Kotlin and Jetpack Compose.
 
-Current version: **Open 2.0.0** (`2.0.0`). Feature releases show existing users a one-time in-app update notice covering new behavior, privacy impact, and any optional permissions; the onboarding tutorial is updated alongside each release.
+Current version: **Open 3.0.0** (`3.0.0`). Feature releases show existing users a one-time in-app update notice covering new behavior, privacy impact, and any optional permissions; the onboarding tutorial is updated alongside each release.
 
 ## Download
 
@@ -135,7 +135,7 @@ the existing app first and clears MinkLauncher OpenSource's local data.
 
 ## Run
 
-### MinkPad Beta (development branch)
+### MinkPad
 
 MinkPad turns the phone into a native Bluetooth keyboard and trackpad for one connected host.
 Open **Settings → MinkPad** or search `?minkpad`. It can also be assigned to a configurable
@@ -174,7 +174,7 @@ notification. MinkPad never removes Android pairings automatically.
 - Controller preferences are included in portable backups. Bluetooth addresses, paired-host
   history, per-host system presets, active sessions, and typed text are excluded. Android owns the pairing records.
 - Gaming mode is not included. Host behavior still varies across Apple, Windows, Android, TV, and
-  phone Bluetooth stacks. MinkPad uses English labels pending localization.
+  phone Bluetooth stacks.
 
 Open the folder in Android Studio or build from the terminal:
 

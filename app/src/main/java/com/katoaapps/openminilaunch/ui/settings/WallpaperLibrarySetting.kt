@@ -208,7 +208,7 @@ private fun WallpaperLibraryTile(
                             } else {
                                 Icon(
                                     Icons.Default.Check,
-                                    stringResource(R.string.selected),
+                                    stringResource(R.string.selected_label),
                                     tint = MinkWhite,
                                     modifier = Modifier.size(Dimens.dp17),
                                 )

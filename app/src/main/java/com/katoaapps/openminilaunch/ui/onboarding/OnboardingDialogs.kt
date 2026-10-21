@@ -13,16 +13,15 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Apps
-import androidx.compose.material.icons.filled.BubbleChart
-import androidx.compose.material.icons.filled.Calculate
+import androidx.compose.material.icons.filled.FontDownload
 import androidx.compose.material.icons.filled.Folder
 import androidx.compose.material.icons.filled.FolderOpen
-import androidx.compose.material.icons.filled.Lock
-import androidx.compose.material.icons.filled.MusicNote
+import androidx.compose.material.icons.filled.Keyboard
 import androidx.compose.material.icons.filled.Pets
-import androidx.compose.material.icons.filled.PhotoLibrary
+import androidx.compose.material.icons.filled.Tv
+import androidx.compose.material.icons.filled.Wallpaper
 import androidx.compose.material.icons.filled.Security
-import androidx.compose.material.icons.filled.Work
+import androidx.compose.material.icons.filled.Widgets
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
@@ -61,54 +60,49 @@ internal fun FeatureUpdateDialog(
                 verticalArrangement = Arrangement.spacedBy(Dimens.dp14),
             ) {
                 Text(
-                    stringResource(R.string.update_notice_200_minkspace_heading),
+                    stringResource(R.string.minkpad_tagline),
                     fontSize = Dimens.sp18,
                     fontWeight = FontWeight.Bold,
                 )
                 UpdatePoint(
-                    Icons.Default.Calculate,
-                    stringResource(R.string.update_notice_200_minkspace_title),
-                    stringResource(R.string.update_notice_200_minkspace_description),
+                    Icons.Default.Keyboard,
+                    stringResource(R.string.minkpad_name),
+                    stringResource(R.string.minkpad_overview),
                 )
                 UpdatePoint(
-                    Icons.Default.PhotoLibrary,
-                    stringResource(R.string.update_notice_200_media_title),
-                    stringResource(R.string.update_notice_200_media_description),
-                )
-                UpdatePoint(
-                    Icons.Default.MusicNote,
-                    stringResource(R.string.update_notice_200_music_title),
-                    stringResource(R.string.update_notice_200_music_description),
+                    Icons.Default.Tv,
+                    stringResource(R.string.minkpad_tv_remote),
+                    stringResource(R.string.minkpad_remote_keyboard_note),
                 )
                 Text(
-                    stringResource(R.string.update_notice_200_bubbles_heading),
+                    stringResource(R.string.mink_space_mini_apps),
                     fontSize = Dimens.sp18,
                     fontWeight = FontWeight.Bold,
                 )
                 UpdatePoint(
-                    Icons.Default.BubbleChart,
-                    stringResource(R.string.update_notice_200_bubbles_title),
-                    stringResource(R.string.update_notice_200_bubbles_description),
-                )
-                Text(
-                    stringResource(R.string.update_notice_200_spaces_heading),
-                    fontSize = Dimens.sp18,
-                    fontWeight = FontWeight.Bold,
-                )
-                UpdatePoint(
-                    Icons.Default.Work,
-                    stringResource(R.string.update_notice_200_work_title),
-                    stringResource(R.string.update_notice_200_work_description),
-                )
-                UpdatePoint(
-                    Icons.Default.Lock,
-                    stringResource(R.string.update_notice_200_privacy_title),
-                    stringResource(R.string.update_notice_200_privacy_description),
+                    Icons.Default.Widgets,
+                    stringResource(R.string.widgets),
+                    stringResource(R.string.mink_space_widget_picker_description),
                 )
                 UpdatePoint(
                     Icons.Default.Apps,
-                    stringResource(R.string.update_notice_200_smaller_title),
-                    stringResource(R.string.update_notice_200_smaller_description),
+                    stringResource(R.string.mink_space_mini_apps),
+                    stringResource(R.string.mink_space_settings_summary),
+                )
+                Text(
+                    stringResource(R.string.appearance),
+                    fontSize = Dimens.sp18,
+                    fontWeight = FontWeight.Bold,
+                )
+                UpdatePoint(
+                    Icons.Default.Wallpaper,
+                    stringResource(R.string.wallpaper_library),
+                    stringResource(R.string.wallpaper_library_description),
+                )
+                UpdatePoint(
+                    Icons.Default.FontDownload,
+                    stringResource(R.string.appearance_icons_fonts_title),
+                    stringResource(R.string.appearance_icons_fonts_summary),
                 )
                 TextButton(onClick = onReviewTutorial, contentPadding = PaddingValues(Dimens.dp0)) {
                     Text(stringResource(R.string.review_updated_tutorial))

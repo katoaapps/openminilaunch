@@ -552,7 +552,7 @@
     <string name="messaging_conditional_support_description">যোগাযোগ এবং বার্তা সমর্থন ইনস্টল করা সংস্করণের উপর নির্ভর করে</string>
     <string name="see_more_messaging_options">আরও বিকল্প দেখুন...</string>
     <string name="send_with">সাথে পাঠান</string>
-    <string name="selected">নির্বাচিত</string>
+    <string name="selected_label">নির্বাচিত</string>
     <string name="choose_recipient_in_preferred_app">মেসেজিং অ্যাপে %1$s বেছে নিন।</string>
     <string name="preferred_messaging_fallback">ইন্টিগ্রেটেড অ্যাপ্লিকেশন অনুপলব্ধ. পরিবর্তে সিস্টেম বার্তা খুলুন.</string>
     <string name="files_section">ফাইল</string>
@@ -809,7 +809,7 @@
     <string name="previous_widget">আগের উইজেট</string>
     <string name="next_widget">পরবর্তী উইজেট</string>
     <string name="widget_resizable">%1$s · আকার পরিবর্তনযোগ্য</string>
-    <string name="mink_day_heading">মিঙ্কস ডে</string>
+    <string name="mink_day_heading">MINK’S DAY</string>
     <string name="mink_made_it_home">Mink এটি বাড়িতে তৈরি করেছে</string>
     <string name="mink_checking_trail">Mink ট্রেইল চেক করছে</string>
     <string name="mink_loading_detail">এই ডিভাইসে আজকের নির্বাচিত অ্যাপগুলো দেখছি...</string>

@@ -12,14 +12,6 @@ from pathlib import Path
 PROJECT_ROOT = Path(__file__).resolve().parents[1]
 RESOURCE_ROOT = PROJECT_ROOT / "app/src/main/res"
 SOURCE_DIRECTORY = RESOURCE_ROOT / "values"
-SOURCE_FILES = (
-    "strings.xml",
-    "strings_calendar.xml",
-    "strings_demo.xml",
-    "strings_localization.xml",
-    "strings_minkspace.xml",
-    "strings_v200.xml",
-)
 LOCALE_DIRECTORIES = (
     "values-en-rGB",
     "values-b+zh+Hans",
@@ -66,20 +58,21 @@ UNESCAPED_ATTRIBUTE_REFERENCE_PATTERN = re.compile(r"^\s*\?")
 
 def resource_entries(directory: Path) -> dict[str, str]:
     entries: dict[str, str] = {}
-    for file_name in SOURCE_FILES:
-        path = directory / file_name
-        if not path.is_file():
-            raise ValueError(f"Missing {path.relative_to(PROJECT_ROOT)}")
+    for path in sorted(directory.glob("strings*.xml")):
         for element in ET.parse(path).getroot():
             if element.tag == "string":
                 if directory == SOURCE_DIRECTORY and element.attrib.get("translatable") == "false":
                     continue
-                entries[f"{file_name}|{element.attrib['name']}|string"] = element.text or ""
+                key = f"{element.attrib['name']}|string"
+                if key in entries:
+                    raise ValueError(f"Duplicate resource {key} in {directory.relative_to(PROJECT_ROOT)}")
+                entries[key] = element.text or ""
             elif element.tag == "plurals":
                 for item in element.findall("item"):
-                    entries[
-                        f"{file_name}|{element.attrib['name']}|{item.attrib['quantity']}"
-                    ] = item.text or ""
+                    key = f"{element.attrib['name']}|{item.attrib['quantity']}"
+                    if key in entries:
+                        raise ValueError(f"Duplicate resource {key} in {directory.relative_to(PROJECT_ROOT)}")
+                    entries[key] = item.text or ""
     return entries
 
 
@@ -90,16 +83,25 @@ def validate_locale(
     localized = resource_entries(RESOURCE_ROOT / directory_name)
     errors: list[str] = []
 
-    missing = sorted(source.keys() - localized.keys())
     source_plural_names = {
-        "|".join(key.split("|")[:2])
+        key.split("|")[0]
         for key in source
-        if key.split("|")[2] != "string"
+        if key.split("|")[1] != "string"
     }
+    localized_plural_names = {
+        key.split("|")[0]
+        for key in localized
+        if key.split("|")[1] != "string"
+    }
+    missing = sorted(
+        key
+        for key in source.keys() - localized.keys()
+        if key.split("|")[1] == "string" or key.split("|")[0] not in localized_plural_names
+    )
     unexpected = sorted(
         key
         for key in localized.keys() - source.keys()
-        if "|".join(key.split("|")[:2]) not in source_plural_names
+        if key.split("|")[0] not in source_plural_names
     )
     if missing:
         errors.append(f"missing {len(missing)} entries: {', '.join(missing[:5])}")
@@ -116,8 +118,8 @@ def validate_locale(
         actual_placeholders = sorted(PRINTF_PATTERN.findall(translation))
         key_parts = key.split("|")
         accepted_placeholder_sets = {tuple(expected_placeholders)}
-        if key_parts[2] != "string":
-            plural_prefix = "|".join(key_parts[:2]) + "|"
+        if key_parts[1] != "string":
+            plural_prefix = key_parts[0] + "|"
             accepted_placeholder_sets.update(
                 tuple(sorted(PRINTF_PATTERN.findall(value)))
                 for source_key, value in source.items()
@@ -135,7 +137,7 @@ def validate_locale(
         for term in PROTECTED_TERMS:
             if original.count(term) != translation.count(term):
                 errors.append(f"{key}: changed protected term {term!r}")
-        resource_name = key.split("|")[1]
+        resource_name = key.split("|")[0]
         symbols_to_check = (
             ALL_COMMAND_SYMBOLS
             if resource_name in COMMAND_RESOURCE_NAMES

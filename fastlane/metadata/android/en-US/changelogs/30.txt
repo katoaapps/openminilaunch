@@ -1,0 +1,7 @@
+MinkLauncher OpenSource 3.0 introduces MinkPad, a native Bluetooth keyboard, trackpad, media controller, and TV remote for Android 9 or newer. Pair and switch between saved receiving devices, use hardware or software text input, and tune pointer and scrolling behavior.
+
+MinkSpace can now host an Android widget as a mini-app with setup, replacement, sizing guidance, and an interaction mode for nested controls. Every mini-app is optional and reorderable, while To-dos remain reachable from Settings and the Magic Box.
+
+Settings now uses adaptive sections for compact and large displays. Appearance adds sixteen bundled wallpapers, reusable personal photos, custom local fonts, live text sizing, and font colors.
+
+This release also improves physical-keyboard hotkeys, directional trackpad navigation, large-font widget setup, wallpaper application, widget refresh behavior, and controller usability.

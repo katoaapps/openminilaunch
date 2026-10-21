@@ -192,7 +192,7 @@ private fun MinkPadSetupContent(
         verticalArrangement = Arrangement.spacedBy(16.dp),
     ) {
         Column {
-            Text(stringResource(R.string.minkpad_beta), style = MaterialTheme.typography.headlineSmall, fontWeight = FontWeight.Bold)
+            Text(stringResource(R.string.minkpad_name), style = MaterialTheme.typography.headlineSmall, fontWeight = FontWeight.Bold)
             Text(stringResource(R.string.minkpad_tagline), style = MaterialTheme.typography.bodyMedium)
         }
         MinkPadConnectionPanel(repository, state, onStart, onDiscover, onBrowseNearby, onHostDialogStateChanged)

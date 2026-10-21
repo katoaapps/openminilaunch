@@ -552,7 +552,7 @@
     <string name="messaging_conditional_support_description">联系和消息支持取决于安装的版本</string>
     <string name="see_more_messaging_options">查看更多选项...</string>
     <string name="send_with">发送与</string>
-    <string name="selected">已选择</string>
+    <string name="selected_label">已选择</string>
     <string name="choose_recipient_in_preferred_app">在消息应用程序中选择 %1$s。</string>
     <string name="preferred_messaging_fallback">集成应用程序不可用。相反，打开系统消息。</string>
     <string name="files_section">文件</string>

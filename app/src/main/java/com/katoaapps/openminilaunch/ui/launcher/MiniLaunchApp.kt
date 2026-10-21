@@ -80,7 +80,7 @@ import com.katoaapps.openminilaunch.ui.theme.withAppBackground
 import com.katoaapps.openminilaunch.ui.minkspace.todo.TodosScreen
 import com.katoaapps.openminilaunch.ui.profile.openVirtualContactCard
 
-private const val FEATURE_UPDATE_ID = "v200_whats_new_v1"
+private const val FEATURE_UPDATE_ID = "v300_whats_new_v1"
 
 @Composable
 internal fun MiniLaunchApp(

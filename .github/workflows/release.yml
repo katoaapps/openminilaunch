@@ -41,7 +41,9 @@ jobs:
           ANDROID_KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
           ANDROID_KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
           ANDROID_KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
-        run: ./gradlew testDebugUnitTest lintDebug assembleRelease
+        run: |
+          python3 tools/validate_localizations.py
+          ./gradlew testDebugUnitTest lintDebug assembleRelease
 
       - name: Verify and prepare release assets
         run: |
@@ -51,6 +53,13 @@ jobs:
           "$APKSIGNER" verify --verbose --print-certs "$APK"
           cp "$APK" MinkLauncher-OpenSource.apk
           sha256sum MinkLauncher-OpenSource.apk > MinkLauncher-OpenSource.apk.sha256
+
+      - name: Preserve R8 mapping
+        uses: actions/upload-artifact@v4
+        with:
+          name: r8-mapping-${{ github.ref_name }}
+          path: app/build/outputs/mapping/release/mapping.txt
+          if-no-files-found: error
 
       - name: Publish GitHub release
         env:
