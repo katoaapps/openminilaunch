@@ -2,7 +2,6 @@
 <resources>
     <string name="appearance_wallpaper_title">Fondo de pantalla y fondo</string>
     <string name="appearance_wallpaper_summary">Modo claro, fondo, color del panel de Inicio, fotos y fondos de pantalla</string>
-    <string name="appearance_icons_summary">Estilo, paquetes y color de iconos de Mink</string>
     <string name="appearance_layout_clock_title">Diseño y reloj</string>
     <string name="appearance_layout_clock_summary">Fecha, barra de estado, posición del panel y pantallas grandes</string>
     <string name="appearance_layout_section">DISEÑO Y PANTALLA</string>

@@ -3,6 +3,7 @@ package com.katoaapps.openminilaunch.ui.magic
 import android.os.SystemClock
 import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.TextFieldValue
+import com.katoaapps.openminilaunch.features.magic.MAGIC_COMMAND_PREFIXES
 
 /**
  * Reconciles the first key captured by collapsed Home with an IME's long-press replacement.
@@ -42,11 +43,28 @@ internal class InitialHardwareKeyCorrection(
         }
 
         val appendedText = value.text.removePrefix(pending.text)
-        if (appendedText.isEmpty() || appendedText.startsWith(pending.text)) return value
+        if (appendedText.isEmpty()) return value
+
+        // Command prefixes are complete input, never ordinary characters waiting for a
+        // long-press replacement. Some editors do not deliver the original key-up after focus
+        // moves from collapsed Home to the real field, so an arbitrary next character must not
+        // be allowed to replace the prefix while the correction window is still open.
+        if (pending.text.singleOrNull() in MAGIC_COMMAND_PREFIXES) {
+            clear()
+            val suffixWithoutAutoSpace = appendedText.trimStart()
+            if (suffixWithoutAutoSpace == appendedText) return value
+
+            val correctedText = pending.text + suffixWithoutAutoSpace
+            return TextFieldValue(
+                text = correctedText,
+                selection = TextRange(correctedText.length),
+            )
+        }
+
+        if (appendedText.startsWith(pending.text)) return value
 
         // A few physical-keyboard IMEs automatically commit a separator after punctuation.
-        // The captured punctuation is already the complete Magic Box command prefix, so do not
-        // mistake that separator for the IME replacing a long-pressed key.
+        // Do not mistake that separator for the IME replacing a long-pressed key.
         if (appendedText.all(Char::isWhitespace)) {
             clear()
             return TextFieldValue(

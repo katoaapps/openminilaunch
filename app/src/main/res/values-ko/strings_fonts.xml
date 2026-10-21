@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="appearance_icons_fonts_title">아이콘 및 글꼴</string>
+    <string name="appearance_icons_fonts_summary">아이콘 스타일, 글꼴, 글자 크기 및 런처 색상</string>
+    <string name="fonts">글꼴</string>
+    <string name="font_style">글꼴 스타일</string>
+    <string name="choose_font_style">글꼴 스타일 선택</string>
+    <string name="font_default">Mink 기본</string>
+    <string name="font_default_description">Mink가 사용하는 선명한 시스템 글꼴</string>
+    <string name="font_serif">세리프</string>
+    <string name="font_serif_description">개성이 있는 전통적인 서체</string>
+    <string name="font_monospace">고정폭</string>
+    <string name="font_monospace_description">모든 문자가 같은 너비를 사용합니다</string>
+    <string name="custom_font">사용자 지정 글꼴</string>
+    <string name="custom_font_saved_description">Mink에 저장된 가져온 글꼴</string>
+    <string name="choose_font_file">.ttf 또는 .otf 파일 선택</string>
+    <string name="custom_font_file_help">Mink가 글꼴을 앱의 비공개 저장소에 복사합니다. 이후 원본 파일을 이동하거나 삭제할 수 있습니다.</string>
+    <string name="custom_font_import_failed">이 글꼴을 읽을 수 없습니다. 올바른 .ttf 또는 .otf 파일을 선택하세요.</string>
+    <string name="font_size">글꼴 크기</string>
+    <string name="font_size_description">시스템 글꼴 크기를 바꾸지 않고 런처 텍스트를 조절합니다.</string>
+    <string name="font_size_percent">%1$d%%</string>
+    <string name="font_color">글꼴 색상</string>
+    <string name="font_color_description">자동은 배경화면과 패널 색상에 맞춰 읽기 쉬운 텍스트를 선택합니다.</string>
+    <string name="custom_font_color">사용자 지정 글꼴 색상</string>
+    <string name="custom_font_color_description">색상을 선택하거나 6자리 16진수 값을 입력하세요.</string>
+    <string name="use_automatic_font_color">자동 글꼴 색상 사용</string>
+    <string name="color_white">흰색</string>
+    <string name="color_black">검은색</string>
+    <string name="browse_free_fonts">무료 글꼴 찾아보기</string>
+    <string name="custom_font_download_help">Google Fonts는 ZIP 파일을 다운로드합니다. 먼저 압축을 푼 다음 여기로 돌아와 다운로드의 압축 해제된 글꼴 폴더에서 .ttf 파일을 선택하세요. 글꼴 파일은 최근 항목에 나타나지 않을 수 있습니다.</string>
+    <string name="third_party_font_license_notice">글꼴은 제3자가 제공합니다. 사용하거나 공유하기 전에 라이선스를 확인하세요.</string>
+</resources>

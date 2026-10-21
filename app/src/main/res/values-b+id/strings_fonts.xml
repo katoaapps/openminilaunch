@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="appearance_icons_fonts_title">Ikon dan font</string>
+    <string name="appearance_icons_fonts_summary">Gaya ikon, font, ukuran teks, dan warna peluncur</string>
+    <string name="fonts">FONT</string>
+    <string name="font_style">Gaya font</string>
+    <string name="choose_font_style">Pilih gaya font</string>
+    <string name="font_default">Bawaan Mink</string>
+    <string name="font_default_description">Font sistem yang jelas dan digunakan Mink</string>
+    <string name="font_serif">Serif</string>
+    <string name="font_serif_description">Jenis huruf tradisional dengan lebih banyak karakter</string>
+    <string name="font_monospace">Monospace</string>
+    <string name="font_monospace_description">Setiap karakter menggunakan lebar yang sama</string>
+    <string name="custom_font">Font khusus</string>
+    <string name="custom_font_saved_description">Font impor yang disimpan oleh Mink</string>
+    <string name="choose_font_file">Pilih file .ttf atau .otf</string>
+    <string name="custom_font_file_help">Mink menyalin font ke penyimpanan pribadi aplikasi. File asli dapat dipindah atau dihapus setelahnya.</string>
+    <string name="custom_font_import_failed">Mink tidak dapat membaca font itu. Pilih file .ttf atau .otf yang valid.</string>
+    <string name="font_size">Ukuran font</string>
+    <string name="font_size_description">Sesuaikan teks peluncur tanpa mengubah ukuran font sistem.</string>
+    <string name="font_size_percent">%1$d%%</string>
+    <string name="font_color">Warna font</string>
+    <string name="font_color_description">Otomatis memilih teks yang mudah dibaca dari warna wallpaper dan panel.</string>
+    <string name="custom_font_color">Warna font khusus</string>
+    <string name="custom_font_color_description">Pilih warna atau masukkan nilai heksadesimal enam digit.</string>
+    <string name="use_automatic_font_color">Gunakan warna font otomatis</string>
+    <string name="color_white">Putih</string>
+    <string name="color_black">Hitam</string>
+    <string name="browse_free_fonts">Jelajahi font gratis</string>
+    <string name="custom_font_download_help">Google Fonts mengunduh file ZIP. Ekstrak dahulu, lalu kembali ke sini dan pilih file .ttf dari Unduhan dan folder font yang diekstrak. File font mungkin tidak muncul di Terbaru.</string>
+    <string name="third_party_font_license_notice">Font disediakan oleh pihak ketiga. Periksa lisensinya sebelum menggunakan atau membagikannya.</string>
+</resources>

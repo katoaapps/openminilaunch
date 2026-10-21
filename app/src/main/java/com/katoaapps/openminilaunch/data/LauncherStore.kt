@@ -1,6 +1,7 @@
 package com.katoaapps.openminilaunch.data
 
 import com.katoaapps.openminilaunch.features.appearance.BundledWallpaperCatalog
+import com.katoaapps.openminilaunch.features.appearance.CustomFontRepository
 import com.katoaapps.openminilaunch.features.appearance.HomeWallpaperRepository
 import com.katoaapps.openminilaunch.features.appearance.WATERMELON_PILL_COLOR_ARGB
 import com.katoaapps.openminilaunch.features.demo.DemoHomeProfile
@@ -11,6 +12,9 @@ import com.katoaapps.openminilaunch.features.minkspace.MinkSpaceMiniApp
 import com.katoaapps.openminilaunch.model.*
 
 import android.content.Context
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.setValue
 
 class LauncherStore private constructor(context: Context) {
     private val appContext = context.applicationContext
@@ -27,6 +31,7 @@ class LauncherStore private constructor(context: Context) {
         isFreshInstall = !generalPreferences.onboardingComplete,
     )
     private val iconAppearancePreferences = IconAppearancePreferenceStore(prefs)
+    private val fontAppearancePreferences = FontAppearancePreferenceStore(prefs)
     private val messagingPreferences = MessagingPreferenceStore(prefs)
     private val minkDayPreferences = MinkDayPreferenceStore(prefs)
     private val updatePreferences = UpdatePreferenceStore(prefs)
@@ -37,6 +42,9 @@ class LauncherStore private constructor(context: Context) {
     private val minkSpacePreferences = MinkSpacePreferenceStore(prefs)
     private val minkSpaceWidgetStore = MinkSpaceWidgetStore(prefs)
     private val homeWallpaperRepository = HomeWallpaperRepository(appContext)
+    private val customFontRepository = CustomFontRepository(appContext)
+    var customFontRevision by mutableIntStateOf(0)
+        private set
     internal val profileRepository = ProfileRepository(appContext)
     internal val minkPadPreferences = com.katoaapps.openminilaunch.features.minkpad.MinkPadRepository.get(appContext).preferences
     private val demoPreferences: DemoPreferenceStore = DemoPreferenceStore(appContext, prefs, todoStore)
@@ -90,6 +98,9 @@ class LauncherStore private constructor(context: Context) {
         get() = !demoPreferences.enabled && appearancePreferences.useSystemHomeWallpaper
     internal val appBackgroundImageFile get() = homeWallpaperRepository.wallpaperFile
     val iconAppearance get() = iconAppearancePreferences.appearance
+    val fontAppearance get() = fontAppearancePreferences.appearance
+    internal val customFontFile get() = customFontRepository.fontFile
+    val hasCustomFont get() = customFontRepository.hasFont
     val sendMessagesAutomatically get() = messagingPreferences.sendMessagesAutomatically
     val preferredMessagingPackage get() = messagingPreferences.preferredMessagingPackage
     val preferredAiPackage get() = messagingPreferences.preferredAiPackage
@@ -137,6 +148,9 @@ class LauncherStore private constructor(context: Context) {
         get() = demoPreferences.effectiveShortcutOrder(shortcutOrder)
 
     init {
+        if (fontAppearance.source == FontSource.CUSTOM && !hasCustomFont) {
+            fontAppearancePreferences.useSource(FontSource.DEFAULT)
+        }
         if (
             appearancePreferences.appBackgroundImageEnabled &&
             appearancePreferences.appBackgroundImageAppearance == null
@@ -445,6 +459,25 @@ class LauncherStore private constructor(context: Context) {
 
     fun setMinkIconColor(argb: Int?) {
         iconAppearancePreferences.setMinkIconColor(argb)
+    }
+
+    fun useFont(source: FontSource) {
+        if (source != FontSource.CUSTOM || hasCustomFont) {
+            fontAppearancePreferences.useSource(source)
+        }
+    }
+
+    fun importCustomFont(uri: android.net.Uri): Result<Unit> = customFontRepository.import(uri).map { name ->
+        fontAppearancePreferences.useCustomFont(name)
+        customFontRevision++
+    }
+
+    fun setFontSizeScale(scale: Float) {
+        fontAppearancePreferences.setSizeScale(scale)
+    }
+
+    fun setFontColor(argb: Int?) {
+        fontAppearancePreferences.setColor(argb)
     }
 
     fun updateSocialGoalHours(hours: Int) {

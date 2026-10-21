@@ -2,7 +2,6 @@
 <resources>
     <string name="appearance_wallpaper_title">壁紙と背景</string>
     <string name="appearance_wallpaper_summary">ライトモード、背景、ホームパネルの色、写真、壁紙</string>
-    <string name="appearance_icons_summary">アイコンスタイル、アイコンパック、Mink アイコンの色</string>
     <string name="appearance_layout_clock_title">レイアウトと時計</string>
     <string name="appearance_layout_clock_summary">日付、ステータスバー、パネル位置、大画面</string>
     <string name="appearance_layout_section">レイアウトとディスプレイ</string>

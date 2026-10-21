@@ -2,7 +2,6 @@
 <resources>
     <string name="appearance_wallpaper_title">Wallpaper dan latar belakang</string>
     <string name="appearance_wallpaper_summary">Mode terang, latar belakang, warna pil, foto, dan wallpaper</string>
-    <string name="appearance_icons_summary">Gaya ikon, paket ikon, dan warna ikon Mink</string>
     <string name="appearance_layout_clock_title">Tata letak dan jam</string>
     <string name="appearance_layout_clock_summary">Tanggal, bilah status, posisi panel, dan layar besar</string>
     <string name="appearance_layout_section">TATA LETAK DAN TAMPILAN</string>

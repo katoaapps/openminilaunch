@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="appearance_icons_fonts_title">Значки и шрифты</string>
+    <string name="appearance_icons_fonts_summary">Стиль значков, шрифт, размер текста и цвета лаунчера</string>
+    <string name="fonts">ШРИФТЫ</string>
+    <string name="font_style">Стиль шрифта</string>
+    <string name="choose_font_style">Выберите стиль шрифта</string>
+    <string name="font_default">Стандартный Mink</string>
+    <string name="font_default_description">Чёткий системный шрифт Mink</string>
+    <string name="font_serif">С засечками</string>
+    <string name="font_serif_description">Традиционный шрифт с выразительным характером</string>
+    <string name="font_monospace">Моноширинный</string>
+    <string name="font_monospace_description">Все символы имеют одинаковую ширину</string>
+    <string name="custom_font">Свой шрифт</string>
+    <string name="custom_font_saved_description">Импортированный шрифт, сохранённый Mink</string>
+    <string name="choose_font_file">Выбрать файл .ttf или .otf</string>
+    <string name="custom_font_file_help">Mink копирует шрифт в закрытое хранилище приложения. После этого исходный файл можно переместить или удалить.</string>
+    <string name="custom_font_import_failed">Mink не удалось прочитать этот шрифт. Выберите корректный файл .ttf или .otf.</string>
+    <string name="font_size">Размер шрифта</string>
+    <string name="font_size_description">Настройте текст лаунчера, не меняя системный размер шрифта.</string>
+    <string name="font_size_percent">%1$d%%</string>
+    <string name="font_color">Цвет шрифта</string>
+    <string name="font_color_description">Автоматический режим выбирает читаемый цвет с учётом обоев и панели.</string>
+    <string name="custom_font_color">Свой цвет шрифта</string>
+    <string name="custom_font_color_description">Выберите цвет или введите шестизначное значение.</string>
+    <string name="use_automatic_font_color">Использовать автоматический цвет шрифта</string>
+    <string name="color_white">Белый</string>
+    <string name="color_black">Чёрный</string>
+    <string name="browse_free_fonts">Найти бесплатные шрифты</string>
+    <string name="custom_font_download_help">Google Fonts скачивает ZIP-файл. Сначала распакуйте его, затем вернитесь сюда и выберите файл .ttf в папке загрузок и распакованной папке шрифта. Файлы шрифтов могут не отображаться в недавних.</string>
+    <string name="third_party_font_license_notice">Шрифты предоставляются третьими лицами. Проверьте лицензию перед использованием или публикацией.</string>
+</resources>

@@ -39,8 +39,8 @@ internal fun AppearanceSettingsPage(
             icon = Icons.Default.Wallpaper,
         ) { onNavigate(SettingsDestination.APPEARANCE_WALLPAPER) }
         SettingsRow(
-            title = stringResource(R.string.icons),
-            subtitle = stringResource(R.string.appearance_icons_summary),
+            title = stringResource(R.string.appearance_icons_fonts_title),
+            subtitle = stringResource(R.string.appearance_icons_fonts_summary),
             icon = Icons.Default.Apps,
         ) { onNavigate(SettingsDestination.APPEARANCE_ICONS) }
         SettingsRow(
@@ -73,12 +73,7 @@ internal fun WallpaperAndBackgroundSettingsPage(
             store.appBackgroundPreset != null -> stringResource(R.string.mink_wallpaper)
             else -> null
         }
-        AppBackgroundSetting(
-            selectedArgb = store.effectiveAppBackgroundColorArgb,
-            activeWallpaperLabel = activeWallpaperLabel,
-            onColorSelected = store::setAppBackgroundColor,
-            onUseThemeDefault = { store.setAppBackgroundColor(null) },
-        )
+        ThemeChooser(store.themePreference, store::setTheme)
         HomePanelColorSetting(
             selectedArgb = store.effectiveHomePanelColorArgb,
             transparency = store.homePanelTransparency,
@@ -86,7 +81,12 @@ internal fun WallpaperAndBackgroundSettingsPage(
             onWatermelonSelected = store::activateWatermelonMode,
             onTransparencyChanged = store::setHomePanelTransparency,
         )
-        ThemeChooser(store.themePreference, store::setTheme)
+        AppBackgroundSetting(
+            selectedArgb = store.effectiveAppBackgroundColorArgb,
+            activeWallpaperLabel = activeWallpaperLabel,
+            onColorSelected = store::setAppBackgroundColor,
+            onUseThemeDefault = { store.setAppBackgroundColor(null) },
+        )
         WallpaperLibrarySetting(
             selectedPresetId = store.appBackgroundPreset?.id,
             customPhotoSelected = store.appBackgroundImageEnabled,
@@ -169,13 +169,16 @@ internal fun WallpaperAndBackgroundSettingsPage(
 }
 
 @Composable
-internal fun IconSettingsPage(
+internal fun IconsAndFontsSettingsPage(
     store: LauncherStore,
     onIconStyleApplied: () -> Unit,
     goBack: () -> Unit,
 ) {
-    SettingsPage(stringResource(R.string.icons), goBack) {
+    SettingsPage(stringResource(R.string.appearance_icons_fonts_title), goBack) {
+        SectionLabel(stringResource(R.string.icons))
         IconPackAppearanceSettings(store, onApplied = onIconStyleApplied)
+        SectionLabel(stringResource(R.string.fonts))
+        FontAppearanceSettings(store)
     }
 }
 

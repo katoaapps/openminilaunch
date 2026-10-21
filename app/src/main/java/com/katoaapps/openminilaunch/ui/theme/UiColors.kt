@@ -3,6 +3,7 @@ package com.katoaapps.openminilaunch.ui.theme
 import com.katoaapps.openminilaunch.R
 
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.colorResource
 import androidx.compose.material3.ColorScheme
@@ -13,7 +14,8 @@ internal val Sage: Color @Composable get() = colorResource(R.color.sage)
 internal val Rust: Color @Composable get() = colorResource(R.color.rust)
 internal val MinkForest: Color @Composable get() = colorResource(R.color.mink_forest)
 internal val MinkForestPanel: Color @Composable get() = colorResource(R.color.mink_forest_panel)
-internal val Muted: Color @Composable get() = colorResource(R.color.muted)
+internal val LocalMutedColor = compositionLocalOf<Color?> { null }
+internal val Muted: Color @Composable get() = LocalMutedColor.current ?: colorResource(R.color.muted)
 internal val DarkPrimary: Color @Composable get() = colorResource(R.color.dark_primary)
 internal val DarkOnPrimary: Color @Composable get() = colorResource(R.color.dark_on_primary)
 internal val DarkBackground: Color @Composable get() = colorResource(R.color.dark_background)

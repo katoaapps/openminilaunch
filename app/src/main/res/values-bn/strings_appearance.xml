@@ -2,7 +2,6 @@
 <resources>
     <string name="appearance_wallpaper_title">ওয়ালপেপার ও পটভূমি</string>
     <string name="appearance_wallpaper_summary">লাইট মোড, ব্যাকগ্রাউন্ড, হোম প্যানেলের রং, ছবি ও ওয়ালপেপার</string>
-    <string name="appearance_icons_summary">আইকন স্টাইল, আইকন প্যাক ও Mink আইকনের রং</string>
     <string name="appearance_layout_clock_title">লেআউট ও ঘড়ি</string>
     <string name="appearance_layout_clock_summary">তারিখ, স্ট্যাটাস বার, প্যানেলের অবস্থান ও বড় ডিসপ্লে</string>
     <string name="appearance_layout_section">লেআউট ও ডিসপ্লে</string>

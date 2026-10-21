@@ -8,6 +8,7 @@ import com.katoaapps.openminilaunch.ui.settings.pushSettingsRoute
 import com.katoaapps.openminilaunch.ui.settings.settingsPathTo
 import com.katoaapps.openminilaunch.ui.settings.settingsSectionFor
 import com.katoaapps.openminilaunch.ui.settings.settingsRoutesTo
+import com.katoaapps.openminilaunch.ui.settings.selectSettingsSection
 
 import org.junit.Assert.assertEquals
 import org.junit.Test
@@ -96,5 +97,36 @@ class SettingsNavigationTest {
         assertEquals(listOf(home, advanced), popSettingsRoute(stack))
         assertEquals(listOf(home), popSettingsRoute(popSettingsRoute(stack)))
         assertEquals(listOf(home), popSettingsRoute(listOf(home)))
+    }
+
+    @Test fun selectingHomeReturnsToTheExistingHomeRoot() {
+        val home = SettingsRoute(SettingsSection.HOME, SettingsDestination.OVERVIEW)
+        val magicBox = SettingsRoute(SettingsSection.MAGIC_BOX, SettingsDestination.OVERVIEW)
+        val fileSearch = SettingsRoute(SettingsSection.MAGIC_BOX, SettingsDestination.FILE_SEARCH)
+
+        assertEquals(
+            listOf(home),
+            selectSettingsSection(listOf(home, magicBox, fileSearch), SettingsSection.HOME),
+        )
+    }
+
+    @Test fun selectingCurrentSectionReturnsToItsRoot() {
+        val home = SettingsRoute(SettingsSection.HOME, SettingsDestination.OVERVIEW)
+        val shortcuts = SettingsRoute(SettingsSection.HOME, SettingsDestination.SHORTCUTS)
+
+        assertEquals(
+            listOf(home),
+            selectSettingsSection(listOf(home, shortcuts), SettingsSection.HOME),
+        )
+    }
+
+    @Test fun selectingANewSectionAddsItsRoot() {
+        val home = SettingsRoute(SettingsSection.HOME, SettingsDestination.OVERVIEW)
+        val advanced = SettingsRoute(SettingsSection.ADVANCED, SettingsDestination.OVERVIEW)
+
+        assertEquals(
+            listOf(home, advanced),
+            selectSettingsSection(listOf(home), SettingsSection.ADVANCED),
+        )
     }
 }

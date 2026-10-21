@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="appearance_icons_fonts_title">Icons and fonts</string>
+    <string name="appearance_icons_fonts_summary">Icon style, font, text size, and launcher colours</string>
+    <string name="fonts">FONTS</string>
+    <string name="font_style">Font style</string>
+    <string name="choose_font_style">Choose font style</string>
+    <string name="font_default">Mink default</string>
+    <string name="font_default_description">The clear system font used by Mink</string>
+    <string name="font_serif">Serif</string>
+    <string name="font_serif_description">A traditional typeface with more character</string>
+    <string name="font_monospace">Monospace</string>
+    <string name="font_monospace_description">Every character uses the same width</string>
+    <string name="custom_font">Custom font</string>
+    <string name="custom_font_saved_description">Imported font saved by Mink</string>
+    <string name="choose_font_file">Choose .ttf or .otf file</string>
+    <string name="custom_font_file_help">Mink copies the font into private app storage. The original file can be moved or deleted afterwards.</string>
+    <string name="custom_font_import_failed">Mink could not read that font. Choose a valid .ttf or .otf file.</string>
+    <string name="font_size">Font size</string>
+    <string name="font_size_description">Adjust launcher text without changing the system font size.</string>
+    <string name="font_size_percent">%1$d%%</string>
+    <string name="font_color">Font colour</string>
+    <string name="font_color_description">Automatic chooses readable text from the wallpaper and panel colours.</string>
+    <string name="custom_font_color">Custom font colour</string>
+    <string name="custom_font_color_description">Choose any colour or enter its six-digit hex value.</string>
+    <string name="use_automatic_font_color">Use automatic font colour</string>
+    <string name="color_white">White</string>
+    <string name="color_black">Black</string>
+    <string name="browse_free_fonts">Browse free fonts</string>
+    <string name="custom_font_download_help">Google Fonts downloads a ZIP. Extract it first, then return here and choose a .ttf file from Downloads and the extracted font folder. Font files may not appear in Recents.</string>
+    <string name="third_party_font_license_notice">Fonts are provided by third parties. Check the font’s licence before using or sharing it.</string>
+</resources>

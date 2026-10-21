@@ -2,7 +2,6 @@
 <resources>
     <string name="appearance_wallpaper_title">牆紙與背景</string>
     <string name="appearance_wallpaper_summary">淺色模式、背景、主畫面面板顏色、相片與牆紙</string>
-    <string name="appearance_icons_summary">圖示樣式、圖示套件與 Mink 圖示顏色</string>
     <string name="appearance_layout_clock_title">版面與時鐘</string>
     <string name="appearance_layout_clock_summary">日期、狀態列、面板位置與大型顯示器</string>
     <string name="appearance_layout_section">版面與顯示</string>

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="appearance_icons_fonts_title">آئیکنز اور فونٹس</string>
+    <string name="appearance_icons_fonts_summary">آئیکن اسٹائل، فونٹ، متن کا سائز اور لانچر کے رنگ</string>
+    <string name="fonts">فونٹس</string>
+    <string name="font_style">فونٹ اسٹائل</string>
+    <string name="choose_font_style">فونٹ اسٹائل منتخب کریں</string>
+    <string name="font_default">Mink ڈیفالٹ</string>
+    <string name="font_default_description">Mink کا صاف سسٹم فونٹ</string>
+    <string name="font_serif">سیرف</string>
+    <string name="font_serif_description">زیادہ خصوصیت والا روایتی ٹائپ فیس</string>
+    <string name="font_monospace">مونو اسپیس</string>
+    <string name="font_monospace_description">ہر حرف ایک جیسی چوڑائی استعمال کرتا ہے</string>
+    <string name="custom_font">کسٹم فونٹ</string>
+    <string name="custom_font_saved_description">Mink میں محفوظ درآمد شدہ فونٹ</string>
+    <string name="choose_font_file">.ttf یا .otf فائل منتخب کریں</string>
+    <string name="custom_font_file_help">Mink فونٹ کو ایپ کی نجی اسٹوریج میں کاپی کرتا ہے۔ بعد میں اصل فائل منتقل یا حذف کی جا سکتی ہے۔</string>
+    <string name="custom_font_import_failed">Mink یہ فونٹ نہیں پڑھ سکا۔ درست .ttf یا .otf فائل منتخب کریں۔</string>
+    <string name="font_size">فونٹ کا سائز</string>
+    <string name="font_size_description">سسٹم فونٹ کا سائز بدلے بغیر لانچر کا متن ایڈجسٹ کریں۔</string>
+    <string name="font_size_percent">%1$d%%</string>
+    <string name="font_color">فونٹ کا رنگ</string>
+    <string name="font_color_description">خودکار موڈ وال پیپر اور پینل کے مطابق پڑھنے کے قابل رنگ منتخب کرتا ہے۔</string>
+    <string name="custom_font_color">کسٹم فونٹ رنگ</string>
+    <string name="custom_font_color_description">کوئی رنگ منتخب کریں یا چھ ہندسوں کی ہیکس قدر درج کریں۔</string>
+    <string name="use_automatic_font_color">خودکار فونٹ رنگ استعمال کریں</string>
+    <string name="color_white">سفید</string>
+    <string name="color_black">سیاہ</string>
+    <string name="browse_free_fonts">مفت فونٹس دیکھیں</string>
+    <string name="custom_font_download_help">Google Fonts ایک ZIP ڈاؤن لوڈ کرتا ہے۔ پہلے اسے نکالیں، پھر یہاں واپس آ کر Downloads کے نکالے گئے فونٹ فولڈر سے .ttf فائل منتخب کریں۔ فونٹ فائلیں Recents میں نظر نہ آئیں تو فولڈر کھولیں۔</string>
+    <string name="third_party_font_license_notice">فونٹس تیسرے فریق فراہم کرتے ہیں۔ استعمال یا شیئر کرنے سے پہلے فونٹ کا لائسنس چیک کریں۔</string>
+</resources>

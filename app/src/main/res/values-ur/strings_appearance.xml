@@ -2,7 +2,6 @@
 <resources>
     <string name="appearance_wallpaper_title">وال پیپر اور پس منظر</string>
     <string name="appearance_wallpaper_summary">لائٹ موڈ، بیک گراؤنڈ، ہوم پینل کا رنگ، تصاویر اور وال پیپر</string>
-    <string name="appearance_icons_summary">آئیکن اسٹائل، آئیکن پیکس اور Mink آئیکن کا رنگ</string>
     <string name="appearance_layout_clock_title">لے آؤٹ اور گھڑی</string>
     <string name="appearance_layout_clock_summary">تاریخ، اسٹیٹس بار، پینل کی جگہ اور بڑی اسکرینیں</string>
     <string name="appearance_layout_section">لے آؤٹ اور ڈسپلے</string>

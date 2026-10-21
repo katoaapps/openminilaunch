@@ -62,7 +62,8 @@ internal fun BoxScope.HomeFocusPanel(
     )
     val panelOpacity = panelColor.alpha
     val visiblePanelColor = compositeColor(panelColor, launcherBackgroundColor(store))
-    val contentColor = readableContentColor(visiblePanelColor)
+    val contentColor = store.fontAppearance.colorArgb?.let(::Color)
+        ?: readableContentColor(visiblePanelColor)
     val mutedColor = contentColor.copy(alpha = .68f)
     val insetColor = if (contentColor == com.katoaapps.openminilaunch.ui.theme.MinkWhite) {
         com.katoaapps.openminilaunch.ui.theme.MinkBlack.copy(alpha = .16f)

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="appearance_icons_fonts_title">আইকন ও ফন্ট</string>
+    <string name="appearance_icons_fonts_summary">আইকন স্টাইল, ফন্ট, লেখার আকার এবং লঞ্চারের রং</string>
+    <string name="fonts">ফন্ট</string>
+    <string name="font_style">ফন্ট স্টাইল</string>
+    <string name="choose_font_style">ফন্ট স্টাইল বেছে নিন</string>
+    <string name="font_default">Mink ডিফল্ট</string>
+    <string name="font_default_description">Mink-এর পরিষ্কার সিস্টেম ফন্ট</string>
+    <string name="font_serif">সেরিফ</string>
+    <string name="font_serif_description">আরও বৈশিষ্ট্যপূর্ণ একটি ঐতিহ্যবাহী টাইপফেস</string>
+    <string name="font_monospace">মনোস্পেস</string>
+    <string name="font_monospace_description">প্রতিটি অক্ষর একই প্রস্থ ব্যবহার করে</string>
+    <string name="custom_font">কাস্টম ফন্ট</string>
+    <string name="custom_font_saved_description">Mink-এ সংরক্ষিত আমদানি করা ফন্ট</string>
+    <string name="choose_font_file">.ttf বা .otf ফাইল বেছে নিন</string>
+    <string name="custom_font_file_help">Mink ফন্টটি অ্যাপের ব্যক্তিগত স্টোরেজে কপি করে। পরে মূল ফাইলটি সরানো বা মুছে ফেলা যাবে।</string>
+    <string name="custom_font_import_failed">Mink এই ফন্টটি পড়তে পারেনি। একটি বৈধ .ttf বা .otf ফাইল বেছে নিন।</string>
+    <string name="font_size">ফন্টের আকার</string>
+    <string name="font_size_description">সিস্টেম ফন্টের আকার না বদলে লঞ্চারের লেখা সমন্বয় করুন।</string>
+    <string name="font_size_percent">%1$d%%</string>
+    <string name="font_color">ফন্টের রং</string>
+    <string name="font_color_description">স্বয়ংক্রিয় মোড ওয়ালপেপার ও প্যানেলের ভিত্তিতে পাঠযোগ্য রং বেছে নেয়।</string>
+    <string name="custom_font_color">কাস্টম ফন্টের রং</string>
+    <string name="custom_font_color_description">একটি রং বেছে নিন বা ছয় অঙ্কের হেক্স মান লিখুন।</string>
+    <string name="use_automatic_font_color">স্বয়ংক্রিয় ফন্টের রং ব্যবহার করুন</string>
+    <string name="color_white">সাদা</string>
+    <string name="color_black">কালো</string>
+    <string name="browse_free_fonts">বিনামূল্যের ফন্ট দেখুন</string>
+    <string name="custom_font_download_help">Google Fonts একটি ZIP ডাউনলোড করে। প্রথমে এটি এক্সট্র্যাক্ট করুন, তারপর এখানে ফিরে এসে Downloads-এর এক্সট্র্যাক্ট করা ফন্ট ফোল্ডার থেকে .ttf ফাইল বেছে নিন। ফন্ট ফাইল Recents-এ নাও দেখা যেতে পারে।</string>
+    <string name="third_party_font_license_notice">ফন্ট তৃতীয় পক্ষ প্রদান করে। ব্যবহার বা শেয়ার করার আগে ফন্টের লাইসেন্স যাচাই করুন।</string>
+</resources>

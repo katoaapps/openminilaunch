@@ -55,6 +55,7 @@ internal fun IconPackPickerDialog(
     selectionEnabled: Boolean,
     showApplyingFeedback: Boolean,
     applyingStyleLabel: String,
+    minkColorContent: @Composable () -> Unit,
     onMinkIcons: () -> Unit,
     onSystemIcons: () -> Unit,
     onIconPack: (String) -> Unit,
@@ -78,6 +79,7 @@ internal fun IconPackPickerDialog(
                         selectedPackage = selectedPackage,
                         packs = packs,
                         selectionEnabled = selectionEnabled,
+                        minkColorContent = minkColorContent,
                         onMinkIcons = onMinkIcons,
                         onSystemIcons = onSystemIcons,
                         onIconPack = onIconPack,
@@ -95,6 +97,7 @@ private fun IconStyleChoices(
     selectedPackage: String?,
     packs: List<InstalledIconPack>?,
     selectionEnabled: Boolean,
+    minkColorContent: @Composable () -> Unit,
     onMinkIcons: () -> Unit,
     onSystemIcons: () -> Unit,
     onIconPack: (String) -> Unit,
@@ -125,6 +128,9 @@ private fun IconStyleChoices(
                     enabled = selectionEnabled,
                     onClick = onMinkIcons,
                 )
+            }
+            if (selectedSource == IconSource.MINK) {
+                item { minkColorContent() }
             }
             item {
                 BuiltInIconChoice(

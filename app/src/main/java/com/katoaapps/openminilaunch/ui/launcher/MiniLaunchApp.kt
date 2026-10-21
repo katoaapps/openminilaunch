@@ -51,10 +51,10 @@ import com.katoaapps.openminilaunch.platform.DeviceActions
 import com.katoaapps.openminilaunch.platform.isPermanentlyDenied
 import com.katoaapps.openminilaunch.platform.supportsDirectCalls
 import com.katoaapps.openminilaunch.platform.supportsDirectSms
+import com.katoaapps.openminilaunch.ui.launcher.home.HomeEntranceTransition
 import com.katoaapps.openminilaunch.ui.launcher.layout.HOME_PAGE
 import com.katoaapps.openminilaunch.ui.launcher.layout.LauncherHomePager
 import com.katoaapps.openminilaunch.ui.launcher.layout.WIDGET_PAGE
-import com.katoaapps.openminilaunch.ui.launcher.home.HomeEntranceTransition
 import com.katoaapps.openminilaunch.ui.conversations.NotificationHubScreen
 import com.katoaapps.openminilaunch.ui.magic.rememberMagicBoxSessionState
 import com.katoaapps.openminilaunch.ui.onboarding.FeatureUpdateDialog
@@ -70,6 +70,7 @@ import com.katoaapps.openminilaunch.ui.theme.DarkOnSurface
 import com.katoaapps.openminilaunch.ui.theme.DarkPrimary
 import com.katoaapps.openminilaunch.ui.theme.DarkSurface
 import com.katoaapps.openminilaunch.ui.theme.DarkSurfaceContainerLow
+import com.katoaapps.openminilaunch.ui.theme.FontAppearanceTheme
 import com.katoaapps.openminilaunch.ui.theme.LightInk
 import com.katoaapps.openminilaunch.ui.theme.LightPaper
 import com.katoaapps.openminilaunch.ui.theme.MinkTransparent
@@ -87,6 +88,7 @@ internal fun MiniLaunchApp(
     actions: DeviceActions,
     requestHomeRole: () -> Unit,
     homeRequestToken: Int,
+    setSettingsVisibleInRecents: (Boolean) -> Unit,
 ) {
     var screen by rememberSaveable { mutableStateOf(Screen.HOME) }
     var settingsDestination by rememberSaveable { mutableStateOf(SettingsDestination.OVERVIEW) }
@@ -105,6 +107,9 @@ internal fun MiniLaunchApp(
     var homePageRequestToken by remember { mutableIntStateOf(0) }
     val launcherPagerState = rememberPagerState(initialPage = HOME_PAGE, pageCount = { WIDGET_PAGE + 1 })
     val twoPanelState = rememberLazyListState(initialFirstVisibleItemIndex = 1)
+    LaunchedEffect(screen) {
+        setSettingsVisibleInRecents(screen == Screen.SETTINGS)
+    }
     LaunchedEffect(homeRequestToken) {
         if (homeRequestToken > 0) {
             screen = Screen.HOME
@@ -294,48 +299,53 @@ internal fun MiniLaunchApp(
                         onAnimationFinished = { animateHomeEntrance = false },
                         modifier = Modifier.fillMaxSize(),
                     ) {
-                        LauncherHomePager(
+                        FontAppearanceTheme(store) {
+                            LauncherHomePager(
+                                store = store,
+                                actions = actions,
+                                pagerState = launcherPagerState,
+                                twoPanelState = twoPanelState,
+                                focusedPage = focusedLauncherPage,
+                                onFocusedPageChange = { focusedLauncherPage = it },
+                                onTwoPanelActiveChange = { twoPanelActive = it },
+                                homePageRequestToken = homePageRequestToken,
+                                keyboardInputEnabled =
+                                    (twoPanelActive || launcherPagerState.currentPage == HOME_PAGE) &&
+                                        !showTutorial && !showUpdateNotice && !showShortcutSetup,
+                                homeRequestToken = homeRequestToken,
+                                magicBoxSessionState = homeMagicBoxSessionState,
+                                openSettings = { destination ->
+                                    settingsDestination = destination
+                                    screen = Screen.SETTINGS
+                                },
+                                openTodos = { screen = Screen.TODOS },
+                                openVCardSettings = {
+                                    openVirtualContactCard(context)
+                                },
+                                openHub = { screen = Screen.HUB },
+                                modifier = Modifier.fillMaxSize(),
+                            )
+                        }
+                    }
+                    Screen.SETTINGS -> FontAppearanceTheme(store, applyFontColor = true) {
+                        SettingsScreen(
                             store = store,
                             actions = actions,
-                            pagerState = launcherPagerState,
-                            twoPanelState = twoPanelState,
-                            focusedPage = focusedLauncherPage,
-                            onFocusedPageChange = { focusedLauncherPage = it },
-                            onTwoPanelActiveChange = { twoPanelActive = it },
-                            homePageRequestToken = homePageRequestToken,
-                            keyboardInputEnabled = (twoPanelActive || launcherPagerState.currentPage == HOME_PAGE) &&
-                                !showTutorial && !showUpdateNotice && !showShortcutSetup,
-                            homeRequestToken = homeRequestToken,
-                            magicBoxSessionState = homeMagicBoxSessionState,
-                            openSettings = { destination ->
-                                settingsDestination = destination
-                                screen = Screen.SETTINGS
+                            requestHomeRole = requestHomeRole,
+                            onRepeatTutorial = { tutorialRun++; showTutorial = true },
+                            initialDestination = settingsDestination,
+                            onIconStyleApplied = {
+                                settingsDestination = SettingsDestination.OVERVIEW
+                                animateHomeEntrance = true
+                                screen = Screen.HOME
                             },
                             openTodos = { screen = Screen.TODOS },
-                            openVCardSettings = {
-                                openVirtualContactCard(context)
+                            goBack = {
+                                settingsDestination = SettingsDestination.OVERVIEW
+                                screen = Screen.HOME
                             },
-                            openHub = { screen = Screen.HUB },
-                            modifier = Modifier.fillMaxSize(),
                         )
                     }
-                    Screen.SETTINGS -> SettingsScreen(
-                        store = store,
-                        actions = actions,
-                        requestHomeRole = requestHomeRole,
-                        onRepeatTutorial = { tutorialRun++; showTutorial = true },
-                        initialDestination = settingsDestination,
-                        onIconStyleApplied = {
-                            settingsDestination = SettingsDestination.OVERVIEW
-                            animateHomeEntrance = true
-                            screen = Screen.HOME
-                        },
-                        openTodos = { screen = Screen.TODOS },
-                        goBack = {
-                            settingsDestination = SettingsDestination.OVERVIEW
-                            screen = Screen.HOME
-                        },
-                    )
                     Screen.TODOS -> TodosScreen(store, actions) { screen = Screen.HOME }
                     Screen.HUB -> NotificationHubScreen(store, actions) { screen = Screen.HOME }
                 }

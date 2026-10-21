@@ -2,7 +2,6 @@
 <resources>
     <string name="appearance_wallpaper_title">Обои и фон</string>
     <string name="appearance_wallpaper_summary">Светлая тема, фон, цвет панели, фотографии и обои</string>
-    <string name="appearance_icons_summary">Стиль, наборы и цвет значков Mink</string>
     <string name="appearance_layout_clock_title">Макет и часы</string>
     <string name="appearance_layout_clock_summary">Дата, строка состояния, положение панели и большие экраны</string>
     <string name="appearance_layout_section">МАКЕТ И ЭКРАН</string>

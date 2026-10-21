@@ -2,6 +2,7 @@ package com.katoaapps.openminilaunch.ui.launcher
 
 import android.annotation.SuppressLint
 import android.app.Activity
+import android.app.ActivityManager
 import android.app.role.RoleManager
 import android.appwidget.AppWidgetHost
 import android.content.Intent
@@ -84,7 +85,23 @@ class MainActivity : ComponentActivity(), MagicHardwareHotkeyHost {
                 store.maybeEnableTwoPanelForDisplay(this@MainActivity)
                 applyLargeDisplayOrientation(this@MainActivity, store.twoPanelModeForLargeDisplays)
             }
-            MiniLaunchApp(store, actions, ::requestHomeRole, homeRequestToken)
+            MiniLaunchApp(
+                store = store,
+                actions = actions,
+                requestHomeRole = ::requestHomeRole,
+                homeRequestToken = homeRequestToken,
+                setSettingsVisibleInRecents = ::setSettingsVisibleInRecents,
+            )
+        }
+    }
+
+    @Suppress("DEPRECATION")
+    private fun setSettingsVisibleInRecents(visible: Boolean) {
+        runCatching {
+            val currentTaskId = taskId
+            getSystemService(ActivityManager::class.java).appTasks
+                .firstOrNull { appTask -> appTask.taskInfo.id == currentTaskId }
+                ?.setExcludeFromRecents(!visible)
         }
     }
 

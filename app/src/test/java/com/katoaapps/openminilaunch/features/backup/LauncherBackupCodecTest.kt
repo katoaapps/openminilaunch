@@ -1,6 +1,8 @@
 package com.katoaapps.openminilaunch.features.backup
 
 import com.katoaapps.openminilaunch.model.IconAppearance
+import com.katoaapps.openminilaunch.model.FontAppearance
+import com.katoaapps.openminilaunch.model.FontSource
 import com.katoaapps.openminilaunch.model.MinkAppPauseMode
 import com.katoaapps.openminilaunch.model.PinShortcutRequestPresentation
 import com.katoaapps.openminilaunch.model.ThemePreference
@@ -78,6 +80,35 @@ class LauncherBackupCodecTest {
         json.getJSONObject("settings").getJSONObject("appearance").remove("appBackgroundPresetId")
 
         assertNull(LauncherBackupCodec.decode(json.toString()).settings.appBackgroundPresetId)
+    }
+
+    @Test fun fontAppearanceSurvivesPortableBackupRoundTrip() {
+        val original = sampleBackup(twoPanelMode = true).let { sample ->
+            sample.copy(
+                settings = sample.settings.copy(
+                    fontAppearance = FontAppearance(
+                        source = FontSource.SERIF,
+                        sizeScale = 1.3f,
+                        colorArgb = 0xFF123456.toInt(),
+                    ),
+                ),
+            )
+        }
+
+        val restored = LauncherBackupCodec.decode(LauncherBackupCodec.encode(original))
+
+        assertEquals(original.settings.fontAppearance, restored.settings.fontAppearance)
+    }
+
+    @Test fun olderBackupWithoutFontAppearanceUsesDefaults() {
+        val json = JSONObject(LauncherBackupCodec.encode(sampleBackup(twoPanelMode = true)))
+        val appearance = json.getJSONObject("settings").getJSONObject("appearance")
+        appearance.remove("fontSource")
+        appearance.remove("fontSizeScale")
+        appearance.remove("fontColorArgb")
+        appearance.remove("customFontName")
+
+        assertEquals(FontAppearance(), LauncherBackupCodec.decode(json.toString()).settings.fontAppearance)
     }
 
     @Test fun interimSchemaFourBackupStillImports() {

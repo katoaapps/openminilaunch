@@ -2,7 +2,6 @@
 <resources>
     <string name="appearance_wallpaper_title">वॉलपेपर और बैकग्राउंड</string>
     <string name="appearance_wallpaper_summary">लाइट मोड, बैकग्राउंड, होम पैनल का रंग, तस्वीरें और वॉलपेपर</string>
-    <string name="appearance_icons_summary">आइकन शैली, आइकन पैक और Mink आइकन का रंग</string>
     <string name="appearance_layout_clock_title">लेआउट और घड़ी</string>
     <string name="appearance_layout_clock_summary">तारीख, स्टेटस बार, पैनल की स्थिति और बड़ी स्क्रीन</string>
     <string name="appearance_layout_section">लेआउट और डिस्प्ले</string>

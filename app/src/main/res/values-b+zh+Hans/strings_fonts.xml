@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="appearance_icons_fonts_title">图标和字体</string>
+    <string name="appearance_icons_fonts_summary">图标样式、字体、文字大小和启动器颜色</string>
+    <string name="fonts">字体</string>
+    <string name="font_style">字体样式</string>
+    <string name="choose_font_style">选择字体样式</string>
+    <string name="font_default">Mink 默认</string>
+    <string name="font_default_description">Mink 使用的清晰系统字体</string>
+    <string name="font_serif">衬线字体</string>
+    <string name="font_serif_description">更具特色的传统字体</string>
+    <string name="font_monospace">等宽字体</string>
+    <string name="font_monospace_description">每个字符使用相同宽度</string>
+    <string name="custom_font">自定义字体</string>
+    <string name="custom_font_saved_description">Mink 保存的导入字体</string>
+    <string name="choose_font_file">选择 .ttf 或 .otf 文件</string>
+    <string name="custom_font_file_help">Mink 会将字体复制到应用专用存储中。之后可以移动或删除原始文件。</string>
+    <string name="custom_font_import_failed">Mink 无法读取该字体。请选择有效的 .ttf 或 .otf 文件。</string>
+    <string name="font_size">字体大小</string>
+    <string name="font_size_description">调整启动器文字，而不更改系统字体大小。</string>
+    <string name="font_size_percent">%1$d%%</string>
+    <string name="font_color">字体颜色</string>
+    <string name="font_color_description">自动模式会根据壁纸和面板颜色选择易读文字。</string>
+    <string name="custom_font_color">自定义字体颜色</string>
+    <string name="custom_font_color_description">选择任意颜色或输入六位十六进制值。</string>
+    <string name="use_automatic_font_color">使用自动字体颜色</string>
+    <string name="color_white">白色</string>
+    <string name="color_black">黑色</string>
+    <string name="browse_free_fonts">浏览免费字体</string>
+    <string name="custom_font_download_help">Google Fonts 会下载 ZIP 文件。请先解压，然后返回此处，从“下载”和解压后的字体文件夹中选择 .ttf 文件。字体文件可能不会显示在“最近”中。</string>
+    <string name="third_party_font_license_notice">字体由第三方提供。使用或分享前请查看字体许可。</string>
+</resources>

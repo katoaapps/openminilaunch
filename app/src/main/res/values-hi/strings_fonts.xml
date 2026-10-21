@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="appearance_icons_fonts_title">आइकन और फ़ॉन्ट</string>
+    <string name="appearance_icons_fonts_summary">आइकन शैली, फ़ॉन्ट, टेक्स्ट आकार और लॉन्चर के रंग</string>
+    <string name="fonts">फ़ॉन्ट</string>
+    <string name="font_style">फ़ॉन्ट शैली</string>
+    <string name="choose_font_style">फ़ॉन्ट शैली चुनें</string>
+    <string name="font_default">Mink डिफ़ॉल्ट</string>
+    <string name="font_default_description">Mink का साफ़ सिस्टम फ़ॉन्ट</string>
+    <string name="font_serif">सेरिफ़</string>
+    <string name="font_serif_description">अधिक व्यक्तित्व वाला पारंपरिक टाइपफ़ेस</string>
+    <string name="font_monospace">मोनोस्पेस</string>
+    <string name="font_monospace_description">हर अक्षर समान चौड़ाई का होता है</string>
+    <string name="custom_font">कस्टम फ़ॉन्ट</string>
+    <string name="custom_font_saved_description">Mink में सहेजा गया आयातित फ़ॉन्ट</string>
+    <string name="choose_font_file">.ttf या .otf फ़ाइल चुनें</string>
+    <string name="custom_font_file_help">Mink फ़ॉन्ट को ऐप के निजी स्टोरेज में कॉपी करता है। बाद में मूल फ़ाइल हटाई या स्थानांतरित की जा सकती है।</string>
+    <string name="custom_font_import_failed">Mink यह फ़ॉन्ट नहीं पढ़ सका। मान्य .ttf या .otf फ़ाइल चुनें।</string>
+    <string name="font_size">फ़ॉन्ट आकार</string>
+    <string name="font_size_description">सिस्टम फ़ॉन्ट आकार बदले बिना लॉन्चर टेक्स्ट समायोजित करें।</string>
+    <string name="font_size_percent">%1$d%%</string>
+    <string name="font_color">फ़ॉन्ट का रंग</string>
+    <string name="font_color_description">ऑटोमैटिक वॉलपेपर और पैनल के आधार पर पढ़ने योग्य रंग चुनता है।</string>
+    <string name="custom_font_color">कस्टम फ़ॉन्ट रंग</string>
+    <string name="custom_font_color_description">कोई रंग चुनें या छह अंकों का हेक्स मान दर्ज करें।</string>
+    <string name="use_automatic_font_color">ऑटोमैटिक फ़ॉन्ट रंग इस्तेमाल करें</string>
+    <string name="color_white">सफ़ेद</string>
+    <string name="color_black">काला</string>
+    <string name="browse_free_fonts">मुफ़्त फ़ॉन्ट देखें</string>
+    <string name="custom_font_download_help">Google Fonts एक ZIP डाउनलोड करता है। पहले उसे एक्सट्रैक्ट करें, फिर यहाँ लौटकर Downloads के एक्सट्रैक्ट किए गए फ़ॉन्ट फ़ोल्डर से .ttf फ़ाइल चुनें। फ़ॉन्ट फ़ाइलें Recents में न दिखें तो फ़ोल्डर पर जाएँ।</string>
+    <string name="third_party_font_license_notice">फ़ॉन्ट तृतीय पक्षों द्वारा दिए जाते हैं। उपयोग या साझा करने से पहले फ़ॉन्ट का लाइसेंस जाँचें।</string>
+</resources>

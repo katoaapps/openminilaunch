@@ -76,4 +76,5 @@ internal fun launcherBackgroundColor(store: LauncherStore, header: Boolean = fal
 
 @Composable
 internal fun launcherBackgroundContentColor(store: LauncherStore, header: Boolean = false): Color =
-    readableContentColor(launcherBackgroundColor(store, header))
+    store.fontAppearance.colorArgb?.let(::Color)
+        ?: readableContentColor(launcherBackgroundColor(store, header))

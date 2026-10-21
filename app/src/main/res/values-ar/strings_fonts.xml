@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="appearance_icons_fonts_title">الأيقونات والخطوط</string>
+    <string name="appearance_icons_fonts_summary">نمط الأيقونات والخط وحجم النص وألوان المشغّل</string>
+    <string name="fonts">الخطوط</string>
+    <string name="font_style">نمط الخط</string>
+    <string name="choose_font_style">اختيار نمط الخط</string>
+    <string name="font_default">خط Mink الافتراضي</string>
+    <string name="font_default_description">خط النظام الواضح الذي يستخدمه Mink</string>
+    <string name="font_serif">بزخارف</string>
+    <string name="font_serif_description">خط تقليدي بطابع أوضح</string>
+    <string name="font_monospace">أحادي المسافة</string>
+    <string name="font_monospace_description">كل حرف يستخدم العرض نفسه</string>
+    <string name="custom_font">خط مخصص</string>
+    <string name="custom_font_saved_description">خط مستورد محفوظ بواسطة Mink</string>
+    <string name="choose_font_file">اختيار ملف .ttf أو .otf</string>
+    <string name="custom_font_file_help">ينسخ Mink الخط إلى مساحة التخزين الخاصة بالتطبيق. يمكن نقل الملف الأصلي أو حذفه بعد ذلك.</string>
+    <string name="custom_font_import_failed">تعذر على Mink قراءة هذا الخط. اختر ملف .ttf أو .otf صالحًا.</string>
+    <string name="font_size">حجم الخط</string>
+    <string name="font_size_description">اضبط نص المشغّل من دون تغيير حجم خط النظام.</string>
+    <string name="font_size_percent">%1$d%%</string>
+    <string name="font_color">لون الخط</string>
+    <string name="font_color_description">يختار الوضع التلقائي نصًا مقروءًا وفقًا للخلفية وألوان اللوحة.</string>
+    <string name="custom_font_color">لون خط مخصص</string>
+    <string name="custom_font_color_description">اختر لونًا أو أدخل قيمته السداسية المكونة من ستة أرقام.</string>
+    <string name="use_automatic_font_color">استخدام لون الخط التلقائي</string>
+    <string name="color_white">أبيض</string>
+    <string name="color_black">أسود</string>
+    <string name="browse_free_fonts">تصفّح خطوطًا مجانية</string>
+    <string name="custom_font_download_help">تنزّل Google Fonts ملف ZIP. فك ضغطه أولًا، ثم ارجع إلى هنا واختر ملف .ttf من التنزيلات ومجلد الخط المستخرج. قد لا تظهر ملفات الخطوط في العناصر الأخيرة.</string>
+    <string name="third_party_font_license_notice">الخطوط مقدمة من جهات خارجية. تحقق من ترخيص الخط قبل استخدامه أو مشاركته.</string>
+</resources>

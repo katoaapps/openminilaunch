@@ -58,10 +58,6 @@ internal fun IconPackAppearanceSettings(
         icon = Icons.Default.Palette,
         onClick = { showPicker = true },
     )
-    if (store.iconAppearance.source == IconSource.MINK) {
-        MinkIconColorSetting(store)
-    }
-
     if (showPicker) {
         fun selectIconStyle(updateSelection: () -> Unit) {
             if (selectionInProgress) return
@@ -89,6 +85,7 @@ internal fun IconPackAppearanceSettings(
             selectionEnabled = !selectionInProgress,
             showApplyingFeedback = showApplyingFeedback,
             applyingStyleLabel = selectionLabel,
+            minkColorContent = { MinkIconColorSetting(store) },
             onMinkIcons = { selectIconStyle(store::useMinkIcons) },
             onSystemIcons = { selectIconStyle(store::useSystemIcons) },
             onIconPack = { packageName -> selectIconStyle { store.useIconPack(packageName) } },

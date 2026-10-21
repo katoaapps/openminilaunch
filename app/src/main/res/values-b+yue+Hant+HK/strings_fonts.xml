@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="appearance_icons_fonts_title">圖示同字型</string>
+    <string name="appearance_icons_fonts_summary">圖示樣式、字型、文字大小同啟動器顏色</string>
+    <string name="fonts">字型</string>
+    <string name="font_style">字型樣式</string>
+    <string name="choose_font_style">揀選字型樣式</string>
+    <string name="font_default">Mink 預設</string>
+    <string name="font_default_description">Mink 使用嘅清晰系統字型</string>
+    <string name="font_serif">襯線字型</string>
+    <string name="font_serif_description">更有特色嘅傳統字型</string>
+    <string name="font_monospace">等寬字型</string>
+    <string name="font_monospace_description">每個字元使用相同闊度</string>
+    <string name="custom_font">自訂字型</string>
+    <string name="custom_font_saved_description">Mink 儲存嘅匯入字型</string>
+    <string name="choose_font_file">揀選 .ttf 或 .otf 檔案</string>
+    <string name="custom_font_file_help">Mink 會將字型複製到應用程式私人儲存空間。之後可以移動或刪除原始檔案。</string>
+    <string name="custom_font_import_failed">Mink 無法讀取該字型。請揀選有效嘅 .ttf 或 .otf 檔案。</string>
+    <string name="font_size">字型大小</string>
+    <string name="font_size_description">調整啟動器文字，而唔更改系統字型大小。</string>
+    <string name="font_size_percent">%1$d%%</string>
+    <string name="font_color">字型顏色</string>
+    <string name="font_color_description">自動模式會按背景圖片同面板顏色揀選易讀文字。</string>
+    <string name="custom_font_color">自訂字型顏色</string>
+    <string name="custom_font_color_description">揀選任何顏色或輸入六位十六進制值。</string>
+    <string name="use_automatic_font_color">使用自動字型顏色</string>
+    <string name="color_white">白色</string>
+    <string name="color_black">黑色</string>
+    <string name="browse_free_fonts">瀏覽免費字型</string>
+    <string name="custom_font_download_help">Google Fonts 會下載 ZIP。請先解壓，然後返嚟呢度，喺「下載」同解壓後嘅字型資料夾揀選 .ttf 檔案。字型檔案未必會喺「最近使用」出現。</string>
+    <string name="third_party_font_license_notice">字型由第三方提供。使用或分享前請查看字型授權。</string>
+</resources>

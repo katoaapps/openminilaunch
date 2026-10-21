@@ -61,7 +61,7 @@ internal fun SettingsDestinationContent(
             onIconStyleApplied = onIconStyleApplied,
             goBack = onNavigateBack,
         )
-        SettingsDestination.APPEARANCE_ICONS -> IconSettingsPage(
+        SettingsDestination.APPEARANCE_ICONS -> IconsAndFontsSettingsPage(
             store = store,
             onIconStyleApplied = onIconStyleApplied,
             goBack = onNavigateBack,

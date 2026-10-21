@@ -2,6 +2,7 @@ package com.katoaapps.openminilaunch.features.backup
 
 import com.katoaapps.openminilaunch.data.LauncherStore
 import com.katoaapps.openminilaunch.model.IconSource
+import com.katoaapps.openminilaunch.model.FontSource
 import com.katoaapps.openminilaunch.features.profile.ProfileState
 
 internal fun LauncherStore.createPortableBackup(appVersion: String): LauncherBackup {
@@ -47,6 +48,7 @@ internal fun LauncherStore.createPortableBackup(appVersion: String): LauncherBac
             githubUpdateChecksEnabled = githubUpdateChecksEnabled,
             pinShortcutRequestPresentation = pinShortcutRequestPresentation,
             minkPadPreferences = minkPadPreferences.state.value,
+            fontAppearance = fontAppearance,
         ),
         todos = savedTodosForBackup,
         profile = profile?.card?.copy(hasPortrait = false),
@@ -89,6 +91,10 @@ internal fun LauncherStore.restorePortableBackup(backup: LauncherBackup) {
             ?: useMinkIcons()
     }
     setMinkIconColor(settings.iconAppearance.minkIconColorArgb)
+    val restoredFontSource = settings.fontAppearance.source
+    useFont(if (restoredFontSource == FontSource.CUSTOM && !hasCustomFont) FontSource.DEFAULT else restoredFontSource)
+    setFontSizeScale(settings.fontAppearance.sizeScale)
+    setFontColor(settings.fontAppearance.colorArgb)
 
     updateOpenSoftwareKeyboardOnHome(settings.openSoftwareKeyboardOnHome)
     updateIncludeAppShortcutsInDiscovery(settings.includeAppShortcutsInDiscovery)

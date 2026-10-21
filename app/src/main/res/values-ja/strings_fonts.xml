@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="appearance_icons_fonts_title">アイコンとフォント</string>
+    <string name="appearance_icons_fonts_summary">アイコン、フォント、文字サイズ、ランチャーの色</string>
+    <string name="fonts">フォント</string>
+    <string name="font_style">フォントスタイル</string>
+    <string name="choose_font_style">フォントスタイルを選択</string>
+    <string name="font_default">Mink 標準</string>
+    <string name="font_default_description">Mink が使用する見やすいシステムフォント</string>
+    <string name="font_serif">セリフ</string>
+    <string name="font_serif_description">個性のある伝統的な書体</string>
+    <string name="font_monospace">等幅</string>
+    <string name="font_monospace_description">すべての文字が同じ幅になります</string>
+    <string name="custom_font">カスタムフォント</string>
+    <string name="custom_font_saved_description">Mink に保存されたインポート済みフォント</string>
+    <string name="choose_font_file">.ttf または .otf ファイルを選択</string>
+    <string name="custom_font_file_help">Mink はフォントをアプリ専用ストレージにコピーします。元のファイルは後で移動または削除できます。</string>
+    <string name="custom_font_import_failed">このフォントを読み込めませんでした。有効な .ttf または .otf ファイルを選択してください。</string>
+    <string name="font_size">フォントサイズ</string>
+    <string name="font_size_description">システムのフォントサイズを変えずにランチャーの文字を調整します。</string>
+    <string name="font_size_percent">%1$d%%</string>
+    <string name="font_color">フォントの色</string>
+    <string name="font_color_description">自動では壁紙とパネルに合わせて読みやすい色を選びます。</string>
+    <string name="custom_font_color">カスタムフォント色</string>
+    <string name="custom_font_color_description">色を選ぶか、6桁の16進数を入力します。</string>
+    <string name="use_automatic_font_color">フォント色を自動にする</string>
+    <string name="color_white">白</string>
+    <string name="color_black">黒</string>
+    <string name="browse_free_fonts">無料フォントを探す</string>
+    <string name="custom_font_download_help">Google Fonts は ZIP をダウンロードします。先に展開し、ここに戻って「ダウンロード」内の展開したフォントフォルダーから .ttf ファイルを選択してください。フォントは「最近使った項目」に表示されない場合があります。</string>
+    <string name="third_party_font_license_notice">フォントは第三者によって提供されています。使用または共有する前にライセンスを確認してください。</string>
+</resources>

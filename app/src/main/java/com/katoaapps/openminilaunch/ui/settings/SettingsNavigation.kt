@@ -43,6 +43,19 @@ internal fun pushSettingsRoute(
     route: SettingsRoute,
 ): List<SettingsRoute> = if (stack.lastOrNull() == route) stack else stack + route
 
+internal fun selectSettingsSection(
+    stack: List<SettingsRoute>,
+    section: SettingsSection,
+): List<SettingsRoute> {
+    val sectionRoot = SettingsRoute(section, SettingsDestination.OVERVIEW)
+    val existingRootIndex = stack.indexOfLast { it == sectionRoot }
+    return if (existingRootIndex >= 0) {
+        stack.take(existingRootIndex + 1)
+    } else {
+        stack + sectionRoot
+    }
+}
+
 internal fun popSettingsRoute(stack: List<SettingsRoute>): List<SettingsRoute> =
     if (stack.size > 1) stack.dropLast(1) else stack
 

@@ -1,6 +1,7 @@
 package com.katoaapps.openminilaunch.features.backup
 
 import com.katoaapps.openminilaunch.model.IconAppearance
+import com.katoaapps.openminilaunch.model.FontAppearance
 import com.katoaapps.openminilaunch.model.MinkAppPauseMode
 import com.katoaapps.openminilaunch.model.PinShortcutRequestPresentation
 import com.katoaapps.openminilaunch.model.Shortcut
@@ -70,4 +71,5 @@ internal data class LauncherBackupSettings(
     val githubUpdateChecksEnabled: Boolean,
     val pinShortcutRequestPresentation: PinShortcutRequestPresentation,
     val minkPadPreferences: com.katoaapps.openminilaunch.features.minkpad.MinkPadPreferences? = null,
+    val fontAppearance: FontAppearance = FontAppearance(),
 )

@@ -2,6 +2,9 @@ package com.katoaapps.openminilaunch.features.backup
 
 import com.katoaapps.openminilaunch.model.IconAppearance
 import com.katoaapps.openminilaunch.model.IconSource
+import com.katoaapps.openminilaunch.model.FontAppearance
+import com.katoaapps.openminilaunch.model.FontSource
+import com.katoaapps.openminilaunch.model.normalizeFontSizeScale
 import com.katoaapps.openminilaunch.model.MAX_SOCIAL_GOAL_HOURS
 import com.katoaapps.openminilaunch.model.MIN_SOCIAL_GOAL_HOURS
 import com.katoaapps.openminilaunch.model.MinkAppPauseMode
@@ -111,6 +114,10 @@ internal object LauncherBackupCodec {
             put("iconSource", settings.iconAppearance.source.name)
             putNullable("iconPackPackage", settings.iconAppearance.iconPackPackage)
             putNullable("minkIconColorArgb", settings.iconAppearance.minkIconColorArgb)
+            put("fontSource", settings.fontAppearance.source.name)
+            put("fontSizeScale", settings.fontAppearance.sizeScale.toDouble())
+            putNullable("fontColorArgb", settings.fontAppearance.colorArgb)
+            putNullable("customFontName", settings.fontAppearance.customFontName)
         })
         put("magicBox", JSONObject().apply {
             put("openSoftwareKeyboardOnHome", settings.openSoftwareKeyboardOnHome)
@@ -176,6 +183,14 @@ internal object LauncherBackupCodec {
                 source = appearance.enumValue("iconSource", IconSource.MINK),
                 iconPackPackage = appearance.optNullableString("iconPackPackage")?.safePackage(),
                 minkIconColorArgb = appearance.optNullableInt("minkIconColorArgb"),
+            ),
+            fontAppearance = FontAppearance(
+                source = appearance.enumValue("fontSource", FontSource.DEFAULT),
+                sizeScale = normalizeFontSizeScale(
+                    appearance.optDouble("fontSizeScale", 1.0).toFloat(),
+                ),
+                colorArgb = appearance.optNullableInt("fontColorArgb"),
+                customFontName = appearance.optNullableString("customFontName")?.safeText(120),
             ),
             openSoftwareKeyboardOnHome = magicBox.optBoolean("openSoftwareKeyboardOnHome", true),
             includeAppShortcutsInDiscovery = magicBox.optBoolean("includeAppShortcutsInDiscovery", false),

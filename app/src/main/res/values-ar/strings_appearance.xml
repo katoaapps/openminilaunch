@@ -2,7 +2,6 @@
 <resources>
     <string name="appearance_wallpaper_title">ورق الحائط والخلفية</string>
     <string name="appearance_wallpaper_summary">الوضع الفاتح والخلفية ولون لوحة الشاشة الرئيسية والصور والخلفيات</string>
-    <string name="appearance_icons_summary">نمط الأيقونات وحزم الأيقونات ولون أيقونات Mink</string>
     <string name="appearance_layout_clock_title">التخطيط والساعة</string>
     <string name="appearance_layout_clock_summary">التاريخ وشريط الحالة وموضع اللوحة والشاشات الكبيرة</string>
     <string name="appearance_layout_section">التخطيط والعرض</string>

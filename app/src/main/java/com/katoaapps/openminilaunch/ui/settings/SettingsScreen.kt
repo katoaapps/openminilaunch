@@ -215,10 +215,10 @@ internal fun SettingsScreen(
     }
 
     fun selectSection(next: SettingsSection) {
-        val nextRoute = SettingsRoute(next, SettingsDestination.OVERVIEW)
-        if (currentRoute == nextRoute) return
-        navigatingBack = false
-        settingsStack = pushSettingsRoute(settingsStack, nextRoute)
+        val updatedStack = selectSettingsSection(settingsStack, next)
+        if (updatedStack == settingsStack) return
+        navigatingBack = updatedStack.size < settingsStack.size
+        settingsStack = updatedStack
     }
 
     fun navigateBack() {

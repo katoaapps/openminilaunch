@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="appearance_icons_fonts_title">Icônes et polices</string>
+    <string name="appearance_icons_fonts_summary">Style des icônes, police, taille du texte et couleurs du lanceur</string>
+    <string name="fonts">POLICES</string>
+    <string name="font_style">Style de police</string>
+    <string name="choose_font_style">Choisir un style de police</string>
+    <string name="font_default">Police Mink</string>
+    <string name="font_default_description">La police système claire utilisée par Mink</string>
+    <string name="font_serif">Avec empattements</string>
+    <string name="font_serif_description">Une police traditionnelle avec plus de caractère</string>
+    <string name="font_monospace">Chasse fixe</string>
+    <string name="font_monospace_description">Chaque caractère utilise la même largeur</string>
+    <string name="custom_font">Police personnalisée</string>
+    <string name="custom_font_saved_description">Police importée enregistrée par Mink</string>
+    <string name="choose_font_file">Choisir un fichier .ttf ou .otf</string>
+    <string name="custom_font_file_help">Mink copie la police dans le stockage privé de l’application. Le fichier original peut ensuite être déplacé ou supprimé.</string>
+    <string name="custom_font_import_failed">Mink n’a pas pu lire cette police. Choisissez un fichier .ttf ou .otf valide.</string>
+    <string name="font_size">Taille de police</string>
+    <string name="font_size_description">Ajustez le texte du lanceur sans modifier la taille de police du système.</string>
+    <string name="font_size_percent">%1$d%%</string>
+    <string name="font_color">Couleur de police</string>
+    <string name="font_color_description">Le mode automatique choisit un texte lisible selon le fond et le panneau.</string>
+    <string name="custom_font_color">Couleur de police personnalisée</string>
+    <string name="custom_font_color_description">Choisissez une couleur ou saisissez sa valeur hexadécimale à six chiffres.</string>
+    <string name="use_automatic_font_color">Utiliser la couleur de police automatique</string>
+    <string name="color_white">Blanc</string>
+    <string name="color_black">Noir</string>
+    <string name="browse_free_fonts">Parcourir les polices gratuites</string>
+    <string name="custom_font_download_help">Google Fonts télécharge un fichier ZIP. Extrayez-le, puis revenez ici et choisissez un fichier .ttf dans Téléchargements et le dossier extrait. Les polices peuvent ne pas apparaître dans Récents.</string>
+    <string name="third_party_font_license_notice">Les polices sont fournies par des tiers. Vérifiez leur licence avant de les utiliser ou de les partager.</string>
+</resources>

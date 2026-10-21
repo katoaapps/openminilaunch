@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="appearance_icons_fonts_title">Ícones e fontes</string>
+    <string name="appearance_icons_fonts_summary">Estilo dos ícones, fonte, tamanho do texto e cores do launcher</string>
+    <string name="fonts">FONTES</string>
+    <string name="font_style">Estilo da fonte</string>
+    <string name="choose_font_style">Escolher estilo da fonte</string>
+    <string name="font_default">Padrão do Mink</string>
+    <string name="font_default_description">A fonte clara do sistema usada pelo Mink</string>
+    <string name="font_serif">Serifada</string>
+    <string name="font_serif_description">Uma fonte tradicional com mais personalidade</string>
+    <string name="font_monospace">Monoespaçada</string>
+    <string name="font_monospace_description">Cada caractere usa a mesma largura</string>
+    <string name="custom_font">Fonte personalizada</string>
+    <string name="custom_font_saved_description">Fonte importada salva pelo Mink</string>
+    <string name="choose_font_file">Escolher arquivo .ttf ou .otf</string>
+    <string name="custom_font_file_help">O Mink copia a fonte para o armazenamento privado do app. Depois, o arquivo original pode ser movido ou excluído.</string>
+    <string name="custom_font_import_failed">O Mink não conseguiu ler essa fonte. Escolha um arquivo .ttf ou .otf válido.</string>
+    <string name="font_size">Tamanho da fonte</string>
+    <string name="font_size_description">Ajuste o texto do launcher sem alterar o tamanho da fonte do sistema.</string>
+    <string name="font_size_percent">%1$d%%</string>
+    <string name="font_color">Cor da fonte</string>
+    <string name="font_color_description">O modo automático escolhe texto legível com base no papel de parede e no painel.</string>
+    <string name="custom_font_color">Cor de fonte personalizada</string>
+    <string name="custom_font_color_description">Escolha uma cor ou digite o valor hexadecimal de seis dígitos.</string>
+    <string name="use_automatic_font_color">Usar cor de fonte automática</string>
+    <string name="color_white">Branco</string>
+    <string name="color_black">Preto</string>
+    <string name="browse_free_fonts">Explorar fontes gratuitas</string>
+    <string name="custom_font_download_help">O Google Fonts baixa um arquivo ZIP. Extraia-o primeiro, volte aqui e escolha um arquivo .ttf em Downloads e na pasta extraída. Os arquivos de fonte podem não aparecer em Recentes.</string>
+    <string name="third_party_font_license_notice">As fontes são fornecidas por terceiros. Verifique a licença antes de usar ou compartilhar.</string>
+</resources>

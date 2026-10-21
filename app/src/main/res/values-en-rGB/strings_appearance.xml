@@ -2,7 +2,6 @@
 <resources>
     <string name="appearance_wallpaper_title">Wallpaper &amp; background</string>
     <string name="appearance_wallpaper_summary">Light mode, background, pill colour, photos and wallpapers</string>
-    <string name="appearance_icons_summary">Icon style, icon packs, and Mink icon colour</string>
     <string name="appearance_layout_clock_title">Layout &amp; clock</string>
     <string name="appearance_layout_clock_summary">Date, status bar, panel position, and large displays</string>
     <string name="appearance_layout_section">LAYOUT &amp; DISPLAY</string>
