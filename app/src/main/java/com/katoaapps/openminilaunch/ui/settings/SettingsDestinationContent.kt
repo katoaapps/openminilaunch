@@ -41,6 +41,7 @@ internal fun SettingsDestinationContent(
             permissionState = permissionState,
             onPickWeb = onPickWeb,
             onPickAi = onPickAi,
+            openTodos = onOpenTodos,
             onNavigate = onOverviewNavigate,
             goBack = onExitSettings,
         )

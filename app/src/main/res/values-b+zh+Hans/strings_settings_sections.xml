@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="settings_section_home">主页</string>
+    <string name="settings_tab_mini_apps">小程序</string>
     <string name="settings_section_advanced">高级功能</string>
     <string name="settings_tab_advanced">高级</string>
     <string name="settings_section_more">更多</string>

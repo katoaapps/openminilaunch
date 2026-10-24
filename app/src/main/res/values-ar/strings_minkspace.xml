@@ -9,19 +9,13 @@
     <string name="calculator">آلة حاسبة</string>
     <string name="recorder">مسجل</string>
     <string name="music_player">مشغل موسيقى</string>
-    <string name="music_player_preview">معاينة مشغل الموسيقى</string>
-    <string name="open_music_player_preview">افتح معاينة مشغل الموسيقى</string>
     <string name="swipe_vertically_to_switch">اسحب عموديًا للتبديل</string>
-    <string name="open_and_manage">فتح وإدارة</string>
-    <string name="open_calculator_lab">فتح معاينة الآلة الحاسبة</string>
-    <string name="mink_space_lab">مختبر MinkSpace</string>
     <string name="calculator_history">التاريخ</string>
     <string name="clear_history">مسح التاريخ</string>
     <string name="calculator_invalid_expression">تحقق من التعبير وحاول مرة أخرى</string>
     <string name="delete_last_character">حذف الحرف الأخير</string>
     <string name="calculator_history_empty">سوف تظهر الحسابات المكتملة هنا.</string>
     <string name="coming_later">سيأتي لاحقا</string>
-    <string name="open_media_lab">افتح Media Lab</string>
     <string name="media_lab">Media Lab</string>
     <string name="add_media">أضف الوسائط</string>
     <string name="media_empty">أضف صورًا أو ملفات GIF أو مقاطع فيديو لمعاينتها هنا.</string>
@@ -50,7 +44,6 @@
     <string name="music_forward_control_description">تقديم 10 ثواني؛ توفر الصنابير المتعددة الوسائط التالية والخلط العشوائي</string>
     <string name="mink_space_widget_description">أضف أداة واحدة من تطبيق مثبّت إلى MinkSpace.</string>
     <string name="mink_space_widget_picker_description">توفر التطبيقات المثبّتة الأدوات. يعرض Mink مدى الملاءمة المتوقع، لكن موفر الأداة يتحكم في التخطيط النهائي والإجراءات المتاحة.</string>
-    <string name="mink_space_widget_compact_warning">بعض الأدوات غير مصممة للمساحات الصغيرة وقد تبدو أو تعمل بشكل مختلف هنا.</string>
     <string name="replace_widget">استبدال الأداة</string>
     <string name="interact_with_widget">التفاعل مع الأداة</string>
     <string name="widget_fits_mink_space">تلائم MinkSpace</string>

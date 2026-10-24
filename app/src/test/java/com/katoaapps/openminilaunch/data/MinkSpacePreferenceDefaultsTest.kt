@@ -36,4 +36,28 @@ class MinkSpacePreferenceDefaultsTest {
             enabledMinkSpaceMiniAppsFromStableIds(setOf("calculator", "recorder", "future-app")),
         )
     }
+
+    @Test
+    fun visibleReorderKeepsUnavailableMiniAppsInTheirExistingSlots() {
+        assertEquals(
+            listOf(
+                MinkSpaceMiniApp.WIDGET,
+                MinkSpaceMiniApp.TODO,
+                MinkSpaceMiniApp.CALCULATOR,
+                MinkSpaceMiniApp.RECORDER,
+                MinkSpaceMiniApp.MEDIA,
+                MinkSpaceMiniApp.MUSIC,
+            ),
+            mergeVisibleMinkSpaceMiniAppOrder(
+                currentOrder = MinkSpaceMiniApp.defaultOrder,
+                requestedVisibleOrder = listOf(
+                    MinkSpaceMiniApp.WIDGET,
+                    MinkSpaceMiniApp.TODO,
+                    MinkSpaceMiniApp.CALCULATOR,
+                    MinkSpaceMiniApp.MEDIA,
+                    MinkSpaceMiniApp.MUSIC,
+                ),
+            ),
+        )
+    }
 }

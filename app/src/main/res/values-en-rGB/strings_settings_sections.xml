@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="settings_section_home">Home</string>
+    <string name="settings_tab_mini_apps">Mini-Apps</string>
     <string name="settings_section_advanced">Advanced features</string>
     <string name="settings_tab_advanced">Advanced</string>
     <string name="settings_section_more">More</string>

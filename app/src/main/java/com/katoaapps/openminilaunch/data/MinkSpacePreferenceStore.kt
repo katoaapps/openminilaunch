@@ -24,27 +24,19 @@ internal class MinkSpacePreferenceStore(private val prefs: SharedPreferences) {
         saveEnabledMiniApps()
     }
 
-    fun move(miniApp: MinkSpaceMiniApp, direction: Int) {
-        val currentIndex = order.indexOf(miniApp)
-        val targetIndex = (currentIndex + direction).coerceIn(order.indices)
-        if (currentIndex == -1 || currentIndex == targetIndex) return
+    fun updateOrder(visibleOrder: List<MinkSpaceMiniApp>) {
+        val updatedOrder = mergeVisibleMinkSpaceMiniAppOrder(order, visibleOrder)
+        if (updatedOrder == order) return
 
-        order = order.toMutableList().apply {
-            add(targetIndex, removeAt(currentIndex))
-        }
-        prefs.edit { putString(KEY_ORDER, order.joinToString(",") { it.stableId }) }
+        order = updatedOrder
+        saveOrder()
     }
 
     fun replaceFromBackup(
         restoredOrder: List<MinkSpaceMiniApp>,
         restoredEnabledMiniApps: Set<MinkSpaceMiniApp>,
     ) {
-        val readyMiniApps = MinkSpaceMiniApp.entries.filter(MinkSpaceMiniApp::readyForHome)
-        val normalizedReadyOrder = restoredOrder
-            .filter(MinkSpaceMiniApp::readyForHome)
-            .distinct() + readyMiniApps.filterNot(restoredOrder::contains)
-
-        order = normalizedReadyOrder + MinkSpaceMiniApp.entries.filterNot(MinkSpaceMiniApp::readyForHome)
+        order = mergeVisibleMinkSpaceMiniAppOrder(order, restoredOrder)
         enabledMiniApps = restoredEnabledMiniApps
             .filterTo(mutableSetOf(), MinkSpaceMiniApp::readyForHome)
 
@@ -72,9 +64,31 @@ internal class MinkSpacePreferenceStore(private val prefs: SharedPreferences) {
         }
     }
 
+    private fun saveOrder() {
+        prefs.edit { putString(KEY_ORDER, order.joinToString(",") { it.stableId }) }
+    }
+
     private companion object {
         const val KEY_ORDER = "mink_space_mini_app_order"
         const val KEY_ENABLED = "mink_space_enabled_mini_apps"
+    }
+}
+
+internal fun mergeVisibleMinkSpaceMiniAppOrder(
+    currentOrder: List<MinkSpaceMiniApp>,
+    requestedVisibleOrder: List<MinkSpaceMiniApp>,
+): List<MinkSpaceMiniApp> {
+    val completeCurrentOrder = currentOrder.distinct() +
+        MinkSpaceMiniApp.entries.filterNot(currentOrder::contains)
+    val requestedReadyOrder = requestedVisibleOrder
+        .filter(MinkSpaceMiniApp::readyForHome)
+        .distinct()
+    val completeReadyOrder = requestedReadyOrder + MinkSpaceMiniApp.entries.filter { miniApp ->
+        miniApp.readyForHome && miniApp !in requestedReadyOrder
+    }
+    val readyIterator = completeReadyOrder.iterator()
+    return completeCurrentOrder.map { miniApp ->
+        if (miniApp.readyForHome) readyIterator.next() else miniApp
     }
 }
 

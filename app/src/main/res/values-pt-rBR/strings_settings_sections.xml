@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="settings_section_home">Início</string>
+    <string name="settings_tab_mini_apps">Miniaplicativos</string>
     <string name="settings_section_advanced">Recursos avançados</string>
     <string name="settings_tab_advanced">Avançado</string>
     <string name="settings_section_more">Mais</string>

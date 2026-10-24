@@ -9,19 +9,13 @@
     <string name="calculator">Kalkulator</string>
     <string name="recorder">Perekam</string>
     <string name="music_player">Pemutar musik</string>
-    <string name="music_player_preview">Pratinjau pemutar musik</string>
-    <string name="open_music_player_preview">Buka pratinjau Pemutar Musik</string>
     <string name="swipe_vertically_to_switch">Gesek secara vertikal untuk beralih</string>
-    <string name="open_and_manage">Buka dan kelola</string>
-    <string name="open_calculator_lab">Buka pratinjau kalkulator</string>
-    <string name="mink_space_lab">Lab MinkSpace</string>
     <string name="calculator_history">Sejarah</string>
     <string name="clear_history">Hapus riwayat</string>
     <string name="calculator_invalid_expression">Periksa ekspresinya dan coba lagi</string>
     <string name="delete_last_character">Hapus karakter terakhir</string>
     <string name="calculator_history_empty">Perhitungan yang sudah selesai akan muncul di sini.</string>
     <string name="coming_later">Akan datang nanti</string>
-    <string name="open_media_lab">Buka Media Lab</string>
     <string name="media_lab">Media Lab</string>
     <string name="add_media">Tambahkan media</string>
     <string name="media_empty">Tambahkan gambar, GIF, atau video untuk dipratinjau di sini.</string>
@@ -50,7 +44,6 @@
     <string name="music_forward_control_description">Maju 10 detik; beberapa ketukan menawarkan media berikutnya dan acak</string>
     <string name="mink_space_widget_description">Tambahkan satu widget dari aplikasi terinstal ke MinkSpace.</string>
     <string name="mink_space_widget_picker_description">Widget disediakan oleh aplikasi terinstal. Mink menampilkan perkiraan kecocokannya, tetapi penyedia mengontrol tata letak akhir dan tindakan yang tersedia.</string>
-    <string name="mink_space_widget_compact_warning">Beberapa widget tidak dirancang untuk ruang ringkas dan mungkin terlihat atau berfungsi berbeda di sini.</string>
     <string name="replace_widget">Ganti widget</string>
     <string name="interact_with_widget">Berinteraksi dengan widget</string>
     <string name="widget_fits_mink_space">Cocok di MinkSpace</string>

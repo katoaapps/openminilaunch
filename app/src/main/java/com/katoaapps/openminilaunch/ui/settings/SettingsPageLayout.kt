@@ -11,6 +11,7 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.ColumnScope
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -19,6 +20,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.layout.widthIn
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.LazyListScope
+import androidx.compose.foundation.lazy.LazyListState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
@@ -67,6 +71,38 @@ internal fun SettingsPage(
             content()
             Spacer(Modifier.height(Dimens.dp24))
         }
+    }
+}
+
+@Composable
+internal fun SettingsLazyPage(
+    title: String,
+    goBack: () -> Unit,
+    state: LazyListState,
+    content: LazyListScope.() -> Unit,
+) {
+    Column(
+        Modifier.fillMaxSize().statusBarsPadding(),
+        horizontalAlignment = Alignment.CenterHorizontally,
+    ) {
+        Box(Modifier.widthIn(max = Dimens.dp720).fillMaxWidth()) {
+            PageHeader(
+                title = title,
+                goBack = goBack,
+                showBackButton = LocalSettingsShowBackButton.current,
+            )
+        }
+        LazyColumn(
+            modifier = Modifier.widthIn(max = Dimens.dp720).fillMaxWidth().weight(1f),
+            state = state,
+            contentPadding = PaddingValues(
+                start = Dimens.dp22,
+                end = Dimens.dp22,
+                bottom = Dimens.dp24,
+            ),
+            verticalArrangement = Arrangement.spacedBy(Dimens.dp14),
+            content = content,
+        )
     }
 }
 

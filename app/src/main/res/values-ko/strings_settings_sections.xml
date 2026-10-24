@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="settings_section_home">홈</string>
+    <string name="settings_tab_mini_apps">미니앱</string>
     <string name="settings_section_advanced">고급 기능</string>
     <string name="settings_tab_advanced">고급</string>
     <string name="settings_section_more">더보기</string>

@@ -9,19 +9,13 @@
     <string name="calculator">ক্যালকুলেটর</string>
     <string name="recorder">রেকর্ডার</string>
     <string name="music_player">মিউজিক প্লেয়ার</string>
-    <string name="music_player_preview">মিউজিক প্লেয়ার প্রিভিউ</string>
-    <string name="open_music_player_preview">মিউজিক প্লেয়ার প্রিভিউ খুলুন</string>
     <string name="swipe_vertically_to_switch">সুইচ করতে উল্লম্বভাবে সোয়াইপ করুন</string>
-    <string name="open_and_manage">খুলুন এবং পরিচালনা করুন</string>
-    <string name="open_calculator_lab">ক্যালকুলেটর প্রিভিউ খুলুন</string>
-    <string name="mink_space_lab">MinkSpace ল্যাব</string>
     <string name="calculator_history">ইতিহাস</string>
     <string name="clear_history">ইতিহাস পরিষ্কার করুন</string>
     <string name="calculator_invalid_expression">অভিব্যক্তি পরীক্ষা করুন এবং আবার চেষ্টা করুন</string>
     <string name="delete_last_character">শেষ অক্ষর মুছুন</string>
     <string name="calculator_history_empty">সম্পূর্ণ গণনা এখানে প্রদর্শিত হবে.</string>
     <string name="coming_later">পরে আসছে</string>
-    <string name="open_media_lab">Media Lab খুলুন</string>
     <string name="media_lab">Media Lab</string>
     <string name="add_media">মিডিয়া যোগ করুন</string>
     <string name="media_empty">এখানে পূর্বরূপ দেখতে ছবি, GIF বা ভিডিও যোগ করুন।</string>
@@ -50,7 +44,6 @@
     <string name="music_forward_control_description">10 সেকেন্ড ফরোয়ার্ড করুন; একাধিক ট্যাপ পরবর্তী মিডিয়া এবং শাফেল অফার করে</string>
     <string name="mink_space_widget_description">ইনস্টল করা অ্যাপ থেকে একটি উইজেট MinkSpace-এ যোগ করুন।</string>
     <string name="mink_space_widget_picker_description">ইনস্টল করা অ্যাপগুলি উইজেট সরবরাহ করে। Mink সম্ভাব্য মানানসই অবস্থা দেখায়, তবে চূড়ান্ত লেআউট ও উপলভ্য কাজগুলি প্রদানকারী নিয়ন্ত্রণ করে।</string>
-    <string name="mink_space_widget_compact_warning">কিছু উইজেট ছোট জায়গার জন্য তৈরি নয় এবং এখানে ভিন্ন দেখাতে বা কাজ করতে পারে।</string>
     <string name="replace_widget">উইজেট বদলান</string>
     <string name="interact_with_widget">উইজেট ব্যবহার করুন</string>
     <string name="widget_fits_mink_space">MinkSpace-এ মানায়</string>

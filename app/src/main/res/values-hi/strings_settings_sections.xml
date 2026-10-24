@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="settings_section_home">होम</string>
+    <string name="settings_tab_mini_apps">मिनी-ऐप्स</string>
     <string name="settings_section_advanced">उन्नत सुविधाएं</string>
     <string name="settings_tab_advanced">उन्नत</string>
     <string name="settings_section_more">और</string>

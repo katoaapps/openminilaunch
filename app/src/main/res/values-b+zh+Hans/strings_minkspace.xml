@@ -9,19 +9,13 @@
     <string name="calculator">计算器</string>
     <string name="recorder">录音机</string>
     <string name="music_player">音乐播放器</string>
-    <string name="music_player_preview">音乐播放器预览</string>
-    <string name="open_music_player_preview">打开音乐播放器预览</string>
     <string name="swipe_vertically_to_switch">垂直滑动切换</string>
-    <string name="open_and_manage">打开和管理</string>
-    <string name="open_calculator_lab">打开计算器预览</string>
-    <string name="mink_space_lab">MinkSpace实验室</string>
     <string name="calculator_history">历史</string>
     <string name="clear_history">清除历史记录</string>
     <string name="calculator_invalid_expression">检查表达式并重试</string>
     <string name="delete_last_character">删除最后一个字符</string>
     <string name="calculator_history_empty">完成的计算将出现在这里。</string>
     <string name="coming_later">稍后推出</string>
-    <string name="open_media_lab">打开Media Lab</string>
     <string name="media_lab">Media Lab</string>
     <string name="add_media">添加媒体</string>
     <string name="media_empty">添加图像、GIF 或视频以在此处预览。</string>
@@ -50,7 +44,6 @@
     <string name="music_forward_control_description">前进10秒；多次点击可提供下一个媒体和随机播放</string>
     <string name="mink_space_widget_description">将已安装应用中的一个小部件添加到 MinkSpace。</string>
     <string name="mink_space_widget_picker_description">小部件由已安装的应用提供。Mink 会显示预计的适配情况，但最终布局和可用操作由提供方控制。</string>
-    <string name="mink_space_widget_compact_warning">部分小部件并非为紧凑空间设计，在这里的外观或行为可能有所不同。</string>
     <string name="replace_widget">替换小部件</string>
     <string name="interact_with_widget">与小部件互动</string>
     <string name="widget_fits_mink_space">适合 MinkSpace</string>

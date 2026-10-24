@@ -385,8 +385,8 @@ class LauncherStore private constructor(context: Context) {
         minkSpacePreferences.setEnabled(miniApp, enabled)
     }
 
-    internal fun moveMinkSpaceMiniApp(miniApp: MinkSpaceMiniApp, direction: Int) {
-        minkSpacePreferences.move(miniApp, direction)
+    internal fun setMinkSpaceMiniAppOrder(order: List<MinkSpaceMiniApp>) {
+        minkSpacePreferences.updateOrder(order)
     }
 
     internal fun replaceMinkSpacePreferencesFromBackup(

@@ -12,7 +12,6 @@ import androidx.compose.material.icons.filled.Keyboard
 import androidx.compose.material.icons.filled.Pets
 import androidx.compose.material.icons.filled.Security
 import androidx.compose.material.icons.filled.Shield
-import androidx.compose.material.icons.filled.ViewCarousel
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.pluralStringResource
@@ -34,11 +33,18 @@ internal fun SettingsOverviewPage(
     permissionState: SettingsPermissionState,
     onPickWeb: () -> Unit,
     onPickAi: () -> Unit,
+    openTodos: () -> Unit,
     onNavigate: (SettingsDestination) -> Unit,
     goBack: () -> Unit,
 ) {
     when (section) {
         SettingsSection.HOME -> HomeSettingsSection(store, actions, onNavigate, goBack)
+        SettingsSection.MINI_APPS -> MinkSpaceSettingsPage(
+            store = store,
+            actions = actions,
+            openTodos = openTodos,
+            goBack = goBack,
+        )
         SettingsSection.MAGIC_BOX -> MagicBoxSettingsPage(
             store = store,
             actions = actions,
@@ -90,11 +96,6 @@ private fun HomeSettingsSection(
                 ?: actions.defaultMessagingAppLabel(),
             icon = Icons.AutoMirrored.Filled.Chat,
         ) { onNavigate(SettingsDestination.MESSAGING) }
-        SettingsCategoryRow(
-            title = stringResource(R.string.mink_space_mini_apps),
-            subtitle = stringResource(R.string.mink_space_settings_summary),
-            icon = Icons.Default.ViewCarousel,
-        ) { onNavigate(SettingsDestination.MINK_SPACE) }
         SettingsCategoryRow(
             title = stringResource(R.string.privacy_apps),
             subtitle = stringResource(R.string.privacy_apps_settings_summary),

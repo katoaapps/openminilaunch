@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="settings_section_home">ہوم</string>
+    <string name="settings_tab_mini_apps">منی ایپس</string>
     <string name="settings_section_advanced">جدید خصوصیات</string>
     <string name="settings_tab_advanced">جدید</string>
     <string name="settings_section_more">مزید</string>

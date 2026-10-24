@@ -73,9 +73,21 @@ class SettingsNavigationTest {
 
     @Test fun destinationsBelongToTheExpectedPrimarySection() {
         assertEquals(SettingsSection.HOME, settingsSectionFor(SettingsDestination.MESSAGING))
+        assertEquals(SettingsSection.MINI_APPS, settingsSectionFor(SettingsDestination.MINK_SPACE))
         assertEquals(SettingsSection.MAGIC_BOX, settingsSectionFor(SettingsDestination.FILE_SEARCH))
         assertEquals(SettingsSection.ADVANCED, settingsSectionFor(SettingsDestination.MINK_DAY))
         assertEquals(SettingsSection.MORE, settingsSectionFor(SettingsDestination.PERMISSIONS))
+    }
+
+    @Test fun minkSpaceSettingsOpenAtTheMiniAppsSectionRoot() {
+        assertEquals(
+            listOf(SettingsDestination.OVERVIEW),
+            settingsPathTo(SettingsDestination.MINK_SPACE),
+        )
+        assertEquals(
+            listOf(SettingsRoute(SettingsSection.MINI_APPS, SettingsDestination.OVERVIEW)),
+            settingsRoutesTo(SettingsDestination.MINK_SPACE),
+        )
     }
 
     @Test fun deepLinkRoutesKeepTheirSectionAcrossTheWholeBackStack() {

@@ -9,19 +9,13 @@
     <string name="calculator">कैलकुलेटर</string>
     <string name="recorder">रिकार्डर</string>
     <string name="music_player">म्यूजिक प्लेयर</string>
-    <string name="music_player_preview">म्यूजिक प्लेयर पूर्वावलोकन</string>
-    <string name="open_music_player_preview">म्यूजिक प्लेयर पूर्वावलोकन खोलें</string>
     <string name="swipe_vertically_to_switch">स्विच करने के लिए लंबवत स्वाइप करें</string>
-    <string name="open_and_manage">खोलें और प्रबंधित करें</string>
-    <string name="open_calculator_lab">कैलकुलेटर पूर्वावलोकन खोलें</string>
-    <string name="mink_space_lab">MinkSpace लैब</string>
     <string name="calculator_history">इतिहास</string>
     <string name="clear_history">स्पष्ट इतिहास</string>
     <string name="calculator_invalid_expression">अभिव्यक्ति की जाँच करें और पुनः प्रयास करें</string>
     <string name="delete_last_character">अंतिम अक्षर हटाएँ</string>
     <string name="calculator_history_empty">पूर्ण गणनाएँ यहाँ दिखाई देंगी।</string>
     <string name="coming_later">बाद में आ रहा हूँ</string>
-    <string name="open_media_lab">Media Lab खोलें</string>
     <string name="media_lab">Media Lab</string>
     <string name="add_media">मीडिया जोड़ें</string>
     <string name="media_empty">यहां पूर्वावलोकन करने के लिए चित्र, GIF या वीडियो जोड़ें।</string>
@@ -50,7 +44,6 @@
     <string name="music_forward_control_description">10 सेकंड आगे बढ़ाएं; एकाधिक टैप अगले मीडिया और शफ़ल की पेशकश करते हैं</string>
     <string name="mink_space_widget_description">इंस्टॉल किए गए ऐप से एक विजेट MinkSpace में जोड़ें।</string>
     <string name="mink_space_widget_picker_description">विजेट इंस्टॉल किए गए ऐप देते हैं। Mink संभावित फ़िट दिखाता है, लेकिन अंतिम लेआउट और उपलब्ध कार्रवाइयों को प्रदाता नियंत्रित करता है।</string>
-    <string name="mink_space_widget_compact_warning">कुछ विजेट छोटी जगहों के लिए नहीं बने हैं और यहाँ अलग दिख सकते हैं या अलग तरह से काम कर सकते हैं।</string>
     <string name="replace_widget">विजेट बदलें</string>
     <string name="interact_with_widget">विजेट का उपयोग करें</string>
     <string name="widget_fits_mink_space">MinkSpace में फ़िट होता है</string>

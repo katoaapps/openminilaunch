@@ -10,6 +10,7 @@ import androidx.compose.material.icons.filled.AutoAwesome
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.MoreHoriz
 import androidx.compose.material.icons.filled.Star
+import androidx.compose.material.icons.filled.ViewCarousel
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.NavigationBar
@@ -31,6 +32,11 @@ internal enum class SettingsSection(
     val icon: ImageVector,
 ) {
     HOME(R.string.settings_section_home, icon = Icons.Default.Home),
+    MINI_APPS(
+        R.string.mink_space_mini_apps,
+        R.string.settings_tab_mini_apps,
+        Icons.Default.ViewCarousel,
+    ),
     MAGIC_BOX(R.string.magic_box, icon = Icons.Default.AutoAwesome),
     ADVANCED(
         R.string.settings_section_advanced,
@@ -41,6 +47,8 @@ internal enum class SettingsSection(
 }
 
 internal fun settingsSectionFor(destination: SettingsDestination): SettingsSection = when (destination) {
+    SettingsDestination.MINK_SPACE -> SettingsSection.MINI_APPS
+
     SettingsDestination.APP_BUBBLES,
     SettingsDestination.FILE_SEARCH -> SettingsSection.MAGIC_BOX
 

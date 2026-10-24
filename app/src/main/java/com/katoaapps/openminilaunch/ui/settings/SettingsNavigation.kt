@@ -72,7 +72,7 @@ internal fun settingsPathTo(destination: SettingsDestination): List<SettingsDest
         SettingsDestination.LAUNCHER,
         destination,
     )
-    SettingsDestination.MINK_SPACE,
+    SettingsDestination.MINK_SPACE -> listOf(SettingsDestination.OVERVIEW)
     SettingsDestination.SHORTCUTS,
     SettingsDestination.PRIVACY_APPS -> listOf(SettingsDestination.OVERVIEW, destination)
     SettingsDestination.APPEARANCE_WALLPAPER,

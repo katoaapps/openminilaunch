@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="settings_section_home">主頁</string>
+    <string name="settings_tab_mini_apps">迷你應用程式</string>
     <string name="settings_section_advanced">進階功能</string>
     <string name="settings_tab_advanced">進階</string>
     <string name="settings_section_more">更多</string>

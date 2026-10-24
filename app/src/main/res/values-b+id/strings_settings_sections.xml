@@ -1,6 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="settings_section_home">Beranda</string>
+    <string name="settings_tab_mini_apps">Mini Apps</string>
     <string name="settings_section_advanced">Fitur lanjutan</string>
     <string name="settings_tab_advanced">Lanjutan</string>
     <string name="settings_section_more">Lainnya</string>
