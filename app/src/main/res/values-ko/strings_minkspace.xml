@@ -39,13 +39,12 @@
     <string name="music_hide_controls">컨트롤 숨기기 및 아트워크 표시</string>
     <string name="music_show_controls">미디어 컨트롤 표시</string>
     <string name="music_expand_player">미디어 컨트롤 확장</string>
-    <string name="music_collapse_player">미디어 컨트롤 접기</string>
     <string name="music_back_control_description">10초 뒤로; 여러 번 탭하면 다시 시작 및 이전 미디어 제공</string>
     <string name="music_forward_control_description">10초 앞으로; 여러 번 탭하면 다음 미디어 및 셔플이 제공됩니다.</string>
     <string name="mink_space_widget_description">설치된 앱의 위젯 하나를 MinkSpace에 추가합니다.</string>
     <string name="mink_space_widget_picker_description">위젯은 설치된 앱에서 제공합니다. Mink는 예상 호환성을 표시하지만 최종 레이아웃과 사용 가능한 동작은 제공 앱에서 결정합니다.</string>
     <string name="replace_widget">위젯 교체</string>
-    <string name="interact_with_widget">위젯과 상호작용</string>
+    <string name="expand_view">보기 확장</string>
     <string name="widget_fits_mink_space">MinkSpace에 맞음</string>
     <string name="widget_fits_expanded">확장하면 맞음</string>
     <string name="widget_may_be_cramped">비좁을 수 있음</string>

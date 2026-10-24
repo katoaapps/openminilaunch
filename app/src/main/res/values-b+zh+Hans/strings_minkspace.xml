@@ -39,13 +39,12 @@
     <string name="music_hide_controls">隐藏控件并显示图稿</string>
     <string name="music_show_controls">显示媒体控件</string>
     <string name="music_expand_player">扩大媒体控制</string>
-    <string name="music_collapse_player">折叠媒体控件</string>
     <string name="music_back_control_description">后退10秒；多次点击可提供重新启动和以前的媒体</string>
     <string name="music_forward_control_description">前进10秒；多次点击可提供下一个媒体和随机播放</string>
     <string name="mink_space_widget_description">将已安装应用中的一个小部件添加到 MinkSpace。</string>
     <string name="mink_space_widget_picker_description">小部件由已安装的应用提供。Mink 会显示预计的适配情况，但最终布局和可用操作由提供方控制。</string>
     <string name="replace_widget">替换小部件</string>
-    <string name="interact_with_widget">与小部件互动</string>
+    <string name="expand_view">展开视图</string>
     <string name="widget_fits_mink_space">适合 MinkSpace</string>
     <string name="widget_fits_expanded">展开后适合</string>
     <string name="widget_may_be_cramped">可能较拥挤</string>

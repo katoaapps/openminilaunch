@@ -4,7 +4,6 @@ import android.appwidget.AppWidgetHostView
 import android.view.View
 import android.view.ViewGroup
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -15,16 +14,13 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.MoreVert
-import androidx.compose.material.icons.filled.OpenWith
 import androidx.compose.material.icons.filled.Widgets
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
@@ -41,14 +37,12 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.Role
 import androidx.compose.ui.semantics.clearAndSetSemantics
-import androidx.compose.ui.semantics.contentDescription
-import androidx.compose.ui.semantics.onClick
-import androidx.compose.ui.semantics.role
-import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.IntSize
 import androidx.compose.ui.viewinterop.AndroidView
 import com.katoaapps.openminilaunch.R
+import com.katoaapps.openminilaunch.ui.minkspace.core.MinkSpaceExpansionController
 import com.katoaapps.openminilaunch.ui.minkspace.core.MinkSpaceTitle
+import com.katoaapps.openminilaunch.ui.minkspace.core.minkSpaceExpansionBackgroundTap
 import com.katoaapps.openminilaunch.ui.theme.Dimens
 import com.katoaapps.openminilaunch.ui.widgets.reportWidgetSizes
 
@@ -63,14 +57,13 @@ internal fun WidgetMiniAppContent(
     appWidgetId: Int,
     infoLabel: String,
     compact: Boolean,
-    expanded: Boolean,
+    expansion: MinkSpaceExpansionController,
     contentColor: Color,
     hostViewFactory: () -> AppWidgetHostView,
-    onExpand: () -> Unit,
-    onCollapse: () -> Unit,
-    onReplace: () -> Unit,
+    onOpenProvider: () -> Unit,
     onRemove: () -> Unit,
 ) {
+    val expanded = expansion.expanded
     val density = LocalDensity.current.density
     val configuration = LocalConfiguration.current
     val sizeStateKey = listOf(
@@ -85,11 +78,14 @@ internal fun WidgetMiniAppContent(
     var expandedSize by remember(sizeStateKey) { mutableStateOf(IntSize.Zero) }
     val sizeReportCache = remember(sizeStateKey) { WidgetSizeReportCache() }
 
-    Column(Modifier.fillMaxSize()) {
+    Column(Modifier.fillMaxSize().minkSpaceExpansionBackgroundTap(expansion)) {
         Row(
             modifier = Modifier
                 .heightIn(min = if (compact) Dimens.dp38 else Dimens.dp44)
-                .padding(start = Dimens.dp12, end = Dimens.dp4),
+                .padding(
+                    start = Dimens.dp12,
+                    end = if (expanded) Dimens.dp64 else Dimens.dp4,
+                ),
             verticalAlignment = Alignment.CenterVertically,
         ) {
             MinkSpaceTitle(
@@ -116,23 +112,6 @@ internal fun WidgetMiniAppContent(
                     expanded = menuExpanded,
                     onDismissRequest = { menuExpanded = false },
                 ) {
-                    if (!expanded) {
-                        DropdownMenuItem(
-                            text = { Text(stringResource(R.string.interact_with_widget)) },
-                            onClick = {
-                                menuExpanded = false
-                                onExpand()
-                            },
-                            leadingIcon = { Icon(Icons.Default.OpenWith, null) },
-                        )
-                    }
-                    DropdownMenuItem(
-                        text = { Text(stringResource(R.string.replace_widget)) },
-                        onClick = {
-                            menuExpanded = false
-                            onReplace()
-                        },
-                    )
                     DropdownMenuItem(
                         text = { Text(stringResource(R.string.remove)) },
                         onClick = {
@@ -140,14 +119,6 @@ internal fun WidgetMiniAppContent(
                             onRemove()
                         },
                     )
-                }
-            }
-            if (expanded) {
-                IconButton(
-                    onClick = onCollapse,
-                    modifier = Modifier.size(Dimens.dp48),
-                ) {
-                    Icon(Icons.Default.Close, stringResource(R.string.close))
                 }
             }
         }
@@ -196,45 +167,16 @@ internal fun WidgetMiniAppContent(
             )
 
             if (!expanded) {
-                val interactionDescription = stringResource(R.string.interact_with_widget)
+                val openProviderDescription = stringResource(R.string.open_app, infoLabel)
                 Box(
                     modifier = Modifier
                         .matchParentSize()
-                        .clickable(role = Role.Button, onClick = onExpand)
-                        .clearAndSetSemantics {
-                            contentDescription = interactionDescription
-                            role = Role.Button
-                            onClick(interactionDescription) {
-                                onExpand()
-                                true
-                            }
-                        },
-                    contentAlignment = Alignment.BottomCenter,
-                ) {
-                    Surface(
-                        shape = RoundedCornerShape(Dimens.dp96),
-                        color = MaterialTheme.colorScheme.surface.copy(alpha = .9f),
-                        contentColor = MaterialTheme.colorScheme.onSurface,
-                        shadowElevation = Dimens.dp2,
-                        modifier = Modifier.padding(Dimens.dp8),
-                    ) {
-                        Row(
-                            modifier = Modifier.padding(
-                                horizontal = Dimens.dp12,
-                                vertical = Dimens.dp7,
-                            ),
-                            horizontalArrangement = Arrangement.spacedBy(Dimens.dp6),
-                            verticalAlignment = Alignment.CenterVertically,
-                        ) {
-                            Icon(Icons.Default.OpenWith, null, Modifier.size(Dimens.dp16))
-                            Text(
-                                stringResource(R.string.interact_with_widget),
-                                fontWeight = FontWeight.Bold,
-                                style = MaterialTheme.typography.labelSmall,
-                            )
-                        }
-                    }
-                }
+                        .clickable(
+                            onClickLabel = openProviderDescription,
+                            role = Role.Button,
+                            onClick = onOpenProvider,
+                        ),
+                )
             }
         }
     }

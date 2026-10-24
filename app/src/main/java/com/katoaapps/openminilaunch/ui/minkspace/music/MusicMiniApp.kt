@@ -15,15 +15,16 @@ import androidx.compose.ui.res.stringResource
 import com.katoaapps.openminilaunch.R
 import com.katoaapps.openminilaunch.features.minkspace.music.MusicPlaybackAvailability
 import com.katoaapps.openminilaunch.features.minkspace.music.MusicPlaybackState
+import com.katoaapps.openminilaunch.ui.minkspace.core.MinkSpaceExpansionController
+import com.katoaapps.openminilaunch.ui.minkspace.core.minkSpaceExpansionBackgroundTap
 import com.katoaapps.openminilaunch.ui.theme.Dimens
 
 /** Art-led media UI. Platform state and transport commands remain in the owning page/repository. */
 @Composable
 internal fun MusicMiniApp(
     state: MusicPlaybackState,
-    expanded: Boolean,
+    expansion: MinkSpaceExpansionController,
     foregroundVisible: Boolean,
-    onExpandedChanged: (Boolean) -> Unit,
     onForegroundVisibleChanged: (Boolean) -> Unit,
     onOpenPlayer: () -> Unit,
     onRequestAccess: () -> Unit,
@@ -37,7 +38,13 @@ internal fun MusicMiniApp(
     onShuffle: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    Box(modifier) {
+    val expanded = expansion.expanded
+    Box(
+        modifier.minkSpaceExpansionBackgroundTap(
+            expansion = expansion,
+            enabled = expanded || state.hasSession,
+        ),
+    ) {
         MusicArtworkBackground(
             state = state,
             modifier = Modifier.fillMaxSize(),
@@ -57,8 +64,7 @@ internal fun MusicMiniApp(
 
         MusicHeading(
             state = state,
-            expanded = expanded,
-            onExpandedChanged = onExpandedChanged,
+            expansion = expansion,
             onOpenPlayer = onOpenPlayer,
             modifier = Modifier
                 .align(Alignment.TopStart)
@@ -70,7 +76,10 @@ internal fun MusicMiniApp(
             onOpenPlayer = onOpenPlayer,
             modifier = Modifier
                 .align(Alignment.TopEnd)
-                .padding(Dimens.dp14),
+                .padding(
+                    top = Dimens.dp14,
+                    end = if (expanded) Dimens.dp64 else Dimens.dp14,
+                ),
         )
 
         if (state.availability != MusicPlaybackAvailability.READY) {

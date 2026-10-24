@@ -48,7 +48,7 @@ import com.katoaapps.openminilaunch.features.minkspace.MinkSpaceMiniApp
 import com.katoaapps.openminilaunch.platform.DeviceActions
 import com.katoaapps.openminilaunch.ui.components.SectionLabel
 import com.katoaapps.openminilaunch.ui.minkspace.core.MinkSpaceMiniAppCatalog
-import com.katoaapps.openminilaunch.ui.minkspace.core.MinkSpaceMiniAppSpec
+import com.katoaapps.openminilaunch.ui.minkspace.core.MinkSpaceMiniAppManifest
 import com.katoaapps.openminilaunch.ui.minkspace.core.MinkSpaceMiniAppSettingsTarget
 import com.katoaapps.openminilaunch.ui.minkspace.widget.MinkSpaceWidgetSetup
 import com.katoaapps.openminilaunch.ui.profile.openVirtualContactCard
@@ -199,7 +199,7 @@ internal fun MinkSpaceSettingsPage(
 
 @Composable
 private fun MinkSpaceMiniAppRow(
-    spec: MinkSpaceMiniAppSpec,
+    spec: MinkSpaceMiniAppManifest,
     shown: Boolean,
     onShownChange: (Boolean) -> Unit,
     onSettingsClick: (() -> Unit)?,

@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ExpandLess
 import androidx.compose.material.icons.filled.ExpandMore
 import androidx.compose.material.icons.filled.MusicNote
 import androidx.compose.material3.Icon
@@ -26,16 +25,17 @@ import androidx.compose.ui.text.style.TextOverflow
 import com.katoaapps.openminilaunch.R
 import com.katoaapps.openminilaunch.features.minkspace.music.MusicPlaybackAvailability
 import com.katoaapps.openminilaunch.features.minkspace.music.MusicPlaybackState
+import com.katoaapps.openminilaunch.ui.minkspace.core.MinkSpaceExpansionController
 import com.katoaapps.openminilaunch.ui.theme.Dimens
 
 @Composable
 internal fun MusicHeading(
     state: MusicPlaybackState,
-    expanded: Boolean,
-    onExpandedChanged: (Boolean) -> Unit,
+    expansion: MinkSpaceExpansionController,
     onOpenPlayer: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
+    val expanded = expansion.expanded
     val title = when (state.availability) {
         MusicPlaybackAvailability.ACCESS_REQUIRED -> stringResource(R.string.music_access_required)
         MusicPlaybackAvailability.NOTHING_PLAYING -> stringResource(R.string.music_nothing_playing)
@@ -46,24 +46,21 @@ internal fun MusicHeading(
         MusicPlaybackAvailability.NOTHING_PLAYING -> stringResource(R.string.music_start_playback_hint)
         MusicPlaybackAvailability.READY -> state.subtitle
     }
-    val headingEnabled = expanded ||
-        state.hasSession ||
-        state.availability == MusicPlaybackAvailability.NOTHING_PLAYING
+    val headingEnabled = !expanded &&
+        (state.hasSession || state.availability == MusicPlaybackAvailability.NOTHING_PLAYING)
 
     Column(
         modifier = modifier.clickable(
             enabled = headingEnabled,
             onClickLabel = stringResource(
                 when {
-                    expanded -> R.string.music_collapse_player
                     state.hasSession -> R.string.music_expand_player
                     else -> R.string.music_open_music_app
                 },
             ),
             onClick = {
                 when {
-                    expanded -> onExpandedChanged(false)
-                    state.hasSession -> onExpandedChanged(true)
+                    state.hasSession -> expansion.expand()
                     state.availability == MusicPlaybackAvailability.NOTHING_PLAYING -> onOpenPlayer()
                 }
             },
@@ -84,9 +81,9 @@ internal fun MusicHeading(
             maxLines = if (expanded) 2 else 1,
             overflow = TextOverflow.Ellipsis,
         )
-        if (expanded || state.hasSession) {
+        if (!expanded && state.hasSession) {
             Icon(
-                imageVector = if (expanded) Icons.Default.ExpandLess else Icons.Default.ExpandMore,
+                imageVector = Icons.Default.ExpandMore,
                 contentDescription = null,
                 tint = Color.White.copy(alpha = 0.72f),
                 modifier = Modifier.size(Dimens.dp20),

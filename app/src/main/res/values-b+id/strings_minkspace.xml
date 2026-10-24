@@ -39,13 +39,12 @@
     <string name="music_hide_controls">Sembunyikan kontrol dan tampilkan karya seni</string>
     <string name="music_show_controls">Tampilkan kontrol media</string>
     <string name="music_expand_player">Perluas kontrol media</string>
-    <string name="music_collapse_player">Ciutkan kontrol media</string>
     <string name="music_back_control_description">Mundur 10 detik; beberapa ketukan menawarkan restart dan media sebelumnya</string>
     <string name="music_forward_control_description">Maju 10 detik; beberapa ketukan menawarkan media berikutnya dan acak</string>
     <string name="mink_space_widget_description">Tambahkan satu widget dari aplikasi terinstal ke MinkSpace.</string>
     <string name="mink_space_widget_picker_description">Widget disediakan oleh aplikasi terinstal. Mink menampilkan perkiraan kecocokannya, tetapi penyedia mengontrol tata letak akhir dan tindakan yang tersedia.</string>
     <string name="replace_widget">Ganti widget</string>
-    <string name="interact_with_widget">Berinteraksi dengan widget</string>
+    <string name="expand_view">Perluas tampilan</string>
     <string name="widget_fits_mink_space">Cocok di MinkSpace</string>
     <string name="widget_fits_expanded">Cocok saat diperluas</string>
     <string name="widget_may_be_cramped">Mungkin terasa sempit</string>

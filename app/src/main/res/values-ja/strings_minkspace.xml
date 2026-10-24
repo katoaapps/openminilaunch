@@ -39,13 +39,12 @@
     <string name="music_hide_controls">コントロールを非表示にしてアートワークを表示</string>
     <string name="music_show_controls">メディアコントロールを表示</string>
     <string name="music_expand_player">メディアコントロールを拡張する</string>
-    <string name="music_collapse_player">メディア コントロールを折りたたむ</string>
     <string name="music_back_control_description">10秒前に戻ります。複数回タップすると再起動と前のメディアが表示されます</string>
     <string name="music_forward_control_description">10 秒送ります。複数回タップすると次のメディアが提供され、シャッフルされます</string>
     <string name="mink_space_widget_description">インストール済みアプリのウィジェットを 1 つ MinkSpace に追加します。</string>
     <string name="mink_space_widget_picker_description">ウィジェットはインストール済みアプリから提供されます。Mink は適合の目安を表示しますが、最終的なレイアウトと操作は提供元が制御します。</string>
     <string name="replace_widget">ウィジェットを置き換える</string>
-    <string name="interact_with_widget">ウィジェットを操作する</string>
+    <string name="expand_view">表示を拡大</string>
     <string name="widget_fits_mink_space">MinkSpace に収まります</string>
     <string name="widget_fits_expanded">展開時に収まります</string>
     <string name="widget_may_be_cramped">窮屈になる可能性があります</string>

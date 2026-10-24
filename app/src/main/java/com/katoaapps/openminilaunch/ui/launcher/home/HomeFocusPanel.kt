@@ -3,6 +3,8 @@ package com.katoaapps.openminilaunch.ui.launcher.home
 import android.widget.Toast
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.BoxScope
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxHeight
@@ -10,6 +12,7 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Surface
@@ -18,6 +21,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.layout.positionInRoot
 import androidx.compose.ui.platform.LocalContext
@@ -30,6 +34,7 @@ import com.katoaapps.openminilaunch.features.wellbeing.MinkAppAccessState
 import com.katoaapps.openminilaunch.platform.DeviceActions
 import com.katoaapps.openminilaunch.ui.minkspace.core.MinkSpaceHost
 import com.katoaapps.openminilaunch.ui.minkspace.core.MinkSpacePresentationState
+import com.katoaapps.openminilaunch.ui.minkspace.core.animateMinkSpaceExpansionLayout
 import com.katoaapps.openminilaunch.ui.theme.Dimens
 import com.katoaapps.openminilaunch.ui.theme.compositeColor
 import com.katoaapps.openminilaunch.ui.theme.readableContentColor
@@ -105,62 +110,67 @@ internal fun BoxScope.HomeFocusPanel(
         },
         tonalElevation = Dimens.dp1 * panelOpacity,
     ) {
-        Row(
-            Modifier
-                .fillMaxSize()
-                .padding(
-                    if (minkSpaceExpanded) {
-                        Dimens.dp0
-                    } else if (qwertyHome) {
-                        Dimens.dp10
-                    } else {
-                        Dimens.dp14
-                    },
-                ),
-            horizontalArrangement = Arrangement.spacedBy(if (qwertyHome) Dimens.dp8 else Dimens.dp12),
-        ) {
-            MinkSpaceHost(
-                store = store,
-                actions = actions,
-                openTodos = openTodos,
-                todoJumpToken = todoJumpToken,
-                todoItemsPerPage = itemsPerPage,
-                todoTextMetrics = todoTextMetrics,
+        BoxWithConstraints(Modifier.fillMaxSize()) {
+            val expansionLayout = animateMinkSpaceExpansionLayout(
+                expanded = minkSpaceExpanded,
                 compact = qwertyHome,
-                contentColor = contentColor,
-                mutedContentColor = mutedColor,
-                insetColor = insetColor,
-                openMediaLab = actions::openMediaLab,
-                openVCardSettings = openVCardSettings,
-                openMinkSpaceSettings = openMinkSpaceSettings,
-                presentationState = minkSpacePresentation,
-                modifier = Modifier.weight(2f).fillMaxHeight().onGloballyPositioned { coordinates ->
-                    val origin = coordinates.positionInRoot()
-                    onTodoCenterChanged(
-                        origin + Offset(coordinates.size.width / 2f, coordinates.size.height / 2f),
-                    )
-                },
+                availableWidth = maxWidth,
             )
-            if (!minkSpaceExpanded) {
-                ShortcutGrid(
+
+            Row(
+                Modifier.fillMaxSize().padding(expansionLayout.contentPadding),
+                horizontalArrangement = Arrangement.spacedBy(expansionLayout.contentSpacing),
+            ) {
+                MinkSpaceHost(
                     store = store,
                     actions = actions,
-                    appAccessState = appAccessState,
-                    onPausedApp = onPausedApp,
-                    onUnavailableApp = { label ->
-                        Toast.makeText(
-                            context,
-                            context.getString(R.string.launcher_app_unavailable, label),
-                            Toast.LENGTH_LONG,
-                        ).show()
-                    },
-                    onConfigureExtraApp = openShortcutSettings,
+                    openTodos = openTodos,
+                    todoJumpToken = todoJumpToken,
+                    todoItemsPerPage = itemsPerPage,
+                    todoTextMetrics = todoTextMetrics,
                     compact = qwertyHome,
                     contentColor = contentColor,
-                    itemContainerColor = contentColor.copy(alpha = .09f),
-                    modifier = Modifier.weight(1f).fillMaxHeight(),
-                    openDrawer = onOpenDrawer,
+                    mutedContentColor = mutedColor,
+                    insetColor = insetColor,
+                    openMediaLab = actions::openMediaLab,
+                    openVCardSettings = openVCardSettings,
+                    openMinkSpaceSettings = openMinkSpaceSettings,
+                    presentationState = minkSpacePresentation,
+                    modifier = Modifier.weight(1f).fillMaxHeight().onGloballyPositioned { coordinates ->
+                        val origin = coordinates.positionInRoot()
+                        onTodoCenterChanged(
+                            origin + Offset(coordinates.size.width / 2f, coordinates.size.height / 2f),
+                        )
+                    },
                 )
+                if (expansionLayout.shortcutWidth > Dimens.dp1) {
+                    Box(
+                        Modifier
+                            .width(expansionLayout.shortcutWidth)
+                            .fillMaxHeight()
+                            .graphicsLayer { alpha = expansionLayout.shortcutAlpha },
+                    ) {
+                        ShortcutGrid(
+                            store = store,
+                            actions = actions,
+                            appAccessState = appAccessState,
+                            onPausedApp = onPausedApp,
+                            onUnavailableApp = { label ->
+                                Toast.makeText(
+                                    context,
+                                    context.getString(R.string.launcher_app_unavailable, label),
+                                    Toast.LENGTH_LONG,
+                                ).show()
+                            },
+                            onConfigureExtraApp = openShortcutSettings,
+                            compact = qwertyHome,
+                            contentColor = contentColor,
+                            itemContainerColor = contentColor.copy(alpha = .09f),
+                            modifier = Modifier.fillMaxSize(),
+                            openDrawer = onOpenDrawer,
+                        )
+                    }
+                }
             }
         }
     }

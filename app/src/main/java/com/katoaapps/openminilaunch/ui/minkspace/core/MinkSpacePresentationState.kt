@@ -18,18 +18,19 @@ import com.katoaapps.openminilaunch.features.minkspace.MinkSpaceMiniApp
 internal class MinkSpacePresentationState(
     initiallyExpanded: MinkSpaceMiniApp? = null,
 ) {
-    var expandedMiniApp by mutableStateOf(initiallyExpanded)
+    var expandedMiniApp by mutableStateOf(
+        initiallyExpanded?.takeIf { MinkSpaceMiniAppCatalog.get(it).supportsExpansion },
+    )
         private set
 
     val isExpanded: Boolean get() = expandedMiniApp != null
 
-    fun isExpanded(miniApp: MinkSpaceMiniApp): Boolean = expandedMiniApp == miniApp
+    internal fun expansionController(manifest: MinkSpaceMiniAppManifest): MinkSpaceExpansionController =
+        MinkSpaceExpansionController(manifest, this)
 
-    fun setExpanded(miniApp: MinkSpaceMiniApp, expanded: Boolean) {
-        if (expanded) {
-            expandedMiniApp = miniApp
-        } else {
-            collapse(miniApp)
+    internal fun expand(manifest: MinkSpaceMiniAppManifest) {
+        if (manifest.supportsExpansion) {
+            expandedMiniApp = manifest.miniApp
         }
     }
 

@@ -39,13 +39,12 @@
     <string name="music_hide_controls">Hide controls and show artwork</string>
     <string name="music_show_controls">Show media controls</string>
     <string name="music_expand_player">Expand media controls</string>
-    <string name="music_collapse_player">Collapse media controls</string>
     <string name="music_back_control_description">Back 10 seconds; multiple taps offer restart and previous media</string>
     <string name="music_forward_control_description">Forward 10 seconds; multiple taps offer next media and shuffle</string>
     <string name="mink_space_widget_description">Add one widget from an installed app to MinkSpace.</string>
     <string name="mink_space_widget_picker_description">Widgets are supplied by installed apps. Mink shows their likely fit, but the provider controls the final layout and available actions.</string>
     <string name="replace_widget">Replace widget</string>
-    <string name="interact_with_widget">Interact with widget</string>
+    <string name="expand_view">Expand view</string>
     <string name="widget_fits_mink_space">Fits MinkSpace</string>
     <string name="widget_fits_expanded">Fits when expanded</string>
     <string name="widget_may_be_cramped">May be cramped</string>

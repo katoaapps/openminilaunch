@@ -992,7 +992,6 @@
     <string name="moto_secure_unavailable">Moto Secure খোলা যায়নি।</string>
     <string name="shortcut_extra">অতিরিক্ত অ্যাপ</string>
     <string name="expand_vcard">vCard প্রসারিত করুন</string>
-    <string name="collapse_vcard">vCard সংকুচিত করুন</string>
     <string name="home_shortcuts_description_v2">সাতটি স্লটের প্রতিটি যেকোনো ইনস্টল করা অ্যাপ খুলতে পারে। অপরিবর্তিত স্লট নিচে দেখানো বিল্ট-ইন কাজটি রাখে; Top 8 বিল্ট-ইন থাকে।</string>
     <string name="less_visual_noise_description_v2">একটি ফোকাস করা হোম পেজ, সাতটি অ্যাপ স্লট, একটি বিল্ট-ইন Top 8 শর্টকাট এবং প্রতিটি ইনস্টল করা অ্যাপের জন্য একটি ফোকাসড হুইল।</string>
     <string name="profile_onboarding_description_v2">আপনার vCard অন্যান্য মিনি-অ্যাপের পাশে MinkSpace-এ থাকে। QR কোড দেখতে এটি প্রসারিত করুন, অথবা কাজ পরিচালনা করতে টু-ডু মিনি-অ্যাপে ট্যাপ করুন।</string>

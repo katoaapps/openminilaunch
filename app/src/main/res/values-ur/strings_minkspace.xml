@@ -39,13 +39,12 @@
     <string name="music_hide_controls">کنٹرولز چھپائیں اور آرٹ ورک دکھائیں۔</string>
     <string name="music_show_controls">میڈیا کنٹرولز دکھائیں۔</string>
     <string name="music_expand_player">میڈیا کنٹرولز کو وسعت دیں۔</string>
-    <string name="music_collapse_player">میڈیا کنٹرولز کو سکیڑیں۔</string>
     <string name="music_back_control_description">واپس 10 سیکنڈ؛ متعدد نلکیاں دوبارہ شروع اور پچھلا میڈیا پیش کرتی ہیں۔</string>
     <string name="music_forward_control_description">آگے 10 سیکنڈ؛ متعدد ٹیپس اگلے میڈیا اور شفل کی پیشکش کرتے ہیں۔</string>
     <string name="mink_space_widget_description">انسٹال کردہ ایپ سے ایک ویجیٹ MinkSpace میں شامل کریں۔</string>
     <string name="mink_space_widget_picker_description">ویجیٹس انسٹال کردہ ایپس فراہم کرتی ہیں۔ Mink ممکنہ مطابقت دکھاتا ہے، لیکن آخری لے آؤٹ اور دستیاب اعمال فراہم کنندہ کنٹرول کرتا ہے۔</string>
     <string name="replace_widget">ویجیٹ تبدیل کریں</string>
-    <string name="interact_with_widget">ویجیٹ استعمال کریں</string>
+    <string name="expand_view">منظر کو پھیلائیں</string>
     <string name="widget_fits_mink_space">MinkSpace میں فٹ ہے</string>
     <string name="widget_fits_expanded">پھیلانے پر فٹ ہے</string>
     <string name="widget_may_be_cramped">جگہ تنگ ہو سکتی ہے</string>

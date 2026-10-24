@@ -2,23 +2,20 @@
 
 package com.katoaapps.openminilaunch.ui.minkspace.core
 
+import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.pager.VerticalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.key
+import androidx.compose.runtime.remember
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import com.katoaapps.openminilaunch.data.LauncherStore
 import com.katoaapps.openminilaunch.features.minkspace.MinkSpaceMiniApp
 import com.katoaapps.openminilaunch.platform.DeviceActions
 import com.katoaapps.openminilaunch.ui.launcher.home.HomeTodoTextMetrics
-import com.katoaapps.openminilaunch.ui.minkspace.calculator.CalculatorMiniAppPage
-import com.katoaapps.openminilaunch.ui.minkspace.media.MediaMiniAppPage
-import com.katoaapps.openminilaunch.ui.minkspace.music.MusicMiniAppPage
-import com.katoaapps.openminilaunch.ui.minkspace.todo.TodoMiniAppPage
-import com.katoaapps.openminilaunch.ui.minkspace.profile.VCardMiniAppPage
-import com.katoaapps.openminilaunch.ui.minkspace.widget.WidgetMiniAppPage
 
 /** Hosts visible mini-apps, the settings shortcut, and MinkSpace's vertical switching axis. */
 @Composable
@@ -39,11 +36,39 @@ internal fun MinkSpaceHost(
     presentationState: MinkSpacePresentationState,
     modifier: Modifier = Modifier,
 ) {
+    val dependencies = remember(
+        store,
+        actions,
+        openTodos,
+        todoJumpToken,
+        todoItemsPerPage,
+        todoTextMetrics,
+        openMediaLab,
+        openVCardSettings,
+    ) {
+        MinkSpaceHostDependencies(
+            store = store,
+            actions = actions,
+            openTodos = openTodos,
+            todoJumpToken = todoJumpToken,
+            todoItemsPerPage = todoItemsPerPage,
+            todoTextMetrics = todoTextMetrics,
+            openMediaLab = openMediaLab,
+            openVCardSettings = openVCardSettings,
+        )
+    }
+    val registry = remember(dependencies) {
+        MinkSpaceMiniAppCatalog.createRegistry(dependencies)
+    }
     val activeMiniApps = store.minkSpaceMiniAppOrder.filter { miniApp ->
         miniApp.readyForHome && miniApp in store.enabledMinkSpaceMiniApps
     }
     val settingsPage = activeMiniApps.size
     val pagerState = rememberPagerState(pageCount = { activeMiniApps.size + 1 })
+
+    BackHandler(enabled = presentationState.isExpanded) {
+        presentationState.collapse()
+    }
 
     LaunchedEffect(activeMiniApps) {
         if (pagerState.currentPage > settingsPage) {
@@ -69,62 +94,9 @@ internal fun MinkSpaceHost(
         userScrollEnabled = !presentationState.isExpanded,
         beyondViewportPageCount = 1,
     ) { page ->
-        when (activeMiniApps.getOrNull(page)) {
-            MinkSpaceMiniApp.TODO -> TodoMiniAppPage(
-                store = store,
-                openTodos = openTodos,
-                jumpToken = todoJumpToken,
-                itemsPerPage = todoItemsPerPage,
-                textMetrics = todoTextMetrics,
-                compact = compact,
-                contentColor = contentColor,
-                mutedContentColor = mutedContentColor,
-                containerColor = insetColor,
-                modifier = Modifier.fillMaxSize(),
-            )
-            MinkSpaceMiniApp.CALCULATOR -> CalculatorMiniAppPage(
-                compact = compact,
-                contentColor = contentColor,
-                mutedContentColor = mutedContentColor,
-                containerColor = insetColor,
-                modifier = Modifier.fillMaxSize(),
-            )
-            MinkSpaceMiniApp.MEDIA -> MediaMiniAppPage(
-                compact = compact,
-                contentColor = contentColor,
-                mutedContentColor = mutedContentColor,
-                containerColor = insetColor,
-                onManageMedia = openMediaLab,
-                modifier = Modifier.fillMaxSize(),
-            )
-            MinkSpaceMiniApp.MUSIC -> MusicMiniAppPage(
-                compact = compact,
-                containerColor = insetColor,
-                presentationState = presentationState,
-                modifier = Modifier.fillMaxSize(),
-            )
-            MinkSpaceMiniApp.WIDGET -> WidgetMiniAppPage(
-                store = store,
-                actions = actions,
-                compact = compact,
-                contentColor = contentColor,
-                mutedContentColor = mutedContentColor,
-                containerColor = insetColor,
-                presentationState = presentationState,
-                modifier = Modifier.fillMaxSize(),
-            )
-            MinkSpaceMiniApp.VCARD -> VCardMiniAppPage(
-                store = store,
-                compact = compact,
-                contentColor = contentColor,
-                mutedContentColor = mutedContentColor,
-                containerColor = insetColor,
-                presentationState = presentationState,
-                openVCardSettings = openVCardSettings,
-                modifier = Modifier.fillMaxSize(),
-            )
-            MinkSpaceMiniApp.RECORDER -> Unit
-            null -> MinkSpaceSettingsShortcutPage(
+        val miniApp = activeMiniApps.getOrNull(page)
+        if (miniApp == null) {
+            MinkSpaceSettingsShortcutPage(
                 compact = compact,
                 contentColor = contentColor,
                 mutedContentColor = mutedContentColor,
@@ -132,6 +104,24 @@ internal fun MinkSpaceHost(
                 onOpenSettings = openMinkSpaceSettings,
                 modifier = Modifier.fillMaxSize(),
             )
+        } else {
+            key(miniApp.stableId) {
+                val app = registry.get(miniApp)
+                val expansion = remember(presentationState, app.manifest) {
+                    presentationState.expansionController(app.manifest)
+                }
+                MinkSpaceAppFrame(
+                    app = app,
+                    scope = MinkSpaceScope(
+                        compact = compact,
+                        contentColor = contentColor,
+                        mutedContentColor = mutedContentColor,
+                        containerColor = insetColor,
+                        expansion = expansion,
+                    ),
+                    modifier = Modifier.fillMaxSize(),
+                )
+            }
         }
     }
 }

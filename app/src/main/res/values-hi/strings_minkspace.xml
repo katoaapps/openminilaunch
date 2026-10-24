@@ -39,13 +39,12 @@
     <string name="music_hide_controls">नियंत्रण छिपाएँ और कलाकृति दिखाएँ</string>
     <string name="music_show_controls">मीडिया नियंत्रण दिखाएँ</string>
     <string name="music_expand_player">मीडिया नियंत्रण का विस्तार करें</string>
-    <string name="music_collapse_player">मीडिया नियंत्रण संक्षिप्त करें</string>
     <string name="music_back_control_description">10 सेकंड पीछे; एकाधिक टैप पुनरारंभ और पिछले मीडिया की पेशकश करते हैं</string>
     <string name="music_forward_control_description">10 सेकंड आगे बढ़ाएं; एकाधिक टैप अगले मीडिया और शफ़ल की पेशकश करते हैं</string>
     <string name="mink_space_widget_description">इंस्टॉल किए गए ऐप से एक विजेट MinkSpace में जोड़ें।</string>
     <string name="mink_space_widget_picker_description">विजेट इंस्टॉल किए गए ऐप देते हैं। Mink संभावित फ़िट दिखाता है, लेकिन अंतिम लेआउट और उपलब्ध कार्रवाइयों को प्रदाता नियंत्रित करता है।</string>
     <string name="replace_widget">विजेट बदलें</string>
-    <string name="interact_with_widget">विजेट का उपयोग करें</string>
+    <string name="expand_view">दृश्य विस्तृत करें</string>
     <string name="widget_fits_mink_space">MinkSpace में फ़िट होता है</string>
     <string name="widget_fits_expanded">बड़ा करने पर फ़िट होता है</string>
     <string name="widget_may_be_cramped">जगह कम पड़ सकती है</string>

@@ -39,13 +39,12 @@
     <string name="music_hide_controls">Ocultar controles y mostrar ilustraciones</string>
     <string name="music_show_controls">Mostrar controles multimedia</string>
     <string name="music_expand_player">Ampliar los controles de medios</string>
-    <string name="music_collapse_player">Contraer controles de medios</string>
     <string name="music_back_control_description">Retroceder 10 segundos; múltiples toques ofrecen reinicio y medios anteriores</string>
     <string name="music_forward_control_description">Adelante 10 segundos; múltiples toques ofrecen el siguiente medio y reproducción aleatoria</string>
     <string name="mink_space_widget_description">Agrega un widget de una aplicación instalada a MinkSpace.</string>
     <string name="mink_space_widget_picker_description">Los widgets provienen de aplicaciones instaladas. Mink muestra su ajuste probable, pero el proveedor controla el diseño final y las acciones disponibles.</string>
     <string name="replace_widget">Reemplazar widget</string>
-    <string name="interact_with_widget">Interactuar con el widget</string>
+    <string name="expand_view">Ampliar vista</string>
     <string name="widget_fits_mink_space">Cabe en MinkSpace</string>
     <string name="widget_fits_expanded">Cabe al expandirse</string>
     <string name="widget_may_be_cramped">Puede quedar ajustado</string>

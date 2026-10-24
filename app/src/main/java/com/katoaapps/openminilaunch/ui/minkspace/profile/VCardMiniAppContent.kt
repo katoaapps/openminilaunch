@@ -14,7 +14,6 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ExpandLess
 import androidx.compose.material.icons.filled.ExpandMore
 import androidx.compose.material.icons.filled.Link
 import androidx.compose.material3.FilledTonalButton
@@ -40,6 +39,8 @@ import com.katoaapps.openminilaunch.features.profile.ProfileQrCode
 import com.katoaapps.openminilaunch.ui.profile.ProfilePortrait
 import com.katoaapps.openminilaunch.ui.profile.ProfileQrImage
 import com.katoaapps.openminilaunch.ui.profile.profileLinkTypeLabel
+import com.katoaapps.openminilaunch.ui.minkspace.core.MinkSpaceExpansionController
+import com.katoaapps.openminilaunch.ui.minkspace.core.minkSpaceExpansionBackgroundTap
 import com.katoaapps.openminilaunch.ui.theme.Dimens
 
 /** Pure vCard presentation; the page owns profile state, dialogs, and MinkSpace expansion. */
@@ -50,14 +51,16 @@ internal fun VCardMiniAppContent(
     selectedLinks: List<ProfileLink>,
     qrCode: ProfileQrCode?,
     compact: Boolean,
-    expanded: Boolean,
+    expansion: MinkSpaceExpansionController,
     contentColor: Color,
     mutedContentColor: Color,
-    onExpandedChanged: (Boolean) -> Unit,
     onOpenQr: () -> Unit,
     onFixQr: () -> Unit,
 ) {
-    BoxWithConstraints(Modifier.fillMaxSize()) {
+    val expanded = expansion.expanded
+    BoxWithConstraints(
+        Modifier.fillMaxSize().minkSpaceExpansionBackgroundTap(expansion),
+    ) {
         val outerPadding = if (compact) Dimens.dp10 else Dimens.dp16
         val availableWidth = maxWidth
         val availableHeight = maxHeight
@@ -100,17 +103,17 @@ internal fun VCardMiniAppContent(
             )
         }
 
-        IconButton(
-            onClick = { onExpandedChanged(!expanded) },
-            modifier = Modifier.align(Alignment.TopEnd).size(Dimens.dp44),
-        ) {
-            Icon(
-                imageVector = if (expanded) Icons.Default.ExpandLess else Icons.Default.ExpandMore,
-                contentDescription = stringResource(
-                    if (expanded) R.string.collapse_vcard else R.string.expand_vcard,
-                ),
-                tint = contentColor,
-            )
+        if (!expanded) {
+            IconButton(
+                onClick = expansion::expand,
+                modifier = Modifier.align(Alignment.TopEnd).size(Dimens.dp44),
+            ) {
+                Icon(
+                    imageVector = Icons.Default.ExpandMore,
+                    contentDescription = stringResource(R.string.expand_vcard),
+                    tint = contentColor,
+                )
+            }
         }
     }
 }

@@ -992,7 +992,6 @@
     <string name="moto_secure_unavailable">Moto Secure could not be opened.</string>
     <string name="shortcut_extra">Extra app</string>
     <string name="expand_vcard">Expand vCard</string>
-    <string name="collapse_vcard">Collapse vCard</string>
     <string name="home_shortcuts_description_v2">Each of the seven slots can open any installed app. Unchanged slots keep the built-in action shown below; Top 8 stays built in.</string>
     <string name="less_visual_noise_description_v2">One focused home page, seven app slots, a built-in Top 8 shortcut, and a focused wheel for every installed app.</string>
     <string name="profile_onboarding_description_v2">Your vCard lives in MinkSpace beside your other mini-apps. Expand it to reveal the QR code, or tap the to-do mini-app to manage tasks.</string>

@@ -39,13 +39,12 @@
     <string name="music_hide_controls">إخفاء عناصر التحكم وإظهار العمل الفني</string>
     <string name="music_show_controls">إظهار عناصر التحكم في الوسائط</string>
     <string name="music_expand_player">قم بتوسيع عناصر التحكم في الوسائط</string>
-    <string name="music_collapse_player">طي عناصر التحكم في الوسائط</string>
     <string name="music_back_control_description">العودة 10 ثانية. توفر الصنابير المتعددة إعادة التشغيل والوسائط السابقة</string>
     <string name="music_forward_control_description">تقديم 10 ثواني؛ توفر الصنابير المتعددة الوسائط التالية والخلط العشوائي</string>
     <string name="mink_space_widget_description">أضف أداة واحدة من تطبيق مثبّت إلى MinkSpace.</string>
     <string name="mink_space_widget_picker_description">توفر التطبيقات المثبّتة الأدوات. يعرض Mink مدى الملاءمة المتوقع، لكن موفر الأداة يتحكم في التخطيط النهائي والإجراءات المتاحة.</string>
     <string name="replace_widget">استبدال الأداة</string>
-    <string name="interact_with_widget">التفاعل مع الأداة</string>
+    <string name="expand_view">توسيع العرض</string>
     <string name="widget_fits_mink_space">تلائم MinkSpace</string>
     <string name="widget_fits_expanded">تلائم عند التوسيع</string>
     <string name="widget_may_be_cramped">قد تكون ضيقة</string>

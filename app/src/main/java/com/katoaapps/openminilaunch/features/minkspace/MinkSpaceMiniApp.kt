@@ -1,6 +1,6 @@
 package com.katoaapps.openminilaunch.features.minkspace
 
-/** Stable mini-app identities used by settings, persistence, and the eventual MinkSpace host. */
+/** Stable mini-app identities used by settings, persistence, and the MinkSpace registry. */
 internal enum class MinkSpaceMiniApp(
     val stableId: String,
     val readyForHome: Boolean,

@@ -1,15 +1,89 @@
-# Adding a MinkSpace mini-app
+# Building a MinkSpace mini-app
 
-MinkSpace mini-apps are built-in launcher features, not dynamically loaded plugins. This keeps
-their data private, their behavior reviewable, and the Home pager predictable on small devices.
+MinkSpace is a small platform inside the launcher. It owns the vertical pager, the shared Home
+surface, compact-device sizing, theme colors, expansion animation, Back handling, and saved
+presentation state. A mini-app owns its feature data, UI, and the actions that request presentation
+changes.
 
-OpenMink ships Todo, Calculator, Media, Music, and Widget. Recorder keeps a reserved internal stable ID
-for future migration safety, but it is not a released mini-app, is hidden from user-facing settings,
-and must not be enabled until its permission, privacy, UI, and release plan are explicitly approved.
+Mini-apps are built into the launcher rather than loaded from arbitrary APKs. This keeps private
+data local, behavior reviewable, and Home predictable on compact devices.
+
+## The contract
+
+Every released mini-app has one adapter class implementing `MinkSpaceApp`:
+
+```kotlin
+internal class ExampleMinkSpaceApp(
+    private val repository: ExampleRepository,
+) : MinkSpaceApp {
+    override val manifest = Manifest
+
+    @Composable
+    override fun Content(scope: MinkSpaceScope, modifier: Modifier) {
+        scope.Surface(modifier) {
+            ExampleMiniApp(
+                compact = scope.compact,
+                contentColor = scope.contentColor,
+                mutedContentColor = scope.mutedContentColor,
+                expanded = scope.expansion.expanded,
+                onExpand = scope.expansion::expand,
+                onCollapse = scope.expansion::collapse,
+            )
+        }
+    }
+
+    companion object {
+        val Manifest = MinkSpaceMiniAppManifest(
+            miniApp = MinkSpaceMiniApp.EXAMPLE,
+            labelRes = R.string.example,
+            icon = Icons.Default.Extension,
+            supportsExpansion = true,
+            showExpansionButton = true,
+        )
+    }
+}
+```
+
+`MinkSpaceScope` is the complete platform-facing API available to a mini-app:
+
+- `compact` describes the current layout class.
+- `contentColor`, `mutedContentColor`, and `containerColor` are resolved by Home.
+- `Surface` draws the standard MinkSpace container.
+- `expansion` exposes `enabled`, `expanded`, `expand()`, and `collapse()`.
+
+The scope deliberately does not expose `LauncherStore`, `DeviceActions`, Activities, or feature
+repositories. Pass those through the adapter constructor instead. This prevents MinkSpace from
+becoming a service locator and keeps feature dependencies visible.
+
+`supportsExpansion` grants permission to request the full Home panel. `showExpansionButton` asks
+MinkSpace to draw its standard collapsed-state action using "Expand view" or the manifest's optional
+label override. A mini-app may hide that standard action and call the controller from feature UI.
+MinkSpace always draws the expanded-state close button; mini-apps cannot suppress it.
+
+## Registration
+
+Adding a mini-app requires three deliberate changes:
+
+1. Add its permanent `stableId` to `MinkSpaceMiniApp`. This enum is the persistence identity; never
+   rename an ID after release. Keep `readyForHome = false` until the runtime UI is complete, and add
+   it to `defaultEnabled` only when new installs should show it automatically.
+2. Implement one `<Name>MinkSpaceApp` adapter beside the feature UI. Keep its manifest with the
+   implementation so metadata and capabilities cannot drift away from the actual app.
+3. Add one `MinkSpaceMiniAppRegistration` to `MinkSpaceMiniAppCatalog`. The factory receives
+   `MinkSpaceHostDependencies` and constructor-injects only the dependencies that app needs.
+
+Do not add a branch to `MinkSpaceHost`. The host renders every mini-app through the registry and
+the shared interface. Catalog validation fails early if an identity is duplicated, omitted, or
+marked ready without a runtime implementation.
+
+If setup or management is needed, add a focused Activity in the feature's UI package, declare a
+`settingsTarget` in the manifest, and route that destination from Settings.
+
+Add localized strings and focused tests in the matching feature package. Mini-apps backed by
+Android system state should keep platform callbacks and capability checks in their repository;
+their `MinkSpaceApp` adapter owns that repository's UI lifecycle.
 
 ## Package shape
-
-Use the same two-package structure as Calculator, Media, and Todo:
 
 ```text
 features/minkspace/<name>/
@@ -18,52 +92,35 @@ features/minkspace/<name>/
   <Name>Item.kt                   # feature models, when needed
 
 ui/minkspace/<name>/
-  <Name>MiniAppPage.kt            # Home entry point and feature-state acquisition
-  <Name>MiniApp.kt                # Mini-app content UI
-  <Name>LabActivity.kt            # optional setup/management screen
+  <Name>MinkSpaceApp.kt           # manifest, dependency adapter, and platform entry point
+  <Name>MiniApp.kt                # feature content UI
+  <Name>LabActivity.kt            # optional setup or management screen
   ...                             # feature-only UI components
 ```
 
-Shared paging and presentation code belongs in `ui/minkspace/core`. Do not put feature state or
-feature-specific controls there.
-
-## Registration checklist
-
-1. Add a stable identity to `MinkSpaceMiniApp`. Never rename a shipped `stableId`; it is persisted.
-2. Mark `readyForHome` only after the Home UI is usable. Add a mini-app to `defaultEnabled` only
-   when it should appear for new users; released mini-apps remain user-hideable.
-3. Add label, icon, and optional manager metadata to `MinkSpaceMiniAppCatalog`.
-4. Expose one `<Name>MiniAppPage` composable from the mini-app's UI package. It owns repository
-   lookup and uses `MinkSpaceMiniAppSurface` for the common Home container.
-5. Add one branch in `MinkSpaceHost` that calls that page. The host should not acquire the
-   mini-app's repository or contain its UI.
-6. If setup or management is needed, add a focused Activity in the same UI package, register it in
-   the manifest, and connect its preview destination from Settings.
-7. Add localized strings and focused tests under the matching `features/minkspace/<name>` test
-   package.
-
-Mini-apps backed by Android system state should keep platform controllers, callbacks, and command
-capability checks in their feature repository. The Home-facing Page owns that repository's
-lifecycle, while the UI consumes a small immutable state model. Music is the reference example.
+Shared platform code belongs in `ui/minkspace/core`. Feature state and feature-specific controls
+do not.
 
 ## Interaction rules
 
-- Vertical paging belongs to MinkSpace. A mini-app may use horizontal paging for its own items.
-- Todo remains enabled, but it does not have to be first.
+- Vertical paging belongs to MinkSpace. A mini-app may use horizontal paging internally.
 - Mini-app drafts should survive their own horizontal page changes.
 - Do not intercept launcher gestures outside the mini-app bounds.
-- Use the shared content, muted-content, and container colors supplied by the Home page.
-- Keep runtime permissions and destructive confirmations inside the owning mini-app feature.
-- Multi-tap controls must resolve the complete tap sequence before firing the single-tap action;
-  otherwise double- and triple-taps also execute the single-tap command.
-- System-backed commands must honor the active provider's advertised capabilities. Do not invent
-  a fallback command when Android or the provider exposes no compatible operation.
-- Mini-apps that need the entire Home pill use `MinkSpacePresentationState`. The mini-app requests
-  expansion for its stable identity; the shared shell owns shortcut visibility, padding, gesture
-  locking, saved state, and cleanup when the visible mini-app changes.
-- Mini-apps that host arbitrary Android views must use an explicit interaction state instead of
-  guessing whether the child can scroll. Widget is the reference: browsing gestures stay with
-  MinkSpace, while tapping the widget expands the pill and gives the provider exclusive gestures.
-- Platform integration can reuse `ui/widgets` host and binding infrastructure, but MinkSpace
-  placement, sizing, and UI stay in `ui/minkspace/widget` so forks can omit the mini-app without
-  rewriting the full widget page.
+- Keep permissions, destructive confirmations, and platform failures inside the owning feature.
+- Multi-tap controls must resolve the complete tap sequence before firing a single-tap action.
+- System-backed commands must honor the provider's advertised capabilities.
+- MinkSpace owns expansion state, the standard expand action, the permanent expanded-state close
+  button, layout animation, pager locking, Back handling, saved state, and cleanup when the visible
+  mini-app changes.
+- A mini-app may hide the standard expand action and provide its own trigger. Use
+  `minkSpaceExpansionBackgroundTap` only when empty-space taps fit the feature.
+- Nested actionable content must win its gesture before an empty-space expansion gesture.
+- Android-view hosts need an explicit interaction state. Widget is the reference: collapsed widget
+  taps open the provider, its affordance requests expansion, and real widget controls are enabled
+  only while expanded.
+
+## Current built-ins
+
+OpenMink ships Todo, Calculator, Media, Music, Widget, and vCard. Recorder retains a reserved stable
+ID for migration safety but remains hidden until its permission, privacy, UI, and release plan are
+approved.
