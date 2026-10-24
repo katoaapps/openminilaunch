@@ -1010,4 +1010,10 @@
     <string name="moto_secure_gateway_description">Motorola хранит приложения Защищенной папки в собственной защищенной области. Откройте Moto Secure, чтобы пройти проверку и войти в Защищенную папку.</string>
     <string name="open_moto_secure">Открыть Moto Secure</string>
     <string name="moto_secure_unavailable">Не удалось открыть Moto Secure.</string>
+    <string name="shortcut_extra">Дополнительное приложение</string>
+    <string name="expand_vcard">Развернуть vCard</string>
+    <string name="collapse_vcard">Свернуть vCard</string>
+    <string name="home_shortcuts_description_v2">Каждый из семи слотов может открыть любое установленное приложение. Неизменённые слоты сохраняют встроенное действие, показанное ниже; Top 8 остаётся встроенным.</string>
+    <string name="less_visual_noise_description_v2">Одна сфокусированная домашняя страница, семь слотов приложений, встроенный ярлык Top 8 и колесо для каждого установленного приложения.</string>
+    <string name="profile_onboarding_description_v2">Ваша vCard находится в MinkSpace рядом с другими мини-приложениями. Разверните её, чтобы показать QR-код, или нажмите мини-приложение задач для управления ими.</string>
 </resources>

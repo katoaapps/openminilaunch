@@ -46,7 +46,6 @@ internal fun LauncherTwoPanel(
     magicBoxExpanded: Boolean,
     minkSpaceExpanded: Boolean,
     homeRequestToken: Int,
-    profileFlipResetKey: Int,
     magicBoxSessionState: MagicBoxSessionState,
     onFocusPage: (Int) -> Unit,
     onMinkDay: () -> Unit,
@@ -121,7 +120,6 @@ internal fun LauncherTwoPanel(
                 onMinkSpaceExpandedChange = onMinkSpaceExpandedChange,
                 keyboardInputEnabled = true,
                 homeRequestToken = homeRequestToken,
-                profileFlipResetKey = profileFlipResetKey,
                 magicBoxSessionState = magicBoxSessionState,
                 paneModifier = Modifier.offset { IntOffset(homeLeftPx, 0) }
                     .width(paneWidth).fillMaxHeight(),

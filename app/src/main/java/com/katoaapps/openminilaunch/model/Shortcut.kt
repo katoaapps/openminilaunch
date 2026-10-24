@@ -7,7 +7,7 @@ enum class Shortcut(@param:StringRes val labelRes: Int) {
     NOTE(R.string.shortcut_note),
     EVENT(R.string.shortcut_calendar),
     WEATHER(R.string.shortcut_weather),
-    PROFILE(R.string.shortcut_profile),
+    EXTRA(R.string.shortcut_extra),
     CALL(R.string.shortcut_call),
     MESSAGE(R.string.shortcut_messenger),
     FILES(R.string.shortcut_files),
@@ -16,11 +16,9 @@ enum class Shortcut(@param:StringRes val labelRes: Int) {
 
 internal const val MAX_DRAWER_APPS = 8
 
-val configurableShortcuts: List<Shortcut> = Shortcut.entries.filterNot {
-    it == Shortcut.PROFILE || it == Shortcut.DRAWER
-}
+val configurableShortcuts: List<Shortcut> = Shortcut.entries.filterNot { it == Shortcut.DRAWER }
 
 internal fun shortcutFromStoredName(name: String): Shortcut? = when (name) {
-    "TODO" -> Shortcut.PROFILE
+    "TODO", "PROFILE" -> Shortcut.EXTRA
     else -> runCatching { Shortcut.valueOf(name) }.getOrNull()
 }

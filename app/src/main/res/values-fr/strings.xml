@@ -990,4 +990,10 @@
     <string name="moto_secure_gateway_description">Motorola conserve les applications du Dossier sécurisé dans son propre espace protégé. Ouvrez Moto Secure pour vous authentifier et accéder au Dossier sécurisé.</string>
     <string name="open_moto_secure">Ouvrir Moto Secure</string>
     <string name="moto_secure_unavailable">Impossible d’ouvrir Moto Secure.</string>
+    <string name="shortcut_extra">Application supplémentaire</string>
+    <string name="expand_vcard">Développer la vCard</string>
+    <string name="collapse_vcard">Réduire la vCard</string>
+    <string name="home_shortcuts_description_v2">Chacun des sept emplacements peut ouvrir une application installée. Les emplacements inchangés conservent l’action intégrée indiquée ci-dessous ; Top 8 reste intégré.</string>
+    <string name="less_visual_noise_description_v2">Une page d’accueil ciblée, sept emplacements d’applications, un raccourci Top 8 intégré et une roue ciblée pour chaque application installée.</string>
+    <string name="profile_onboarding_description_v2">Votre vCard se trouve dans MinkSpace avec vos autres mini-applications. Développez-la pour afficher le code QR ou touchez la mini-application des tâches pour les gérer.</string>
 </resources>

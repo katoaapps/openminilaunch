@@ -4,6 +4,7 @@ import androidx.annotation.StringRes
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Calculate
 import androidx.compose.material.icons.filled.Checklist
+import androidx.compose.material.icons.filled.ContactPage
 import androidx.compose.material.icons.filled.Mic
 import androidx.compose.material.icons.filled.MusicNote
 import androidx.compose.material.icons.filled.PhotoLibrary
@@ -29,6 +30,7 @@ internal enum class MinkSpaceMiniAppSettingsTarget {
     TODOS,
     MEDIA,
     WIDGET,
+    VCARD,
 }
 
 internal object MinkSpaceMiniAppCatalog {
@@ -65,6 +67,12 @@ internal object MinkSpaceMiniAppCatalog {
             labelRes = R.string.widgets,
             icon = Icons.Default.Widgets,
             settingsTarget = MinkSpaceMiniAppSettingsTarget.WIDGET,
+        ),
+        MinkSpaceMiniAppSpec(
+            miniApp = MinkSpaceMiniApp.VCARD,
+            labelRes = R.string.profile,
+            icon = Icons.Default.ContactPage,
+            settingsTarget = MinkSpaceMiniAppSettingsTarget.VCARD,
         ),
     )
 

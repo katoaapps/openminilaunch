@@ -94,19 +94,19 @@ internal object DemoHomeData {
     fun shortcutOrder(profile: DemoHomeProfile): List<Shortcut> = when (profile) {
         DemoHomeProfile.CLASSIC -> Shortcut.entries
         DemoHomeProfile.WORK -> listOf(
-            Shortcut.FILES, Shortcut.EVENT, Shortcut.NOTE, Shortcut.PROFILE,
+            Shortcut.FILES, Shortcut.EVENT, Shortcut.NOTE, Shortcut.EXTRA,
             Shortcut.MESSAGE, Shortcut.CALL, Shortcut.WEATHER, Shortcut.DRAWER,
         )
         DemoHomeProfile.NIGHT -> listOf(
-            Shortcut.WEATHER, Shortcut.PROFILE, Shortcut.NOTE, Shortcut.EVENT,
+            Shortcut.WEATHER, Shortcut.EXTRA, Shortcut.NOTE, Shortcut.EVENT,
             Shortcut.CALL, Shortcut.MESSAGE, Shortcut.FILES, Shortcut.DRAWER,
         )
         DemoHomeProfile.PERSONAL -> listOf(
-            Shortcut.MESSAGE, Shortcut.CALL, Shortcut.EVENT, Shortcut.PROFILE,
+            Shortcut.MESSAGE, Shortcut.CALL, Shortcut.EVENT, Shortcut.EXTRA,
             Shortcut.NOTE, Shortcut.WEATHER, Shortcut.FILES, Shortcut.DRAWER,
         )
         DemoHomeProfile.FRESH -> listOf(
-            Shortcut.NOTE, Shortcut.FILES, Shortcut.EVENT, Shortcut.PROFILE,
+            Shortcut.NOTE, Shortcut.FILES, Shortcut.EVENT, Shortcut.EXTRA,
             Shortcut.MESSAGE, Shortcut.WEATHER, Shortcut.CALL, Shortcut.DRAWER,
         )
     }

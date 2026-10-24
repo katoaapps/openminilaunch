@@ -990,4 +990,10 @@
     <string name="moto_secure_gateway_description">A Motorola mantém os apps da Pasta Segura na própria área protegida. Abra o Moto Secure para autenticar e entrar na Pasta Segura.</string>
     <string name="open_moto_secure">Abrir Moto Secure</string>
     <string name="moto_secure_unavailable">Não foi possível abrir o Moto Secure.</string>
+    <string name="shortcut_extra">Aplicativo extra</string>
+    <string name="expand_vcard">Expandir vCard</string>
+    <string name="collapse_vcard">Recolher vCard</string>
+    <string name="home_shortcuts_description_v2">Cada um dos sete espaços pode abrir qualquer aplicativo instalado. Os espaços inalterados mantêm a ação integrada mostrada abaixo; o Top 8 continua integrado.</string>
+    <string name="less_visual_noise_description_v2">Uma página inicial focada, sete espaços de aplicativos, um atalho Top 8 integrado e uma roda focada para cada aplicativo instalado.</string>
+    <string name="profile_onboarding_description_v2">Seu vCard fica no MinkSpace ao lado dos outros miniaplicativos. Expanda-o para revelar o código QR ou toque no miniaplicativo de tarefas para gerenciá-las.</string>
 </resources>

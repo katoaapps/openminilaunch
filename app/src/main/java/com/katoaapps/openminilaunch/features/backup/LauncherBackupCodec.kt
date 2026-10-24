@@ -159,6 +159,17 @@ internal object LauncherBackupCodec {
         val messaging = json.getJSONObject("messaging")
         val minkDay = json.getJSONObject("minkDay")
         val minkSpace = json.optJSONObject("minkSpace")
+        val minkSpaceOrder = minkSpace?.optJSONArray("order")?.minkSpaceMiniApps()
+        val enabledMinkSpaceMiniApps = minkSpace?.optJSONArray("enabled")
+            ?.minkSpaceMiniApps()
+            ?.toSet()
+            ?.let { enabled ->
+                if (minkSpaceOrder != null && MinkSpaceMiniApp.VCARD !in minkSpaceOrder) {
+                    enabled + MinkSpaceMiniApp.VCARD
+                } else {
+                    enabled
+                }
+            }
 
         return LauncherBackupSettings(
             themePreference = appearance.enumValue("theme", ThemePreference.SYSTEM),
@@ -195,10 +206,8 @@ internal object LauncherBackupCodec {
             openSoftwareKeyboardOnHome = magicBox.optBoolean("openSoftwareKeyboardOnHome", true),
             includeAppShortcutsInDiscovery = magicBox.optBoolean("includeAppShortcutsInDiscovery", false),
             automaticAppBubbleTargets = magicBox.optJSONArray("automaticAppBubbleTargets").safeTargets(),
-            minkSpaceMiniAppOrder = minkSpace?.optJSONArray("order")?.minkSpaceMiniApps(),
-            enabledMinkSpaceMiniApps = minkSpace?.optJSONArray("enabled")
-                ?.minkSpaceMiniApps()
-                ?.toSet(),
+            minkSpaceMiniAppOrder = minkSpaceOrder,
+            enabledMinkSpaceMiniApps = enabledMinkSpaceMiniApps,
             sendMessagesAutomatically = messaging.optBoolean("sendMessagesAutomatically", false),
             preferredMessagingPackage = messaging.optNullableString("preferredMessagingPackage")?.safePackage(),
             preferredAiPackage = magicBox.optNullableString("preferredAiPackage")?.safePackage(),

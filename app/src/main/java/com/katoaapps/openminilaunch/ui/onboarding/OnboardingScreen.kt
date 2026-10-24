@@ -181,7 +181,7 @@ internal fun OnboardingScreen(store: LauncherStore, actions: DeviceActions, onFi
                     when (page) {
                         0 -> Column(verticalArrangement = Arrangement.spacedBy(Dimens.dp18)) {
                             Text(stringResource(R.string.onboarding_intro_description, appName), fontSize = Dimens.sp18)
-                            OnboardingPoint(Icons.Default.FilterAlt, stringResource(R.string.less_visual_noise), stringResource(R.string.less_visual_noise_description))
+                            OnboardingPoint(Icons.Default.FilterAlt, stringResource(R.string.less_visual_noise), stringResource(R.string.less_visual_noise_description_v2))
                             OnboardingPoint(Icons.Default.Palette, stringResource(R.string.choose_panel_color), stringResource(R.string.choose_panel_color_description))
                             OnboardingPoint(Icons.Default.Wallpaper, stringResource(R.string.choose_home_wallpaper), stringResource(R.string.choose_home_wallpaper_description))
                             OnboardingPoint(Icons.Default.Apps, stringResource(R.string.choose_your_icons), stringResource(R.string.choose_your_icons_description))
@@ -212,7 +212,7 @@ internal fun OnboardingScreen(store: LauncherStore, actions: DeviceActions, onFi
                             OnboardingPoint(
                                 Icons.Default.AccountCircle,
                                 stringResource(R.string.profile_onboarding_title),
-                                stringResource(R.string.profile_onboarding_description),
+                                stringResource(R.string.profile_onboarding_description_v2),
                             )
                             OnboardingPoint(Icons.Default.IosShare, stringResource(R.string.take_list_with_you), stringResource(R.string.take_list_with_you_description))
                             OnboardingPoint(Icons.Default.CheckCircle, stringResource(R.string.keep_context), stringResource(R.string.keep_context_description))

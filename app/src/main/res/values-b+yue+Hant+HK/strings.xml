@@ -990,4 +990,10 @@
     <string name="moto_secure_gateway_description">Motorola 會將安全資料夾應用程式保留喺自己受保護嘅區域入面。開啟 Moto Secure 以驗證身份並進入安全資料夾。</string>
     <string name="open_moto_secure">開啟 Moto Secure</string>
     <string name="moto_secure_unavailable">無法開啟 Moto Secure。</string>
+    <string name="shortcut_extra">額外應用程式</string>
+    <string name="expand_vcard">展開 vCard</string>
+    <string name="collapse_vcard">收合 vCard</string>
+    <string name="home_shortcuts_description_v2">七個欄位都可以開啟任何已安裝嘅應用程式。未更改嘅欄位會保留下方顯示嘅內置操作；Top 8 仍然係內置功能。</string>
+    <string name="less_visual_noise_description_v2">一個專注嘅主畫面、七個應用程式欄位、內置 Top 8 捷徑，同埋為每個已安裝應用程式而設嘅專注轉盤。</string>
+    <string name="profile_onboarding_description_v2">你嘅 vCard 會放喺 MinkSpace，同其他迷你應用程式並列。展開即可顯示 QR 碼，或者撳待辦事項迷你應用程式管理工作。</string>
 </resources>

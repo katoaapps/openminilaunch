@@ -17,6 +17,7 @@ import com.katoaapps.openminilaunch.ui.minkspace.calculator.CalculatorMiniAppPag
 import com.katoaapps.openminilaunch.ui.minkspace.media.MediaMiniAppPage
 import com.katoaapps.openminilaunch.ui.minkspace.music.MusicMiniAppPage
 import com.katoaapps.openminilaunch.ui.minkspace.todo.TodoMiniAppPage
+import com.katoaapps.openminilaunch.ui.minkspace.profile.VCardMiniAppPage
 import com.katoaapps.openminilaunch.ui.minkspace.widget.WidgetMiniAppPage
 
 /** Hosts visible mini-apps, the settings shortcut, and MinkSpace's vertical switching axis. */
@@ -33,6 +34,7 @@ internal fun MinkSpaceHost(
     mutedContentColor: Color,
     insetColor: Color,
     openMediaLab: () -> Unit,
+    openVCardSettings: () -> Unit,
     openMinkSpaceSettings: () -> Unit,
     presentationState: MinkSpacePresentationState,
     modifier: Modifier = Modifier,
@@ -109,6 +111,16 @@ internal fun MinkSpaceHost(
                 mutedContentColor = mutedContentColor,
                 containerColor = insetColor,
                 presentationState = presentationState,
+                modifier = Modifier.fillMaxSize(),
+            )
+            MinkSpaceMiniApp.VCARD -> VCardMiniAppPage(
+                store = store,
+                compact = compact,
+                contentColor = contentColor,
+                mutedContentColor = mutedContentColor,
+                containerColor = insetColor,
+                presentationState = presentationState,
+                openVCardSettings = openVCardSettings,
                 modifier = Modifier.fillMaxSize(),
             )
             MinkSpaceMiniApp.RECORDER -> Unit

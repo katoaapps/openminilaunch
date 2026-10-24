@@ -45,10 +45,10 @@ internal fun BoxScope.HomeFocusPanel(
     focusPanelHeight: Dp,
     todoJumpToken: Int,
     minkSpacePresentation: MinkSpacePresentationState,
-    profileFlipResetKey: Int,
     openTodos: () -> Unit,
     openVCardSettings: () -> Unit,
     openMinkSpaceSettings: () -> Unit,
+    openShortcutSettings: () -> Unit,
     onTodoCenterChanged: (Offset) -> Unit,
     onPausedApp: (String) -> Unit,
     onOpenDrawer: () -> Unit,
@@ -105,68 +105,62 @@ internal fun BoxScope.HomeFocusPanel(
         },
         tonalElevation = Dimens.dp1 * panelOpacity,
     ) {
-        FlippableHomeProfilePanel(
-            store = store,
-            compact = qwertyHome,
-            resetKey = profileFlipResetKey,
-            openVCardSettings = openVCardSettings,
-        ) { showVCard ->
-            Row(
-                Modifier
-                    .fillMaxSize()
-                    .padding(
-                        if (minkSpaceExpanded) {
-                            Dimens.dp0
-                        } else if (qwertyHome) {
-                            Dimens.dp10
-                        } else {
-                            Dimens.dp14
-                        },
-                    ),
-                horizontalArrangement = Arrangement.spacedBy(if (qwertyHome) Dimens.dp8 else Dimens.dp12),
-            ) {
-                MinkSpaceHost(
+        Row(
+            Modifier
+                .fillMaxSize()
+                .padding(
+                    if (minkSpaceExpanded) {
+                        Dimens.dp0
+                    } else if (qwertyHome) {
+                        Dimens.dp10
+                    } else {
+                        Dimens.dp14
+                    },
+                ),
+            horizontalArrangement = Arrangement.spacedBy(if (qwertyHome) Dimens.dp8 else Dimens.dp12),
+        ) {
+            MinkSpaceHost(
+                store = store,
+                actions = actions,
+                openTodos = openTodos,
+                todoJumpToken = todoJumpToken,
+                todoItemsPerPage = itemsPerPage,
+                todoTextMetrics = todoTextMetrics,
+                compact = qwertyHome,
+                contentColor = contentColor,
+                mutedContentColor = mutedColor,
+                insetColor = insetColor,
+                openMediaLab = actions::openMediaLab,
+                openVCardSettings = openVCardSettings,
+                openMinkSpaceSettings = openMinkSpaceSettings,
+                presentationState = minkSpacePresentation,
+                modifier = Modifier.weight(2f).fillMaxHeight().onGloballyPositioned { coordinates ->
+                    val origin = coordinates.positionInRoot()
+                    onTodoCenterChanged(
+                        origin + Offset(coordinates.size.width / 2f, coordinates.size.height / 2f),
+                    )
+                },
+            )
+            if (!minkSpaceExpanded) {
+                ShortcutGrid(
                     store = store,
                     actions = actions,
-                    openTodos = openTodos,
-                    todoJumpToken = todoJumpToken,
-                    todoItemsPerPage = itemsPerPage,
-                    todoTextMetrics = todoTextMetrics,
+                    appAccessState = appAccessState,
+                    onPausedApp = onPausedApp,
+                    onUnavailableApp = { label ->
+                        Toast.makeText(
+                            context,
+                            context.getString(R.string.launcher_app_unavailable, label),
+                            Toast.LENGTH_LONG,
+                        ).show()
+                    },
+                    onConfigureExtraApp = openShortcutSettings,
                     compact = qwertyHome,
                     contentColor = contentColor,
-                    mutedContentColor = mutedColor,
-                    insetColor = insetColor,
-                    openMediaLab = actions::openMediaLab,
-                    openMinkSpaceSettings = openMinkSpaceSettings,
-                    presentationState = minkSpacePresentation,
-                    modifier = Modifier.weight(2f).fillMaxHeight().onGloballyPositioned { coordinates ->
-                        val origin = coordinates.positionInRoot()
-                        onTodoCenterChanged(
-                            origin + Offset(coordinates.size.width / 2f, coordinates.size.height / 2f),
-                        )
-                    },
+                    itemContainerColor = contentColor.copy(alpha = .09f),
+                    modifier = Modifier.weight(1f).fillMaxHeight(),
+                    openDrawer = onOpenDrawer,
                 )
-                if (!minkSpaceExpanded) {
-                    ShortcutGrid(
-                        store = store,
-                        actions = actions,
-                        appAccessState = appAccessState,
-                        onPausedApp = onPausedApp,
-                        onUnavailableApp = { label ->
-                            Toast.makeText(
-                                context,
-                                context.getString(R.string.launcher_app_unavailable, label),
-                                Toast.LENGTH_LONG,
-                            ).show()
-                        },
-                        showVCard = showVCard,
-                        compact = qwertyHome,
-                        contentColor = contentColor,
-                        itemContainerColor = contentColor.copy(alpha = .09f),
-                        modifier = Modifier.weight(1f).fillMaxHeight(),
-                        openDrawer = onOpenDrawer,
-                    )
-                }
             }
         }
     }

@@ -6,9 +6,9 @@ import org.junit.Test
 
 class MinkSpacePreferenceDefaultsTest {
     @Test
-    fun missingPreferenceStartsWithTodoEnabled() {
+    fun missingPreferenceStartsWithTodoAndVCardEnabled() {
         assertEquals(
-            setOf(MinkSpaceMiniApp.TODO),
+            setOf(MinkSpaceMiniApp.TODO, MinkSpaceMiniApp.VCARD),
             enabledMinkSpaceMiniAppsFromStableIds(null),
         )
     }
@@ -47,6 +47,7 @@ class MinkSpacePreferenceDefaultsTest {
                 MinkSpaceMiniApp.RECORDER,
                 MinkSpaceMiniApp.MEDIA,
                 MinkSpaceMiniApp.MUSIC,
+                MinkSpaceMiniApp.VCARD,
             ),
             mergeVisibleMinkSpaceMiniAppOrder(
                 currentOrder = MinkSpaceMiniApp.defaultOrder,
@@ -56,6 +57,7 @@ class MinkSpacePreferenceDefaultsTest {
                     MinkSpaceMiniApp.CALCULATOR,
                     MinkSpaceMiniApp.MEDIA,
                     MinkSpaceMiniApp.MUSIC,
+                    MinkSpaceMiniApp.VCARD,
                 ),
             ),
         )

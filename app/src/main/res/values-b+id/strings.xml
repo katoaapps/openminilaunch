@@ -990,4 +990,10 @@
     <string name="moto_secure_gateway_description">Motorola menyimpan aplikasi Folder Aman di area terlindung miliknya. Buka Moto Secure untuk melakukan autentikasi dan masuk ke Folder Aman.</string>
     <string name="open_moto_secure">Buka Moto Secure</string>
     <string name="moto_secure_unavailable">Moto Secure tidak dapat dibuka.</string>
+    <string name="shortcut_extra">Aplikasi tambahan</string>
+    <string name="expand_vcard">Perluas vCard</string>
+    <string name="collapse_vcard">Ciutkan vCard</string>
+    <string name="home_shortcuts_description_v2">Masing-masing dari tujuh slot dapat membuka aplikasi apa pun yang terinstal. Slot yang tidak diubah mempertahankan tindakan bawaan yang ditampilkan di bawah; Top 8 tetap menjadi bawaan.</string>
+    <string name="less_visual_noise_description_v2">Satu halaman beranda yang terfokus, tujuh slot aplikasi, pintasan Top 8 bawaan, dan roda terfokus untuk setiap aplikasi yang terinstal.</string>
+    <string name="profile_onboarding_description_v2">vCard Anda berada di MinkSpace bersama aplikasi mini lainnya. Perluas untuk menampilkan kode QR, atau ketuk aplikasi mini tugas untuk mengelola tugas.</string>
 </resources>

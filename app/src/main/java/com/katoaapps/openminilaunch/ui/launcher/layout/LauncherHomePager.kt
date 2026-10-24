@@ -61,13 +61,8 @@ internal fun LauncherHomePager(
     var settledPair by remember { mutableIntStateOf(1) }
     var initialized by remember { mutableStateOf(false) }
     var previousModeWasTwoPanel by remember { mutableStateOf(false) }
-    var profileFlipResetToken by remember { mutableIntStateOf(0) }
     var minkSpaceExpanded by remember { mutableStateOf(false) }
     val magicBoxExpanded = magicBoxSessionState.expanded
-
-    LaunchedEffect(focusedPage) {
-        profileFlipResetToken++
-    }
 
     LaunchedEffect(fold, configuration.smallestScreenWidthDp) {
         store.maybeEnableTwoPanelForUnfoldedBookDisplay(
@@ -121,7 +116,6 @@ internal fun LauncherHomePager(
 
         LaunchedEffect(homePageRequestToken) {
             if (homePageRequestToken > 0) {
-                profileFlipResetToken++
                 onFocusedPageChange(HOME_PAGE)
                 if (twoPanelActive) {
                     settledPair = 1
@@ -133,7 +127,6 @@ internal fun LauncherHomePager(
         }
 
         val goHome: () -> Unit = {
-            profileFlipResetToken++
             onFocusedPageChange(HOME_PAGE)
             scope.launch {
                 if (twoPanelActive) {
@@ -178,7 +171,6 @@ internal fun LauncherHomePager(
                 magicBoxExpanded = magicBoxExpanded,
                 minkSpaceExpanded = minkSpaceExpanded,
                 homeRequestToken = homeRequestToken,
-                profileFlipResetKey = profileFlipResetToken,
                 magicBoxSessionState = magicBoxSessionState,
                 onFocusPage = onFocusedPageChange,
                 onMinkDay = goToMinkDay,
@@ -216,7 +208,6 @@ internal fun LauncherHomePager(
                             onMinkSpaceExpandedChange = { minkSpaceExpanded = it },
                             keyboardInputEnabled = keyboardInputEnabled,
                             homeRequestToken = homeRequestToken,
-                            profileFlipResetKey = profileFlipResetToken,
                             magicBoxSessionState = magicBoxSessionState,
                         )
                     }

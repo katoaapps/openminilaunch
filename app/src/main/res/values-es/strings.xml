@@ -990,4 +990,10 @@
     <string name="moto_secure_gateway_description">Motorola mantiene las aplicaciones de Carpeta segura dentro de su propia área protegida. Abre Moto Secure para autenticarte y entrar en Carpeta segura.</string>
     <string name="open_moto_secure">Abrir Moto Secure</string>
     <string name="moto_secure_unavailable">No se pudo abrir Moto Secure.</string>
+    <string name="shortcut_extra">Aplicación adicional</string>
+    <string name="expand_vcard">Expandir vCard</string>
+    <string name="collapse_vcard">Contraer vCard</string>
+    <string name="home_shortcuts_description_v2">Cada uno de los siete espacios puede abrir cualquier aplicación instalada. Los espacios sin cambios conservan la acción integrada que se muestra abajo; Top 8 sigue integrado.</string>
+    <string name="less_visual_noise_description_v2">Una página de inicio enfocada, siete espacios para aplicaciones, un acceso directo Top 8 integrado y una rueda enfocada para cada aplicación instalada.</string>
+    <string name="profile_onboarding_description_v2">Tu vCard está en MinkSpace junto a tus otras miniaplicaciones. Expándela para mostrar el código QR o toca la miniaplicación de tareas para administrarlas.</string>
 </resources>

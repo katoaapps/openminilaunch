@@ -57,9 +57,9 @@ class HomeLayoutTest {
     }
 
     @Test fun configurableShortcutsUseStableGenericSlotLabels() {
-        assertEquals(6, configurableShortcuts.size)
+        assertEquals(7, configurableShortcuts.size)
         assertEquals(R.string.shortcut_note, Shortcut.NOTE.labelRes)
         assertEquals(R.string.shortcut_files, Shortcut.FILES.labelRes)
-        assertEquals(R.string.shortcut_profile, Shortcut.PROFILE.labelRes)
+        assertEquals(R.string.shortcut_extra, Shortcut.EXTRA.labelRes)
     }
 }

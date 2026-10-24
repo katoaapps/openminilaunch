@@ -55,8 +55,23 @@ internal class MinkSpacePreferenceStore(private val prefs: SharedPreferences) {
         return saved + MinkSpaceMiniApp.defaultOrder.filterNot(saved::contains)
     }
 
-    private fun loadEnabledMiniApps(): Set<MinkSpaceMiniApp> =
-        enabledMinkSpaceMiniAppsFromStableIds(prefs.getStringSet(KEY_ENABLED, null))
+    private fun loadEnabledMiniApps(): Set<MinkSpaceMiniApp> {
+        val savedStableIds = prefs.getStringSet(KEY_ENABLED, null)
+        val enabled = enabledMinkSpaceMiniAppsFromStableIds(savedStableIds)
+        if (savedStableIds == null) {
+            prefs.edit { putBoolean(KEY_VCARD_MINI_APP_MIGRATED, true) }
+            return enabled
+        }
+        if (!prefs.getBoolean(KEY_VCARD_MINI_APP_MIGRATED, false)) {
+            val migrated = enabled + MinkSpaceMiniApp.VCARD
+            prefs.edit {
+                putStringSet(KEY_ENABLED, migrated.mapTo(mutableSetOf()) { it.stableId })
+                putBoolean(KEY_VCARD_MINI_APP_MIGRATED, true)
+            }
+            return migrated
+        }
+        return enabled
+    }
 
     private fun saveEnabledMiniApps() {
         prefs.edit {
@@ -71,6 +86,7 @@ internal class MinkSpacePreferenceStore(private val prefs: SharedPreferences) {
     private companion object {
         const val KEY_ORDER = "mink_space_mini_app_order"
         const val KEY_ENABLED = "mink_space_enabled_mini_apps"
+        const val KEY_VCARD_MINI_APP_MIGRATED = "mink_space_vcard_migration_complete"
     }
 }
 

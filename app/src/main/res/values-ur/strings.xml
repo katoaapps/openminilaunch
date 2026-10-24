@@ -990,4 +990,10 @@
     <string name="moto_secure_gateway_description">Motorola، Secure Folder ایپس کو اپنے محفوظ علاقے میں رکھتا ہے۔ تصدیق اور Secure Folder میں داخل ہونے کے لیے Moto Secure کھولیں۔</string>
     <string name="open_moto_secure">Moto Secure کھولیں</string>
     <string name="moto_secure_unavailable">Moto Secure نہیں کھولا جا سکا۔</string>
+    <string name="shortcut_extra">اضافی ایپ</string>
+    <string name="expand_vcard">vCard پھیلائیں</string>
+    <string name="collapse_vcard">vCard سمیٹیں</string>
+    <string name="home_shortcuts_description_v2">ساتوں سلاٹس میں سے ہر ایک کسی بھی انسٹال شدہ ایپ کو کھول سکتا ہے۔ غیر تبدیل شدہ سلاٹس نیچے دکھائی گئی بلٹ ان کارروائی برقرار رکھتے ہیں؛ Top 8 بلٹ ان رہتا ہے۔</string>
+    <string name="less_visual_noise_description_v2">ایک فوکسڈ ہوم پیج، سات ایپ سلاٹس، ایک بلٹ ان Top 8 شارٹ کٹ، اور ہر انسٹال شدہ ایپ کے لیے ایک فوکسڈ وہیل۔</string>
+    <string name="profile_onboarding_description_v2">آپ کا vCard دوسری منی ایپس کے ساتھ MinkSpace میں موجود ہے۔ QR کوڈ دکھانے کے لیے اسے پھیلائیں، یا کام سنبھالنے کے لیے ٹو ڈو منی ایپ کو تھپتھپائیں۔</string>
 </resources>

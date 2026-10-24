@@ -87,7 +87,7 @@ internal fun ShortcutsSettingsPage(
     SettingsPage(stringResource(R.string.shortcuts_and_drawer), goBack) {
         SectionLabel(stringResource(R.string.home_shortcuts))
         Text(
-            stringResource(R.string.home_shortcuts_description),
+            stringResource(R.string.home_shortcuts_description_v2),
             color = Muted,
             fontSize = Dimens.sp13,
         )

@@ -64,7 +64,7 @@ internal fun ShortcutGrid(
     appAccessState: MinkAppAccessState,
     onPausedApp: (String) -> Unit,
     onUnavailableApp: (String) -> Unit,
-    showVCard: () -> Unit,
+    onConfigureExtraApp: () -> Unit,
     compact: Boolean = false,
     contentColor: Color = MaterialTheme.colorScheme.onSurface,
     itemContainerColor: Color = MinkTransparent,
@@ -178,8 +178,10 @@ internal fun ShortcutGrid(
                                     onPausedApp(checkNotNull(pausedTargetPackage))
                                 } else if (appUnavailable) {
                                     onUnavailableApp(checkNotNull(assignedTarget).label)
+                                } else if (shortcut == Shortcut.EXTRA && assignedTargetKey == null) {
+                                    onConfigureExtraApp()
                                 } else {
-                                    actions.launchShortcut(shortcut, assignedTargetKey, showVCard, openDrawer)
+                                    actions.launchShortcut(shortcut, assignedTargetKey, openDrawer)
                                 }
                             },
                             onLongClick = ::beginEditing,

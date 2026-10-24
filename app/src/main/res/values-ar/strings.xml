@@ -1030,4 +1030,10 @@
     <string name="moto_secure_gateway_description">تحتفظ Motorola بتطبيقات المجلد الآمن داخل منطقتها المحمية. افتح Moto Secure للمصادقة والدخول إلى المجلد الآمن.</string>
     <string name="open_moto_secure">فتح Moto Secure</string>
     <string name="moto_secure_unavailable">تعذر فتح Moto Secure.</string>
+    <string name="shortcut_extra">تطبيق إضافي</string>
+    <string name="expand_vcard">توسيع vCard</string>
+    <string name="collapse_vcard">طي vCard</string>
+    <string name="home_shortcuts_description_v2">يمكن لكل واحدة من الخانات السبع فتح أي تطبيق مثبت. تحتفظ الخانات غير المعدلة بالإجراء المدمج الموضح أدناه؛ ويظل Top 8 مدمجًا.</string>
+    <string name="less_visual_noise_description_v2">صفحة رئيسية واحدة مركزة، وسبع خانات للتطبيقات، واختصار Top 8 مدمج، وعجلة مركزة لكل تطبيق مثبت.</string>
+    <string name="profile_onboarding_description_v2">توجد vCard الخاصة بك في MinkSpace بجانب تطبيقاتك المصغرة الأخرى. وسّعها لإظهار رمز QR، أو اضغط على تطبيق المهام المصغر لإدارة المهام.</string>
 </resources>

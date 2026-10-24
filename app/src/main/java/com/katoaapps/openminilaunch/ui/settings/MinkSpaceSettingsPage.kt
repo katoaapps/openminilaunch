@@ -38,6 +38,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalHapticFeedback
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.zIndex
@@ -50,6 +51,7 @@ import com.katoaapps.openminilaunch.ui.minkspace.core.MinkSpaceMiniAppCatalog
 import com.katoaapps.openminilaunch.ui.minkspace.core.MinkSpaceMiniAppSpec
 import com.katoaapps.openminilaunch.ui.minkspace.core.MinkSpaceMiniAppSettingsTarget
 import com.katoaapps.openminilaunch.ui.minkspace.widget.MinkSpaceWidgetSetup
+import com.katoaapps.openminilaunch.ui.profile.openVirtualContactCard
 import com.katoaapps.openminilaunch.ui.theme.Dimens
 import com.katoaapps.openminilaunch.ui.theme.Muted
 import com.katoaapps.openminilaunch.ui.theme.Rust
@@ -63,6 +65,7 @@ internal fun MinkSpaceSettingsPage(
     openTodos: () -> Unit,
     goBack: () -> Unit,
 ) {
+    val context = LocalContext.current
     var showWidgetSetup by rememberSaveable { mutableStateOf(false) }
     val listState = rememberLazyListState()
     var draggedMiniApp by remember { mutableStateOf<MinkSpaceMiniApp?>(null) }
@@ -110,6 +113,7 @@ internal fun MinkSpaceSettingsPage(
                 MinkSpaceMiniAppSettingsTarget.TODOS -> openTodos
                 MinkSpaceMiniAppSettingsTarget.MEDIA -> actions::openMediaLab
                 MinkSpaceMiniAppSettingsTarget.WIDGET -> ({ showWidgetSetup = true })
+                MinkSpaceMiniAppSettingsTarget.VCARD -> ({ openVirtualContactCard(context) })
                 null -> null
             }
             ReorderableItem(reorderableState, key = miniApp.stableId) { isDragging ->

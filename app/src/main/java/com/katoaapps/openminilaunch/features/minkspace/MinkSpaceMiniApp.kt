@@ -11,11 +11,12 @@ internal enum class MinkSpaceMiniApp(
     RECORDER("recorder", readyForHome = false),
     MUSIC("music", readyForHome = true),
     WIDGET("widget", readyForHome = true),
+    VCARD("vcard", readyForHome = true),
     ;
 
     companion object {
         val defaultOrder: List<MinkSpaceMiniApp> = entries
-        val defaultEnabled: Set<MinkSpaceMiniApp> = setOf(TODO)
+        val defaultEnabled: Set<MinkSpaceMiniApp> = setOf(TODO, VCARD)
 
         fun fromStableId(stableId: String): MinkSpaceMiniApp? =
             entries.firstOrNull { it.stableId == stableId }

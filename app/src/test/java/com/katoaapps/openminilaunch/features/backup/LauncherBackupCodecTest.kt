@@ -43,7 +43,12 @@ class LauncherBackupCodecTest {
 
         assertEquals(3, JSONObject(encoded).getInt("schemaVersion"))
         assertEquals(
-            listOf(MinkSpaceMiniApp.MUSIC, MinkSpaceMiniApp.TODO, MinkSpaceMiniApp.CALCULATOR),
+            listOf(
+                MinkSpaceMiniApp.MUSIC,
+                MinkSpaceMiniApp.TODO,
+                MinkSpaceMiniApp.CALCULATOR,
+                MinkSpaceMiniApp.VCARD,
+            ),
             restored.settings.minkSpaceMiniAppOrder,
         )
         assertEquals(
@@ -123,14 +128,29 @@ class LauncherBackupCodecTest {
         )
     }
 
-    @Test fun olderTodoShortcutMigratesToProfile() {
+    @Test fun olderTodoShortcutMigratesToExtraAppSlot() {
         val json = JSONObject(LauncherBackupCodec.encode(sampleBackup(twoPanelMode = true)))
         json.put("schemaVersion", 2)
         json.getJSONObject("launcher").put("shortcutOrder", org.json.JSONArray(listOf("TODO", "DRAWER")))
 
         val restored = LauncherBackupCodec.decode(json.toString())
 
-        assertEquals(com.katoaapps.openminilaunch.model.Shortcut.PROFILE, restored.launcher.shortcutOrder.first())
+        assertEquals(com.katoaapps.openminilaunch.model.Shortcut.EXTRA, restored.launcher.shortcutOrder.first())
+    }
+
+    @Test fun minkSpaceBackupFromBeforeVCardEnablesVCardDuringMigration() {
+        val json = JSONObject(LauncherBackupCodec.encode(sampleBackup(twoPanelMode = true)))
+        json.getJSONObject("settings").getJSONObject("minkSpace").apply {
+            put("order", org.json.JSONArray(listOf("todo", "music", "calculator")))
+            put("enabled", org.json.JSONArray(listOf("todo", "music")))
+        }
+
+        val restored = LauncherBackupCodec.decode(json.toString())
+
+        assertEquals(
+            setOf(MinkSpaceMiniApp.TODO, MinkSpaceMiniApp.MUSIC, MinkSpaceMiniApp.VCARD),
+            restored.settings.enabledMinkSpaceMiniApps,
+        )
     }
 
     @Test fun profileTextAndLinksSurviveBackupWithoutPortrait() {
@@ -178,6 +198,7 @@ class LauncherBackupCodecTest {
                 MinkSpaceMiniApp.MUSIC,
                 MinkSpaceMiniApp.TODO,
                 MinkSpaceMiniApp.CALCULATOR,
+                MinkSpaceMiniApp.VCARD,
             ),
             enabledMinkSpaceMiniApps = setOf(MinkSpaceMiniApp.TODO, MinkSpaceMiniApp.MUSIC),
             sendMessagesAutomatically = false,

@@ -990,4 +990,10 @@
     <string name="moto_secure_gateway_description">Motorola はセキュリティフォルダのアプリを専用の保護領域内に保持します。Moto Secure を開いて認証し、セキュリティフォルダに入ってください。</string>
     <string name="open_moto_secure">Moto Secure を開く</string>
     <string name="moto_secure_unavailable">Moto Secure を開けませんでした。</string>
+    <string name="shortcut_extra">追加アプリ</string>
+    <string name="expand_vcard">vCard を展開</string>
+    <string name="collapse_vcard">vCard を閉じる</string>
+    <string name="home_shortcuts_description_v2">7 つの各スロットで任意のインストール済みアプリを開けます。変更していないスロットは下に示す組み込みアクションを維持し、Top 8 は引き続き組み込まれています。</string>
+    <string name="less_visual_noise_description_v2">1 つの集中型ホームページ、7 つのアプリスロット、組み込みの Top 8 ショートカット、インストール済みの各アプリ用の集中型ホイール。</string>
+    <string name="profile_onboarding_description_v2">vCard は他のミニアプリと並んで MinkSpace にあります。展開すると QR コードが表示され、ToDo ミニアプリをタップするとタスクを管理できます。</string>
 </resources>
