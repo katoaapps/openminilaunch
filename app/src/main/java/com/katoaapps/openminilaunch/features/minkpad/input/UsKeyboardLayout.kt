@@ -4,6 +4,13 @@ internal data class HidKey(val usage: Int, val modifiers: Int = 0)
 
 /** Text mapping for hosts using a US keyboard layout. Unicode is rejected, never replaced. */
 internal object UsKeyboardLayout {
+    /** Resolves a phone's local Alt/Sym layer without forwarding that Alt modifier to the host. */
+    fun alternateKey(resolvedCodePoint: Int, baseCodePoint: Int): HidKey? {
+        if (resolvedCodePoint == 0 || resolvedCodePoint == baseCodePoint) return null
+        if (resolvedCodePoint !in Char.MIN_VALUE.code..Char.MAX_VALUE.code) return null
+        return key(resolvedCodePoint.toChar())
+    }
+
     fun key(character: Char): HidKey? = when (character) {
         in 'a'..'z' -> HidKey(character - 'a' + 4)
         in 'A'..'Z' -> HidKey(character - 'A' + 4, 2)

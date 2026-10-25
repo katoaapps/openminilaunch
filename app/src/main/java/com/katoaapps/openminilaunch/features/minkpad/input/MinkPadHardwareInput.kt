@@ -14,9 +14,16 @@ internal class MinkPadHardwareInput(private val repository: MinkPadRepository) {
         if (event.action != KeyEvent.ACTION_DOWN && event.action != KeyEvent.ACTION_UP) return false
         val down = event.action == KeyEvent.ACTION_DOWN
         val modifierBit = modifierBits[event.keyCode]
-        val resolvedCharacter = event.takeIf { it.isAltPressed && !it.isCtrlPressed && !it.isMetaPressed }
-            ?.unicodeChar?.takeIf { it != 0 }?.toChar()?.takeIf { !it.isLetterOrDigit() }
-        val resolvedSymbol = resolvedCharacter?.let(UsKeyboardLayout::key)
+        val resolvedSymbol = event
+            .takeIf { it.isAltPressed && !it.isCtrlPressed && !it.isMetaPressed }
+            ?.let { keyEvent ->
+                UsKeyboardLayout.alternateKey(
+                    resolvedCodePoint = keyEvent.unicodeChar,
+                    baseCodePoint = keyEvent.getUnicodeChar(
+                        keyEvent.metaState and KeyEvent.META_ALT_MASK.inv(),
+                    ),
+                )
+            }
         val usage = resolvedSymbol?.usage ?: usage(event.keyCode) ?: if (modifierBit != null) 0 else return false
         val repeated = down && event.repeatCount > 0
         // The host repeats a held HID key until its release report. Forwarding Android's
