@@ -1,0 +1,7 @@
+MinkSpace now has a dedicated Mini-Apps settings section with drag-and-drop ordering and direct access to each app's configuration.
+
+The encrypted vCard is now a Mini-App. Its compact view keeps contact details close, while the expanded view reveals the QR sharing card and retains a MinkSpace-owned close control.
+
+Mini-Apps now share a documented platform contract for capabilities, expansion, host controls, and settings. Widget behavior is clearer between compact launch and expanded interaction.
+
+MinkPad also fixes Alt/Sym number-layer input from compact physical keyboards on Android and macOS.
