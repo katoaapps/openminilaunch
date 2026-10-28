@@ -488,6 +488,8 @@
     <string name="unknown_version">অজানা সংস্করণ</string>
     <string name="permissions">অনুমতি</string>
     <string name="settings_permissions_summary">এক জায়গায় ব্যক্তিগত ডিভাইস অ্যাক্সেস পরিচালনা করুন</string>
+    <string name="system_settings">সিস্টেম সেটিংস</string>
+    <string name="settings_system_summary">Android ডিভাইস সেটিংস খুলুন</string>
     <string name="about">সম্পর্কে</string>
     <string name="settings_about_summary">সাহায্য, আইনি তথ্য এবং টিউটোরিয়াল</string>
     <string name="permission_active_count">%1$d/%2$d সক্রিয়</string>

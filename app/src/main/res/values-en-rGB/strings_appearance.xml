@@ -10,4 +10,8 @@
     <string name="wallpaper_library_description">Choose a Mink wallpaper. Your photo stays saved.</string>
     <string name="wallpaper_number">Wallpaper %1$d</string>
     <string name="mink_wallpaper">Mink wallpaper</string>
+    <string name="color_palette">Color palette</string>
+    <string name="palette_mink">Mink</string>
+    <string name="palette_system">System</string>
+    <string name="palette_system_unavailable">System colors require Android 12 or newer.</string>
 </resources>

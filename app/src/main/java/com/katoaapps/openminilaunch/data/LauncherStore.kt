@@ -74,6 +74,7 @@ class LauncherStore private constructor(context: Context) {
     val hasOpenedClockFromDate get() = generalPreferences.hasOpenedClockFromDate
     val openSoftwareKeyboardOnHome get() = generalPreferences.openSoftwareKeyboardOnHome
     val themePreference get() = appearancePreferences.themePreference
+    val palettePreference get() = appearancePreferences.palettePreference
     val hideStatusBar get() = appearancePreferences.hideStatusBar
     val alignHomePanelBottom get() = appearancePreferences.alignHomePanelBottom
     val twoPanelModeForLargeDisplays get() = appearancePreferences.twoPanelModeForLargeDisplays
@@ -343,6 +344,10 @@ class LauncherStore private constructor(context: Context) {
 
     fun setTheme(preference: ThemePreference) {
         appearancePreferences.setTheme(preference)
+    }
+
+    fun setPalette(preference: PalettePreference) {
+        appearancePreferences.setPalette(preference)
     }
 
     fun updateHideStatusBar(enabled: Boolean) {

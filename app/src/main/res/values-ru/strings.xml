@@ -488,6 +488,8 @@
     <string name="unknown_version">неизвестная версия</string>
     <string name="permissions">Разрешения</string>
     <string name="settings_permissions_summary">Управляйте доступом к частным устройствам в одном месте</string>
+    <string name="system_settings">Системные настройки</string>
+    <string name="settings_system_summary">Открыть настройки устройства Android</string>
     <string name="about">О</string>
     <string name="settings_about_summary">Помощь, юридическая информация и руководство</string>
     <string name="permission_active_count">%1$d/%2$d активен</string>

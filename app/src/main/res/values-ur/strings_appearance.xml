@@ -10,4 +10,8 @@
     <string name="wallpaper_library_description">Mink وال پیپر منتخب کریں۔ آپ کی تصویر محفوظ رہے گی۔</string>
     <string name="wallpaper_number">وال پیپر %1$d</string>
     <string name="mink_wallpaper">Mink وال پیپر</string>
+    <string name="color_palette">Color palette</string>
+    <string name="palette_mink">Mink</string>
+    <string name="palette_system">System</string>
+    <string name="palette_system_unavailable">System colors require Android 12 or newer.</string>
 </resources>

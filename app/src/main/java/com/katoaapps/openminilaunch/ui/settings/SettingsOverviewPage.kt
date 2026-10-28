@@ -11,6 +11,7 @@ import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Keyboard
 import androidx.compose.material.icons.filled.Pets
 import androidx.compose.material.icons.filled.Security
+import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.Shield
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
@@ -61,7 +62,7 @@ internal fun SettingsOverviewPage(
             onNavigate = onNavigate,
             goBack = goBack,
         )
-        SettingsSection.MORE -> MoreSettingsSection(permissionState, onNavigate, goBack)
+        SettingsSection.MORE -> MoreSettingsSection(actions, permissionState, onNavigate, goBack)
     }
 }
 
@@ -147,6 +148,7 @@ private fun AdvancedSettingsSection(
 
 @Composable
 private fun MoreSettingsSection(
+    actions: DeviceActions,
     permissionState: SettingsPermissionState,
     onNavigate: (SettingsDestination) -> Unit,
     goBack: () -> Unit,
@@ -168,6 +170,11 @@ private fun MoreSettingsSection(
             status = stringResource(R.string.backup_local_file),
             icon = Icons.Default.ImportExport,
         ) { onNavigate(SettingsDestination.BACKUP_RESTORE) }
+        SettingsCategoryRow(
+            title = stringResource(R.string.system_settings),
+            subtitle = stringResource(R.string.settings_system_summary),
+            icon = Icons.Default.Settings,
+        ) { actions.openSystemSettings() }
         SettingsCategoryRow(
             title = stringResource(R.string.about),
             subtitle = stringResource(R.string.settings_about_summary),

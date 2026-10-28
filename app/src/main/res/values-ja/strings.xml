@@ -488,6 +488,8 @@
     <string name="unknown_version">不明なバージョン</string>
     <string name="permissions">権限</string>
     <string name="settings_permissions_summary">プライベートデバイスへのアクセスを 1 か所で管理</string>
+    <string name="system_settings">システム設定</string>
+    <string name="settings_system_summary">Android デバイスの設定を開く</string>
     <string name="about">について</string>
     <string name="settings_about_summary">ヘルプ、法的情報、チュートリアル</string>
     <string name="permission_active_count">%1$d/%2$d アクティブ</string>

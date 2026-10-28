@@ -10,4 +10,8 @@
     <string name="wallpaper_library_description">اختر خلفية Mink. ستبقى صورتك محفوظة.</string>
     <string name="wallpaper_number">الخلفية %1$d</string>
     <string name="mink_wallpaper">خلفية Mink</string>
+    <string name="color_palette">Color palette</string>
+    <string name="palette_mink">Mink</string>
+    <string name="palette_system">System</string>
+    <string name="palette_system_unavailable">System colors require Android 12 or newer.</string>
 </resources>

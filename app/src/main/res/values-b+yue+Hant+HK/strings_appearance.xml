@@ -10,4 +10,8 @@
     <string name="wallpaper_library_description">揀一張 Mink 牆紙。你嘅相片會繼續保留。</string>
     <string name="wallpaper_number">牆紙 %1$d</string>
     <string name="mink_wallpaper">Mink 牆紙</string>
+    <string name="color_palette">Color palette</string>
+    <string name="palette_mink">Mink</string>
+    <string name="palette_system">System</string>
+    <string name="palette_system_unavailable">System colors require Android 12 or newer.</string>
 </resources>

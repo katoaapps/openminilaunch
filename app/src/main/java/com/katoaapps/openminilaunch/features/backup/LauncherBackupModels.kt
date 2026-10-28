@@ -4,6 +4,7 @@ import com.katoaapps.openminilaunch.model.IconAppearance
 import com.katoaapps.openminilaunch.model.FontAppearance
 import com.katoaapps.openminilaunch.model.MinkAppPauseMode
 import com.katoaapps.openminilaunch.model.PinShortcutRequestPresentation
+import com.katoaapps.openminilaunch.model.PalettePreference
 import com.katoaapps.openminilaunch.model.Shortcut
 import com.katoaapps.openminilaunch.model.ThemePreference
 import com.katoaapps.openminilaunch.features.minkspace.todo.TodoItem
@@ -39,6 +40,7 @@ internal data class LauncherBackupLayout(
 
 internal data class LauncherBackupSettings(
     val themePreference: ThemePreference,
+    val palettePreference: PalettePreference = PalettePreference.MINK,
     val hideStatusBar: Boolean,
     val alignHomePanelBottom: Boolean,
     /** Null means this backup predates the two-panel preference. */

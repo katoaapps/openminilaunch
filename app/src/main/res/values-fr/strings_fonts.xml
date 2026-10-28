@@ -5,8 +5,8 @@
     <string name="fonts">POLICES</string>
     <string name="font_style">Style de police</string>
     <string name="choose_font_style">Choisir un style de police</string>
-    <string name="font_default">Police Mink</string>
-    <string name="font_default_description">La police système claire utilisée par Mink</string>
+    <string name="font_default">Mink / Geist</string>
+    <string name="font_default_description">The official Mink Launcher typeface</string>
     <string name="font_serif">Avec empattements</string>
     <string name="font_serif_description">Une police traditionnelle avec plus de caractère</string>
     <string name="font_monospace">Chasse fixe</string>

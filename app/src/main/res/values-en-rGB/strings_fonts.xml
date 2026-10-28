@@ -5,8 +5,8 @@
     <string name="fonts">FONTS</string>
     <string name="font_style">Font style</string>
     <string name="choose_font_style">Choose font style</string>
-    <string name="font_default">Mink default</string>
-    <string name="font_default_description">The clear system font used by Mink</string>
+    <string name="font_default">Mink / Geist</string>
+    <string name="font_default_description">The official Mink Launcher typeface</string>
     <string name="font_serif">Serif</string>
     <string name="font_serif_description">A traditional typeface with more character</string>
     <string name="font_monospace">Monospace</string>

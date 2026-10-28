@@ -19,6 +19,7 @@ internal fun LauncherStore.createPortableBackup(appVersion: String): LauncherBac
         ),
         settings = LauncherBackupSettings(
             themePreference = themePreference,
+            palettePreference = palettePreference,
             hideStatusBar = hideStatusBar,
             alignHomePanelBottom = alignHomePanelBottom,
             twoPanelModeForLargeDisplays = twoPanelModeForLargeDisplays,
@@ -70,6 +71,7 @@ internal fun LauncherStore.restorePortableBackup(backup: LauncherBackup) {
     profileRepository.replaceFromBackup(backup.profile, backup.profileLinks)
 
     setTheme(settings.themePreference)
+    setPalette(settings.palettePreference)
     updateHideStatusBar(settings.hideStatusBar)
     updateAlignHomePanelBottom(settings.alignHomePanelBottom)
     settings.twoPanelModeForLargeDisplays?.let(::updateTwoPanelModeForLargeDisplays)

@@ -488,6 +488,8 @@
     <string name="unknown_version">نامعلوم ورژن</string>
     <string name="permissions">اجازتیں</string>
     <string name="settings_permissions_summary">ایک جگہ پر نجی ڈیوائس تک رسائی کا نظم کریں۔</string>
+    <string name="system_settings">سسٹم کی ترتیبات</string>
+    <string name="settings_system_summary">Android ڈیوائس کی ترتیبات کھولیں</string>
     <string name="about">کے بارے میں</string>
     <string name="settings_about_summary">مدد، قانونی معلومات اور سبق</string>
     <string name="permission_active_count">%1$d/%2$d فعال</string>

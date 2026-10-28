@@ -136,9 +136,9 @@ private fun FontColorSetting(store: LauncherStore) {
     val presets = listOf(
         HomePanelColorPreset(R.string.color_white, MinkWhite.toArgb()),
         HomePanelColorPreset(R.string.color_black, MinkBlack.toArgb()),
-        HomePanelColorPreset(R.string.color_forest, androidx.core.content.ContextCompat.getColor(context, R.color.mink_forest)),
         HomePanelColorPreset(R.string.color_mink, androidx.core.content.ContextCompat.getColor(context, R.color.home_panel_mink)),
         HomePanelColorPreset(R.string.color_rust, androidx.core.content.ContextCompat.getColor(context, R.color.rust)),
+        HomePanelColorPreset(R.string.color_forest, androidx.core.content.ContextCompat.getColor(context, R.color.mink_forest)),
     )
     AppearanceColorSetting(
         selectedArgb = selected,

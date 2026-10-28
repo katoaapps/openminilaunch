@@ -10,6 +10,7 @@ import com.katoaapps.openminilaunch.model.MIN_SOCIAL_GOAL_HOURS
 import com.katoaapps.openminilaunch.model.MinkAppPauseMode
 import com.katoaapps.openminilaunch.model.normalizeHomePanelTransparency
 import com.katoaapps.openminilaunch.model.PinShortcutRequestPresentation
+import com.katoaapps.openminilaunch.model.PalettePreference
 import com.katoaapps.openminilaunch.model.Shortcut
 import com.katoaapps.openminilaunch.model.configurableShortcuts
 import com.katoaapps.openminilaunch.model.shortcutFromStoredName
@@ -99,6 +100,7 @@ internal object LauncherBackupCodec {
     private fun encodeSettings(settings: LauncherBackupSettings) = JSONObject().apply {
         put("appearance", JSONObject().apply {
             put("theme", settings.themePreference.name)
+            put("palette", settings.palettePreference.name)
             put("hideStatusBar", settings.hideStatusBar)
             put("alignHomePanelBottom", settings.alignHomePanelBottom)
             settings.twoPanelModeForLargeDisplays?.let { put("twoPanelModeForLargeDisplays", it) }
@@ -173,6 +175,7 @@ internal object LauncherBackupCodec {
 
         return LauncherBackupSettings(
             themePreference = appearance.enumValue("theme", ThemePreference.SYSTEM),
+            palettePreference = appearance.enumValue("palette", PalettePreference.MINK),
             hideStatusBar = appearance.optBoolean("hideStatusBar", true),
             alignHomePanelBottom = appearance.optBoolean("alignHomePanelBottom", false),
             twoPanelModeForLargeDisplays = if (appearance.has("twoPanelModeForLargeDisplays")) {

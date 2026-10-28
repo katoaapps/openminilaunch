@@ -488,6 +488,8 @@
     <string name="unknown_version">未知版本</string>
     <string name="permissions">权限</string>
     <string name="settings_permissions_summary">在一处管理私人设备访问</string>
+    <string name="system_settings">系统设置</string>
+    <string name="settings_system_summary">打开 Android 设备设置</string>
     <string name="about">关于</string>
     <string name="settings_about_summary">帮助、法律信息和教程</string>
     <string name="permission_active_count">%1$d/%2$d 有源</string>

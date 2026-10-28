@@ -5,8 +5,8 @@
     <string name="fonts">फ़ॉन्ट</string>
     <string name="font_style">फ़ॉन्ट शैली</string>
     <string name="choose_font_style">फ़ॉन्ट शैली चुनें</string>
-    <string name="font_default">Mink डिफ़ॉल्ट</string>
-    <string name="font_default_description">Mink का साफ़ सिस्टम फ़ॉन्ट</string>
+    <string name="font_default">Mink / Geist</string>
+    <string name="font_default_description">The official Mink Launcher typeface</string>
     <string name="font_serif">सेरिफ़</string>
     <string name="font_serif_description">अधिक व्यक्तित्व वाला पारंपरिक टाइपफ़ेस</string>
     <string name="font_monospace">मोनोस्पेस</string>

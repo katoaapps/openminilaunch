@@ -488,6 +488,8 @@
     <string name="unknown_version">अज्ञात संस्करण</string>
     <string name="permissions">अनुमतियाँ</string>
     <string name="settings_permissions_summary">निजी डिवाइस एक्सेस को एक ही स्थान पर प्रबंधित करें</string>
+    <string name="system_settings">सिस्टम सेटिंग</string>
+    <string name="settings_system_summary">Android डिवाइस की सेटिंग खोलें</string>
     <string name="about">के बारे में</string>
     <string name="settings_about_summary">सहायता, कानूनी जानकारी और ट्यूटोरियल</string>
     <string name="permission_active_count">%1$d/%2$d सक्रिय</string>

@@ -251,6 +251,8 @@ class DeviceActions(private val context: Context) {
 
     fun openInstalledAppsSettings() = start(Intent(Settings.ACTION_APPLICATION_SETTINGS))
 
+    fun openSystemSettings() = start(Intent(Settings.ACTION_SETTINGS))
+
     fun openAllApps() = start(Intent(context, AllAppsActivity::class.java))
 
     fun openPrivateApps() = start(Intent(context, PrivateAppsActivity::class.java))

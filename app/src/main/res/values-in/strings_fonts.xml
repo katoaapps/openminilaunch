@@ -5,8 +5,8 @@
     <string name="fonts">FONT</string>
     <string name="font_style">Gaya font</string>
     <string name="choose_font_style">Pilih gaya font</string>
-    <string name="font_default">Bawaan Mink</string>
-    <string name="font_default_description">Font sistem yang jelas dan digunakan Mink</string>
+    <string name="font_default">Mink / Geist</string>
+    <string name="font_default_description">The official Mink Launcher typeface</string>
     <string name="font_serif">Serif</string>
     <string name="font_serif_description">Jenis huruf tradisional dengan lebih banyak karakter</string>
     <string name="font_monospace">Monospace</string>

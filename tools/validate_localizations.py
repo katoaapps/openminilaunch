@@ -25,7 +25,7 @@ LOCALE_DIRECTORIES = (
     "values-pt-rBR",
     "values-ru",
     "values-ur",
-    "values-b+id",
+    "values-in",
     "values-ar",
 )
 PROTECTED_TERMS = (

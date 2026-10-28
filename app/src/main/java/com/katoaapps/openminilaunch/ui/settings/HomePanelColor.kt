@@ -88,11 +88,11 @@ internal fun HomePanelColorSetting(
     val context = androidx.compose.ui.platform.LocalContext.current
     var sliderTransparency by remember(transparency) { mutableFloatStateOf(transparency) }
     val presets = listOf(
-        HomePanelColorPreset(R.string.color_forest, androidx.core.content.ContextCompat.getColor(context, R.color.mink_forest)),
         HomePanelColorPreset(R.string.color_mink, androidx.core.content.ContextCompat.getColor(context, R.color.home_panel_mink)),
         HomePanelColorPreset(R.string.color_navy, androidx.core.content.ContextCompat.getColor(context, R.color.home_panel_navy)),
         HomePanelColorPreset(R.string.color_plum, androidx.core.content.ContextCompat.getColor(context, R.color.home_panel_plum)),
         HomePanelColorPreset(R.string.color_charcoal, androidx.core.content.ContextCompat.getColor(context, R.color.home_panel_charcoal)),
+        HomePanelColorPreset(R.string.color_forest, androidx.core.content.ContextCompat.getColor(context, R.color.mink_forest)),
     )
     AppearanceColorSetting(
         selectedArgb = selectedArgb,

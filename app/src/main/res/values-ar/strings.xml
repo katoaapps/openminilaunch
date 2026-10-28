@@ -488,6 +488,8 @@
     <string name="unknown_version">نسخة غير معروفة</string>
     <string name="permissions">الأذونات</string>
     <string name="settings_permissions_summary">إدارة الوصول إلى الأجهزة الخاصة في مكان واحد</string>
+    <string name="system_settings">إعدادات النظام</string>
+    <string name="settings_system_summary">فتح إعدادات جهاز Android</string>
     <string name="about">حول</string>
     <string name="settings_about_summary">المساعدة والمعلومات القانونية والبرنامج التعليمي</string>
     <string name="permission_active_count">%1$d/%2$d نشط</string>

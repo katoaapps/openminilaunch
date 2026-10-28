@@ -21,7 +21,6 @@ import androidx.activity.compose.setContent
 import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.PageSize
@@ -35,11 +34,6 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Switch
 import androidx.compose.material3.Text
-import androidx.compose.material3.Typography
-import androidx.compose.material3.darkColorScheme
-import androidx.compose.material3.dynamicDarkColorScheme
-import androidx.compose.material3.dynamicLightColorScheme
-import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.LaunchedEffect
@@ -110,39 +104,6 @@ private fun AllAppsTheme(
     content: @Composable () -> Unit,
 ) {
     val context = LocalContext.current
-    val systemDark = isSystemInDarkTheme()
-    val darkTheme = when (store.themePreference) {
-        ThemePreference.SYSTEM -> systemDark
-        ThemePreference.LIGHT -> false
-        ThemePreference.DARK -> true
-    }
-    val fallback = if (darkTheme) {
-        darkColorScheme(
-            primary = DarkPrimary,
-            onPrimary = DarkOnPrimary,
-            background = DarkBackground,
-            surface = DarkSurface,
-            surfaceContainerLow = DarkSurfaceContainerLow,
-            onSurface = DarkOnSurface,
-            secondary = Rust,
-        )
-    } else {
-        lightColorScheme(
-            primary = LightInk,
-            onPrimary = LightPaper,
-            background = LightPaper,
-            surface = LightPaper,
-            surfaceContainerLow = MinkWhite,
-            onSurface = LightInk,
-            secondary = Rust,
-        )
-    }
-    val baseColors = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-        if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
-    } else {
-        fallback
-    }
-    val colors = baseColors.withAppBackground(store.effectiveAppBackgroundColorArgb)
     val view = LocalView.current
     val transparent = MinkTransparent
     SideEffect {
@@ -154,7 +115,7 @@ private fun AllAppsTheme(
             isAppearanceLightNavigationBars = false
         }
     }
-    MaterialTheme(colorScheme = colors, typography = Typography(), content = content)
+    MinkLauncherTheme(store, content)
 }
 
 @Composable

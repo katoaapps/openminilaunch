@@ -73,6 +73,7 @@ internal fun WallpaperAndBackgroundSettingsPage(
             store.appBackgroundPreset != null -> stringResource(R.string.mink_wallpaper)
             else -> null
         }
+        PaletteChooser(store.palettePreference, store::setPalette)
         ThemeChooser(store.themePreference, store::setTheme)
         HomePanelColorSetting(
             selectedArgb = store.effectiveHomePanelColorArgb,

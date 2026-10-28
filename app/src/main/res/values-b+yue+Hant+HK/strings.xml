@@ -488,6 +488,8 @@
     <string name="unknown_version">未知版本</string>
     <string name="permissions">權限</string>
     <string name="settings_permissions_summary">喺一個地方管理私人裝置存取權</string>
+    <string name="system_settings">系統設定</string>
+    <string name="settings_system_summary">開啟 Android 裝置設定</string>
     <string name="about">關於</string>
     <string name="settings_about_summary">幫助、法律資訊同教學</string>
     <string name="permission_active_count">%1$d / %2$d 有效</string>

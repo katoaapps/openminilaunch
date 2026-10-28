@@ -8,11 +8,9 @@ package com.katoaapps.openminilaunch.ui.launcher
 import android.Manifest
 import android.app.Activity
 import android.content.pm.PackageManager
-import android.os.Build
 import androidx.activity.compose.BackHandler
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
@@ -20,11 +18,6 @@ import androidx.compose.foundation.layout.isImeVisible
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
-import androidx.compose.material3.Typography
-import androidx.compose.material3.darkColorScheme
-import androidx.compose.material3.dynamicDarkColorScheme
-import androidx.compose.material3.dynamicLightColorScheme
-import androidx.compose.material3.lightColorScheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.SideEffect
@@ -46,7 +39,6 @@ import com.katoaapps.openminilaunch.data.LauncherStore
 import com.katoaapps.openminilaunch.features.conversations.NotificationHub
 import com.katoaapps.openminilaunch.features.wellbeing.UsageInsightsRepository
 import com.katoaapps.openminilaunch.model.Screen
-import com.katoaapps.openminilaunch.model.ThemePreference
 import com.katoaapps.openminilaunch.platform.DeviceActions
 import com.katoaapps.openminilaunch.platform.isPermanentlyDenied
 import com.katoaapps.openminilaunch.platform.supportsDirectCalls
@@ -64,19 +56,10 @@ import com.katoaapps.openminilaunch.ui.onboarding.UsageAccessDisclosureDialog
 import com.katoaapps.openminilaunch.ui.settings.NotificationAccessDisclosureDialog
 import com.katoaapps.openminilaunch.ui.settings.SettingsDestination
 import com.katoaapps.openminilaunch.ui.settings.SettingsScreen
-import com.katoaapps.openminilaunch.ui.theme.DarkBackground
-import com.katoaapps.openminilaunch.ui.theme.DarkOnPrimary
-import com.katoaapps.openminilaunch.ui.theme.DarkOnSurface
-import com.katoaapps.openminilaunch.ui.theme.DarkPrimary
-import com.katoaapps.openminilaunch.ui.theme.DarkSurface
-import com.katoaapps.openminilaunch.ui.theme.DarkSurfaceContainerLow
 import com.katoaapps.openminilaunch.ui.theme.FontAppearanceTheme
-import com.katoaapps.openminilaunch.ui.theme.LightInk
-import com.katoaapps.openminilaunch.ui.theme.LightPaper
+import com.katoaapps.openminilaunch.ui.theme.MinkLauncherTheme
 import com.katoaapps.openminilaunch.ui.theme.MinkTransparent
-import com.katoaapps.openminilaunch.ui.theme.MinkWhite
-import com.katoaapps.openminilaunch.ui.theme.Rust
-import com.katoaapps.openminilaunch.ui.theme.withAppBackground
+import com.katoaapps.openminilaunch.ui.theme.minkDarkTheme
 import com.katoaapps.openminilaunch.ui.minkspace.todo.TodosScreen
 import com.katoaapps.openminilaunch.ui.profile.openVirtualContactCard
 
@@ -121,39 +104,7 @@ internal fun MiniLaunchApp(
     val usageInsightsRepository = remember(context) {
         UsageInsightsRepository(context.applicationContext)
     }
-    val systemDark = isSystemInDarkTheme()
-    val darkTheme = when (store.themePreference) {
-        ThemePreference.SYSTEM -> systemDark
-        ThemePreference.LIGHT -> false
-        ThemePreference.DARK -> true
-    }
-    val fallbackColors = if (darkTheme) {
-        darkColorScheme(
-            primary = DarkPrimary,
-            onPrimary = DarkOnPrimary,
-            background = DarkBackground,
-            surface = DarkSurface,
-            surfaceContainerLow = DarkSurfaceContainerLow,
-            onSurface = DarkOnSurface,
-            secondary = Rust,
-        )
-    } else {
-        lightColorScheme(
-            primary = LightInk,
-            onPrimary = LightPaper,
-            background = LightPaper,
-            surface = LightPaper,
-            surfaceContainerLow = MinkWhite,
-            onSurface = LightInk,
-            secondary = Rust,
-        )
-    }
-    val baseColors = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
-        if (darkTheme) dynamicDarkColorScheme(context) else dynamicLightColorScheme(context)
-    } else {
-        fallbackColors
-    }
-    val colors = baseColors.withAppBackground(store.effectiveAppBackgroundColorArgb)
+    val darkTheme = minkDarkTheme(store)
     val view = LocalView.current
 
     val finishOnboardingSetup = {
@@ -241,7 +192,7 @@ internal fun MiniLaunchApp(
         }
     }
 
-    MaterialTheme(colorScheme = colors, typography = Typography()) {
+    MinkLauncherTheme(store) {
         BackHandler(enabled = !showTutorial && screen != Screen.HOME) { screen = Screen.HOME }
         BackHandler(
             enabled = !showTutorial && screen == Screen.HOME &&

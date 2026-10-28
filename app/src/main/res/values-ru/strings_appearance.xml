@@ -10,4 +10,8 @@
     <string name="wallpaper_library_description">Выберите обои Mink. Ваше фото останется сохранено.</string>
     <string name="wallpaper_number">Обои %1$d</string>
     <string name="mink_wallpaper">Обои Mink</string>
+    <string name="color_palette">Color palette</string>
+    <string name="palette_mink">Mink</string>
+    <string name="palette_system">System</string>
+    <string name="palette_system_unavailable">System colors require Android 12 or newer.</string>
 </resources>

@@ -10,4 +10,8 @@
     <string name="wallpaper_library_description">Choisissez un fond d\'écran Mink. Votre photo reste enregistrée.</string>
     <string name="wallpaper_number">Fond d\'écran %1$d</string>
     <string name="mink_wallpaper">Fond d\'écran Mink</string>
+    <string name="color_palette">Color palette</string>
+    <string name="palette_mink">Mink</string>
+    <string name="palette_system">System</string>
+    <string name="palette_system_unavailable">System colors require Android 12 or newer.</string>
 </resources>

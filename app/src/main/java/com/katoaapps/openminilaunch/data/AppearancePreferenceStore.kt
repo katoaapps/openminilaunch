@@ -10,6 +10,7 @@ import androidx.compose.runtime.setValue
 import androidx.core.content.ContextCompat
 import com.katoaapps.openminilaunch.R
 import com.katoaapps.openminilaunch.model.HomeWallpaperAppearance
+import com.katoaapps.openminilaunch.model.PalettePreference
 import com.katoaapps.openminilaunch.model.ThemePreference
 import com.katoaapps.openminilaunch.model.normalizeHomePanelTransparency
 
@@ -18,6 +19,15 @@ internal class AppearancePreferenceStore(
     private val prefs: SharedPreferences,
     isFreshInstall: Boolean,
 ) {
+    var palettePreference by mutableStateOf(
+        runCatching {
+            PalettePreference.valueOf(
+                prefs.getString(PALETTE_PREFERENCE_KEY, PalettePreference.MINK.name)
+                    ?: PalettePreference.MINK.name,
+            )
+        }.getOrDefault(PalettePreference.MINK),
+    )
+        private set
     var themePreference by mutableStateOf(
         runCatching {
             ThemePreference.valueOf(
@@ -46,7 +56,7 @@ internal class AppearancePreferenceStore(
     )
         private set
     var homePanelColorArgb by mutableIntStateOf(
-        prefs.getInt(HOME_PANEL_COLOR_KEY, ContextCompat.getColor(context, R.color.mink_forest)),
+        prefs.getInt(HOME_PANEL_COLOR_KEY, ContextCompat.getColor(context, R.color.home_panel_mink)),
     )
         private set
     var watermelonModeEnabled by mutableStateOf(prefs.getBoolean(WATERMELON_MODE_KEY, false))
@@ -105,6 +115,11 @@ internal class AppearancePreferenceStore(
     fun setTheme(preference: ThemePreference) {
         themePreference = preference
         prefs.edit().putString(THEME_PREFERENCE_KEY, preference.name).apply()
+    }
+
+    fun setPalette(preference: PalettePreference) {
+        palettePreference = preference
+        prefs.edit().putString(PALETTE_PREFERENCE_KEY, preference.name).apply()
     }
 
     fun updateHideStatusBar(enabled: Boolean) {
@@ -240,6 +255,7 @@ internal class AppearancePreferenceStore(
         const val APP_BACKGROUND_PRESET_AVERAGE_COLOR_KEY = "app_background_preset_average_color"
         const val APP_BACKGROUND_PRESET_HEADER_COLOR_KEY = "app_background_preset_header_color"
         const val HIDE_STATUS_BAR_KEY = "hide_status_bar"
+        const val PALETTE_PREFERENCE_KEY = "palette_preference"
         const val HOME_PANEL_COLOR_KEY = "home_panel_color"
         const val HOME_PANEL_TRANSPARENCY_KEY = "home_panel_transparency"
         const val SHOW_CLOCK_KEY = "show_clock"

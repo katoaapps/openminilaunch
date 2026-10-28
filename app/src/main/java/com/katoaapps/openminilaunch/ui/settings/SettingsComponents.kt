@@ -2,6 +2,7 @@
 
 package com.katoaapps.openminilaunch.ui.settings
 
+import android.os.Build
 import com.katoaapps.openminilaunch.R
 import com.katoaapps.openminilaunch.data.*
 import com.katoaapps.openminilaunch.model.*
@@ -372,6 +373,38 @@ internal fun LauncherTargetPickerDialog(
 }
 
 private enum class LauncherTargetCategory { APPS, SHORTCUTS }
+
+@Composable
+internal fun PaletteChooser(selected: PalettePreference, onSelect: (PalettePreference) -> Unit) {
+    val systemAvailable = Build.VERSION.SDK_INT >= Build.VERSION_CODES.S
+    val displayedSelection = if (systemAvailable) selected else PalettePreference.MINK
+    Column(
+        Modifier.fillMaxWidth().clip(RoundedCornerShape(Dimens.dp16)).background(MaterialTheme.colorScheme.surfaceContainerLow).padding(Dimens.dp14),
+        verticalArrangement = Arrangement.spacedBy(Dimens.dp10),
+    ) {
+        Text(stringResource(R.string.color_palette), fontWeight = FontWeight.SemiBold)
+        Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(Dimens.dp7)) {
+            PalettePreference.entries.forEach { option ->
+                val enabled = option != PalettePreference.SYSTEM || systemAvailable
+                FilterChip(
+                    selected = displayedSelection == option,
+                    enabled = enabled,
+                    onClick = { onSelect(option) },
+                    label = { Text(stringResource(option.labelRes)) },
+                    leadingIcon = if (displayedSelection == option) ({ Icon(Icons.Default.Check, null, Modifier.size(Dimens.dp15)) }) else null,
+                    modifier = Modifier.weight(1f),
+                )
+            }
+        }
+        if (!systemAvailable) {
+            Text(
+                stringResource(R.string.palette_system_unavailable),
+                style = MaterialTheme.typography.bodySmall,
+                color = MaterialTheme.colorScheme.onSurfaceVariant,
+            )
+        }
+    }
+}
 
 @Composable
 internal fun ThemeChooser(selected: ThemePreference, onSelect: (ThemePreference) -> Unit) {

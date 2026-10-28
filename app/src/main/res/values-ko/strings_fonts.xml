@@ -5,8 +5,8 @@
     <string name="fonts">글꼴</string>
     <string name="font_style">글꼴 스타일</string>
     <string name="choose_font_style">글꼴 스타일 선택</string>
-    <string name="font_default">Mink 기본</string>
-    <string name="font_default_description">Mink가 사용하는 선명한 시스템 글꼴</string>
+    <string name="font_default">Mink / Geist</string>
+    <string name="font_default_description">The official Mink Launcher typeface</string>
     <string name="font_serif">세리프</string>
     <string name="font_serif_description">개성이 있는 전통적인 서체</string>
     <string name="font_monospace">고정폭</string>

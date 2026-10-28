@@ -228,6 +228,16 @@
             android:taskAffinity="${applicationId}.vcard"
             android:windowSoftInputMode="adjustResize" />
         <activity
+            android:name=".ui.launcher.LauncherEntryActivity"
+            android:excludeFromRecents="true"
+            android:exported="true"
+            android:theme="@style/Theme.MiniLaunch.Home">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <activity
             android:name=".ui.launcher.MainActivity"
             android:clearTaskOnLaunch="true"
             android:excludeFromRecents="true"
@@ -235,10 +245,6 @@
             android:launchMode="singleTask"
             android:theme="@style/Theme.MiniLaunch.Home"
             android:windowSoftInputMode="adjustResize">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
                 <category android:name="android.intent.category.HOME" />

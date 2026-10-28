@@ -488,6 +488,8 @@
     <string name="unknown_version">versi yang tidak diketahui</string>
     <string name="permissions">Izin</string>
     <string name="settings_permissions_summary">Kelola akses perangkat pribadi di satu tempat</string>
+    <string name="system_settings">Setelan sistem</string>
+    <string name="settings_system_summary">Buka setelan perangkat Android</string>
     <string name="about">Tentang</string>
     <string name="settings_about_summary">Bantuan, informasi hukum dan tutorial</string>
     <string name="permission_active_count">%1$d/%2$d aktif</string>

@@ -5,6 +5,7 @@ import com.katoaapps.openminilaunch.model.FontAppearance
 import com.katoaapps.openminilaunch.model.FontSource
 import com.katoaapps.openminilaunch.model.MinkAppPauseMode
 import com.katoaapps.openminilaunch.model.PinShortcutRequestPresentation
+import com.katoaapps.openminilaunch.model.PalettePreference
 import com.katoaapps.openminilaunch.model.ThemePreference
 import com.katoaapps.openminilaunch.features.profile.ProfileCard
 import com.katoaapps.openminilaunch.features.profile.ProfileLink
@@ -16,6 +17,27 @@ import org.junit.Assert.assertNull
 import org.junit.Test
 
 class LauncherBackupCodecTest {
+    @Test fun palettePreferenceSurvivesPortableBackupRoundTrip() {
+        val sample = sampleBackup(twoPanelMode = true)
+        val original = sample.copy(
+            settings = sample.settings.copy(palettePreference = PalettePreference.SYSTEM),
+        )
+
+        val restored = LauncherBackupCodec.decode(LauncherBackupCodec.encode(original))
+
+        assertEquals(PalettePreference.SYSTEM, restored.settings.palettePreference)
+    }
+
+    @Test fun olderBackupWithoutPaletteUsesMink() {
+        val json = JSONObject(LauncherBackupCodec.encode(sampleBackup(twoPanelMode = true)))
+        json.getJSONObject("settings").getJSONObject("appearance").remove("palette")
+
+        assertEquals(
+            PalettePreference.MINK,
+            LauncherBackupCodec.decode(json.toString()).settings.palettePreference,
+        )
+    }
+
     @Test fun twoPanelPreferenceSurvivesPortableBackupRoundTrip() {
         val restored = LauncherBackupCodec.decode(LauncherBackupCodec.encode(sampleBackup(twoPanelMode = true)))
 

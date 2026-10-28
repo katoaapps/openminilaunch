@@ -488,6 +488,8 @@
     <string name="unknown_version">version inconnue</string>
     <string name="permissions">Autorisations</string>
     <string name="settings_permissions_summary">Gérez l\'accès aux appareils privés en un seul endroit</string>
+    <string name="system_settings">Paramètres système</string>
+    <string name="settings_system_summary">Ouvrir les paramètres de l’appareil Android</string>
     <string name="about">À propos</string>
     <string name="settings_about_summary">Aide, informations juridiques et tutoriel</string>
     <string name="permission_active_count">%1$d/%2$d actif</string>

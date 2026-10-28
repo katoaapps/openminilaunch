@@ -10,4 +10,8 @@
     <string name="wallpaper_library_description">Mink の壁紙を選択します。あなたの写真は保存されたままです。</string>
     <string name="wallpaper_number">壁紙 %1$d</string>
     <string name="mink_wallpaper">Mink の壁紙</string>
+    <string name="color_palette">Color palette</string>
+    <string name="palette_mink">Mink</string>
+    <string name="palette_system">System</string>
+    <string name="palette_system_unavailable">System colors require Android 12 or newer.</string>
 </resources>
