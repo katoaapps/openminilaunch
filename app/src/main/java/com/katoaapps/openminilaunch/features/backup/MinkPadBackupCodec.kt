@@ -1,6 +1,6 @@
 package com.katoaapps.openminilaunch.features.backup
 
-import com.katoaapps.openminilaunch.features.minkpad.MinkPadPreferences
+import com.katoaapps.minkpad.core.MinkPadPreferences
 import org.json.JSONObject
 
 /** Portable controller preferences only. Addresses, host names and input never enter backups. */

@@ -1,5 +1,7 @@
 package com.katoaapps.openminilaunch.ui.minkpad
 
+import com.katoaapps.minkpad.core.R as MinkPadR
+
 import android.content.res.Configuration
 import android.view.View
 import androidx.compose.foundation.layout.Column
@@ -38,7 +40,7 @@ internal fun MinkPadLiveTextInput(
     Column {
         if (!hardwareKeyboard) {
             TextButton(onClick = { softwareEditorOpen = !softwareEditorOpen }, enabled = enabled) {
-                Text(stringResource(if (showEditor) R.string.minkpad_hide_keyboard else R.string.minkpad_type))
+                Text(stringResource(if (showEditor) MinkPadR.string.minkpad_hide_keyboard else MinkPadR.string.minkpad_type))
             }
         }
         AndroidView(

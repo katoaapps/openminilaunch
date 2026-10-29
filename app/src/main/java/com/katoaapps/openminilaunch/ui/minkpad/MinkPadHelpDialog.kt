@@ -1,5 +1,7 @@
 package com.katoaapps.openminilaunch.ui.minkpad
 
+import com.katoaapps.minkpad.core.R as MinkPadR
+
 import androidx.compose.foundation.gestures.detectTapGestures
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.pager.HorizontalPager
@@ -19,7 +21,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.Dialog
 import androidx.compose.ui.window.DialogProperties
 import com.katoaapps.openminilaunch.R
-import com.katoaapps.openminilaunch.features.minkpad.input.MinkPadHostPlatform
+import com.katoaapps.minkpad.core.input.MinkPadHostPlatform
 import com.katoaapps.openminilaunch.ui.minkpad.help.MinkPadHelpPageContent
 import com.katoaapps.openminilaunch.ui.minkpad.help.minkPadHelpPages
 import kotlinx.coroutines.launch
@@ -56,18 +58,18 @@ internal fun MinkPadHelpDialog(platform: MinkPadHostPlatform, onSettings: () -> 
                         verticalAlignment = Alignment.CenterVertically,
                     ) {
                         Column(Modifier.weight(1f)) {
-                            Text(stringResource(R.string.minkpad_trackpad_help), style = MaterialTheme.typography.titleLarge)
+                            Text(stringResource(MinkPadR.string.minkpad_trackpad_help), style = MaterialTheme.typography.titleLarge)
                             if (compactHeader) Text(stringResource(platform.labelResource), style = MaterialTheme.typography.labelMedium)
                         }
                         if (compactHeader) IconButton(onClick = onSettings) {
-                            Icon(Icons.Default.Settings, contentDescription = stringResource(R.string.minkpad_help_choose_os))
+                            Icon(Icons.Default.Settings, contentDescription = stringResource(MinkPadR.string.minkpad_help_choose_os))
                         }
                         IconButton(onClick = close) {
-                            Icon(Icons.Default.Close, contentDescription = stringResource(R.string.minkpad_help_close))
+                            Icon(Icons.Default.Close, contentDescription = stringResource(MinkPadR.string.minkpad_help_close))
                         }
                     }
                     if (!compactHeader) TextButton(onClick = onSettings, modifier = Modifier.padding(horizontal = 12.dp)) {
-                        Text(stringResource(R.string.minkpad_help_platform, stringResource(platform.labelResource)))
+                        Text(stringResource(MinkPadR.string.minkpad_help_platform, stringResource(platform.labelResource)))
                     }
                     HorizontalDivider()
                     HorizontalPager(
@@ -92,7 +94,7 @@ internal fun MinkPadHelpDialog(platform: MinkPadHostPlatform, onSettings: () -> 
                             onClick = { scope.launch { pager.animateScrollToPage(pager.currentPage - 1) } },
                             enabled = pager.currentPage > 0,
                             modifier = Modifier.weight(1f).heightIn(min = 48.dp),
-                        ) { Text(stringResource(R.string.minkpad_help_previous)) }
+                        ) { Text(stringResource(MinkPadR.string.minkpad_help_previous)) }
                         FilledTonalButton(
                             onClick = {
                                 if (pager.currentPage == pages.lastIndex) close()

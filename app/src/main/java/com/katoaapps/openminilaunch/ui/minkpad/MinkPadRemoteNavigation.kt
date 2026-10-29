@@ -1,5 +1,7 @@
 package com.katoaapps.openminilaunch.ui.minkpad
 
+import com.katoaapps.minkpad.core.R as MinkPadR
+
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
@@ -27,8 +29,8 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.katoaapps.openminilaunch.R
-import com.katoaapps.openminilaunch.features.minkpad.input.MinkPadAction
-import com.katoaapps.openminilaunch.features.minkpad.input.MinkPadConsumerAction
+import com.katoaapps.minkpad.core.input.MinkPadAction
+import com.katoaapps.minkpad.core.input.MinkPadConsumerAction
 
 @Composable
 internal fun RemoteNavigationCluster(
@@ -49,9 +51,9 @@ internal fun RemoteNavigationCluster(
             verticalAlignment = Alignment.CenterVertically,
         ) {
             RemoteRocker(
-                label = stringResource(R.string.minkpad_volume_short),
-                upDescription = stringResource(R.string.minkpad_volume_up),
-                downDescription = stringResource(R.string.minkpad_volume_down),
+                label = stringResource(MinkPadR.string.minkpad_volume_short),
+                upDescription = stringResource(MinkPadR.string.minkpad_volume_up),
+                downDescription = stringResource(MinkPadR.string.minkpad_volume_down),
                 enabled = mediaEnabled,
                 width = rockerWidth,
                 height = rockerHeight,
@@ -60,9 +62,9 @@ internal fun RemoteNavigationCluster(
             )
             RemoteDirectionalPad(keyboardEnabled, dialSize, onDirection)
             RemoteRocker(
-                label = stringResource(R.string.minkpad_channel_short),
-                upDescription = stringResource(R.string.minkpad_channel_up),
-                downDescription = stringResource(R.string.minkpad_channel_down),
+                label = stringResource(MinkPadR.string.minkpad_channel_short),
+                upDescription = stringResource(MinkPadR.string.minkpad_channel_up),
+                downDescription = stringResource(MinkPadR.string.minkpad_channel_down),
                 enabled = mediaEnabled,
                 width = rockerWidth,
                 height = rockerHeight,
@@ -94,13 +96,13 @@ private fun RemoteDirectionalPad(
         Box(Modifier.fillMaxSize().padding(8.dp)) {
             RemoteDirectionButton(
                 Icons.Default.KeyboardArrowUp,
-                stringResource(R.string.minkpad_up),
+                stringResource(MinkPadR.string.minkpad_up),
                 enabled,
                 Modifier.align(Alignment.TopCenter).size(directionButtonSize),
             ) { onAction(MinkPadAction.UP) }
             RemoteDirectionButton(
                 Icons.AutoMirrored.Filled.KeyboardArrowLeft,
-                stringResource(R.string.minkpad_left),
+                stringResource(MinkPadR.string.minkpad_left),
                 enabled,
                 Modifier.align(Alignment.CenterStart).size(directionButtonSize),
             ) { onAction(MinkPadAction.LEFT) }
@@ -111,17 +113,17 @@ private fun RemoteDirectionalPad(
                 contentPadding = PaddingValues(0.dp),
                 modifier = Modifier.align(Alignment.Center).size(okButtonSize),
             ) {
-                Text(stringResource(R.string.minkpad_ok), fontWeight = FontWeight.Bold)
+                Text(stringResource(MinkPadR.string.minkpad_ok), fontWeight = FontWeight.Bold)
             }
             RemoteDirectionButton(
                 Icons.AutoMirrored.Filled.KeyboardArrowRight,
-                stringResource(R.string.minkpad_right),
+                stringResource(MinkPadR.string.minkpad_right),
                 enabled,
                 Modifier.align(Alignment.CenterEnd).size(directionButtonSize),
             ) { onAction(MinkPadAction.RIGHT) }
             RemoteDirectionButton(
                 Icons.Default.KeyboardArrowDown,
-                stringResource(R.string.minkpad_down),
+                stringResource(MinkPadR.string.minkpad_down),
                 enabled,
                 Modifier.align(Alignment.BottomCenter).size(directionButtonSize),
             ) { onAction(MinkPadAction.DOWN) }

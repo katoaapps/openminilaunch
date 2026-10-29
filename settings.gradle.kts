@@ -13,4 +13,4 @@ dependencyResolutionManagement {
     }
 }
 rootProject.name = "OpenMiniLaunch"
-include(":app")
+include(":app", ":minkpad-core")

@@ -1,5 +1,7 @@
 package com.katoaapps.openminilaunch.ui.minkpad
 
+import com.katoaapps.minkpad.core.R as MinkPadR
+
 import android.content.Context
 import android.graphics.Rect
 import android.text.InputType
@@ -24,7 +26,7 @@ internal class MinkPadInputEditor(context: Context) : EditText(context) {
 
     init {
         isEnabled = false
-        hint = context.getString(R.string.minkpad_type_directly_hint)
+        hint = context.getString(MinkPadR.string.minkpad_type_directly_hint)
         // A remote keyboard sends literal input, not locally corrected prose. Some physical
         // IMEs ignore NO_SUGGESTIONS for smart caps/spacing but honor this standard variation.
         inputType = InputType.TYPE_CLASS_TEXT or InputType.TYPE_TEXT_VARIATION_VISIBLE_PASSWORD or

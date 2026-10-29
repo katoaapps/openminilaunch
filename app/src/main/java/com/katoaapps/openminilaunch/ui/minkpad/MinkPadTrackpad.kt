@@ -1,5 +1,7 @@
 package com.katoaapps.openminilaunch.ui.minkpad
 
+import com.katoaapps.minkpad.core.R as MinkPadR
+
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
@@ -18,10 +20,10 @@ import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.katoaapps.openminilaunch.R
-import com.katoaapps.openminilaunch.features.minkpad.MinkPadPreferences
-import com.katoaapps.openminilaunch.features.minkpad.MinkPadRepository
-import com.katoaapps.openminilaunch.features.minkpad.input.MinkPadGestureAction
-import com.katoaapps.openminilaunch.features.minkpad.input.MinkPadHostPlatform
+import com.katoaapps.minkpad.core.MinkPadPreferences
+import com.katoaapps.minkpad.core.MinkPadRepository
+import com.katoaapps.minkpad.core.input.MinkPadGestureAction
+import com.katoaapps.minkpad.core.input.MinkPadHostPlatform
 
 @Composable
 internal fun MinkPadTrackpad(
@@ -59,8 +61,8 @@ internal fun MinkPadTrackpad(
                 contentAlignment = Alignment.Center,
             ) {
                 if (showHint && !hasInteracted) Column(horizontalAlignment = Alignment.CenterHorizontally) {
-                    Text(stringResource(R.string.minkpad_trackpad), style = MaterialTheme.typography.titleLarge)
-                    Text(stringResource(R.string.minkpad_trackpad_hint), style = MaterialTheme.typography.bodyMedium)
+                    Text(stringResource(MinkPadR.string.minkpad_trackpad), style = MaterialTheme.typography.titleLarge)
+                    Text(stringResource(MinkPadR.string.minkpad_trackpad_hint), style = MaterialTheme.typography.bodyMedium)
                 }
                 if (showGridOutline) Canvas(
                     Modifier
@@ -93,7 +95,7 @@ internal fun MinkPadTrackpad(
                 IconButton(onClick = onHelp, modifier = Modifier.align(Alignment.TopEnd).padding(8.dp)) {
                     Icon(
                         Icons.AutoMirrored.Outlined.HelpOutline,
-                        contentDescription = stringResource(R.string.minkpad_trackpad_help),
+                        contentDescription = stringResource(MinkPadR.string.minkpad_trackpad_help),
                     )
                 }
             }

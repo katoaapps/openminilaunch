@@ -1,5 +1,7 @@
 package com.katoaapps.openminilaunch.ui.minkpad
 
+import com.katoaapps.minkpad.core.R as MinkPadR
+
 import android.app.Activity
 import android.view.WindowManager
 import androidx.compose.animation.AnimatedContent
@@ -20,11 +22,11 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import com.katoaapps.openminilaunch.R
-import com.katoaapps.openminilaunch.features.minkpad.MinkPadRepository
-import com.katoaapps.openminilaunch.features.minkpad.MinkPadSessionState
-import com.katoaapps.openminilaunch.features.minkpad.MinkPadStatus
-import com.katoaapps.openminilaunch.features.minkpad.input.MinkPadHostPlatform
-import com.katoaapps.openminilaunch.features.minkpad.input.shortcut
+import com.katoaapps.minkpad.core.MinkPadRepository
+import com.katoaapps.minkpad.core.MinkPadSessionState
+import com.katoaapps.minkpad.core.MinkPadStatus
+import com.katoaapps.minkpad.core.input.MinkPadHostPlatform
+import com.katoaapps.minkpad.core.input.shortcut
 import com.katoaapps.openminilaunch.ui.settings.AppearanceApplyingScreen
 import kotlinx.coroutines.delay
 
@@ -56,12 +58,12 @@ internal fun MinkPadScreen(
     var modifiers by remember { mutableIntStateOf(0) }
     val inputReset by repository.inputReset.collectAsState()
     val activity = LocalContext.current as Activity
-    val chooseHostOsFeedback = stringResource(R.string.minkpad_choose_host_os_feedback)
+    val chooseHostOsFeedback = stringResource(MinkPadR.string.minkpad_choose_host_os_feedback)
     val unmappedGestureFeedback = stringResource(
-        R.string.minkpad_unmapped_gesture_feedback,
+        MinkPadR.string.minkpad_unmapped_gesture_feedback,
         stringResource(platform.labelResource),
     )
-    val shortcutsNotReady = stringResource(R.string.minkpad_shortcuts_not_ready)
+    val shortcutsNotReady = stringResource(MinkPadR.string.minkpad_shortcuts_not_ready)
     LaunchedEffect(connected, state.host?.address) {
         controllerReady = false
         if (connected) {
@@ -123,9 +125,9 @@ internal fun MinkPadScreen(
                 )
 
                 MinkPadScreenPhase.CONNECTED_FEEDBACK -> AppearanceApplyingScreen(
-                    title = stringResource(R.string.minkpad_connected_to),
-                    selectionLabel = state.host?.name ?: stringResource(R.string.minkpad_receiving_device),
-                    description = stringResource(R.string.minkpad_preparing_controls),
+                    title = stringResource(MinkPadR.string.minkpad_connected_to),
+                    selectionLabel = state.host?.name ?: stringResource(MinkPadR.string.minkpad_receiving_device),
+                    description = stringResource(MinkPadR.string.minkpad_preparing_controls),
                 )
 
                 MinkPadScreenPhase.CONTROLLER -> MinkPadConnectedSurface(
@@ -192,8 +194,8 @@ private fun MinkPadSetupContent(
         verticalArrangement = Arrangement.spacedBy(16.dp),
     ) {
         Column {
-            Text(stringResource(R.string.minkpad_name), style = MaterialTheme.typography.headlineSmall, fontWeight = FontWeight.Bold)
-            Text(stringResource(R.string.minkpad_tagline), style = MaterialTheme.typography.bodyMedium)
+            Text(stringResource(MinkPadR.string.minkpad_name), style = MaterialTheme.typography.headlineSmall, fontWeight = FontWeight.Bold)
+            Text(stringResource(MinkPadR.string.minkpad_tagline), style = MaterialTheme.typography.bodyMedium)
         }
         MinkPadConnectionPanel(repository, state, onStart, onDiscover, onBrowseNearby, onHostDialogStateChanged)
         if (state.status in stableSetupStatuses) MinkPadSetupOverview()
@@ -210,17 +212,17 @@ private fun MinkPadSetupOverview() {
             Modifier.fillMaxWidth().padding(16.dp),
             verticalArrangement = Arrangement.spacedBy(8.dp),
         ) {
-            Text(stringResource(R.string.minkpad_whats_minkpad), style = MaterialTheme.typography.titleMedium)
+            Text(stringResource(MinkPadR.string.minkpad_whats_minkpad), style = MaterialTheme.typography.titleMedium)
             Text(
-                stringResource(R.string.minkpad_overview),
+                stringResource(MinkPadR.string.minkpad_overview),
                 style = MaterialTheme.typography.bodyMedium,
             )
             Text(
-                stringResource(R.string.minkpad_privacy_summary),
+                stringResource(MinkPadR.string.minkpad_privacy_summary),
                 style = MaterialTheme.typography.bodySmall,
             )
             Text(
-                stringResource(R.string.minkpad_identity_summary),
+                stringResource(MinkPadR.string.minkpad_identity_summary),
                 style = MaterialTheme.typography.bodySmall,
                 color = MaterialTheme.colorScheme.onSurfaceVariant,
             )

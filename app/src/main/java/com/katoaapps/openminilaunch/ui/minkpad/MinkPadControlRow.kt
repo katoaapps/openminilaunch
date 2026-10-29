@@ -1,5 +1,7 @@
 package com.katoaapps.openminilaunch.ui.minkpad
 
+import com.katoaapps.minkpad.core.R as MinkPadR
+
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
@@ -12,7 +14,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.katoaapps.openminilaunch.R
-import com.katoaapps.openminilaunch.features.minkpad.input.MinkPadAction
+import com.katoaapps.minkpad.core.input.MinkPadAction
 
 @Composable
 internal fun MinkPadControlRow(actions: List<MinkPadAction>, enabled: Boolean, onInput: (MinkPadAction) -> Unit) {
@@ -30,13 +32,13 @@ internal fun MinkPadControlRow(actions: List<MinkPadAction>, enabled: Boolean, o
 
 internal val MinkPadAction.labelResource: Int
     get() = when (this) {
-        MinkPadAction.UP -> R.string.minkpad_up
-        MinkPadAction.DOWN -> R.string.minkpad_down
-        MinkPadAction.LEFT -> R.string.minkpad_left
-        MinkPadAction.RIGHT -> R.string.minkpad_right
-        MinkPadAction.ENTER -> R.string.minkpad_enter
-        MinkPadAction.ESCAPE -> R.string.minkpad_escape
-        MinkPadAction.TAB -> R.string.minkpad_tab
-        MinkPadAction.BACKSPACE -> R.string.minkpad_backspace
-        MinkPadAction.DELETE -> R.string.minkpad_delete
+        MinkPadAction.UP -> MinkPadR.string.minkpad_up
+        MinkPadAction.DOWN -> MinkPadR.string.minkpad_down
+        MinkPadAction.LEFT -> MinkPadR.string.minkpad_left
+        MinkPadAction.RIGHT -> MinkPadR.string.minkpad_right
+        MinkPadAction.ENTER -> MinkPadR.string.minkpad_enter
+        MinkPadAction.ESCAPE -> MinkPadR.string.minkpad_escape
+        MinkPadAction.TAB -> MinkPadR.string.minkpad_tab
+        MinkPadAction.BACKSPACE -> MinkPadR.string.minkpad_backspace
+        MinkPadAction.DELETE -> MinkPadR.string.minkpad_delete
     }

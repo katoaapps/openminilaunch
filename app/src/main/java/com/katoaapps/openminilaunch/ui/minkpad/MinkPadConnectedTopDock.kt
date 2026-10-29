@@ -1,5 +1,7 @@
 package com.katoaapps.openminilaunch.ui.minkpad
 
+import com.katoaapps.minkpad.core.R as MinkPadR
+
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -39,7 +41,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.dp
 import com.katoaapps.openminilaunch.R
-import com.katoaapps.openminilaunch.features.minkpad.MinkPadSessionState
+import com.katoaapps.minkpad.core.MinkPadSessionState
 
 internal enum class MinkPadConnectedMenu { HOSTS, MORE }
 
@@ -89,7 +91,7 @@ internal fun MinkPadTopDock(
                             ),
                     )
                     Text(
-                        state.host?.name ?: stringResource(R.string.minkpad_choose_device),
+                        state.host?.name ?: stringResource(MinkPadR.string.minkpad_choose_device),
                         modifier = Modifier
                             .weight(1f)
                             .padding(start = 8.dp),
@@ -116,7 +118,7 @@ internal fun MinkPadTopDock(
                                 {
                                     Icon(
                                         Icons.Default.Check,
-                                        contentDescription = stringResource(R.string.minkpad_connected_description),
+                                        contentDescription = stringResource(MinkPadR.string.minkpad_connected_description),
                                     )
                                 }
                             } else null,
@@ -124,12 +126,12 @@ internal fun MinkPadTopDock(
                     }
                     if (hosts.isNotEmpty()) HorizontalDivider()
                     DropdownMenuItem(
-                        text = { Text(stringResource(R.string.minkpad_pair_new_device)) },
+                        text = { Text(stringResource(MinkPadR.string.minkpad_pair_new_device)) },
                         onClick = { onMenu(null); onDiscover() },
                         leadingIcon = { Icon(Icons.Default.Add, contentDescription = null) },
                     )
                     DropdownMenuItem(
-                        text = { Text(stringResource(R.string.minkpad_manage_saved_devices)) },
+                        text = { Text(stringResource(MinkPadR.string.minkpad_manage_saved_devices)) },
                         onClick = { onMenu(null); onHosts() },
                     )
                 }
@@ -137,17 +139,17 @@ internal fun MinkPadTopDock(
             MinkPadModeIconButton(
                 selected = mode == MinkPadControllerMode.TRADITIONAL,
                 onClick = { onMode(MinkPadControllerMode.TRADITIONAL) },
-                icon = { Icon(Icons.Default.Mouse, contentDescription = stringResource(R.string.minkpad_trackpad_mode)) },
+                icon = { Icon(Icons.Default.Mouse, contentDescription = stringResource(MinkPadR.string.minkpad_trackpad_mode)) },
             )
             MinkPadModeIconButton(
                 selected = mode == MinkPadControllerMode.REMOTE,
                 onClick = { onMode(MinkPadControllerMode.REMOTE) },
-                icon = { Icon(Icons.Default.SettingsRemote, contentDescription = stringResource(R.string.minkpad_remote_mode)) },
+                icon = { Icon(Icons.Default.SettingsRemote, contentDescription = stringResource(MinkPadR.string.minkpad_remote_mode)) },
             )
             IconButton(onClick = onHelp, modifier = Modifier.size(40.dp)) {
                 Icon(
                     Icons.AutoMirrored.Outlined.HelpOutline,
-                    contentDescription = stringResource(R.string.minkpad_trackpad_help),
+                    contentDescription = stringResource(MinkPadR.string.minkpad_trackpad_help),
                 )
             }
             Box {
@@ -155,18 +157,18 @@ internal fun MinkPadTopDock(
                     onClick = { onMenu(MinkPadConnectedMenu.MORE) },
                     modifier = Modifier.size(40.dp),
                 ) {
-                    Icon(Icons.Default.MoreVert, contentDescription = stringResource(R.string.minkpad_more_options))
+                    Icon(Icons.Default.MoreVert, contentDescription = stringResource(MinkPadR.string.minkpad_more_options))
                 }
                 DropdownMenu(
                     expanded = menu == MinkPadConnectedMenu.MORE,
                     onDismissRequest = { onMenu(null) },
                 ) {
                     DropdownMenuItem(
-                        text = { Text(stringResource(R.string.minkpad_mouse_keyboard_settings)) },
+                        text = { Text(stringResource(MinkPadR.string.minkpad_mouse_keyboard_settings)) },
                         onClick = { onMenu(null); onSettings() },
                     )
                     DropdownMenuItem(
-                        text = { Text(stringResource(R.string.minkpad_close)) },
+                        text = { Text(stringResource(MinkPadR.string.minkpad_close)) },
                         onClick = { onMenu(null); onClose() },
                     )
                 }

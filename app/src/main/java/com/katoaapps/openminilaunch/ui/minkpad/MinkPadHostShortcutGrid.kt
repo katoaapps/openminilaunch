@@ -1,5 +1,7 @@
 package com.katoaapps.openminilaunch.ui.minkpad
 
+import com.katoaapps.minkpad.core.R as MinkPadR
+
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
@@ -14,9 +16,9 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.katoaapps.openminilaunch.R
-import com.katoaapps.openminilaunch.features.minkpad.input.MinkPadGestureAction
-import com.katoaapps.openminilaunch.features.minkpad.input.MinkPadHostPlatform
-import com.katoaapps.openminilaunch.features.minkpad.input.shortcut
+import com.katoaapps.minkpad.core.input.MinkPadGestureAction
+import com.katoaapps.minkpad.core.input.MinkPadHostPlatform
+import com.katoaapps.minkpad.core.input.shortcut
 
 /** Reliable button equivalents for gestures that a phone's own system UI may reserve. */
 @Composable
@@ -26,10 +28,10 @@ internal fun MinkPadHostShortcutGrid(
     onAction: (MinkPadGestureAction) -> Unit,
 ) {
     Column(verticalArrangement = Arrangement.spacedBy(8.dp)) {
-        Text(stringResource(R.string.minkpad_host_shortcuts), style = MaterialTheme.typography.titleSmall)
+        Text(stringResource(MinkPadR.string.minkpad_host_shortcuts), style = MaterialTheme.typography.titleSmall)
         if (platform == MinkPadHostPlatform.GENERIC) {
             Text(
-                stringResource(R.string.minkpad_choose_os_for_shortcuts),
+                stringResource(MinkPadR.string.minkpad_choose_os_for_shortcuts),
                 style = MaterialTheme.typography.bodySmall,
             )
         }

@@ -1,5 +1,7 @@
 package com.katoaapps.openminilaunch.ui.minkpad.help
 
+import com.katoaapps.minkpad.core.R as MinkPadR
+
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -42,7 +44,7 @@ internal fun MinkPadHelpPageContent(page: MinkPadHelpPage, modifier: Modifier = 
                 if (example != null) MinkPadHelpExamples(page.examples, selectedExample, previewHeight) { selectedExample = it }
                 Text(page.description, style = MaterialTheme.typography.bodyLarge)
             }
-            Text(stringResource(R.string.minkpad_help_swipe_hint),
+            Text(stringResource(MinkPadR.string.minkpad_help_swipe_hint),
                 style = MaterialTheme.typography.bodySmall, color = MaterialTheme.colorScheme.onSurfaceVariant)
         }
     }
@@ -54,7 +56,7 @@ private fun MinkPadHelpExamples(
     examples: List<MinkPadGestureExample>, selected: Int, maxPreviewHeight: Dp, onSelect: (Int) -> Unit,
 ) {
     val example = examples[selected]
-    Text(pluralStringResource(R.plurals.minkpad_finger_count, example.fingers, example.fingers),
+    Text(pluralStringResource(MinkPadR.plurals.minkpad_finger_count, example.fingers, example.fingers),
         style = MaterialTheme.typography.labelLarge)
     Box(Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
         MinkPadGestureIllustration(example, Modifier.widthIn(max = maxPreviewHeight * 1.8f).fillMaxWidth())

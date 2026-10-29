@@ -1,5 +1,7 @@
 package com.katoaapps.openminilaunch.ui.minkpad.help
 
+import com.katoaapps.minkpad.core.R as MinkPadR
+
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.shape.CircleShape
@@ -32,7 +34,7 @@ internal data class MinkPadGestureExample(
 internal fun MinkPadGestureIllustration(example: MinkPadGestureExample, modifier: Modifier = Modifier) {
     val color = MaterialTheme.colorScheme.primary
     val description = stringResource(
-        R.string.minkpad_gesture_description,
+        MinkPadR.string.minkpad_gesture_description,
         example.fingers,
         example.label,
         example.caption,

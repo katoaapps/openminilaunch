@@ -1,5 +1,7 @@
 package com.katoaapps.openminilaunch.ui.minkpad
 
+import com.katoaapps.minkpad.core.R as MinkPadR
+
 import androidx.activity.compose.BackHandler
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.animateDpAsState
@@ -53,11 +55,11 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.katoaapps.openminilaunch.R
-import com.katoaapps.openminilaunch.features.minkpad.MinkPadPreferences
-import com.katoaapps.openminilaunch.features.minkpad.MinkPadRepository
-import com.katoaapps.openminilaunch.features.minkpad.MinkPadSessionState
-import com.katoaapps.openminilaunch.features.minkpad.input.MinkPadGestureAction
-import com.katoaapps.openminilaunch.features.minkpad.input.MinkPadHostPlatform
+import com.katoaapps.minkpad.core.MinkPadPreferences
+import com.katoaapps.minkpad.core.MinkPadRepository
+import com.katoaapps.minkpad.core.MinkPadSessionState
+import com.katoaapps.minkpad.core.input.MinkPadGestureAction
+import com.katoaapps.minkpad.core.input.MinkPadHostPlatform
 
 /** Full-screen controller shown only while a native HID host is connected. */
 @Composable
@@ -103,8 +105,8 @@ internal fun MinkPadConnectedSurface(
     )
     val snackbarHost = remember { SnackbarHostState() }
     val bottomControlsScroll = rememberScrollState()
-    val capsLockWarning = stringResource(R.string.minkpad_caps_lock_warning)
-    val textNotSent = stringResource(R.string.minkpad_text_not_sent)
+    val capsLockWarning = stringResource(MinkPadR.string.minkpad_caps_lock_warning)
+    val textNotSent = stringResource(MinkPadR.string.minkpad_text_not_sent)
 
     BackHandler(enabled = bottomExpanded) { bottomExpanded = false }
 
@@ -192,7 +194,7 @@ internal fun MinkPadConnectedSurface(
                 Icon(
                     if (topExpanded) Icons.Default.KeyboardArrowUp else Icons.Default.KeyboardArrowDown,
                     contentDescription = stringResource(
-                        if (topExpanded) R.string.minkpad_hide_controls else R.string.minkpad_show_controls,
+                        if (topExpanded) MinkPadR.string.minkpad_hide_controls else MinkPadR.string.minkpad_show_controls,
                     ),
                 )
             }
@@ -253,8 +255,8 @@ internal fun MinkPadConnectedSurface(
                 Icon(
                     if (bottomExpanded) Icons.Default.KeyboardArrowDown else Icons.Default.Keyboard,
                     contentDescription = stringResource(
-                        if (bottomExpanded) R.string.minkpad_hide_keyboard_controls
-                        else R.string.minkpad_show_keyboard_controls,
+                        if (bottomExpanded) MinkPadR.string.minkpad_hide_keyboard_controls
+                        else MinkPadR.string.minkpad_show_keyboard_controls,
                     ),
                 )
             }

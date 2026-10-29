@@ -5,6 +5,8 @@
 
 package com.katoaapps.openminilaunch.ui.launcher.home
 
+import com.katoaapps.minkpad.core.R as MinkPadR
+
 import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -178,7 +180,7 @@ private fun MinkPadDrawerIcon() {
     Box(Modifier.size(Dimens.dp28)) {
         Icon(
             painterResource(R.drawable.ic_minkpad_notification),
-            stringResource(R.string.minkpad_name),
+            stringResource(MinkPadR.string.minkpad_name),
             modifier = Modifier.size(Dimens.dp24).align(Alignment.TopStart),
         )
         Box(

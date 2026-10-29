@@ -1,6 +1,6 @@
 package com.katoaapps.openminilaunch.features.backup
 
-import com.katoaapps.openminilaunch.features.minkpad.MinkPadPreferences
+import com.katoaapps.minkpad.core.MinkPadPreferences
 import org.json.JSONObject
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue

@@ -1,5 +1,7 @@
 package com.katoaapps.openminilaunch.features.minkpad
 
+import com.katoaapps.minkpad.core.R as MinkPadR
+
 import android.app.NotificationChannel
 import android.app.NotificationManager
 import android.app.PendingIntent
@@ -15,10 +17,12 @@ import androidx.core.app.NotificationCompat
 import androidx.core.app.ServiceCompat
 import androidx.core.content.ContextCompat
 import com.katoaapps.openminilaunch.R
+import com.katoaapps.minkpad.core.MinkPadRepository
+import com.katoaapps.minkpad.core.MinkPadStatus
 
 /** User-started, non-sticky native Bluetooth HID session. */
 class MinkPadSessionService : Service() {
-    private val repository by lazy { MinkPadRepository.get(this) }
+    private val repository by lazy { minkPadRepository(this) }
     private var receiverRegistered = false
     private var sessionStarted = false
     private val updates = object : BroadcastReceiver() {
@@ -30,7 +34,7 @@ class MinkPadSessionService : Service() {
         getSystemService(NotificationManager::class.java).createNotificationChannel(
             NotificationChannel(
                 CHANNEL,
-                getString(R.string.minkpad_notification_channel),
+                getString(MinkPadR.string.minkpad_notification_channel),
                 NotificationManager.IMPORTANCE_LOW,
             ),
         )
@@ -63,32 +67,32 @@ class MinkPadSessionService : Service() {
             Intent(this, MinkPadSessionService::class.java).setAction(action), PendingIntent.FLAG_IMMUTABLE or PendingIntent.FLAG_UPDATE_CURRENT)
         return NotificationCompat.Builder(this, CHANNEL)
             .setSmallIcon(R.drawable.ic_minkpad_notification)
-            .setContentTitle(getString(R.string.minkpad_name))
+            .setContentTitle(getString(MinkPadR.string.minkpad_name))
             .setContentText(state.host?.name?.let {
-                getString(R.string.minkpad_notification_with_host, statusText(state.status), it)
-            } ?: getString(R.string.minkpad_notification_without_host, statusText(state.status)))
+                getString(MinkPadR.string.minkpad_notification_with_host, statusText(state.status), it)
+            } ?: getString(MinkPadR.string.minkpad_notification_without_host, statusText(state.status)))
             .setContentIntent(open).setOngoing(true).setSilent(true)
-            .addAction(0, getString(R.string.minkpad_notification_open), open)
+            .addAction(0, getString(MinkPadR.string.minkpad_notification_open), open)
             .apply {
                 if (state.status == MinkPadStatus.DISCONNECTED && state.host != null) {
-                    addAction(0, getString(R.string.minkpad_reconnect), command(ACTION_RECONNECT, 1))
+                    addAction(0, getString(MinkPadR.string.minkpad_reconnect), command(ACTION_RECONNECT, 1))
                 }
             }
-            .addAction(0, getString(R.string.minkpad_notification_stop), command(ACTION_STOP, 2)).build()
+            .addAction(0, getString(MinkPadR.string.minkpad_notification_stop), command(ACTION_STOP, 2)).build()
     }
 
     private fun statusText(status: MinkPadStatus): String = getString(when (status) {
-        MinkPadStatus.IDLE -> R.string.minkpad_notification_status_idle
-        MinkPadStatus.REGISTERING -> R.string.minkpad_notification_status_registering
-        MinkPadStatus.READY -> R.string.minkpad_notification_status_ready
-        MinkPadStatus.WAITING_FOR_HOST -> R.string.minkpad_notification_status_waiting
-        MinkPadStatus.CONNECTING -> R.string.minkpad_notification_status_connecting
-        MinkPadStatus.CONNECTED -> R.string.minkpad_notification_status_connected
-        MinkPadStatus.DISCONNECTING -> R.string.minkpad_notification_status_disconnecting
-        MinkPadStatus.DISCONNECTED -> R.string.minkpad_notification_status_disconnected
-        MinkPadStatus.STOPPING -> R.string.minkpad_notification_status_stopping
-        MinkPadStatus.UNSUPPORTED -> R.string.minkpad_notification_status_unsupported
-        MinkPadStatus.ERROR -> R.string.minkpad_notification_status_error
+        MinkPadStatus.IDLE -> MinkPadR.string.minkpad_notification_status_idle
+        MinkPadStatus.REGISTERING -> MinkPadR.string.minkpad_notification_status_registering
+        MinkPadStatus.READY -> MinkPadR.string.minkpad_notification_status_ready
+        MinkPadStatus.WAITING_FOR_HOST -> MinkPadR.string.minkpad_notification_status_waiting
+        MinkPadStatus.CONNECTING -> MinkPadR.string.minkpad_notification_status_connecting
+        MinkPadStatus.CONNECTED -> MinkPadR.string.minkpad_notification_status_connected
+        MinkPadStatus.DISCONNECTING -> MinkPadR.string.minkpad_notification_status_disconnecting
+        MinkPadStatus.DISCONNECTED -> MinkPadR.string.minkpad_notification_status_disconnected
+        MinkPadStatus.STOPPING -> MinkPadR.string.minkpad_notification_status_stopping
+        MinkPadStatus.UNSUPPORTED -> MinkPadR.string.minkpad_notification_status_unsupported
+        MinkPadStatus.ERROR -> MinkPadR.string.minkpad_notification_status_error
     })
 
     @android.annotation.SuppressLint("MissingPermission")

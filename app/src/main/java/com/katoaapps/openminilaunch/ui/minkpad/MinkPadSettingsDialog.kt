@@ -1,5 +1,7 @@
 package com.katoaapps.openminilaunch.ui.minkpad
 
+import com.katoaapps.minkpad.core.R as MinkPadR
+
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.verticalScroll
@@ -18,9 +20,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.window.DialogProperties
 import com.katoaapps.openminilaunch.R
-import com.katoaapps.openminilaunch.features.minkpad.MinkPadHost
-import com.katoaapps.openminilaunch.features.minkpad.input.MinkPadHostPlatform
-import com.katoaapps.openminilaunch.features.minkpad.MinkPadPreferences
+import com.katoaapps.minkpad.core.MinkPadHost
+import com.katoaapps.minkpad.core.input.MinkPadHostPlatform
+import com.katoaapps.minkpad.core.MinkPadPreferences
 
 @Composable
 internal fun MinkPadSettingsDialog(
@@ -34,40 +36,40 @@ internal fun MinkPadSettingsDialog(
         onDismissRequest = close,
         modifier = Modifier.widthIn(max = 720.dp).fillMaxWidth(.96f),
         properties = DialogProperties(usePlatformDefaultWidth = false),
-        title = { Text(stringResource(R.string.minkpad_controller_settings)) },
+        title = { Text(stringResource(MinkPadR.string.minkpad_controller_settings)) },
         text = {
         Column(Modifier.verticalScroll(rememberScrollState()), verticalArrangement = Arrangement.spacedBy(8.dp)) {
-            SettingSwitch(stringResource(R.string.minkpad_keep_awake), value.keepAwake) { update(value.copy(keepAwake = it)) }
-            SettingSwitch(stringResource(R.string.minkpad_invert_scroll), value.naturalScroll) { update(value.copy(naturalScroll = it)) }
-            SettingSwitch(stringResource(R.string.minkpad_tap_to_click), value.tapToClick) { update(value.copy(tapToClick = it)) }
-            SettingSwitch(stringResource(R.string.minkpad_click_haptics), value.haptics) { update(value.copy(haptics = it)) }
+            SettingSwitch(stringResource(MinkPadR.string.minkpad_keep_awake), value.keepAwake) { update(value.copy(keepAwake = it)) }
+            SettingSwitch(stringResource(MinkPadR.string.minkpad_invert_scroll), value.naturalScroll) { update(value.copy(naturalScroll = it)) }
+            SettingSwitch(stringResource(MinkPadR.string.minkpad_tap_to_click), value.tapToClick) { update(value.copy(tapToClick = it)) }
+            SettingSwitch(stringResource(MinkPadR.string.minkpad_click_haptics), value.haptics) { update(value.copy(haptics = it)) }
             SettingSwitch(
-                label = stringResource(R.string.minkpad_advanced_gestures),
-                supportingText = stringResource(R.string.minkpad_advanced_gestures_description),
+                label = stringResource(MinkPadR.string.minkpad_advanced_gestures),
+                supportingText = stringResource(MinkPadR.string.minkpad_advanced_gestures_description),
                 checked = value.advancedHostGestures,
             ) { update(value.copy(advancedHostGestures = it)) }
-            Text(stringResource(R.string.minkpad_pointer_sensitivity, value.pointerSensitivity))
+            Text(stringResource(MinkPadR.string.minkpad_pointer_sensitivity, value.pointerSensitivity))
             Slider(value.pointerSensitivity, { update(value.copy(pointerSensitivity = it)) }, valueRange = .25f..3f)
             TextButton(onClick = { update(value.copy(pointerSensitivity = .65f)) }) {
-                Text(stringResource(R.string.minkpad_gentler_pointer))
+                Text(stringResource(MinkPadR.string.minkpad_gentler_pointer))
             }
             TextButton(onClick = {
                 val candidates = listOf(Settings.ACTION_HARD_KEYBOARD_SETTINGS, Settings.ACTION_INPUT_METHOD_SETTINGS, Settings.ACTION_SETTINGS)
                 val opened = candidates.any { action ->
                     runCatching { context.startActivity(Intent(action)); true }.getOrDefault(false)
                 }
-                if (!opened) Toast.makeText(context, context.getString(R.string.minkpad_input_settings_failed), Toast.LENGTH_SHORT).show()
-            }) { Text(stringResource(R.string.minkpad_phone_input_settings)) }
-            Text(stringResource(R.string.minkpad_input_settings_description),
+                if (!opened) Toast.makeText(context, context.getString(MinkPadR.string.minkpad_input_settings_failed), Toast.LENGTH_SHORT).show()
+            }) { Text(stringResource(MinkPadR.string.minkpad_phone_input_settings)) }
+            Text(stringResource(MinkPadR.string.minkpad_input_settings_description),
                 style = MaterialTheme.typography.bodySmall)
-            Text(stringResource(R.string.minkpad_scroll_sensitivity, value.scrollSensitivity))
+            Text(stringResource(MinkPadR.string.minkpad_scroll_sensitivity, value.scrollSensitivity))
             Slider(value.scrollSensitivity, { update(value.copy(scrollSensitivity = it)) }, valueRange = .25f..3f)
             HorizontalDivider(Modifier.padding(vertical = 8.dp))
-            Text(stringResource(R.string.minkpad_operating_system), style = MaterialTheme.typography.titleSmall)
+            Text(stringResource(MinkPadR.string.minkpad_operating_system), style = MaterialTheme.typography.titleSmall)
             host?.let {
-                Text(stringResource(R.string.minkpad_saved_for, it.name), style = MaterialTheme.typography.bodySmall)
+                Text(stringResource(MinkPadR.string.minkpad_saved_for, it.name), style = MaterialTheme.typography.bodySmall)
             } ?: Text(
-                stringResource(R.string.minkpad_connect_to_save_os),
+                stringResource(MinkPadR.string.minkpad_connect_to_save_os),
                 style = MaterialTheme.typography.bodySmall,
             )
             Box {
@@ -82,7 +84,7 @@ internal fun MinkPadSettingsDialog(
                 }
             }
             Text(
-                stringResource(R.string.minkpad_os_hint_description),
+                stringResource(MinkPadR.string.minkpad_os_hint_description),
                 style = MaterialTheme.typography.bodySmall,
             )
         }

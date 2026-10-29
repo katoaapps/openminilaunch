@@ -8,10 +8,10 @@ import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.input.pointer.PointerInputChange
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.input.pointer.positionChange
-import com.katoaapps.openminilaunch.features.minkpad.MinkPadPreferences
-import com.katoaapps.openminilaunch.features.minkpad.MinkPadRepository
-import com.katoaapps.openminilaunch.features.minkpad.input.MinkPadGestureAction
-import com.katoaapps.openminilaunch.features.minkpad.input.MinkPadHostPlatform
+import com.katoaapps.minkpad.core.MinkPadPreferences
+import com.katoaapps.minkpad.core.MinkPadRepository
+import com.katoaapps.minkpad.core.input.MinkPadGestureAction
+import com.katoaapps.minkpad.core.input.MinkPadHostPlatform
 import kotlin.math.abs
 
 /** Captures only the pad. Highest finger count owns the stream, including its release tail. */

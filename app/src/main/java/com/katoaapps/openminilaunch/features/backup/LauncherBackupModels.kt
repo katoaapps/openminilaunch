@@ -72,6 +72,6 @@ internal data class LauncherBackupSettings(
     val minkAppPauseMode: MinkAppPauseMode,
     val githubUpdateChecksEnabled: Boolean,
     val pinShortcutRequestPresentation: PinShortcutRequestPresentation,
-    val minkPadPreferences: com.katoaapps.openminilaunch.features.minkpad.MinkPadPreferences? = null,
+    val minkPadPreferences: com.katoaapps.minkpad.core.MinkPadPreferences? = null,
     val fontAppearance: FontAppearance = FontAppearance(),
 )

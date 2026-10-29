@@ -46,7 +46,7 @@ class LauncherStore private constructor(context: Context) {
     var customFontRevision by mutableIntStateOf(0)
         private set
     internal val profileRepository = ProfileRepository(appContext)
-    internal val minkPadPreferences = com.katoaapps.openminilaunch.features.minkpad.MinkPadRepository.get(appContext).preferences
+    internal val minkPadPreferences = com.katoaapps.openminilaunch.features.minkpad.minkPadRepository(appContext).preferences
     private val demoPreferences: DemoPreferenceStore = DemoPreferenceStore(appContext, prefs, todoStore)
     internal val demoHomeProfile get() = demoPreferences.profile
     val todos get() = todoStore.items

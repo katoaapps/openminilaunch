@@ -1,5 +1,7 @@
 package com.katoaapps.openminilaunch.ui.minkpad
 
+import com.katoaapps.minkpad.core.R as MinkPadR
+
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.Composable
@@ -9,7 +11,7 @@ import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
 import com.katoaapps.openminilaunch.R
-import com.katoaapps.openminilaunch.features.minkpad.input.MinkPadAction
+import com.katoaapps.minkpad.core.input.MinkPadAction
 
 /** Twelve consistently sized controls; sticky modifiers retain the existing report behavior. */
 @Composable
@@ -36,8 +38,8 @@ internal fun MinkPadKeyboardGrid(
 }
 
 private val modifierKeys = listOf(
-    R.string.minkpad_control to 1,
-    R.string.minkpad_shift to 2,
-    R.string.minkpad_alt to 4,
-    R.string.minkpad_meta to 8,
+    MinkPadR.string.minkpad_control to 1,
+    MinkPadR.string.minkpad_shift to 2,
+    MinkPadR.string.minkpad_alt to 4,
+    MinkPadR.string.minkpad_meta to 8,
 )

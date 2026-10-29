@@ -15,13 +15,14 @@ import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
 import com.katoaapps.openminilaunch.data.LauncherStore
-import com.katoaapps.openminilaunch.features.minkpad.MinkPadRepository
-import com.katoaapps.openminilaunch.features.minkpad.MinkPadStatus
-import com.katoaapps.openminilaunch.features.minkpad.input.MinkPadHardwareInput
+import com.katoaapps.minkpad.core.MinkPadRepository
+import com.katoaapps.openminilaunch.features.minkpad.minkPadRepository
+import com.katoaapps.minkpad.core.MinkPadStatus
+import com.katoaapps.minkpad.core.input.MinkPadHardwareInput
 import com.katoaapps.openminilaunch.ui.theme.MinkLauncherTheme
 
 class MinkPadActivity : ComponentActivity() {
-    private val repository by lazy { MinkPadRepository.get(this) }
+    private val repository by lazy { minkPadRepository(this) }
     private val hardware by lazy { MinkPadHardwareInput(repository) }
     private var captureHardwareInput = false
     private val permissionRequest = registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { grants ->

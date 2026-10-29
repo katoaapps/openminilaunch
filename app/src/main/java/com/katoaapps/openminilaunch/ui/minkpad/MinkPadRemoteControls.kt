@@ -1,5 +1,7 @@
 package com.katoaapps.openminilaunch.ui.minkpad
 
+import com.katoaapps.minkpad.core.R as MinkPadR
+
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
@@ -16,16 +18,16 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.katoaapps.openminilaunch.R
-import com.katoaapps.openminilaunch.features.minkpad.MinkPadRepository
-import com.katoaapps.openminilaunch.features.minkpad.input.MinkPadAction
-import com.katoaapps.openminilaunch.features.minkpad.input.MinkPadConsumerAction
+import com.katoaapps.minkpad.core.MinkPadRepository
+import com.katoaapps.minkpad.core.input.MinkPadAction
+import com.katoaapps.minkpad.core.input.MinkPadConsumerAction
 
 /** Native HID keyboard navigation and consumer-page media controls. */
 @Composable
 internal fun MinkPadRemoteControls(repository: MinkPadRepository, keyboardEnabled: Boolean, mediaEnabled: Boolean) {
     Column(Modifier.fillMaxWidth(), verticalArrangement = Arrangement.spacedBy(16.dp)) {
-        Text(stringResource(R.string.minkpad_tv_remote), style = MaterialTheme.typography.titleLarge)
-        Text(stringResource(R.string.minkpad_remote_description), style = MaterialTheme.typography.bodySmall)
+        Text(stringResource(MinkPadR.string.minkpad_tv_remote), style = MaterialTheme.typography.titleLarge)
+        Text(stringResource(MinkPadR.string.minkpad_remote_description), style = MaterialTheme.typography.bodySmall)
 
         RemoteNavigationCluster(
             keyboardEnabled = keyboardEnabled,
@@ -45,10 +47,10 @@ internal fun MinkPadRemoteControls(repository: MinkPadRepository, keyboardEnable
         )
 
         if (!mediaEnabled) Text(
-            stringResource(R.string.minkpad_media_unavailable),
+            stringResource(MinkPadR.string.minkpad_media_unavailable),
             style = MaterialTheme.typography.bodySmall,
         )
-        Text(stringResource(R.string.minkpad_remote_keyboard_note), style = MaterialTheme.typography.bodySmall)
+        Text(stringResource(MinkPadR.string.minkpad_remote_keyboard_note), style = MaterialTheme.typography.bodySmall)
     }
 }
 @Composable
@@ -78,21 +80,21 @@ private fun RemoteActionControls(
             )
             RemoteActionButton(
                 icon = Icons.AutoMirrored.Filled.VolumeOff,
-                description = stringResource(R.string.minkpad_mute),
+                description = stringResource(MinkPadR.string.minkpad_mute),
                 enabled = mediaEnabled,
                 size = buttonSize,
                 onClick = { onConsumerAction(MinkPadConsumerAction.MUTE) },
             )
             RemoteActionButton(
                 icon = Icons.Default.SkipPrevious,
-                description = stringResource(R.string.minkpad_previous),
+                description = stringResource(MinkPadR.string.minkpad_previous),
                 enabled = mediaEnabled,
                 size = buttonSize,
                 onClick = { onConsumerAction(MinkPadConsumerAction.PREVIOUS) },
             )
             RemoteActionButton(
                 icon = Icons.Default.PlayArrow,
-                description = stringResource(R.string.minkpad_play_pause),
+                description = stringResource(MinkPadR.string.minkpad_play_pause),
                 enabled = mediaEnabled,
                 size = primaryButtonSize,
                 primary = true,
@@ -100,7 +102,7 @@ private fun RemoteActionControls(
             )
             RemoteActionButton(
                 icon = Icons.Default.SkipNext,
-                description = stringResource(R.string.minkpad_next),
+                description = stringResource(MinkPadR.string.minkpad_next),
                 enabled = mediaEnabled,
                 size = buttonSize,
                 onClick = { onConsumerAction(MinkPadConsumerAction.NEXT) },
