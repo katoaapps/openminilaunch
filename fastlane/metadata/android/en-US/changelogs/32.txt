@@ -1,0 +1,5 @@
+Open 3.1.1 adds a choice between Mink and Android system color palettes, introduces the Geist interface font, and applies shared colors and typography more consistently throughout the app.
+
+Language switching no longer crashes the launcher, Indonesian translations load correctly, and Settings > More now links directly to Android system settings.
+
+Backup schema version 3 remains unchanged, and existing backups continue to import normally.

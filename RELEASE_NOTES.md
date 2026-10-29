@@ -1,10 +1,10 @@
-Open 3.1.0 makes MinkSpace a cleaner platform for focused Mini-Apps and moves the virtual contact card into the stack.
+Open 3.1.1 improves visual consistency, language handling, and access to Android settings without changing the OpenSource product identity.
 
-- **A dedicated Mini-Apps section:** Enable or disable Mini-Apps, drag them into order, and open each app's own settings from one focused Settings tab.
-- **vCard in MinkSpace:** The compact card keeps your photo, name, company, bio, and links close by. Expand it to reveal the QR code, then tap the code for its full-screen sharing view. Moving vCard into MinkSpace also frees its former fixed Home shortcut.
-- **A consistent expansion model:** Mini-Apps now declare their capabilities through a common MinkSpace contract. Apps can request compact or expanded presentation, MinkSpace supplies the standard expansion action when requested, and every expanded app retains a host-owned close control.
-- **Improved widget behavior:** A collapsed widget opens its provider app, while expansion exposes the interactive widget surface. Widget replacement remains with the Widget Mini-App rather than the MinkSpace shell.
-- **Better physical-keyboard input:** MinkPad now translates local Alt/Sym layers on compact QWERTY phones before sending HID input. Number-layer keys were verified on both Android and macOS without leaking the host's Alt modifier.
-- **Clearer contributor architecture:** Built-in Mini-Apps now use the same manifest, registry, scope, and presentation APIs, with updated documentation and contract tests for future contributions.
+- **Mink and system palettes:** Appearance settings now let you choose the intentional Mink color palette or Android's dynamic system colors on Android 12 and newer. The choice is included in backups, while older backups continue to import with Mink as the safe default.
+- **Geist typography:** Mink's default interface typeface is now Geist, with a matching monospace family and bundled open-source license information.
+- **Consistent app surfaces:** Home, Settings, the app drawer, dialogs, and secondary activities now share the same color and typography foundation.
+- **Reliable language switching:** The launcher entry point is separated from the Home activity so changing the app language no longer crashes the launcher. Indonesian resources now use Android's supported `in` qualifier and load correctly.
+- **System Settings shortcut:** Settings > More now includes a direct link to Android's system settings.
+- **OpenSource identity preserved:** User-facing OpenSource naming remains unchanged while the internal theme architecture is normalized for future development.
 
-MinkSpace remains an on-device launcher surface. The vCard stays encrypted locally, and the MinkPad input fix does not record or upload typed text.
+No new permissions, network services, or data collection are introduced in this release. Backup schema version 3 remains unchanged and compatible with existing backups.
