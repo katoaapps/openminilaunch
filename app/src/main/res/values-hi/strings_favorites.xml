@@ -26,7 +26,7 @@
     <string name="no_favorite_contacts_description">Android संपर्क में लोगों को पसंदीदा बनाएं और वे अपने आप यहां दिखाई देंगे।</string>
     <string name="open_contacts">संपर्क खोलें</string>
     <string name="loading_favorite_contacts">पसंदीदा संपर्क लोड हो रहे हैं…</string>
-    <string name="contact_action_apps">संपर्क कार्रवाई ऐप</string>
+    <string name="contact_action_apps">त्वरित सेटिंग्स</string>
     <string name="contact_action_apps_description">लॉन्चर की सामान्य सेटिंग इस्तेमाल करें या सिर्फ़ इस व्यक्ति के लिए ऐप चुनें।</string>
     <string name="message_with">इससे संदेश भेजें</string>
     <string name="call_with">इससे कॉल करें</string>

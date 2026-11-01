@@ -26,7 +26,7 @@
     <string name="no_favorite_contacts_description">Android رابطوں میں لوگوں کو پسندیدہ بنائیں اور وہ خود بخود یہاں دکھائی دیں گے۔</string>
     <string name="open_contacts">رابطے کھولیں</string>
     <string name="loading_favorite_contacts">پسندیدہ رابطے لوڈ ہو رہے ہیں…</string>
-    <string name="contact_action_apps">رابطے کی کارروائیوں کی ایپس</string>
+    <string name="contact_action_apps">فوری ترتیبات</string>
     <string name="contact_action_apps_description">لانچر کی عمومی ترتیب استعمال کریں یا صرف اس شخص کے لیے ایپس منتخب کریں۔</string>
     <string name="message_with">پیغام بھیجنے کی ایپ</string>
     <string name="call_with">کال کرنے کی ایپ</string>

@@ -1061,7 +1061,7 @@
     <string name="call">Call</string>
     <string name="open_contact">Open in Contacts</string>
     <string name="change_favorite_in_contacts">Star or unstar this person in Android Contacts. Mink does not keep a separate favorites list.</string>
-    <string name="contact_action_apps">Contact action apps</string>
+    <string name="contact_action_apps">Quick Settings</string>
     <string name="contact_action_apps_description">Use the launcher-wide setting, or choose apps for this person only.</string>
     <string name="message_with">Message with</string>
     <string name="call_with">Call with</string>

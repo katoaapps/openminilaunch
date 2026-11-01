@@ -26,7 +26,7 @@
     <string name="no_favorite_contacts_description">Добавьте людей в избранное в Контактах Android, и они автоматически появятся здесь.</string>
     <string name="open_contacts">Открыть Контакты</string>
     <string name="loading_favorite_contacts">Загрузка избранных контактов…</string>
-    <string name="contact_action_apps">Приложения для действий с контактом</string>
+    <string name="contact_action_apps">Быстрые настройки</string>
     <string name="contact_action_apps_description">Используйте общие настройки лаунчера или выберите приложения только для этого человека.</string>
     <string name="message_with">Сообщения через</string>
     <string name="call_with">Звонки через</string>

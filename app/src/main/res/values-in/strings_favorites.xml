@@ -26,7 +26,7 @@
     <string name="no_favorite_contacts_description">Beri bintang pada orang di Kontak Android dan mereka akan muncul otomatis di sini.</string>
     <string name="open_contacts">Buka Kontak</string>
     <string name="loading_favorite_contacts">Memuat kontak favorit…</string>
-    <string name="contact_action_apps">Aplikasi tindakan kontak</string>
+    <string name="contact_action_apps">Setelan cepat</string>
     <string name="contact_action_apps_description">Gunakan setelan launcher atau pilih aplikasi khusus untuk orang ini.</string>
     <string name="message_with">Kirim pesan dengan</string>
     <string name="call_with">Telepon dengan</string>

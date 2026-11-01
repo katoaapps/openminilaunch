@@ -26,7 +26,7 @@
     <string name="no_favorite_contacts_description">Android পরিচিতিতে মানুষদের পছন্দের হিসেবে চিহ্নিত করলে তারা এখানে নিজে থেকেই দেখা যাবে।</string>
     <string name="open_contacts">পরিচিতি খুলুন</string>
     <string name="loading_favorite_contacts">পছন্দের পরিচিতি লোড হচ্ছে…</string>
-    <string name="contact_action_apps">পরিচিতির কাজের অ্যাপ</string>
+    <string name="contact_action_apps">দ্রুত সেটিংস</string>
     <string name="contact_action_apps_description">লঞ্চারের সাধারণ সেটিং ব্যবহার করুন অথবা শুধু এই ব্যক্তির জন্য অ্যাপ বেছে নিন।</string>
     <string name="message_with">বার্তা পাঠানোর অ্যাপ</string>
     <string name="call_with">কল করার অ্যাপ</string>

@@ -26,7 +26,7 @@
     <string name="no_favorite_contacts_description">喺 Android 通訊錄將聯絡人加星，佢哋就會自動喺度出現。</string>
     <string name="open_contacts">開啟通訊錄</string>
     <string name="loading_favorite_contacts">正在載入最愛聯絡人…</string>
-    <string name="contact_action_apps">聯絡人操作應用程式</string>
+    <string name="contact_action_apps">快速設定</string>
     <string name="contact_action_apps_description">使用啟動器設定，或者只為呢位聯絡人揀應用程式。</string>
     <string name="message_with">傳訊息用</string>
     <string name="call_with">致電用</string>

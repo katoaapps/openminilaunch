@@ -26,7 +26,7 @@
     <string name="no_favorite_contacts_description">أضف أشخاصًا إلى المفضلة في جهات اتصال Android وسيظهرون هنا تلقائيًا.</string>
     <string name="open_contacts">فتح جهات الاتصال</string>
     <string name="loading_favorite_contacts">جارٍ تحميل جهات الاتصال المفضلة…</string>
-    <string name="contact_action_apps">تطبيقات إجراءات جهة الاتصال</string>
+    <string name="contact_action_apps">الإعدادات السريعة</string>
     <string name="contact_action_apps_description">استخدم إعداد المشغّل العام أو اختر تطبيقات لهذا الشخص فقط.</string>
     <string name="message_with">المراسلة عبر</string>
     <string name="call_with">الاتصال عبر</string>

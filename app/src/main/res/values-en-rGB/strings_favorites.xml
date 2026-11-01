@@ -26,7 +26,7 @@
     <string name="no_favorite_contacts_description">Star people in Android Contacts and they will appear here automatically.</string>
     <string name="open_contacts">Open Contacts</string>
     <string name="loading_favorite_contacts">Loading favourite contacts…</string>
-    <string name="contact_action_apps">Contact action apps</string>
+    <string name="contact_action_apps">Quick Settings</string>
     <string name="contact_action_apps_description">Use the launcher-wide setting, or choose apps for this person only.</string>
     <string name="message_with">Message with</string>
     <string name="call_with">Call with</string>

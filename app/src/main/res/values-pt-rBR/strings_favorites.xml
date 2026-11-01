@@ -26,7 +26,7 @@
     <string name="no_favorite_contacts_description">Marque pessoas como favoritas no app Contatos do Android e elas aparecerão aqui automaticamente.</string>
     <string name="open_contacts">Abrir Contatos</string>
     <string name="loading_favorite_contacts">Carregando contatos favoritos…</string>
-    <string name="contact_action_apps">Apps de ações do contato</string>
+    <string name="contact_action_apps">Configurações rápidas</string>
     <string name="contact_action_apps_description">Use a configuração geral do launcher ou escolha apps apenas para esta pessoa.</string>
     <string name="message_with">Enviar mensagem com</string>
     <string name="call_with">Ligar com</string>
