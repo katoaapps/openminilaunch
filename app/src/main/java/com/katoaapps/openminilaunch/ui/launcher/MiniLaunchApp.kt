@@ -38,7 +38,7 @@ import androidx.core.view.WindowInsetsControllerCompat
 import com.katoaapps.openminilaunch.data.LauncherStore
 import com.katoaapps.openminilaunch.features.conversations.ConversationNotificationStore
 import com.katoaapps.openminilaunch.features.wellbeing.UsageInsightsRepository
-import com.katoaapps.openminilaunch.model.PersonAppRoute
+import com.katoaapps.openminilaunch.model.ContactAppRoute
 import com.katoaapps.openminilaunch.model.Screen
 import com.katoaapps.openminilaunch.platform.DeviceActions
 import com.katoaapps.openminilaunch.platform.isPermanentlyDenied
@@ -304,12 +304,18 @@ internal fun MiniLaunchApp(
                             store = store,
                             actions = actions,
                             onComposeMessage = { recipient, route ->
-                                val providerPackage = (route as? PersonAppRoute.Package)?.packageName
+                                val providerPackage = (route as? ContactAppRoute.Package)?.packageName
                                 homeMagicBoxSessionState.prepareMessage(
                                     recipient = recipient,
                                     providerPackage = providerPackage,
-                                    providerRouteOverridden = route != PersonAppRoute.Inherit,
+                                    providerRouteOverridden = route != ContactAppRoute.Inherit,
                                 )
+                                focusedLauncherPage = HOME_PAGE
+                                homePageRequestToken++
+                                screen = Screen.HOME
+                            },
+                            onComposeConversationMessage = { conversation ->
+                                homeMagicBoxSessionState.prepareConversationMessage(conversation)
                                 focusedLauncherPage = HOME_PAGE
                                 homePageRequestToken++
                                 screen = Screen.HOME

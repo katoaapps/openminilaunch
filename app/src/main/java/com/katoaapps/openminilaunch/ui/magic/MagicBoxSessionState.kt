@@ -9,6 +9,7 @@ import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.TextFieldValue
 import com.katoaapps.openminilaunch.model.CommunicationRecipient
+import com.katoaapps.openminilaunch.model.LauncherShortcutTarget
 
 /**
  * The editable part of a Magic Box session.
@@ -44,6 +45,14 @@ internal class MagicBoxSessionState private constructor(
             providerPackage = providerPackage,
             providerRouteOverridden = providerRouteOverridden,
         )
+        lockedPrefixState.value = '@'
+        expandedState.value = true
+    }
+
+    /** Starts an @ draft for an exact app-published conversation shortcut. */
+    fun prepareConversationMessage(conversation: LauncherShortcutTarget) {
+        textState.value = TextFieldValue()
+        selectedRecipientState.value = SelectedMessageRecipient.ConversationRecipient(conversation)
         lockedPrefixState.value = '@'
         expandedState.value = true
     }

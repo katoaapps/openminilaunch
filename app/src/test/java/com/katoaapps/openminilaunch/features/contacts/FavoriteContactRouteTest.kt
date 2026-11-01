@@ -1,7 +1,8 @@
 package com.katoaapps.openminilaunch.features.contacts
 
-import com.katoaapps.openminilaunch.model.PersonActionRoutes
-import com.katoaapps.openminilaunch.model.PersonAppRoute
+import com.katoaapps.openminilaunch.model.ContactAppRoute
+import com.katoaapps.openminilaunch.model.FavoriteContactActionRoutes
+import com.katoaapps.openminilaunch.model.FavoriteContactId
 import com.katoaapps.openminilaunch.model.favoritePhoneFingerprint
 import java.io.ByteArrayOutputStream
 import java.io.DataOutputStream
@@ -15,18 +16,21 @@ import org.junit.Assert.assertThrows
 import org.junit.Assert.assertTrue
 import org.junit.Test
 
-class PersonActionRouteTest {
+class FavoriteContactRouteTest {
     @Test fun encryptedRoutesRestoreWithoutPlaintextIdentifiersOnDisk() {
-        val personKey = "android-contact:opaque-contact-key"
+        val contactKey = "android-contact:opaque-contact-key"
         val phoneNumber = "+15551234567"
         val routes = mapOf(
-            personKey to PersonActionRoutes(
-                message = PersonAppRoute.Package("com.example.messages"),
-                call = PersonAppRoute.SystemDefault,
-                preferredPhoneFingerprint = favoritePhoneFingerprint(personKey, phoneNumber),
+            contactKey to FavoriteContactActionRoutes(
+                message = ContactAppRoute.Package("com.example.messages"),
+                call = ContactAppRoute.SystemDefault,
+                preferredPhoneFingerprint = favoritePhoneFingerprint(
+                    FavoriteContactId.Android("opaque-contact-key"),
+                    phoneNumber,
+                ),
             ),
         )
-        val plaintext = PersonActionRouteCodec.encode(routes)
+        val plaintext = FavoriteContactRouteCodec.encode(routes)
         val cipher = testCipher()
 
         val encrypted = cipher.encrypt(plaintext)
@@ -35,18 +39,18 @@ class PersonActionRouteTest {
         assertFalse(encrypted.containsBytes("com.example.messages".toByteArray()))
         assertFalse(plaintext.containsBytes(phoneNumber.toByteArray()))
         assertFalse(encrypted.containsBytes(phoneNumber.toByteArray()))
-        assertEquals(routes, PersonActionRouteCodec.decode(cipher.decrypt(encrypted)))
+        assertEquals(routes, FavoriteContactRouteCodec.decode(cipher.decrypt(encrypted)))
     }
 
     @Test fun legacyVersionOneRoutesRestoreWithoutAPreferredPhone() {
-        val personKey = "android-contact:legacy"
+        val contactKey = "android-contact:legacy"
         val packageName = "com.example.messages"
         val payload = ByteArrayOutputStream().use { bytes ->
             DataOutputStream(bytes).use { output ->
                 output.writeInt(0x4D_52_54_50)
                 output.writeInt(1)
                 output.writeInt(1)
-                output.writeTestString(personKey)
+                output.writeTestString(contactKey)
                 output.writeByte(2)
                 output.writeTestString(packageName)
                 output.writeByte(0)
@@ -56,17 +60,19 @@ class PersonActionRouteTest {
 
         assertEquals(
             mapOf(
-                personKey to PersonActionRoutes(
-                    message = PersonAppRoute.Package(packageName),
+                contactKey to FavoriteContactActionRoutes(
+                    message = ContactAppRoute.Package(packageName),
                 ),
             ),
-            PersonActionRouteCodec.decode(payload),
+            FavoriteContactRouteCodec.decode(payload),
         )
     }
 
     @Test fun identicalRouteSnapshotsProduceDifferentCiphertext() {
-        val plaintext = PersonActionRouteCodec.encode(
-            mapOf("android-contact:key" to PersonActionRoutes(PersonAppRoute.SystemDefault)),
+        val plaintext = FavoriteContactRouteCodec.encode(
+            mapOf(
+                "android-contact:key" to FavoriteContactActionRoutes(ContactAppRoute.SystemDefault),
+            ),
         )
         val cipher = testCipher()
 
@@ -80,7 +86,7 @@ class PersonActionRouteTest {
 
     @Test fun tamperedCiphertextCannotBeRestored() {
         val cipher = testCipher()
-        val encrypted = cipher.encrypt(PersonActionRouteCodec.encode(emptyMap()))
+        val encrypted = cipher.encrypt(FavoriteContactRouteCodec.encode(emptyMap()))
         encrypted[encrypted.lastIndex] = (encrypted.last().toInt() xor 1).toByte()
 
         assertThrows(Exception::class.java) { cipher.decrypt(encrypted) }
@@ -88,53 +94,58 @@ class PersonActionRouteTest {
 
     @Test fun persistenceClearsTamperedDataAndFallsBackToInheritedRoutes() {
         val storage = MemoryRouteStorage()
-        val persistence = EncryptedPersonActionRoutePersistence(storage, testCipher())
+        val persistence = EncryptedFavoriteContactRoutePersistence(storage, testCipher())
         val routes = mapOf(
-            "android-contact:key" to PersonActionRoutes(
-                message = PersonAppRoute.Package("org.example.messages"),
+            "android-contact:key" to FavoriteContactActionRoutes(
+                message = ContactAppRoute.Package("org.example.messages"),
             ),
         )
         assertTrue(persistence.save(routes))
         storage.bytes!![storage.bytes!!.lastIndex] =
             (storage.bytes!!.last().toInt() xor 1).toByte()
 
-        assertEquals(emptyMap<String, PersonActionRoutes>(), persistence.load())
+        assertEquals(emptyMap<String, FavoriteContactActionRoutes>(), persistence.load())
         assertNull(storage.bytes)
     }
 
     @Test fun malformedPayloadIsRejected() {
         assertThrows(IOException::class.java) {
-            PersonActionRouteCodec.decode(byteArrayOf(0, 1, 2, 3))
+            FavoriteContactRouteCodec.decode(byteArrayOf(0, 1, 2, 3))
         }
     }
 
     @Test fun invalidatedKeyIsRotatedAndTheNextSaveCanRecover() {
         val storage = MemoryRouteStorage().apply { bytes = byteArrayOf(1, 2, 3) }
         val cipher = ResetTrackingCipher()
-        val persistence = EncryptedPersonActionRoutePersistence(storage, cipher)
+        val persistence = EncryptedFavoriteContactRoutePersistence(storage, cipher)
 
-        assertEquals(emptyMap<String, PersonActionRoutes>(), persistence.load())
+        assertEquals(emptyMap<String, FavoriteContactActionRoutes>(), persistence.load())
         assertEquals(1, cipher.resetCount)
         assertTrue(
             persistence.save(
                 mapOf(
-                    "android-contact:key" to PersonActionRoutes(
-                        message = PersonAppRoute.SystemDefault,
+                    "android-contact:key" to FavoriteContactActionRoutes(
+                        message = ContactAppRoute.SystemDefault,
                     ),
                 ),
             ),
         )
     }
 
-    private fun testCipher(): AesGcmPersonActionRouteCipher {
+    private fun testCipher(): AesGcmContactDataCipher {
         val generator = KeyGenerator.getInstance("AES")
         generator.init(256)
         val key = generator.generateKey()
-        return AesGcmPersonActionRouteCipher { key }
+        return AesGcmContactDataCipher(
+            keyProvider = { key },
+            envelopeMagic = 0x4D_52_54_45,
+            authenticatedContext =
+                "openmink:favorite-person-action-routes:v1".toByteArray(Charsets.UTF_8),
+        )
     }
 }
 
-private class MemoryRouteStorage : PersonActionRouteBlobStorage {
+private class MemoryRouteStorage : ContactDataBlobStorage {
     var bytes: ByteArray? = null
 
     override fun read(): ByteArray? = bytes?.copyOf()
@@ -148,7 +159,7 @@ private class MemoryRouteStorage : PersonActionRouteBlobStorage {
     }
 }
 
-private class ResetTrackingCipher : PersonActionRouteCipher {
+private class ResetTrackingCipher : ContactDataCipher {
     var resetCount = 0
     private var usable = false
 

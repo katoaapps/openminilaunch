@@ -8,8 +8,9 @@ import android.os.Looper
 import android.provider.ContactsContract
 import android.telephony.PhoneNumberUtils
 import com.katoaapps.openminilaunch.R
-import com.katoaapps.openminilaunch.model.FavoriteContact
-import com.katoaapps.openminilaunch.model.FavoritePhone
+import com.katoaapps.openminilaunch.model.AndroidContactPhone
+import com.katoaapps.openminilaunch.model.FavoriteAndroidContact
+import com.katoaapps.openminilaunch.model.FavoriteContactId
 import java.io.Closeable
 import java.text.Collator
 import kotlinx.coroutines.flow.MutableStateFlow
@@ -18,7 +19,7 @@ import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 
 /** Local, read-only access to contacts starred in Android Contacts. */
-internal class FavoriteContactsRepository(context: Context) : Closeable {
+internal class FavoriteAndroidContactsRepository(context: Context) : Closeable {
     private val appContext = context.applicationContext
     private val resolver = appContext.contentResolver
     private val revisionState = MutableStateFlow(0L)
@@ -35,7 +36,7 @@ internal class FavoriteContactsRepository(context: Context) : Closeable {
         resolver.registerContentObserver(ContactsContract.Data.CONTENT_URI, true, observer)
     }
 
-    fun favorites(): List<FavoriteContact> {
+    fun favorites(): List<FavoriteAndroidContact> {
         val records = queryFavoriteRecords()
         if (records.isEmpty()) return emptyList()
         val contactIds = records.map(FavoriteRecord::contactId).toSet()
@@ -44,8 +45,8 @@ internal class FavoriteContactsRepository(context: Context) : Closeable {
         val locale = appContext.resources.configuration.locales[0]
         val collator = Collator.getInstance(locale)
         return records.map { record ->
-            FavoriteContact(
-                lookupKey = record.lookupKey,
+            FavoriteAndroidContact(
+                id = FavoriteContactId.Android(record.lookupKey),
                 contactUri = ContactsContract.Contacts.getLookupUri(
                     record.contactId,
                     record.lookupKey,
@@ -99,9 +100,9 @@ internal class FavoriteContactsRepository(context: Context) : Closeable {
         }
     }
 
-    private fun queryPhones(contactIds: Set<Long>): Map<Long, List<FavoritePhone>> {
+    private fun queryPhones(contactIds: Set<Long>): Map<Long, List<AndroidContactPhone>> {
         if (contactIds.isEmpty()) return emptyMap()
-        val collected = mutableMapOf<Long, MutableList<FavoritePhone>>()
+        val collected = mutableMapOf<Long, MutableList<AndroidContactPhone>>()
         contactIds.chunked(MAX_IDS_PER_QUERY).forEach { ids ->
             val placeholders = ids.joinToString(",") { "?" }
             val projection = arrayOf(
@@ -139,7 +140,7 @@ internal class FavoriteContactsRepository(context: Context) : Closeable {
                         cursor.getString(labelIndex),
                     ).toString().ifBlank { appContext.getString(R.string.phone) }
                     collected.getOrPut(cursor.getLong(idIndex), ::mutableListOf).add(
-                        FavoritePhone(
+                        AndroidContactPhone(
                             rawNumber = rawNumber,
                             normalizedNumber = normalizedNumber,
                             label = label,
@@ -152,11 +153,11 @@ internal class FavoriteContactsRepository(context: Context) : Closeable {
         }
         return collected.mapValues { (_, phones) ->
             phones.sortedWith(
-                compareByDescending<FavoritePhone>(FavoritePhone::isSuperPrimary)
-                    .thenByDescending(FavoritePhone::isPrimary)
-                    .thenBy(String.CASE_INSENSITIVE_ORDER, FavoritePhone::label)
-                    .thenBy(FavoritePhone::normalizedNumber),
-            ).distinctBy(FavoritePhone::normalizedNumber)
+                compareByDescending<AndroidContactPhone>(AndroidContactPhone::isSuperPrimary)
+                    .thenByDescending(AndroidContactPhone::isPrimary)
+                    .thenBy(String.CASE_INSENSITIVE_ORDER, AndroidContactPhone::label)
+                    .thenBy(AndroidContactPhone::normalizedNumber),
+            ).distinctBy(AndroidContactPhone::normalizedNumber)
         }
     }
 

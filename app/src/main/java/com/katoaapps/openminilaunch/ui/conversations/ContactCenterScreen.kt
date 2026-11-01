@@ -42,7 +42,8 @@ import com.katoaapps.openminilaunch.data.LauncherStore
 import com.katoaapps.openminilaunch.features.conversations.ConversationNotificationStore
 import com.katoaapps.openminilaunch.features.conversations.NotificationConversation
 import com.katoaapps.openminilaunch.model.CommunicationRecipient
-import com.katoaapps.openminilaunch.model.PersonAppRoute
+import com.katoaapps.openminilaunch.model.ContactAppRoute
+import com.katoaapps.openminilaunch.model.LauncherShortcutTarget
 import com.katoaapps.openminilaunch.platform.DeviceActions
 import com.katoaapps.openminilaunch.ui.components.PageHeader
 import com.katoaapps.openminilaunch.ui.settings.NotificationAccessDisclosureDialog
@@ -56,7 +57,8 @@ import com.katoaapps.openminilaunch.ui.theme.Sage
 internal fun ContactCenterScreen(
     store: LauncherStore,
     actions: DeviceActions,
-    onComposeMessage: (CommunicationRecipient, PersonAppRoute) -> Unit,
+    onComposeMessage: (CommunicationRecipient, ContactAppRoute) -> Unit,
+    onComposeConversationMessage: (LauncherShortcutTarget) -> Unit,
     goBack: () -> Unit,
 ) {
     val context = LocalContext.current
@@ -102,6 +104,7 @@ internal fun ContactCenterScreen(
                         ContactSection.FAVORITES -> FavoriteContactsPane(
                             actions = actions,
                             onComposeMessage = onComposeMessage,
+                            onComposeConversationMessage = onComposeConversationMessage,
                         )
                         ContactSection.CONVERSATIONS -> when {
                             !accessGranted && !demoModeEnabled -> {

@@ -23,7 +23,7 @@
     <string name="open_app_permissions">開啟應用程式權限</string>
     <string name="allow_contact_access">允許存取聯絡人</string>
     <string name="no_favorite_contacts">暫時未有最愛</string>
-    <string name="no_favorite_contacts_description">喺 Android 通訊錄將聯絡人加星，佢哋就會自動喺度出現。</string>
+    <string name="no_favorite_contacts_description">喺通訊錄將聯絡人加到最愛，或者由整合應用程式加入對話。</string>
     <string name="open_contacts">開啟通訊錄</string>
     <string name="loading_favorite_contacts">正在載入最愛聯絡人…</string>
     <string name="contact_action_apps">快速設定</string>
@@ -33,5 +33,12 @@
     <string name="use_messaging_setting">使用訊息設定</string>
     <string name="use_system_calling_app">使用系統電話應用程式</string>
     <string name="app_unavailable">所選應用程式無法使用</string>
-    <string name="manage_favorites">管理最愛</string>
+    <string name="add_person">新增聯絡人</string>
+    <string name="add_person_description">選擇通訊錄或整合應用程式。</string>
+    <string name="no_integrated_contacts_available">目前沒有新的應用程式對話可用。</string>
+    <string name="display_name">顯示名稱</string>
+    <string name="integrated_contact">已整合聯絡人</string>
+    <string name="integrated_contact_unavailable">此應用程式對話目前無法使用。</string>
+    <string name="open_conversation">開啟對話</string>
+    <string name="remove_from_favorites">從最愛移除</string>
 </resources>

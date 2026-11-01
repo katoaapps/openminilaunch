@@ -23,7 +23,7 @@
     <string name="open_app_permissions">Открыть разрешения приложения</string>
     <string name="allow_contact_access">Разрешить доступ к контактам</string>
     <string name="no_favorite_contacts">В избранном пока пусто</string>
-    <string name="no_favorite_contacts_description">Добавьте людей в избранное в Контактах Android, и они автоматически появятся здесь.</string>
+    <string name="no_favorite_contacts_description">Добавьте человека в избранное в Контактах или добавьте беседу из интегрированного приложения.</string>
     <string name="open_contacts">Открыть Контакты</string>
     <string name="loading_favorite_contacts">Загрузка избранных контактов…</string>
     <string name="contact_action_apps">Быстрые настройки</string>
@@ -33,5 +33,12 @@
     <string name="use_messaging_setting">Использовать настройки сообщений</string>
     <string name="use_system_calling_app">Использовать системное приложение для звонков</string>
     <string name="app_unavailable">Выбранное приложение недоступно</string>
-    <string name="manage_favorites">Управление избранным</string>
+    <string name="add_person">Добавить человека</string>
+    <string name="add_person_description">Выберите Контакты или интегрированное приложение.</string>
+    <string name="no_integrated_contacts_available">Сейчас нет новых разговоров из приложений.</string>
+    <string name="display_name">Отображаемое имя</string>
+    <string name="integrated_contact">Интегрированный контакт</string>
+    <string name="integrated_contact_unavailable">Этот разговор сейчас недоступен.</string>
+    <string name="open_conversation">Открыть разговор</string>
+    <string name="remove_from_favorites">Удалить из избранного</string>
 </resources>

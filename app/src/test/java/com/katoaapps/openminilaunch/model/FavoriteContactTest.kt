@@ -7,14 +7,14 @@ import org.junit.Test
 class FavoriteContactTest {
     @Test
     fun noPhonesReturnsNone() {
-        assertSame(FavoritePhoneSelection.None, favorite(emptyList()).phoneSelection())
+        assertSame(AndroidPhoneSelection.None, favorite(emptyList()).phoneSelection())
     }
 
     @Test
     fun onlyPhoneResolvesDirectly() {
         val mobile = phone("111", "Mobile")
 
-        assertEquals(FavoritePhoneSelection.Resolved(mobile), favorite(listOf(mobile)).phoneSelection())
+        assertEquals(AndroidPhoneSelection.Resolved(mobile), favorite(listOf(mobile)).phoneSelection())
     }
 
     @Test
@@ -23,7 +23,7 @@ class FavoriteContactTest {
         val mobile = phone("222", "Mobile", superPrimary = true)
 
         assertEquals(
-            FavoritePhoneSelection.Choose(listOf(work, mobile)),
+            AndroidPhoneSelection.Choose(listOf(work, mobile)),
             favorite(listOf(work, mobile)).phoneSelection(),
         )
     }
@@ -34,7 +34,7 @@ class FavoriteContactTest {
         val mobile = phone("222", "Mobile", primary = true)
 
         assertEquals(
-            FavoritePhoneSelection.Choose(listOf(home, mobile)),
+            AndroidPhoneSelection.Choose(listOf(home, mobile)),
             favorite(listOf(home, mobile)).phoneSelection(),
         )
     }
@@ -45,7 +45,7 @@ class FavoriteContactTest {
         val mobile = phone("222", "Mobile")
 
         assertEquals(
-            FavoritePhoneSelection.Choose(listOf(home, mobile)),
+            AndroidPhoneSelection.Choose(listOf(home, mobile)),
             favorite(listOf(home, mobile)).phoneSelection(),
         )
     }
@@ -55,12 +55,11 @@ class FavoriteContactTest {
         val home = phone("111", "Home")
         val mobile = phone("222", "Mobile")
         val contact = favorite(listOf(home, mobile))
-        val personKey = androidContactPersonKey(contact.lookupKey)
-        val fingerprint = favoritePhoneFingerprint(personKey, mobile.normalizedNumber)
+        val fingerprint = favoritePhoneFingerprint(contact.id, mobile.normalizedNumber)
 
         assertEquals(
-            FavoritePhoneSelection.Resolved(mobile),
-            contact.phoneSelection(contact.preferredPhone(personKey, fingerprint)),
+            AndroidPhoneSelection.Resolved(mobile),
+            contact.phoneSelection(contact.preferredPhone(contact.id, fingerprint)),
         )
     }
 
@@ -69,12 +68,11 @@ class FavoriteContactTest {
         val home = phone("111", "Home")
         val mobile = phone("222", "Mobile")
         val contact = favorite(listOf(home, mobile))
-        val personKey = androidContactPersonKey(contact.lookupKey)
-        val removedPhone = favoritePhoneFingerprint(personKey, "333")
+        val removedPhone = favoritePhoneFingerprint(contact.id, "333")
 
         assertEquals(
-            FavoritePhoneSelection.Choose(listOf(home, mobile)),
-            contact.phoneSelection(contact.preferredPhone(personKey, removedPhone)),
+            AndroidPhoneSelection.Choose(listOf(home, mobile)),
+            contact.phoneSelection(contact.preferredPhone(contact.id, removedPhone)),
         )
     }
 
@@ -84,7 +82,7 @@ class FavoriteContactTest {
         val plain = phone("+15551234567", "Other", normalized = "+15551234567")
 
         assertEquals(
-            FavoritePhoneSelection.Resolved(formatted),
+            AndroidPhoneSelection.Resolved(formatted),
             favorite(listOf(formatted, plain)).phoneSelection(),
         )
     }
@@ -101,13 +99,13 @@ class FavoriteContactTest {
         val work = phone("5557654321", "Work")
 
         assertEquals(
-            FavoritePhoneSelection.Choose(listOf(preferred, work)),
+            AndroidPhoneSelection.Choose(listOf(preferred, work)),
             favorite(listOf(unranked, preferred, work)).phoneSelection(),
         )
     }
 
-    private fun favorite(phones: List<FavoritePhone>) = FavoriteContact(
-        lookupKey = "may",
+    private fun favorite(phones: List<AndroidContactPhone>) = FavoriteAndroidContact(
+        id = FavoriteContactId.Android("may"),
         contactUri = "content://contacts/may",
         displayName = "May Wong",
         photoUri = null,
@@ -121,7 +119,7 @@ class FavoriteContactTest {
         normalized: String = number,
         primary: Boolean = false,
         superPrimary: Boolean = false,
-    ) = FavoritePhone(
+    ) = AndroidContactPhone(
         rawNumber = number,
         normalizedNumber = normalized,
         label = label,

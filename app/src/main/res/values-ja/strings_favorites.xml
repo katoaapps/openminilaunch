@@ -23,7 +23,7 @@
     <string name="open_app_permissions">アプリの権限を開く</string>
     <string name="allow_contact_access">連絡先へのアクセスを許可</string>
     <string name="no_favorite_contacts">お気に入りはまだありません</string>
-    <string name="no_favorite_contacts_description">Android の連絡先で相手をお気に入りにすると、ここに自動的に表示されます。</string>
+    <string name="no_favorite_contacts_description">連絡先で相手をお気に入りにするか、連携アプリから会話を追加します。</string>
     <string name="open_contacts">連絡先を開く</string>
     <string name="loading_favorite_contacts">お気に入りの連絡先を読み込み中…</string>
     <string name="contact_action_apps">クイック設定</string>
@@ -33,5 +33,12 @@
     <string name="use_messaging_setting">メッセージ設定を使用</string>
     <string name="use_system_calling_app">システムの通話アプリを使用</string>
     <string name="app_unavailable">選択したアプリは利用できません</string>
-    <string name="manage_favorites">お気に入りを管理</string>
+    <string name="add_person">人を追加</string>
+    <string name="add_person_description">連絡先または連携アプリを選択します。</string>
+    <string name="no_integrated_contacts_available">現在追加できるアプリの会話はありません。</string>
+    <string name="display_name">表示名</string>
+    <string name="integrated_contact">連携連絡先</string>
+    <string name="integrated_contact_unavailable">このアプリの会話は現在利用できません。</string>
+    <string name="open_conversation">会話を開く</string>
+    <string name="remove_from_favorites">お気に入りから削除</string>
 </resources>

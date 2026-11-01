@@ -23,7 +23,7 @@
     <string name="open_app_permissions">Abrir permissões do app</string>
     <string name="allow_contact_access">Permitir acesso aos contatos</string>
     <string name="no_favorite_contacts">Nenhum favorito ainda</string>
-    <string name="no_favorite_contacts_description">Marque pessoas como favoritas no app Contatos do Android e elas aparecerão aqui automaticamente.</string>
+    <string name="no_favorite_contacts_description">Marque alguém como favorito em Contatos ou adicione uma conversa de um app integrado.</string>
     <string name="open_contacts">Abrir Contatos</string>
     <string name="loading_favorite_contacts">Carregando contatos favoritos…</string>
     <string name="contact_action_apps">Configurações rápidas</string>
@@ -33,5 +33,12 @@
     <string name="use_messaging_setting">Usar configuração de mensagens</string>
     <string name="use_system_calling_app">Usar app de chamadas do sistema</string>
     <string name="app_unavailable">App selecionado indisponível</string>
-    <string name="manage_favorites">Gerenciar favoritos</string>
+    <string name="add_person">Adicionar pessoa</string>
+    <string name="add_person_description">Escolha Contatos ou um app integrado.</string>
+    <string name="no_integrated_contacts_available">Nenhuma nova conversa de app está disponível agora.</string>
+    <string name="display_name">Nome de exibição</string>
+    <string name="integrated_contact">Contato integrado</string>
+    <string name="integrated_contact_unavailable">Esta conversa não está disponível agora.</string>
+    <string name="open_conversation">Abrir conversa</string>
+    <string name="remove_from_favorites">Remover dos favoritos</string>
 </resources>

@@ -23,7 +23,7 @@
     <string name="open_app_permissions">앱 권한 열기</string>
     <string name="allow_contact_access">연락처 접근 허용</string>
     <string name="no_favorite_contacts">아직 즐겨찾기가 없습니다</string>
-    <string name="no_favorite_contacts_description">Android 연락처에서 사람을 즐겨찾기에 추가하면 여기에 자동으로 표시됩니다.</string>
+    <string name="no_favorite_contacts_description">연락처에서 사람을 즐겨찾기에 추가하거나 연동된 앱에서 대화를 추가하세요.</string>
     <string name="open_contacts">연락처 열기</string>
     <string name="loading_favorite_contacts">즐겨찾는 연락처 불러오는 중…</string>
     <string name="contact_action_apps">빠른 설정</string>
@@ -33,5 +33,12 @@
     <string name="use_messaging_setting">메시지 설정 사용</string>
     <string name="use_system_calling_app">시스템 통화 앱 사용</string>
     <string name="app_unavailable">선택한 앱을 사용할 수 없음</string>
-    <string name="manage_favorites">즐겨찾기 관리</string>
+    <string name="add_person">사람 추가</string>
+    <string name="add_person_description">연락처 또는 연동 앱을 선택하세요.</string>
+    <string name="no_integrated_contacts_available">지금 추가할 수 있는 새 앱 대화가 없습니다.</string>
+    <string name="display_name">표시 이름</string>
+    <string name="integrated_contact">연동 연락처</string>
+    <string name="integrated_contact_unavailable">이 앱 대화는 현재 사용할 수 없습니다.</string>
+    <string name="open_conversation">대화 열기</string>
+    <string name="remove_from_favorites">즐겨찾기에서 삭제</string>
 </resources>

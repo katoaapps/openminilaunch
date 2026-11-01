@@ -23,7 +23,7 @@
     <string name="open_app_permissions">فتح أذونات التطبيق</string>
     <string name="allow_contact_access">السماح بالوصول إلى جهات الاتصال</string>
     <string name="no_favorite_contacts">لا توجد مفضلة بعد</string>
-    <string name="no_favorite_contacts_description">أضف أشخاصًا إلى المفضلة في جهات اتصال Android وسيظهرون هنا تلقائيًا.</string>
+    <string name="no_favorite_contacts_description">أضف شخصًا إلى المفضلة في جهات الاتصال أو أضف محادثة من تطبيق مدمج.</string>
     <string name="open_contacts">فتح جهات الاتصال</string>
     <string name="loading_favorite_contacts">جارٍ تحميل جهات الاتصال المفضلة…</string>
     <string name="contact_action_apps">الإعدادات السريعة</string>
@@ -33,5 +33,12 @@
     <string name="use_messaging_setting">استخدام إعداد المراسلة</string>
     <string name="use_system_calling_app">استخدام تطبيق الاتصال في النظام</string>
     <string name="app_unavailable">التطبيق المحدد غير متاح</string>
-    <string name="manage_favorites">إدارة المفضلة</string>
+    <string name="add_person">إضافة شخص</string>
+    <string name="add_person_description">اختر جهات الاتصال أو تطبيقًا مدمجًا.</string>
+    <string name="no_integrated_contacts_available">لا تتوفر محادثات تطبيقات جديدة الآن.</string>
+    <string name="display_name">اسم العرض</string>
+    <string name="integrated_contact">جهة اتصال متكاملة</string>
+    <string name="integrated_contact_unavailable">محادثة التطبيق هذه غير متاحة الآن.</string>
+    <string name="open_conversation">فتح المحادثة</string>
+    <string name="remove_from_favorites">إزالة من المفضلة</string>
 </resources>

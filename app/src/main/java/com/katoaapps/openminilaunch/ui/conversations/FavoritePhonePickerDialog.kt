@@ -25,8 +25,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.window.Dialog
 import com.katoaapps.openminilaunch.R
-import com.katoaapps.openminilaunch.model.FavoriteContact
-import com.katoaapps.openminilaunch.model.FavoritePhone
+import com.katoaapps.openminilaunch.model.AndroidContactPhone
+import com.katoaapps.openminilaunch.model.FavoriteAndroidContact
 import com.katoaapps.openminilaunch.ui.components.MinkDialogDefaults
 import com.katoaapps.openminilaunch.ui.components.minkDialogWidth
 import com.katoaapps.openminilaunch.ui.theme.Dimens
@@ -34,10 +34,10 @@ import com.katoaapps.openminilaunch.ui.theme.Muted
 
 @Composable
 internal fun FavoritePhonePickerDialog(
-    contact: FavoriteContact,
-    phones: List<FavoritePhone>,
+    contact: FavoriteAndroidContact,
+    phones: List<AndroidContactPhone>,
     action: FavoriteContactAction,
-    onPhone: (FavoritePhone) -> Unit,
+    onPhone: (AndroidContactPhone) -> Unit,
     onDismiss: () -> Unit,
 ) {
     Dialog(onDismissRequest = onDismiss, properties = MinkDialogDefaults.properties) {
@@ -64,7 +64,7 @@ internal fun FavoritePhonePickerDialog(
                     modifier = Modifier.fillMaxWidth().weight(1f).padding(top = Dimens.dp12),
                     verticalArrangement = Arrangement.spacedBy(Dimens.dp8),
                 ) {
-                    items(phones, key = FavoritePhone::normalizedNumber) { phone ->
+                    items(phones, key = AndroidContactPhone::normalizedNumber) { phone ->
                         Surface(
                             onClick = { onPhone(phone) },
                             modifier = Modifier.fillMaxWidth(),

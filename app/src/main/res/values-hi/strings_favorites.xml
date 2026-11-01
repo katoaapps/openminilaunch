@@ -23,7 +23,7 @@
     <string name="open_app_permissions">ऐप की अनुमतियाँ खोलें</string>
     <string name="allow_contact_access">संपर्क की अनुमति दें</string>
     <string name="no_favorite_contacts">अभी कोई पसंदीदा नहीं</string>
-    <string name="no_favorite_contacts_description">Android संपर्क में लोगों को पसंदीदा बनाएं और वे अपने आप यहां दिखाई देंगे।</string>
+    <string name="no_favorite_contacts_description">संपर्क में किसी व्यक्ति को पसंदीदा बनाएं या किसी एकीकृत ऐप से बातचीत जोड़ें।</string>
     <string name="open_contacts">संपर्क खोलें</string>
     <string name="loading_favorite_contacts">पसंदीदा संपर्क लोड हो रहे हैं…</string>
     <string name="contact_action_apps">त्वरित सेटिंग्स</string>
@@ -33,5 +33,12 @@
     <string name="use_messaging_setting">संदेश सेटिंग इस्तेमाल करें</string>
     <string name="use_system_calling_app">सिस्टम कॉलिंग ऐप इस्तेमाल करें</string>
     <string name="app_unavailable">चुना गया ऐप उपलब्ध नहीं है</string>
-    <string name="manage_favorites">पसंदीदा प्रबंधित करें</string>
+    <string name="add_person">व्यक्ति जोड़ें</string>
+    <string name="add_person_description">संपर्क या कोई इंटीग्रेटेड ऐप चुनें।</string>
+    <string name="no_integrated_contacts_available">अभी कोई नई ऐप बातचीत उपलब्ध नहीं है।</string>
+    <string name="display_name">दिखने वाला नाम</string>
+    <string name="integrated_contact">इंटीग्रेटेड संपर्क</string>
+    <string name="integrated_contact_unavailable">यह ऐप बातचीत अभी उपलब्ध नहीं है।</string>
+    <string name="open_conversation">बातचीत खोलें</string>
+    <string name="remove_from_favorites">पसंदीदा से हटाएँ</string>
 </resources>

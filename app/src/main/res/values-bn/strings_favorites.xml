@@ -23,7 +23,7 @@
     <string name="open_app_permissions">অ্যাপের অনুমতি খুলুন</string>
     <string name="allow_contact_access">পরিচিতি ব্যবহারের অনুমতি দিন</string>
     <string name="no_favorite_contacts">এখনও কোনো পছন্দের পরিচিতি নেই</string>
-    <string name="no_favorite_contacts_description">Android পরিচিতিতে মানুষদের পছন্দের হিসেবে চিহ্নিত করলে তারা এখানে নিজে থেকেই দেখা যাবে।</string>
+    <string name="no_favorite_contacts_description">পরিচিতিতে কাউকে পছন্দের হিসেবে চিহ্নিত করুন অথবা সমন্বিত অ্যাপ থেকে একটি কথোপকথন যোগ করুন।</string>
     <string name="open_contacts">পরিচিতি খুলুন</string>
     <string name="loading_favorite_contacts">পছন্দের পরিচিতি লোড হচ্ছে…</string>
     <string name="contact_action_apps">দ্রুত সেটিংস</string>
@@ -33,5 +33,12 @@
     <string name="use_messaging_setting">বার্তা সেটিং ব্যবহার করুন</string>
     <string name="use_system_calling_app">সিস্টেম কল অ্যাপ ব্যবহার করুন</string>
     <string name="app_unavailable">নির্বাচিত অ্যাপটি পাওয়া যাচ্ছে না</string>
-    <string name="manage_favorites">পছন্দের তালিকা পরিচালনা করুন</string>
+    <string name="add_person">ব্যক্তি যোগ করুন</string>
+    <string name="add_person_description">পরিচিতি বা একটি সমন্বিত অ্যাপ বেছে নিন।</string>
+    <string name="no_integrated_contacts_available">এখন কোনো নতুন অ্যাপ কথোপকথন উপলভ্য নেই।</string>
+    <string name="display_name">প্রদর্শিত নাম</string>
+    <string name="integrated_contact">সমন্বিত পরিচিতি</string>
+    <string name="integrated_contact_unavailable">এই অ্যাপ কথোপকথনটি এখন উপলভ্য নয়।</string>
+    <string name="open_conversation">কথোপকথন খুলুন</string>
+    <string name="remove_from_favorites">পছন্দের তালিকা থেকে সরান</string>
 </resources>

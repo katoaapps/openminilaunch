@@ -1082,8 +1082,15 @@
     <string name="open_app_permissions">Open app permissions</string>
     <string name="allow_contact_access">Allow contact access</string>
     <string name="no_favorite_contacts">No favorites yet</string>
-    <string name="no_favorite_contacts_description">Star people in Android Contacts and they will appear here automatically.</string>
+    <string name="no_favorite_contacts_description">Star someone in Contacts or add a conversation from an integrated app.</string>
     <string name="open_contacts">Open Contacts</string>
-    <string name="manage_favorites">Manage favorites</string>
+    <string name="add_person">Add person</string>
+    <string name="add_person_description">Choose Contacts or an integrated app.</string>
+    <string name="no_integrated_contacts_available">No new app conversations are available right now.</string>
+    <string name="display_name">Display name</string>
+    <string name="integrated_contact">Integrated contact</string>
+    <string name="integrated_contact_unavailable">This app conversation is not available right now.</string>
+    <string name="open_conversation">Open conversation</string>
+    <string name="remove_from_favorites">Remove from favorites</string>
     <string name="loading_favorite_contacts">Loading favorite contacts…</string>
 </resources>

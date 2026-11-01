@@ -47,10 +47,10 @@ import androidx.compose.ui.window.Dialog
 import com.katoaapps.openminilaunch.R
 import com.katoaapps.openminilaunch.features.contacts.CallingAppOption
 import com.katoaapps.openminilaunch.features.messaging.MessagingProviderOption
-import com.katoaapps.openminilaunch.model.FavoriteContact
-import com.katoaapps.openminilaunch.model.FavoritePhone
-import com.katoaapps.openminilaunch.model.PersonActionRoutes
-import com.katoaapps.openminilaunch.model.PersonAppRoute
+import com.katoaapps.openminilaunch.model.AndroidContactPhone
+import com.katoaapps.openminilaunch.model.ContactAppRoute
+import com.katoaapps.openminilaunch.model.FavoriteAndroidContact
+import com.katoaapps.openminilaunch.model.FavoriteContactActionRoutes
 import com.katoaapps.openminilaunch.model.uniquePhones
 import com.katoaapps.openminilaunch.ui.components.MinkDialogDefaults
 import com.katoaapps.openminilaunch.ui.components.minkDialogWidth
@@ -63,16 +63,16 @@ internal enum class FavoriteContactAction {
 }
 
 @Composable
-internal fun FavoriteContactActionDialog(
-    contact: FavoriteContact,
-    routes: PersonActionRoutes,
+internal fun FavoriteAndroidContactActionDialog(
+    contact: FavoriteAndroidContact,
+    routes: FavoriteContactActionRoutes,
     messagingOptions: List<MessagingProviderOption>,
     callingOptions: List<CallingAppOption>,
-    preferredPhone: FavoritePhone?,
+    preferredPhone: AndroidContactPhone?,
     onAction: (FavoriteContactAction) -> Unit,
-    onPreferredPhone: (FavoritePhone?) -> Unit,
-    onMessageRoute: (PersonAppRoute) -> Unit,
-    onCallRoute: (PersonAppRoute) -> Unit,
+    onPreferredPhone: (AndroidContactPhone?) -> Unit,
+    onMessageRoute: (ContactAppRoute) -> Unit,
+    onCallRoute: (ContactAppRoute) -> Unit,
     onOpenContact: () -> Unit,
     onDismiss: () -> Unit,
 ) {
@@ -131,9 +131,9 @@ internal fun FavoriteContactActionDialog(
 }
 @Composable
 private fun FavoriteContactIdentityHeader(
-    contact: FavoriteContact,
-    phones: List<FavoritePhone>,
-    preferredPhone: FavoritePhone?,
+    contact: FavoriteAndroidContact,
+    phones: List<AndroidContactPhone>,
+    preferredPhone: AndroidContactPhone?,
     onDismiss: () -> Unit,
 ) {
     Row(verticalAlignment = Alignment.CenterVertically) {
@@ -171,9 +171,9 @@ private fun FavoriteContactIdentityHeader(
 
 @Composable
 private fun PreferredPhonePicker(
-    phones: List<FavoritePhone>,
-    preferredPhone: FavoritePhone?,
-    onPhone: (FavoritePhone?) -> Unit,
+    phones: List<AndroidContactPhone>,
+    preferredPhone: AndroidContactPhone?,
+    onPhone: (AndroidContactPhone?) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     var expanded by remember { mutableStateOf(false) }
@@ -247,11 +247,11 @@ private fun ManageContactRow(
 
 @Composable
 private fun ContactActionAppsSection(
-    routes: PersonActionRoutes,
+    routes: FavoriteContactActionRoutes,
     messagingOptions: List<MessagingProviderOption>,
     callingOptions: List<CallingAppOption>,
-    onMessageRoute: (PersonAppRoute) -> Unit,
-    onCallRoute: (PersonAppRoute) -> Unit,
+    onMessageRoute: (ContactAppRoute) -> Unit,
+    onCallRoute: (ContactAppRoute) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     var expanded by rememberSaveable { mutableStateOf(false) }
@@ -333,18 +333,18 @@ private fun FavoriteContactPrimaryActions(
 
 @Composable
 private fun MessageRoutePicker(
-    route: PersonAppRoute,
+    route: ContactAppRoute,
     options: List<MessagingProviderOption>,
-    onRoute: (PersonAppRoute) -> Unit,
+    onRoute: (ContactAppRoute) -> Unit,
 ) {
     var expanded by remember { mutableStateOf(false) }
     val systemOption = options.firstOrNull(MessagingProviderOption::systemDefault)
     val packageOptions = options.filter { !it.systemDefault && it.installedPackageName != null }
     val currentLabel = when (route) {
-        PersonAppRoute.Inherit -> stringResource(R.string.use_messaging_setting)
-        PersonAppRoute.SystemDefault -> systemOption?.label
+        ContactAppRoute.Inherit -> stringResource(R.string.use_messaging_setting)
+        ContactAppRoute.SystemDefault -> systemOption?.label
             ?: stringResource(R.string.system_messages)
-        is PersonAppRoute.Package -> options.firstOrNull {
+        is ContactAppRoute.Package -> options.firstOrNull {
             it.installedPackageName == route.packageName
         }?.label ?: stringResource(R.string.app_unavailable)
     }
@@ -356,18 +356,18 @@ private fun MessageRoutePicker(
     ) {
         DropdownMenuItem(
             text = { Text(stringResource(R.string.use_messaging_setting)) },
-            onClick = { onRoute(PersonAppRoute.Inherit); expanded = false },
+            onClick = { onRoute(ContactAppRoute.Inherit); expanded = false },
         )
         DropdownMenuItem(
             text = { Text(systemOption?.label ?: stringResource(R.string.system_messages)) },
-            onClick = { onRoute(PersonAppRoute.SystemDefault); expanded = false },
+            onClick = { onRoute(ContactAppRoute.SystemDefault); expanded = false },
         )
         packageOptions.forEach { option ->
             val packageName = checkNotNull(option.installedPackageName)
             DropdownMenuItem(
                 text = { Text(option.label) },
                 onClick = {
-                    onRoute(PersonAppRoute.Package(packageName))
+                    onRoute(ContactAppRoute.Package(packageName))
                     expanded = false
                 },
             )
@@ -377,16 +377,16 @@ private fun MessageRoutePicker(
 
 @Composable
 private fun CallRoutePicker(
-    route: PersonAppRoute,
+    route: ContactAppRoute,
     options: List<CallingAppOption>,
-    onRoute: (PersonAppRoute) -> Unit,
+    onRoute: (ContactAppRoute) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     var expanded by remember { mutableStateOf(false) }
     val currentLabel = when (route) {
-        PersonAppRoute.Inherit, PersonAppRoute.SystemDefault ->
+        ContactAppRoute.Inherit, ContactAppRoute.SystemDefault ->
             stringResource(R.string.use_system_calling_app)
-        is PersonAppRoute.Package -> options.firstOrNull {
+        is ContactAppRoute.Package -> options.firstOrNull {
             it.packageName == route.packageName
         }?.label ?: stringResource(R.string.app_unavailable)
     }
@@ -399,13 +399,13 @@ private fun CallRoutePicker(
     ) {
         DropdownMenuItem(
             text = { Text(stringResource(R.string.use_system_calling_app)) },
-            onClick = { onRoute(PersonAppRoute.Inherit); expanded = false },
+            onClick = { onRoute(ContactAppRoute.Inherit); expanded = false },
         )
         options.forEach { option ->
             DropdownMenuItem(
                 text = { Text(option.label) },
                 onClick = {
-                    onRoute(PersonAppRoute.Package(option.packageName))
+                    onRoute(ContactAppRoute.Package(option.packageName))
                     expanded = false
                 },
             )

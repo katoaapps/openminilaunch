@@ -23,7 +23,7 @@
     <string name="open_app_permissions">Buka izin aplikasi</string>
     <string name="allow_contact_access">Izinkan akses kontak</string>
     <string name="no_favorite_contacts">Belum ada favorit</string>
-    <string name="no_favorite_contacts_description">Beri bintang pada orang di Kontak Android dan mereka akan muncul otomatis di sini.</string>
+    <string name="no_favorite_contacts_description">Beri bintang pada seseorang di Kontak atau tambahkan percakapan dari aplikasi terintegrasi.</string>
     <string name="open_contacts">Buka Kontak</string>
     <string name="loading_favorite_contacts">Memuat kontak favorit…</string>
     <string name="contact_action_apps">Setelan cepat</string>
@@ -33,5 +33,12 @@
     <string name="use_messaging_setting">Gunakan setelan pesan</string>
     <string name="use_system_calling_app">Gunakan aplikasi telepon sistem</string>
     <string name="app_unavailable">Aplikasi yang dipilih tidak tersedia</string>
-    <string name="manage_favorites">Kelola favorit</string>
+    <string name="add_person">Tambahkan orang</string>
+    <string name="add_person_description">Pilih Kontak atau aplikasi terintegrasi.</string>
+    <string name="no_integrated_contacts_available">Tidak ada percakapan aplikasi baru yang tersedia saat ini.</string>
+    <string name="display_name">Nama tampilan</string>
+    <string name="integrated_contact">Kontak terintegrasi</string>
+    <string name="integrated_contact_unavailable">Percakapan aplikasi ini tidak tersedia saat ini.</string>
+    <string name="open_conversation">Buka percakapan</string>
+    <string name="remove_from_favorites">Hapus dari favorit</string>
 </resources>

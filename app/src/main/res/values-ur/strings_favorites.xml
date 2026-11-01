@@ -23,7 +23,7 @@
     <string name="open_app_permissions">ایپ کی اجازتیں کھولیں</string>
     <string name="allow_contact_access">رابطوں تک رسائی دیں</string>
     <string name="no_favorite_contacts">ابھی کوئی پسندیدہ نہیں</string>
-    <string name="no_favorite_contacts_description">Android رابطوں میں لوگوں کو پسندیدہ بنائیں اور وہ خود بخود یہاں دکھائی دیں گے۔</string>
+    <string name="no_favorite_contacts_description">رابطوں میں کسی شخص کو پسندیدہ بنائیں یا مربوط ایپ سے گفتگو شامل کریں۔</string>
     <string name="open_contacts">رابطے کھولیں</string>
     <string name="loading_favorite_contacts">پسندیدہ رابطے لوڈ ہو رہے ہیں…</string>
     <string name="contact_action_apps">فوری ترتیبات</string>
@@ -33,5 +33,12 @@
     <string name="use_messaging_setting">پیغام رسانی کی ترتیب استعمال کریں</string>
     <string name="use_system_calling_app">سسٹم کالنگ ایپ استعمال کریں</string>
     <string name="app_unavailable">منتخب ایپ دستیاب نہیں ہے</string>
-    <string name="manage_favorites">پسندیدہ رابطوں کا نظم کریں</string>
+    <string name="add_person">شخص شامل کریں</string>
+    <string name="add_person_description">رابطے یا کوئی مربوط ایپ منتخب کریں۔</string>
+    <string name="no_integrated_contacts_available">اس وقت کوئی نئی ایپ گفتگو دستیاب نہیں ہے۔</string>
+    <string name="display_name">ظاہری نام</string>
+    <string name="integrated_contact">مربوط رابطہ</string>
+    <string name="integrated_contact_unavailable">یہ ایپ گفتگو اس وقت دستیاب نہیں ہے۔</string>
+    <string name="open_conversation">گفتگو کھولیں</string>
+    <string name="remove_from_favorites">پسندیدہ سے ہٹائیں</string>
 </resources>

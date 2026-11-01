@@ -2,10 +2,12 @@ package com.katoaapps.openminilaunch.features.contacts
 
 import android.security.keystore.KeyGenParameterSpec
 import android.security.keystore.KeyProperties
+import android.util.AtomicFile
 import java.io.ByteArrayInputStream
 import java.io.ByteArrayOutputStream
 import java.io.DataInputStream
 import java.io.DataOutputStream
+import java.io.File
 import java.io.IOException
 import java.security.KeyStore
 import javax.crypto.Cipher
@@ -13,16 +15,16 @@ import javax.crypto.KeyGenerator
 import javax.crypto.SecretKey
 import javax.crypto.spec.GCMParameterSpec
 
-internal fun interface PersonActionRouteSecretKeyProvider {
+internal fun interface ContactDataSecretKeyProvider {
     fun secretKey(): SecretKey
 
     fun reset() = Unit
 }
 
-/** Supplies a non-exportable per-install key. Hardware backing is used when the device supports it. */
-internal class AndroidKeystoreSecretKeyProvider(
+/** Supplies a non-exportable per-install key. Hardware backing is used when available. */
+internal class AndroidKeystoreContactDataKeyProvider(
     private val alias: String,
-) : PersonActionRouteSecretKeyProvider {
+) : ContactDataSecretKeyProvider {
     override fun secretKey(): SecretKey = synchronized(KEYSTORE_LOCK) {
         val keyStore = KeyStore.getInstance(ANDROID_KEYSTORE).apply { load(null) }
         val existing = runCatching { keyStore.getKey(alias, null) }.getOrNull()
@@ -62,28 +64,28 @@ internal class AndroidKeystoreSecretKeyProvider(
     }
 }
 
-internal interface PersonActionRouteCipher {
+internal interface ContactDataCipher {
     fun encrypt(plaintext: ByteArray): ByteArray
     fun decrypt(envelope: ByteArray): ByteArray
     fun resetKey()
 }
 
-/** Versioned AES-GCM envelope with authenticated context binding and a fresh IV per write. */
-internal class AesGcmPersonActionRouteCipher(
-    private val keyProvider: PersonActionRouteSecretKeyProvider,
-) : PersonActionRouteCipher {
-    override fun resetKey() {
-        keyProvider.reset()
-    }
+/** AES-GCM envelope whose magic and AAD keep each contact store cryptographically separate. */
+internal class AesGcmContactDataCipher(
+    private val keyProvider: ContactDataSecretKeyProvider,
+    private val envelopeMagic: Int,
+    private val authenticatedContext: ByteArray,
+) : ContactDataCipher {
+    override fun resetKey() = keyProvider.reset()
 
     override fun encrypt(plaintext: ByteArray): ByteArray {
         val cipher = Cipher.getInstance(TRANSFORMATION)
         cipher.init(Cipher.ENCRYPT_MODE, keyProvider.secretKey())
-        cipher.updateAAD(AUTHENTICATED_CONTEXT)
+        cipher.updateAAD(authenticatedContext)
         val ciphertext = cipher.doFinal(plaintext)
         return ByteArrayOutputStream().use { bytes ->
             DataOutputStream(bytes).use { output ->
-                output.writeInt(ENVELOPE_MAGIC)
+                output.writeInt(envelopeMagic)
                 output.writeInt(ENVELOPE_VERSION)
                 output.writeInt(cipher.iv.size)
                 output.write(cipher.iv)
@@ -96,14 +98,13 @@ internal class AesGcmPersonActionRouteCipher(
 
     override fun decrypt(envelope: ByteArray): ByteArray {
         val parsed = DataInputStream(ByteArrayInputStream(envelope)).use { input ->
-            if (input.readInt() != ENVELOPE_MAGIC) throw IOException("Invalid route envelope")
-            if (input.readInt() != ENVELOPE_VERSION) throw IOException("Unsupported route envelope")
+            if (input.readInt() != envelopeMagic) throw IOException("Invalid encrypted contact data")
+            if (input.readInt() != ENVELOPE_VERSION) throw IOException("Unsupported encrypted contact data")
             val iv = input.readSizedBytes(MAX_IV_BYTES, "IV")
             val ciphertext = input.readSizedBytes(MAX_CIPHERTEXT_BYTES, "ciphertext")
-            if (input.read() != -1) throw IOException("Trailing route envelope data")
+            if (input.read() != -1) throw IOException("Trailing encrypted contact data")
             ParsedEnvelope(iv, ciphertext)
         }
-
         return try {
             val cipher = Cipher.getInstance(TRANSFORMATION)
             cipher.init(
@@ -111,7 +112,7 @@ internal class AesGcmPersonActionRouteCipher(
                 keyProvider.secretKey(),
                 GCMParameterSpec(GCM_TAG_BITS, parsed.iv),
             )
-            cipher.updateAAD(AUTHENTICATED_CONTEXT)
+            cipher.updateAAD(authenticatedContext)
             cipher.doFinal(parsed.ciphertext)
         } finally {
             parsed.iv.fill(0)
@@ -124,12 +125,57 @@ internal class AesGcmPersonActionRouteCipher(
     private companion object {
         const val TRANSFORMATION = "AES/GCM/NoPadding"
         const val GCM_TAG_BITS = 128
-        const val ENVELOPE_MAGIC = 0x4D_52_54_45 // MRTE
         const val ENVELOPE_VERSION = 1
         const val MAX_IV_BYTES = 32
         const val MAX_CIPHERTEXT_BYTES = 2 * 1024 * 1024
-        val AUTHENTICATED_CONTEXT =
-            "openmink:favorite-person-action-routes:v1".toByteArray(Charsets.UTF_8)
+    }
+}
+
+internal interface ContactDataBlobStorage {
+    fun read(): ByteArray?
+    fun write(bytes: ByteArray)
+    fun clear()
+}
+
+/** Atomic encrypted-blob storage under the caller-supplied no-backup path. */
+internal class AtomicContactDataBlobStorage(file: File) : ContactDataBlobStorage {
+    private val atomicFile = AtomicFile(file)
+
+    override fun read(): ByteArray? {
+        if (!atomicFile.baseFile.exists()) return null
+        return atomicFile.openRead().use { input ->
+            val output = ByteArrayOutputStream()
+            val buffer = ByteArray(DEFAULT_BUFFER_SIZE)
+            var total = 0
+            while (true) {
+                val read = input.read(buffer)
+                if (read == -1) break
+                total += read
+                if (total > MAX_ENCRYPTED_FILE_BYTES) throw IOException("Contact store is too large")
+                output.write(buffer, 0, read)
+            }
+            output.toByteArray()
+        }
+    }
+
+    override fun write(bytes: ByteArray) {
+        if (bytes.size > MAX_ENCRYPTED_FILE_BYTES) throw IOException("Contact store is too large")
+        atomicFile.baseFile.parentFile?.mkdirs()
+        val output = atomicFile.startWrite()
+        try {
+            output.write(bytes)
+            output.fd.sync()
+            atomicFile.finishWrite(output)
+        } catch (failure: Exception) {
+            atomicFile.failWrite(output)
+            throw failure
+        }
+    }
+
+    override fun clear() = atomicFile.delete()
+
+    private companion object {
+        const val MAX_ENCRYPTED_FILE_BYTES = 2 * 1024 * 1024
     }
 }
 

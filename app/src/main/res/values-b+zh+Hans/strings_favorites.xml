@@ -23,7 +23,7 @@
     <string name="open_app_permissions">打开应用权限</string>
     <string name="allow_contact_access">允许访问联系人</string>
     <string name="no_favorite_contacts">还没有收藏</string>
-    <string name="no_favorite_contacts_description">在 Android 通讯录中为联系人添加星标，他们就会自动显示在这里。</string>
+    <string name="no_favorite_contacts_description">在通讯录中收藏联系人，或从集成应用添加对话。</string>
     <string name="open_contacts">打开通讯录</string>
     <string name="loading_favorite_contacts">正在加载收藏的联系人…</string>
     <string name="contact_action_apps">快速设置</string>
@@ -33,5 +33,12 @@
     <string name="use_messaging_setting">使用消息设置</string>
     <string name="use_system_calling_app">使用系统通话应用</string>
     <string name="app_unavailable">所选应用不可用</string>
-    <string name="manage_favorites">管理收藏</string>
+    <string name="add_person">添加联系人</string>
+    <string name="add_person_description">选择通讯录或集成应用。</string>
+    <string name="no_integrated_contacts_available">目前没有新的应用对话可用。</string>
+    <string name="display_name">显示名称</string>
+    <string name="integrated_contact">集成联系人</string>
+    <string name="integrated_contact_unavailable">此应用对话目前不可用。</string>
+    <string name="open_conversation">打开对话</string>
+    <string name="remove_from_favorites">从收藏中移除</string>
 </resources>
