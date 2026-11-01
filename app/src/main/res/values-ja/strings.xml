@@ -997,4 +997,13 @@
     <string name="home_shortcuts_description_v2">7 つの各スロットで任意のインストール済みアプリを開けます。変更していないスロットは下に示す組み込みアクションを維持し、Top 8 は引き続き組み込まれています。</string>
     <string name="less_visual_noise_description_v2">1 つの集中型ホームページ、7 つのアプリスロット、組み込みの Top 8 ショートカット、インストール済みの各アプリ用の集中型ホイール。</string>
     <string name="profile_onboarding_description_v2">vCard は他のミニアプリと並んで MinkSpace にあります。展開すると QR コードが表示され、ToDo ミニアプリをタップするとタスクを管理できます。</string>
+    <string name="calling">通話</string>
+    <string name="settings_calling_summary">通話の引き渡し方法を選択</string>
+    <string name="integrated_calling_app">統合通話アプリ</string>
+    <string name="choose_integrated_calling_app">統合通話アプリを選択</string>
+    <string name="call_automatically">自動的に発信</string>
+    <string name="call_automatically_description">確認後に発信します。オフにすると、準備済みの通話下書きを開きます。</string>
+    <string name="calling_behavior_description">Magic Box とお気に入りからの通話に適用されます。お気に入りごとに、この設定、システム通話アプリ、または個別のアプリを使用できます。</string>
+    <string name="open_call_draft">通話下書きを開く</string>
+    <string name="use_calling_setting">通話設定を使用</string>
 </resources>

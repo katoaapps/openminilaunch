@@ -997,4 +997,13 @@
     <string name="home_shortcuts_description_v2">7개의 각 슬롯에서 설치된 앱을 열 수 있습니다. 변경하지 않은 슬롯은 아래에 표시된 기본 동작을 유지하며 Top 8은 계속 기본으로 제공됩니다.</string>
     <string name="less_visual_noise_description_v2">하나의 집중형 홈 페이지, 7개의 앱 슬롯, 기본 제공 Top 8 바로가기, 설치된 각 앱을 위한 집중형 휠.</string>
     <string name="profile_onboarding_description_v2">vCard는 다른 미니 앱과 함께 MinkSpace에 있습니다. 펼치면 QR 코드가 나타나며, 할 일 미니 앱을 탭하면 작업을 관리할 수 있습니다.</string>
+    <string name="calling">통화</string>
+    <string name="settings_calling_summary">통화를 전달할 방법 선택</string>
+    <string name="integrated_calling_app">통합 통화 앱</string>
+    <string name="choose_integrated_calling_app">통합 통화 앱 선택</string>
+    <string name="call_automatically">자동으로 전화 걸기</string>
+    <string name="call_automatically_description">확인 후 전화를 겁니다. 끄면 준비된 통화 초안을 대신 엽니다.</string>
+    <string name="calling_behavior_description">Magic Box와 즐겨찾기에서 시작한 통화에 적용됩니다. 즐겨찾기는 이 설정, 시스템 통화 앱 또는 개별 앱을 사용할 수 있습니다.</string>
+    <string name="open_call_draft">통화 초안 열기</string>
+    <string name="use_calling_setting">통화 설정 사용</string>
 </resources>

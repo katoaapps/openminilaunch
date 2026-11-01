@@ -27,6 +27,7 @@ import androidx.compose.material.icons.filled.CreateNewFolder
 import androidx.compose.material.icons.filled.Folder
 import androidx.compose.material.icons.filled.FolderOpen
 import androidx.compose.material.icons.filled.PhotoLibrary
+import androidx.compose.material.icons.filled.Phone
 import androidx.compose.material.icons.filled.Public
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -141,6 +142,35 @@ internal fun MessagingSettingsPage(
             onCheckedChange = store::updateSendMessagesAutomatically,
         )
         Text(stringResource(R.string.messaging_behavior_description), color = Muted, fontSize = Dimens.sp13)
+    }
+}
+
+@Composable
+internal fun CallingSettingsPage(
+    store: LauncherStore,
+    actions: DeviceActions,
+    onPickCallingApp: () -> Unit,
+    goBack: () -> Unit,
+) {
+    SettingsPage(stringResource(R.string.calling), goBack) {
+        SettingsRow(
+            stringResource(R.string.integrated_calling_app),
+            store.preferredCallingPackage?.let(actions::appLabel)
+                ?: actions.defaultCallingAppLabel(),
+            Icons.Default.Phone,
+            onClick = onPickCallingApp,
+        )
+        SettingsSwitchRow(
+            title = stringResource(R.string.call_automatically),
+            subtitle = stringResource(R.string.call_automatically_description),
+            checked = store.callAutomatically,
+            onCheckedChange = store::updateCallAutomatically,
+        )
+        Text(
+            stringResource(R.string.calling_behavior_description),
+            color = Muted,
+            fontSize = Dimens.sp13,
+        )
     }
 }
 

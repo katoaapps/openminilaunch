@@ -12,6 +12,7 @@ import androidx.compose.material.icons.filled.ImportExport
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Keyboard
 import androidx.compose.material.icons.filled.Pets
+import androidx.compose.material.icons.filled.Phone
 import androidx.compose.material.icons.filled.Security
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.Shield
@@ -99,6 +100,13 @@ private fun HomeSettingsSection(
                 ?: actions.defaultMessagingAppLabel(),
             icon = Icons.AutoMirrored.Filled.Chat,
         ) { onNavigate(SettingsDestination.MESSAGING) }
+        SettingsCategoryRow(
+            title = stringResource(R.string.calling),
+            subtitle = stringResource(R.string.settings_calling_summary),
+            status = store.preferredCallingPackage?.let(actions::appLabel)
+                ?: actions.defaultCallingAppLabel(),
+            icon = Icons.Default.Phone,
+        ) { onNavigate(SettingsDestination.CALLING) }
         SettingsCategoryRow(
             title = stringResource(R.string.privacy_apps),
             subtitle = stringResource(R.string.privacy_apps_settings_summary),

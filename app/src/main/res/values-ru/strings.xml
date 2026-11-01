@@ -1017,4 +1017,13 @@
     <string name="home_shortcuts_description_v2">Каждый из семи слотов может открыть любое установленное приложение. Неизменённые слоты сохраняют встроенное действие, показанное ниже; Top 8 остаётся встроенным.</string>
     <string name="less_visual_noise_description_v2">Одна сфокусированная домашняя страница, семь слотов приложений, встроенный ярлык Top 8 и колесо для каждого установленного приложения.</string>
     <string name="profile_onboarding_description_v2">Ваша vCard находится в MinkSpace рядом с другими мини-приложениями. Разверните её, чтобы показать QR-код, или нажмите мини-приложение задач для управления ими.</string>
+    <string name="calling">Звонки</string>
+    <string name="settings_calling_summary">Выберите способ передачи звонков</string>
+    <string name="integrated_calling_app">Интегрированное приложение для звонков</string>
+    <string name="choose_integrated_calling_app">Выбрать приложение для звонков</string>
+    <string name="call_automatically">Звонить автоматически</string>
+    <string name="call_automatically_description">Начинает звонок после подтверждения. Отключите, чтобы вместо этого открыть подготовленный черновик звонка.</string>
+    <string name="calling_behavior_description">Применяется к звонкам из Magic Box и Избранного. Для избранного контакта можно использовать эту настройку, системное приложение или отдельное приложение.</string>
+    <string name="open_call_draft">Открыть черновик звонка</string>
+    <string name="use_calling_setting">Использовать настройку звонков</string>
 </resources>

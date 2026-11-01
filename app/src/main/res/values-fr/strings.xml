@@ -997,4 +997,13 @@
     <string name="home_shortcuts_description_v2">Chacun des sept emplacements peut ouvrir une application installée. Les emplacements inchangés conservent l’action intégrée indiquée ci-dessous ; Top 8 reste intégré.</string>
     <string name="less_visual_noise_description_v2">Une page d’accueil ciblée, sept emplacements d’applications, un raccourci Top 8 intégré et une roue ciblée pour chaque application installée.</string>
     <string name="profile_onboarding_description_v2">Votre vCard se trouve dans MinkSpace avec vos autres mini-applications. Développez-la pour afficher le code QR ou touchez la mini-application des tâches pour les gérer.</string>
+    <string name="calling">Appels</string>
+    <string name="settings_calling_summary">Choisissez comment les appels sont transmis</string>
+    <string name="integrated_calling_app">Application d’appel intégrée</string>
+    <string name="choose_integrated_calling_app">Choisir l’application d’appel intégrée</string>
+    <string name="call_automatically">Appeler automatiquement</string>
+    <string name="call_automatically_description">Passe l’appel après votre confirmation. Désactivez cette option pour ouvrir un brouillon d’appel préparé.</string>
+    <string name="calling_behavior_description">Ce réglage s’applique aux appels depuis Magic Box et les Favoris. Un favori peut utiliser ce réglage, l’application d’appel système ou sa propre application.</string>
+    <string name="open_call_draft">Ouvrir le brouillon d’appel</string>
+    <string name="use_calling_setting">Utiliser le réglage d’appel</string>
 </resources>

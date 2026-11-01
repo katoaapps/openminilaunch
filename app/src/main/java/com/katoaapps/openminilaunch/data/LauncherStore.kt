@@ -33,6 +33,7 @@ class LauncherStore private constructor(context: Context) {
     private val iconAppearancePreferences = IconAppearancePreferenceStore(prefs)
     private val fontAppearancePreferences = FontAppearancePreferenceStore(prefs)
     private val messagingPreferences = MessagingPreferenceStore(prefs)
+    private val callingPreferences = CallingPreferenceStore(prefs)
     private val minkDayPreferences = MinkDayPreferenceStore(prefs)
     private val updatePreferences = UpdatePreferenceStore(prefs)
     private val pinShortcutPreferences = PinShortcutPreferenceStore(prefs)
@@ -104,6 +105,8 @@ class LauncherStore private constructor(context: Context) {
     val hasCustomFont get() = customFontRepository.hasFont
     val sendMessagesAutomatically get() = messagingPreferences.sendMessagesAutomatically
     val preferredMessagingPackage get() = messagingPreferences.preferredMessagingPackage
+    val callAutomatically get() = callingPreferences.callAutomatically
+    val preferredCallingPackage get() = callingPreferences.preferredCallingPackage
     val preferredAiPackage get() = messagingPreferences.preferredAiPackage
     val preferredWebPackage get() = messagingPreferences.preferredWebPackage
     val socialGoalMinutes get() = minkDayPreferences.socialGoalMinutes
@@ -515,6 +518,18 @@ class LauncherStore private constructor(context: Context) {
 
     fun resetPreferredMessagingApp() {
         messagingPreferences.setPreferredMessagingApp(null)
+    }
+
+    fun updateCallAutomatically(enabled: Boolean) {
+        callingPreferences.updateCallAutomatically(enabled)
+    }
+
+    fun setPreferredCallingApp(packageName: String) {
+        callingPreferences.setPreferredCallingApp(packageName)
+    }
+
+    fun resetPreferredCallingApp() {
+        callingPreferences.setPreferredCallingApp(null)
     }
 
     fun setPreferredAiApp(packageName: String) {

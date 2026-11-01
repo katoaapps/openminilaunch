@@ -997,4 +997,13 @@
     <string name="home_shortcuts_description_v2">सातों स्लॉट में से हर एक कोई भी इंस्टॉल किया गया ऐप खोल सकता है। बिना बदले स्लॉट नीचे दिखाई गई बिल्ट-इन कार्रवाई रखते हैं; Top 8 बिल्ट-इन रहता है।</string>
     <string name="less_visual_noise_description_v2">एक केंद्रित होम पेज, सात ऐप स्लॉट, एक बिल्ट-इन Top 8 शॉर्टकट और हर इंस्टॉल किए गए ऐप के लिए एक केंद्रित व्हील।</string>
     <string name="profile_onboarding_description_v2">आपका vCard आपके अन्य मिनी-ऐप्स के साथ MinkSpace में रहता है। QR कोड दिखाने के लिए इसे फैलाएँ, या काम प्रबंधित करने के लिए टू-डू मिनी-ऐप पर टैप करें।</string>
+    <string name="calling">कॉलिंग</string>
+    <string name="settings_calling_summary">चुनें कि कॉल कैसे सौंपी जाएँ</string>
+    <string name="integrated_calling_app">इंटीग्रेटेड कॉलिंग ऐप</string>
+    <string name="choose_integrated_calling_app">इंटीग्रेटेड कॉलिंग ऐप चुनें</string>
+    <string name="call_automatically">अपने-आप कॉल करें</string>
+    <string name="call_automatically_description">पुष्टि के बाद कॉल करें। इसके बजाय तैयार कॉल ड्राफ्ट खोलने के लिए इसे बंद करें।</string>
+    <string name="calling_behavior_description">यह Magic Box और Favorites से की गई कॉल पर लागू होता है। कोई Favorite इस सेटिंग, सिस्टम कॉलिंग ऐप या अपने ऐप का उपयोग कर सकता है।</string>
+    <string name="open_call_draft">कॉल ड्राफ्ट खोलें</string>
+    <string name="use_calling_setting">कॉलिंग सेटिंग उपयोग करें</string>
 </resources>

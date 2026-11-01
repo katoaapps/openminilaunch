@@ -128,6 +128,7 @@
     <string name="call_recipient">Call %1$s?</string>
     <string name="phone_type_and_number">%1$s  ·  %2$s</string>
     <string name="call_now">Call now</string>
+    <string name="open_call_draft">Open call draft</string>
     <string name="cancel">Cancel</string>
     <string name="no_compatible_calling_app">No compatible calling app found</string>
     <string name="choose_calling_app">Choose calling app</string>
@@ -492,6 +493,8 @@
     <string name="minklauncher_community_summary">Join r/minklauncher on Reddit</string>
     <string name="settings_assistant_summary">Open the Magic Box over another app</string>
     <string name="settings_messaging_summary">Choose how one-time @ messages are handed off</string>
+    <string name="calling">Calling</string>
+    <string name="settings_calling_summary">Choose how calls are handed off</string>
     <string name="settings_mink_day_summary">Choose the social apps you want to limit</string>
     <string name="backup_and_restore">Backup &amp; restore</string>
     <string name="settings_backup_summary">Move your setup between OpenMink installs</string>
@@ -560,6 +563,11 @@
     <string name="send_messages_automatically_description">With System Messages, this sends carrier SMS immediately. Other integrated apps open a prepared draft.</string>
     <string name="send_messages_automatically_onboarding_description">Turn this on to send carrier SMS immediately with System Messages. If you choose another integrated app later, Mink opens its prepared draft instead.</string>
     <string name="messaging_behavior_description">This applies only to one-time @ messages from the Magic Box. With automatic sending off, Mink asks which installed supported app to use. See all apps opens Android’s share sheet. Conversation replies still use their source app, and Mink does not change RCS settings.</string>
+    <string name="integrated_calling_app">Integrated calling app</string>
+    <string name="choose_integrated_calling_app">Choose integrated calling app</string>
+    <string name="call_automatically">Call automatically</string>
+    <string name="call_automatically_description">Place the call after you confirm. Turn this off to open a prepared call draft instead.</string>
+    <string name="calling_behavior_description">This applies to calls from Magic Box and Favorites. A favorite can use this setting, the system calling app, or its own app.</string>
     <string name="search_messaging_apps">Search messaging apps</string>
     <string name="no_messaging_providers_found">No matching messaging apps</string>
     <string name="messaging_draft_ready">Draft-ready</string>
@@ -1067,6 +1075,7 @@
     <string name="call_with">Call with</string>
     <string name="use_messaging_setting">Use messaging setting</string>
     <string name="use_system_calling_app">Use system calling app</string>
+    <string name="use_calling_setting">Use calling setting</string>
     <string name="app_unavailable">Selected app unavailable</string>
     <string name="choose_phone_number">Choose a phone number</string>
     <string name="preferred_number">Preferred number</string>

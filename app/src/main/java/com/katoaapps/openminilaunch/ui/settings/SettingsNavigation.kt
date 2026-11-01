@@ -18,6 +18,7 @@ internal enum class SettingsDestination {
     APP_BUBBLES,
     MINK_ASSISTANT,
     MESSAGING,
+    CALLING,
     FILE_SEARCH,
     MINK_DAY,
     BACKUP_RESTORE,
@@ -98,6 +99,7 @@ internal fun settingsPathTo(destination: SettingsDestination): List<SettingsDest
     )
     SettingsDestination.MINK_ASSISTANT,
     SettingsDestination.MESSAGING,
+    SettingsDestination.CALLING,
     SettingsDestination.MINK_DAY,
     SettingsDestination.BACKUP_RESTORE,
     SettingsDestination.PERMISSIONS,

@@ -997,4 +997,13 @@
     <string name="home_shortcuts_description_v2">Cada um dos sete espaços pode abrir qualquer aplicativo instalado. Os espaços inalterados mantêm a ação integrada mostrada abaixo; o Top 8 continua integrado.</string>
     <string name="less_visual_noise_description_v2">Uma página inicial focada, sete espaços de aplicativos, um atalho Top 8 integrado e uma roda focada para cada aplicativo instalado.</string>
     <string name="profile_onboarding_description_v2">Seu vCard fica no MinkSpace ao lado dos outros miniaplicativos. Expanda-o para revelar o código QR ou toque no miniaplicativo de tarefas para gerenciá-las.</string>
+    <string name="calling">Chamadas</string>
+    <string name="settings_calling_summary">Escolha como as chamadas são encaminhadas</string>
+    <string name="integrated_calling_app">Aplicativo de chamadas integrado</string>
+    <string name="choose_integrated_calling_app">Escolher aplicativo de chamadas integrado</string>
+    <string name="call_automatically">Ligar automaticamente</string>
+    <string name="call_automatically_description">Faz a ligação após sua confirmação. Desative para abrir um rascunho de chamada preparado.</string>
+    <string name="calling_behavior_description">Isso se aplica a chamadas do Magic Box e dos Favoritos. Um favorito pode usar esta configuração, o aplicativo de chamadas do sistema ou seu próprio aplicativo.</string>
+    <string name="open_call_draft">Abrir rascunho de chamada</string>
+    <string name="use_calling_setting">Usar configuração de chamadas</string>
 </resources>

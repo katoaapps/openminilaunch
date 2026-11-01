@@ -23,6 +23,7 @@ import androidx.core.content.ContextCompat
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import com.katoaapps.openminilaunch.R
+import com.katoaapps.openminilaunch.data.LauncherStore
 import com.katoaapps.openminilaunch.features.contacts.FavoriteAndroidContactsRepository
 import com.katoaapps.openminilaunch.features.contacts.FavoriteContactCatalog
 import com.katoaapps.openminilaunch.features.contacts.FavoriteContactRouteStore
@@ -38,14 +39,17 @@ import com.katoaapps.openminilaunch.model.favoritePhoneFingerprint
 import com.katoaapps.openminilaunch.model.launcherShortcutSelectionKey
 import com.katoaapps.openminilaunch.model.phoneSelection
 import com.katoaapps.openminilaunch.model.preferredPhone
+import com.katoaapps.openminilaunch.model.resolvePackage
 import com.katoaapps.openminilaunch.platform.DeviceActions
 import com.katoaapps.openminilaunch.platform.isPermanentlyDenied
+import com.katoaapps.openminilaunch.platform.supportsDirectCalls
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 @Composable
 internal fun FavoriteContactsPane(
+    store: LauncherStore,
     actions: DeviceActions,
     onComposeMessage: (CommunicationRecipient, ContactAppRoute) -> Unit,
     onComposeConversationMessage: (LauncherShortcutTarget) -> Unit,
@@ -91,6 +95,7 @@ internal fun FavoriteContactsPane(
         Unit
     }
     GrantedFavoriteContactsPane(
+        store = store,
         actions = actions,
         onComposeMessage = onComposeMessage,
         onComposeConversationMessage = onComposeConversationMessage,
@@ -101,6 +106,7 @@ internal fun FavoriteContactsPane(
 
 @Composable
 private fun GrantedFavoriteContactsPane(
+    store: LauncherStore,
     actions: DeviceActions,
     onComposeMessage: (CommunicationRecipient, ContactAppRoute) -> Unit,
     onComposeConversationMessage: (LauncherShortcutTarget) -> Unit,
@@ -126,6 +132,31 @@ private fun GrantedFavoriteContactsPane(
     var integratedRevision by remember { mutableIntStateOf(0) }
     var selectedIntegratedContact by remember { mutableStateOf<FavoriteIntegratedContact?>(null) }
     var showAddPerson by remember { mutableStateOf(false) }
+    var pendingAutomaticCall by remember {
+        mutableStateOf<Pair<String, String?>?>(null)
+    }
+    fun openCall(phone: String, packageName: String?, automatically: Boolean) {
+        if (!actions.openCall(phone, packageName, automatically)) {
+            Toast.makeText(
+                context,
+                context.getString(R.string.could_not_open_calling_app),
+                Toast.LENGTH_SHORT,
+            ).show()
+        }
+    }
+    val callPermissionLauncher = rememberLauncherForActivityResult(
+        ActivityResultContracts.RequestPermission(),
+    ) { granted ->
+        val pending = pendingAutomaticCall
+        pendingAutomaticCall = null
+        if (pending != null) {
+            if (granted) {
+                openCall(pending.first, pending.second, automatically = true)
+            } else {
+                openCall(pending.first, pending.second, automatically = false)
+            }
+        }
+    }
     val integratedContacts by produceState<List<FavoriteIntegratedContact>?>(
         initialValue = null,
         key1 = integratedStore,
@@ -202,16 +233,18 @@ private fun GrantedFavoriteContactsPane(
                     routes.message,
                 )
             }
-            FavoriteContactAction.CALL -> if (!actions.dial(
-                    phone.rawNumber,
-                    (routes.call as? ContactAppRoute.Package)?.packageName,
-                )
-            ) {
-                Toast.makeText(
-                    context,
-                    context.getString(R.string.could_not_open_calling_app),
-                    Toast.LENGTH_SHORT,
-                ).show()
+            FavoriteContactAction.CALL -> {
+                val packageName = routes.call.resolvePackage(store.preferredCallingPackage)
+                if (
+                    store.callAutomatically && supportsDirectCalls(context) &&
+                    ContextCompat.checkSelfPermission(context, Manifest.permission.CALL_PHONE) !=
+                    PackageManager.PERMISSION_GRANTED
+                ) {
+                    pendingAutomaticCall = phone.rawNumber to packageName
+                    callPermissionLauncher.launch(Manifest.permission.CALL_PHONE)
+                } else {
+                    openCall(phone.rawNumber, packageName, store.callAutomatically)
+                }
             }
         }
         selectedContact = null

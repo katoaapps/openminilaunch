@@ -14,6 +14,13 @@ internal sealed interface ContactAppRoute {
     data class Package(val packageName: String) : ContactAppRoute
 }
 
+/** Resolves one person's route without conflating inherit with an explicit system choice. */
+internal fun ContactAppRoute.resolvePackage(inheritedPackage: String?): String? = when (this) {
+    ContactAppRoute.Inherit -> inheritedPackage
+    ContactAppRoute.SystemDefault -> null
+    is ContactAppRoute.Package -> packageName
+}
+
 internal data class FavoriteContactActionRoutes(
     val message: ContactAppRoute = ContactAppRoute.Inherit,
     val call: ContactAppRoute = ContactAppRoute.Inherit,

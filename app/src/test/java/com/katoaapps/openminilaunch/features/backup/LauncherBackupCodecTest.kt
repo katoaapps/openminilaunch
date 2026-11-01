@@ -138,6 +138,32 @@ class LauncherBackupCodecTest {
         assertEquals(FontAppearance(), LauncherBackupCodec.decode(json.toString()).settings.fontAppearance)
     }
 
+    @Test fun callingPreferencesSurvivePortableBackupRoundTrip() {
+        val original = sampleBackup(twoPanelMode = true).let { sample ->
+            sample.copy(
+                settings = sample.settings.copy(
+                    callAutomatically = true,
+                    preferredCallingPackage = "com.example.phone",
+                ),
+            )
+        }
+
+        val restored = LauncherBackupCodec.decode(LauncherBackupCodec.encode(original))
+
+        assertEquals(true, restored.settings.callAutomatically)
+        assertEquals("com.example.phone", restored.settings.preferredCallingPackage)
+    }
+
+    @Test fun olderBackupWithoutCallingPreferencesUsesSafeDefaults() {
+        val json = JSONObject(LauncherBackupCodec.encode(sampleBackup(twoPanelMode = true)))
+        json.getJSONObject("settings").remove("calling")
+
+        val restored = LauncherBackupCodec.decode(json.toString())
+
+        assertEquals(false, restored.settings.callAutomatically)
+        assertNull(restored.settings.preferredCallingPackage)
+    }
+
     @Test fun interimSchemaFourBackupStillImports() {
         val json = JSONObject(LauncherBackupCodec.encode(sampleBackup(twoPanelMode = true)))
         json.put("schemaVersion", 4)

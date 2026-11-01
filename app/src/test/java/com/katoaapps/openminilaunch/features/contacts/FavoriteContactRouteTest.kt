@@ -4,6 +4,7 @@ import com.katoaapps.openminilaunch.model.ContactAppRoute
 import com.katoaapps.openminilaunch.model.FavoriteContactActionRoutes
 import com.katoaapps.openminilaunch.model.FavoriteContactId
 import com.katoaapps.openminilaunch.model.favoritePhoneFingerprint
+import com.katoaapps.openminilaunch.model.resolvePackage
 import java.io.ByteArrayOutputStream
 import java.io.DataOutputStream
 import java.io.IOException
@@ -17,6 +18,18 @@ import org.junit.Assert.assertTrue
 import org.junit.Test
 
 class FavoriteContactRouteTest {
+    @Test fun callRoutesKeepInheritAndSystemDefaultDistinct() {
+        assertEquals(
+            "com.example.phone",
+            ContactAppRoute.Inherit.resolvePackage("com.example.phone"),
+        )
+        assertNull(ContactAppRoute.SystemDefault.resolvePackage("com.example.phone"))
+        assertEquals(
+            "com.example.other",
+            ContactAppRoute.Package("com.example.other").resolvePackage("com.example.phone"),
+        )
+    }
+
     @Test fun encryptedRoutesRestoreWithoutPlaintextIdentifiersOnDisk() {
         val contactKey = "android-contact:opaque-contact-key"
         val phoneNumber = "+15551234567"

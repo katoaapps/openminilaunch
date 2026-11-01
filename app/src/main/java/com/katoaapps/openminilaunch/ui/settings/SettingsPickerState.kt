@@ -2,6 +2,7 @@ package com.katoaapps.openminilaunch.ui.settings
 
 import com.katoaapps.openminilaunch.features.ai.AiProviderOption
 import com.katoaapps.openminilaunch.features.messaging.MessagingProviderOption
+import com.katoaapps.openminilaunch.features.contacts.CallingAppOption
 import com.katoaapps.openminilaunch.model.LaunchableApp
 import com.katoaapps.openminilaunch.model.LauncherAppTarget
 import com.katoaapps.openminilaunch.model.LauncherShortcutTarget
@@ -15,6 +16,7 @@ internal sealed interface SettingsPicker {
     data object CompatibleAiApp : SettingsPicker
     data object WebApp : SettingsPicker
     data object MessagingApp : SettingsPicker
+    data object CallingApp : SettingsPicker
     data object MinkDayApps : SettingsPicker
 }
 
@@ -35,6 +37,11 @@ internal data class LauncherShortcutListLoadState(
 
 internal data class MessagingProviderLoadState(
     val options: List<MessagingProviderOption> = emptyList(),
+    val loaded: Boolean = false,
+)
+
+internal data class CallingAppLoadState(
+    val options: List<CallingAppOption> = emptyList(),
     val loaded: Boolean = false,
 )
 

@@ -997,4 +997,13 @@
     <string name="home_shortcuts_description_v2">সাতটি স্লটের প্রতিটি যেকোনো ইনস্টল করা অ্যাপ খুলতে পারে। অপরিবর্তিত স্লট নিচে দেখানো বিল্ট-ইন কাজটি রাখে; Top 8 বিল্ট-ইন থাকে।</string>
     <string name="less_visual_noise_description_v2">একটি ফোকাস করা হোম পেজ, সাতটি অ্যাপ স্লট, একটি বিল্ট-ইন Top 8 শর্টকাট এবং প্রতিটি ইনস্টল করা অ্যাপের জন্য একটি ফোকাসড হুইল।</string>
     <string name="profile_onboarding_description_v2">আপনার vCard অন্যান্য মিনি-অ্যাপের পাশে MinkSpace-এ থাকে। QR কোড দেখতে এটি প্রসারিত করুন, অথবা কাজ পরিচালনা করতে টু-ডু মিনি-অ্যাপে ট্যাপ করুন।</string>
+    <string name="calling">কল করা</string>
+    <string name="settings_calling_summary">কল কীভাবে হস্তান্তর হবে তা বেছে নিন</string>
+    <string name="integrated_calling_app">ইন্টিগ্রেটেড কলিং অ্যাপ</string>
+    <string name="choose_integrated_calling_app">ইন্টিগ্রেটেড কলিং অ্যাপ বেছে নিন</string>
+    <string name="call_automatically">স্বয়ংক্রিয়ভাবে কল করুন</string>
+    <string name="call_automatically_description">নিশ্চিত করার পর কল করুন। এর পরিবর্তে প্রস্তুত কল ড্রাফট খুলতে এটি বন্ধ করুন।</string>
+    <string name="calling_behavior_description">এটি Magic Box এবং Favorites থেকে করা কলে প্রযোজ্য। কোনো Favorite এই সেটিং, সিস্টেম কলিং অ্যাপ বা নিজস্ব অ্যাপ ব্যবহার করতে পারে।</string>
+    <string name="open_call_draft">কল ড্রাফট খুলুন</string>
+    <string name="use_calling_setting">কলিং সেটিং ব্যবহার করুন</string>
 </resources>

@@ -1037,4 +1037,13 @@
     <string name="home_shortcuts_description_v2">يمكن لكل واحدة من الخانات السبع فتح أي تطبيق مثبت. تحتفظ الخانات غير المعدلة بالإجراء المدمج الموضح أدناه؛ ويظل Top 8 مدمجًا.</string>
     <string name="less_visual_noise_description_v2">صفحة رئيسية واحدة مركزة، وسبع خانات للتطبيقات، واختصار Top 8 مدمج، وعجلة مركزة لكل تطبيق مثبت.</string>
     <string name="profile_onboarding_description_v2">توجد vCard الخاصة بك في MinkSpace بجانب تطبيقاتك المصغرة الأخرى. وسّعها لإظهار رمز QR، أو اضغط على تطبيق المهام المصغر لإدارة المهام.</string>
+    <string name="calling">المكالمات</string>
+    <string name="settings_calling_summary">اختر كيفية تمرير المكالمات</string>
+    <string name="integrated_calling_app">تطبيق الاتصال المدمج</string>
+    <string name="choose_integrated_calling_app">اختر تطبيق اتصال مدمجًا</string>
+    <string name="call_automatically">الاتصال تلقائيًا</string>
+    <string name="call_automatically_description">أجرِ المكالمة بعد التأكيد. أوقف هذا لفتح مسودة مكالمة جاهزة بدلًا من ذلك.</string>
+    <string name="calling_behavior_description">ينطبق هذا على المكالمات من Magic Box والمفضلة. يمكن للمفضلة استخدام هذا الإعداد أو تطبيق اتصال النظام أو تطبيقها الخاص.</string>
+    <string name="open_call_draft">فتح مسودة المكالمة</string>
+    <string name="use_calling_setting">استخدام إعداد المكالمات</string>
 </resources>

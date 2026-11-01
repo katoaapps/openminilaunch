@@ -126,7 +126,12 @@ internal fun MagicBoxContent(
     var showCommandDiscardConfirmation by remember { mutableStateOf(false) }
     var todoCompletionPending by remember { mutableStateOf(false) }
     var pendingCalendarReview by remember { mutableStateOf<CalendarParseResult?>(null) }
-    val callFlow = rememberMagicCallFlow(actions, onSessionComplete)
+    val callFlow = rememberMagicCallFlow(
+        actions = actions,
+        callAutomatically = store.callAutomatically,
+        preferredCallingPackage = store.preferredCallingPackage,
+        onSessionComplete = onSessionComplete,
+    )
     val smsFlow = rememberMagicSmsFlow(actions, onSessionComplete)
     var aiProvidersLoaded by remember { mutableStateOf(false) }
     val aiProviders by produceState<List<AiProviderOption>>(
@@ -1017,6 +1022,7 @@ internal fun MagicBoxContent(
 
     MagicCommunicationDialogHost(
         callRecipient = callFlow.recipientToConfirm,
+        callAutomatically = callFlow.callAutomatically,
         smsDraft = smsFlow.draftToConfirm,
         assistantActive = actions.isAssistantRoleHeld(),
         onCallNow = { callFlow.callNow() },

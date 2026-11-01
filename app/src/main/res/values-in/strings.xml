@@ -997,4 +997,13 @@
     <string name="home_shortcuts_description_v2">Masing-masing dari tujuh slot dapat membuka aplikasi apa pun yang terinstal. Slot yang tidak diubah mempertahankan tindakan bawaan yang ditampilkan di bawah; Top 8 tetap menjadi bawaan.</string>
     <string name="less_visual_noise_description_v2">Satu halaman beranda yang terfokus, tujuh slot aplikasi, pintasan Top 8 bawaan, dan roda terfokus untuk setiap aplikasi yang terinstal.</string>
     <string name="profile_onboarding_description_v2">vCard Anda berada di MinkSpace bersama aplikasi mini lainnya. Perluas untuk menampilkan kode QR, atau ketuk aplikasi mini tugas untuk mengelola tugas.</string>
+    <string name="calling">Panggilan</string>
+    <string name="settings_calling_summary">Pilih cara panggilan diteruskan</string>
+    <string name="integrated_calling_app">Aplikasi panggilan terintegrasi</string>
+    <string name="choose_integrated_calling_app">Pilih aplikasi panggilan terintegrasi</string>
+    <string name="call_automatically">Telepon secara otomatis</string>
+    <string name="call_automatically_description">Lakukan panggilan setelah Anda mengonfirmasi. Nonaktifkan untuk membuka draf panggilan yang sudah disiapkan.</string>
+    <string name="calling_behavior_description">Ini berlaku untuk panggilan dari Magic Box dan Favorit. Favorit dapat memakai setelan ini, aplikasi panggilan sistem, atau aplikasinya sendiri.</string>
+    <string name="open_call_draft">Buka draf panggilan</string>
+    <string name="use_calling_setting">Gunakan setelan panggilan</string>
 </resources>

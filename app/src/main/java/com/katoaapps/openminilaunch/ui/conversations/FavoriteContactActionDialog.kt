@@ -384,8 +384,8 @@ private fun CallRoutePicker(
 ) {
     var expanded by remember { mutableStateOf(false) }
     val currentLabel = when (route) {
-        ContactAppRoute.Inherit, ContactAppRoute.SystemDefault ->
-            stringResource(R.string.use_system_calling_app)
+        ContactAppRoute.Inherit -> stringResource(R.string.use_calling_setting)
+        ContactAppRoute.SystemDefault -> stringResource(R.string.use_system_calling_app)
         is ContactAppRoute.Package -> options.firstOrNull {
             it.packageName == route.packageName
         }?.label ?: stringResource(R.string.app_unavailable)
@@ -398,8 +398,12 @@ private fun CallRoutePicker(
         modifier = modifier,
     ) {
         DropdownMenuItem(
-            text = { Text(stringResource(R.string.use_system_calling_app)) },
+            text = { Text(stringResource(R.string.use_calling_setting)) },
             onClick = { onRoute(ContactAppRoute.Inherit); expanded = false },
+        )
+        DropdownMenuItem(
+            text = { Text(stringResource(R.string.use_system_calling_app)) },
+            onClick = { onRoute(ContactAppRoute.SystemDefault); expanded = false },
         )
         options.forEach { option ->
             DropdownMenuItem(

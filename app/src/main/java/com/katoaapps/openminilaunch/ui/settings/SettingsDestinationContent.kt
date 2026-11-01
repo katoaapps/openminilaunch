@@ -29,6 +29,7 @@ internal fun SettingsDestinationContent(
     onPickWeb: () -> Unit,
     onPickAi: () -> Unit,
     onPickMessagingApp: () -> Unit,
+    onPickCallingApp: () -> Unit,
     onPickSocialApps: () -> Unit,
     onAddFolder: () -> Unit,
     onRemoveFolder: (SearchFolder) -> Unit,
@@ -111,6 +112,12 @@ internal fun SettingsDestinationContent(
             store = store,
             actions = actions,
             onPickMessagingApp = onPickMessagingApp,
+            goBack = onNavigateBack,
+        )
+        SettingsDestination.CALLING -> CallingSettingsPage(
+            store = store,
+            actions = actions,
+            onPickCallingApp = onPickCallingApp,
             goBack = onNavigateBack,
         )
         SettingsDestination.FILE_SEARCH -> FileSearchSettingsPage(

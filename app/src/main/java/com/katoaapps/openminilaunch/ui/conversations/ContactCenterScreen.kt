@@ -102,6 +102,7 @@ internal fun ContactCenterScreen(
                     ContactSectionTabs(selectedSection) { selectedSection = it }
                     when (selectedSection) {
                         ContactSection.FAVORITES -> FavoriteContactsPane(
+                            store = store,
                             actions = actions,
                             onComposeMessage = onComposeMessage,
                             onComposeConversationMessage = onComposeConversationMessage,

@@ -997,4 +997,13 @@
     <string name="home_shortcuts_description_v2">Each of the seven slots can open any installed app. Unchanged slots keep the built-in action shown below; Top 8 stays built in.</string>
     <string name="less_visual_noise_description_v2">One focused home page, seven app slots, a built-in Top 8 shortcut, and a focused wheel for every installed app.</string>
     <string name="profile_onboarding_description_v2">Your vCard lives in MinkSpace beside your other mini-apps. Expand it to reveal the QR code, or tap the to-do mini-app to manage tasks.</string>
+    <string name="calling">Calling</string>
+    <string name="settings_calling_summary">Choose how calls are handed off</string>
+    <string name="integrated_calling_app">Integrated calling app</string>
+    <string name="choose_integrated_calling_app">Choose integrated calling app</string>
+    <string name="call_automatically">Call automatically</string>
+    <string name="call_automatically_description">Place the call after you confirm. Turn this off to open a prepared call draft instead.</string>
+    <string name="calling_behavior_description">This applies to calls from Magic Box and Favourites. A favourite can use this setting, the system calling app, or its own app.</string>
+    <string name="open_call_draft">Open call draft</string>
+    <string name="use_calling_setting">Use calling setting</string>
 </resources>

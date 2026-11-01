@@ -138,6 +138,7 @@ internal fun MagicPickerDialogHost(
 @Composable
 internal fun MagicCommunicationDialogHost(
     callRecipient: CommunicationRecipient?,
+    callAutomatically: Boolean,
     smsDraft: MessageDraft?,
     assistantActive: Boolean,
     onCallNow: (CommunicationRecipient) -> Unit,
@@ -150,6 +151,7 @@ internal fun MagicCommunicationDialogHost(
     callRecipient?.let { recipient ->
         CallConfirmationDialog(
             recipient = recipient,
+            callAutomatically = callAutomatically,
             onCallNow = { onCallNow(recipient) },
             onChooseCallingApp = { onChooseCallingApp(recipient) },
             onDismiss = onDismissCall,

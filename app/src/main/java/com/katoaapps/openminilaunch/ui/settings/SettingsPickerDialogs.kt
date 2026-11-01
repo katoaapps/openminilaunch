@@ -16,6 +16,7 @@ import com.katoaapps.openminilaunch.features.messaging.MessagingProviderCatalog
 import com.katoaapps.openminilaunch.features.wellbeing.UsageInsightsRepository
 import com.katoaapps.openminilaunch.model.MAX_DRAWER_APPS
 import com.katoaapps.openminilaunch.model.LauncherTarget
+import com.katoaapps.openminilaunch.model.LaunchableApp
 import com.katoaapps.openminilaunch.platform.DeviceActions
 import com.katoaapps.openminilaunch.ui.shortcuts.displayLabel
 import com.katoaapps.openminilaunch.ui.shortcuts.displaySlotLabel
@@ -33,6 +34,7 @@ internal fun SettingsPickerDialogs(
     allAiApps: AppListLoadState,
     webApps: AppListLoadState,
     messagingProviders: MessagingProviderLoadState,
+    callingApps: CallingAppLoadState,
     usageInsights: UsageInsightsRepository,
     onPickerChange: (SettingsPicker?) -> Unit,
 ) {
@@ -125,6 +127,22 @@ internal fun SettingsPickerDialogs(
                     ?: store.resetPreferredMessagingApp()
                 onPickerChange(null)
             },
+            onDismiss = { onPickerChange(null) },
+        )
+        SettingsPicker.CallingApp -> AppPickerDialog(
+            title = stringResource(R.string.choose_integrated_calling_app),
+            apps = callingApps.options.map { option ->
+                LaunchableApp(
+                    label = option.label,
+                    packageName = option.packageName,
+                )
+            },
+            selected = setOfNotNull(store.preferredCallingPackage),
+            loading = !callingApps.loaded,
+            emptyMessage = stringResource(R.string.no_compatible_calling_app),
+            onApp = { store.setPreferredCallingApp(it.packageName); onPickerChange(null) },
+            onReset = { store.resetPreferredCallingApp(); onPickerChange(null) },
+            resetLabel = stringResource(R.string.use_system_calling_app),
             onDismiss = { onPickerChange(null) },
         )
         SettingsPicker.MinkDayApps -> SocialAppsDialog(store, usageInsights) {

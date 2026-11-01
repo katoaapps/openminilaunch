@@ -60,7 +60,7 @@ class SettingsNavigationTest {
         )
     }
 
-    @Test fun assistantAndMessagingAreTopLevelDestinations() {
+    @Test fun assistantMessagingAndCallingAreTopLevelDestinations() {
         assertEquals(
             listOf(SettingsDestination.OVERVIEW, SettingsDestination.MINK_ASSISTANT),
             settingsPathTo(SettingsDestination.MINK_ASSISTANT),
@@ -69,10 +69,15 @@ class SettingsNavigationTest {
             listOf(SettingsDestination.OVERVIEW, SettingsDestination.MESSAGING),
             settingsPathTo(SettingsDestination.MESSAGING),
         )
+        assertEquals(
+            listOf(SettingsDestination.OVERVIEW, SettingsDestination.CALLING),
+            settingsPathTo(SettingsDestination.CALLING),
+        )
     }
 
     @Test fun destinationsBelongToTheExpectedPrimarySection() {
         assertEquals(SettingsSection.HOME, settingsSectionFor(SettingsDestination.MESSAGING))
+        assertEquals(SettingsSection.HOME, settingsSectionFor(SettingsDestination.CALLING))
         assertEquals(SettingsSection.MINI_APPS, settingsSectionFor(SettingsDestination.MINK_SPACE))
         assertEquals(SettingsSection.MAGIC_BOX, settingsSectionFor(SettingsDestination.FILE_SEARCH))
         assertEquals(SettingsSection.ADVANCED, settingsSectionFor(SettingsDestination.MINK_DAY))

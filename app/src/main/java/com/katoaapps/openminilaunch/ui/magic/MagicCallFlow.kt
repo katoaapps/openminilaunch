@@ -25,6 +25,8 @@ import com.katoaapps.openminilaunch.platform.supportsDirectCalls
 internal class MagicCallFlow internal constructor() {
     var recipientToConfirm by mutableStateOf<CommunicationRecipient?>(null)
         internal set
+    var callAutomatically by mutableStateOf(false)
+        internal set
 
     internal var pendingPermissionRecipient: CommunicationRecipient? = null
     internal var callNowAction: () -> Unit = {}
@@ -46,11 +48,16 @@ internal class MagicCallFlow internal constructor() {
 @Composable
 internal fun rememberMagicCallFlow(
     actions: DeviceActions,
+    callAutomatically: Boolean,
+    preferredCallingPackage: String?,
     onSessionComplete: () -> Unit,
 ): MagicCallFlow {
     val context = LocalContext.current
     val currentOnSessionComplete by rememberUpdatedState(onSessionComplete)
+    val currentCallAutomatically by rememberUpdatedState(callAutomatically)
+    val currentPreferredCallingPackage by rememberUpdatedState(preferredCallingPackage)
     val flow = remember { MagicCallFlow() }
+    flow.callAutomatically = callAutomatically
 
     fun openCallingApp(recipient: CommunicationRecipient) {
         if (!actions.chooseCallingApp(recipient.address)) {
@@ -69,9 +76,11 @@ internal fun rememberMagicCallFlow(
         val recipient = flow.pendingPermissionRecipient
         flow.pendingPermissionRecipient = null
         if (granted && recipient != null) {
-            actions.placeCall(recipient.address)
+            actions.placeCall(recipient.address, currentPreferredCallingPackage)
         } else if (!granted && isPermanentlyDenied(context, Manifest.permission.CALL_PHONE)) {
-            actions.openAppSettings()
+            actions.openAppPermissionSettings()
+        } else if (recipient != null) {
+            actions.dial(recipient.address, currentPreferredCallingPackage)
         }
         currentOnSessionComplete()
     }
@@ -81,12 +90,21 @@ internal fun rememberMagicCallFlow(
             flow.recipientToConfirm = null
             if (recipient.userEntered && !recipient.address.looksLikePhoneRecipient()) {
                 openCallingApp(recipient)
+            } else if (!currentCallAutomatically) {
+                if (!actions.dial(recipient.address, currentPreferredCallingPackage)) {
+                    Toast.makeText(
+                        context,
+                        context.getString(R.string.could_not_open_calling_app),
+                        Toast.LENGTH_LONG,
+                    ).show()
+                }
+                currentOnSessionComplete()
             } else if (
                 !supportsDirectCalls(context) ||
                 ContextCompat.checkSelfPermission(context, Manifest.permission.CALL_PHONE) ==
                     PackageManager.PERMISSION_GRANTED
             ) {
-                actions.placeCall(recipient.address)
+                actions.placeCall(recipient.address, currentPreferredCallingPackage)
                 currentOnSessionComplete()
             } else {
                 flow.pendingPermissionRecipient = recipient

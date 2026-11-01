@@ -61,6 +61,7 @@ internal fun MagicDiscardDialog(
 @Composable
 internal fun CallConfirmationDialog(
     recipient: CommunicationRecipient,
+    callAutomatically: Boolean,
     onCallNow: () -> Unit,
     onChooseCallingApp: () -> Unit,
     onDismiss: () -> Unit,
@@ -84,7 +85,11 @@ internal fun CallConfirmationDialog(
             ) {
                 Text(
                     stringResource(
-                        if (requiresCallingApp) R.string.choose_calling_app else R.string.call_now,
+                        when {
+                            requiresCallingApp -> R.string.choose_calling_app
+                            callAutomatically -> R.string.call_now
+                            else -> R.string.open_call_draft
+                        },
                     ),
                 )
             }

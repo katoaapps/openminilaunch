@@ -375,14 +375,32 @@ class DeviceActions(private val context: Context) {
     }
 
     @Suppress("DEPRECATION")
-    fun placeCall(phone: String): Boolean {
+    fun placeCall(phone: String, packageName: String? = null): Boolean {
         if (!context.packageManager.hasSystemFeature(PackageManager.FEATURE_TELEPHONY) ||
             runCatching { PhoneNumberUtils.isEmergencyNumber(phone) }.getOrDefault(false)
         ) {
-            return dial(phone)
+            return dial(phone, packageName)
         }
         val direct = Intent(Intent.ACTION_CALL, Uri.parse("tel:${Uri.encode(phone)}"))
-        return if (canResolve(direct) && start(direct)) true else dial(phone)
+        if (!packageName.isNullOrBlank() && start(Intent(direct).setPackage(packageName))) {
+            return true
+        }
+        return if (packageName == null && canResolve(direct) && start(direct)) {
+            true
+        } else {
+            dial(phone, packageName)
+        }
+    }
+
+    /** Applies the launcher-wide behavior while preserving an explicit calling-app route. */
+    fun openCall(
+        phone: String,
+        packageName: String? = null,
+        automatically: Boolean,
+    ): Boolean = if (automatically) {
+        placeCall(phone, packageName)
+    } else {
+        dial(phone, packageName)
     }
 
     /** Opens a dial request in one person's override when available, then falls back safely. */
@@ -407,6 +425,17 @@ class DeviceActions(private val context: Context) {
             .map { packageName -> CallingAppOption(packageName, appLabel(packageName)) }
             .sortedWith(compareBy(String.CASE_INSENSITIVE_ORDER, CallingAppOption::label))
             .toList()
+    }
+
+    fun defaultCallingAppLabel(): String {
+        val intent = Intent(Intent.ACTION_DIAL, Uri.parse("tel:+15551234567"))
+        @Suppress("DEPRECATION")
+        val packageName = context.packageManager.resolveActivity(
+            intent,
+            PackageManager.MATCH_DEFAULT_ONLY,
+        )?.activityInfo?.packageName
+        return packageName?.takeIf { it != "android" }?.let(::appLabel)
+            ?: context.getString(R.string.use_system_calling_app)
     }
 
     fun openContact(contactUri: String): Boolean = runCatching {

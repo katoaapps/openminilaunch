@@ -997,4 +997,13 @@
     <string name="home_shortcuts_description_v2">ساتوں سلاٹس میں سے ہر ایک کسی بھی انسٹال شدہ ایپ کو کھول سکتا ہے۔ غیر تبدیل شدہ سلاٹس نیچے دکھائی گئی بلٹ ان کارروائی برقرار رکھتے ہیں؛ Top 8 بلٹ ان رہتا ہے۔</string>
     <string name="less_visual_noise_description_v2">ایک فوکسڈ ہوم پیج، سات ایپ سلاٹس، ایک بلٹ ان Top 8 شارٹ کٹ، اور ہر انسٹال شدہ ایپ کے لیے ایک فوکسڈ وہیل۔</string>
     <string name="profile_onboarding_description_v2">آپ کا vCard دوسری منی ایپس کے ساتھ MinkSpace میں موجود ہے۔ QR کوڈ دکھانے کے لیے اسے پھیلائیں، یا کام سنبھالنے کے لیے ٹو ڈو منی ایپ کو تھپتھپائیں۔</string>
+    <string name="calling">کالنگ</string>
+    <string name="settings_calling_summary">منتخب کریں کہ کالز کیسے حوالے کی جائیں</string>
+    <string name="integrated_calling_app">مربوط کالنگ ایپ</string>
+    <string name="choose_integrated_calling_app">مربوط کالنگ ایپ منتخب کریں</string>
+    <string name="call_automatically">خودکار طور پر کال کریں</string>
+    <string name="call_automatically_description">تصدیق کے بعد کال کریں۔ اس کے بجائے تیار کال ڈرافٹ کھولنے کے لیے اسے بند کریں۔</string>
+    <string name="calling_behavior_description">یہ Magic Box اور Favorites سے کی گئی کالز پر لاگو ہوتا ہے۔ کوئی Favorite یہ ترتیب، سسٹم کالنگ ایپ، یا اپنی الگ ایپ استعمال کر سکتا ہے۔</string>
+    <string name="open_call_draft">کال ڈرافٹ کھولیں</string>
+    <string name="use_calling_setting">کالنگ ترتیب استعمال کریں</string>
 </resources>

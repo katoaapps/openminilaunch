@@ -114,6 +114,14 @@ internal fun SettingsScreen(
             )
         }
     }
+    val callingApps by produceState(CallingAppLoadState(), picker, appListRefresh) {
+        if (picker == SettingsPicker.CallingApp) {
+            value = CallingAppLoadState(
+                options = withContext(Dispatchers.IO) { actions.callingAppOptions() },
+                loaded = true,
+            )
+        }
+    }
     var showFileScopeChoice by remember { mutableStateOf(false) }
     val permissionHost = rememberSettingsPermissionHost(actions) {
         showFileScopeChoice = true
@@ -185,6 +193,15 @@ internal fun SettingsScreen(
                     installedVariant.preferencePackageName?.let(store::setPreferredMessagingApp)
                 }
             }
+        }
+    }
+    LaunchedEffect(callingApps.loaded, callingApps.options, store.preferredCallingPackage) {
+        val savedPackage = store.preferredCallingPackage
+        if (
+            callingApps.loaded && savedPackage != null &&
+            callingApps.options.none { it.packageName == savedPackage }
+        ) {
+            store.resetPreferredCallingApp()
         }
     }
     var settingsStack by remember(initialDestination) {
@@ -262,6 +279,7 @@ internal fun SettingsScreen(
                 onPickWeb = { picker = SettingsPicker.WebApp },
                 onPickAi = { picker = SettingsPicker.CuratedAiApp },
                 onPickMessagingApp = { picker = SettingsPicker.MessagingApp },
+                onPickCallingApp = { picker = SettingsPicker.CallingApp },
                 onPickSocialApps = { picker = SettingsPicker.MinkDayApps },
                 onAddFolder = { folderPicker.launch(null) },
                 onRemoveFolder = { folder ->
@@ -300,6 +318,7 @@ internal fun SettingsScreen(
         allAiApps = allAiApps,
         webApps = webApps,
         messagingProviders = messagingProviders,
+        callingApps = callingApps,
         usageInsights = permissionHost.usageInsights,
         onPickerChange = { picker = it },
     )

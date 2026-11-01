@@ -997,4 +997,13 @@
     <string name="home_shortcuts_description_v2">七个栏位都可以打开任意已安装的应用。未更改的栏位会保留下方显示的内置操作；Top 8 仍为内置功能。</string>
     <string name="less_visual_noise_description_v2">一个专注的主页、七个应用栏位、内置的 Top 8 快捷方式，以及面向每个已安装应用的专注转盘。</string>
     <string name="profile_onboarding_description_v2">你的 vCard 位于 MinkSpace 中，与其他迷你应用并列。展开即可显示二维码，或点按待办事项迷你应用来管理任务。</string>
+    <string name="calling">通话</string>
+    <string name="settings_calling_summary">选择通话的转交方式</string>
+    <string name="integrated_calling_app">集成通话应用</string>
+    <string name="choose_integrated_calling_app">选择集成通话应用</string>
+    <string name="call_automatically">自动拨号</string>
+    <string name="call_automatically_description">确认后立即拨号。关闭后将改为打开准备好的拨号草稿。</string>
+    <string name="calling_behavior_description">此设置适用于 Magic Box 和收藏联系人发起的通话。收藏联系人可以使用此设置、系统通话应用或单独指定的应用。</string>
+    <string name="open_call_draft">打开拨号草稿</string>
+    <string name="use_calling_setting">使用通话设置</string>
 </resources>

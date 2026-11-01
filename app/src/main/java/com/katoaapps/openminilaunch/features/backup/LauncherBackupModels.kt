@@ -64,6 +64,8 @@ internal data class LauncherBackupSettings(
     val enabledMinkSpaceMiniApps: Set<MinkSpaceMiniApp>?,
     val sendMessagesAutomatically: Boolean,
     val preferredMessagingPackage: String?,
+    val callAutomatically: Boolean = false,
+    val preferredCallingPackage: String? = null,
     val preferredAiPackage: String?,
     val preferredWebPackage: String?,
     val usesAutomaticSocialApps: Boolean,

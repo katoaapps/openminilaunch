@@ -997,4 +997,13 @@
     <string name="home_shortcuts_description_v2">七個欄位都可以開啟任何已安裝嘅應用程式。未更改嘅欄位會保留下方顯示嘅內置操作；Top 8 仍然係內置功能。</string>
     <string name="less_visual_noise_description_v2">一個專注嘅主畫面、七個應用程式欄位、內置 Top 8 捷徑，同埋為每個已安裝應用程式而設嘅專注轉盤。</string>
     <string name="profile_onboarding_description_v2">你嘅 vCard 會放喺 MinkSpace，同其他迷你應用程式並列。展開即可顯示 QR 碼，或者撳待辦事項迷你應用程式管理工作。</string>
+    <string name="calling">打電話</string>
+    <string name="settings_calling_summary">揀選點樣交畀電話應用程式處理</string>
+    <string name="integrated_calling_app">整合電話應用程式</string>
+    <string name="choose_integrated_calling_app">揀選整合電話應用程式</string>
+    <string name="call_automatically">自動打電話</string>
+    <string name="call_automatically_description">確認後立即打電話。關閉後會改為開啟已準備好嘅撥號草稿。</string>
+    <string name="calling_behavior_description">呢個設定適用於 Magic Box 同最愛聯絡人嘅電話。最愛聯絡人可以使用呢個設定、系統電話應用程式，或者自己指定嘅應用程式。</string>
+    <string name="open_call_draft">開啟撥號草稿</string>
+    <string name="use_calling_setting">使用打電話設定</string>
 </resources>

@@ -40,6 +40,8 @@ internal fun LauncherStore.createPortableBackup(appVersion: String): LauncherBac
             enabledMinkSpaceMiniApps = enabledMinkSpaceMiniApps.filterTo(mutableSetOf()) { it.readyForHome },
             sendMessagesAutomatically = sendMessagesAutomatically,
             preferredMessagingPackage = preferredMessagingPackage,
+            callAutomatically = callAutomatically,
+            preferredCallingPackage = preferredCallingPackage,
             preferredAiPackage = preferredAiPackage,
             preferredWebPackage = preferredWebPackage,
             usesAutomaticSocialApps = usesAutomaticSocialApps,
@@ -110,6 +112,9 @@ internal fun LauncherStore.restorePortableBackup(backup: LauncherBackup) {
     updateSendMessagesAutomatically(settings.sendMessagesAutomatically)
     settings.preferredMessagingPackage?.let(::setPreferredMessagingApp)
         ?: resetPreferredMessagingApp()
+    updateCallAutomatically(settings.callAutomatically)
+    settings.preferredCallingPackage?.let(::setPreferredCallingApp)
+        ?: resetPreferredCallingApp()
     settings.preferredAiPackage?.let(::setPreferredAiApp) ?: resetPreferredAiApp()
     settings.preferredWebPackage?.let(::setPreferredWebApp) ?: resetPreferredWebApp()
 

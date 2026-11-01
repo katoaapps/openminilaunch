@@ -144,6 +144,10 @@ internal object LauncherBackupCodec {
             put("sendMessagesAutomatically", settings.sendMessagesAutomatically)
             putNullable("preferredMessagingPackage", settings.preferredMessagingPackage)
         })
+        put("calling", JSONObject().apply {
+            put("callAutomatically", settings.callAutomatically)
+            putNullable("preferredCallingPackage", settings.preferredCallingPackage)
+        })
         put("minkDay", JSONObject().apply {
             put("usesAutomaticSocialApps", settings.usesAutomaticSocialApps)
             put("socialPackages", settings.socialPackages.stringsJsonArray())
@@ -159,6 +163,7 @@ internal object LauncherBackupCodec {
         val appearance = json.getJSONObject("appearance")
         val magicBox = json.getJSONObject("magicBox")
         val messaging = json.getJSONObject("messaging")
+        val calling = json.optJSONObject("calling")
         val minkDay = json.getJSONObject("minkDay")
         val minkSpace = json.optJSONObject("minkSpace")
         val minkSpaceOrder = minkSpace?.optJSONArray("order")?.minkSpaceMiniApps()
@@ -213,6 +218,8 @@ internal object LauncherBackupCodec {
             enabledMinkSpaceMiniApps = enabledMinkSpaceMiniApps,
             sendMessagesAutomatically = messaging.optBoolean("sendMessagesAutomatically", false),
             preferredMessagingPackage = messaging.optNullableString("preferredMessagingPackage")?.safePackage(),
+            callAutomatically = calling?.optBoolean("callAutomatically", false) ?: false,
+            preferredCallingPackage = calling?.optNullableString("preferredCallingPackage")?.safePackage(),
             preferredAiPackage = magicBox.optNullableString("preferredAiPackage")?.safePackage(),
             preferredWebPackage = magicBox.optNullableString("preferredWebPackage")?.safePackage(),
             usesAutomaticSocialApps = minkDay.optBoolean("usesAutomaticSocialApps", true),
