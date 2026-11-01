@@ -14,7 +14,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.setValue
 import com.katoaapps.openminilaunch.features.conversations.MinkNotificationListenerService
-import com.katoaapps.openminilaunch.features.conversations.NotificationHub
+import com.katoaapps.openminilaunch.features.conversations.ConversationNotificationStore
 
 /**
  * Adapts Android's active media-session API into small, observable MinkSpace state.
@@ -81,7 +81,7 @@ internal class MusicSessionRepository private constructor(context: Context) {
     }
 
     fun refresh() {
-        if (!NotificationHub.hasAccess(appContext)) {
+        if (!ConversationNotificationStore.hasNotificationAccess(appContext)) {
             removeActiveSessionsListener()
             unregisterController()
             controller = null
@@ -244,7 +244,7 @@ internal class MusicSessionRepository private constructor(context: Context) {
     }
 
     private fun initialState(): MusicPlaybackState = MusicPlaybackState(
-        availability = if (NotificationHub.hasAccess(appContext)) {
+        availability = if (ConversationNotificationStore.hasNotificationAccess(appContext)) {
             MusicPlaybackAvailability.NOTHING_PLAYING
         } else {
             MusicPlaybackAvailability.ACCESS_REQUIRED

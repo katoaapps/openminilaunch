@@ -36,18 +36,19 @@ import androidx.core.content.ContextCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import com.katoaapps.openminilaunch.data.LauncherStore
-import com.katoaapps.openminilaunch.features.conversations.NotificationHub
+import com.katoaapps.openminilaunch.features.conversations.ConversationNotificationStore
 import com.katoaapps.openminilaunch.features.wellbeing.UsageInsightsRepository
+import com.katoaapps.openminilaunch.model.PersonAppRoute
 import com.katoaapps.openminilaunch.model.Screen
 import com.katoaapps.openminilaunch.platform.DeviceActions
 import com.katoaapps.openminilaunch.platform.isPermanentlyDenied
 import com.katoaapps.openminilaunch.platform.supportsDirectCalls
 import com.katoaapps.openminilaunch.platform.supportsDirectSms
+import com.katoaapps.openminilaunch.ui.conversations.ContactCenterScreen
 import com.katoaapps.openminilaunch.ui.launcher.home.HomeEntranceTransition
 import com.katoaapps.openminilaunch.ui.launcher.layout.HOME_PAGE
 import com.katoaapps.openminilaunch.ui.launcher.layout.LauncherHomePager
 import com.katoaapps.openminilaunch.ui.launcher.layout.WIDGET_PAGE
-import com.katoaapps.openminilaunch.ui.conversations.NotificationHubScreen
 import com.katoaapps.openminilaunch.ui.magic.rememberMagicBoxSessionState
 import com.katoaapps.openminilaunch.ui.onboarding.FeatureUpdateDialog
 import com.katoaapps.openminilaunch.ui.onboarding.OnboardingScreen
@@ -116,15 +117,15 @@ internal fun MiniLaunchApp(
         else showUsageAccessPrompt = true
     }
     val finishPermissionSetup = {
-        if (NotificationHub.hasAccess(context)) finishSpecialAccessSetup()
+        if (ConversationNotificationStore.hasNotificationAccess(context)) finishSpecialAccessSetup()
         else showNotificationAccessPrompt = true
     }
     val onboardingNotificationAccess = rememberLauncherForActivityResult(
         ActivityResultContracts.StartActivityForResult(),
     ) {
-        if (NotificationHub.hasAccess(context)) {
+        if (ConversationNotificationStore.hasNotificationAccess(context)) {
             showNotificationAccessPrompt = false
-            NotificationHub.requestReconnect(context)
+            ConversationNotificationStore.requestListenerReconnect(context)
             finishSpecialAccessSetup()
         }
     }
@@ -273,7 +274,7 @@ internal fun MiniLaunchApp(
                                 openVCardSettings = {
                                     openVirtualContactCard(context)
                                 },
-                                openHub = { screen = Screen.HUB },
+                                openContactCenter = { screen = Screen.CONTACTS },
                                 modifier = Modifier.fillMaxSize(),
                             )
                         }
@@ -298,7 +299,24 @@ internal fun MiniLaunchApp(
                         )
                     }
                     Screen.TODOS -> TodosScreen(store, actions) { screen = Screen.HOME }
-                    Screen.HUB -> NotificationHubScreen(store, actions) { screen = Screen.HOME }
+                    Screen.CONTACTS -> FontAppearanceTheme(store) {
+                        ContactCenterScreen(
+                            store = store,
+                            actions = actions,
+                            onComposeMessage = { recipient, route ->
+                                val providerPackage = (route as? PersonAppRoute.Package)?.packageName
+                                homeMagicBoxSessionState.prepareMessage(
+                                    recipient = recipient,
+                                    providerPackage = providerPackage,
+                                    providerRouteOverridden = route != PersonAppRoute.Inherit,
+                                )
+                                focusedLauncherPage = HOME_PAGE
+                                homePageRequestToken++
+                                screen = Screen.HOME
+                            },
+                            goBack = { screen = Screen.HOME },
+                        )
+                    }
                 }
             }
         }
@@ -317,7 +335,7 @@ internal fun MiniLaunchApp(
             NotificationAccessDisclosureDialog(
                 onOpenAppInfo = actions::openAppSettings,
                 onOpenNotificationAccess = {
-                    onboardingNotificationAccess.launch(NotificationHub.accessSettingsIntent())
+                    onboardingNotificationAccess.launch(ConversationNotificationStore.notificationAccessSettingsIntent())
                 },
                 onDismiss = {
                     showNotificationAccessPrompt = false

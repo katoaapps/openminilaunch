@@ -8,7 +8,7 @@ internal object DemoConversationData {
 
     private val sessionStartedAt = System.currentTimeMillis()
 
-    fun notifications(now: Long = sessionStartedAt): List<HubNotification> {
+    fun notifications(now: Long = sessionStartedAt): List<ConversationNotification> {
         val mayaConversation = "demo:contact:maya-diaz"
         val averyConversation = "demo:contact:avery-brooks"
         val karaConversation = "demo:contact:kara-ellis"
@@ -153,7 +153,7 @@ internal object DemoConversationData {
         appName: String,
         postedAt: Long,
         messages: List<ConversationMessage>,
-    ) = HubNotification(
+    ) = ConversationNotification(
         key = key,
         conversationId = conversationId,
         conversationName = conversationName,

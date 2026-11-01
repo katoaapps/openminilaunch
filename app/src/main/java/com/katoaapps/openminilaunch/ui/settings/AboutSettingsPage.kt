@@ -3,7 +3,7 @@ package com.katoaapps.openminilaunch.ui.settings
 import com.katoaapps.openminilaunch.BuildConfig
 import com.katoaapps.openminilaunch.R
 import com.katoaapps.openminilaunch.data.LauncherStore
-import com.katoaapps.openminilaunch.features.conversations.NotificationHub
+import com.katoaapps.openminilaunch.features.conversations.ConversationNotificationStore
 import com.katoaapps.openminilaunch.features.demo.DemoSearchData
 import com.katoaapps.openminilaunch.platform.DeviceActions
 import com.katoaapps.openminilaunch.ui.components.SettingsRow
@@ -140,7 +140,7 @@ internal fun AboutSettingsPage(
                 onClick = {
                     store.toggleDemoSearchData()
                     DemoSearchData.clearFiles(context.applicationContext)
-                    NotificationHub.clearDemoReplies()
+                    ConversationNotificationStore.clearDemoReplyHistory()
                     Toast.makeText(context, disabledMessage, Toast.LENGTH_SHORT).show()
                 },
             )
@@ -153,7 +153,7 @@ internal fun AboutSettingsPage(
                     val enabled = store.toggleDemoSearchData()
                     if (!enabled) {
                         DemoSearchData.clearFiles(context.applicationContext)
-                        NotificationHub.clearDemoReplies()
+                        ConversationNotificationStore.clearDemoReplyHistory()
                     }
                     Toast.makeText(
                         context,

@@ -50,10 +50,14 @@ internal fun dispatchMagicCommand(
                             recipient = recipient.recipient,
                             body = payload,
                             conversationPackage = recipient.providerPackage,
+                            providerRouteOverridden = recipient.providerRouteOverridden,
                         )
                         onMessage(
                             draft,
-                            if (recipient.providerPackage != null) {
+                            if (
+                                recipient.providerPackage != null ||
+                                recipient.providerRouteOverridden
+                            ) {
                                 MessagingSendRoute.PREFERRED_DRAFT
                             } else {
                                 messagingSendRoute(

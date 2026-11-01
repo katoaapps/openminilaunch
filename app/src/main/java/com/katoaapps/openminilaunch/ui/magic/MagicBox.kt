@@ -648,7 +648,11 @@ internal fun MagicBoxContent(
                         keyboard?.hide()
                         openMessagingProvider(
                             draft,
-                            draft.conversationPackage ?: store.preferredMessagingPackage,
+                            if (draft.providerRouteOverridden) {
+                                draft.conversationPackage
+                            } else {
+                                draft.conversationPackage ?: store.preferredMessagingPackage
+                            },
                         )
                     }
                     MessagingSendRoute.PROVIDER_PICKER -> {

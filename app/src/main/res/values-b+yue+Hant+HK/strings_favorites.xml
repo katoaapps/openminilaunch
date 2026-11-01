@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="favorites">最愛</string>
+    <string name="starred_contacts">已加星號嘅聯絡人</string>
+    <string name="unnamed_contact">未命名聯絡人</string>
+    <string name="no_phone_numbers">冇電話號碼</string>
+    <string name="no_phone_numbers_description">打電話或者傳訊息畀呢位聯絡人之前，請先喺通訊錄加入電話號碼。</string>
+    <string name="message">訊息</string>
+    <string name="call">致電</string>
+    <string name="open_contact">喺通訊錄開啟</string>
+    <string name="change_favorite_in_contacts">請喺 Android 通訊錄將呢位聯絡人加星或者取消。Mink 唔會另外儲存最愛清單。</string>
+    <string name="choose_phone_number">揀電話號碼</string>
+    <string name="preferred_number">偏好號碼</string>
+    <string name="ask_every_time">每次詢問</string>
+    <string name="numbers_available">有 %1$d 個號碼可用</string>
+    <string name="could_not_open_messaging_app">無法開啟訊息應用程式。</string>
+    <string name="could_not_open_calling_app">無法開啟電話應用程式。</string>
+    <string name="could_not_open_contact">無法開啟呢位聯絡人。</string>
+    <string name="message_contact">傳訊息畀 %1$s</string>
+    <string name="call_contact">致電 %1$s</string>
+    <string name="show_favorite_contacts">重要嘅人，隨時搵到</string>
+    <string name="favorite_contacts_permission_description">允許存取聯絡人，以顯示你喺通訊錄加咗星號嘅人。最愛資料只會留喺呢部裝置。</string>
+    <string name="open_app_permissions">開啟應用程式權限</string>
+    <string name="allow_contact_access">允許存取聯絡人</string>
+    <string name="no_favorite_contacts">暫時未有最愛</string>
+    <string name="no_favorite_contacts_description">喺 Android 通訊錄將聯絡人加星，佢哋就會自動喺度出現。</string>
+    <string name="open_contacts">開啟通訊錄</string>
+    <string name="loading_favorite_contacts">正在載入最愛聯絡人…</string>
+    <string name="contact_action_apps">聯絡人操作應用程式</string>
+    <string name="contact_action_apps_description">使用啟動器設定，或者只為呢位聯絡人揀應用程式。</string>
+    <string name="message_with">傳訊息用</string>
+    <string name="call_with">致電用</string>
+    <string name="use_messaging_setting">使用訊息設定</string>
+    <string name="use_system_calling_app">使用系統電話應用程式</string>
+    <string name="app_unavailable">所選應用程式無法使用</string>
+    <string name="manage_favorites">管理最愛</string>
+</resources>

@@ -1,15 +1,16 @@
 package com.katoaapps.openminilaunch
 
-import com.katoaapps.openminilaunch.features.conversations.*
-
 import android.app.Notification
-import org.junit.Assert.assertFalse
+import com.katoaapps.openminilaunch.features.conversations.ConversationNotificationStore
+import com.katoaapps.openminilaunch.features.conversations.DemoConversationData
+import com.katoaapps.openminilaunch.features.conversations.isConversationNotification
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertTrue
 import org.junit.Test
 
-class NotificationHubTest {
+class ConversationNotificationStoreTest {
     @Test
     fun acceptsStructuredMessagesAndConversationCategories() {
         assertTrue(isConversationNotification(category = null, hasStructuredMessages = true))
@@ -26,7 +27,7 @@ class NotificationHubTest {
 
     @Test
     fun demoFeedKeepsMessagesSlackAndGmailThreadsEasyToRead() {
-        val conversations = NotificationHub.buildConversations(
+        val conversations = ConversationNotificationStore.groupConversations(
             sourceNotifications = DemoConversationData.notifications(now = 1_000_000L),
             replies = emptyList(),
         )

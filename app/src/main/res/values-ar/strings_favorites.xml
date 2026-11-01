@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="favorites">المفضلة</string>
+    <string name="starred_contacts">جهات الاتصال المفضلة</string>
+    <string name="unnamed_contact">جهة اتصال بلا اسم</string>
+    <string name="no_phone_numbers">لا توجد أرقام هاتف</string>
+    <string name="no_phone_numbers_description">أضف رقم هاتف في جهات الاتصال قبل الاتصال بهذا الشخص أو مراسلته.</string>
+    <string name="message">مراسلة</string>
+    <string name="call">اتصال</string>
+    <string name="open_contact">فتح في جهات الاتصال</string>
+    <string name="change_favorite_in_contacts">أضف هذا الشخص إلى المفضلة أو أزله منها في جهات اتصال Android. لا يحتفظ Mink بقائمة مفضلة منفصلة.</string>
+    <string name="choose_phone_number">اختيار رقم هاتف</string>
+    <string name="preferred_number">الرقم المفضل</string>
+    <string name="ask_every_time">اسأل في كل مرة</string>
+    <string name="numbers_available">%1$d أرقام متاحة</string>
+    <string name="could_not_open_messaging_app">تعذّر فتح تطبيق مراسلة.</string>
+    <string name="could_not_open_calling_app">تعذّر فتح تطبيق الهاتف.</string>
+    <string name="could_not_open_contact">تعذّر فتح جهة الاتصال هذه.</string>
+    <string name="message_contact">مراسلة %1$s</string>
+    <string name="call_contact">الاتصال بـ %1$s</string>
+    <string name="show_favorite_contacts">أبقِ الأشخاص المهمين قريبين</string>
+    <string name="favorite_contacts_permission_description">اسمح بالوصول إلى جهات الاتصال لعرض الأشخاص الذين أضفتهم إلى المفضلة في جهات الاتصال. تبقى المفضلة على هذا الجهاز.</string>
+    <string name="open_app_permissions">فتح أذونات التطبيق</string>
+    <string name="allow_contact_access">السماح بالوصول إلى جهات الاتصال</string>
+    <string name="no_favorite_contacts">لا توجد مفضلة بعد</string>
+    <string name="no_favorite_contacts_description">أضف أشخاصًا إلى المفضلة في جهات اتصال Android وسيظهرون هنا تلقائيًا.</string>
+    <string name="open_contacts">فتح جهات الاتصال</string>
+    <string name="loading_favorite_contacts">جارٍ تحميل جهات الاتصال المفضلة…</string>
+    <string name="contact_action_apps">تطبيقات إجراءات جهة الاتصال</string>
+    <string name="contact_action_apps_description">استخدم إعداد المشغّل العام أو اختر تطبيقات لهذا الشخص فقط.</string>
+    <string name="message_with">المراسلة عبر</string>
+    <string name="call_with">الاتصال عبر</string>
+    <string name="use_messaging_setting">استخدام إعداد المراسلة</string>
+    <string name="use_system_calling_app">استخدام تطبيق الاتصال في النظام</string>
+    <string name="app_unavailable">التطبيق المحدد غير متاح</string>
+    <string name="manage_favorites">إدارة المفضلة</string>
+</resources>

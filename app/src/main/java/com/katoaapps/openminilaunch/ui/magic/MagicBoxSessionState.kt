@@ -8,6 +8,7 @@ import androidx.compose.runtime.saveable.mapSaver
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.TextFieldValue
+import com.katoaapps.openminilaunch.model.CommunicationRecipient
 
 /**
  * The editable part of a Magic Box session.
@@ -30,6 +31,22 @@ internal class MagicBoxSessionState private constructor(
 
     val expanded: Boolean
         get() = expandedState.value
+
+    /** Starts an @ draft with the person already selected by another Mink surface. */
+    fun prepareMessage(
+        recipient: CommunicationRecipient,
+        providerPackage: String?,
+        providerRouteOverridden: Boolean,
+    ) {
+        textState.value = TextFieldValue()
+        selectedRecipientState.value = SelectedMessageRecipient.AddressRecipient(
+            recipient = recipient,
+            providerPackage = providerPackage,
+            providerRouteOverridden = providerRouteOverridden,
+        )
+        lockedPrefixState.value = '@'
+        expandedState.value = true
+    }
 
     companion object {
         private const val TEXT_KEY = "text"

@@ -49,9 +49,9 @@ import androidx.compose.ui.text.input.ImeAction
 import androidx.lifecycle.Lifecycle
 import com.katoaapps.openminilaunch.R
 import com.katoaapps.openminilaunch.features.conversations.ConversationMessage
-import com.katoaapps.openminilaunch.features.conversations.HubConversation
-import com.katoaapps.openminilaunch.features.conversations.HubNotification
-import com.katoaapps.openminilaunch.features.conversations.NotificationHub
+import com.katoaapps.openminilaunch.features.conversations.NotificationConversation
+import com.katoaapps.openminilaunch.features.conversations.ConversationNotification
+import com.katoaapps.openminilaunch.features.conversations.ConversationNotificationStore
 import com.katoaapps.openminilaunch.platform.DeviceActions
 import com.katoaapps.openminilaunch.ui.components.PageHeader
 import com.katoaapps.openminilaunch.ui.theme.Dimens
@@ -65,7 +65,7 @@ import kotlinx.coroutines.launch
 
 @Composable
 internal fun ConversationWindow(
-    conversation: HubConversation,
+    conversation: NotificationConversation,
     actions: DeviceActions,
     goBack: () -> Unit,
 ) {
@@ -78,7 +78,7 @@ internal fun ConversationWindow(
 
     fun sendReply() {
         val target = replyTarget ?: return
-        if (NotificationHub.reply(target, replyText)) {
+        if (ConversationNotificationStore.sendReply(target, replyText)) {
             replyText = ""
             replyStatus = R.string.sent
         } else {
@@ -119,7 +119,7 @@ internal fun ConversationWindow(
 
 @Composable
 private fun ConversationWindowHeader(
-    conversation: HubConversation,
+    conversation: NotificationConversation,
     actions: DeviceActions,
     activity: ComponentActivity,
 ) {
@@ -131,7 +131,7 @@ private fun ConversationWindowHeader(
     ) {
         ConversationSourceIcons(conversation.sourcePackages, actions)
         Text(
-            conversation.notifications.map(HubNotification::appName).distinct()
+            conversation.notifications.map(ConversationNotification::appName).distinct()
                 .joinToString(stringResource(R.string.middle_dot_separator)),
             Modifier.weight(1f).padding(horizontal = Dimens.dp10),
             color = Muted,
@@ -141,7 +141,7 @@ private fun ConversationWindowHeader(
         OutlinedButton(
             onClick = {
                 val target = conversation.openTarget
-                if (!NotificationHub.open(context, target)) {
+                if (!ConversationNotificationStore.openConversation(context, target)) {
                     if (!actions.launchPackage(target.packageName)) {
                         Toast.makeText(
                             context,

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="favorites">पसंदीदा</string>
+    <string name="starred_contacts">पसंदीदा संपर्क</string>
+    <string name="unnamed_contact">बिना नाम का संपर्क</string>
+    <string name="no_phone_numbers">कोई फ़ोन नंबर नहीं</string>
+    <string name="no_phone_numbers_description">इस व्यक्ति को कॉल या संदेश भेजने से पहले संपर्क में फ़ोन नंबर जोड़ें।</string>
+    <string name="message">संदेश</string>
+    <string name="call">कॉल</string>
+    <string name="open_contact">संपर्क में खोलें</string>
+    <string name="change_favorite_in_contacts">Android संपर्क में इस व्यक्ति को पसंदीदा बनाएं या हटाएं। Mink अलग पसंदीदा सूची नहीं रखता।</string>
+    <string name="choose_phone_number">फ़ोन नंबर चुनें</string>
+    <string name="preferred_number">पसंदीदा नंबर</string>
+    <string name="ask_every_time">हर बार पूछें</string>
+    <string name="numbers_available">%1$d नंबर उपलब्ध</string>
+    <string name="could_not_open_messaging_app">मैसेजिंग ऐप नहीं खुल सका।</string>
+    <string name="could_not_open_calling_app">फ़ोन ऐप नहीं खुल सका।</string>
+    <string name="could_not_open_contact">यह संपर्क नहीं खुल सका।</string>
+    <string name="message_contact">%1$s को संदेश भेजें</string>
+    <string name="call_contact">%1$s को कॉल करें</string>
+    <string name="show_favorite_contacts">ज़रूरी लोगों को पास रखें</string>
+    <string name="favorite_contacts_permission_description">संपर्क में पसंदीदा बनाए गए लोगों को दिखाने के लिए संपर्क की अनुमति दें। पसंदीदा इस डिवाइस पर ही रहते हैं।</string>
+    <string name="open_app_permissions">ऐप की अनुमतियाँ खोलें</string>
+    <string name="allow_contact_access">संपर्क की अनुमति दें</string>
+    <string name="no_favorite_contacts">अभी कोई पसंदीदा नहीं</string>
+    <string name="no_favorite_contacts_description">Android संपर्क में लोगों को पसंदीदा बनाएं और वे अपने आप यहां दिखाई देंगे।</string>
+    <string name="open_contacts">संपर्क खोलें</string>
+    <string name="loading_favorite_contacts">पसंदीदा संपर्क लोड हो रहे हैं…</string>
+    <string name="contact_action_apps">संपर्क कार्रवाई ऐप</string>
+    <string name="contact_action_apps_description">लॉन्चर की सामान्य सेटिंग इस्तेमाल करें या सिर्फ़ इस व्यक्ति के लिए ऐप चुनें।</string>
+    <string name="message_with">इससे संदेश भेजें</string>
+    <string name="call_with">इससे कॉल करें</string>
+    <string name="use_messaging_setting">संदेश सेटिंग इस्तेमाल करें</string>
+    <string name="use_system_calling_app">सिस्टम कॉलिंग ऐप इस्तेमाल करें</string>
+    <string name="app_unavailable">चुना गया ऐप उपलब्ध नहीं है</string>
+    <string name="manage_favorites">पसंदीदा प्रबंधित करें</string>
+</resources>

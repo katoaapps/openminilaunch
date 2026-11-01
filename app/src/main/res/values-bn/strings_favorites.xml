@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="favorites">পছন্দের</string>
+    <string name="starred_contacts">পছন্দের পরিচিতি</string>
+    <string name="unnamed_contact">নামহীন পরিচিতি</string>
+    <string name="no_phone_numbers">কোনো ফোন নম্বর নেই</string>
+    <string name="no_phone_numbers_description">এই ব্যক্তিকে কল বা বার্তা পাঠানোর আগে পরিচিতিতে একটি ফোন নম্বর যোগ করুন।</string>
+    <string name="message">বার্তা</string>
+    <string name="call">কল</string>
+    <string name="open_contact">পরিচিতিতে খুলুন</string>
+    <string name="change_favorite_in_contacts">Android পরিচিতিতে এই ব্যক্তিকে পছন্দের হিসেবে চিহ্নিত করুন বা সরান। Mink আলাদা পছন্দের তালিকা রাখে না।</string>
+    <string name="choose_phone_number">ফোন নম্বর বেছে নিন</string>
+    <string name="preferred_number">পছন্দের নম্বর</string>
+    <string name="ask_every_time">প্রতিবার জিজ্ঞাসা করুন</string>
+    <string name="numbers_available">%1$dটি নম্বর উপলভ্য</string>
+    <string name="could_not_open_messaging_app">বার্তার অ্যাপ খোলা যায়নি।</string>
+    <string name="could_not_open_calling_app">ফোন অ্যাপ খোলা যায়নি।</string>
+    <string name="could_not_open_contact">এই পরিচিতি খোলা যায়নি।</string>
+    <string name="message_contact">%1$s-কে বার্তা পাঠান</string>
+    <string name="call_contact">%1$s-কে কল করুন</string>
+    <string name="show_favorite_contacts">গুরুত্বপূর্ণ মানুষদের কাছে রাখুন</string>
+    <string name="favorite_contacts_permission_description">পরিচিতিতে পছন্দের হিসেবে চিহ্নিত ব্যক্তিদের দেখাতে পরিচিতির অনুমতি দিন। পছন্দের তালিকা এই ডিভাইসেই থাকে।</string>
+    <string name="open_app_permissions">অ্যাপের অনুমতি খুলুন</string>
+    <string name="allow_contact_access">পরিচিতি ব্যবহারের অনুমতি দিন</string>
+    <string name="no_favorite_contacts">এখনও কোনো পছন্দের পরিচিতি নেই</string>
+    <string name="no_favorite_contacts_description">Android পরিচিতিতে মানুষদের পছন্দের হিসেবে চিহ্নিত করলে তারা এখানে নিজে থেকেই দেখা যাবে।</string>
+    <string name="open_contacts">পরিচিতি খুলুন</string>
+    <string name="loading_favorite_contacts">পছন্দের পরিচিতি লোড হচ্ছে…</string>
+    <string name="contact_action_apps">পরিচিতির কাজের অ্যাপ</string>
+    <string name="contact_action_apps_description">লঞ্চারের সাধারণ সেটিং ব্যবহার করুন অথবা শুধু এই ব্যক্তির জন্য অ্যাপ বেছে নিন।</string>
+    <string name="message_with">বার্তা পাঠানোর অ্যাপ</string>
+    <string name="call_with">কল করার অ্যাপ</string>
+    <string name="use_messaging_setting">বার্তা সেটিং ব্যবহার করুন</string>
+    <string name="use_system_calling_app">সিস্টেম কল অ্যাপ ব্যবহার করুন</string>
+    <string name="app_unavailable">নির্বাচিত অ্যাপটি পাওয়া যাচ্ছে না</string>
+    <string name="manage_favorites">পছন্দের তালিকা পরিচালনা করুন</string>
+</resources>

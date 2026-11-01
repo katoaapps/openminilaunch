@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="favorites">收藏</string>
+    <string name="starred_contacts">已加星标的联系人</string>
+    <string name="unnamed_contact">未命名联系人</string>
+    <string name="no_phone_numbers">没有电话号码</string>
+    <string name="no_phone_numbers_description">请先在“通讯录”中添加电话号码，再给此人打电话或发消息。</string>
+    <string name="message">发消息</string>
+    <string name="call">打电话</string>
+    <string name="open_contact">在通讯录中打开</string>
+    <string name="change_favorite_in_contacts">请在 Android 通讯录中为此人添加或取消星标。Mink 不会保存单独的收藏列表。</string>
+    <string name="choose_phone_number">选择电话号码</string>
+    <string name="preferred_number">首选号码</string>
+    <string name="ask_every_time">每次询问</string>
+    <string name="numbers_available">有 %1$d 个号码可用</string>
+    <string name="could_not_open_messaging_app">无法打开消息应用。</string>
+    <string name="could_not_open_calling_app">无法打开电话应用。</string>
+    <string name="could_not_open_contact">无法打开此联系人。</string>
+    <string name="message_contact">给 %1$s 发消息</string>
+    <string name="call_contact">给 %1$s 打电话</string>
+    <string name="show_favorite_contacts">让重要的人触手可及</string>
+    <string name="favorite_contacts_permission_description">允许访问联系人，以显示你在通讯录中加星标的人。收藏数据只保留在此设备上。</string>
+    <string name="open_app_permissions">打开应用权限</string>
+    <string name="allow_contact_access">允许访问联系人</string>
+    <string name="no_favorite_contacts">还没有收藏</string>
+    <string name="no_favorite_contacts_description">在 Android 通讯录中为联系人添加星标，他们就会自动显示在这里。</string>
+    <string name="open_contacts">打开通讯录</string>
+    <string name="loading_favorite_contacts">正在加载收藏的联系人…</string>
+    <string name="contact_action_apps">联系人操作应用</string>
+    <string name="contact_action_apps_description">使用启动器的通用设置，或仅为此联系人选择应用。</string>
+    <string name="message_with">消息应用</string>
+    <string name="call_with">通话应用</string>
+    <string name="use_messaging_setting">使用消息设置</string>
+    <string name="use_system_calling_app">使用系统通话应用</string>
+    <string name="app_unavailable">所选应用不可用</string>
+    <string name="manage_favorites">管理收藏</string>
+</resources>

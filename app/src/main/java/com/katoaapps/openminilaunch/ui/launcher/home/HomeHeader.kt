@@ -34,7 +34,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import com.katoaapps.openminilaunch.R
 import com.katoaapps.openminilaunch.data.LauncherStore
-import com.katoaapps.openminilaunch.features.conversations.NotificationHub
+import com.katoaapps.openminilaunch.features.conversations.ConversationNotificationStore
 import com.katoaapps.openminilaunch.platform.DeviceActions
 import com.katoaapps.openminilaunch.ui.settings.SettingsDestination
 import com.katoaapps.openminilaunch.ui.theme.Dimens
@@ -52,7 +52,7 @@ internal fun HomeHeader(
     updateAvailable: Boolean,
     onMinkDay: () -> Unit,
     onUpdate: () -> Unit,
-    onHub: () -> Unit,
+    onContactCenter: () -> Unit,
     openSettings: (SettingsDestination) -> Unit,
 ) {
     val context = LocalContext.current
@@ -132,10 +132,10 @@ internal fun HomeHeader(
                     )
                 }
             }
-            IconButton(onClick = onHub, modifier = Modifier.size(actionSize)) {
+            IconButton(onClick = onContactCenter, modifier = Modifier.size(actionSize)) {
                 BadgedBox(
                     badge = {
-                        val count = NotificationHub.conversations().size
+                        val count = ConversationNotificationStore.currentConversations().size
                         if (count > 0) {
                             Badge {
                                 Text(

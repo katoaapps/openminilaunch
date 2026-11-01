@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="favorites">즐겨찾기</string>
+    <string name="starred_contacts">즐겨찾는 연락처</string>
+    <string name="unnamed_contact">이름 없는 연락처</string>
+    <string name="no_phone_numbers">전화번호 없음</string>
+    <string name="no_phone_numbers_description">이 사람에게 전화하거나 메시지를 보내기 전에 연락처에서 전화번호를 추가하세요.</string>
+    <string name="message">메시지</string>
+    <string name="call">전화</string>
+    <string name="open_contact">연락처에서 열기</string>
+    <string name="change_favorite_in_contacts">Android 연락처에서 이 사람을 즐겨찾기에 추가하거나 해제하세요. Mink는 별도의 즐겨찾기 목록을 저장하지 않습니다.</string>
+    <string name="choose_phone_number">전화번호 선택</string>
+    <string name="preferred_number">기본 번호</string>
+    <string name="ask_every_time">항상 묻기</string>
+    <string name="numbers_available">사용 가능한 번호 %1$d개</string>
+    <string name="could_not_open_messaging_app">메시지 앱을 열 수 없습니다.</string>
+    <string name="could_not_open_calling_app">전화 앱을 열 수 없습니다.</string>
+    <string name="could_not_open_contact">이 연락처를 열 수 없습니다.</string>
+    <string name="message_contact">%1$s에게 메시지</string>
+    <string name="call_contact">%1$s에게 전화</string>
+    <string name="show_favorite_contacts">소중한 사람을 가까이에</string>
+    <string name="favorite_contacts_permission_description">연락처에서 즐겨찾기한 사람을 표시하려면 연락처 접근을 허용하세요. 즐겨찾기는 이 기기에만 남습니다.</string>
+    <string name="open_app_permissions">앱 권한 열기</string>
+    <string name="allow_contact_access">연락처 접근 허용</string>
+    <string name="no_favorite_contacts">아직 즐겨찾기가 없습니다</string>
+    <string name="no_favorite_contacts_description">Android 연락처에서 사람을 즐겨찾기에 추가하면 여기에 자동으로 표시됩니다.</string>
+    <string name="open_contacts">연락처 열기</string>
+    <string name="loading_favorite_contacts">즐겨찾는 연락처 불러오는 중…</string>
+    <string name="contact_action_apps">연락처 작업 앱</string>
+    <string name="contact_action_apps_description">런처 전체 설정을 사용하거나 이 사람에게만 사용할 앱을 선택하세요.</string>
+    <string name="message_with">메시지 앱</string>
+    <string name="call_with">통화 앱</string>
+    <string name="use_messaging_setting">메시지 설정 사용</string>
+    <string name="use_system_calling_app">시스템 통화 앱 사용</string>
+    <string name="app_unavailable">선택한 앱을 사용할 수 없음</string>
+    <string name="manage_favorites">즐겨찾기 관리</string>
+</resources>

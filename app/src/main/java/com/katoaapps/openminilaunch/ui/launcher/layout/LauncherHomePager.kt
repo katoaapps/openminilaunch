@@ -50,7 +50,7 @@ internal fun LauncherHomePager(
     openSettings: (SettingsDestination) -> Unit,
     openTodos: () -> Unit,
     openVCardSettings: () -> Unit,
-    openHub: () -> Unit,
+    openContactCenter: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val scope = rememberCoroutineScope()
@@ -178,7 +178,7 @@ internal fun LauncherHomePager(
                 openSettings = openSettings,
                 openTodos = openTodos,
                 openVCardSettings = openVCardSettings,
-                openHub = openHub,
+                openContactCenter = openContactCenter,
                 onMinkSpaceExpandedChange = { minkSpaceExpanded = it },
                 modifier = Modifier.fillMaxSize(),
             )
@@ -201,7 +201,7 @@ internal fun LauncherHomePager(
                             openSettings = openSettings,
                             openTodos = openTodos,
                             openVCardSettings = openVCardSettings,
-                            openHub = openHub,
+                            openContactCenter = openContactCenter,
                             openMinkDay = goToMinkDay,
                             minkStatusActive = pagerState.currentPage == HOME_PAGE,
                             onMagicExpandedChange = {},

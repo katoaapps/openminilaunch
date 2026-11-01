@@ -28,6 +28,16 @@ class SelectedMessageRecipientTest {
         assertEquals(selected, recipientFromSnapshot(selected.snapshot()))
     }
 
+    @Test fun explicitSystemMessagesRouteSurvivesSnapshot() {
+        val selected = SelectedMessageRecipient.AddressRecipient(
+            CommunicationRecipient("+15551234567", "Alex", "Mobile"),
+            providerPackage = null,
+            providerRouteOverridden = true,
+        )
+
+        assertEquals(selected, recipientFromSnapshot(selected.snapshot()))
+    }
+
     @Test fun invalidSnapshotDoesNotRestoreAChip() {
         assertNull(recipientFromSnapshot("not JSON"))
     }

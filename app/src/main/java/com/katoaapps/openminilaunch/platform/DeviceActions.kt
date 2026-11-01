@@ -14,7 +14,8 @@ import com.katoaapps.openminilaunch.features.apps.LegacyLauncherShortcutReposito
 import com.katoaapps.openminilaunch.features.privatespace.PrivateSpaceRepository
 import com.katoaapps.openminilaunch.features.workprofile.WorkProfileRepository
 import com.katoaapps.openminilaunch.features.workprofile.WorkProfileSnapshot
-import com.katoaapps.openminilaunch.features.conversations.NotificationHub
+import com.katoaapps.openminilaunch.features.conversations.ConversationNotificationStore
+import com.katoaapps.openminilaunch.features.contacts.CallingAppOption
 import com.katoaapps.openminilaunch.features.magic.normalizedWebUrl
 import com.katoaapps.openminilaunch.features.messaging.MessagingDeviceActions
 import com.katoaapps.openminilaunch.features.messaging.MessagingProviderOption
@@ -48,6 +49,7 @@ import android.os.Build
 import android.app.SearchManager
 import android.provider.Settings
 import android.provider.CalendarContract
+import android.provider.ContactsContract
 import android.provider.Telephony
 import android.telephony.PhoneNumberUtils
 import kotlinx.coroutines.flow.StateFlow
@@ -383,7 +385,41 @@ class DeviceActions(private val context: Context) {
         return if (canResolve(direct) && start(direct)) true else dial(phone)
     }
 
-    fun dial(phone: String): Boolean = start(Intent(Intent.ACTION_DIAL, Uri.parse("tel:${Uri.encode(phone)}")))
+    /** Opens a dial request in one person's override when available, then falls back safely. */
+    fun dial(phone: String, packageName: String? = null): Boolean {
+        val dial = Intent(Intent.ACTION_DIAL, Uri.parse("tel:${Uri.encode(phone)}"))
+        if (!packageName.isNullOrBlank() && start(Intent(dial).setPackage(packageName))) {
+            return true
+        }
+        return start(dial)
+    }
+
+    @Suppress("DEPRECATION")
+    internal fun callingAppOptions(): List<CallingAppOption> {
+        val probe = Intent(Intent.ACTION_DIAL, Uri.parse("tel:+15551234567"))
+        return context.packageManager.queryIntentActivities(
+            probe,
+            PackageManager.MATCH_DEFAULT_ONLY,
+        ).asSequence()
+            .map { it.activityInfo.packageName }
+            .filter { it.isNotBlank() && it != context.packageName }
+            .distinct()
+            .map { packageName -> CallingAppOption(packageName, appLabel(packageName)) }
+            .sortedWith(compareBy(String.CASE_INSENSITIVE_ORDER, CallingAppOption::label))
+            .toList()
+    }
+
+    fun openContact(contactUri: String): Boolean = runCatching {
+        Uri.parse(contactUri)
+    }.getOrNull()?.let { uri ->
+        start(Intent(Intent.ACTION_VIEW, uri))
+    } == true
+
+    fun openContactsApp(): Boolean {
+        val contactsApp = Intent(Intent.ACTION_MAIN).addCategory(Intent.CATEGORY_APP_CONTACTS)
+        if (start(contactsApp)) return true
+        return start(Intent(Intent.ACTION_VIEW, ContactsContract.Contacts.CONTENT_URI))
+    }
 
     fun chooseCallingApp(phone: String): Boolean {
         val intent = Intent(Intent.ACTION_DIAL, Uri.parse("tel:${Uri.encode(phone)}"))
@@ -524,9 +560,23 @@ class DeviceActions(private val context: Context) {
         chooser = true,
     )
 
-    fun openAppSettings() = start(Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS, Uri.parse("package:${context.packageName}")))
+    fun openAppSettings() = start(
+        Intent(
+            Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
+            Uri.parse("package:${context.packageName}"),
+        ),
+    )
 
-    fun openNotificationAccessSettings() = start(NotificationHub.accessSettingsIntent())
+    fun openAppPermissionSettings(): Boolean {
+        val permissions = Intent(ACTION_MANAGE_APP_PERMISSIONS)
+            .putExtra(EXTRA_PACKAGE_NAME, context.packageName)
+        if (canResolve(permissions) && start(permissions)) return true
+        return openAppSettings()
+    }
+
+    fun openNotificationAccessSettings() = start(
+        ConversationNotificationStore.notificationAccessSettingsIntent(),
+    )
 
     fun expandNotificationShade() {
         runCatching {
@@ -557,6 +607,8 @@ class DeviceActions(private val context: Context) {
     }
 
     private companion object {
+        const val ACTION_MANAGE_APP_PERMISSIONS = "android.intent.action.MANAGE_APP_PERMISSIONS"
+        const val EXTRA_PACKAGE_NAME = "android.intent.extra.PACKAGE_NAME"
         const val MINKLAUNCHER_SUBREDDIT_URL = "https://reddit.com/r/minklauncher"
         const val SAMSUNG_CLOCK_PACKAGE = "com.sec.android.app.clockpackage"
         val CLOCK_PACKAGES = listOf(

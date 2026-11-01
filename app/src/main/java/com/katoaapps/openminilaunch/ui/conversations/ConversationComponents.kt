@@ -30,7 +30,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
 import com.katoaapps.openminilaunch.R
 import com.katoaapps.openminilaunch.features.conversations.DemoConversationData
-import com.katoaapps.openminilaunch.features.conversations.HubConversation
+import com.katoaapps.openminilaunch.features.conversations.NotificationConversation
 import com.katoaapps.openminilaunch.platform.DeviceActions
 import com.katoaapps.openminilaunch.ui.components.AppIcon
 import com.katoaapps.openminilaunch.ui.theme.Dimens
@@ -42,7 +42,7 @@ import java.util.Date
 
 @Composable
 internal fun ConversationCard(
-    conversation: HubConversation,
+    conversation: NotificationConversation,
     actions: DeviceActions,
     onOpen: () -> Unit,
 ) {

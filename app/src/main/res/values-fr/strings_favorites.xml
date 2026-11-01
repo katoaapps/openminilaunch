@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="favorites">Favoris</string>
+    <string name="starred_contacts">CONTACTS FAVORIS</string>
+    <string name="unnamed_contact">Contact sans nom</string>
+    <string name="no_phone_numbers">Aucun numéro de téléphone</string>
+    <string name="no_phone_numbers_description">Ajoutez un numéro dans Contacts avant d’appeler cette personne ou de lui envoyer un message.</string>
+    <string name="message">Message</string>
+    <string name="call">Appeler</string>
+    <string name="open_contact">Ouvrir dans Contacts</string>
+    <string name="change_favorite_in_contacts">Ajoutez ou retirez cette personne des favoris dans Contacts Android. Mink ne conserve pas de liste de favoris distincte.</string>
+    <string name="choose_phone_number">Choisir un numéro de téléphone</string>
+    <string name="preferred_number">Numéro préféré</string>
+    <string name="ask_every_time">Toujours demander</string>
+    <string name="numbers_available">%1$d numéros disponibles</string>
+    <string name="could_not_open_messaging_app">Impossible d’ouvrir une application de messagerie.</string>
+    <string name="could_not_open_calling_app">Impossible d’ouvrir l’application Téléphone.</string>
+    <string name="could_not_open_contact">Impossible d’ouvrir ce contact.</string>
+    <string name="message_contact">Envoyer un message à %1$s</string>
+    <string name="call_contact">Appeler %1$s</string>
+    <string name="show_favorite_contacts">Gardez vos proches à portée de main</string>
+    <string name="favorite_contacts_permission_description">Autorisez l’accès aux contacts pour afficher les personnes ajoutées aux favoris dans Contacts. Les favoris restent sur cet appareil.</string>
+    <string name="open_app_permissions">Ouvrir les autorisations de l’application</string>
+    <string name="allow_contact_access">Autoriser l’accès aux contacts</string>
+    <string name="no_favorite_contacts">Aucun favori pour le moment</string>
+    <string name="no_favorite_contacts_description">Ajoutez des personnes aux favoris dans Contacts Android pour les voir apparaître automatiquement ici.</string>
+    <string name="open_contacts">Ouvrir Contacts</string>
+    <string name="loading_favorite_contacts">Chargement des contacts favoris…</string>
+    <string name="contact_action_apps">Applications d’action du contact</string>
+    <string name="contact_action_apps_description">Utilisez le réglage général du lanceur ou choisissez des applications uniquement pour cette personne.</string>
+    <string name="message_with">Envoyer un message avec</string>
+    <string name="call_with">Appeler avec</string>
+    <string name="use_messaging_setting">Utiliser le réglage de messagerie</string>
+    <string name="use_system_calling_app">Utiliser l’application d’appel du système</string>
+    <string name="app_unavailable">L’application sélectionnée est indisponible</string>
+    <string name="manage_favorites">Gérer les favoris</string>
+</resources>

@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="favorites">お気に入り</string>
+    <string name="starred_contacts">お気に入りの連絡先</string>
+    <string name="unnamed_contact">名前のない連絡先</string>
+    <string name="no_phone_numbers">電話番号がありません</string>
+    <string name="no_phone_numbers_description">この相手に電話やメッセージを送る前に、連絡先で電話番号を追加してください。</string>
+    <string name="message">メッセージ</string>
+    <string name="call">電話</string>
+    <string name="open_contact">連絡先で開く</string>
+    <string name="change_favorite_in_contacts">Android の連絡先でこの相手をお気に入りに追加または解除できます。Mink は別のお気に入りリストを保存しません。</string>
+    <string name="choose_phone_number">電話番号を選択</string>
+    <string name="preferred_number">優先する電話番号</string>
+    <string name="ask_every_time">毎回確認</string>
+    <string name="numbers_available">%1$d 件の電話番号を利用できます</string>
+    <string name="could_not_open_messaging_app">メッセージアプリを開けませんでした。</string>
+    <string name="could_not_open_calling_app">電話アプリを開けませんでした。</string>
+    <string name="could_not_open_contact">この連絡先を開けませんでした。</string>
+    <string name="message_contact">%1$s にメッセージ</string>
+    <string name="call_contact">%1$s に電話</string>
+    <string name="show_favorite_contacts">大切な人をすぐそばに</string>
+    <string name="favorite_contacts_permission_description">連絡先でお気に入りにした人を表示するには、連絡先へのアクセスを許可してください。お気に入りはこの端末内に保存されます。</string>
+    <string name="open_app_permissions">アプリの権限を開く</string>
+    <string name="allow_contact_access">連絡先へのアクセスを許可</string>
+    <string name="no_favorite_contacts">お気に入りはまだありません</string>
+    <string name="no_favorite_contacts_description">Android の連絡先で相手をお気に入りにすると、ここに自動的に表示されます。</string>
+    <string name="open_contacts">連絡先を開く</string>
+    <string name="loading_favorite_contacts">お気に入りの連絡先を読み込み中…</string>
+    <string name="contact_action_apps">連絡先のアクション用アプリ</string>
+    <string name="contact_action_apps_description">ランチャー全体の設定を使用するか、この人だけに使うアプリを選択します。</string>
+    <string name="message_with">メッセージに使用</string>
+    <string name="call_with">通話に使用</string>
+    <string name="use_messaging_setting">メッセージ設定を使用</string>
+    <string name="use_system_calling_app">システムの通話アプリを使用</string>
+    <string name="app_unavailable">選択したアプリは利用できません</string>
+    <string name="manage_favorites">お気に入りを管理</string>
+</resources>

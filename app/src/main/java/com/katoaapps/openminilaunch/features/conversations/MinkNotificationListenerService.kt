@@ -17,25 +17,27 @@ class MinkNotificationListenerService : NotificationListenerService() {
     override fun onListenerConnected() {
         super.onListenerConnected()
         connectedService = this
-        NotificationHub.replace(activeNotifications.orEmpty().mapNotNull(::toConversationNotification))
+        ConversationNotificationStore.replaceNotifications(
+            activeNotifications.orEmpty().mapNotNull(::toConversationNotification),
+        )
     }
 
     override fun onListenerDisconnected() {
         if (connectedService === this) connectedService = null
-        NotificationHub.replace(emptyList())
+        ConversationNotificationStore.replaceNotifications(emptyList())
         super.onListenerDisconnected()
     }
 
     override fun onNotificationPosted(sbn: StatusBarNotification) {
-        toConversationNotification(sbn)?.let(NotificationHub::upsert)
+        toConversationNotification(sbn)?.let(ConversationNotificationStore::upsertNotification)
     }
 
     override fun onNotificationRemoved(sbn: StatusBarNotification) {
-        NotificationHub.remove(sbn.key)
+        ConversationNotificationStore.removeNotification(sbn.key)
     }
 
     @Suppress("DEPRECATION")
-    private fun toConversationNotification(sbn: StatusBarNotification): HubNotification? {
+    private fun toConversationNotification(sbn: StatusBarNotification): ConversationNotification? {
         if (sbn.packageName == packageName) return null
         val notification = sbn.notification ?: return null
         if (notification.flags and Notification.FLAG_GROUP_SUMMARY != 0) return null
@@ -137,7 +139,7 @@ class MinkNotificationListenerService : NotificationListenerService() {
         }
         if (messages.isEmpty()) return null
 
-        return HubNotification(
+        return ConversationNotification(
             key = sbn.key,
             conversationId = conversationId,
             conversationName = conversationName,

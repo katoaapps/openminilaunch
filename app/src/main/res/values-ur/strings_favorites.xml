@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="favorites">پسندیدہ</string>
+    <string name="starred_contacts">پسندیدہ رابطے</string>
+    <string name="unnamed_contact">بے نام رابطہ</string>
+    <string name="no_phone_numbers">کوئی فون نمبر نہیں</string>
+    <string name="no_phone_numbers_description">اس شخص کو کال یا پیغام بھیجنے سے پہلے رابطوں میں فون نمبر شامل کریں۔</string>
+    <string name="message">پیغام</string>
+    <string name="call">کال</string>
+    <string name="open_contact">رابطوں میں کھولیں</string>
+    <string name="change_favorite_in_contacts">Android رابطوں میں اس شخص کو پسندیدہ بنائیں یا ہٹائیں۔ Mink الگ پسندیدہ فہرست محفوظ نہیں کرتا۔</string>
+    <string name="choose_phone_number">فون نمبر منتخب کریں</string>
+    <string name="preferred_number">ترجیحی نمبر</string>
+    <string name="ask_every_time">ہر بار پوچھیں</string>
+    <string name="numbers_available">%1$d نمبرز دستیاب ہیں</string>
+    <string name="could_not_open_messaging_app">پیغام رسانی کی ایپ نہیں کھل سکی۔</string>
+    <string name="could_not_open_calling_app">فون ایپ نہیں کھل سکی۔</string>
+    <string name="could_not_open_contact">یہ رابطہ نہیں کھل سکا۔</string>
+    <string name="message_contact">%1$s کو پیغام بھیجیں</string>
+    <string name="call_contact">%1$s کو کال کریں</string>
+    <string name="show_favorite_contacts">اہم لوگوں کو قریب رکھیں</string>
+    <string name="favorite_contacts_permission_description">رابطوں میں پسندیدہ بنائے گئے لوگوں کو دکھانے کے لیے رابطوں تک رسائی دیں۔ پسندیدہ اس ڈیوائس پر ہی رہتے ہیں۔</string>
+    <string name="open_app_permissions">ایپ کی اجازتیں کھولیں</string>
+    <string name="allow_contact_access">رابطوں تک رسائی دیں</string>
+    <string name="no_favorite_contacts">ابھی کوئی پسندیدہ نہیں</string>
+    <string name="no_favorite_contacts_description">Android رابطوں میں لوگوں کو پسندیدہ بنائیں اور وہ خود بخود یہاں دکھائی دیں گے۔</string>
+    <string name="open_contacts">رابطے کھولیں</string>
+    <string name="loading_favorite_contacts">پسندیدہ رابطے لوڈ ہو رہے ہیں…</string>
+    <string name="contact_action_apps">رابطے کی کارروائیوں کی ایپس</string>
+    <string name="contact_action_apps_description">لانچر کی عمومی ترتیب استعمال کریں یا صرف اس شخص کے لیے ایپس منتخب کریں۔</string>
+    <string name="message_with">پیغام بھیجنے کی ایپ</string>
+    <string name="call_with">کال کرنے کی ایپ</string>
+    <string name="use_messaging_setting">پیغام رسانی کی ترتیب استعمال کریں</string>
+    <string name="use_system_calling_app">سسٹم کالنگ ایپ استعمال کریں</string>
+    <string name="app_unavailable">منتخب ایپ دستیاب نہیں ہے</string>
+    <string name="manage_favorites">پسندیدہ رابطوں کا نظم کریں</string>
+</resources>

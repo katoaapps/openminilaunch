@@ -17,7 +17,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
-import com.katoaapps.openminilaunch.features.conversations.NotificationHub
+import com.katoaapps.openminilaunch.features.conversations.ConversationNotificationStore
 import com.katoaapps.openminilaunch.features.wellbeing.UsageInsightsRepository
 import com.katoaapps.openminilaunch.platform.DeviceActions
 import com.katoaapps.openminilaunch.platform.hasMediaReadAccess
@@ -68,7 +68,7 @@ internal fun rememberSettingsPermissionHost(
     }
     var lockServiceEnabled by remember { mutableStateOf(deviceActions.isLockServiceEnabled()) }
     var assistantRoleHeld by remember { mutableStateOf(deviceActions.isAssistantRoleHeld()) }
-    var notificationAccessGranted by remember { mutableStateOf(NotificationHub.hasAccess(context)) }
+    var notificationAccessGranted by remember { mutableStateOf(ConversationNotificationStore.hasNotificationAccess(context)) }
     var usageAccessGranted by remember { mutableStateOf(usageInsights.hasAccess()) }
     var showLockDisclosure by remember { mutableStateOf(false) }
     var showAssistantDisclosure by remember { mutableStateOf(false) }
@@ -93,7 +93,7 @@ internal fun rememberSettingsPermissionHost(
         ) == PackageManager.PERMISSION_GRANTED
         lockServiceEnabled = deviceActions.isLockServiceEnabled()
         assistantRoleHeld = deviceActions.isAssistantRoleHeld()
-        notificationAccessGranted = NotificationHub.hasAccess(context)
+        notificationAccessGranted = ConversationNotificationStore.hasNotificationAccess(context)
         usageAccessGranted = usageInsights.hasAccess()
     }
 
@@ -161,10 +161,10 @@ internal fun rememberSettingsPermissionHost(
     val notificationAccessSettings = rememberLauncherForActivityResult(
         ActivityResultContracts.StartActivityForResult(),
     ) {
-        notificationAccessGranted = NotificationHub.hasAccess(context)
+        notificationAccessGranted = ConversationNotificationStore.hasNotificationAccess(context)
         if (notificationAccessGranted) {
             showNotificationDisclosure = false
-            NotificationHub.requestReconnect(context)
+            ConversationNotificationStore.requestListenerReconnect(context)
         }
     }
     val usageAccessSettings = rememberLauncherForActivityResult(
@@ -196,7 +196,7 @@ internal fun rememberSettingsPermissionHost(
         NotificationAccessDisclosureDialog(
             onOpenAppInfo = deviceActions::openAppSettings,
             onOpenNotificationAccess = {
-                notificationAccessSettings.launch(NotificationHub.accessSettingsIntent())
+                notificationAccessSettings.launch(ConversationNotificationStore.notificationAccessSettingsIntent())
             },
             onDismiss = { showNotificationDisclosure = false },
         )
@@ -233,7 +233,7 @@ internal fun rememberSettingsPermissionHost(
             manageUsageAccess = { usageAccessSettings.launch(usageInsights.accessSettingsIntent()) },
             requestNotificationAccess = { showNotificationDisclosure = true },
             manageNotificationAccess = {
-                notificationAccessSettings.launch(NotificationHub.accessSettingsIntent())
+                notificationAccessSettings.launch(ConversationNotificationStore.notificationAccessSettingsIntent())
             },
             requestContacts = { contactsPermission.launch(Manifest.permission.READ_CONTACTS) },
             requestCalls = { callPermission.launch(Manifest.permission.CALL_PHONE) },

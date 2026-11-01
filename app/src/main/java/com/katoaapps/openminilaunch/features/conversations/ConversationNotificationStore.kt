@@ -1,7 +1,5 @@
 package com.katoaapps.openminilaunch.features.conversations
 
-
-import android.Manifest
 import android.app.Activity
 import android.app.ActivityOptions
 import android.app.Notification
@@ -10,17 +8,12 @@ import android.app.RemoteInput
 import android.content.ComponentName
 import android.content.Context
 import android.content.Intent
-import android.content.pm.PackageManager
-import android.net.Uri
 import android.os.Build
 import android.os.Bundle
-import android.provider.ContactsContract
 import android.provider.Settings
 import android.service.notification.NotificationListenerService
-import android.service.notification.StatusBarNotification
 import androidx.compose.runtime.mutableStateListOf
 import androidx.core.app.NotificationManagerCompat
-import androidx.core.content.ContextCompat
 
 data class ConversationMessage(
     val id: String,
@@ -39,7 +32,7 @@ internal fun isConversationNotification(category: String?, hasStructuredMessages
         category == Notification.CATEGORY_MESSAGE ||
         category == Notification.CATEGORY_EMAIL
 
-data class HubNotification(
+data class ConversationNotification(
     val key: String,
     val conversationId: String,
     val conversationName: String,
@@ -55,42 +48,55 @@ data class HubNotification(
     val canReply: Boolean get() = isDemo || replyAction != null
 }
 
-data class HubConversation(
+data class NotificationConversation(
     val id: String,
     val name: String,
-    val notifications: List<HubNotification>,
+    val notifications: List<ConversationNotification>,
     val messages: List<ConversationMessage>,
 ) {
-    val latestNotification: HubNotification get() = notifications.maxBy(HubNotification::postedAt)
-    val openTarget: HubNotification get() = notifications.firstOrNull { it.contentIntent != null } ?: latestNotification
+    val latestNotification: ConversationNotification get() =
+        notifications.maxBy(ConversationNotification::postedAt)
+    val openTarget: ConversationNotification get() =
+        notifications.firstOrNull { it.contentIntent != null } ?: latestNotification
     val latestMessage: ConversationMessage? get() = messages.maxByOrNull(ConversationMessage::timestamp)
-    val replyTarget: HubNotification? get() = notifications.filter(HubNotification::canReply).maxByOrNull(HubNotification::postedAt)
-    val sourcePackages: List<String> get() = notifications.sortedByDescending(HubNotification::postedAt).map(HubNotification::packageName).distinct()
+    val replyTarget: ConversationNotification? get() = notifications
+        .filter(ConversationNotification::canReply)
+        .maxByOrNull(ConversationNotification::postedAt)
+    val sourcePackages: List<String> get() = notifications
+        .sortedByDescending(ConversationNotification::postedAt)
+        .map(ConversationNotification::packageName)
+        .distinct()
 }
 
-object NotificationHub {
-    val notifications = mutableStateListOf<HubNotification>()
+object ConversationNotificationStore {
+    val activeNotifications = mutableStateListOf<ConversationNotification>()
     private val sentReplies = mutableStateListOf<ConversationMessage>()
     private val demoReplies = mutableStateListOf<ConversationMessage>()
 
-    fun hasAccess(context: Context): Boolean =
+    fun hasNotificationAccess(context: Context): Boolean =
         context.packageName in NotificationManagerCompat.getEnabledListenerPackages(context)
 
-    fun accessSettingsIntent(): Intent = Intent(Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS)
+    fun notificationAccessSettingsIntent(): Intent =
+        Intent(Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS)
 
-    fun conversations(useDemoData: Boolean = false): List<HubConversation> = buildConversations(
-        sourceNotifications = if (useDemoData) DemoConversationData.notifications() else notifications,
-        replies = if (useDemoData) demoReplies else sentReplies,
-    )
+    fun currentConversations(useDemoData: Boolean = false): List<NotificationConversation> =
+        groupConversations(
+            sourceNotifications = if (useDemoData) {
+                DemoConversationData.notifications()
+            } else {
+                activeNotifications
+            },
+            replies = if (useDemoData) demoReplies else sentReplies,
+        )
 
-    internal fun buildConversations(
-        sourceNotifications: List<HubNotification>,
+    internal fun groupConversations(
+        sourceNotifications: List<ConversationNotification>,
         replies: List<ConversationMessage>,
-    ): List<HubConversation> = sourceNotifications
-        .groupBy(HubNotification::conversationId)
+    ): List<NotificationConversation> = sourceNotifications
+        .groupBy(ConversationNotification::conversationId)
         .map { (id, grouped) ->
-            val orderedNotifications = grouped.sortedByDescending(HubNotification::postedAt)
-            val providerMessages = grouped.flatMap(HubNotification::messages)
+            val orderedNotifications = grouped.sortedByDescending(ConversationNotification::postedAt)
+            val providerMessages = grouped.flatMap(ConversationNotification::messages)
             val localReplies = replies.filter { it.conversationId == id }.filterNot { local ->
                 providerMessages.any { provider ->
                     provider.isOutgoing && provider.text == local.text &&
@@ -100,7 +106,7 @@ object NotificationHub {
             val messages = (providerMessages + localReplies)
                 .distinctBy(ConversationMessage::id)
                 .sortedBy(ConversationMessage::timestamp)
-            HubConversation(
+            NotificationConversation(
                 id = id,
                 name = orderedNotifications.first().conversationName,
                 notifications = orderedNotifications,
@@ -109,28 +115,28 @@ object NotificationHub {
         }
         .sortedByDescending { it.latestMessage?.timestamp ?: it.latestNotification.postedAt }
 
-    internal fun replace(items: List<HubNotification>) {
-        notifications.clear()
-        notifications.addAll(items.sortedByDescending(HubNotification::postedAt))
-        val activeConversationIds = items.map(HubNotification::conversationId).toSet()
+    internal fun replaceNotifications(items: List<ConversationNotification>) {
+        activeNotifications.clear()
+        activeNotifications.addAll(items.sortedByDescending(ConversationNotification::postedAt))
+        val activeConversationIds = items.map(ConversationNotification::conversationId).toSet()
         sentReplies.removeAll { it.conversationId !in activeConversationIds }
     }
 
-    internal fun upsert(item: HubNotification) {
-        notifications.removeAll { it.key == item.key }
-        notifications += item
-        notifications.sortByDescending(HubNotification::postedAt)
+    internal fun upsertNotification(item: ConversationNotification) {
+        activeNotifications.removeAll { it.key == item.key }
+        activeNotifications += item
+        activeNotifications.sortByDescending(ConversationNotification::postedAt)
     }
 
-    internal fun remove(key: String) {
-        val conversationId = notifications.firstOrNull { it.key == key }?.conversationId
-        notifications.removeAll { it.key == key }
-        if (conversationId != null && notifications.none { it.conversationId == conversationId }) {
+    internal fun removeNotification(key: String) {
+        val conversationId = activeNotifications.firstOrNull { it.key == key }?.conversationId
+        activeNotifications.removeAll { it.key == key }
+        if (conversationId != null && activeNotifications.none { it.conversationId == conversationId }) {
             sentReplies.removeAll { it.conversationId == conversationId }
         }
     }
 
-    fun open(context: Context, item: HubNotification): Boolean {
+    fun openConversation(context: Context, item: ConversationNotification): Boolean {
         val pendingIntent = item.contentIntent ?: return false
         return runCatching {
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
@@ -147,7 +153,7 @@ object NotificationHub {
         }.getOrDefault(false)
     }
 
-    fun reply(item: HubNotification, reply: String): Boolean {
+    fun sendReply(item: ConversationNotification, reply: String): Boolean {
         val clean = reply.trim()
         if (clean.isEmpty()) return false
         if (item.isDemo) {
@@ -166,7 +172,10 @@ object NotificationHub {
             return true
         }
         val action = item.replyAction ?: return false
-        val inputs = action.remoteInputs?.filter(RemoteInput::getAllowFreeFormInput)?.toTypedArray().orEmpty()
+        val inputs = action.remoteInputs
+            ?.filter(RemoteInput::getAllowFreeFormInput)
+            ?.toTypedArray()
+            .orEmpty()
         if (inputs.isEmpty()) return false
         return runCatching {
             val results = Bundle().apply { inputs.forEach { putCharSequence(it.resultKey, clean) } }
@@ -189,11 +198,11 @@ object NotificationHub {
         }.getOrDefault(false)
     }
 
-    fun clearDemoReplies() {
+    fun clearDemoReplyHistory() {
         demoReplies.clear()
     }
 
-    fun requestReconnect(context: Context) {
+    fun requestListenerReconnect(context: Context) {
         runCatching {
             NotificationListenerService.requestRebind(
                 ComponentName(context, MinkNotificationListenerService::class.java),

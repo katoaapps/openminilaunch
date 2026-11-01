@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="favorites">Избранное</string>
+    <string name="starred_contacts">ИЗБРАННЫЕ КОНТАКТЫ</string>
+    <string name="unnamed_contact">Контакт без имени</string>
+    <string name="no_phone_numbers">Нет номеров телефона</string>
+    <string name="no_phone_numbers_description">Добавьте номер в приложении «Контакты», прежде чем звонить или писать этому человеку.</string>
+    <string name="message">Сообщение</string>
+    <string name="call">Позвонить</string>
+    <string name="open_contact">Открыть в Контактах</string>
+    <string name="change_favorite_in_contacts">Добавьте или удалите этого человека из избранного в Контактах Android. Mink не хранит отдельный список избранного.</string>
+    <string name="choose_phone_number">Выберите номер телефона</string>
+    <string name="preferred_number">Предпочитаемый номер</string>
+    <string name="ask_every_time">Спрашивать каждый раз</string>
+    <string name="numbers_available">Доступно номеров: %1$d</string>
+    <string name="could_not_open_messaging_app">Не удалось открыть приложение для сообщений.</string>
+    <string name="could_not_open_calling_app">Не удалось открыть приложение «Телефон».</string>
+    <string name="could_not_open_contact">Не удалось открыть этот контакт.</string>
+    <string name="message_contact">Написать %1$s</string>
+    <string name="call_contact">Позвонить: %1$s</string>
+    <string name="show_favorite_contacts">Важные люди всегда рядом</string>
+    <string name="favorite_contacts_permission_description">Разрешите доступ к контактам, чтобы показывать людей, добавленных в избранное в Контактах. Избранное остаётся на этом устройстве.</string>
+    <string name="open_app_permissions">Открыть разрешения приложения</string>
+    <string name="allow_contact_access">Разрешить доступ к контактам</string>
+    <string name="no_favorite_contacts">В избранном пока пусто</string>
+    <string name="no_favorite_contacts_description">Добавьте людей в избранное в Контактах Android, и они автоматически появятся здесь.</string>
+    <string name="open_contacts">Открыть Контакты</string>
+    <string name="loading_favorite_contacts">Загрузка избранных контактов…</string>
+    <string name="contact_action_apps">Приложения для действий с контактом</string>
+    <string name="contact_action_apps_description">Используйте общие настройки лаунчера или выберите приложения только для этого человека.</string>
+    <string name="message_with">Сообщения через</string>
+    <string name="call_with">Звонки через</string>
+    <string name="use_messaging_setting">Использовать настройки сообщений</string>
+    <string name="use_system_calling_app">Использовать системное приложение для звонков</string>
+    <string name="app_unavailable">Выбранное приложение недоступно</string>
+    <string name="manage_favorites">Управление избранным</string>
+</resources>

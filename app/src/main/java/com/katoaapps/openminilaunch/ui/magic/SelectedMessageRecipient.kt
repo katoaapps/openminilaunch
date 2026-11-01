@@ -14,6 +14,8 @@ internal sealed interface SelectedMessageRecipient {
     data class AddressRecipient(
         override val recipient: CommunicationRecipient,
         override val providerPackage: String? = null,
+        /** True when null deliberately means System Messages instead of launcher-wide behavior. */
+        val providerRouteOverridden: Boolean = false,
     ) : SelectedMessageRecipient {
         override val conversationShortcut: LauncherShortcutTarget? = null
         override val label: String = recipient.displayName
@@ -40,6 +42,7 @@ internal fun SelectedMessageRecipient.snapshot(): String = JSONObject().apply {
             put("detail", recipient.detail)
             put("entered", recipient.userEntered)
             put("package", providerPackage.orEmpty())
+            put("providerRouteOverridden", providerRouteOverridden)
         }
         is SelectedMessageRecipient.ConversationRecipient -> {
             put("type", "conversation")
@@ -65,6 +68,7 @@ internal fun recipientFromSnapshot(snapshot: String): SelectedMessageRecipient? 
                 userEntered = json.optBoolean("entered"),
             ),
             providerPackage = json.optString("package").takeIf(String::isNotBlank),
+            providerRouteOverridden = json.optBoolean("providerRouteOverridden"),
         )
         "conversation" -> SelectedMessageRecipient.ConversationRecipient(
             LauncherShortcutTarget(

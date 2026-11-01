@@ -94,6 +94,8 @@ internal data class MessageDraft(
     val body: String,
     /** Explicit app selected through a recent conversation; null keeps normal message settings. */
     val conversationPackage: String? = null,
+    /** Distinguishes an explicit System Messages route from inherited launcher settings. */
+    val providerRouteOverridden: Boolean = false,
 )
 
 /** A provider-published conversation selected before the user types the message body. */

@@ -48,7 +48,7 @@ internal fun HomeScreen(
     openSettings: (SettingsDestination) -> Unit,
     openTodos: () -> Unit,
     openVCardSettings: () -> Unit,
-    openHub: () -> Unit,
+    openContactCenter: () -> Unit,
     openMinkDay: () -> Unit,
     minkStatusActive: Boolean,
     onMagicExpandedChange: (Boolean) -> Unit,
@@ -177,7 +177,7 @@ internal fun HomeScreen(
                         updateAvailable = updateAvailable,
                         onMinkDay = openMinkDay,
                         onUpdate = { showUpdateConfirmation = true },
-                        onHub = openHub,
+                        onContactCenter = openContactCenter,
                         openSettings = openSettings,
                     )
                     BoxWithConstraints(

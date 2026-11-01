@@ -18,7 +18,7 @@ import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import com.katoaapps.openminilaunch.R
-import com.katoaapps.openminilaunch.features.conversations.NotificationHub
+import com.katoaapps.openminilaunch.features.conversations.ConversationNotificationStore
 import com.katoaapps.openminilaunch.features.minkspace.MinkSpaceMiniApp
 import com.katoaapps.openminilaunch.features.minkspace.music.MusicSessionRepository
 import com.katoaapps.openminilaunch.ui.minkspace.core.MinkSpaceApp
@@ -60,7 +60,7 @@ internal class MusicMinkSpaceApp : MinkSpaceApp {
                 onOpenPlayer = { repository.openPlayerApp() },
                 onRequestAccess = {
                     try {
-                        context.startActivity(NotificationHub.accessSettingsIntent())
+                        context.startActivity(ConversationNotificationStore.notificationAccessSettingsIntent())
                     } catch (_: ActivityNotFoundException) {
                         // Some OEMs remove this settings surface. Leave the current explanation visible.
                     }

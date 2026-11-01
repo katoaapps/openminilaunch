@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="favorites">Favorit</string>
+    <string name="starred_contacts">KONTAK FAVORIT</string>
+    <string name="unnamed_contact">Kontak tanpa nama</string>
+    <string name="no_phone_numbers">Tidak ada nomor telepon</string>
+    <string name="no_phone_numbers_description">Tambahkan nomor di Kontak sebelum menelepon atau mengirim pesan kepada orang ini.</string>
+    <string name="message">Pesan</string>
+    <string name="call">Telepon</string>
+    <string name="open_contact">Buka di Kontak</string>
+    <string name="change_favorite_in_contacts">Beri atau hapus bintang untuk orang ini di Kontak Android. Mink tidak menyimpan daftar favorit terpisah.</string>
+    <string name="choose_phone_number">Pilih nomor telepon</string>
+    <string name="preferred_number">Nomor pilihan</string>
+    <string name="ask_every_time">Tanyakan setiap kali</string>
+    <string name="numbers_available">%1$d nomor tersedia</string>
+    <string name="could_not_open_messaging_app">Tidak dapat membuka aplikasi pesan.</string>
+    <string name="could_not_open_calling_app">Tidak dapat membuka aplikasi Telepon.</string>
+    <string name="could_not_open_contact">Tidak dapat membuka kontak ini.</string>
+    <string name="message_contact">Kirim pesan ke %1$s</string>
+    <string name="call_contact">Telepon %1$s</string>
+    <string name="show_favorite_contacts">Dekatkan orang-orang penting</string>
+    <string name="favorite_contacts_permission_description">Izinkan akses kontak untuk menampilkan orang yang Anda beri bintang di Kontak. Favorit tetap berada di perangkat ini.</string>
+    <string name="open_app_permissions">Buka izin aplikasi</string>
+    <string name="allow_contact_access">Izinkan akses kontak</string>
+    <string name="no_favorite_contacts">Belum ada favorit</string>
+    <string name="no_favorite_contacts_description">Beri bintang pada orang di Kontak Android dan mereka akan muncul otomatis di sini.</string>
+    <string name="open_contacts">Buka Kontak</string>
+    <string name="loading_favorite_contacts">Memuat kontak favorit…</string>
+    <string name="contact_action_apps">Aplikasi tindakan kontak</string>
+    <string name="contact_action_apps_description">Gunakan setelan launcher atau pilih aplikasi khusus untuk orang ini.</string>
+    <string name="message_with">Kirim pesan dengan</string>
+    <string name="call_with">Telepon dengan</string>
+    <string name="use_messaging_setting">Gunakan setelan pesan</string>
+    <string name="use_system_calling_app">Gunakan aplikasi telepon sistem</string>
+    <string name="app_unavailable">Aplikasi yang dipilih tidak tersedia</string>
+    <string name="manage_favorites">Kelola favorit</string>
+</resources>

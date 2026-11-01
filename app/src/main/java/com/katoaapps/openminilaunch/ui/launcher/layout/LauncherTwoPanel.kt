@@ -53,7 +53,7 @@ internal fun LauncherTwoPanel(
     openSettings: (SettingsDestination) -> Unit,
     openTodos: () -> Unit,
     openVCardSettings: () -> Unit,
-    openHub: () -> Unit,
+    openContactCenter: () -> Unit,
     onMinkSpaceExpandedChange: (Boolean) -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -111,7 +111,7 @@ internal fun LauncherTwoPanel(
                 openSettings = openSettings,
                 openTodos = openTodos,
                 openVCardSettings = openVCardSettings,
-                openHub = openHub,
+                openContactCenter = openContactCenter,
                 openMinkDay = onMinkDay,
                 minkStatusActive = true,
                 onMagicExpandedChange = { expanded ->
