@@ -52,9 +52,9 @@ import com.katoaapps.openminilaunch.ui.theme.Muted
 import com.katoaapps.openminilaunch.ui.theme.Rust
 import com.katoaapps.openminilaunch.ui.theme.Sage
 
-/** Contact-focused surface containing notification conversations and Android favorites. */
+/** Conversations surface containing active messages and favorite people. */
 @Composable
-internal fun ContactCenterScreen(
+internal fun ConversationCenterScreen(
     store: LauncherStore,
     actions: DeviceActions,
     onComposeMessage: (CommunicationRecipient, ContactAppRoute) -> Unit,
@@ -68,7 +68,7 @@ internal fun ContactCenterScreen(
     }
     var showAccessDisclosure by remember { mutableStateOf(false) }
     var selectedConversationId by rememberSaveable { mutableStateOf<String?>(null) }
-    var selectedSection by rememberSaveable { mutableStateOf(ContactSection.CONVERSATIONS) }
+    var selectedSection by rememberSaveable { mutableStateOf(ConversationSection.MESSAGES) }
     val demoModeEnabled = store.demoSearchDataEnabled
     val conversations = ConversationNotificationStore.currentConversations(
         useDemoData = demoModeEnabled,
@@ -98,16 +98,16 @@ internal fun ContactCenterScreen(
                 )
             } else {
                 Column(Modifier.fillMaxSize().statusBarsPadding().navigationBarsPadding()) {
-                    PageHeader(stringResource(R.string.contacts), goBack)
-                    ContactSectionTabs(selectedSection) { selectedSection = it }
+                    PageHeader(stringResource(R.string.conversations), goBack)
+                    ConversationSectionTabs(selectedSection) { selectedSection = it }
                     when (selectedSection) {
-                        ContactSection.FAVORITES -> FavoriteContactsPane(
+                        ConversationSection.FAVORITES -> FavoriteContactsPane(
                             store = store,
                             actions = actions,
                             onComposeMessage = onComposeMessage,
                             onComposeConversationMessage = onComposeConversationMessage,
                         )
-                        ContactSection.CONVERSATIONS -> when {
+                        ConversationSection.MESSAGES -> when {
                             !accessGranted && !demoModeEnabled -> {
                                 ConversationAccessEmptyState { showAccessDisclosure = true }
                             }

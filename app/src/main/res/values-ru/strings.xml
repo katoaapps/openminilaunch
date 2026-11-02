@@ -435,6 +435,7 @@
     <string name="active_and_local_description">%1$s не сохраняет историю разговоров. Текст сообщения и ответы остаются в памяти и никогда не отправляются на Katoa Apps.</string>
     <string name="permissions_onboarding_intro">%1$s запрашивает только доступ, связанный с используемыми вами функциями.</string>
     <string name="contacts">Контакты</string>
+    <string name="messages">Сообщения</string>
     <string name="recent_conversations">Недавние разговоры</string>
     <string name="contacts_onboarding_description">Читайте только тогда, когда ищете человека.</string>
     <string name="document_folder_scope_description">Для документов Android позволяет выбирать только те папки, в которых может выполнять поиск %1$s.</string>

@@ -435,6 +435,7 @@
     <string name="active_and_local_description">%1$s কথোপকথনের ইতিহাস রাখে না। মেসেজ টেক্সট এবং উত্তর মেমরিতে থাকে এবং কখনও Katoa Apps এ পাঠানো হয় না।</string>
     <string name="permissions_onboarding_intro">%1$s শুধুমাত্র আপনার ব্যবহার করা বৈশিষ্ট্যগুলির সাথে সংযুক্ত অ্যাক্সেসের জন্য জিজ্ঞাসা করে৷</string>
     <string name="contacts">পরিচিতি</string>
+    <string name="messages">বার্তা</string>
     <string name="recent_conversations">সাম্প্রতিক কথোপকথন</string>
     <string name="contacts_onboarding_description">আপনি যখন একজন ব্যক্তির সন্ধান করেন তখনই পড়ুন।</string>
     <string name="document_folder_scope_description">নথিগুলির জন্য, Android আপনাকে %1$s অনুসন্ধান করতে পারে এমন ফোল্ডারগুলি বেছে নিতে দেয়৷</string>

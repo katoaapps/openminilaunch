@@ -435,6 +435,7 @@
     <string name="active_and_local_description">%1$s não mantém histórico de conversas. O texto da mensagem e as respostas permanecem na memória e nunca são enviadas para Katoa Apps.</string>
     <string name="permissions_onboarding_intro">%1$s solicita apenas acesso vinculado aos recursos que você usa.</string>
     <string name="contacts">Contatos</string>
+    <string name="messages">Mensagens</string>
     <string name="recent_conversations">Conversas recentes</string>
     <string name="contacts_onboarding_description">Leia apenas quando procurar por uma pessoa.</string>
     <string name="document_folder_scope_description">Para documentos, Android permite escolher apenas as pastas que %1$s pode pesquisar.</string>

@@ -435,6 +435,7 @@
     <string name="active_and_local_description">%1$s は会話履歴を保持しません。メッセージ テキストと返信はメモリに残り、Katoa Apps に送信されることはありません。</string>
     <string name="permissions_onboarding_intro">%1$s は、使用する機能に関連付けられたアクセスのみを要求します。</string>
     <string name="contacts">連絡先</string>
+    <string name="messages">メッセージ</string>
     <string name="recent_conversations">最近の会話</string>
     <string name="contacts_onboarding_description">人物を検索する場合にのみお読みください。</string>
     <string name="document_folder_scope_description">ドキュメントの場合、Android では、%1$s が検索できるフォルダーのみを選択できます。</string>

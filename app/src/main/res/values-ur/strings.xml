@@ -435,6 +435,7 @@
     <string name="active_and_local_description">%1$s گفتگو کی سرگزشت کو برقرار نہیں رکھتا ہے۔ پیغام کا متن اور جوابات میموری میں رہتے ہیں اور کبھی بھی Katoa Apps پر نہیں بھیجے جاتے ہیں۔</string>
     <string name="permissions_onboarding_intro">%1$s صرف آپ کے استعمال کردہ خصوصیات سے منسلک رسائی کے لیے پوچھتا ہے۔</string>
     <string name="contacts">رابطے</string>
+    <string name="messages">پیغامات</string>
     <string name="recent_conversations">حالیہ گفتگو</string>
     <string name="contacts_onboarding_description">صرف اس وقت پڑھیں جب آپ کسی شخص کو تلاش کریں۔</string>
     <string name="document_folder_scope_description">دستاویزات کے لیے، Android آپ کو صرف وہ فولڈر منتخب کرنے دیتا ہے جو %1$s تلاش کر سکتے ہیں۔</string>

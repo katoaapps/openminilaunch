@@ -44,7 +44,7 @@ import com.katoaapps.openminilaunch.platform.DeviceActions
 import com.katoaapps.openminilaunch.platform.isPermanentlyDenied
 import com.katoaapps.openminilaunch.platform.supportsDirectCalls
 import com.katoaapps.openminilaunch.platform.supportsDirectSms
-import com.katoaapps.openminilaunch.ui.conversations.ContactCenterScreen
+import com.katoaapps.openminilaunch.ui.conversations.ConversationCenterScreen
 import com.katoaapps.openminilaunch.ui.launcher.home.HomeEntranceTransition
 import com.katoaapps.openminilaunch.ui.launcher.layout.HOME_PAGE
 import com.katoaapps.openminilaunch.ui.launcher.layout.LauncherHomePager
@@ -274,7 +274,7 @@ internal fun MiniLaunchApp(
                                 openVCardSettings = {
                                     openVirtualContactCard(context)
                                 },
-                                openContactCenter = { screen = Screen.CONTACTS },
+                                openConversations = { screen = Screen.CONVERSATIONS },
                                 modifier = Modifier.fillMaxSize(),
                             )
                         }
@@ -299,8 +299,8 @@ internal fun MiniLaunchApp(
                         )
                     }
                     Screen.TODOS -> TodosScreen(store, actions) { screen = Screen.HOME }
-                    Screen.CONTACTS -> FontAppearanceTheme(store) {
-                        ContactCenterScreen(
+                    Screen.CONVERSATIONS -> FontAppearanceTheme(store) {
+                        ConversationCenterScreen(
                             store = store,
                             actions = actions,
                             onComposeMessage = { recipient, route ->

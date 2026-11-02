@@ -435,6 +435,7 @@
     <string name="active_and_local_description">%1$s لا يحتفظ بسجل المحادثات. يظل نص الرسالة والردود في الذاكرة ولا يتم إرسالها مطلقًا إلى Katoa Apps.</string>
     <string name="permissions_onboarding_intro">يطلب %1$s فقط الوصول المرتبط بالميزات التي تستخدمها.</string>
     <string name="contacts">اتصالات</string>
+    <string name="messages">الرسائل</string>
     <string name="recent_conversations">المحادثات الأخيرة</string>
     <string name="contacts_onboarding_description">اقرأ فقط عندما تبحث عن شخص ما.</string>
     <string name="document_folder_scope_description">بالنسبة للمستندات، يتيح لك Android اختيار المجلدات التي قد يبحث عنها %1$s فقط.</string>

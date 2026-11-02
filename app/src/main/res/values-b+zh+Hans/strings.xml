@@ -435,6 +435,7 @@
     <string name="active_and_local_description">%1$s 不保留对话历史记录。消息文本和回复保留在内存中，并且永远不会发送到 Katoa Apps。</string>
     <string name="permissions_onboarding_intro">%1$s 仅要求与您使用的功能相关的访问权限。</string>
     <string name="contacts">联系方式</string>
+    <string name="messages">消息</string>
     <string name="recent_conversations">最近的对话</string>
     <string name="contacts_onboarding_description">仅当您搜索某人时才阅读。</string>
     <string name="document_folder_scope_description">对于文档，Android 允许您仅选择 %1$s 可以搜索的文件夹。</string>

@@ -435,6 +435,7 @@
     <string name="active_and_local_description">%1$s tidak menyimpan riwayat percakapan. Teks pesan dan balasannya tetap ada di memori dan tidak pernah dikirim ke Katoa Apps.</string>
     <string name="permissions_onboarding_intro">%1$s hanya meminta akses yang terkait dengan fitur yang Anda gunakan.</string>
     <string name="contacts">Kontak</string>
+    <string name="messages">Pesan</string>
     <string name="recent_conversations">Percakapan baru-baru ini</string>
     <string name="contacts_onboarding_description">Hanya baca saat Anda mencari seseorang.</string>
     <string name="document_folder_scope_description">Untuk dokumen, Android memungkinkan Anda memilih hanya folder yang dapat dicari %1$s.</string>

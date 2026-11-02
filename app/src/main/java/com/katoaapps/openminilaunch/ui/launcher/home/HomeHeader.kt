@@ -52,7 +52,7 @@ internal fun HomeHeader(
     updateAvailable: Boolean,
     onMinkDay: () -> Unit,
     onUpdate: () -> Unit,
-    onContactCenter: () -> Unit,
+    onConversations: () -> Unit,
     openSettings: (SettingsDestination) -> Unit,
 ) {
     val context = LocalContext.current
@@ -132,7 +132,7 @@ internal fun HomeHeader(
                     )
                 }
             }
-            IconButton(onClick = onContactCenter, modifier = Modifier.size(actionSize)) {
+            IconButton(onClick = onConversations, modifier = Modifier.size(actionSize)) {
                 BadgedBox(
                     badge = {
                         val count = ConversationNotificationStore.currentConversations().size

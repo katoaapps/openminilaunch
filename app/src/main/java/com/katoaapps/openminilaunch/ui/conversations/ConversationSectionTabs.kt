@@ -16,15 +16,15 @@ import androidx.compose.ui.text.style.TextOverflow
 import com.katoaapps.openminilaunch.R
 import com.katoaapps.openminilaunch.ui.theme.Dimens
 
-internal enum class ContactSection {
-    CONVERSATIONS,
+internal enum class ConversationSection {
+    MESSAGES,
     FAVORITES,
 }
 
 @Composable
-internal fun ContactSectionTabs(
-    selected: ContactSection,
-    onSelected: (ContactSection) -> Unit,
+internal fun ConversationSectionTabs(
+    selected: ConversationSection,
+    onSelected: (ConversationSection) -> Unit,
 ) {
     Surface(
         modifier = Modifier.fillMaxWidth().padding(horizontal = Dimens.dp18, vertical = Dimens.dp6),
@@ -32,7 +32,7 @@ internal fun ContactSectionTabs(
         shape = RoundedCornerShape(Dimens.dp16),
     ) {
         Row(Modifier.padding(Dimens.dp4), verticalAlignment = Alignment.CenterVertically) {
-            ContactSection.entries.forEach { section ->
+            ConversationSection.entries.forEach { section ->
                 val isSelected = section == selected
                 Surface(
                     onClick = { onSelected(section) },
@@ -52,8 +52,8 @@ internal fun ContactSectionTabs(
                     Text(
                         text = stringResource(
                             when (section) {
-                                ContactSection.CONVERSATIONS -> R.string.conversations
-                                ContactSection.FAVORITES -> R.string.favorites
+                                ConversationSection.MESSAGES -> R.string.messages
+                                ConversationSection.FAVORITES -> R.string.favorites
                             },
                         ),
                         modifier = Modifier.padding(horizontal = Dimens.dp8, vertical = Dimens.dp10),

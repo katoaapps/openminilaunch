@@ -435,6 +435,7 @@
     <string name="active_and_local_description">%1$s 唔會保留對話記錄。訊息文字同回覆會保留喺記憶體入面，而且永遠唔會傳送去 Katoa Apps 。</string>
     <string name="permissions_onboarding_intro">%1$s 只會要求同你用緊嘅功能相關嘅存取權。</string>
     <string name="contacts">聯絡人</string>
+    <string name="messages">訊息</string>
     <string name="recent_conversations">最近嘅對話</string>
     <string name="contacts_onboarding_description">只有喺你搵人嗰陣先會睇。</string>
     <string name="document_folder_scope_description">對於文件， Android 只畀你揀 %1$s 可以搜尋嘅資料夾。</string>
