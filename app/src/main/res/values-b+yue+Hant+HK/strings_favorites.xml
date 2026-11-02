@@ -37,8 +37,21 @@
     <string name="add_person_description">選擇通訊錄或整合應用程式。</string>
     <string name="no_integrated_contacts_available">目前沒有新的應用程式對話可用。</string>
     <string name="display_name">顯示名稱</string>
+    <string name="add_by_phone_number">輸入電話號碼</string>
+    <string name="add_by_username">輸入用戶名稱</string>
+    <string name="phone_number">電話號碼</string>
+    <string name="username">用戶名稱</string>
     <string name="integrated_contact">已整合聯絡人</string>
     <string name="integrated_contact_unavailable">此應用程式對話目前無法使用。</string>
+    <string name="provider_not_installed">未安裝 %1$s。</string>
+    <string name="provider_conversation_unavailable">呢個 %1$s 對話已經無法使用。</string>
+    <string name="install_provider">安裝 %1$s</string>
+    <string name="reconnect">重新連接</string>
+    <string name="reconnect_conversation">重新連接對話</string>
+    <string name="reconnect_conversation_description">揀選呢個最愛聯絡人應該使用嘅應用程式對話。</string>
+    <string name="could_not_reconnect_conversation">無法重新連接呢個對話。</string>
+    <string name="favorite_already_added">呢個人已經喺最愛入面。</string>
+    <string name="could_not_add_favorite">無法加入呢個最愛。</string>
     <string name="open_conversation">開啟對話</string>
     <string name="remove_from_favorites">從最愛移除</string>
 </resources>

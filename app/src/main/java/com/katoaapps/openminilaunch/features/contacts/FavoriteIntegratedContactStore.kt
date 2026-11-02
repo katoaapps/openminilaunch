@@ -5,25 +5,29 @@ import com.katoaapps.openminilaunch.model.FavoriteContactId
 import com.katoaapps.openminilaunch.model.FavoriteIntegratedContact
 import com.katoaapps.openminilaunch.model.IntegratedContactEndpoint
 import com.katoaapps.openminilaunch.model.LauncherShortcutTarget
-import java.io.ByteArrayInputStream
-import java.io.ByteArrayOutputStream
-import java.io.DataInputStream
-import java.io.DataOutputStream
+import com.katoaapps.openminilaunch.model.ProviderAddressType
 import java.io.File
-import java.io.IOException
 import java.util.UUID
 
 // Kotlin's character count can understate UTF-8 size. This remains below the 512-byte codec limit
 // so even a name made entirely of four-byte characters can be saved.
 internal const val FAVORITE_INTEGRATED_CONTACT_NAME_MAX_CHARS = 120
+internal const val FAVORITE_PROVIDER_ADDRESS_MAX_CHARS = 256
+
+internal enum class FavoriteIntegratedContactAddResult {
+    ADDED,
+    DUPLICATE,
+    FAILED,
+}
 
 /**
- * Encrypted, local-only ownership for favorites imported from conversation shortcuts.
+ * Encrypted, local-only ownership for favorites connected to provider-owned conversations.
  *
  * Unlike Android favorites, these records belong to Mink. They are deliberately kept out of
- * portable backups because shortcut ids and Android user serials are installation-specific.
+ * portable backups because shortcut ids, provider addresses, and Android user serials are either
+ * sensitive or installation-specific.
  */
-internal class FavoriteIntegratedContactStore private constructor(
+internal class FavoriteIntegratedContactStore(
     private val persistence: EncryptedFavoriteIntegratedContactPersistence,
 ) {
     private var cachedContacts: List<FavoriteIntegratedContact>? = null
@@ -34,25 +38,35 @@ internal class FavoriteIntegratedContactStore private constructor(
     fun contacts(): List<FavoriteIntegratedContact> = allContacts()
 
     @Synchronized
-    fun add(shortcut: LauncherShortcutTarget, displayName: String = shortcut.label): Boolean {
+    fun add(
+        shortcut: LauncherShortcutTarget,
+        displayName: String = shortcut.label,
+    ): FavoriteIntegratedContactAddResult {
         val endpoint = shortcut.toIntegratedEndpoint()
-        val current = allContacts()
-        if (current.any { contact -> contact.endpoints.any { it.identity == endpoint.identity } }) {
-            return false
-        }
-        val cleanName = displayName.trim().take(FAVORITE_INTEGRATED_CONTACT_NAME_MAX_CHARS)
-            .ifBlank {
-                shortcut.label.trim().take(FAVORITE_INTEGRATED_CONTACT_NAME_MAX_CHARS)
-            }
-            .ifBlank { return false }
-        val updated = current + FavoriteIntegratedContact(
-            id = FavoriteContactId.Integrated(UUID.randomUUID().toString()),
-            displayName = cleanName,
-            endpoints = listOf(endpoint),
-        )
-        if (!persistence.save(updated)) return false
-        cachedContacts = updated
-        return true
+        val cleanName = displayName.cleanFavoriteName()
+            ?: shortcut.label.cleanFavoriteName()
+            ?: return FavoriteIntegratedContactAddResult.FAILED
+        return add(endpoint, cleanName)
+    }
+
+    /** Adds a favorite through a provider contract that accepts an explicit recipient address. */
+    @Synchronized
+    fun addProviderAddress(
+        providerId: String,
+        packageName: String,
+        addressType: ProviderAddressType,
+        address: String,
+        displayName: String,
+    ): FavoriteIntegratedContactAddResult {
+        val endpoint = providerAddressEndpoint(
+            providerId = providerId,
+            packageName = packageName,
+            addressType = addressType,
+            address = address,
+        ) ?: return FavoriteIntegratedContactAddResult.FAILED
+        val cleanName = displayName.cleanFavoriteName()
+            ?: return FavoriteIntegratedContactAddResult.FAILED
+        return add(endpoint, cleanName)
     }
 
     @Synchronized
@@ -60,8 +74,91 @@ internal class FavoriteIntegratedContactStore private constructor(
         val current = allContacts()
         val updated = current.filterNot { it.id == id }
         if (updated.size == current.size) return false
-        if (!persistence.save(updated)) return false
-        cachedContacts = updated
+        return save(updated)
+    }
+
+    /** Points an existing favorite at another conversation without changing its local identity. */
+    @Synchronized
+    fun replaceEndpoint(
+        id: FavoriteContactId.Integrated,
+        shortcut: LauncherShortcutTarget,
+    ): Boolean = replaceEndpoint(id, shortcut.toIntegratedEndpoint())
+
+    /** Reroutes an existing favorite through another verified provider-address contract. */
+    @Synchronized
+    fun replaceProviderAddress(
+        id: FavoriteContactId.Integrated,
+        providerId: String,
+        packageName: String,
+        addressType: ProviderAddressType,
+        address: String,
+    ): Boolean {
+        val replacement = providerAddressEndpoint(
+            providerId = providerId,
+            packageName = packageName,
+            addressType = addressType,
+            address = address,
+        ) ?: return false
+        return replaceEndpoint(id, replacement)
+    }
+
+    private fun add(
+        endpoint: IntegratedContactEndpoint,
+        displayName: String,
+    ): FavoriteIntegratedContactAddResult {
+        val current = allContacts()
+        if (current.hasEndpoint(endpoint, excluding = null)) {
+            return FavoriteIntegratedContactAddResult.DUPLICATE
+        }
+        val updated = current + FavoriteIntegratedContact(
+            id = FavoriteContactId.Integrated(UUID.randomUUID().toString()),
+            displayName = displayName,
+            endpoints = listOf(endpoint),
+        )
+        return if (save(updated)) {
+            FavoriteIntegratedContactAddResult.ADDED
+        } else {
+            FavoriteIntegratedContactAddResult.FAILED
+        }
+    }
+
+    private fun replaceEndpoint(
+        id: FavoriteContactId.Integrated,
+        replacement: IntegratedContactEndpoint,
+    ): Boolean {
+        val current = allContacts()
+        val contactIndex = current.indexOfFirst { it.id == id }
+        if (contactIndex == -1 || current.hasEndpoint(replacement, excluding = id)) return false
+
+        val existing = current[contactIndex]
+        if (existing.endpoints.singleOrNull()?.identity == replacement.identity) return true
+
+        val updated = current.toMutableList().apply {
+            this[contactIndex] = existing.copy(endpoints = listOf(replacement))
+        }
+        return save(updated)
+    }
+
+    private fun providerAddressEndpoint(
+        providerId: String,
+        packageName: String,
+        addressType: ProviderAddressType,
+        address: String,
+    ): IntegratedContactEndpoint.ProviderAddress? {
+        val cleanProviderId = providerId.trim().takeIf(String::isNotBlank) ?: return null
+        val cleanPackageName = packageName.trim().takeIf(String::isNotBlank) ?: return null
+        val cleanAddress = address.cleanProviderAddress(addressType) ?: return null
+        return IntegratedContactEndpoint.ProviderAddress(
+            providerId = cleanProviderId,
+            packageName = cleanPackageName,
+            addressType = addressType,
+            address = cleanAddress,
+        )
+    }
+
+    private fun save(contacts: List<FavoriteIntegratedContact>): Boolean {
+        if (!persistence.save(contacts)) return false
+        cachedContacts = contacts
         return true
     }
 
@@ -71,6 +168,7 @@ internal class FavoriteIntegratedContactStore private constructor(
     private companion object {
         const val ENCRYPTED_FILE_NAME = "favorite_integrated_contacts_v1.enc"
         const val KEY_ALIAS = "mink.favorite-integrated-contacts.aes-gcm.v1"
+
         fun createPersistence(context: Context): EncryptedFavoriteIntegratedContactPersistence =
             EncryptedFavoriteIntegratedContactPersistence(
                 storage = AtomicContactDataBlobStorage(
@@ -86,188 +184,12 @@ internal class FavoriteIntegratedContactStore private constructor(
     }
 }
 
-internal class EncryptedFavoriteIntegratedContactPersistence(
-    private val storage: ContactDataBlobStorage,
-    private val cipher: ContactDataCipher,
-) {
-    fun load(): List<FavoriteIntegratedContact> {
-        val encrypted = try {
-            storage.read()
-        } catch (_: Exception) {
-            return emptyList()
-        } ?: return emptyList()
+private fun String.cleanFavoriteName(): String? =
+    trim().take(FAVORITE_INTEGRATED_CONTACT_NAME_MAX_CHARS).takeIf(String::isNotBlank)
 
-        var plaintext: ByteArray? = null
-        return try {
-            plaintext = cipher.decrypt(encrypted)
-            FavoriteIntegratedContactCodec.decode(checkNotNull(plaintext))
-        } catch (_: Exception) {
-            // Never log names, provider identities, ciphertext, or cryptographic failures here.
-            runCatching(cipher::resetKey)
-            runCatching(storage::clear)
-            emptyList()
-        } finally {
-            encrypted.fill(0)
-            plaintext?.fill(0)
-        }
-    }
-
-    fun save(contacts: List<FavoriteIntegratedContact>): Boolean {
-        var plaintext: ByteArray? = null
-        var encrypted: ByteArray? = null
-        return try {
-            plaintext = FavoriteIntegratedContactCodec.encode(contacts)
-            encrypted = encryptWithFreshKeyRecovery(checkNotNull(plaintext))
-            storage.write(checkNotNull(encrypted))
-            true
-        } catch (_: Exception) {
-            false
-        } finally {
-            plaintext?.fill(0)
-            encrypted?.fill(0)
-        }
-    }
-
-    private fun encryptWithFreshKeyRecovery(plaintext: ByteArray): ByteArray = try {
-        cipher.encrypt(plaintext)
-    } catch (_: Exception) {
-        cipher.resetKey()
-        cipher.encrypt(plaintext)
-    }
+private fun List<FavoriteIntegratedContact>.hasEndpoint(
+    endpoint: IntegratedContactEndpoint,
+    excluding: FavoriteContactId.Integrated?,
+): Boolean = any { contact ->
+    contact.id != excluding && contact.endpoints.any { it.identity == endpoint.identity }
 }
-
-internal object FavoriteIntegratedContactCodec {
-    fun encode(contacts: List<FavoriteIntegratedContact>): ByteArray {
-        require(contacts.size <= MAX_CONTACTS) { "Too many integrated contacts" }
-        require(contacts.map { it.id.localId }.distinct().size == contacts.size) {
-            "Duplicate integrated contact identity"
-        }
-        val endpointIdentities = contacts.flatMap(FavoriteIntegratedContact::endpoints)
-            .map(IntegratedContactEndpoint::identity)
-        require(endpointIdentities.distinct().size == endpointIdentities.size) {
-            "Duplicate integrated endpoint identity"
-        }
-        return ByteArrayOutputStream().use { bytes ->
-            DataOutputStream(bytes).use { output ->
-                output.writeInt(PAYLOAD_MAGIC)
-                output.writeInt(PAYLOAD_VERSION)
-                output.writeInt(contacts.size)
-                contacts.sortedBy { it.id.localId }.forEach { contact ->
-                    require(contact.endpoints.isNotEmpty()) { "Integrated contact needs an endpoint" }
-                    require(contact.endpoints.size <= MAX_ENDPOINTS_PER_CONTACT) {
-                        "Too many integrated contact endpoints"
-                    }
-                    output.writeBoundedString(contact.id.localId, MAX_LOCAL_ID_BYTES)
-                    output.writeBoundedString(contact.displayName, MAX_DISPLAY_NAME_BYTES)
-                    output.writeInt(contact.endpoints.size)
-                    contact.endpoints.forEach { endpoint ->
-                        output.writeBoundedString(endpoint.packageName, MAX_PACKAGE_BYTES)
-                        output.writeBoundedString(endpoint.shortcutId, MAX_SHORTCUT_ID_BYTES)
-                        output.writeLong(endpoint.userSerial)
-                        output.writeNullableBoundedString(endpoint.label, MAX_LABEL_BYTES)
-                    }
-                }
-            }
-            bytes.toByteArray()
-        }
-    }
-
-    fun decode(bytes: ByteArray): List<FavoriteIntegratedContact> =
-        DataInputStream(ByteArrayInputStream(bytes)).use { input ->
-            if (input.readInt() != PAYLOAD_MAGIC) throw IOException("Invalid integrated contact payload")
-            if (input.readInt() != PAYLOAD_VERSION) throw IOException("Unsupported integrated contact payload")
-            val count = input.readInt()
-            if (count !in 0..MAX_CONTACTS) throw IOException("Invalid integrated contact count")
-            val seenIds = mutableSetOf<String>()
-            val seenEndpoints = mutableSetOf<String>()
-            buildList(count) {
-                repeat(count) {
-                    val localId = input.readBoundedString(MAX_LOCAL_ID_BYTES)
-                    val displayName = input.readBoundedString(MAX_DISPLAY_NAME_BYTES)
-                    if (localId.isBlank() || displayName.isBlank() || !seenIds.add(localId)) {
-                        throw IOException("Invalid integrated contact identity")
-                    }
-                    val endpointCount = input.readInt()
-                    if (endpointCount !in 1..MAX_ENDPOINTS_PER_CONTACT) {
-                        throw IOException("Invalid integrated endpoint count")
-                    }
-                    val endpoints = buildList(endpointCount) {
-                        repeat(endpointCount) {
-                            val endpoint = IntegratedContactEndpoint(
-                                packageName = input.readBoundedString(MAX_PACKAGE_BYTES),
-                                shortcutId = input.readBoundedString(MAX_SHORTCUT_ID_BYTES),
-                                userSerial = input.readLong(),
-                                label = input.readNullableBoundedString(MAX_LABEL_BYTES),
-                            )
-                            if (endpoint.packageName.isBlank() || endpoint.shortcutId.isBlank() ||
-                                !seenEndpoints.add(endpoint.identity)
-                            ) {
-                                throw IOException("Invalid integrated endpoint identity")
-                            }
-                            add(endpoint)
-                        }
-                    }
-                    add(
-                        FavoriteIntegratedContact(
-                            id = FavoriteContactId.Integrated(localId),
-                            displayName = displayName,
-                            endpoints = endpoints,
-                        ),
-                    )
-                }
-                if (input.read() != -1) throw IOException("Trailing integrated contact data")
-            }
-        }
-
-    private fun DataOutputStream.writeBoundedString(value: String, maxBytes: Int) {
-        val encoded = value.toByteArray(Charsets.UTF_8)
-        try {
-            require(encoded.isNotEmpty() && encoded.size <= maxBytes) { "String is out of bounds" }
-            writeInt(encoded.size)
-            write(encoded)
-        } finally {
-            encoded.fill(0)
-        }
-    }
-
-    private fun DataOutputStream.writeNullableBoundedString(value: String?, maxBytes: Int) {
-        writeBoolean(value != null)
-        if (value != null) writeBoundedString(value, maxBytes)
-    }
-
-    private fun DataInputStream.readBoundedString(maxBytes: Int): String {
-        val size = readInt()
-        if (size !in 1..maxBytes) throw IOException("Invalid string size")
-        val encoded = ByteArray(size)
-        return try {
-            readFully(encoded)
-            encoded.toString(Charsets.UTF_8)
-        } finally {
-            encoded.fill(0)
-        }
-    }
-
-    private fun DataInputStream.readNullableBoundedString(maxBytes: Int): String? =
-        if (readBoolean()) readBoundedString(maxBytes) else null
-
-    private const val PAYLOAD_MAGIC = 0x4D_49_43_50 // MICP
-    private const val PAYLOAD_VERSION = 1
-    private const val MAX_CONTACTS = 256
-    private const val MAX_ENDPOINTS_PER_CONTACT = 8
-    private const val MAX_LOCAL_ID_BYTES = 128
-    private const val MAX_DISPLAY_NAME_BYTES = 512
-    private const val MAX_PACKAGE_BYTES = 512
-    private const val MAX_SHORTCUT_ID_BYTES = 2048
-    private const val MAX_LABEL_BYTES = 512
-}
-
-internal val IntegratedContactEndpoint.identity: String
-    get() = "$userSerial\u0000$packageName\u0000$shortcutId"
-
-internal fun LauncherShortcutTarget.toIntegratedEndpoint(): IntegratedContactEndpoint =
-    IntegratedContactEndpoint(
-        packageName = packageName,
-        shortcutId = shortcutId,
-        userSerial = userSerial,
-        label = label.takeIf(String::isNotBlank),
-    )

@@ -19,6 +19,7 @@ import com.katoaapps.openminilaunch.features.contacts.CallingAppOption
 import com.katoaapps.openminilaunch.features.magic.normalizedWebUrl
 import com.katoaapps.openminilaunch.features.messaging.MessagingDeviceActions
 import com.katoaapps.openminilaunch.features.messaging.MessagingProviderOption
+import com.katoaapps.openminilaunch.features.messaging.MessagingProviderAvailability
 import com.katoaapps.openminilaunch.features.messaging.ConversationShortcutDraftResult
 import com.katoaapps.openminilaunch.features.messaging.PreferredMessageDraftResult
 import com.katoaapps.openminilaunch.features.updates.GITHUB_LATEST_APK_URL
@@ -355,6 +356,12 @@ class DeviceActions(private val context: Context) {
         messagingActions.providerOptions()
 
     fun defaultMessagingAppLabel(): String = messagingActions.defaultMessagingAppLabel()
+
+    internal fun messagingProviderAvailability(packageName: String): MessagingProviderAvailability =
+        messagingActions.providerAvailability(packageName)
+
+    internal fun openMessagingProviderInstallPage(packageName: String): Boolean =
+        messagingActions.openProviderInstallPage(packageName)
 
     fun defaultMessagingPackage(): String? = messagingActions.defaultMessagingPackage()
 

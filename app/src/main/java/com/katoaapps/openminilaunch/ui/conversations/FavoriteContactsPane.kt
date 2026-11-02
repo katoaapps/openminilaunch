@@ -27,6 +27,7 @@ import com.katoaapps.openminilaunch.data.LauncherStore
 import com.katoaapps.openminilaunch.features.contacts.FavoriteAndroidContactsRepository
 import com.katoaapps.openminilaunch.features.contacts.FavoriteContactCatalog
 import com.katoaapps.openminilaunch.features.contacts.FavoriteContactRouteStore
+import com.katoaapps.openminilaunch.features.contacts.FavoriteIntegratedContactAddResult
 import com.katoaapps.openminilaunch.features.contacts.FavoriteIntegratedContactStore
 import com.katoaapps.openminilaunch.model.CommunicationRecipient
 import com.katoaapps.openminilaunch.model.AndroidContactPhone
@@ -34,6 +35,7 @@ import com.katoaapps.openminilaunch.model.AndroidPhoneSelection
 import com.katoaapps.openminilaunch.model.ContactAppRoute
 import com.katoaapps.openminilaunch.model.FavoriteAndroidContact
 import com.katoaapps.openminilaunch.model.FavoriteIntegratedContact
+import com.katoaapps.openminilaunch.model.IntegratedContactEndpoint
 import com.katoaapps.openminilaunch.model.LauncherShortcutTarget
 import com.katoaapps.openminilaunch.model.favoritePhoneFingerprint
 import com.katoaapps.openminilaunch.model.launcherShortcutSelectionKey
@@ -131,6 +133,9 @@ private fun GrantedFavoriteContactsPane(
     var routeRevision by remember { mutableIntStateOf(0) }
     var integratedRevision by remember { mutableIntStateOf(0) }
     var selectedIntegratedContact by remember { mutableStateOf<FavoriteIntegratedContact?>(null) }
+    var reconnectingIntegratedContact by remember {
+        mutableStateOf<FavoriteIntegratedContact?>(null)
+    }
     var showAddPerson by remember { mutableStateOf(false) }
     var pendingAutomaticCall by remember {
         mutableStateOf<Pair<String, String?>?>(null)
@@ -179,6 +184,23 @@ private fun GrantedFavoriteContactsPane(
             }
         }
     }
+    val integratedAddressProviders by produceState(
+        initialValue = emptyList(),
+        key1 = showAddPerson,
+        key2 = reconnectingIntegratedContact?.id,
+        key3 = resumeRevision,
+    ) {
+        value = if (!showAddPerson && reconnectingIntegratedContact == null) {
+            emptyList()
+        } else {
+            withContext(Dispatchers.IO) {
+                actions.messagingProviderOptions().filter { option ->
+                    option.installed && !option.systemDefault &&
+                        option.installedPackageName != null && option.addressTypes.isNotEmpty()
+                }
+            }
+        }
+    }
     val contacts by produceState<List<FavoriteAndroidContact>?>(
         initialValue = null,
         repository,
@@ -203,6 +225,15 @@ private fun GrantedFavoriteContactsPane(
                 locale = locale,
             )
         } }
+    }
+    val integratedAvailability = remember(
+        integratedContacts,
+        shortcutsRevision,
+        resumeRevision,
+    ) {
+        integratedContacts.orEmpty().associate { contact ->
+            contact.id to actions.integratedContactAvailability(contact)
+        }
     }
 
     DisposableEffect(repository, activity) {
@@ -268,21 +299,35 @@ private fun GrantedFavoriteContactsPane(
     }
 
     fun composeIntegratedMessage(contact: FavoriteIntegratedContact) {
-        val endpoint = contact.endpoints.firstOrNull()
-        val target = endpoint?.let {
-            actions.resolveLauncherSelection(
-                launcherShortcutSelectionKey(it.userSerial, it.packageName, it.shortcutId),
-            ) as? LauncherShortcutTarget
+        when (val endpoint = contact.endpoints.firstOrNull()) {
+            is IntegratedContactEndpoint.ConversationShortcut -> {
+                val target = actions.resolveIntegratedContact(endpoint)
+                if (target != null) {
+                    onComposeConversationMessage(target)
+                    return
+                }
+            }
+            is IntegratedContactEndpoint.ProviderAddress -> {
+                if (actions.messagingProviderAvailability(endpoint.packageName).installed) {
+                    onComposeMessage(
+                        CommunicationRecipient(
+                            address = endpoint.address,
+                            displayName = contact.displayName,
+                            detail = actions.appLabel(endpoint.packageName),
+                            userEntered = true,
+                        ),
+                        ContactAppRoute.Package(endpoint.packageName),
+                    )
+                    return
+                }
+            }
+            null -> Unit
         }
-        if (target == null) {
-            Toast.makeText(
-                context,
-                context.getString(R.string.integrated_contact_unavailable),
-                Toast.LENGTH_LONG,
-            ).show()
-            return
-        }
-        onComposeConversationMessage(target)
+        Toast.makeText(
+            context,
+            context.getString(R.string.integrated_contact_unavailable),
+            Toast.LENGTH_LONG,
+        ).show()
     }
 
     when {
@@ -295,7 +340,7 @@ private fun GrantedFavoriteContactsPane(
         )
         else -> FavoriteContactsList(
             contacts = favoriteContacts,
-            actions = actions,
+            integratedAvailability = integratedAvailability,
             onOpen = { contact ->
                 when (contact) {
                     is FavoriteAndroidContact -> selectedContact = contact
@@ -309,6 +354,24 @@ private fun GrantedFavoriteContactsPane(
                 }
             },
             onCall = { requestAction(it, FavoriteContactAction.CALL) },
+            onInstallProvider = { contact ->
+                val state = integratedAvailability[contact.id]
+                val packageName = contact.endpoints.firstOrNull()?.packageName
+                if (
+                    state !is FavoriteIntegratedContactAvailability.AppNotInstalled ||
+                    packageName == null ||
+                    !actions.openMessagingProviderInstallPage(packageName)
+                ) {
+                    Toast.makeText(
+                        context,
+                        context.getString(
+                            R.string.could_not_open_app,
+                            state?.providerLabel ?: contact.displayName,
+                        ),
+                        Toast.LENGTH_SHORT,
+                    ).show()
+                }
+            },
             onAddPerson = { showAddPerson = true },
         )
     }
@@ -366,13 +429,30 @@ private fun GrantedFavoriteContactsPane(
     }
 
     selectedIntegratedContact?.let { contact ->
-        val endpoint = contact.endpoints.firstOrNull()
+        val availability = integratedAvailability[contact.id]
+            ?: actions.integratedContactAvailability(contact)
         FavoriteIntegratedContactActionDialog(
             contact = contact,
-            providerLabel = endpoint?.packageName?.let(actions::appLabel),
+            availability = availability,
             onMessage = {
                 selectedIntegratedContact = null
                 composeIntegratedMessage(contact)
+            },
+            onInstallProvider = {
+                val packageName = contact.endpoints.firstOrNull()?.packageName
+                if (packageName != null && actions.openMessagingProviderInstallPage(packageName)) {
+                    selectedIntegratedContact = null
+                } else {
+                    Toast.makeText(
+                        context,
+                        context.getString(R.string.could_not_open_app, availability.providerLabel),
+                        Toast.LENGTH_SHORT,
+                    ).show()
+                }
+            },
+            onReconnect = {
+                selectedIntegratedContact = null
+                reconnectingIntegratedContact = contact
             },
             onRemove = {
                 selectedIntegratedContact = null
@@ -386,10 +466,78 @@ private fun GrantedFavoriteContactsPane(
         )
     }
 
+    reconnectingIntegratedContact?.let { contact ->
+        val shortcuts = remember(
+            contact.id,
+            shortcutsRevision,
+            integratedRevision,
+        ) {
+            val endpointsUsedByOtherContacts = integratedContacts.orEmpty()
+                .filterNot { it.id == contact.id }
+                .flatMap(FavoriteIntegratedContact::endpoints)
+                .filterIsInstance<IntegratedContactEndpoint.ConversationShortcut>()
+                .map { launcherShortcutSelectionKey(it.userSerial, it.packageName, it.shortcutId) }
+                .toSet()
+            actions.recentConversationShortcuts(
+                sendAutomatically = false,
+                preferredMessagingPackage = null,
+            ).filterNot { it.selectionKey in endpointsUsedByOtherContacts }
+        }
+        ReconnectIntegratedContactDialog(
+            contact = contact,
+            shortcuts = shortcuts,
+            addressProviders = integratedAddressProviders,
+            actions = actions,
+            onReconnect = { shortcut ->
+                scope.launch {
+                    val replaced = withContext(Dispatchers.IO) {
+                        integratedStore.replaceEndpoint(contact.id, shortcut)
+                    }
+                    if (replaced) {
+                        integratedRevision++
+                        reconnectingIntegratedContact = null
+                    } else {
+                        Toast.makeText(
+                            context,
+                            context.getString(R.string.could_not_reconnect_conversation),
+                            Toast.LENGTH_SHORT,
+                        ).show()
+                    }
+                }
+            },
+            onReconnectAddress = { provider, addressType, address ->
+                scope.launch {
+                    val packageName = provider.installedPackageName
+                    val replaced = packageName != null && withContext(Dispatchers.IO) {
+                        integratedStore.replaceProviderAddress(
+                            id = contact.id,
+                            providerId = provider.id,
+                            packageName = packageName,
+                            addressType = addressType,
+                            address = address,
+                        )
+                    }
+                    if (replaced) {
+                        integratedRevision++
+                        reconnectingIntegratedContact = null
+                    } else {
+                        Toast.makeText(
+                            context,
+                            context.getString(R.string.could_not_reconnect_conversation),
+                            Toast.LENGTH_SHORT,
+                        ).show()
+                    }
+                }
+            },
+            onDismiss = { reconnectingIntegratedContact = null },
+        )
+    }
+
     if (showAddPerson) {
         val shortcuts = remember(shortcutsRevision, integratedRevision) {
             val imported = integratedContacts.orEmpty()
                 .flatMap(FavoriteIntegratedContact::endpoints)
+                .filterIsInstance<IntegratedContactEndpoint.ConversationShortcut>()
                 .map { launcherShortcutSelectionKey(it.userSerial, it.packageName, it.shortcutId) }
                 .toSet()
             actions.recentConversationShortcuts(
@@ -399,6 +547,7 @@ private fun GrantedFavoriteContactsPane(
         }
         AddIntegratedContactDialog(
             shortcuts = shortcuts,
+            addressProviders = integratedAddressProviders,
             actions = actions,
             onOpenContacts = {
                 showAddPerson = false
@@ -409,13 +558,58 @@ private fun GrantedFavoriteContactsPane(
                 }
             },
             onAdd = { shortcut, displayName ->
-                showAddPerson = false
                 scope.launch {
-                    if (withContext(Dispatchers.IO) {
-                            integratedStore.add(shortcut, displayName)
+                    when (withContext(Dispatchers.IO) {
+                        integratedStore.add(shortcut, displayName)
+                    }) {
+                        FavoriteIntegratedContactAddResult.ADDED -> {
+                            integratedRevision++
+                            showAddPerson = false
                         }
-                    ) {
-                        integratedRevision++
+                        FavoriteIntegratedContactAddResult.DUPLICATE -> Toast.makeText(
+                            context,
+                            context.getString(R.string.favorite_already_added),
+                            Toast.LENGTH_SHORT,
+                        ).show()
+                        FavoriteIntegratedContactAddResult.FAILED -> Toast.makeText(
+                            context,
+                            context.getString(R.string.could_not_add_favorite),
+                            Toast.LENGTH_SHORT,
+                        ).show()
+                    }
+                }
+            },
+            onAddAddress = { provider, addressType, address, displayName ->
+                scope.launch {
+                    val packageName = provider.installedPackageName
+                    val result = if (packageName != null) {
+                        withContext(Dispatchers.IO) {
+                            integratedStore.addProviderAddress(
+                                providerId = provider.id,
+                                packageName = packageName,
+                                addressType = addressType,
+                                address = address,
+                                displayName = displayName,
+                            )
+                        }
+                    } else {
+                        FavoriteIntegratedContactAddResult.FAILED
+                    }
+                    when (result) {
+                        FavoriteIntegratedContactAddResult.ADDED -> {
+                            integratedRevision++
+                            showAddPerson = false
+                        }
+                        FavoriteIntegratedContactAddResult.DUPLICATE -> Toast.makeText(
+                            context,
+                            context.getString(R.string.favorite_already_added),
+                            Toast.LENGTH_SHORT,
+                        ).show()
+                        FavoriteIntegratedContactAddResult.FAILED -> Toast.makeText(
+                            context,
+                            context.getString(R.string.could_not_add_favorite),
+                            Toast.LENGTH_SHORT,
+                        ).show()
                     }
                 }
             },

@@ -29,19 +29,36 @@ internal data class FavoriteAndroidContact(
     val phones: List<AndroidContactPhone>,
 ) : FavoriteContact
 
-/** A local favorite imported from an app-published conversation shortcut. */
+/** A local favorite connected to an app-owned conversation or address. */
 internal data class FavoriteIntegratedContact(
     override val id: FavoriteContactId.Integrated,
     override val displayName: String,
     val endpoints: List<IntegratedContactEndpoint>,
 ) : FavoriteContact
 
-internal data class IntegratedContactEndpoint(
-    val packageName: String,
-    val shortcutId: String,
-    val userSerial: Long,
-    val label: String?,
-)
+/** The app-owned destination behind an integrated favorite. */
+internal sealed interface IntegratedContactEndpoint {
+    val packageName: String
+
+    /** A conversation published by Android's launcher-shortcut APIs. */
+    data class ConversationShortcut(
+        override val packageName: String,
+        val shortcutId: String,
+        val userSerial: Long,
+        val label: String?,
+    ) : IntegratedContactEndpoint
+
+    /** A provider contract that accepts an explicit phone number or username. */
+    data class ProviderAddress(
+        val providerId: String,
+        override val packageName: String,
+        val addressType: ProviderAddressType,
+        val address: String,
+    ) : IntegratedContactEndpoint
+}
+
+/** Explicit address forms verified by a provider integration. */
+internal enum class ProviderAddressType { PHONE, USERNAME }
 
 internal data class AndroidContactPhone(
     val rawNumber: String,

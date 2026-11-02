@@ -37,8 +37,21 @@
     <string name="add_person_description">选择通讯录或集成应用。</string>
     <string name="no_integrated_contacts_available">目前没有新的应用对话可用。</string>
     <string name="display_name">显示名称</string>
+    <string name="add_by_phone_number">输入电话号码</string>
+    <string name="add_by_username">输入用户名</string>
+    <string name="phone_number">电话号码</string>
+    <string name="username">用户名</string>
     <string name="integrated_contact">集成联系人</string>
     <string name="integrated_contact_unavailable">此应用对话目前不可用。</string>
+    <string name="provider_not_installed">未安装 %1$s。</string>
+    <string name="provider_conversation_unavailable">此 %1$s 对话已不可用。</string>
+    <string name="install_provider">安装 %1$s</string>
+    <string name="reconnect">重新连接</string>
+    <string name="reconnect_conversation">重新连接对话</string>
+    <string name="reconnect_conversation_description">选择此收藏联系人要使用的应用对话。</string>
+    <string name="could_not_reconnect_conversation">无法重新连接此对话。</string>
+    <string name="favorite_already_added">此联系人已在收藏夹中。</string>
+    <string name="could_not_add_favorite">无法添加此收藏。</string>
     <string name="open_conversation">打开对话</string>
     <string name="remove_from_favorites">从收藏中移除</string>
 </resources>

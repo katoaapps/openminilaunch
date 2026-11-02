@@ -37,8 +37,21 @@
     <string name="add_person_description">संपर्क या कोई इंटीग्रेटेड ऐप चुनें।</string>
     <string name="no_integrated_contacts_available">अभी कोई नई ऐप बातचीत उपलब्ध नहीं है।</string>
     <string name="display_name">दिखने वाला नाम</string>
+    <string name="add_by_phone_number">फ़ोन नंबर दर्ज करें</string>
+    <string name="add_by_username">उपयोगकर्ता नाम दर्ज करें</string>
+    <string name="phone_number">फ़ोन नंबर</string>
+    <string name="username">उपयोगकर्ता नाम</string>
     <string name="integrated_contact">इंटीग्रेटेड संपर्क</string>
     <string name="integrated_contact_unavailable">यह ऐप बातचीत अभी उपलब्ध नहीं है।</string>
+    <string name="provider_not_installed">%1$s इंस्टॉल नहीं है।</string>
+    <string name="provider_conversation_unavailable">यह %1$s बातचीत अब उपलब्ध नहीं है।</string>
+    <string name="install_provider">%1$s इंस्टॉल करें</string>
+    <string name="reconnect">फिर से कनेक्ट करें</string>
+    <string name="reconnect_conversation">बातचीत फिर से कनेक्ट करें</string>
+    <string name="reconnect_conversation_description">वह ऐप बातचीत चुनें जिसे यह पसंदीदा इस्तेमाल करेगा।</string>
+    <string name="could_not_reconnect_conversation">इस बातचीत को फिर से कनेक्ट नहीं किया जा सका।</string>
+    <string name="favorite_already_added">यह व्यक्ति पहले से पसंदीदा में है।</string>
+    <string name="could_not_add_favorite">इसे पसंदीदा में नहीं जोड़ा जा सका।</string>
     <string name="open_conversation">बातचीत खोलें</string>
     <string name="remove_from_favorites">पसंदीदा से हटाएँ</string>
 </resources>

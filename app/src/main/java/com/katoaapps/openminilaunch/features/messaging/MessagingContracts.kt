@@ -2,6 +2,7 @@ package com.katoaapps.openminilaunch.features.messaging
 
 import com.katoaapps.openminilaunch.model.CommunicationRecipient
 import com.katoaapps.openminilaunch.model.LauncherShortcutTarget
+import com.katoaapps.openminilaunch.model.ProviderAddressType
 
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
@@ -45,6 +46,8 @@ internal data class MessagingDraftProvider(
     val alternatePackageNames: List<String> = emptyList(),
     val kind: MessagingDraftKind,
     val supportTier: MessagingSupportTier,
+    /** Explicit address forms this verified provider route can carry. */
+    val addressTypes: Set<ProviderAddressType> = emptySet(),
     @param:DrawableRes val bundledIconRes: Int? = null,
     val storeUrl: String,
     val documentationUrl: String,
@@ -68,8 +71,16 @@ internal data class MessagingProviderOption(
     val installed: Boolean,
     val systemDefault: Boolean = false,
     val supportsRecentChatDrafts: Boolean = false,
+    val addressTypes: Set<ProviderAddressType> = emptySet(),
     /** Installed, but Mink could not pre-verify this provider's current draft route. */
     val betaCompatibility: Boolean = false,
+)
+
+/** Install state and stable catalog presentation for a provider-owned conversation endpoint. */
+internal data class MessagingProviderAvailability(
+    val label: String,
+    val installed: Boolean,
+    val installUrl: String?,
 )
 
 internal val MessagingProviderOption.isDraftReady: Boolean

@@ -37,8 +37,21 @@
     <string name="add_person_description">Выберите Контакты или интегрированное приложение.</string>
     <string name="no_integrated_contacts_available">Сейчас нет новых разговоров из приложений.</string>
     <string name="display_name">Отображаемое имя</string>
+    <string name="add_by_phone_number">Ввести номер телефона</string>
+    <string name="add_by_username">Ввести имя пользователя</string>
+    <string name="phone_number">Номер телефона</string>
+    <string name="username">Имя пользователя</string>
     <string name="integrated_contact">Интегрированный контакт</string>
     <string name="integrated_contact_unavailable">Этот разговор сейчас недоступен.</string>
+    <string name="provider_not_installed">%1$s не установлено.</string>
+    <string name="provider_conversation_unavailable">Этот разговор в %1$s больше недоступен.</string>
+    <string name="install_provider">Установить %1$s</string>
+    <string name="reconnect">Переподключить</string>
+    <string name="reconnect_conversation">Переподключить разговор</string>
+    <string name="reconnect_conversation_description">Выберите разговор приложения для этого избранного контакта.</string>
+    <string name="could_not_reconnect_conversation">Не удалось переподключить этот разговор.</string>
+    <string name="favorite_already_added">Этот человек уже в избранном.</string>
+    <string name="could_not_add_favorite">Не удалось добавить в избранное.</string>
     <string name="open_conversation">Открыть разговор</string>
     <string name="remove_from_favorites">Удалить из избранного</string>
 </resources>

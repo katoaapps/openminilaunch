@@ -10,58 +10,25 @@ import java.io.IOException
 
 /**
  * Converts the route map to authenticated ciphertext and treats unreadable state as no overrides.
- * Route preferences are optional, so corruption or key invalidation must never block the launcher.
+ * Route preferences are optional, so corruption or key invalidation never blocks the launcher;
+ * the shared persistence layer still preserves that state instead of replacing it.
  */
 internal class EncryptedFavoriteContactRoutePersistence(
-    private val storage: ContactDataBlobStorage,
-    private val cipher: ContactDataCipher,
+    storage: ContactDataBlobStorage,
+    cipher: ContactDataCipher,
 ) {
-    fun load(): Map<String, FavoriteContactActionRoutes> {
-        val encrypted = try {
-            storage.read()
-        } catch (_: Exception) {
-            return emptyMap()
-        } ?: return emptyMap()
+    private val persistence = EncryptedContactDataPersistence(
+        storage = storage,
+        cipher = cipher,
+        emptyValue = { emptyMap() },
+        encode = FavoriteContactRouteCodec::encode,
+        decode = FavoriteContactRouteCodec::decode,
+    )
 
-        var plaintext: ByteArray? = null
-        return try {
-            plaintext = cipher.decrypt(encrypted)
-            FavoriteContactRouteCodec.decode(checkNotNull(plaintext))
-        } catch (_: Exception) {
-            // Never log ciphertext, contact identifiers, packages, or cryptographic failures here.
-            runCatching(cipher::resetKey)
-            runCatching(storage::clear)
-            emptyMap()
-        } finally {
-            encrypted.fill(0)
-            plaintext?.fill(0)
-        }
-    }
+    fun load(): Map<String, FavoriteContactActionRoutes> = persistence.load()
 
-    fun save(routes: Map<String, FavoriteContactActionRoutes>): Boolean {
-        var plaintext: ByteArray? = null
-        var encrypted: ByteArray? = null
-        return try {
-            plaintext = FavoriteContactRouteCodec.encode(routes)
-            encrypted = encryptWithFreshKeyRecovery(checkNotNull(plaintext))
-            storage.write(checkNotNull(encrypted))
-            true
-        } catch (_: Exception) {
-            false
-        } finally {
-            plaintext?.fill(0)
-            encrypted?.fill(0)
-        }
-    }
-
-    private fun encryptWithFreshKeyRecovery(plaintext: ByteArray): ByteArray = try {
-        cipher.encrypt(plaintext)
-    } catch (_: Exception) {
-        // A permanently invalidated app key cannot repair itself. Rotate this dedicated key and
-        // retry once; no other feature or user data shares the alias.
-        cipher.resetKey()
-        cipher.encrypt(plaintext)
-    }
+    fun save(routes: Map<String, FavoriteContactActionRoutes>): Boolean =
+        persistence.save(routes)
 }
 
 /** Small deterministic binary format kept entirely inside the authenticated encrypted envelope. */

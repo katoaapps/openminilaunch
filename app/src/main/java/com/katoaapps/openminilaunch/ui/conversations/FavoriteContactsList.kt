@@ -19,7 +19,9 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Message
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ContactPage
+import androidx.compose.material.icons.filled.Download
 import androidx.compose.material.icons.filled.Phone
+import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
@@ -39,8 +41,8 @@ import androidx.compose.ui.text.style.TextOverflow
 import com.katoaapps.openminilaunch.R
 import com.katoaapps.openminilaunch.model.FavoriteAndroidContact
 import com.katoaapps.openminilaunch.model.FavoriteContact
+import com.katoaapps.openminilaunch.model.FavoriteContactId
 import com.katoaapps.openminilaunch.model.FavoriteIntegratedContact
-import com.katoaapps.openminilaunch.platform.DeviceActions
 import com.katoaapps.openminilaunch.ui.theme.Dimens
 import com.katoaapps.openminilaunch.ui.theme.Muted
 import com.katoaapps.openminilaunch.ui.theme.Rust
@@ -48,10 +50,11 @@ import com.katoaapps.openminilaunch.ui.theme.Rust
 @Composable
 internal fun FavoriteContactsList(
     contacts: List<FavoriteContact>,
-    actions: DeviceActions,
+    integratedAvailability: Map<FavoriteContactId.Integrated, FavoriteIntegratedContactAvailability>,
     onOpen: (FavoriteContact) -> Unit,
     onMessage: (FavoriteContact) -> Unit,
     onCall: (FavoriteAndroidContact) -> Unit,
+    onInstallProvider: (FavoriteIntegratedContact) -> Unit,
     onAddPerson: () -> Unit,
 ) {
     LazyColumn(
@@ -88,9 +91,10 @@ internal fun FavoriteContactsList(
                 )
                 is FavoriteIntegratedContact -> FavoriteIntegratedContactCard(
                     contact = contact,
-                    actions = actions,
+                    availability = integratedAvailability[contact.id],
                     onOpen = onOpen,
                     onMessage = onMessage,
+                    onInstallProvider = onInstallProvider,
                 )
             }
         }
@@ -162,11 +166,16 @@ private fun FavoriteAndroidContactCard(
 @Composable
 private fun FavoriteIntegratedContactCard(
     contact: FavoriteIntegratedContact,
-    actions: DeviceActions,
+    availability: FavoriteIntegratedContactAvailability?,
     onOpen: (FavoriteContact) -> Unit,
     onMessage: (FavoriteContact) -> Unit,
+    onInstallProvider: (FavoriteIntegratedContact) -> Unit,
 ) {
-    val providerLabel = contact.endpoints.firstOrNull()?.packageName?.let(actions::appLabel)
+    val resolvedAvailability = availability
+        ?: FavoriteIntegratedContactAvailability.ConversationUnavailable(
+            stringResource(R.string.integrated_contact),
+        )
+    val providerLabel = resolvedAvailability.providerLabel
     Card(
         modifier = Modifier.fillMaxWidth().clickable { onOpen(contact) },
         shape = RoundedCornerShape(Dimens.dp18),
@@ -187,19 +196,66 @@ private fun FavoriteIntegratedContactCard(
                     overflow = TextOverflow.Ellipsis,
                 )
                 Text(
-                    providerLabel ?: stringResource(R.string.integrated_contact),
-                    color = Muted,
+                    when (resolvedAvailability) {
+                        is FavoriteIntegratedContactAvailability.Available -> providerLabel
+                        is FavoriteIntegratedContactAvailability.AppNotInstalled ->
+                            stringResource(R.string.provider_not_installed, providerLabel)
+                        is FavoriteIntegratedContactAvailability.ConversationUnavailable ->
+                            stringResource(
+                                R.string.provider_conversation_unavailable,
+                                providerLabel,
+                            )
+                    },
+                    color = if (
+                        resolvedAvailability is FavoriteIntegratedContactAvailability.Available
+                    ) {
+                        Muted
+                    } else {
+                        MaterialTheme.colorScheme.error
+                    },
                     fontSize = Dimens.sp11,
                     maxLines = 1,
                     overflow = TextOverflow.Ellipsis,
                 )
             }
-            FilledTonalIconButton(onClick = { onMessage(contact) }) {
-                Icon(
-                    Icons.AutoMirrored.Filled.Message,
-                    stringResource(R.string.message_contact, contact.displayName),
-                    Modifier.size(Dimens.dp18),
-                )
+            FilledTonalIconButton(
+                onClick = {
+                    when (resolvedAvailability) {
+                        is FavoriteIntegratedContactAvailability.Available -> onMessage(contact)
+                        is FavoriteIntegratedContactAvailability.AppNotInstalled -> {
+                            if (resolvedAvailability.installAvailable) onInstallProvider(contact)
+                            else onOpen(contact)
+                        }
+                        is FavoriteIntegratedContactAvailability.ConversationUnavailable ->
+                            onOpen(contact)
+                    }
+                },
+            ) {
+                when (resolvedAvailability) {
+                    is FavoriteIntegratedContactAvailability.Available -> Icon(
+                        Icons.AutoMirrored.Filled.Message,
+                        stringResource(R.string.message_contact, contact.displayName),
+                        Modifier.size(Dimens.dp18),
+                    )
+                    is FavoriteIntegratedContactAvailability.AppNotInstalled -> Icon(
+                        if (resolvedAvailability.installAvailable) {
+                            Icons.Default.Download
+                        } else {
+                            Icons.Default.Refresh
+                        },
+                        if (resolvedAvailability.installAvailable) {
+                            stringResource(R.string.install_provider, providerLabel)
+                        } else {
+                            stringResource(R.string.reconnect_conversation)
+                        },
+                        Modifier.size(Dimens.dp18),
+                    )
+                    is FavoriteIntegratedContactAvailability.ConversationUnavailable -> Icon(
+                        Icons.Default.Refresh,
+                        stringResource(R.string.reconnect_conversation),
+                        Modifier.size(Dimens.dp18),
+                    )
+                }
             }
         }
     }

@@ -137,6 +137,61 @@ internal interface ContactDataBlobStorage {
     fun clear()
 }
 
+/**
+ * Shared fail-closed persistence for sensitive contact data.
+ *
+ * An unreadable encrypted blob is never deleted, re-keyed, or overwritten. Keeping it intact gives
+ * a transient keystore/storage failure a chance to recover and avoids turning a read failure into
+ * permanent data loss.
+ */
+internal class EncryptedContactDataPersistence<T>(
+    private val storage: ContactDataBlobStorage,
+    private val cipher: ContactDataCipher,
+    private val emptyValue: () -> T,
+    private val encode: (T) -> ByteArray,
+    private val decode: (ByteArray) -> T,
+) {
+    private var loadFailed = false
+
+    fun load(): T {
+        val encrypted = try {
+            storage.read()
+        } catch (_: Exception) {
+            loadFailed = true
+            return emptyValue()
+        } ?: return emptyValue()
+
+        var plaintext: ByteArray? = null
+        return try {
+            plaintext = cipher.decrypt(encrypted)
+            decode(checkNotNull(plaintext)).also { loadFailed = false }
+        } catch (_: Exception) {
+            loadFailed = true
+            emptyValue()
+        } finally {
+            encrypted.fill(0)
+            plaintext?.fill(0)
+        }
+    }
+
+    fun save(value: T): Boolean {
+        if (loadFailed) return false
+        var plaintext: ByteArray? = null
+        var encrypted: ByteArray? = null
+        return try {
+            plaintext = encode(value)
+            encrypted = cipher.encrypt(checkNotNull(plaintext))
+            storage.write(checkNotNull(encrypted))
+            true
+        } catch (_: Exception) {
+            false
+        } finally {
+            plaintext?.fill(0)
+            encrypted?.fill(0)
+        }
+    }
+}
+
 /** Atomic encrypted-blob storage under the caller-supplied no-backup path. */
 internal class AtomicContactDataBlobStorage(file: File) : ContactDataBlobStorage {
     private val atomicFile = AtomicFile(file)

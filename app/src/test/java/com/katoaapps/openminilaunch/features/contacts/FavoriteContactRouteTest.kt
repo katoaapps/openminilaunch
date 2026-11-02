@@ -105,7 +105,7 @@ class FavoriteContactRouteTest {
         assertThrows(Exception::class.java) { cipher.decrypt(encrypted) }
     }
 
-    @Test fun persistenceClearsTamperedDataAndFallsBackToInheritedRoutes() {
+    @Test fun persistencePreservesTamperedDataAndPreventsOverwrite() {
         val storage = MemoryRouteStorage()
         val persistence = EncryptedFavoriteContactRoutePersistence(storage, testCipher())
         val routes = mapOf(
@@ -118,7 +118,8 @@ class FavoriteContactRouteTest {
             (storage.bytes!!.last().toInt() xor 1).toByte()
 
         assertEquals(emptyMap<String, FavoriteContactActionRoutes>(), persistence.load())
-        assertNull(storage.bytes)
+        assertTrue(storage.bytes != null)
+        assertFalse(persistence.save(emptyMap()))
     }
 
     @Test fun malformedPayloadIsRejected() {
@@ -127,14 +128,14 @@ class FavoriteContactRouteTest {
         }
     }
 
-    @Test fun invalidatedKeyIsRotatedAndTheNextSaveCanRecover() {
+    @Test fun invalidatedKeyIsNotRotatedOrOverwritten() {
         val storage = MemoryRouteStorage().apply { bytes = byteArrayOf(1, 2, 3) }
         val cipher = ResetTrackingCipher()
         val persistence = EncryptedFavoriteContactRoutePersistence(storage, cipher)
 
         assertEquals(emptyMap<String, FavoriteContactActionRoutes>(), persistence.load())
-        assertEquals(1, cipher.resetCount)
-        assertTrue(
+        assertEquals(0, cipher.resetCount)
+        assertFalse(
             persistence.save(
                 mapOf(
                     "android-contact:key" to FavoriteContactActionRoutes(

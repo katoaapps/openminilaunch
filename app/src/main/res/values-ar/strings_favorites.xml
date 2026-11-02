@@ -37,8 +37,21 @@
     <string name="add_person_description">اختر جهات الاتصال أو تطبيقًا مدمجًا.</string>
     <string name="no_integrated_contacts_available">لا تتوفر محادثات تطبيقات جديدة الآن.</string>
     <string name="display_name">اسم العرض</string>
+    <string name="add_by_phone_number">أدخل رقم الهاتف</string>
+    <string name="add_by_username">أدخل اسم المستخدم</string>
+    <string name="phone_number">رقم الهاتف</string>
+    <string name="username">اسم المستخدم</string>
     <string name="integrated_contact">جهة اتصال متكاملة</string>
     <string name="integrated_contact_unavailable">محادثة التطبيق هذه غير متاحة الآن.</string>
+    <string name="provider_not_installed">تطبيق %1$s غير مثبّت.</string>
+    <string name="provider_conversation_unavailable">لم تعد محادثة %1$s هذه متاحة.</string>
+    <string name="install_provider">تثبيت %1$s</string>
+    <string name="reconnect">إعادة الاتصال</string>
+    <string name="reconnect_conversation">إعادة ربط المحادثة</string>
+    <string name="reconnect_conversation_description">اختر محادثة التطبيق التي يجب أن تستخدمها جهة الاتصال المفضلة هذه.</string>
+    <string name="could_not_reconnect_conversation">تعذرت إعادة ربط هذه المحادثة.</string>
+    <string name="favorite_already_added">هذا الشخص موجود بالفعل في المفضلة.</string>
+    <string name="could_not_add_favorite">تعذرت إضافة هذا العنصر إلى المفضلة.</string>
     <string name="open_conversation">فتح المحادثة</string>
     <string name="remove_from_favorites">إزالة من المفضلة</string>
 </resources>

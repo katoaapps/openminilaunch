@@ -37,8 +37,21 @@
     <string name="add_person_description">Choose Contacts or an integrated app.</string>
     <string name="no_integrated_contacts_available">No new app conversations are available right now.</string>
     <string name="display_name">Display name</string>
+    <string name="add_by_phone_number">Enter phone number</string>
+    <string name="add_by_username">Enter username</string>
+    <string name="phone_number">Phone number</string>
+    <string name="username">Username</string>
     <string name="integrated_contact">Integrated contact</string>
     <string name="integrated_contact_unavailable">This app conversation is not available right now.</string>
+    <string name="provider_not_installed">%1$s isn’t installed.</string>
+    <string name="provider_conversation_unavailable">This %1$s conversation is no longer available.</string>
+    <string name="install_provider">Install %1$s</string>
+    <string name="reconnect">Reconnect</string>
+    <string name="reconnect_conversation">Reconnect conversation</string>
+    <string name="reconnect_conversation_description">Choose the app conversation this favourite should use.</string>
+    <string name="could_not_reconnect_conversation">Couldn’t reconnect this conversation.</string>
+    <string name="favorite_already_added">This person is already in Favourites.</string>
+    <string name="could_not_add_favorite">Couldn’t add this favourite.</string>
     <string name="open_conversation">Open conversation</string>
     <string name="remove_from_favorites">Remove from favourites</string>
 </resources>

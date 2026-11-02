@@ -37,8 +37,21 @@
     <string name="add_person_description">Pilih Kontak atau aplikasi terintegrasi.</string>
     <string name="no_integrated_contacts_available">Tidak ada percakapan aplikasi baru yang tersedia saat ini.</string>
     <string name="display_name">Nama tampilan</string>
+    <string name="add_by_phone_number">Masukkan nomor telepon</string>
+    <string name="add_by_username">Masukkan nama pengguna</string>
+    <string name="phone_number">Nomor telepon</string>
+    <string name="username">Nama pengguna</string>
     <string name="integrated_contact">Kontak terintegrasi</string>
     <string name="integrated_contact_unavailable">Percakapan aplikasi ini tidak tersedia saat ini.</string>
+    <string name="provider_not_installed">%1$s belum diinstal.</string>
+    <string name="provider_conversation_unavailable">Percakapan %1$s ini tidak tersedia lagi.</string>
+    <string name="install_provider">Instal %1$s</string>
+    <string name="reconnect">Hubungkan kembali</string>
+    <string name="reconnect_conversation">Hubungkan kembali percakapan</string>
+    <string name="reconnect_conversation_description">Pilih percakapan aplikasi yang akan digunakan favorit ini.</string>
+    <string name="could_not_reconnect_conversation">Tidak dapat menghubungkan kembali percakapan ini.</string>
+    <string name="favorite_already_added">Orang ini sudah ada di Favorit.</string>
+    <string name="could_not_add_favorite">Tidak dapat menambahkan favorit ini.</string>
     <string name="open_conversation">Buka percakapan</string>
     <string name="remove_from_favorites">Hapus dari favorit</string>
 </resources>

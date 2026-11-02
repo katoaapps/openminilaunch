@@ -37,8 +37,21 @@
     <string name="add_person_description">رابطے یا کوئی مربوط ایپ منتخب کریں۔</string>
     <string name="no_integrated_contacts_available">اس وقت کوئی نئی ایپ گفتگو دستیاب نہیں ہے۔</string>
     <string name="display_name">ظاہری نام</string>
+    <string name="add_by_phone_number">فون نمبر درج کریں</string>
+    <string name="add_by_username">صارف نام درج کریں</string>
+    <string name="phone_number">فون نمبر</string>
+    <string name="username">صارف نام</string>
     <string name="integrated_contact">مربوط رابطہ</string>
     <string name="integrated_contact_unavailable">یہ ایپ گفتگو اس وقت دستیاب نہیں ہے۔</string>
+    <string name="provider_not_installed">%1$s انسٹال نہیں ہے۔</string>
+    <string name="provider_conversation_unavailable">یہ %1$s گفتگو اب دستیاب نہیں ہے۔</string>
+    <string name="install_provider">%1$s انسٹال کریں</string>
+    <string name="reconnect">دوبارہ منسلک کریں</string>
+    <string name="reconnect_conversation">گفتگو دوبارہ منسلک کریں</string>
+    <string name="reconnect_conversation_description">اس پسندیدہ رابطے کے لیے ایپ گفتگو منتخب کریں۔</string>
+    <string name="could_not_reconnect_conversation">اس گفتگو کو دوبارہ منسلک نہیں کیا جا سکا۔</string>
+    <string name="favorite_already_added">یہ شخص پہلے ہی پسندیدہ میں شامل ہے۔</string>
+    <string name="could_not_add_favorite">اسے پسندیدہ میں شامل نہیں کیا جا سکا۔</string>
     <string name="open_conversation">گفتگو کھولیں</string>
     <string name="remove_from_favorites">پسندیدہ سے ہٹائیں</string>
 </resources>

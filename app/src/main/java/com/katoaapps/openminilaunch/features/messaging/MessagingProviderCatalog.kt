@@ -3,6 +3,7 @@ package com.katoaapps.openminilaunch.features.messaging
 import androidx.annotation.DrawableRes
 import androidx.annotation.StringRes
 import com.katoaapps.openminilaunch.R
+import com.katoaapps.openminilaunch.model.ProviderAddressType
 
 /**
  * Curated integrations are deliberately package-based. Activities are resolved at launch time
@@ -21,6 +22,7 @@ internal object MessagingProviderCatalog {
             packageName = "com.whatsapp",
             kind = MessagingDraftKind.WHATSAPP,
             supportTier = MessagingSupportTier.CONTACT_AND_DRAFT,
+            addressTypes = setOf(ProviderAddressType.PHONE),
             bundledIconRes = R.drawable.messaging_provider_whatsapp,
             storeUrl = "https://play.google.com/store/apps/details?id=com.whatsapp",
             documentationUrl = "https://faq.whatsapp.com/5913398998672934/",
@@ -31,6 +33,7 @@ internal object MessagingProviderCatalog {
             packageName = "com.whatsapp.w4b",
             kind = MessagingDraftKind.WHATSAPP,
             supportTier = MessagingSupportTier.CONTACT_AND_DRAFT,
+            addressTypes = setOf(ProviderAddressType.PHONE),
             bundledIconRes = R.drawable.messaging_provider_whatsapp_business,
             storeUrl = "https://play.google.com/store/apps/details?id=com.whatsapp.w4b",
             documentationUrl = "https://faq.whatsapp.com/5913398998672934/",
@@ -42,6 +45,7 @@ internal object MessagingProviderCatalog {
             alternatePackageNames = listOf("org.telegram.messenger.web"),
             kind = MessagingDraftKind.TELEGRAM,
             supportTier = MessagingSupportTier.CONTACT_AND_DRAFT,
+            addressTypes = setOf(ProviderAddressType.PHONE, ProviderAddressType.USERNAME),
             bundledIconRes = R.drawable.messaging_provider_telegram,
             storeUrl = "https://play.google.com/store/apps/details?id=org.telegram.messenger",
             documentationUrl = "https://core.telegram.org/api/links#phone-number-links",
@@ -77,6 +81,7 @@ internal object MessagingProviderCatalog {
             packageName = "im.molly.app",
             kind = MessagingDraftKind.SIGNAL_CONTACT,
             supportTier = MessagingSupportTier.CONTACT_AND_DRAFT,
+            addressTypes = setOf(ProviderAddressType.PHONE),
             bundledIconRes = R.drawable.messaging_provider_molly,
             storeUrl = "https://molly.im/",
             documentationUrl = "https://github.com/mollyim/mollyim-android/blob/main/app/src/main/java/org/thoughtcrime/securesms/SystemContactsEntrypointViewModel.kt",
@@ -87,6 +92,7 @@ internal object MessagingProviderCatalog {
             packageName = "org.thoughtcrime.securesms",
             kind = MessagingDraftKind.SIGNAL_CONTACT,
             supportTier = MessagingSupportTier.CONTACT_AND_DRAFT,
+            addressTypes = setOf(ProviderAddressType.PHONE),
             bundledIconRes = R.drawable.messaging_provider_signal,
             storeUrl = "https://play.google.com/store/apps/details?id=org.thoughtcrime.securesms",
             documentationUrl = "https://github.com/signalapp/Signal-Android/blob/main/app/src/main/AndroidManifest.xml",
@@ -167,6 +173,7 @@ internal object MessagingProviderCatalog {
             packageName = "com.enflick.android.TextNow",
             kind = MessagingDraftKind.SMS_URI,
             supportTier = MessagingSupportTier.CONDITIONAL,
+            addressTypes = setOf(ProviderAddressType.PHONE),
             bundledIconRes = R.drawable.messaging_provider_textnow,
             storeUrl = "https://play.google.com/store/apps/details?id=com.enflick.android.TextNow",
             documentationUrl = "https://help.textnow.com/",
@@ -177,6 +184,7 @@ internal object MessagingProviderCatalog {
             packageName = "com.pinger.textfree",
             kind = MessagingDraftKind.SMS_URI,
             supportTier = MessagingSupportTier.CONDITIONAL,
+            addressTypes = setOf(ProviderAddressType.PHONE),
             bundledIconRes = R.drawable.messaging_provider_textfree,
             storeUrl = "https://play.google.com/store/apps/details?id=com.pinger.textfree",
             documentationUrl = "https://pinger.zendesk.com/",

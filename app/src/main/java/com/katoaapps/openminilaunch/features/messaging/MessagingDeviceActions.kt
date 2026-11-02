@@ -42,7 +42,8 @@ internal class MessagingDeviceActions(
             // The first installed package wins when a provider publishes more than one official
             // build. Keep this order stable because it also controls preference migration.
             val installedPackage = provider.resolveInstalledPackage(::isPackageInstalled)
-            val supportedRoute = installedPackage?.let { verifiedRoutes(provider, it).firstOrNull() }
+            val supportedRoutes = installedPackage?.let { verifiedRoutes(provider, it) }.orEmpty()
+            val supportedRoute = supportedRoutes.firstOrNull()
             val supportsRecentChatDrafts = installedPackage?.let(::supportsConversationShortcutDrafts)
                 ?: false
             MessagingProviderOption(
@@ -61,6 +62,9 @@ internal class MessagingDeviceActions(
                 bundledIconRes = provider.bundledIconRes,
                 installed = installedPackage != null,
                 supportsRecentChatDrafts = supportsRecentChatDrafts,
+                addressTypes = provider.addressTypes.takeIf {
+                    supportedRoutes.any(ProviderMessageIntent::carriesRecipient)
+                }.orEmpty(),
                 betaCompatibility = installedPackage != null && supportedRoute == null,
             )
         }
@@ -75,6 +79,26 @@ internal class MessagingDeviceActions(
         ?: context.getString(R.string.system_messages)
 
     fun defaultMessagingPackage(): String? = Telephony.Sms.getDefaultSmsPackage(context)
+
+    fun providerAvailability(packageName: String): MessagingProviderAvailability {
+        val provider = MessagingProviderCatalog.providerForPackage(packageName)
+        val installed = isPackageInstalled(packageName)
+        return MessagingProviderAvailability(
+            label = if (installed) {
+                appLabel(packageName)
+            } else {
+                provider?.let { context.getString(it.labelRes) } ?: packageName
+            },
+            installed = installed,
+            installUrl = provider?.storeUrl,
+        )
+    }
+
+    fun openProviderInstallPage(packageName: String): Boolean {
+        val installUrl = MessagingProviderCatalog.providerForPackage(packageName)?.storeUrl
+            ?: return false
+        return startActivity(Intent(Intent.ACTION_VIEW, Uri.parse(installUrl)), false)
+    }
 
     fun recentConversationPackages(
         sendAutomatically: Boolean,
