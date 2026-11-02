@@ -2,7 +2,6 @@ package com.katoaapps.openminilaunch.ui.conversations
 
 import android.widget.Toast
 import androidx.activity.ComponentActivity
-import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
@@ -18,22 +17,12 @@ import androidx.compose.foundation.layout.statusBarsPadding
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
-import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.foundation.text.KeyboardActions
-import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.OpenInNew
-import androidx.compose.material.icons.automirrored.filled.Reply
-import androidx.compose.material.icons.filled.Check
-import androidx.compose.material3.FilledIconButton
 import androidx.compose.material3.Icon
-import androidx.compose.material3.LocalContentColor
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.OutlinedButton
-import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -44,22 +33,16 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.input.ImeAction
 import androidx.lifecycle.Lifecycle
 import com.katoaapps.openminilaunch.R
 import com.katoaapps.openminilaunch.features.conversations.ConversationMessage
-import com.katoaapps.openminilaunch.features.conversations.NotificationConversation
 import com.katoaapps.openminilaunch.features.conversations.ConversationNotification
 import com.katoaapps.openminilaunch.features.conversations.ConversationNotificationStore
+import com.katoaapps.openminilaunch.features.conversations.NotificationConversation
 import com.katoaapps.openminilaunch.platform.DeviceActions
 import com.katoaapps.openminilaunch.ui.components.PageHeader
 import com.katoaapps.openminilaunch.ui.theme.Dimens
 import com.katoaapps.openminilaunch.ui.theme.Muted
-import com.katoaapps.openminilaunch.ui.theme.Rust
-import com.katoaapps.openminilaunch.ui.theme.Sage
-import java.text.DateFormat
-import java.util.Date
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
@@ -107,6 +90,29 @@ internal fun ConversationWindow(
             }
             item { Spacer(Modifier.height(Dimens.dp8)) }
         }
+        ConversationActionRow(
+            conversationActions = conversation.actions,
+            dismissAvailable = conversation.canDismiss,
+            actions = actions,
+            onAction = { action ->
+                if (!ConversationNotificationStore.performAction(context, action)) {
+                    Toast.makeText(
+                        context,
+                        context.getString(R.string.conversation_action_unavailable),
+                        Toast.LENGTH_SHORT,
+                    ).show()
+                }
+            },
+            onDismiss = {
+                if (!ConversationNotificationStore.dismissConversation(conversation)) {
+                    Toast.makeText(
+                        context,
+                        context.getString(R.string.conversation_action_unavailable),
+                        Toast.LENGTH_SHORT,
+                    ).show()
+                }
+            },
+        )
         ConversationReplyBox(
             replyText = replyText,
             replyStatus = replyStatus,
@@ -116,7 +122,6 @@ internal fun ConversationWindow(
         )
     }
 }
-
 @Composable
 private fun ConversationWindowHeader(
     conversation: NotificationConversation,
@@ -168,118 +173,6 @@ private fun ConversationWindowHeader(
         ) {
             Icon(Icons.AutoMirrored.Filled.OpenInNew, null, Modifier.size(Dimens.dp17))
             Text(stringResource(R.string.view_full_conversation), Modifier.padding(start = Dimens.dp6))
-        }
-    }
-}
-
-@Composable
-private fun ConversationReplyBox(
-    replyText: String,
-    replyStatus: Int?,
-    replyAvailable: Boolean,
-    onReplyTextChange: (String) -> Unit,
-    onSendReply: () -> Unit,
-) {
-    Column(Modifier.fillMaxWidth().padding(horizontal = Dimens.dp18, vertical = Dimens.dp10)) {
-        replyStatus?.let { status ->
-            Row(
-                Modifier.fillMaxWidth().padding(bottom = Dimens.dp6),
-                horizontalArrangement = Arrangement.End,
-                verticalAlignment = Alignment.CenterVertically,
-            ) {
-                if (status == R.string.sent) {
-                    Icon(Icons.Default.Check, null, Modifier.size(Dimens.dp16), tint = Sage)
-                }
-                Text(
-                    stringResource(status),
-                    color = if (status == R.string.sent) Sage else Rust,
-                    fontSize = Dimens.sp12,
-                    modifier = Modifier.padding(start = Dimens.dp4),
-                )
-            }
-        }
-        if (replyAvailable) {
-            OutlinedTextField(
-                value = replyText,
-                onValueChange = onReplyTextChange,
-                modifier = Modifier.fillMaxWidth(),
-                placeholder = { Text(stringResource(R.string.reply)) },
-                minLines = 1,
-                maxLines = 4,
-                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Send),
-                keyboardActions = KeyboardActions(
-                    onSend = { if (replyText.isNotBlank()) onSendReply() },
-                ),
-                trailingIcon = {
-                    FilledIconButton(onClick = onSendReply, enabled = replyText.isNotBlank()) {
-                        Icon(Icons.AutoMirrored.Filled.Reply, stringResource(R.string.send_reply))
-                    }
-                },
-            )
-        } else {
-            Text(stringResource(R.string.inline_reply_unavailable), color = Muted, fontSize = Dimens.sp12)
-        }
-    }
-}
-
-@Composable
-private fun ConversationBubble(
-    message: ConversationMessage,
-    showSource: Boolean,
-    actions: DeviceActions,
-) {
-    val bubbleColor = if (message.isOutgoing) {
-        MaterialTheme.colorScheme.primaryContainer
-    } else {
-        MaterialTheme.colorScheme.surfaceContainerLow
-    }
-    val bubbleContentColor = if (message.isOutgoing) {
-        MaterialTheme.colorScheme.onPrimaryContainer
-    } else {
-        MaterialTheme.colorScheme.onSurface
-    }
-
-    Row(
-        Modifier.fillMaxWidth(),
-        horizontalArrangement = if (message.isOutgoing) Arrangement.End else Arrangement.Start,
-    ) {
-        CompositionLocalProvider(LocalContentColor provides bubbleContentColor) {
-            Column(
-                Modifier.fillMaxWidth(.82f)
-                    .background(bubbleColor, RoundedCornerShape(Dimens.dp18))
-                    .padding(horizontal = Dimens.dp14, vertical = Dimens.dp10),
-            ) {
-                if (!message.isOutgoing && !message.senderName.isNullOrBlank()) {
-                    Text(message.senderName, fontSize = Dimens.sp11, fontWeight = FontWeight.Bold)
-                }
-                Text(
-                    message.text,
-                    modifier = Modifier.padding(
-                        top = if (message.senderName.isNullOrBlank()) Dimens.dp0 else Dimens.dp2,
-                    ),
-                )
-                Row(
-                    Modifier.fillMaxWidth().padding(top = Dimens.dp5),
-                    horizontalArrangement = Arrangement.End,
-                    verticalAlignment = Alignment.CenterVertically,
-                ) {
-                    if (showSource) {
-                        ConversationSourceIcon(message.packageName, actions, Dimens.dp14)
-                        Text(
-                            message.appName,
-                            color = bubbleContentColor.copy(alpha = .68f),
-                            fontSize = Dimens.sp10,
-                            modifier = Modifier.padding(start = Dimens.dp4),
-                        )
-                        Spacer(Modifier.weight(1f))
-                    }
-                    Text(
-                        DateFormat.getTimeInstance(DateFormat.SHORT).format(Date(message.timestamp)),
-                        color = bubbleContentColor.copy(alpha = .68f),
-                        fontSize = Dimens.sp10,
-                    )
-                }
-            }
         }
     }
 }

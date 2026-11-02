@@ -767,6 +767,8 @@
     <string name="view_full_conversation">সম্পূর্ণ কথোপকথন দেখুন</string>
     <string name="reply">উত্তর দিন</string>
     <string name="inline_reply_unavailable">এই কথোপকথন একটি ইনলাইন উত্তর কর্ম প্রদান করে না.</string>
+    <string name="conversation_action_unavailable">এই কথোপকথনের অ্যাকশনটি আর উপলভ্য নেই।</string>
+    <string name="dismiss">খারিজ করুন</string>
     <string name="sent">পাঠানো হয়েছে</string>
     <string name="todo_page_title">করণীয়</string>
     <string name="add_todo">একটি করণীয় যোগ করুন</string>

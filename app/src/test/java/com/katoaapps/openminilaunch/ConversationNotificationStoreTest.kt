@@ -4,6 +4,8 @@ import android.app.Notification
 import com.katoaapps.openminilaunch.features.conversations.ConversationNotificationStore
 import com.katoaapps.openminilaunch.features.conversations.DemoConversationData
 import com.katoaapps.openminilaunch.features.conversations.isConversationNotification
+import com.katoaapps.openminilaunch.features.conversations.isDismissibleNotification
+import com.katoaapps.openminilaunch.features.conversations.shouldExposeConversationAction
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNotNull
@@ -23,6 +25,46 @@ class ConversationNotificationStoreTest {
         assertFalse(isConversationNotification(Notification.CATEGORY_PROMO, hasStructuredMessages = false))
         assertFalse(isConversationNotification(Notification.CATEGORY_REMINDER, hasStructuredMessages = false))
         assertFalse(isConversationNotification(category = null, hasStructuredMessages = false))
+    }
+
+    @Test
+    fun dismissesOnlyClearableNotifications() {
+        assertTrue(isDismissibleNotification(flags = 0))
+        assertFalse(isDismissibleNotification(Notification.FLAG_ONGOING_EVENT))
+        assertFalse(isDismissibleNotification(Notification.FLAG_NO_CLEAR))
+        assertFalse(
+            isDismissibleNotification(
+                Notification.FLAG_ONGOING_EVENT or Notification.FLAG_NO_CLEAR,
+            ),
+        )
+    }
+
+    @Test
+    fun exposesOnlyNamedActionsThatDoNotRequireInput() {
+        assertTrue(
+            shouldExposeConversationAction(
+                title = "Mark as read",
+                requiresRemoteInput = false,
+            ),
+        )
+        assertFalse(
+            shouldExposeConversationAction(
+                title = "Reply",
+                requiresRemoteInput = true,
+            ),
+        )
+        assertTrue(
+            shouldExposeConversationAction(
+                title = "Reply",
+                requiresRemoteInput = false,
+            ),
+        )
+        assertFalse(
+            shouldExposeConversationAction(
+                title = "",
+                requiresRemoteInput = false,
+            ),
+        )
     }
 
     @Test

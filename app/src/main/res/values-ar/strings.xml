@@ -791,6 +791,8 @@
     <string name="view_full_conversation">عرض المحادثة كاملة</string>
     <string name="reply">رد</string>
     <string name="inline_reply_unavailable">لا توفر هذه المحادثة إجراء رد مضمن.</string>
+    <string name="conversation_action_unavailable">لم يعد إجراء المحادثة هذا متاحًا.</string>
+    <string name="dismiss">تجاهل</string>
     <string name="sent">تم الإرسال</string>
     <string name="todo_page_title">المهام</string>
     <string name="add_todo">أضف مهمة</string>

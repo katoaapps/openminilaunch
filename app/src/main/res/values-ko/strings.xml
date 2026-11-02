@@ -767,6 +767,8 @@
     <string name="view_full_conversation">전체 대화 보기</string>
     <string name="reply">답장하다</string>
     <string name="inline_reply_unavailable">이 대화는 인라인 회신 작업을 제공하지 않습니다.</string>
+    <string name="conversation_action_unavailable">이 대화 작업은 더 이상 사용할 수 없습니다.</string>
+    <string name="dismiss">지우기</string>
     <string name="sent">보냄</string>
     <string name="todo_page_title">할 일</string>
     <string name="add_todo">할 일 추가</string>

@@ -14,6 +14,7 @@ import android.provider.Settings
 import android.service.notification.NotificationListenerService
 import androidx.compose.runtime.mutableStateListOf
 import androidx.core.app.NotificationManagerCompat
+import java.util.Locale
 
 data class ConversationMessage(
     val id: String,
@@ -39,10 +40,11 @@ data class ConversationNotification(
     val packageName: String,
     val appName: String,
     val postedAt: Long,
-    val isOngoing: Boolean,
+    val isDismissible: Boolean,
     val messages: List<ConversationMessage>,
     internal val contentIntent: PendingIntent?,
     internal val replyAction: Notification.Action?,
+    val actions: List<ConversationNotificationAction> = emptyList(),
     val isDemo: Boolean = false,
 ) {
     val canReply: Boolean get() = isDemo || replyAction != null
@@ -66,6 +68,13 @@ data class NotificationConversation(
         .sortedByDescending(ConversationNotification::postedAt)
         .map(ConversationNotification::packageName)
         .distinct()
+    val actions: List<ConversationNotificationAction> get() = notifications
+        .sortedByDescending(ConversationNotification::postedAt)
+        .flatMap(ConversationNotification::actions)
+        .distinctBy { action ->
+            action.packageName to action.title.lowercase(Locale.ROOT)
+        }
+    val canDismiss: Boolean get() = notifications.any(ConversationNotification::isDismissible)
 }
 
 object ConversationNotificationStore {
@@ -196,6 +205,36 @@ object ConversationNotificationStore {
             )
             true
         }.getOrDefault(false)
+    }
+
+    fun performAction(context: Context, action: ConversationNotificationAction): Boolean = runCatching {
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
+            val options = ActivityOptions.makeBasic()
+                .setPendingIntentBackgroundActivityStartMode(ActivityOptions.MODE_BACKGROUND_ACTIVITY_START_ALLOWED)
+                .toBundle()
+            action.actionIntent.send(context, 0, null, null, null, null, options)
+        } else {
+            action.actionIntent.send(context, 0, null)
+        }
+        true
+    }.getOrDefault(false)
+
+    fun dismissConversation(conversation: NotificationConversation): Boolean {
+        val service = MinkNotificationListenerService.connectedService ?: return false
+        var dismissedAny = false
+        conversation.notifications
+            .filter(ConversationNotification::isDismissible)
+            .forEach { notification ->
+                val requested = runCatching {
+                    service.cancelNotification(notification.key)
+                    true
+                }.getOrDefault(false)
+                if (requested) {
+                    removeNotification(notification.key)
+                    dismissedAny = true
+                }
+            }
+        return dismissedAny
     }
 
     fun clearDemoReplyHistory() {

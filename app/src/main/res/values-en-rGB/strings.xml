@@ -767,6 +767,8 @@
     <string name="view_full_conversation">View full conversation</string>
     <string name="reply">Reply</string>
     <string name="inline_reply_unavailable">This conversation does not provide an inline reply action.</string>
+    <string name="conversation_action_unavailable">This conversation action is no longer available.</string>
+    <string name="dismiss">Dismiss</string>
     <string name="sent">Sent</string>
     <string name="todo_page_title">To-do</string>
     <string name="add_todo">Add a to-do</string>

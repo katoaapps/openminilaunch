@@ -160,7 +160,7 @@ internal object DemoConversationData {
         packageName = packageName,
         appName = appName,
         postedAt = postedAt,
-        isOngoing = false,
+        isDismissible = false,
         messages = messages,
         contentIntent = null,
         replyAction = null,

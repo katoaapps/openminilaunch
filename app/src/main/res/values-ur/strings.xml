@@ -767,6 +767,8 @@
     <string name="view_full_conversation">مکمل گفتگو دیکھیں</string>
     <string name="reply">جواب دیں۔</string>
     <string name="inline_reply_unavailable">یہ گفتگو ان لائن جوابی کارروائی فراہم نہیں کرتی ہے۔</string>
+    <string name="conversation_action_unavailable">گفتگو کی یہ کارروائی اب دستیاب نہیں ہے۔</string>
+    <string name="dismiss">ہٹائیں</string>
     <string name="sent">بھیجا</string>
     <string name="todo_page_title">کرنا</string>
     <string name="add_todo">ایک کام شامل کریں۔</string>

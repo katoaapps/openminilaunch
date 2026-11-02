@@ -767,6 +767,8 @@
     <string name="view_full_conversation">Ver conversación completa</string>
     <string name="reply">Responder</string>
     <string name="inline_reply_unavailable">Esta conversación no proporciona una acción de respuesta en línea.</string>
+    <string name="conversation_action_unavailable">Esta acción de conversación ya no está disponible.</string>
+    <string name="dismiss">Descartar</string>
     <string name="sent">Enviado</string>
     <string name="todo_page_title">Tareas pendientes</string>
     <string name="add_todo">Agregar una tarea pendiente</string>

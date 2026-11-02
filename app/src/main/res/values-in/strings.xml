@@ -767,6 +767,8 @@
     <string name="view_full_conversation">Lihat percakapan lengkap</string>
     <string name="reply">Membalas</string>
     <string name="inline_reply_unavailable">Percakapan ini tidak memberikan tindakan balasan sebaris.</string>
+    <string name="conversation_action_unavailable">Tindakan percakapan ini sudah tidak tersedia.</string>
+    <string name="dismiss">Singkirkan</string>
     <string name="sent">Terkirim</string>
     <string name="todo_page_title">Agenda</string>
     <string name="add_todo">Tambahkan tugas</string>

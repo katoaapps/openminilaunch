@@ -767,6 +767,8 @@
     <string name="view_full_conversation">查看完整对话</string>
     <string name="reply">回复</string>
     <string name="inline_reply_unavailable">此对话不提供内联回复操作。</string>
+    <string name="conversation_action_unavailable">此对话操作已不可用。</string>
+    <string name="dismiss">清除</string>
     <string name="sent">已发送</string>
     <string name="todo_page_title">待办事项</string>
     <string name="add_todo">添加待办事项</string>

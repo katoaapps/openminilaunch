@@ -767,6 +767,8 @@
     <string name="view_full_conversation">पूरी बातचीत देखें</string>
     <string name="reply">उत्तर</string>
     <string name="inline_reply_unavailable">यह वार्तालाप इनलाइन उत्तर कार्रवाई प्रदान नहीं करता है.</string>
+    <string name="conversation_action_unavailable">बातचीत की यह कार्रवाई अब उपलब्ध नहीं है।</string>
+    <string name="dismiss">हटाएँ</string>
     <string name="sent">भेजा गया</string>
     <string name="todo_page_title">करने योग्य</string>
     <string name="add_todo">एक कार्य जोड़ें</string>

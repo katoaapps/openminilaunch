@@ -767,6 +767,8 @@
     <string name="view_full_conversation">睇返完整嘅對話</string>
     <string name="reply">回覆</string>
     <string name="inline_reply_unavailable">呢個對話唔會提供內聯回覆操作。</string>
+    <string name="conversation_action_unavailable">呢個對話操作已經唔再可用。</string>
+    <string name="dismiss">清除</string>
     <string name="sent">已經寄咗</string>
     <string name="todo_page_title">待辦事項</string>
     <string name="add_todo">加個待辦事項</string>

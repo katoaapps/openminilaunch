@@ -779,6 +779,8 @@
     <string name="view_full_conversation">Посмотреть весь разговор</string>
     <string name="reply">Ответить</string>
     <string name="inline_reply_unavailable">В этом разговоре не предусмотрено действие встроенного ответа.</string>
+    <string name="conversation_action_unavailable">Это действие в беседе больше недоступно.</string>
+    <string name="dismiss">Скрыть</string>
     <string name="sent">Отправлено</string>
     <string name="todo_page_title">Дела</string>
     <string name="add_todo">Добавить задачу</string>

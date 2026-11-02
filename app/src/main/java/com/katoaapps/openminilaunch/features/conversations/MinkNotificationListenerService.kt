@@ -56,6 +56,7 @@ class MinkNotificationListenerService : NotificationListenerService() {
             val appInfo = packageManager.getApplicationInfo(sbn.packageName, 0)
             packageManager.getApplicationLabel(appInfo).toString()
         }.getOrDefault(sbn.packageName)
+        val conversationActions = extractConversationActions(sbn, notification, appName)
         val rawTitle = style?.conversationTitle
             ?: extras.getCharSequence(Notification.EXTRA_CONVERSATION_TITLE)
             ?: extras.getCharSequence(Notification.EXTRA_TITLE)
@@ -146,12 +147,33 @@ class MinkNotificationListenerService : NotificationListenerService() {
             packageName = sbn.packageName,
             appName = appName,
             postedAt = sbn.postTime,
-            isOngoing = notification.flags and Notification.FLAG_ONGOING_EVENT != 0,
+            isDismissible = isDismissibleNotification(notification.flags),
             messages = messages,
             contentIntent = notification.contentIntent,
             replyAction = replyAction,
+            actions = conversationActions,
         )
     }
+
+    private fun extractConversationActions(
+        sbn: StatusBarNotification,
+        notification: Notification,
+        appName: String,
+    ): List<ConversationNotificationAction> =
+        notification.actions.orEmpty().mapIndexedNotNull { index, action ->
+            val title = action.title?.toString()?.trim().orEmpty()
+            val requiresRemoteInput = !action.remoteInputs.isNullOrEmpty()
+            if (!shouldExposeConversationAction(title, requiresRemoteInput)) {
+                return@mapIndexedNotNull null
+            }
+            ConversationNotificationAction(
+                id = "${sbn.key}|$index|$title",
+                title = title,
+                packageName = sbn.packageName,
+                appName = appName,
+                actionIntent = action.actionIntent,
+            )
+        }
 
     @Suppress("DEPRECATION")
     private fun extractLegacyMessages(extras: Bundle, key: String): List<ExtractedMessage> =
@@ -232,6 +254,9 @@ class MinkNotificationListenerService : NotificationListenerService() {
         @Volatile internal var connectedService: MinkNotificationListenerService? = null
     }
 }
+
+internal fun isDismissibleNotification(flags: Int): Boolean =
+    flags and (Notification.FLAG_ONGOING_EVENT or Notification.FLAG_NO_CLEAR) == 0
 
 private data class ExtractedMessage(
     val text: String,

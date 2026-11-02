@@ -767,6 +767,8 @@
     <string name="view_full_conversation">Ver conversa completa</string>
     <string name="reply">Responder</string>
     <string name="inline_reply_unavailable">Esta conversa não fornece uma ação de resposta embutida.</string>
+    <string name="conversation_action_unavailable">Esta ação da conversa não está mais disponível.</string>
+    <string name="dismiss">Dispensar</string>
     <string name="sent">Enviado</string>
     <string name="todo_page_title">Tarefas</string>
     <string name="add_todo">Adicione uma tarefa</string>

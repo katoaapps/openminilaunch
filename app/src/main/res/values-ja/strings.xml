@@ -767,6 +767,8 @@
     <string name="view_full_conversation">会話全体を表示</string>
     <string name="reply">返信</string>
     <string name="inline_reply_unavailable">この会話にはインライン返信アクションはありません。</string>
+    <string name="conversation_action_unavailable">この会話アクションは利用できなくなりました。</string>
+    <string name="dismiss">消去</string>
     <string name="sent">送信済み</string>
     <string name="todo_page_title">やるべきこと</string>
     <string name="add_todo">To-Doを追加する</string>

@@ -767,6 +767,8 @@
     <string name="view_full_conversation">Afficher la conversation complète</string>
     <string name="reply">Répondre</string>
     <string name="inline_reply_unavailable">Cette conversation ne fournit pas d\'action de réponse en ligne.</string>
+    <string name="conversation_action_unavailable">Cette action de conversation n’est plus disponible.</string>
+    <string name="dismiss">Ignorer</string>
     <string name="sent">Envoyé</string>
     <string name="todo_page_title">À faire</string>
     <string name="add_todo">Ajouter une tâche</string>
