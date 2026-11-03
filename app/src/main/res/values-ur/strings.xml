@@ -409,7 +409,7 @@
     <string name="assistant_active_description">Mink اسسٹنٹ فعال ہے۔ براہ راست SMS کو مندرجہ ذیل اجازت سیٹ اپ کے دوران فعال کیا جا سکتا ہے۔</string>
     <string name="assistant_inactive_description">آپ اسے چھوڑ سکتے ہیں، لیکن براہ راست SMS اس وقت تک دستیاب نہیں رہتا جب تک کہ Mink اسسٹنٹ فعال نہ ہو۔</string>
     <string name="choose_message_behavior">پیغام کے رویے کا انتخاب کریں۔</string>
-    <string name="integrated_messaging_app_onboarding">انٹیگریٹڈ میسجنگ ایپ</string>
+    <string name="integrated_messaging_app_onboarding">پیغامات کہاں کھلیں</string>
     <string name="integrated_messaging_app_onboarding_description">سسٹم میسیجز ڈیفالٹ ہیں۔ آپ ابھی انسٹال کردہ تعاون یافتہ ایپ کا انتخاب کر سکتے ہیں یا اسے بعد میں ترتیبات میں تبدیل کر سکتے ہیں۔</string>
     <string name="ai_app_selected">AI ایپ: %1$s</string>
     <string name="choose_an_ai_app">ایک AI ایپ کا انتخاب کریں۔</string>
@@ -586,6 +586,7 @@
     <string name="minutes_short">%1$dm</string>
     <string name="hours_short">%1$dh</string>
     <string name="permissions_description">رسائی اختیاری ہے اور اسے کسی بھی وقت تبدیل کیا جا سکتا ہے۔ ڈیوائس کا ڈیٹا مقامی رہتا ہے جب تک کہ آپ اسے واضح طور پر کسی اور ایپ کے حوالے نہیں کرتے ہیں۔</string>
+    <string name="app_info_permissions_description">اجازتوں، اطلاعات، اسٹوریج، بیٹری کے استعمال اور دیگر Android ترتیبات کا نظم کریں۔</string>
     <string name="mink_day_usage">Mink’s Day استعمال</string>
     <string name="mink_day_usage_permission_description">Mink’s Day کے لیے منتخب کردہ ایپس کے لیے پیش منظر کی سرگرمی پڑھتا ہے صرف نجی، آن ڈیوائس روزانہ کی بصیرت کا حساب لگانے کے لیے۔</string>
     <string name="conversations_permission_description">مقامی طور پر فعال پیغام اور ای میل گفتگو کو دکھاتا ہے اور ان کی ایپس کے ذریعے فراہم کردہ جوابی کارروائیوں کا استعمال کرتا ہے۔</string>
@@ -1009,4 +1010,12 @@
     <string name="calling_behavior_description">یہ Magic Box اور Favorites سے کی گئی کالز پر لاگو ہوتا ہے۔ کوئی Favorite یہ ترتیب، سسٹم کالنگ ایپ، یا اپنی الگ ایپ استعمال کر سکتا ہے۔</string>
     <string name="open_call_draft">کال ڈرافٹ کھولیں</string>
     <string name="use_calling_setting">کالنگ ترتیب استعمال کریں</string>
+    <string name="onboarding_home_setup_description">%1$s آپ کی موجودہ ہوم اسکرین کی جگہ لینے کے لیے بنایا گیا ہے۔</string>
+    <string name="onboarding_home_setup_active">%1$s آپ کی ڈیفالٹ ہوم ایپ ہے۔</string>
+    <string name="onboarding_home_setup_inactive">جب Android ہوم ایپس کی فہرست دکھائے تو Mink Launcher منتخب کریں۔</string>
+    <string name="onboarding_contacts_title">اپنے لوگوں کو قریب رکھیں</string>
+    <string name="onboarding_messages_title">اپنے انداز میں پیغام بھیجیں</string>
+    <string name="onboarding_contacts_setup_description">ایپس تلاش کیے بغیر دوستوں، خاندان اور ساتھیوں تک پہنچیں۔ پیغام تیار کرنے کے لیے @ یا کال شروع کرنے کے لیے # ٹائپ کریں۔</string>
+    <string name="onboarding_messages_setup_description">@ ٹائپ کریں اور اپنی استعمال کی ایپ منتخب کریں۔ Mink پیغام تیار کرتا ہے اور بعد میں ہر پسندیدہ فرد کے لیے الگ ایپ منتخب کی جا سکتی ہے۔</string>
+    <string name="onboarding_messages_draft_note">خودکار پیغام رسانی شروع سے فعال ہوتی ہے۔ Android رسائی تیار ہونے پر سسٹم میسیجز براہ راست SMS بھیجتا ہے، جبکہ مربوط ایپس تیار مسودہ کھولتی ہیں۔</string>
 </resources>

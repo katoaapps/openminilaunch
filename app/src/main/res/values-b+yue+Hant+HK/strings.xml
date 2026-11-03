@@ -409,7 +409,7 @@
     <string name="assistant_active_description">Mink 助手已經啟用。喺之後嘅權限設定期間，可以啟用直接 SMS 。</string>
     <string name="assistant_inactive_description">你可以略過呢個，但係直接 SMS 喺 Mink 助手啟用之前會保持唔可用。</string>
     <string name="choose_message_behavior">揀訊息行為</string>
-    <string name="integrated_messaging_app_onboarding">綜合短訊應用程式</string>
+    <string name="integrated_messaging_app_onboarding">訊息開啟位置</string>
     <string name="integrated_messaging_app_onboarding_description">系統訊息係預設。你可以而家揀一個已經安裝咗嘅支援應用程式，或者遲啲喺「設定」入面更改。</string>
     <string name="ai_app_selected">人工智能應用程式： %1$s</string>
     <string name="choose_an_ai_app">揀個 AI 應用程式</string>
@@ -586,6 +586,7 @@
     <string name="minutes_short">%1$dm</string>
     <string name="hours_short">%1$dh</string>
     <string name="permissions_description">存取權係選擇性嘅，可以隨時更改。除非你明確將裝置資料交畀其他應用程式，否則裝置資料會保留本地。</string>
+    <string name="app_info_permissions_description">管理權限、通知、儲存空間、電池用量同其他 Android 設定。</string>
     <string name="mink_day_usage">Mink’s Day 使用情況</string>
     <string name="mink_day_usage_permission_description">只會讀取 Mink’s Day 所選應用程式嘅前台活動，嚟計算私人嘅裝置上每日分析資料。</string>
     <string name="conversations_permission_description">喺本機顯示活躍嘅訊息同電郵對話，同埋使用佢哋嘅應用程式提供嘅回覆操作。</string>
@@ -1009,4 +1010,12 @@
     <string name="calling_behavior_description">呢個設定適用於 Magic Box 同最愛聯絡人嘅電話。最愛聯絡人可以使用呢個設定、系統電話應用程式，或者自己指定嘅應用程式。</string>
     <string name="open_call_draft">開啟撥號草稿</string>
     <string name="use_calling_setting">使用打電話設定</string>
+    <string name="onboarding_home_setup_description">%1$s 係用嚟取代你而家嘅主畫面。</string>
+    <string name="onboarding_home_setup_active">%1$s 係你預設嘅主畫面應用程式。</string>
+    <string name="onboarding_home_setup_inactive">Android 顯示主畫面應用程式清單時，請揀 Mink Launcher。</string>
+    <string name="onboarding_contacts_title">重要嘅人，隨時搵到</string>
+    <string name="onboarding_messages_title">用你嘅方式傳訊息</string>
+    <string name="onboarding_contacts_setup_description">唔使逐個應用程式搵，就可以聯絡朋友、家人同同事。輸入 @ 準備訊息，或者輸入 # 開始通話。</string>
+    <string name="onboarding_messages_setup_description">輸入 @，再揀你慣用嘅應用程式。Mink 會準備訊息，之後亦可以為每個收藏聯絡人揀唔同應用程式。</string>
+    <string name="onboarding_messages_draft_note">自動訊息預設已開啟。Android 存取權準備好之後，系統訊息會直接傳送電訊商 SMS；整合應用程式會開啟準備好嘅草稿。</string>
 </resources>

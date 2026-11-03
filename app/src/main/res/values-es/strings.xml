@@ -409,7 +409,7 @@
     <string name="assistant_active_description">Mink El asistente está activo. Direct SMS se puede habilitar durante la configuración de permisos que sigue.</string>
     <string name="assistant_inactive_description">Puede omitir esto, pero el SMS directo no estará disponible hasta que el Asistente Mink esté activo.</string>
     <string name="choose_message_behavior">Elija el comportamiento del mensaje</string>
-    <string name="integrated_messaging_app_onboarding">Aplicación de mensajería integrada</string>
+    <string name="integrated_messaging_app_onboarding">Dónde se abren los mensajes</string>
     <string name="integrated_messaging_app_onboarding_description">Mensajes del sistema es el valor predeterminado. Puede elegir una aplicación compatible instalada ahora o cambiarla más tarde en Configuración.</string>
     <string name="ai_app_selected">Aplicación de IA: %1$s</string>
     <string name="choose_an_ai_app">Elija una aplicación de IA</string>
@@ -586,6 +586,7 @@
     <string name="minutes_short">%1$dm</string>
     <string name="hours_short">%1$dh</string>
     <string name="permissions_description">El acceso es opcional y se puede cambiar en cualquier momento. Los datos del dispositivo permanecen locales a menos que los entregue explícitamente a otra aplicación.</string>
+    <string name="app_info_permissions_description">Gestiona permisos, notificaciones, almacenamiento, uso de batería y otros ajustes de Android.</string>
     <string name="mink_day_usage">Uso de Mink’s Day</string>
     <string name="mink_day_usage_permission_description">Lee la actividad en primer plano de las aplicaciones seleccionadas para Mink’s Day solo para calcular información diaria privada en el dispositivo.</string>
     <string name="conversations_permission_description">Muestra mensajes activos y conversaciones de correo electrónico localmente y utiliza acciones de respuesta proporcionadas por sus aplicaciones.</string>
@@ -1009,4 +1010,12 @@
     <string name="calling_behavior_description">Se aplica a las llamadas desde Magic Box y Favoritos. Un favorito puede usar este ajuste, la aplicación de llamadas del sistema o su propia aplicación.</string>
     <string name="open_call_draft">Abrir borrador de llamada</string>
     <string name="use_calling_setting">Usar ajuste de llamadas</string>
+    <string name="onboarding_home_setup_description">%1$s está diseñado para reemplazar tu pantalla de inicio actual.</string>
+    <string name="onboarding_home_setup_active">%1$s es tu aplicación de inicio predeterminada.</string>
+    <string name="onboarding_home_setup_inactive">Elige Mink Launcher cuando Android muestre la lista de aplicaciones de inicio.</string>
+    <string name="onboarding_contacts_title">Mantén cerca a los tuyos</string>
+    <string name="onboarding_messages_title">Mensajes a tu manera</string>
+    <string name="onboarding_contacts_setup_description">Contacta con amigos, familiares y colegas sin buscar entre aplicaciones. Escribe @ para preparar un mensaje o # para iniciar una llamada.</string>
+    <string name="onboarding_messages_setup_description">Escribe @ y elige la aplicación que ya utilizas. Mink prepara el mensaje y cada Favorito podrá usar otra aplicación más adelante.</string>
+    <string name="onboarding_messages_draft_note">La mensajería automática comienza activada. Mensajes del sistema usa SMS directos cuando Android concede el acceso; las aplicaciones integradas abren un borrador preparado.</string>
 </resources>

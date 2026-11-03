@@ -181,7 +181,9 @@ internal fun MagicBoxContent(
     }
     val permissionLauncher = rememberLauncherForActivityResult(ActivityResultContracts.RequestPermission()) { granted ->
         hasContacts = granted
-        if (!granted && isPermanentlyDenied(context, Manifest.permission.READ_CONTACTS)) actions.openAppSettings()
+        if (!granted && isPermanentlyDenied(context, Manifest.permission.READ_CONTACTS)) {
+            actions.openAppPermissionSettings()
+        }
     }
     val focusRequester = remember { FocusRequester() }
     val armedFocusRequester = remember { FocusRequester() }
@@ -241,7 +243,9 @@ internal fun MagicBoxContent(
     }
     val mediaPermissionLauncher = rememberLauncherForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) {
         hasMediaAccess = hasMediaReadAccess(context)
-        if (!hasMediaAccess && mediaPermissionPermanentlyDenied(context)) actions.openAppSettings()
+        if (!hasMediaAccess && mediaPermissionPermanentlyDenied(context)) {
+            actions.openAppPermissionSettings()
+        }
         showFileScopeChoice = true
     }
     val folderPicker = rememberLauncherForActivityResult(ActivityResultContracts.OpenDocumentTree()) { uri ->

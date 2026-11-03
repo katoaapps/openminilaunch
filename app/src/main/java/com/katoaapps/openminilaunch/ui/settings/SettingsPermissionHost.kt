@@ -111,7 +111,7 @@ internal fun rememberSettingsPermissionHost(
     ) { granted ->
         contactsGranted = granted
         if (!granted && isPermanentlyDenied(context, Manifest.permission.READ_CONTACTS)) {
-            deviceActions.openAppSettings()
+            deviceActions.openAppPermissionSettings()
         }
     }
     val callPermission = rememberLauncherForActivityResult(
@@ -119,7 +119,7 @@ internal fun rememberSettingsPermissionHost(
     ) { granted ->
         callsGranted = granted
         if (!granted && isPermanentlyDenied(context, Manifest.permission.CALL_PHONE)) {
-            deviceActions.openAppSettings()
+            deviceActions.openAppPermissionSettings()
         }
     }
     val smsPermission = rememberLauncherForActivityResult(
@@ -127,7 +127,7 @@ internal fun rememberSettingsPermissionHost(
     ) { granted ->
         smsGranted = granted
         if (!granted && isPermanentlyDenied(context, Manifest.permission.SEND_SMS)) {
-            deviceActions.openAppSettings()
+            deviceActions.openAppPermissionSettings()
         }
     }
     val mediaPermission = rememberLauncherForActivityResult(
@@ -135,7 +135,7 @@ internal fun rememberSettingsPermissionHost(
     ) {
         mediaGranted = hasMediaReadAccess(context)
         if (!mediaGranted && mediaPermissionPermanentlyDenied(context)) {
-            deviceActions.openAppSettings()
+            deviceActions.openAppPermissionSettings()
         }
         currentOnMediaPermissionResult()
     }
@@ -194,7 +194,7 @@ internal fun rememberSettingsPermissionHost(
     }
     if (showNotificationDisclosure) {
         NotificationAccessDisclosureDialog(
-            onOpenAppInfo = deviceActions::openAppSettings,
+            onOpenAppInfo = deviceActions::openAppInfo,
             onOpenNotificationAccess = {
                 notificationAccessSettings.launch(ConversationNotificationStore.notificationAccessSettingsIntent())
             },
@@ -253,7 +253,8 @@ internal fun rememberSettingsPermissionHost(
             },
             manageAppBubbleNotifications = deviceActions::openAppNotificationSettings,
             manageAppBubbles = deviceActions::openAppBubbleSettings,
-            manageAppPermissions = deviceActions::openAppSettings,
+            manageAppPermissions = deviceActions::openAppPermissionSettings,
+            openAppInfo = deviceActions::openAppInfo,
             requestLockService = { showLockDisclosure = true },
             manageLockService = deviceActions::openLockAccessibilitySettings,
             showAssistantSetup = { showAssistantDisclosure = true },

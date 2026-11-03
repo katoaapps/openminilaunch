@@ -56,6 +56,7 @@ import android.telephony.PhoneNumberUtils
 import kotlinx.coroutines.flow.StateFlow
 
 class DeviceActions(private val context: Context) {
+    private val permissionSettings = PermissionSettingsNavigator(context)
     private val appBubbleManager = AppBubbleManager.get(context)
     private val launcherAppRepository = LauncherAppRepository.get(context)
     private val launcherShortcutRepository = LauncherShortcutRepository.get(context)
@@ -92,9 +93,26 @@ class DeviceActions(private val context: Context) {
 
     fun supportsLockScreenAction(): Boolean = Build.VERSION.SDK_INT >= Build.VERSION_CODES.P
 
+    fun isHomeRoleHeld(): Boolean = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
+        context.getSystemService(RoleManager::class.java)?.isRoleHeld(RoleManager.ROLE_HOME) == true
+    } else {
+        Intent(Intent.ACTION_MAIN)
+            .addCategory(Intent.CATEGORY_HOME)
+            .resolveActivity(context.packageManager)
+            ?.packageName == context.packageName
+    }
+
+    fun openHomeSettings(): Boolean = start(Intent(Settings.ACTION_HOME_SETTINGS))
+
     fun lockDevice(): Boolean = isLockServiceEnabled() && LockScreenAccessibilityService.lockScreen()
 
-    fun lockAccessibilitySettingsIntent(): Intent = Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS)
+    fun lockAccessibilitySettingsIntent(): Intent {
+        val service = ComponentName(context, LockScreenAccessibilityService::class.java)
+        return Intent(Settings.ACTION_ACCESSIBILITY_SETTINGS)
+            // Android Settings uses this preference key to scroll to and highlight a row.
+            // The protected details action is unavailable to ordinary third-party apps.
+            .putExtra(EXTRA_SETTINGS_FRAGMENT_ARG_KEY, service.flattenToString())
+    }
 
     fun openLockAccessibilitySettings() = start(lockAccessibilitySettingsIntent())
 
@@ -596,19 +614,9 @@ class DeviceActions(private val context: Context) {
         chooser = true,
     )
 
-    fun openAppSettings() = start(
-        Intent(
-            Settings.ACTION_APPLICATION_DETAILS_SETTINGS,
-            Uri.parse("package:${context.packageName}"),
-        ),
-    )
+    fun openAppInfo(): Boolean = permissionSettings.openAppInfo()
 
-    fun openAppPermissionSettings(): Boolean {
-        val permissions = Intent(ACTION_MANAGE_APP_PERMISSIONS)
-            .putExtra(EXTRA_PACKAGE_NAME, context.packageName)
-        if (canResolve(permissions) && start(permissions)) return true
-        return openAppSettings()
-    }
+    fun openAppPermissionSettings(): Boolean = permissionSettings.openAppPermissions()
 
     fun openNotificationAccessSettings() = start(
         ConversationNotificationStore.notificationAccessSettingsIntent(),
@@ -643,8 +651,7 @@ class DeviceActions(private val context: Context) {
     }
 
     private companion object {
-        const val ACTION_MANAGE_APP_PERMISSIONS = "android.intent.action.MANAGE_APP_PERMISSIONS"
-        const val EXTRA_PACKAGE_NAME = "android.intent.extra.PACKAGE_NAME"
+        const val EXTRA_SETTINGS_FRAGMENT_ARG_KEY = ":settings:fragment_args_key"
         const val MINKLAUNCHER_SUBREDDIT_URL = "https://reddit.com/r/minklauncher"
         const val SAMSUNG_CLOCK_PACKAGE = "com.sec.android.app.clockpackage"
         val CLOCK_PACKAGES = listOf(

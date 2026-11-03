@@ -409,7 +409,7 @@
     <string name="assistant_active_description">Mink アシスタントがアクティブです。直接 SMS は、次の権限の設定中に有効にすることができます。</string>
     <string name="assistant_inactive_description">これをスキップできますが、Mink アシスタントがアクティブになるまで、直接 SMS は利用できません。</string>
     <string name="choose_message_behavior">メッセージの動作を選択する</string>
-    <string name="integrated_messaging_app_onboarding">統合メッセージングアプリ</string>
+    <string name="integrated_messaging_app_onboarding">メッセージを開く場所</string>
     <string name="integrated_messaging_app_onboarding_description">システムメッセージがデフォルトです。インストールされているサポート対象アプリを今すぐ選択することも、後で設定で変更することもできます。</string>
     <string name="ai_app_selected">AIアプリ：%1$s</string>
     <string name="choose_an_ai_app">AIアプリを選ぶ</string>
@@ -586,6 +586,7 @@
     <string name="minutes_short">%1$dm</string>
     <string name="hours_short">%1$dh</string>
     <string name="permissions_description">アクセスはオプションであり、いつでも変更できます。デバイス データは、別のアプリに明示的に渡さない限り、ローカルに残ります。</string>
+    <string name="app_info_permissions_description">権限、通知、ストレージ、バッテリー使用量などの Android 設定を管理します。</string>
     <string name="mink_day_usage">Mink’s Dayの使用法</string>
     <string name="mink_day_usage_permission_description">Mink’s Day に選択されたアプリのフォアグラウンド アクティビティを読み取り、プライベートなオンデバイスの毎日の分析情報を計算します。</string>
     <string name="conversations_permission_description">アクティブなメッセージと電子メールの会話をローカルに表示し、アプリによって提供される返信アクションを使用します。</string>
@@ -1009,4 +1010,12 @@
     <string name="calling_behavior_description">Magic Box とお気に入りからの通話に適用されます。お気に入りごとに、この設定、システム通話アプリ、または個別のアプリを使用できます。</string>
     <string name="open_call_draft">通話下書きを開く</string>
     <string name="use_calling_setting">通話設定を使用</string>
+    <string name="onboarding_home_setup_description">%1$s は現在のホーム画面を置き換えるために作られています。</string>
+    <string name="onboarding_home_setup_active">%1$s は既定のホームアプリです。</string>
+    <string name="onboarding_home_setup_inactive">Android がホームアプリの一覧を表示したら Mink Launcher を選んでください。</string>
+    <string name="onboarding_contacts_title">大切な人をすぐそばに</string>
+    <string name="onboarding_messages_title">自分らしくメッセージ</string>
+    <string name="onboarding_contacts_setup_description">アプリを探し回らずに、友人、家族、同僚へ連絡できます。@ でメッセージを準備し、# で通話を始めます。</string>
+    <string name="onboarding_messages_setup_description">@ を入力して、いつも使うアプリを選びます。Mink がメッセージを準備し、お気に入りごとに後から別のアプリを指定できます。</string>
+    <string name="onboarding_messages_draft_note">自動メッセージは最初からオンです。Android のアクセス準備が整うとシステムメッセージは SMS を直接送信し、連携アプリは作成済みの下書きを開きます。</string>
 </resources>

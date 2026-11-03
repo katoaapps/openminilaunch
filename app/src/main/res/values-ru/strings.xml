@@ -409,7 +409,7 @@
     <string name="assistant_active_description">Mink Ассистент активен. Direct SMS можно включить во время следующей настройки разрешений.</string>
     <string name="assistant_inactive_description">Вы можете пропустить это, но прямой SMS останется недоступным, пока Mink Assistant не станет активным.</string>
     <string name="choose_message_behavior">Выберите поведение сообщения</string>
-    <string name="integrated_messaging_app_onboarding">Интегрированное приложение для обмена сообщениями</string>
+    <string name="integrated_messaging_app_onboarding">Где открываются сообщения</string>
     <string name="integrated_messaging_app_onboarding_description">Системные сообщения установлены по умолчанию. Вы можете выбрать установленное поддерживаемое приложение сейчас или изменить его позже в настройках.</string>
     <string name="ai_app_selected">Приложение AI: %1$s</string>
     <string name="choose_an_ai_app">Выберите приложение с искусственным интеллектом</string>
@@ -590,6 +590,7 @@
     <string name="minutes_short">%1$dm</string>
     <string name="hours_short">%1$dh</string>
     <string name="permissions_description">Доступ не является обязательным и может быть изменен в любое время. Данные устройства остаются локальными, если вы явно не передадите их другому приложению.</string>
+    <string name="app_info_permissions_description">Управляйте разрешениями, уведомлениями, хранилищем, расходом заряда и другими настройками Android.</string>
     <string name="mink_day_usage">Использование Mink’s Day</string>
     <string name="mink_day_usage_permission_description">Считывает активность на переднем плане для приложений, выбранных для Mink’s Day, только для расчета конфиденциальной ежедневной информации на устройстве.</string>
     <string name="conversations_permission_description">Показывает активные сообщения и разговоры по электронной почте локально и использует действия ответа, предоставляемые их приложениями.</string>
@@ -1029,4 +1030,12 @@
     <string name="calling_behavior_description">Применяется к звонкам из Magic Box и Избранного. Для избранного контакта можно использовать эту настройку, системное приложение или отдельное приложение.</string>
     <string name="open_call_draft">Открыть черновик звонка</string>
     <string name="use_calling_setting">Использовать настройку звонков</string>
+    <string name="onboarding_home_setup_description">%1$s создан для замены текущего главного экрана.</string>
+    <string name="onboarding_home_setup_active">%1$s используется как главный экран по умолчанию.</string>
+    <string name="onboarding_home_setup_inactive">Выберите Mink Launcher, когда Android покажет список приложений главного экрана.</string>
+    <string name="onboarding_contacts_title">Будьте ближе к своим</string>
+    <string name="onboarding_messages_title">Общайтесь по-своему</string>
+    <string name="onboarding_contacts_setup_description">Связывайтесь с друзьями, близкими и коллегами, не разыскивая нужное приложение. Введите @, чтобы подготовить сообщение, или #, чтобы начать вызов.</string>
+    <string name="onboarding_messages_setup_description">Введите @ и выберите привычное приложение. Mink подготовит сообщение, а для каждого контакта в Избранном позже можно выбрать другое приложение.</string>
+    <string name="onboarding_messages_draft_note">Автоматические сообщения включены сразу. Системные сообщения отправляют SMS напрямую, когда Android предоставит доступ; интегрированные приложения открывают готовый черновик.</string>
 </resources>

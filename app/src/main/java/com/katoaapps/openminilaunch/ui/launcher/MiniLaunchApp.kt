@@ -5,12 +5,8 @@
 
 package com.katoaapps.openminilaunch.ui.launcher
 
-import android.Manifest
 import android.app.Activity
-import android.content.pm.PackageManager
 import androidx.activity.compose.BackHandler
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
@@ -32,18 +28,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
-import androidx.core.content.ContextCompat
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import com.katoaapps.openminilaunch.data.LauncherStore
-import com.katoaapps.openminilaunch.features.conversations.ConversationNotificationStore
-import com.katoaapps.openminilaunch.features.wellbeing.UsageInsightsRepository
 import com.katoaapps.openminilaunch.model.ContactAppRoute
 import com.katoaapps.openminilaunch.model.Screen
 import com.katoaapps.openminilaunch.platform.DeviceActions
-import com.katoaapps.openminilaunch.platform.isPermanentlyDenied
-import com.katoaapps.openminilaunch.platform.supportsDirectCalls
-import com.katoaapps.openminilaunch.platform.supportsDirectSms
 import com.katoaapps.openminilaunch.ui.conversations.ConversationCenterScreen
 import com.katoaapps.openminilaunch.ui.launcher.home.HomeEntranceTransition
 import com.katoaapps.openminilaunch.ui.launcher.layout.HOME_PAGE
@@ -52,9 +42,6 @@ import com.katoaapps.openminilaunch.ui.launcher.layout.WIDGET_PAGE
 import com.katoaapps.openminilaunch.ui.magic.rememberMagicBoxSessionState
 import com.katoaapps.openminilaunch.ui.onboarding.FeatureUpdateDialog
 import com.katoaapps.openminilaunch.ui.onboarding.OnboardingScreen
-import com.katoaapps.openminilaunch.ui.onboarding.ShortcutSetupDialog
-import com.katoaapps.openminilaunch.ui.onboarding.UsageAccessDisclosureDialog
-import com.katoaapps.openminilaunch.ui.settings.NotificationAccessDisclosureDialog
 import com.katoaapps.openminilaunch.ui.settings.SettingsDestination
 import com.katoaapps.openminilaunch.ui.settings.SettingsScreen
 import com.katoaapps.openminilaunch.ui.theme.FontAppearanceTheme
@@ -80,9 +67,6 @@ internal fun MiniLaunchApp(
     var showUpdateNotice by rememberSaveable {
         mutableStateOf(store.onboardingComplete && !store.hasSeenUpdate(FEATURE_UPDATE_ID))
     }
-    var showShortcutSetup by rememberSaveable { mutableStateOf(false) }
-    var showNotificationAccessPrompt by rememberSaveable { mutableStateOf(false) }
-    var showUsageAccessPrompt by rememberSaveable { mutableStateOf(false) }
     var tutorialRun by rememberSaveable { mutableIntStateOf(0) }
     val homeMagicBoxSessionState = rememberMagicBoxSessionState()
     var animateHomeEntrance by remember { mutableStateOf(false) }
@@ -102,81 +86,8 @@ internal fun MiniLaunchApp(
         }
     }
     val context = LocalContext.current
-    val usageInsightsRepository = remember(context) {
-        UsageInsightsRepository(context.applicationContext)
-    }
     val darkTheme = minkDarkTheme(store)
     val view = LocalView.current
-
-    val finishOnboardingSetup = {
-        if (store.hasConfirmedAllShortcutChoices()) requestHomeRole()
-        else showShortcutSetup = true
-    }
-    val finishSpecialAccessSetup = {
-        if (usageInsightsRepository.hasAccess()) finishOnboardingSetup()
-        else showUsageAccessPrompt = true
-    }
-    val finishPermissionSetup = {
-        if (ConversationNotificationStore.hasNotificationAccess(context)) finishSpecialAccessSetup()
-        else showNotificationAccessPrompt = true
-    }
-    val onboardingNotificationAccess = rememberLauncherForActivityResult(
-        ActivityResultContracts.StartActivityForResult(),
-    ) {
-        if (ConversationNotificationStore.hasNotificationAccess(context)) {
-            showNotificationAccessPrompt = false
-            ConversationNotificationStore.requestListenerReconnect(context)
-            finishSpecialAccessSetup()
-        }
-    }
-    val onboardingUsageAccess = rememberLauncherForActivityResult(
-        ActivityResultContracts.StartActivityForResult(),
-    ) {
-        finishOnboardingSetup()
-    }
-    val onboardingSmsPermission = rememberLauncherForActivityResult(
-        ActivityResultContracts.RequestPermission(),
-    ) { granted ->
-        if (!granted && isPermanentlyDenied(context, Manifest.permission.SEND_SMS)) {
-            actions.openAppSettings()
-        }
-        finishPermissionSetup()
-    }
-    val continueAfterCallPermission = {
-        val directSmsCanBeUsed = supportsDirectSms(context) &&
-            actions.isAssistantRoleHeld() &&
-            store.sendMessagesAutomatically &&
-            store.preferredMessagingPackage == null
-        if (directSmsCanBeUsed &&
-            ContextCompat.checkSelfPermission(context, Manifest.permission.SEND_SMS) != PackageManager.PERMISSION_GRANTED
-        ) {
-            onboardingSmsPermission.launch(Manifest.permission.SEND_SMS)
-        } else {
-            finishPermissionSetup()
-        }
-    }
-    val onboardingCallPermission = rememberLauncherForActivityResult(
-        ActivityResultContracts.RequestPermission(),
-    ) { granted ->
-        if (!granted && isPermanentlyDenied(context, Manifest.permission.CALL_PHONE)) {
-            actions.openAppSettings()
-        }
-        continueAfterCallPermission()
-    }
-    val onboardingPermission = rememberLauncherForActivityResult(
-        ActivityResultContracts.RequestPermission(),
-    ) { granted ->
-        if (!granted && isPermanentlyDenied(context, Manifest.permission.READ_CONTACTS)) {
-            actions.openAppSettings()
-            continueAfterCallPermission()
-        } else if (!supportsDirectCalls(context) ||
-            ContextCompat.checkSelfPermission(context, Manifest.permission.CALL_PHONE) == PackageManager.PERMISSION_GRANTED
-        ) {
-            continueAfterCallPermission()
-        } else {
-            onboardingCallPermission.launch(Manifest.permission.CALL_PHONE)
-        }
-    }
 
     val transparent = MinkTransparent
     val hideHomeStatusBar = store.hideStatusBar && screen == Screen.HOME && !showTutorial
@@ -219,28 +130,12 @@ internal fun MiniLaunchApp(
                     OnboardingScreen(
                         store = store,
                         actions = actions,
+                        requestHomeRole = requestHomeRole,
                         onFinish = {
                             store.completeOnboarding()
                             store.markUpdateSeen(FEATURE_UPDATE_ID)
                             showTutorial = false
-                            if (ContextCompat.checkSelfPermission(
-                                    context,
-                                    Manifest.permission.READ_CONTACTS,
-                                ) == PackageManager.PERMISSION_GRANTED
-                            ) {
-                                if (!supportsDirectCalls(context) ||
-                                    ContextCompat.checkSelfPermission(
-                                        context,
-                                        Manifest.permission.CALL_PHONE,
-                                    ) == PackageManager.PERMISSION_GRANTED
-                                ) {
-                                    continueAfterCallPermission()
-                                } else {
-                                    onboardingCallPermission.launch(Manifest.permission.CALL_PHONE)
-                                }
-                            } else {
-                                onboardingPermission.launch(Manifest.permission.READ_CONTACTS)
-                            }
+                            if (!actions.isHomeRoleHeld()) requestHomeRole()
                         },
                     )
                 }
@@ -263,7 +158,7 @@ internal fun MiniLaunchApp(
                                 homePageRequestToken = homePageRequestToken,
                                 keyboardInputEnabled =
                                     (twoPanelActive || launcherPagerState.currentPage == HOME_PAGE) &&
-                                        !showTutorial && !showUpdateNotice && !showShortcutSetup,
+                                        !showTutorial && !showUpdateNotice,
                                 homeRequestToken = homeRequestToken,
                                 magicBoxSessionState = homeMagicBoxSessionState,
                                 openSettings = { destination ->
@@ -327,40 +222,6 @@ internal fun MiniLaunchApp(
             }
         }
 
-        if (showShortcutSetup && !showTutorial && !showUpdateNotice) {
-            ShortcutSetupDialog(
-                store = store,
-                actions = actions,
-                onFinish = {
-                    showShortcutSetup = false
-                    requestHomeRole()
-                },
-            )
-        }
-        if (showNotificationAccessPrompt && !showTutorial && !showUpdateNotice) {
-            NotificationAccessDisclosureDialog(
-                onOpenAppInfo = actions::openAppSettings,
-                onOpenNotificationAccess = {
-                    onboardingNotificationAccess.launch(ConversationNotificationStore.notificationAccessSettingsIntent())
-                },
-                onDismiss = {
-                    showNotificationAccessPrompt = false
-                    finishSpecialAccessSetup()
-                },
-            )
-        }
-        if (showUsageAccessPrompt && !showTutorial && !showUpdateNotice) {
-            UsageAccessDisclosureDialog(
-                onContinue = {
-                    showUsageAccessPrompt = false
-                    onboardingUsageAccess.launch(usageInsightsRepository.accessSettingsIntent())
-                },
-                onDismiss = {
-                    showUsageAccessPrompt = false
-                    finishOnboardingSetup()
-                },
-            )
-        }
         if (showUpdateNotice && !showTutorial) {
             FeatureUpdateDialog(
                 onOpenMinkSpaceSettings = {

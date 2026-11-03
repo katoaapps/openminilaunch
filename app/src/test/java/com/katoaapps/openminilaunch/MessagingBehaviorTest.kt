@@ -62,10 +62,10 @@ class MessagingBehaviorTest {
         assertTrue(restoredAutomaticMessageSend(null, "DEFAULT_MESSENGER"))
     }
 
-    @Test fun legacyChooserAndFreshInstallsRemainManual() {
+    @Test fun legacyChooserModesRemainManualAndFreshInstallsAreAutomatic() {
         assertFalse(restoredAutomaticMessageSend(null, "SYSTEM_CHOOSER"))
         assertFalse(restoredAutomaticMessageSend(null, "ALWAYS_ASK"))
-        assertFalse(restoredAutomaticMessageSend(null, null))
+        assertTrue(restoredAutomaticMessageSend(null, null))
         assertFalse(restoredAutomaticMessageSend(null, "UNKNOWN"))
     }
 

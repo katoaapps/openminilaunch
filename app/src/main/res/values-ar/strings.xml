@@ -409,7 +409,7 @@
     <string name="assistant_active_description">مساعد Mink نشط. يمكن تمكين SMS المباشر أثناء إعداد الأذونات التالي.</string>
     <string name="assistant_inactive_description">يمكنك تخطي هذا، لكن SMS المباشر يظل غير متاح حتى يتم تنشيط مساعد Mink.</string>
     <string name="choose_message_behavior">اختر سلوك الرسالة</string>
-    <string name="integrated_messaging_app_onboarding">تطبيق المراسلة المتكامل</string>
+    <string name="integrated_messaging_app_onboarding">مكان فتح الرسائل</string>
     <string name="integrated_messaging_app_onboarding_description">رسائل النظام هي الافتراضية. يمكنك اختيار تطبيق مدعوم مثبت الآن أو تغييره لاحقًا في الإعدادات.</string>
     <string name="ai_app_selected">تطبيق الذكاء الاصطناعي: %1$s</string>
     <string name="choose_an_ai_app">اختر أحد تطبيقات الذكاء الاصطناعي</string>
@@ -594,6 +594,7 @@
     <string name="minutes_short">%1$dm</string>
     <string name="hours_short">%1$dh</string>
     <string name="permissions_description">الوصول اختياري ويمكن تغييره في أي وقت. تظل بيانات الجهاز محلية ما لم تقم بتسليمها بشكل صريح إلى تطبيق آخر.</string>
+    <string name="app_info_permissions_description">إدارة الأذونات والإشعارات ومساحة التخزين واستخدام البطارية وإعدادات Android الأخرى.</string>
     <string name="mink_day_usage">استخدام Mink’s Day</string>
     <string name="mink_day_usage_permission_description">يقرأ النشاط الأمامي للتطبيقات المحددة لـ Mink’s Day فقط لحساب الرؤى اليومية الخاصة على الجهاز.</string>
     <string name="conversations_permission_description">يعرض محادثات الرسائل والبريد الإلكتروني النشطة محليًا ويستخدم إجراءات الرد التي توفرها تطبيقاتهم.</string>
@@ -1049,4 +1050,12 @@
     <string name="calling_behavior_description">ينطبق هذا على المكالمات من Magic Box والمفضلة. يمكن للمفضلة استخدام هذا الإعداد أو تطبيق اتصال النظام أو تطبيقها الخاص.</string>
     <string name="open_call_draft">فتح مسودة المكالمة</string>
     <string name="use_calling_setting">استخدام إعداد المكالمات</string>
+    <string name="onboarding_home_setup_description">تم تصميم %1$s ليحل محل الشاشة الرئيسية الحالية.</string>
+    <string name="onboarding_home_setup_active">%1$s هو تطبيق الشاشة الرئيسية الافتراضي.</string>
+    <string name="onboarding_home_setup_inactive">اختر Mink Launcher عندما يعرض Android قائمة تطبيقات الشاشة الرئيسية.</string>
+    <string name="onboarding_contacts_title">أبقِ من يهمك قريبًا</string>
+    <string name="onboarding_messages_title">راسل بطريقتك</string>
+    <string name="onboarding_contacts_setup_description">تواصل مع الأصدقاء والعائلة والزملاء دون البحث بين التطبيقات. اكتب @ لإعداد رسالة أو # لبدء مكالمة.</string>
+    <string name="onboarding_messages_setup_description">اكتب @ واختر التطبيق الذي تستخدمه بالفعل. يجهز Mink الرسالة، ويمكن لكل شخص في المفضلة استخدام تطبيق مختلف لاحقًا.</string>
+    <string name="onboarding_messages_draft_note">تبدأ المراسلة التلقائية مفعّلة. تستخدم رسائل النظام SMS المباشر بعد أن يصبح وصول Android جاهزًا، بينما تفتح التطبيقات المتكاملة مسودة مجهزة.</string>
 </resources>

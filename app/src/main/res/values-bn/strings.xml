@@ -409,7 +409,7 @@
     <string name="assistant_active_description">Mink সহকারী সক্রিয় আছে। নিম্নলিখিত অনুমতি সেটআপের সময় সরাসরি SMS সক্ষম করা যেতে পারে৷</string>
     <string name="assistant_inactive_description">আপনি এটি এড়িয়ে যেতে পারেন, কিন্তু Mink সহকারী সক্রিয় না হওয়া পর্যন্ত সরাসরি SMS অনুপলব্ধ থাকে৷</string>
     <string name="choose_message_behavior">বার্তা আচরণ চয়ন করুন</string>
-    <string name="integrated_messaging_app_onboarding">ইন্টিগ্রেটেড মেসেজিং অ্যাপ</string>
+    <string name="integrated_messaging_app_onboarding">বার্তা কোথায় খুলবে</string>
     <string name="integrated_messaging_app_onboarding_description">সিস্টেম মেসেজ ডিফল্ট। আপনি এখন একটি ইনস্টল করা সমর্থিত অ্যাপ বেছে নিতে পারেন বা সেটিংসে পরে এটি পরিবর্তন করতে পারেন।</string>
     <string name="ai_app_selected">এআই অ্যাপ: %1$s</string>
     <string name="choose_an_ai_app">একটি AI অ্যাপ বেছে নিন</string>
@@ -586,6 +586,7 @@
     <string name="minutes_short">%1$dm</string>
     <string name="hours_short">%1$dh</string>
     <string name="permissions_description">অ্যাক্সেস ঐচ্ছিক এবং যেকোনো সময় পরিবর্তন করা যেতে পারে। ডিভাইসের ডেটা স্থানীয় থাকে যদি না আপনি এটিকে স্পষ্টভাবে অন্য অ্যাপে না দেন।</string>
+    <string name="app_info_permissions_description">অনুমতি, বিজ্ঞপ্তি, স্টোরেজ, ব্যাটারি ব্যবহার এবং অন্যান্য Android সেটিংস পরিচালনা করুন।</string>
     <string name="mink_day_usage">Mink’s Day ব্যবহার</string>
     <string name="mink_day_usage_permission_description">শুধুমাত্র ব্যক্তিগত, অন-ডিভাইস দৈনিক অন্তর্দৃষ্টি গণনা করতে Mink’s Day-এর জন্য নির্বাচিত অ্যাপগুলির জন্য অগ্রভাগের কার্যকলাপ পড়ে।</string>
     <string name="conversations_permission_description">স্থানীয়ভাবে সক্রিয় বার্তা এবং ইমেল কথোপকথন দেখায় এবং তাদের অ্যাপ্লিকেশন দ্বারা সরবরাহকৃত উত্তর ক্রিয়া ব্যবহার করে।</string>
@@ -1009,4 +1010,12 @@
     <string name="calling_behavior_description">এটি Magic Box এবং Favorites থেকে করা কলে প্রযোজ্য। কোনো Favorite এই সেটিং, সিস্টেম কলিং অ্যাপ বা নিজস্ব অ্যাপ ব্যবহার করতে পারে।</string>
     <string name="open_call_draft">কল ড্রাফট খুলুন</string>
     <string name="use_calling_setting">কলিং সেটিং ব্যবহার করুন</string>
+    <string name="onboarding_home_setup_description">%1$s আপনার বর্তমান হোম স্ক্রিনের জায়গা নেওয়ার জন্য তৈরি।</string>
+    <string name="onboarding_home_setup_active">%1$s আপনার ডিফল্ট হোম অ্যাপ।</string>
+    <string name="onboarding_home_setup_inactive">Android হোম অ্যাপের তালিকা দেখালে Mink Launcher বেছে নিন।</string>
+    <string name="onboarding_contacts_title">আপনজনদের কাছে রাখুন</string>
+    <string name="onboarding_messages_title">নিজের মতো বার্তা পাঠান</string>
+    <string name="onboarding_contacts_setup_description">অ্যাপ খুঁজে না বেড়িয়ে বন্ধু, পরিবার ও সহকর্মীদের কাছে পৌঁছান। বার্তা প্রস্তুত করতে @ বা কল শুরু করতে # টাইপ করুন।</string>
+    <string name="onboarding_messages_setup_description">@ টাইপ করে আপনার পরিচিত অ্যাপটি বেছে নিন। Mink বার্তা প্রস্তুত করবে এবং পরে প্রতিটি ফেভারিটের জন্য আলাদা অ্যাপ বেছে নেওয়া যাবে।</string>
+    <string name="onboarding_messages_draft_note">অটোমেটিক মেসেজিং শুরু থেকেই চালু থাকে। Android অ্যাক্সেস প্রস্তুত হলে সিস্টেম মেসেজ সরাসরি SMS পাঠায়; ইন্টিগ্রেটেড অ্যাপ প্রস্তুত খসড়া খোলে।</string>
 </resources>

@@ -409,7 +409,7 @@
     <string name="assistant_active_description">Mink 助手已激活。直接 SMS 可以在随后的权限设置过程中启用。</string>
     <string name="assistant_inactive_description">您可以跳过此步骤，但在 Mink 助手激活之前，直接 SMS 保持不可用。</string>
     <string name="choose_message_behavior">选择消息行为</string>
-    <string name="integrated_messaging_app_onboarding">集成消息应用程序</string>
+    <string name="integrated_messaging_app_onboarding">消息打开位置</string>
     <string name="integrated_messaging_app_onboarding_description">系统消息是默认的。您可以立即选择已安装的支持的应用程序，也可以稍后在“设置”中进行更改。</string>
     <string name="ai_app_selected">人工智能应用程序：%1$s</string>
     <string name="choose_an_ai_app">选择人工智能应用程序</string>
@@ -586,6 +586,7 @@
     <string name="minutes_short">%1$dm</string>
     <string name="hours_short">%1$dh</string>
     <string name="permissions_description">访问权限是可选的，并且可以随时更改。设备数据保留在本地，除非您明确将其交给另一个应用程序。</string>
+    <string name="app_info_permissions_description">管理权限、通知、存储空间、电池使用情况和其他 Android 设置。</string>
     <string name="mink_day_usage">Mink’s Day用途</string>
     <string name="mink_day_usage_permission_description">读取为 Mink’s Day 选择的应用程序的前台活动，仅用于计算设备上的私人每日见解。</string>
     <string name="conversations_permission_description">在本地显示活动消息和电子邮件对话，并使用其应用程序提供的回复操作。</string>
@@ -1009,4 +1010,12 @@
     <string name="calling_behavior_description">此设置适用于 Magic Box 和收藏联系人发起的通话。收藏联系人可以使用此设置、系统通话应用或单独指定的应用。</string>
     <string name="open_call_draft">打开拨号草稿</string>
     <string name="use_calling_setting">使用通话设置</string>
+    <string name="onboarding_home_setup_description">%1$s 旨在替代您当前的主屏幕。</string>
+    <string name="onboarding_home_setup_active">%1$s 是您的默认主屏幕应用。</string>
+    <string name="onboarding_home_setup_inactive">当 Android 显示主屏幕应用列表时，请选择 Mink Launcher。</string>
+    <string name="onboarding_contacts_title">让重要的人触手可及</string>
+    <string name="onboarding_messages_title">按你的方式发消息</string>
+    <string name="onboarding_contacts_setup_description">无需在应用之间寻找，即可联系朋友、家人和同事。输入 @ 准备消息，或输入 # 发起通话。</string>
+    <string name="onboarding_messages_setup_description">输入 @ 并选择你常用的应用。Mink 会准备消息，稍后也可为每位收藏联系人选择不同的应用。</string>
+    <string name="onboarding_messages_draft_note">自动消息默认开启。Android 访问权限就绪后，系统消息会直接发送运营商短信；集成应用会打开准备好的草稿。</string>
 </resources>

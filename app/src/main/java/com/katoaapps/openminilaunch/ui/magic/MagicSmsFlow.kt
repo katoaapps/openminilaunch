@@ -123,7 +123,7 @@ internal fun rememberMagicSmsFlow(
             completeSmsAttempt(draft)
         } else {
             if (!granted && isPermanentlyDenied(context, Manifest.permission.SEND_SMS)) {
-                actions.openAppSettings()
+                actions.openAppPermissionSettings()
             }
             currentOnSessionComplete()
         }

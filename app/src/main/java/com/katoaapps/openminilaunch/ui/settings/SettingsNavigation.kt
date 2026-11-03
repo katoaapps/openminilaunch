@@ -154,6 +154,7 @@ internal data class SettingsPermissionActions(
     val manageAppBubbleNotifications: () -> Unit,
     val manageAppBubbles: () -> Unit,
     val manageAppPermissions: () -> Unit,
+    val openAppInfo: () -> Unit,
     val requestLockService: () -> Unit,
     val manageLockService: () -> Unit,
     val showAssistantSetup: () -> Unit,

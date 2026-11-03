@@ -409,7 +409,7 @@
     <string name="assistant_active_description">Mink Asisten aktif. SMS langsung dapat diaktifkan selama pengaturan izin berikutnya.</string>
     <string name="assistant_inactive_description">Anda dapat melewati ini, namun SMS langsung tetap tidak tersedia hingga Asisten Mink aktif.</string>
     <string name="choose_message_behavior">Pilih perilaku pesan</string>
-    <string name="integrated_messaging_app_onboarding">Aplikasi perpesanan terintegrasi</string>
+    <string name="integrated_messaging_app_onboarding">Tempat pesan dibuka</string>
     <string name="integrated_messaging_app_onboarding_description">Pesan Sistem adalah default. Anda dapat memilih aplikasi terinstal yang didukung sekarang atau mengubahnya nanti di Pengaturan.</string>
     <string name="ai_app_selected">Aplikasi AI: %1$s</string>
     <string name="choose_an_ai_app">Pilih aplikasi AI</string>
@@ -586,6 +586,7 @@
     <string name="minutes_short">%1$dm</string>
     <string name="hours_short">%1$dh</string>
     <string name="permissions_description">Akses bersifat opsional dan dapat diubah kapan saja. Data perangkat tetap bersifat lokal kecuali Anda secara eksplisit menyerahkannya ke aplikasi lain.</string>
+    <string name="app_info_permissions_description">Kelola izin, notifikasi, penyimpanan, penggunaan baterai, dan setelan Android lainnya.</string>
     <string name="mink_day_usage">Penggunaan Mink’s Day</string>
     <string name="mink_day_usage_permission_description">Membaca aktivitas latar depan untuk aplikasi yang dipilih untuk Mink’s Day hanya untuk menghitung wawasan harian pribadi di perangkat.</string>
     <string name="conversations_permission_description">Menampilkan percakapan pesan dan email aktif secara lokal dan menggunakan tindakan balasan yang disediakan oleh aplikasinya.</string>
@@ -1009,4 +1010,12 @@
     <string name="calling_behavior_description">Ini berlaku untuk panggilan dari Magic Box dan Favorit. Favorit dapat memakai setelan ini, aplikasi panggilan sistem, atau aplikasinya sendiri.</string>
     <string name="open_call_draft">Buka draf panggilan</string>
     <string name="use_calling_setting">Gunakan setelan panggilan</string>
+    <string name="onboarding_home_setup_description">%1$s dibuat untuk menggantikan layar Utama Anda saat ini.</string>
+    <string name="onboarding_home_setup_active">%1$s adalah aplikasi Utama default Anda.</string>
+    <string name="onboarding_home_setup_inactive">Pilih Mink Launcher saat Android menampilkan daftar aplikasi Utama.</string>
+    <string name="onboarding_contacts_title">Dekatkan orang-orang penting</string>
+    <string name="onboarding_messages_title">Berkirim pesan dengan caramu</string>
+    <string name="onboarding_contacts_setup_description">Hubungi teman, keluarga, dan kolega tanpa mencari-cari di berbagai aplikasi. Ketik @ untuk menyiapkan pesan atau # untuk memulai panggilan.</string>
+    <string name="onboarding_messages_setup_description">Ketik @ dan pilih aplikasi yang sudah Anda gunakan. Mink menyiapkan pesan, dan setiap Favorit dapat memakai aplikasi lain nanti.</string>
+    <string name="onboarding_messages_draft_note">Pesan otomatis aktif sejak awal. Pesan Sistem memakai SMS langsung setelah akses Android siap; aplikasi terintegrasi membuka draf yang telah disiapkan.</string>
 </resources>

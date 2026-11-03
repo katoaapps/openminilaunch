@@ -422,7 +422,7 @@
     <string name="assistant_active_description">Mink Assistant is active. Direct SMS can be enabled during the permission setup that follows.</string>
     <string name="assistant_inactive_description">You can skip this, but direct SMS stays unavailable until Mink Assistant is active.</string>
     <string name="choose_message_behavior">Choose message behavior</string>
-    <string name="integrated_messaging_app_onboarding">Integrated messaging app</string>
+    <string name="integrated_messaging_app_onboarding">Where messages open</string>
     <string name="integrated_messaging_app_onboarding_description">System Messages is the default. You can choose an installed supported app now or change it later in Settings.</string>
     <string name="ai_app_selected">AI app: %1$s</string>
     <string name="choose_an_ai_app">Choose an AI app</string>
@@ -639,6 +639,7 @@
     <string name="minutes_short">%1$dm</string>
     <string name="hours_short">%1$dh</string>
     <string name="permissions_description">Access is optional and can be changed at any time. Device data stays local unless you explicitly hand it to another app.</string>
+    <string name="app_info_permissions_description">Manage permissions, notifications, storage, battery use, and other Android settings.</string>
     <string name="mink_day_usage">Mink’s Day usage</string>
     <string name="mink_day_usage_permission_description">Reads foreground activity for the apps selected for Mink’s Day only to calculate private, on-device daily insights.</string>
     <string name="conversations_permission_description">Shows active message and email conversations locally and uses reply actions supplied by their apps.</string>
@@ -1118,4 +1119,12 @@
     <string name="open_conversation">Open conversation</string>
     <string name="remove_from_favorites">Remove from favorites</string>
     <string name="loading_favorite_contacts">Loading favorite contacts…</string>
+    <string name="onboarding_home_setup_description">%1$s is built to replace your current Home screen.</string>
+    <string name="onboarding_home_setup_active">%1$s is your default Home app.</string>
+    <string name="onboarding_home_setup_inactive">Choose Mink Launcher when Android shows the Home app list.</string>
+    <string name="onboarding_contacts_title">Keep your people close</string>
+    <string name="onboarding_messages_title">Message your way</string>
+    <string name="onboarding_contacts_setup_description">Reach friends, family, and colleagues without hunting through apps. Type @ to prepare a message or # to start a call.</string>
+    <string name="onboarding_messages_setup_description">Type @ and choose the app you already use. Mink prepares the message, and individual Favorites can use a different app later.</string>
+    <string name="onboarding_messages_draft_note">Automatic messaging starts on. System Messages uses direct carrier SMS once Android access is ready; integrated apps open a prepared draft.</string>
 </resources>

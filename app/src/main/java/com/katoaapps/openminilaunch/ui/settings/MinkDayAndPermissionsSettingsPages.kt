@@ -15,6 +15,7 @@ import androidx.compose.material.icons.filled.Apps
 import androidx.compose.material.icons.filled.BubbleChart
 import androidx.compose.material.icons.filled.Contacts
 import androidx.compose.material.icons.filled.Forum
+import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.Pets
 import androidx.compose.material.icons.filled.Phone
@@ -170,5 +171,11 @@ internal fun PermissionsSettingsPage(
                 enabled = false,
             ) { }
         }
+        SettingsRow(
+            stringResource(R.string.app_info),
+            stringResource(R.string.app_info_permissions_description),
+            Icons.Default.Info,
+            onClick = actions.openAppInfo,
+        )
     }
 }

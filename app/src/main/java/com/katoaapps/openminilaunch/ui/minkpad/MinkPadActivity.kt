@@ -3,20 +3,18 @@ package com.katoaapps.openminilaunch.ui.minkpad
 import android.Manifest
 import android.bluetooth.BluetoothAdapter
 import android.content.Intent
-import android.net.Uri
+import android.content.pm.PackageManager
 import android.os.Build
 import android.os.Bundle
-import android.provider.Settings
 import android.view.KeyEvent
-import android.content.pm.PackageManager
 import androidx.core.content.ContextCompat
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
 import com.katoaapps.openminilaunch.data.LauncherStore
-import com.katoaapps.minkpad.core.MinkPadRepository
 import com.katoaapps.openminilaunch.features.minkpad.minkPadRepository
+import com.katoaapps.openminilaunch.platform.PermissionSettingsNavigator
 import com.katoaapps.minkpad.core.MinkPadStatus
 import com.katoaapps.minkpad.core.input.MinkPadHardwareInput
 import com.katoaapps.openminilaunch.ui.theme.MinkLauncherTheme
@@ -24,15 +22,25 @@ import com.katoaapps.openminilaunch.ui.theme.MinkLauncherTheme
 class MinkPadActivity : ComponentActivity() {
     private val repository by lazy { minkPadRepository(this) }
     private val hardware by lazy { MinkPadHardwareInput(repository) }
+    private val permissionSettings by lazy { PermissionSettingsNavigator(this) }
     private var captureHardwareInput = false
     private val permissionRequest = registerForActivityResult(ActivityResultContracts.RequestMultiplePermissions()) { grants ->
         if (repository.permissionsGranted()) startSession()
         else if (Build.VERSION.SDK_INT >= 31 && grants.any { (permission, granted) -> !granted && !shouldShowRequestPermissionRationale(permission) }) {
-            startActivity(Intent(Settings.ACTION_APPLICATION_DETAILS_SETTINGS, Uri.parse("package:$packageName")))
+            permissionSettings.openAppPermissions()
         }
     }
     private val nearbyDiscoveryPermission = registerForActivityResult(ActivityResultContracts.RequestPermission()) { granted ->
-        if (granted) repository.startNearbyDiscovery() else repository.nearbyDiscoveryPermissionDenied()
+        if (granted) {
+            repository.startNearbyDiscovery()
+        } else {
+            repository.nearbyDiscoveryPermissionDenied()
+            if (Build.VERSION.SDK_INT >= 31 &&
+                !shouldShowRequestPermissionRationale(Manifest.permission.BLUETOOTH_SCAN)
+            ) {
+                permissionSettings.openAppPermissions()
+            }
+        }
     }
     private val notificationRequest = registerForActivityResult(ActivityResultContracts.RequestPermission()) { repository.start() }
     private val enableBluetooth = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) {

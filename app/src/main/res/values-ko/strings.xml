@@ -409,7 +409,7 @@
     <string name="assistant_active_description">Mink 도우미가 활성 상태입니다. Direct SMS는 다음 권한 설정 중에 활성화할 수 있습니다.</string>
     <string name="assistant_inactive_description">이를 건너뛸 수 있지만 Mink Assistant가 활성화될 때까지 직접 SMS를 사용할 수 없습니다.</string>
     <string name="choose_message_behavior">메시지 동작 선택</string>
-    <string name="integrated_messaging_app_onboarding">통합 메시징 앱</string>
+    <string name="integrated_messaging_app_onboarding">메시지가 열리는 곳</string>
     <string name="integrated_messaging_app_onboarding_description">시스템 메시지가 기본값입니다. 지금 설치된 지원 앱을 선택하거나 나중에 설정에서 변경할 수 있습니다.</string>
     <string name="ai_app_selected">AI 앱: %1$s</string>
     <string name="choose_an_ai_app">AI 앱을 선택하세요</string>
@@ -586,6 +586,7 @@
     <string name="minutes_short">%1$dm</string>
     <string name="hours_short">%1$dh</string>
     <string name="permissions_description">액세스 권한은 선택 사항이며 언제든지 변경될 수 있습니다. 기기 데이터는 명시적으로 다른 앱에 전달하지 않는 한 로컬로 유지됩니다.</string>
+    <string name="app_info_permissions_description">권한, 알림, 저장공간, 배터리 사용량 및 기타 Android 설정을 관리합니다.</string>
     <string name="mink_day_usage">Mink’s Day 사용법</string>
     <string name="mink_day_usage_permission_description">Mink’s Day용으로 선택된 앱의 포그라운드 활동을 읽어 기기 내 일일 인사이트를 계산합니다.</string>
     <string name="conversations_permission_description">활성 메시지 및 이메일 대화를 로컬로 표시하고 앱에서 제공하는 응답 작업을 사용합니다.</string>
@@ -1009,4 +1010,12 @@
     <string name="calling_behavior_description">Magic Box와 즐겨찾기에서 시작한 통화에 적용됩니다. 즐겨찾기는 이 설정, 시스템 통화 앱 또는 개별 앱을 사용할 수 있습니다.</string>
     <string name="open_call_draft">통화 초안 열기</string>
     <string name="use_calling_setting">통화 설정 사용</string>
+    <string name="onboarding_home_setup_description">%1$s은(는) 현재 홈 화면을 대체하도록 만들어졌습니다.</string>
+    <string name="onboarding_home_setup_active">%1$s이(가) 기본 홈 앱입니다.</string>
+    <string name="onboarding_home_setup_inactive">Android에 홈 앱 목록이 표시되면 Mink Launcher를 선택하세요.</string>
+    <string name="onboarding_contacts_title">소중한 사람을 가까이</string>
+    <string name="onboarding_messages_title">원하는 방식으로 메시지 보내기</string>
+    <string name="onboarding_contacts_setup_description">앱을 찾아다니지 않고 친구, 가족, 동료에게 연락하세요. @를 입력해 메시지를 준비하거나 #로 통화를 시작할 수 있습니다.</string>
+    <string name="onboarding_messages_setup_description">@를 입력하고 평소 사용하는 앱을 선택하세요. Mink가 메시지를 준비하며, 나중에 즐겨찾기마다 다른 앱을 사용할 수 있습니다.</string>
+    <string name="onboarding_messages_draft_note">자동 메시지는 처음부터 켜져 있습니다. Android 접근 권한이 준비되면 시스템 메시지는 SMS를 바로 보내고, 연동 앱은 준비된 초안을 엽니다.</string>
 </resources>

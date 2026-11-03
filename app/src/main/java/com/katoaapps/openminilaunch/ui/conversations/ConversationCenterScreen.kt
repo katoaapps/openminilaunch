@@ -126,7 +126,7 @@ internal fun ConversationCenterScreen(
 
     if (showAccessDisclosure) {
         NotificationAccessDisclosureDialog(
-            onOpenAppInfo = actions::openAppSettings,
+            onOpenAppInfo = actions::openAppInfo,
             onOpenNotificationAccess = {
                 showAccessDisclosure = false
                 actions.openNotificationAccessSettings()

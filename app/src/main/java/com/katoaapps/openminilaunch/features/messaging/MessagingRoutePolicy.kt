@@ -67,6 +67,7 @@ internal fun resolvedMessageSendRoute(
 internal fun restoredAutomaticMessageSend(saved: Boolean?, legacyMode: String?): Boolean =
     saved ?: when (legacyMode) {
         "DIRECT_SMS", "PREFERRED_APP", "DEFAULT_MESSENGER", "MESSAGING_APP" -> true
+        null -> true
         else -> false
     }
 
