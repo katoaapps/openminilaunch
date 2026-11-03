@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
     <string name="appearance_wallpaper_title">Wallpaper &amp; background</string>
-    <string name="appearance_wallpaper_summary">Light mode, background, pill color, photos, and wallpapers</string>
+    <string name="appearance_wallpaper_summary">Complete themes, custom wallpaper, pill transparency, and light mode</string>
     <string name="appearance_icons_fonts_title">Icons and fonts</string>
     <string name="appearance_icons_fonts_summary">Icon style, font, text size, and launcher colors</string>
     <string name="fonts">FONTS</string>
@@ -43,4 +43,9 @@
     <string name="wallpaper_library_description">Choose a Mink wallpaper. Your photo stays saved.</string>
     <string name="wallpaper_number">Wallpaper %1$d</string>
     <string name="mink_wallpaper">Mink wallpaper</string>
+    <string name="home_themes">Home themes</string>
+    <string name="home_themes_description">Wallpaper, background, and pill change together.</string>
+    <string name="theme_number">Theme %1$d</string>
+    <string name="custom_theme">Custom theme</string>
+    <string name="custom_theme_description">Choose your wallpaper, background, and pill color.</string>
 </resources>

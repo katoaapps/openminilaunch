@@ -14,4 +14,9 @@
     <string name="palette_mink">Mink</string>
     <string name="palette_system">System</string>
     <string name="palette_system_unavailable">System colors require Android 12 or newer.</string>
+    <string name="home_themes">होम थीम</string>
+    <string name="home_themes_description">वॉलपेपर, बैकग्राउंड और पैनल एक साथ बदलते हैं।</string>
+    <string name="theme_number">थीम %1$d</string>
+    <string name="custom_theme">कस्टम थीम</string>
+    <string name="custom_theme_description">अपना वॉलपेपर, बैकग्राउंड और पैनल का रंग चुनें।</string>
 </resources>

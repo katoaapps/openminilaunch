@@ -189,19 +189,26 @@ internal class AppearancePreferenceStore(
     }
 
     fun setAppBackgroundColor(argb: Int?) {
-        appBackgroundColorArgb = argb?.or(0xFF000000.toInt())
+        updateAppBackgroundColor(argb)
         appBackgroundImageEnabled = false
         appBackgroundPresetId = null
         appBackgroundPresetAppearance = null
         useSystemHomeWallpaper = false
         prefs.edit().apply {
-            appBackgroundColorArgb?.let { putInt(APP_BACKGROUND_COLOR_KEY, it) }
-                ?: remove(APP_BACKGROUND_COLOR_KEY)
             putBoolean(APP_BACKGROUND_IMAGE_ENABLED_KEY, false)
             remove(APP_BACKGROUND_PRESET_ID_KEY)
             remove(APP_BACKGROUND_PRESET_AVERAGE_COLOR_KEY)
             remove(APP_BACKGROUND_PRESET_HEADER_COLOR_KEY)
             putBoolean(USE_SYSTEM_HOME_WALLPAPER_KEY, false)
+        }.apply()
+    }
+
+    /** Updates the custom-theme base color without replacing its saved wallpaper. */
+    fun updateAppBackgroundColor(argb: Int?) {
+        appBackgroundColorArgb = argb?.or(0xFF000000.toInt())
+        prefs.edit().apply {
+            appBackgroundColorArgb?.let { putInt(APP_BACKGROUND_COLOR_KEY, it) }
+                ?: remove(APP_BACKGROUND_COLOR_KEY)
         }.apply()
     }
 

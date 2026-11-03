@@ -14,4 +14,9 @@
     <string name="palette_mink">Mink</string>
     <string name="palette_system">System</string>
     <string name="palette_system_unavailable">System colors require Android 12 or newer.</string>
+    <string name="home_themes">主畫面主題</string>
+    <string name="home_themes_description">壁紙、背景同面板會一齊改變。</string>
+    <string name="theme_number">主題 %1$d</string>
+    <string name="custom_theme">自訂主題</string>
+    <string name="custom_theme_description">揀你嘅壁紙、背景同面板顏色。</string>
 </resources>

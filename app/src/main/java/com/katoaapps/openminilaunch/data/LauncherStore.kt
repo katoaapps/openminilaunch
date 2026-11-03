@@ -1,5 +1,7 @@
 package com.katoaapps.openminilaunch.data
 
+import com.katoaapps.openminilaunch.R
+import com.katoaapps.openminilaunch.features.appearance.BundledHomeThemeCatalog
 import com.katoaapps.openminilaunch.features.appearance.BundledWallpaperCatalog
 import com.katoaapps.openminilaunch.features.appearance.CustomFontRepository
 import com.katoaapps.openminilaunch.features.appearance.HomeWallpaperRepository
@@ -12,6 +14,7 @@ import com.katoaapps.openminilaunch.features.minkspace.MinkSpaceMiniApp
 import com.katoaapps.openminilaunch.model.*
 
 import android.content.Context
+import androidx.core.content.ContextCompat
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.setValue
@@ -92,9 +95,10 @@ class LauncherStore private constructor(context: Context) {
             homeWallpaperRepository.hasWallpaper()
     val hasSavedAppBackgroundImage: Boolean
         get() = !demoPreferences.enabled && homeWallpaperRepository.hasWallpaper()
-    internal val appBackgroundPreset
+    internal val bundledHomeTheme
         get() = if (demoPreferences.enabled) null
-        else BundledWallpaperCatalog.find(appearancePreferences.appBackgroundPresetId)
+        else BundledHomeThemeCatalog.find(appearancePreferences.appBackgroundPresetId)
+    internal val appBackgroundPreset get() = bundledHomeTheme?.wallpaper
     val appBackgroundImageRevision get() = appearancePreferences.appBackgroundImageRevision
     val useSystemHomeWallpaper: Boolean
         get() = !demoPreferences.enabled && appearancePreferences.useSystemHomeWallpaper
@@ -123,11 +127,15 @@ class LauncherStore private constructor(context: Context) {
     internal val enabledMinkSpaceMiniApps get() = minkSpacePreferences.enabledMiniApps
     internal val minkSpaceWidgetId get() = minkSpaceWidgetStore.appWidgetId
     val effectiveHomePanelColorArgb: Int
-        get() = demoPreferences.effectivePanelColor(homePanelColorArgb)
+        get() = demoPreferences.effectivePanelColor(
+            bundledHomeTheme?.panelColorArgb ?: homePanelColorArgb,
+        )
     val watermelonModeEnabled: Boolean
         get() = appearancePreferences.watermelonModeEnabled
     val effectiveAppBackgroundColorArgb: Int?
-        get() = demoPreferences.effectiveBackgroundColor(appBackgroundColorArgb)
+        get() = demoPreferences.effectiveBackgroundColor(
+            bundledHomeTheme?.backgroundColorArgb ?: appBackgroundColorArgb,
+        )
     val visibleAppBackgroundColorArgb: Int?
         get() = if (appBackgroundImageEnabled) {
             appearancePreferences.appBackgroundImageAppearance?.averageColorArgb
@@ -432,8 +440,17 @@ class LauncherStore private constructor(context: Context) {
         appearancePreferences.setAppBackgroundColor(opaqueArgb)
     }
 
+    fun setCustomThemeBackgroundColor(argb: Int) {
+        appearancePreferences.updateAppBackgroundColor(argb or 0xFF000000.toInt())
+    }
+
     internal fun useAppBackgroundImage(appearance: HomeWallpaperAppearance) {
         if (homeWallpaperRepository.hasWallpaper()) {
+            if (appearancePreferences.appBackgroundColorArgb == null) {
+                appearancePreferences.updateAppBackgroundColor(
+                    ContextCompat.getColor(appContext, R.color.mink_forest),
+                )
+            }
             appearancePreferences.useAppBackgroundImage(appearance)
         }
     }

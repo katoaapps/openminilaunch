@@ -14,4 +14,9 @@
     <string name="palette_mink">Mink</string>
     <string name="palette_system">System</string>
     <string name="palette_system_unavailable">System colors require Android 12 or newer.</string>
+    <string name="home_themes">Temas de inicio</string>
+    <string name="home_themes_description">El fondo de pantalla, el fondo y el panel cambian juntos.</string>
+    <string name="theme_number">Tema %1$d</string>
+    <string name="custom_theme">Tema personalizado</string>
+    <string name="custom_theme_description">Elige el fondo de pantalla, el fondo y el color del panel.</string>
 </resources>

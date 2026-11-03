@@ -1,9 +1,12 @@
 package com.katoaapps.openminilaunch.features.appearance
 
+import android.annotation.SuppressLint
 import android.app.WallpaperManager
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
+import android.graphics.Canvas
+import android.graphics.drawable.BitmapDrawable
 import android.os.Build
 import android.os.Handler
 import android.os.Looper
@@ -11,6 +14,7 @@ import androidx.annotation.DrawableRes
 import androidx.compose.runtime.mutableStateOf
 import com.katoaapps.openminilaunch.model.HomeWallpaperAppearance
 import java.io.File
+import kotlin.math.roundToInt
 
 internal class HomeWallpaperRepository(context: Context) {
     private val appContext = context.applicationContext
@@ -51,6 +55,36 @@ internal class HomeWallpaperRepository(context: Context) {
         decodeSampled(maximumSide) { options ->
             BitmapFactory.decodeResource(appContext.resources, drawableRes, options)
         }
+
+    /**
+     * Android may withhold the raw system wallpaper from third-party apps. Return a private,
+     * recyclable thumbnail when access is available and let the caller use wallpaper colors
+     * as its permission-free fallback.
+     */
+    @SuppressLint("MissingPermission")
+    @Suppress("DEPRECATION")
+    fun loadSystemWallpaperThumbnail(maximumSide: Int): Bitmap? = runCatching {
+        val drawable = wallpaperManager.drawable ?: return@runCatching null
+        val source = (drawable as? BitmapDrawable)?.bitmap
+        if (source != null && source.width > 0 && source.height > 0) {
+            val scale = (maximumSide.toFloat() / maxOf(source.width, source.height)).coerceAtMost(1f)
+            val width = (source.width * scale).roundToInt().coerceAtLeast(1)
+            val height = (source.height * scale).roundToInt().coerceAtLeast(1)
+            Bitmap.createScaledBitmap(source, width, height, true)
+                .takeUnless { it === source }
+                ?: source.copy(Bitmap.Config.ARGB_8888, false)
+        } else {
+            val sourceWidth = drawable.intrinsicWidth.takeIf { it > 0 } ?: maximumSide
+            val sourceHeight = drawable.intrinsicHeight.takeIf { it > 0 } ?: maximumSide
+            val scale = (maximumSide.toFloat() / maxOf(sourceWidth, sourceHeight)).coerceAtMost(1f)
+            val width = (sourceWidth * scale).roundToInt().coerceAtLeast(1)
+            val height = (sourceHeight * scale).roundToInt().coerceAtLeast(1)
+            Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888).also { bitmap ->
+                drawable.setBounds(0, 0, width, height)
+                drawable.draw(Canvas(bitmap))
+            }
+        }
+    }.getOrNull()
 
     private fun decodeSampled(
         maximumSide: Int,

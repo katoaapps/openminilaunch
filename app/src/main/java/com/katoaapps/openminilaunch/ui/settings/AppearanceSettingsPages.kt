@@ -16,9 +16,11 @@ import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.core.content.ContextCompat
 import com.katoaapps.openminilaunch.R
 import com.katoaapps.openminilaunch.data.LauncherStore
 import com.katoaapps.openminilaunch.features.appearance.HomeWallpaperRepository
+import com.katoaapps.openminilaunch.features.appearance.WATERMELON_HOTPHRASE
 import com.katoaapps.openminilaunch.ui.components.SectionLabel
 import com.katoaapps.openminilaunch.ui.components.SettingsRow
 import com.katoaapps.openminilaunch.ui.components.SettingsSwitchRow
@@ -68,35 +70,20 @@ internal fun WallpaperAndBackgroundSettingsPage(
     }
 
     SettingsPage(stringResource(R.string.appearance_wallpaper_title), goBack) {
-        val activeWallpaperLabel = when {
-            store.appBackgroundImageEnabled -> stringResource(R.string.your_photo)
-            store.appBackgroundPreset != null -> stringResource(R.string.mink_wallpaper)
-            else -> null
-        }
-        PaletteChooser(store.palettePreference, store::setPalette)
-        ThemeChooser(store.themePreference, store::setTheme)
-        HomePanelColorSetting(
-            selectedArgb = store.effectiveHomePanelColorArgb,
-            transparency = store.homePanelTransparency,
-            onColorSelected = store::setHomePanelColor,
-            onWatermelonSelected = store::activateWatermelonMode,
-            onTransparencyChanged = store::setHomePanelTransparency,
-        )
-        AppBackgroundSetting(
-            selectedArgb = store.effectiveAppBackgroundColorArgb,
-            activeWallpaperLabel = activeWallpaperLabel,
-            onColorSelected = store::setAppBackgroundColor,
-            onUseThemeDefault = { store.setAppBackgroundColor(null) },
-        )
-        WallpaperLibrarySetting(
-            selectedPresetId = store.appBackgroundPreset?.id,
-            customPhotoSelected = store.appBackgroundImageEnabled,
+        val customBackgroundArgb = store.appBackgroundColorArgb
+            ?: ContextCompat.getColor(context, R.color.mink_forest)
+        HomeThemeSetting(
+            selectedThemeId = store.bundledHomeTheme?.id,
+            customThemeSelected = store.bundledHomeTheme == null,
             savedPhotoAvailable = store.hasSavedAppBackgroundImage,
             imageRevision = store.appBackgroundImageRevision,
             applyingSelectionId = applyingWallpaperId,
+            customBackgroundArgb = customBackgroundArgb,
+            customPanelArgb = store.homePanelColorArgb,
+            panelTransparency = store.homePanelTransparency,
             onChoosePhoto = { imagePicker.launch(arrayOf("image/*")) },
             onUseSavedPhoto = {
-                applyingWallpaperId = CUSTOM_PHOTO_SELECTION_ID
+                applyingWallpaperId = CUSTOM_THEME_SELECTION_ID
                 scope.launch {
                     val appearanceResult = withContext(Dispatchers.IO) {
                         runCatching {
@@ -124,19 +111,19 @@ internal fun WallpaperAndBackgroundSettingsPage(
                     }
                 }
             },
-            onSelectPreset = { wallpaper ->
-                applyingWallpaperId = wallpaper.id
+            onSelectTheme = { theme ->
+                applyingWallpaperId = theme.id
                 scope.launch {
                     val appearanceResult = withContext(Dispatchers.IO) {
-                        wallpaperRepository.readBundledAppearance(wallpaper.drawableRes)
+                        wallpaperRepository.readBundledAppearance(theme.wallpaper.drawableRes)
                     }
                     val result = appearanceResult.fold(
                         onSuccess = { appearance ->
                             // Save the source before WallpaperManager can trigger an Activity
                             // recreation through dynamic color updates on some devices.
-                            store.useAppBackgroundPreset(wallpaper.id, appearance)
+                            store.useAppBackgroundPreset(theme.id, appearance)
                             withContext(Dispatchers.IO) {
-                                wallpaperRepository.applyBundledToSystem(wallpaper.drawableRes)
+                                wallpaperRepository.applyBundledToSystem(theme.wallpaper.drawableRes)
                             }
                         },
                         onFailure = { Result.failure(it) },
@@ -151,7 +138,18 @@ internal fun WallpaperAndBackgroundSettingsPage(
                     }
                 }
             },
+            onCustomBackgroundSelected = store::setCustomThemeBackgroundColor,
+            onCustomPanelSelected = { input, argb ->
+                if (input.trim().equals(WATERMELON_HOTPHRASE, ignoreCase = true)) {
+                    store.activateWatermelonMode()
+                } else {
+                    store.setHomePanelColor(argb)
+                }
+            },
+            onTransparencyChanged = store::setHomePanelTransparency,
         )
+        PaletteChooser(store.palettePreference, store::setPalette)
+        ThemeChooser(store.themePreference, store::setTheme)
     }
 
     wallpaperToCrop?.let { uri ->
@@ -188,6 +186,12 @@ internal fun LayoutAndClockSettingsPage(store: LauncherStore, goBack: () -> Unit
     SettingsPage(stringResource(R.string.appearance_layout_clock_title), goBack) {
         ClockAppearanceSettings(store)
         SectionLabel(stringResource(R.string.appearance_layout_section))
+        SettingsSwitchRow(
+            title = stringResource(R.string.open_keyboard_on_home),
+            subtitle = stringResource(R.string.open_keyboard_on_home_description),
+            checked = store.openSoftwareKeyboardOnHome,
+            onCheckedChange = store::updateOpenSoftwareKeyboardOnHome,
+        )
         SettingsSwitchRow(
             title = stringResource(R.string.hide_status_bar),
             subtitle = stringResource(R.string.hide_status_bar_description),

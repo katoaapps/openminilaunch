@@ -1,15 +1,15 @@
 package com.katoaapps.openminilaunch.ui.settings
 
 import com.katoaapps.openminilaunch.R
-import com.katoaapps.openminilaunch.data.*
-import com.katoaapps.openminilaunch.model.*
-import com.katoaapps.openminilaunch.platform.*
-import com.katoaapps.openminilaunch.features.files.*
-import com.katoaapps.openminilaunch.features.appearance.WATERMELON_HOTPHRASE
-import com.katoaapps.openminilaunch.features.appearance.WATERMELON_PILL_COLOR_ARGB
-import com.katoaapps.openminilaunch.features.wellbeing.*
-import com.katoaapps.openminilaunch.ui.components.*
-import com.katoaapps.openminilaunch.ui.theme.*
+import com.katoaapps.openminilaunch.model.MAX_HOME_PANEL_TRANSPARENCY
+import com.katoaapps.openminilaunch.ui.components.MinkDialogDefaults
+import com.katoaapps.openminilaunch.ui.components.minkDialogWidth
+import com.katoaapps.openminilaunch.ui.theme.Dimens
+import com.katoaapps.openminilaunch.ui.theme.MinkBlack
+import com.katoaapps.openminilaunch.ui.theme.MinkTransparent
+import com.katoaapps.openminilaunch.ui.theme.MinkWhite
+import com.katoaapps.openminilaunch.ui.theme.Muted
+import com.katoaapps.openminilaunch.ui.theme.readableContentColor
 
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.border
@@ -54,7 +54,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.onSizeChanged
@@ -66,7 +65,10 @@ import androidx.compose.ui.window.Dialog
 import java.util.Locale
 import kotlin.math.roundToInt
 
-internal data class HomePanelColorPreset(@androidx.annotation.StringRes val labelRes: Int, val argb: Int)
+internal data class HomePanelColorPreset(
+    @param:androidx.annotation.StringRes val labelRes: Int,
+    val argb: Int,
+)
 
 internal fun parseHomePanelHex(value: String): Int? {
     val clean = value.trim().removePrefix("#")
@@ -78,70 +80,39 @@ internal fun formatHomePanelHex(argb: Int): String =
     String.format(Locale.US, "#%06X", argb and 0x00FFFFFF)
 
 @Composable
-internal fun HomePanelColorSetting(
-    selectedArgb: Int,
+internal fun PillTransparencyControl(
     transparency: Float,
-    onColorSelected: (Int) -> Unit,
-    onWatermelonSelected: () -> Unit,
     onTransparencyChanged: (Float) -> Unit,
 ) {
-    val context = androidx.compose.ui.platform.LocalContext.current
     var sliderTransparency by remember(transparency) { mutableFloatStateOf(transparency) }
-    val presets = listOf(
-        HomePanelColorPreset(R.string.color_mink, androidx.core.content.ContextCompat.getColor(context, R.color.home_panel_mink)),
-        HomePanelColorPreset(R.string.color_navy, androidx.core.content.ContextCompat.getColor(context, R.color.home_panel_navy)),
-        HomePanelColorPreset(R.string.color_plum, androidx.core.content.ContextCompat.getColor(context, R.color.home_panel_plum)),
-        HomePanelColorPreset(R.string.color_charcoal, androidx.core.content.ContextCompat.getColor(context, R.color.home_panel_charcoal)),
-        HomePanelColorPreset(R.string.color_forest, androidx.core.content.ContextCompat.getColor(context, R.color.mink_forest)),
-    )
-    AppearanceColorSetting(
-        selectedArgb = selectedArgb,
-        pickerArgb = selectedArgb,
-        titleRes = R.string.home_panel_color,
-        descriptionRes = R.string.home_panel_color_description,
-        customTitleRes = R.string.custom_panel_color,
-        customDescriptionRes = R.string.custom_panel_color_description,
-        presets = presets,
-        onColorSelected = onColorSelected,
-        colorHotphrases = mapOf(WATERMELON_HOTPHRASE to WATERMELON_PILL_COLOR_ARGB),
-        onCustomColorSelected = { input, argb ->
-            if (input.trim().equals(WATERMELON_HOTPHRASE, ignoreCase = true)) {
-                onWatermelonSelected()
-            } else {
-                onColorSelected(argb)
-            }
-        },
-        extraContent = {
-            Column(verticalArrangement = Arrangement.spacedBy(Dimens.dp5)) {
-                Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
-                    Text(
-                        stringResource(R.string.home_panel_transparency),
-                        fontWeight = FontWeight.Bold,
-                        modifier = Modifier.weight(1f),
-                    )
-                    Text(
-                        stringResource(
-                            R.string.home_panel_transparency_value,
-                            (sliderTransparency * 100).roundToInt(),
-                        ),
-                        color = MaterialTheme.colorScheme.primary,
-                        fontWeight = FontWeight.Black,
-                    )
-                }
-                Slider(
-                    value = sliderTransparency,
-                    onValueChange = { sliderTransparency = it },
-                    onValueChangeFinished = { onTransparencyChanged(sliderTransparency) },
-                    valueRange = 0f..MAX_HOME_PANEL_TRANSPARENCY,
-                )
-                Text(
-                    stringResource(R.string.home_panel_transparency_description),
-                    color = Muted,
-                    fontSize = Dimens.sp12,
-                )
-            }
-        },
-    )
+    Column(verticalArrangement = Arrangement.spacedBy(Dimens.dp5)) {
+        Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
+            Text(
+                stringResource(R.string.home_panel_transparency),
+                fontWeight = FontWeight.Bold,
+                modifier = Modifier.weight(1f),
+            )
+            Text(
+                stringResource(
+                    R.string.home_panel_transparency_value,
+                    (sliderTransparency * 100).roundToInt(),
+                ),
+                color = MaterialTheme.colorScheme.primary,
+                fontWeight = FontWeight.Black,
+            )
+        }
+        Slider(
+            value = sliderTransparency,
+            onValueChange = { sliderTransparency = it },
+            onValueChangeFinished = { onTransparencyChanged(sliderTransparency) },
+            valueRange = 0f..MAX_HOME_PANEL_TRANSPARENCY,
+        )
+        Text(
+            stringResource(R.string.home_panel_transparency_description),
+            color = Muted,
+            fontSize = Dimens.sp12,
+        )
+    }
 }
 
 @Composable
@@ -259,7 +230,7 @@ internal fun AppearanceColorSetting(
 }
 
 @Composable
-private fun AppearanceColorDialog(
+internal fun AppearanceColorDialog(
     initialArgb: Int,
     @androidx.annotation.StringRes titleRes: Int,
     @androidx.annotation.StringRes descriptionRes: Int,

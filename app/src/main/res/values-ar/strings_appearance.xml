@@ -14,4 +14,9 @@
     <string name="palette_mink">Mink</string>
     <string name="palette_system">System</string>
     <string name="palette_system_unavailable">System colors require Android 12 or newer.</string>
+    <string name="home_themes">سمات الشاشة الرئيسية</string>
+    <string name="home_themes_description">تتغير صورة الخلفية ولون الخلفية ولون اللوحة معًا.</string>
+    <string name="theme_number">السمة %1$d</string>
+    <string name="custom_theme">سمة مخصصة</string>
+    <string name="custom_theme_description">اختر صورة الخلفية ولون الخلفية ولون اللوحة.</string>
 </resources>
