@@ -1031,4 +1031,6 @@
     <string name="home_tour_mink_day_description">ध्यान भटकाने वाले ऐप्स के लिए एक संयुक्त दैनिक सीमा तय करें और उनका उपयोग समय देखें।</string>
     <string name="home_tour_appearance_title">होम को अपना बनाएँ</string>
     <string name="home_tour_appearance_description">वॉलपेपर, आइकन, फ़ॉन्ट, रंग और बहुत कुछ चुनने के लिए सेटिंग में दिखावट खोलें।</string>
+    <string name="conversation_tour_messages_description">नोटिफ़िकेशन से सक्रिय मैसेज और ईमेल बातचीत देखें, फिर जवाब देने या पूरी बातचीत देखने के लिए उसे खोलें।</string>
+    <string name="conversation_tour_favorites_description">Android Contacts में स्टार किए गए लोगों को देखें या इंटीग्रेटेड ऐप्स से लोगों को जोड़ें, ताकि अहम बातचीत पास रहें।</string>
 </resources>

@@ -1031,4 +1031,6 @@
     <string name="home_tour_mink_day_description">মনোযোগ বিঘ্নকারী অ্যাপগুলোর জন্য সম্মিলিত দৈনিক সীমা নির্ধারণ করুন এবং ব্যবহারের সময় দেখুন।</string>
     <string name="home_tour_appearance_title">হোমকে নিজের মতো করুন</string>
     <string name="home_tour_appearance_description">ওয়ালপেপার, আইকন, ফন্ট, রং এবং আরও কিছু বেছে নিতে সেটিংসে Appearance খুলুন।</string>
+    <string name="conversation_tour_messages_description">নোটিফিকেশন থেকে সক্রিয় মেসেজ ও ইমেইল কথোপকথন দেখুন, তারপর উত্তর দিতে বা পুরো কথোপকথন দেখতে একটি খুলুন।</string>
+    <string name="conversation_tour_favorites_description">Android Contacts-এ তারকা দেওয়া মানুষদের দেখুন, অথবা ইন্টিগ্রেটেড অ্যাপ থেকে মানুষ যোগ করুন, যাতে গুরুত্বপূর্ণ কথোপকথনগুলো কাছে থাকে।</string>
 </resources>

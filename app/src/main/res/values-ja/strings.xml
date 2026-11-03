@@ -1031,4 +1031,6 @@
     <string name="home_tour_mink_day_description">気が散るアプリに 1 日の合計制限を設定し、使用時間を確認できます。</string>
     <string name="home_tour_appearance_title">ホームを自分らしく</string>
     <string name="home_tour_appearance_description">設定の「外観」を開いて、壁紙、アイコン、フォント、色などを選べます。</string>
+    <string name="conversation_tour_messages_description">通知からアクティブなメッセージやメールの会話を確認し、開いて返信したり会話全体を表示したりできます。</string>
+    <string name="conversation_tour_favorites_description">Android の連絡先でスターを付けた人を表示したり、連携アプリから人を追加したりして、大切な会話にすぐアクセスできます。</string>
 </resources>

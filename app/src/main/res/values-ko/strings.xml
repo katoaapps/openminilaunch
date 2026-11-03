@@ -1031,4 +1031,6 @@
     <string name="home_tour_mink_day_description">방해가 되는 앱의 일일 총 사용 한도를 정하고 사용 시간을 확인하세요.</string>
     <string name="home_tour_appearance_title">홈 화면을 내 스타일로</string>
     <string name="home_tour_appearance_description">설정의 모양에서 배경화면, 아이콘, 글꼴, 색상 등을 선택하세요.</string>
+    <string name="conversation_tour_messages_description">알림에서 진행 중인 메시지와 이메일 대화를 확인하고, 열어서 답장하거나 전체 대화를 볼 수 있습니다.</string>
+    <string name="conversation_tour_favorites_description">Android 연락처에서 별표 표시한 사람을 보거나 연동 앱에서 사람을 추가해 중요한 대화를 가까이 두세요.</string>
 </resources>

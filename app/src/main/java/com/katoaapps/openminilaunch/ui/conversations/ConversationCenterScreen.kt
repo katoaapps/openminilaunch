@@ -35,6 +35,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import com.katoaapps.openminilaunch.R
@@ -52,6 +53,8 @@ import com.katoaapps.openminilaunch.ui.theme.Muted
 import com.katoaapps.openminilaunch.ui.theme.Rust
 import com.katoaapps.openminilaunch.ui.theme.Sage
 
+private const val CONVERSATION_FEATURE_TOUR_ID = "conversation_feature_tour_v1"
+
 /** Conversations surface containing active messages and favorite people. */
 @Composable
 internal fun ConversationCenterScreen(
@@ -67,6 +70,9 @@ internal fun ConversationCenterScreen(
         mutableStateOf(ConversationNotificationStore.hasNotificationAccess(context))
     }
     var showAccessDisclosure by remember { mutableStateOf(false) }
+    var showFeatureTour by rememberSaveable {
+        mutableStateOf(!store.hasSeenUpdate(CONVERSATION_FEATURE_TOUR_ID))
+    }
     var selectedConversationId by rememberSaveable { mutableStateOf<String?>(null) }
     var selectedSection by rememberSaveable { mutableStateOf(ConversationSection.MESSAGES) }
     val demoModeEnabled = store.demoSearchDataEnabled
@@ -134,6 +140,14 @@ internal fun ConversationCenterScreen(
             onDismiss = { showAccessDisclosure = false },
         )
     }
+    if (showFeatureTour) {
+        ConversationFeatureTour(
+            onDismiss = {
+                store.markUpdateSeen(CONVERSATION_FEATURE_TOUR_ID)
+                showFeatureTour = false
+            },
+        )
+    }
 }
 
 @Composable
@@ -180,6 +194,7 @@ private fun ConversationAccessEmptyState(onEnable: () -> Unit) {
             stringResource(R.string.conversation_access_local_description, stringResource(R.string.app_name)),
             color = Muted,
             modifier = Modifier.padding(vertical = Dimens.dp14),
+            textAlign = TextAlign.Center,
         )
         Button(onClick = onEnable) { Text(stringResource(R.string.open_notification_access)) }
     }
@@ -199,6 +214,10 @@ private fun NoConversationsEmptyState() {
             fontSize = Dimens.sp22,
             fontWeight = FontWeight.Black,
         )
-        Text(stringResource(R.string.no_active_conversations_description), color = Muted)
+        Text(
+            stringResource(R.string.no_active_conversations_description),
+            color = Muted,
+            textAlign = TextAlign.Center,
+        )
     }
 }

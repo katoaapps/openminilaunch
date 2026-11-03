@@ -1,12 +1,15 @@
 package com.katoaapps.openminilaunch.features.contacts
 
+import android.Manifest
 import android.content.Context
+import android.content.pm.PackageManager
 import android.database.ContentObserver
 import android.net.Uri
 import android.os.Handler
 import android.os.Looper
 import android.provider.ContactsContract
 import android.telephony.PhoneNumberUtils
+import androidx.core.content.ContextCompat
 import com.katoaapps.openminilaunch.R
 import com.katoaapps.openminilaunch.model.AndroidContactPhone
 import com.katoaapps.openminilaunch.model.FavoriteAndroidContact
@@ -30,38 +33,61 @@ internal class FavoriteAndroidContactsRepository(context: Context) : Closeable {
             revisionState.update { it + 1L }
         }
     }
+    private var observerRegistered = false
 
     init {
-        resolver.registerContentObserver(ContactsContract.Contacts.CONTENT_URI, true, observer)
-        resolver.registerContentObserver(ContactsContract.Data.CONTENT_URI, true, observer)
+        registerObserverIfPermitted()
     }
 
     fun favorites(): List<FavoriteAndroidContact> {
-        val records = queryFavoriteRecords()
-        if (records.isEmpty()) return emptyList()
-        val contactIds = records.map(FavoriteRecord::contactId).toSet()
-        val phones = queryPhones(contactIds)
-        val organizations = queryOrganizations(contactIds)
-        val locale = appContext.resources.configuration.locales[0]
-        val collator = Collator.getInstance(locale)
-        return records.map { record ->
-            FavoriteAndroidContact(
-                id = FavoriteContactId.Android(record.lookupKey),
-                contactUri = ContactsContract.Contacts.getLookupUri(
-                    record.contactId,
-                    record.lookupKey,
-                ).toString(),
-                displayName = record.displayName,
-                photoUri = record.photoUri,
-                organization = organizations[record.contactId],
-                phones = phones[record.contactId].orEmpty(),
-            )
-        }.sortedWith { first, second -> collator.compare(first.displayName, second.displayName) }
+        if (!hasContactsPermission()) return emptyList()
+        return try {
+            val records = queryFavoriteRecords()
+            if (records.isEmpty()) return emptyList()
+            val contactIds = records.map(FavoriteRecord::contactId).toSet()
+            val phones = queryPhones(contactIds)
+            val organizations = queryOrganizations(contactIds)
+            val locale = appContext.resources.configuration.locales[0]
+            val collator = Collator.getInstance(locale)
+            records.map { record ->
+                FavoriteAndroidContact(
+                    id = FavoriteContactId.Android(record.lookupKey),
+                    contactUri = ContactsContract.Contacts.getLookupUri(
+                        record.contactId,
+                        record.lookupKey,
+                    ).toString(),
+                    displayName = record.displayName,
+                    photoUri = record.photoUri,
+                    organization = organizations[record.contactId],
+                    phones = phones[record.contactId].orEmpty(),
+                )
+            }.sortedWith { first, second -> collator.compare(first.displayName, second.displayName) }
+        } catch (_: SecurityException) {
+            emptyList()
+        }
     }
 
     override fun close() {
-        runCatching { resolver.unregisterContentObserver(observer) }
+        if (observerRegistered) {
+            runCatching { resolver.unregisterContentObserver(observer) }
+            observerRegistered = false
+        }
     }
+
+    private fun registerObserverIfPermitted() {
+        if (!hasContactsPermission()) return
+        try {
+            resolver.registerContentObserver(ContactsContract.Contacts.CONTENT_URI, true, observer)
+            observerRegistered = true
+            resolver.registerContentObserver(ContactsContract.Data.CONTENT_URI, true, observer)
+        } catch (_: SecurityException) {
+            close()
+        }
+    }
+
+    private fun hasContactsPermission(): Boolean =
+        ContextCompat.checkSelfPermission(appContext, Manifest.permission.READ_CONTACTS) ==
+            PackageManager.PERMISSION_GRANTED
 
     private fun queryFavoriteRecords(): List<FavoriteRecord> {
         val projection = arrayOf(

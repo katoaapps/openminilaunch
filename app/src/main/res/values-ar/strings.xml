@@ -1071,4 +1071,6 @@
     <string name="home_tour_mink_day_description">ضع حدًا يوميًا إجماليًا للتطبيقات التي تشتت انتباهك وتابع وقت استخدامها.</string>
     <string name="home_tour_appearance_title">اجعل الشاشة الرئيسية تناسبك</string>
     <string name="home_tour_appearance_description">افتح المظهر في الإعدادات لاختيار الخلفية والأيقونات والخطوط والألوان والمزيد.</string>
+    <string name="conversation_tour_messages_description">اعرض محادثات الرسائل والبريد الإلكتروني النشطة من الإشعارات، ثم افتح إحداها للرد أو لعرض المحادثة كاملة.</string>
+    <string name="conversation_tour_favorites_description">اعرض الأشخاص المميزين بنجمة في جهات اتصال Android، أو أضف أشخاصًا من التطبيقات المتكاملة، لتبقى أهم محادثاتك قريبة.</string>
 </resources>

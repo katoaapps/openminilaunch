@@ -1031,4 +1031,6 @@
     <string name="home_tour_mink_day_description">為令你分心嘅應用程式設定每日總限額，並查看使用時間。</string>
     <string name="home_tour_appearance_title">打造你嘅主畫面</string>
     <string name="home_tour_appearance_description">喺「設定」開啟「外觀」，選擇牆紙、圖示、字型、顏色等。</string>
+    <string name="conversation_tour_messages_description">查看來自通知嘅進行中訊息同電郵對話，再打開對話回覆或者查看完整內容。</string>
+    <string name="conversation_tour_favorites_description">查看 Android 聯絡人入面已加星號嘅人物，或者由整合應用程式加入人物，等最重要嘅聯絡人隨手可及。</string>
 </resources>

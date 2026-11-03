@@ -1031,4 +1031,6 @@
     <string name="home_tour_mink_day_description">توجہ بھٹکانے والی ایپس کے لیے مشترکہ یومیہ حد مقرر کریں اور ان کے استعمال کا وقت دیکھیں۔</string>
     <string name="home_tour_appearance_title">ہوم کو اپنا بنائیں</string>
     <string name="home_tour_appearance_description">وال پیپر، آئیکنز، فونٹس، رنگ اور مزید منتخب کرنے کے لیے سیٹنگز میں ظاہری شکل کھولیں۔</string>
+    <string name="conversation_tour_messages_description">اطلاعات سے فعال پیغامات اور ای میل گفتگو دیکھیں، پھر جواب دینے یا پوری گفتگو دیکھنے کے لیے اسے کھولیں۔</string>
+    <string name="conversation_tour_favorites_description">Android Contacts میں ستارہ لگائے گئے لوگوں کو دیکھیں، یا مربوط ایپس سے لوگوں کو شامل کریں، تاکہ اہم گفتگو قریب رہے۔</string>
 </resources>

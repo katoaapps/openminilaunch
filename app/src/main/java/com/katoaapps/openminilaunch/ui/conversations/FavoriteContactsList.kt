@@ -37,6 +37,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import com.katoaapps.openminilaunch.R
 import com.katoaapps.openminilaunch.model.FavoriteAndroidContact
@@ -284,6 +285,7 @@ internal fun FavoriteContactsEmptyState(
             stringResource(R.string.no_favorite_contacts_description),
             modifier = Modifier.padding(vertical = Dimens.dp14),
             color = Muted,
+            textAlign = TextAlign.Center,
         )
         Button(onClick = onAddPerson) { Text(stringResource(R.string.add_person)) }
         TextButton(

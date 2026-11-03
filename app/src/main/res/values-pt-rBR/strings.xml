@@ -1031,4 +1031,6 @@
     <string name="home_tour_mink_day_description">Defina um limite diário conjunto para apps que distraem e acompanhe o tempo de uso.</string>
     <string name="home_tour_appearance_title">Deixe a tela inicial com a sua cara</string>
     <string name="home_tour_appearance_description">Abra Aparência nas Configurações para escolher papel de parede, ícones, fontes, cores e muito mais.</string>
+    <string name="conversation_tour_messages_description">Veja conversas ativas de mensagens e e-mails pelas notificações e abra uma delas para responder ou ver a conversa completa.</string>
+    <string name="conversation_tour_favorites_description">Veja pessoas marcadas com estrela nos Contatos do Android ou adicione pessoas de apps integrados para manter suas conversas mais importantes por perto.</string>
 </resources>

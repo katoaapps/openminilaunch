@@ -1051,4 +1051,6 @@
     <string name="home_tour_mink_day_description">Задайте общий дневной лимит для отвлекающих приложений и следите за временем их использования.</string>
     <string name="home_tour_appearance_title">Настройте главный экран под себя</string>
     <string name="home_tour_appearance_description">Откройте раздел «Оформление» в настройках, чтобы выбрать обои, значки, шрифты, цвета и многое другое.</string>
+    <string name="conversation_tour_messages_description">Просматривайте активные переписки и письма из уведомлений, а затем открывайте их, чтобы ответить или увидеть беседу целиком.</string>
+    <string name="conversation_tour_favorites_description">Просматривайте людей, отмеченных звёздочкой в Контактах Android, или добавляйте людей из интегрированных приложений, чтобы важные беседы были под рукой.</string>
 </resources>

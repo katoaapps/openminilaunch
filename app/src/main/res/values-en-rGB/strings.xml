@@ -1031,4 +1031,6 @@
     <string name="home_tour_mink_day_description">Set a collective daily limit for distracting apps and keep their usage time visible.</string>
     <string name="home_tour_appearance_title">Make Home yours</string>
     <string name="home_tour_appearance_description">Open Appearance in Settings to choose your wallpaper, icons, fonts, colours, and more.</string>
+    <string name="conversation_tour_messages_description">View active message and email conversations from notifications, then open one to reply or see the full conversation.</string>
+    <string name="conversation_tour_favorites_description">See people starred in Android Contacts, or add people from integrated apps, so your most important conversations stay close.</string>
 </resources>

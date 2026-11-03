@@ -1031,4 +1031,6 @@
     <string name="home_tour_mink_day_description">Tetapkan batas harian gabungan untuk aplikasi pengalih perhatian dan lihat waktu penggunaannya.</string>
     <string name="home_tour_appearance_title">Sesuaikan layar utama</string>
     <string name="home_tour_appearance_description">Buka Tampilan di Setelan untuk memilih wallpaper, ikon, font, warna, dan lainnya.</string>
+    <string name="conversation_tour_messages_description">Lihat percakapan pesan dan email aktif dari notifikasi, lalu buka salah satunya untuk membalas atau melihat percakapan lengkap.</string>
+    <string name="conversation_tour_favorites_description">Lihat orang yang diberi bintang di Kontak Android atau tambahkan orang dari aplikasi terintegrasi agar percakapan penting tetap dekat.</string>
 </resources>

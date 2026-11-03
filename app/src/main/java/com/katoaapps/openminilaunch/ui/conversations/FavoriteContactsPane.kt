@@ -96,7 +96,7 @@ internal fun FavoriteContactsPane(
         }
         Unit
     }
-    GrantedFavoriteContactsPane(
+    FavoriteContactsContent(
         store = store,
         actions = actions,
         onComposeMessage = onComposeMessage,
@@ -107,7 +107,7 @@ internal fun FavoriteContactsPane(
 }
 
 @Composable
-private fun GrantedFavoriteContactsPane(
+private fun FavoriteContactsContent(
     store: LauncherStore,
     actions: DeviceActions,
     onComposeMessage: (CommunicationRecipient, ContactAppRoute) -> Unit,
@@ -117,15 +117,19 @@ private fun GrantedFavoriteContactsPane(
 ) {
     val context = LocalContext.current
     val activity = context as ComponentActivity
-    val repository = remember(context) {
-        FavoriteAndroidContactsRepository(context.applicationContext)
+    val repository = remember(context, contactsPermissionGranted) {
+        if (contactsPermissionGranted) {
+            FavoriteAndroidContactsRepository(context.applicationContext)
+        } else {
+            null
+        }
     }
     val routeStore = remember(context) { FavoriteContactRouteStore(context.applicationContext) }
     val integratedStore = remember(context) {
         FavoriteIntegratedContactStore(context.applicationContext)
     }
     val scope = rememberCoroutineScope()
-    val revision by repository.revision.collectAsState()
+    val revision = repository?.revision?.collectAsState()?.value ?: 0L
     val shortcutsRevision by actions.launcherShortcutsRevision.collectAsState()
     var resumeRevision by remember { mutableLongStateOf(0L) }
     var selectedContact by remember { mutableStateOf<FavoriteAndroidContact?>(null) }
@@ -212,6 +216,7 @@ private fun GrantedFavoriteContactsPane(
             emptyList()
         } else {
             withContext(Dispatchers.IO) {
+                if (repository == null) return@withContext emptyList()
                 runCatching(repository::favorites).getOrDefault(emptyList())
             }
         }
@@ -243,7 +248,7 @@ private fun GrantedFavoriteContactsPane(
         activity.lifecycle.addObserver(observer)
         onDispose {
             activity.lifecycle.removeObserver(observer)
-            repository.close()
+            repository?.close()
         }
     }
 

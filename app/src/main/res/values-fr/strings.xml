@@ -1031,4 +1031,6 @@
     <string name="home_tour_mink_day_description">Fixez une limite quotidienne globale aux applications qui vous distraient et suivez leur temps d’utilisation.</string>
     <string name="home_tour_appearance_title">Personnalisez l’accueil</string>
     <string name="home_tour_appearance_description">Ouvrez Apparence dans les réglages pour choisir le fond d’écran, les icônes, les polices, les couleurs et plus encore.</string>
+    <string name="conversation_tour_messages_description">Consultez les conversations actives de messagerie et d’e-mail issues des notifications, puis ouvrez-en une pour répondre ou voir la conversation complète.</string>
+    <string name="conversation_tour_favorites_description">Retrouvez les personnes favorites de Contacts Android ou ajoutez-en depuis les applications intégrées pour garder vos conversations importantes à portée.</string>
 </resources>
