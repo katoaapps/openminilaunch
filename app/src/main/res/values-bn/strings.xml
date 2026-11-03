@@ -542,7 +542,7 @@
     <string name="messaging_other_options">অন্যান্য মেসেজিং অপশন</string>
     <string name="messaging_choose_default_behavior">\nসেটিংস &gt; মেসেজিং &gt; ইন্টিগ্রেটেড মেসেজিং অ্যাপে একটি ডিফল্ট অ্যাপ নির্বাচন করুন</string>
     <string name="messaging_system_default_description">সিস্টেম ডিফল্ট · ক্যারিয়ার SMS যখন স্বয়ংক্রিয়ভাবে পাঠানো হয়</string>
-    <string name="messaging_not_installed">ইনস্টল করা হয়নি</string>
+    <string name="messaging_not_installed">ইনস্টল করা হয়নি · অ্যাপ দেখতে ট্যাপ করুন</string>
     <string name="messaging_beta_compatibility">BETA · Mink এই ইন্টিগ্রেশন চেষ্টা করবে এবং প্রয়োজনে এর নিরাপদ ফলব্যাক ব্যবহার করবে</string>
     <string name="try_message_recipient">প্রাপক হিসাবে "%1$s" ব্যবহার করে দেখুন</string>
     <string name="try_message_recipient_beta">BETA · প্রাপক অ্যাপ সিদ্ধান্ত নেয় যে এটি এই ঠিকানাটি ব্যবহার করতে পারবে কিনা</string>

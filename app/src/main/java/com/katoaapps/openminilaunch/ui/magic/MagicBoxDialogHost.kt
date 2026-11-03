@@ -86,6 +86,7 @@ internal fun MagicPickerDialogHost(
     allAiAppsLoaded: Boolean,
     preferredAiPackage: String?,
     onMessagingProvider: (MessageDraft, MessagingProviderOption) -> Unit,
+    onInstallMessagingProvider: (MessagingProviderOption) -> Unit,
     onSeeAllMessagingApps: (MessageDraft) -> Unit,
     onDismissMessaging: () -> Unit,
     onSeeAllAiApps: () -> Unit,
@@ -103,8 +104,9 @@ internal fun MagicPickerDialogHost(
             selectedProviderId = MessagingProviderCatalog.providerForPackage(
                 preferredMessagingPackage,
             )?.id ?: MessagingProviderCatalog.SYSTEM_DEFAULT_PROVIDER_ID,
-            showUnavailable = false,
+            showUnavailable = true,
             onProvider = { onMessagingProvider(draft, it) },
+            onInstall = onInstallMessagingProvider,
             onSeeAllApps = { onSeeAllMessagingApps(draft) },
             onDismiss = onDismissMessaging,
         )

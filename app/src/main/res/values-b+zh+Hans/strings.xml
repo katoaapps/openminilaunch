@@ -542,7 +542,7 @@
     <string name="messaging_other_options">其他消息选项</string>
     <string name="messaging_choose_default_behavior">在\n设置 &gt; 消息 &gt; 集成消息应用中选择默认应用</string>
     <string name="messaging_system_default_description">系统默认·发送时自动承运商SMS</string>
-    <string name="messaging_not_installed">未安装</string>
+    <string name="messaging_not_installed">未安装 · 点击查看应用程序</string>
     <string name="messaging_beta_compatibility">BETA · Mink 将尝试此集成，并在需要时使用其安全回退</string>
     <string name="try_message_recipient">尝试使用“%1$s”作为收件人</string>
     <string name="try_message_recipient_beta">BETA · 接收应用程序决定是否可以使用该地址</string>

@@ -160,6 +160,7 @@ internal fun MagicBoxContent(
     val messagingProviders by produceState(
         initialValue = MessagingOptionsLoadState(),
         key1 = pendingMessagingChoice,
+        key2 = launcherAppsRevision,
     ) {
         if (pendingMessagingChoice != null) {
             value = MessagingOptionsLoadState(
@@ -1000,6 +1001,9 @@ internal fun MagicBoxContent(
                 draft,
                 providerPackage = if (option.systemDefault) null else option.preferencePackageName,
             )
+        },
+        onInstallMessagingProvider = { option ->
+            option.preferencePackageName?.let(actions::openMessagingProviderInstallPage)
         },
         onSeeAllMessagingApps = { draft ->
             pendingMessagingChoice = null

@@ -544,7 +544,7 @@
     <string name="messaging_other_options">Другие варианты обмена сообщениями</string>
     <string name="messaging_choose_default_behavior">Выберите приложение по умолчанию в \nНастройки &gt; Сообщения &gt; Интегрированное приложение для обмена сообщениями.</string>
     <string name="messaging_system_default_description">Система по умолчанию · оператор связи SMS при автоматической отправке</string>
-    <string name="messaging_not_installed">Не установлено</string>
+    <string name="messaging_not_installed">Не установлено · Нажмите, чтобы просмотреть приложение</string>
     <string name="messaging_beta_compatibility">БЕТА · Mink попробует эту интеграцию и при необходимости воспользуется ее безопасным резервным вариантом.</string>
     <string name="try_message_recipient">Попробуйте «%1$s» в качестве получателя.</string>
     <string name="try_message_recipient_beta">БЕТА · Приложение-получатель решает, может ли оно использовать этот адрес.</string>

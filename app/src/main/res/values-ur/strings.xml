@@ -542,7 +542,7 @@
     <string name="messaging_other_options">دیگر پیغام رسانی کے اختیارات</string>
     <string name="messaging_choose_default_behavior">\n سیٹنگز &gt; میسجنگ &gt; انٹیگریٹڈ میسجنگ ایپ میں ڈیفالٹ ایپ منتخب کریں۔</string>
     <string name="messaging_system_default_description">سسٹم ڈیفالٹ · کیریئر SMS جب خودکار طور پر بھیجا جاتا ہے۔</string>
-    <string name="messaging_not_installed">انسٹال نہیں ہے۔</string>
+    <string name="messaging_not_installed">انسٹال نہیں ہوا · ایپ دیکھنے کے لیے تھپتھپائیں۔</string>
     <string name="messaging_beta_compatibility">BETA · Mink اس انضمام کو آزمائے گا اور ضرورت پڑنے پر اس کا محفوظ فال بیک استعمال کرے گا۔</string>
     <string name="try_message_recipient">"%1$s" بطور وصول کنندہ آزمائیں۔</string>
     <string name="try_message_recipient_beta">BETA · وصول کرنے والی ایپ فیصلہ کرتی ہے کہ آیا وہ اس ایڈریس کو استعمال کر سکتی ہے۔</string>

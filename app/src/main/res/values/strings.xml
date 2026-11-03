@@ -575,7 +575,7 @@
     <string name="messaging_other_options">Other messaging options</string>
     <string name="messaging_choose_default_behavior">Select a default app in\nSettings > Messaging > Integrated messaging app</string>
     <string name="messaging_system_default_description">System default · carrier SMS when sent automatically</string>
-    <string name="messaging_not_installed">Not installed</string>
+    <string name="messaging_not_installed">Not installed · Tap to view app</string>
     <string name="messaging_beta_compatibility">BETA · Mink will try this integration and use its safe fallback if needed</string>
     <string name="try_message_recipient">Try “%1$s” as recipient</string>
     <string name="try_message_recipient_beta">BETA · The receiving app decides whether it can use this address</string>

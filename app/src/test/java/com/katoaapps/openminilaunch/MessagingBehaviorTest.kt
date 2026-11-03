@@ -8,6 +8,7 @@ import com.katoaapps.openminilaunch.features.messaging.MessagingShortcutDraftCat
 import com.katoaapps.openminilaunch.features.messaging.MessagingProviderOption
 import com.katoaapps.openminilaunch.features.messaging.PreferredMessageDraftResult
 import com.katoaapps.openminilaunch.features.messaging.automaticMessagingPackage
+import com.katoaapps.openminilaunch.features.messaging.canOpenInstallPage
 import com.katoaapps.openminilaunch.features.messaging.defaultMessageDraftResult
 import com.katoaapps.openminilaunch.features.messaging.filteredRecentConversations
 import com.katoaapps.openminilaunch.features.messaging.packageNames
@@ -322,6 +323,22 @@ class MessagingBehaviorTest {
                 isInstalled = { it == "com.example.sms" },
             ),
         )
+    }
+
+    @Test fun unavailableCatalogProviderCanOpenItsInstallPage() {
+        val installed = providerOption(MessagingSupportTier.CONTACT_AND_DRAFT)
+        val unavailable = installed.copy(
+            installedPackageName = null,
+            installed = false,
+        )
+        val systemDefault = unavailable.copy(
+            preferencePackageName = null,
+            systemDefault = true,
+        )
+
+        assertFalse(installed.canOpenInstallPage)
+        assertTrue(unavailable.canOpenInstallPage)
+        assertFalse(systemDefault.canOpenInstallPage)
     }
 
     private fun providerOption(

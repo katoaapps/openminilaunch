@@ -542,7 +542,7 @@
     <string name="messaging_other_options">अन्य मैसेजिंग विकल्प</string>
     <string name="messaging_choose_default_behavior">\nसेटिंग्स &gt; मैसेजिंग &gt; इंटीग्रेटेड मैसेजिंग ऐप में एक डिफ़ॉल्ट ऐप चुनें</string>
     <string name="messaging_system_default_description">स्वचालित रूप से भेजे जाने पर सिस्टम डिफ़ॉल्ट · वाहक SMS</string>
-    <string name="messaging_not_installed">स्थापित नहीं</string>
+    <string name="messaging_not_installed">इंस्टॉल नहीं है · ऐप देखने के लिए टैप करें</string>
     <string name="messaging_beta_compatibility">बीटा · Mink इस एकीकरण का प्रयास करेगा और जरूरत पड़ने पर इसके सुरक्षित फ़ॉलबैक का उपयोग करेगा</string>
     <string name="try_message_recipient">प्राप्तकर्ता के रूप में "%1$s" आज़माएँ</string>
     <string name="try_message_recipient_beta">बीटा · प्राप्तकर्ता ऐप यह तय करता है कि वह इस पते का उपयोग कर सकता है या नहीं</string>

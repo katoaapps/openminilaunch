@@ -2,8 +2,11 @@ package com.katoaapps.openminilaunch
 
 import com.katoaapps.openminilaunch.features.ai.AiHandoffMode
 import com.katoaapps.openminilaunch.features.ai.AiProviderCatalog
+import com.katoaapps.openminilaunch.features.ai.AiProviderOption
+import com.katoaapps.openminilaunch.features.ai.matchesSelectedPackage
 import com.katoaapps.openminilaunch.features.ai.packageNames
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Test
 
@@ -42,5 +45,28 @@ class AiProviderCatalogTest {
 
         assertEquals(providers.size, providers.map { it.id }.distinct().size)
         assertEquals(packages.size, packages.distinct().size)
+    }
+
+    @Test fun unavailableProvidersDoNotMatchAnUnsetPreference() {
+        val unavailable = AiProviderOption(
+            id = "unavailable",
+            label = "Unavailable",
+            installedPackageName = null,
+            handoffMode = AiHandoffMode.TEXT_SHARE,
+            installed = false,
+            canHandoff = false,
+            installUrl = "https://example.com",
+            bundledIconRes = 0,
+        )
+        val installed = unavailable.copy(
+            installedPackageName = "com.example.installed",
+            installed = true,
+            canHandoff = true,
+        )
+
+        assertFalse(unavailable.matchesSelectedPackage(null))
+        assertFalse(unavailable.matchesSelectedPackage("com.example.installed"))
+        assertFalse(installed.matchesSelectedPackage(null))
+        assertTrue(installed.matchesSelectedPackage("com.example.installed"))
     }
 }

@@ -542,7 +542,7 @@
     <string name="messaging_other_options">Opsi perpesanan lainnya</string>
     <string name="messaging_choose_default_behavior">Pilih aplikasi default di\nPengaturan &gt; Pesan &gt; Aplikasi perpesanan terintegrasi</string>
     <string name="messaging_system_default_description">Default sistem · operator SMS bila dikirim secara otomatis</string>
-    <string name="messaging_not_installed">Tidak dipasang</string>
+    <string name="messaging_not_installed">Belum terpasang · Ketuk untuk melihat aplikasi</string>
     <string name="messaging_beta_compatibility">BETA · Mink akan mencoba integrasi ini dan menggunakan fallback amannya jika diperlukan</string>
     <string name="try_message_recipient">Coba “%1$s” sebagai penerima</string>
     <string name="try_message_recipient_beta">BETA · Aplikasi penerima memutuskan apakah dapat menggunakan alamat ini</string>

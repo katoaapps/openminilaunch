@@ -15,10 +15,10 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.OpenInNew
 import androidx.compose.material.icons.filled.AutoAwesome
 import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Close
-import androidx.compose.material.icons.filled.OpenInNew
 import androidx.compose.material.icons.filled.Warning
 import androidx.compose.material3.Button
 import androidx.compose.material3.CircularProgressIndicator
@@ -42,6 +42,7 @@ import androidx.compose.ui.window.Dialog
 import com.katoaapps.openminilaunch.R
 import com.katoaapps.openminilaunch.features.ai.AiHandoffMode
 import com.katoaapps.openminilaunch.features.ai.AiProviderOption
+import com.katoaapps.openminilaunch.features.ai.matchesSelectedPackage
 import com.katoaapps.openminilaunch.ui.components.AppIcon
 import com.katoaapps.openminilaunch.ui.components.MinkDialogDefaults
 import com.katoaapps.openminilaunch.ui.components.minkDialogWidth
@@ -105,7 +106,7 @@ internal fun AiProviderPickerDialog(
                         items(visibleOptions, key = AiProviderOption::id) { option ->
                             AiProviderRow(
                                 option = option,
-                                selected = option.installedPackageName == selectedPackage,
+                                selected = option.matchesSelectedPackage(selectedPackage),
                                 onClick = {
                                     if (option.installed) onProvider(option) else onInstall(option)
                                 },
@@ -189,7 +190,7 @@ private fun AiProviderRow(
             Icon(
                 imageVector = when {
                     selected -> Icons.Default.CheckCircle
-                    !option.installed -> Icons.Default.OpenInNew
+                    !option.installed -> Icons.AutoMirrored.Filled.OpenInNew
                     !option.canHandoff -> Icons.Default.Warning
                     else -> Icons.Default.AutoAwesome
                 },

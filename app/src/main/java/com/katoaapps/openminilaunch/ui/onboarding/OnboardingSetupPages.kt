@@ -25,6 +25,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import com.katoaapps.openminilaunch.R
+import com.katoaapps.openminilaunch.ui.components.SettingsSwitchRow
 import com.katoaapps.openminilaunch.ui.theme.Dimens
 import com.katoaapps.openminilaunch.ui.theme.MagicCallColor
 import com.katoaapps.openminilaunch.ui.theme.Muted
@@ -90,6 +91,8 @@ internal fun OnboardingContactsSetupPage(
 
 @Composable
 internal fun OnboardingMessagingSetupPage(
+    sendAutomatically: Boolean,
+    onSendAutomaticallyChanged: (Boolean) -> Unit,
     selectedProvider: String,
     onChooseProvider: () -> Unit,
 ) {
@@ -102,7 +105,12 @@ internal fun OnboardingMessagingSetupPage(
                 Text(selectedProvider, color = Muted, fontSize = Dimens.sp12)
             }
         }
-        Text(stringResource(R.string.onboarding_messages_draft_note), color = Muted, fontSize = Dimens.sp13)
+        SettingsSwitchRow(
+            title = stringResource(R.string.send_messages_automatically),
+            subtitle = stringResource(R.string.send_messages_automatically_onboarding_description),
+            checked = sendAutomatically,
+            onCheckedChange = onSendAutomaticallyChanged,
+        )
     }
 }
 

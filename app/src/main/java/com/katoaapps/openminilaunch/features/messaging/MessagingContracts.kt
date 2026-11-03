@@ -86,6 +86,9 @@ internal data class MessagingProviderAvailability(
 internal val MessagingProviderOption.isDraftReady: Boolean
     get() = supportTier == MessagingSupportTier.CONTACT_AND_DRAFT || supportsRecentChatDrafts
 
+internal val MessagingProviderOption.canOpenInstallPage: Boolean
+    get() = !installed && !systemDefault && preferencePackageName != null
+
 internal enum class PreferredMessageDraftResult {
     OPENED,
     OPENED_WITH_RECIPIENT_PICKER,

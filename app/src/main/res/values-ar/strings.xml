@@ -546,7 +546,7 @@
     <string name="messaging_other_options">خيارات المراسلة الأخرى</string>
     <string name="messaging_choose_default_behavior">حدد تطبيقًا افتراضيًا في\nالإعدادات &gt; المراسلة &gt; تطبيق المراسلة المتكامل</string>
     <string name="messaging_system_default_description">النظام الافتراضي · الناقل SMS عند إرساله تلقائيًا</string>
-    <string name="messaging_not_installed">غير مثبت</string>
+    <string name="messaging_not_installed">غير مثبت · انقر لعرض التطبيق</string>
     <string name="messaging_beta_compatibility">BETA · Mink سيحاول هذا التكامل ويستخدم احتياطيه الآمن إذا لزم الأمر</string>
     <string name="try_message_recipient">جرب "%1$s" كمستلم</string>
     <string name="try_message_recipient_beta">BETA · يقرر التطبيق المتلقي ما إذا كان يمكنه استخدام هذا العنوان أم لا</string>

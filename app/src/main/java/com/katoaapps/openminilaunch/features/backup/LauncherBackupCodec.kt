@@ -216,7 +216,9 @@ internal object LauncherBackupCodec {
             automaticAppBubbleTargets = magicBox.optJSONArray("automaticAppBubbleTargets").safeTargets(),
             minkSpaceMiniAppOrder = minkSpaceOrder,
             enabledMinkSpaceMiniApps = enabledMinkSpaceMiniApps,
-            sendMessagesAutomatically = messaging.optBoolean("sendMessagesAutomatically", false),
+            // Automatic messaging is the product default. Backups created before this
+            // preference existed must inherit that default instead of silently opting out.
+            sendMessagesAutomatically = messaging.optBoolean("sendMessagesAutomatically", true),
             preferredMessagingPackage = messaging.optNullableString("preferredMessagingPackage")?.safePackage(),
             callAutomatically = calling?.optBoolean("callAutomatically", false) ?: false,
             preferredCallingPackage = calling?.optNullableString("preferredCallingPackage")?.safePackage(),

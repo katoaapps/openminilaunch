@@ -542,7 +542,7 @@
     <string name="messaging_other_options">その他のメッセージング オプション</string>
     <string name="messaging_choose_default_behavior">[\n設定] &gt; [メッセージング] &gt; [統合メッセージング アプリ] でデフォルトのアプリを選択します。</string>
     <string name="messaging_system_default_description">システムデフォルト・自動送信時のキャリア SMS</string>
-    <string name="messaging_not_installed">インストールされていません</string>
+    <string name="messaging_not_installed">インストールされていません · タップしてアプリを表示します</string>
     <string name="messaging_beta_compatibility">ベータ版 · Mink はこの統合を試し、必要に応じて安全なフォールバックを使用します</string>
     <string name="try_message_recipient">受信者として「%1$s」を試してください</string>
     <string name="try_message_recipient_beta">ベータ · 受信側アプリがこのアドレスを使用できるかどうかを決定します</string>

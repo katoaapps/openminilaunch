@@ -40,3 +40,7 @@ internal data class AiProviderOption(
     val installUrl: String,
     @param:DrawableRes val bundledIconRes: Int,
 )
+
+/** An unavailable provider has no package and must never match an unset preference. */
+internal fun AiProviderOption.matchesSelectedPackage(selectedPackage: String?): Boolean =
+    selectedPackage != null && installedPackageName == selectedPackage

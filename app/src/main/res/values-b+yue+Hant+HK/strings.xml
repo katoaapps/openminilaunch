@@ -542,7 +542,7 @@
     <string name="messaging_other_options">其他訊息選項</string>
     <string name="messaging_choose_default_behavior">喺 \n 設定 &gt; 訊息 &gt; 整合訊息應用程式入面揀預設應用程式</string>
     <string name="messaging_system_default_description">系統預設 · 自動發送時嘅載波 SMS</string>
-    <string name="messaging_not_installed">未安裝</string>
+    <string name="messaging_not_installed">未安裝 · 㩒一下就可以睇到應用程式</string>
     <string name="messaging_beta_compatibility">測試版 · Mink 會嘗試呢個整合，並且喺需要嘅時候使用佢嘅安全後備</string>
     <string name="try_message_recipient">試下用「 %1$s 」做收件人</string>
     <string name="try_message_recipient_beta">測試版 · 接收應用程式決定佢可唔可以用呢個地址</string>

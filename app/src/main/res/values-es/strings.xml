@@ -542,7 +542,7 @@
     <string name="messaging_other_options">Otras opciones de mensajería</string>
     <string name="messaging_choose_default_behavior">Seleccione una aplicación predeterminada en \nConfiguración &gt; Mensajería &gt; Aplicación de mensajería integrada</string>
     <string name="messaging_system_default_description">Valor predeterminado del sistema · transportista SMS cuando se envía automáticamente</string>
-    <string name="messaging_not_installed">No instalado</string>
+    <string name="messaging_not_installed">No instalado · Toque para ver la aplicación</string>
     <string name="messaging_beta_compatibility">BETA · Mink probará esta integración y utilizará su respaldo seguro si es necesario</string>
     <string name="try_message_recipient">Pruebe "%1$s" como destinatario</string>
     <string name="try_message_recipient_beta">BETA · La aplicación receptora decide si puede usar esta dirección</string>

@@ -164,6 +164,16 @@ class LauncherBackupCodecTest {
         assertNull(restored.settings.preferredCallingPackage)
     }
 
+    @Test fun olderBackupWithoutAutomaticMessagingPreferenceKeepsProductDefaultEnabled() {
+        val json = JSONObject(LauncherBackupCodec.encode(sampleBackup(twoPanelMode = true)))
+        json.getJSONObject("settings").getJSONObject("messaging")
+            .remove("sendMessagesAutomatically")
+
+        val restored = LauncherBackupCodec.decode(json.toString())
+
+        assertEquals(true, restored.settings.sendMessagesAutomatically)
+    }
+
     @Test fun interimSchemaFourBackupStillImports() {
         val json = JSONObject(LauncherBackupCodec.encode(sampleBackup(twoPanelMode = true)))
         json.put("schemaVersion", 4)

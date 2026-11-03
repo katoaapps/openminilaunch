@@ -127,6 +127,9 @@ internal fun SettingsPickerDialogs(
                     ?: store.resetPreferredMessagingApp()
                 onPickerChange(null)
             },
+            onInstall = { option ->
+                option.preferencePackageName?.let(actions::openMessagingProviderInstallPage)
+            },
             onDismiss = { onPickerChange(null) },
         )
         SettingsPicker.CallingApp -> AppPickerDialog(

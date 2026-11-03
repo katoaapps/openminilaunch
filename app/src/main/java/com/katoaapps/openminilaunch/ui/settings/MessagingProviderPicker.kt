@@ -3,6 +3,7 @@ package com.katoaapps.openminilaunch.ui.settings
 import com.katoaapps.openminilaunch.R
 import com.katoaapps.openminilaunch.features.messaging.MessagingProviderOption
 import com.katoaapps.openminilaunch.features.messaging.MessagingSupportTier
+import com.katoaapps.openminilaunch.features.messaging.canOpenInstallPage
 import com.katoaapps.openminilaunch.features.messaging.isDraftReady
 import com.katoaapps.openminilaunch.ui.components.AppIcon
 import com.katoaapps.openminilaunch.ui.components.MinkDialogDefaults
@@ -24,6 +25,7 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.automirrored.filled.OpenInNew
 import androidx.compose.material.icons.automirrored.filled.Send
 import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Close
@@ -60,6 +62,7 @@ internal fun MessagingProviderPickerDialog(
     selectedProviderId: String?,
     showUnavailable: Boolean,
     onProvider: (MessagingProviderOption) -> Unit,
+    onInstall: (MessagingProviderOption) -> Unit,
     onDismiss: () -> Unit,
     onSeeAllApps: (() -> Unit)? = null,
 ) {
@@ -124,12 +127,14 @@ internal fun MessagingProviderPickerDialog(
                             options = draftReady,
                             selectedProviderId = selectedProviderId,
                             onProvider = onProvider,
+                            onInstall = onInstall,
                         )
                         providerSection(
                             title = R.string.messaging_other_options,
                             options = otherOptions,
                             selectedProviderId = selectedProviderId,
                             onProvider = onProvider,
+                            onInstall = onInstall,
                         )
                     }
                 }
@@ -152,6 +157,7 @@ private fun androidx.compose.foundation.lazy.LazyListScope.providerSection(
     options: List<MessagingProviderOption>,
     selectedProviderId: String?,
     onProvider: (MessagingProviderOption) -> Unit,
+    onInstall: (MessagingProviderOption) -> Unit,
 ) {
     if (options.isEmpty()) return
     item(key = "header-$title") {
@@ -168,7 +174,9 @@ private fun androidx.compose.foundation.lazy.LazyListScope.providerSection(
         MessagingProviderRow(
             option = option,
             selected = option.id == selectedProviderId,
-            onClick = { onProvider(option) },
+            onClick = {
+                if (option.installed) onProvider(option) else onInstall(option)
+            },
         )
     }
 }
@@ -179,10 +187,11 @@ private fun MessagingProviderRow(
     selected: Boolean,
     onClick: () -> Unit,
 ) {
+    val interactive = option.installed || option.canOpenInstallPage
     Surface(
         onClick = onClick,
-        enabled = option.installed,
-        modifier = Modifier.fillMaxWidth().alpha(if (option.installed) 1f else .42f),
+        enabled = interactive,
+        modifier = Modifier.fillMaxWidth().alpha(if (interactive) 1f else .42f),
         shape = RoundedCornerShape(Dimens.dp16),
         color = if (selected) {
             MaterialTheme.colorScheme.primaryContainer
@@ -210,12 +219,20 @@ private fun MessagingProviderRow(
                     overflow = TextOverflow.Ellipsis,
                 )
             }
-            if (selected) {
+            if (selected || option.canOpenInstallPage) {
                 Spacer(Modifier.width(Dimens.dp8))
                 Icon(
-                    Icons.Default.CheckCircle,
-                    stringResource(R.string.selected_label),
-                    tint = MaterialTheme.colorScheme.primary,
+                    imageVector = if (selected) {
+                        Icons.Default.CheckCircle
+                    } else {
+                        Icons.AutoMirrored.Filled.OpenInNew
+                    },
+                    contentDescription = if (selected) {
+                        stringResource(R.string.selected_label)
+                    } else {
+                        stringResource(R.string.messaging_not_installed)
+                    },
+                    tint = if (selected) MaterialTheme.colorScheme.primary else Muted,
                 )
             }
         }

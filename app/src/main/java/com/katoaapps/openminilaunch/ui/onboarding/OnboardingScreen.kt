@@ -97,6 +97,7 @@ internal fun OnboardingScreen(
     var pickingMessaging by remember { mutableStateOf(false) }
     var messagingOptions by remember { mutableStateOf<List<MessagingProviderOption>>(emptyList()) }
     var messagingOptionsLoaded by remember { mutableStateOf(false) }
+    var messagingOptionsRefresh by remember { mutableIntStateOf(0) }
 
     val contactsPermission = rememberLauncherForActivityResult(
         ActivityResultContracts.RequestPermission(),
@@ -115,14 +116,18 @@ internal fun OnboardingScreen(
                     context,
                     Manifest.permission.READ_CONTACTS,
                 ) == PackageManager.PERMISSION_GRANTED
+                if (pickingMessaging) {
+                    messagingOptionsLoaded = false
+                    messagingOptionsRefresh++
+                }
             }
         }
         lifecycleOwner.lifecycle.addObserver(observer)
         onDispose { lifecycleOwner.lifecycle.removeObserver(observer) }
     }
 
-    LaunchedEffect(pickingMessaging) {
-        if (pickingMessaging && !messagingOptionsLoaded) {
+    LaunchedEffect(pickingMessaging, messagingOptionsRefresh) {
+        if (pickingMessaging) {
             messagingOptions = withContext(Dispatchers.IO) { actions.messagingProviderOptions() }
             messagingOptionsLoaded = true
         }
@@ -156,6 +161,8 @@ internal fun OnboardingScreen(
                     onManage = actions::openAppPermissionSettings,
                 )
                 else -> OnboardingMessagingSetupPage(
+                    sendAutomatically = store.sendMessagesAutomatically,
+                    onSendAutomaticallyChanged = store::updateSendMessagesAutomatically,
                     selectedProvider = store.preferredMessagingPackage
                         ?.let(actions::appLabel)
                         ?: stringResource(R.string.system_messages),
@@ -181,6 +188,9 @@ internal fun OnboardingScreen(
                     option.preferencePackageName?.let(store::setPreferredMessagingApp)
                 }
                 pickingMessaging = false
+            },
+            onInstall = { option ->
+                option.preferencePackageName?.let(actions::openMessagingProviderInstallPage)
             },
             onDismiss = { pickingMessaging = false },
         )

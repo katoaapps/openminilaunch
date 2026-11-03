@@ -542,7 +542,7 @@
     <string name="messaging_other_options">기타 메시지 옵션</string>
     <string name="messaging_choose_default_behavior">\n설정 &gt; 메시징 &gt; 통합 메시징 앱에서 기본 앱을 선택하세요.</string>
     <string name="messaging_system_default_description">시스템 기본값 · 자동 전송 시 이동통신사 SMS</string>
-    <string name="messaging_not_installed">설치되지 않음</string>
+    <string name="messaging_not_installed">설치되지 않음 · 탭하여 앱 보기</string>
     <string name="messaging_beta_compatibility">베타 · Mink는 이 통합을 시도하고 필요한 경우 안전한 대체 기능을 사용합니다.</string>
     <string name="try_message_recipient">수신자로 “%1$s”를 사용해 보십시오.</string>
     <string name="try_message_recipient_beta">베타 · 수신 앱이 이 주소를 사용할 수 있는지 여부를 결정합니다.</string>
