@@ -49,7 +49,6 @@ internal fun SettingsDestinationContent(
         SettingsDestination.LANGUAGE -> AppLanguageSettingsPage(goBack = onNavigateBack)
         SettingsDestination.LAUNCHER -> LauncherSettingsPage(
             store = store,
-            requestHomeRole = requestHomeRole,
             onNavigate = onNavigate,
             goBack = onNavigateBack,
         )
@@ -142,6 +141,7 @@ internal fun SettingsDestinationContent(
         SettingsDestination.PERMISSIONS -> PermissionsSettingsPage(
             state = permissionState,
             actions = permissionActions,
+            requestHomeRole = requestHomeRole,
             goBack = onNavigateBack,
         )
         SettingsDestination.ABOUT -> AboutSettingsPage(

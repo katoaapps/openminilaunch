@@ -107,6 +107,7 @@ internal fun settingsPathTo(destination: SettingsDestination): List<SettingsDest
 }
 
 internal data class SettingsPermissionState(
+    val homeRoleHeld: Boolean,
     val usageAccessGranted: Boolean,
     val notificationAccessGranted: Boolean,
     val contactsGranted: Boolean,
@@ -123,11 +124,12 @@ internal data class SettingsPermissionState(
     val lockServiceEnabled: Boolean,
 ) {
     val supportedCount: Int
-        get() = 4 + directCallsSupported.toInt() + directSmsSupported.toInt() +
+        get() = 5 + directCallsSupported.toInt() + directSmsSupported.toInt() +
             appBubblesSupported.toInt() + lockSupported.toInt()
 
     val activeCount: Int
         get() = listOf(
+            homeRoleHeld,
             usageAccessGranted,
             notificationAccessGranted,
             contactsGranted,
@@ -142,6 +144,7 @@ internal data class SettingsPermissionState(
 private fun Boolean.toInt(): Int = if (this) 1 else 0
 
 internal data class SettingsPermissionActions(
+    val manageHomeRole: () -> Unit,
     val requestUsageAccess: () -> Unit,
     val manageUsageAccess: () -> Unit,
     val requestNotificationAccess: () -> Unit,

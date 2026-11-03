@@ -31,7 +31,7 @@ internal enum class SettingsSection(
     @param:StringRes val compactLabelRes: Int = labelRes,
     val icon: ImageVector,
 ) {
-    HOME(R.string.settings_section_home, icon = Icons.Default.Home),
+    HOME(R.string.launcher, icon = Icons.Default.Home),
     MINI_APPS(
         R.string.mink_space_mini_apps,
         R.string.settings_tab_mini_apps,

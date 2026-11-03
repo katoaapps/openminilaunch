@@ -43,6 +43,7 @@ internal fun rememberSettingsPermissionHost(
     val context = LocalContext.current
     val currentOnMediaPermissionResult by rememberUpdatedState(onMediaPermissionResult)
     val usageInsights = remember { UsageInsightsRepository(context.applicationContext) }
+    var homeRoleHeld by remember { mutableStateOf(deviceActions.isHomeRoleHeld()) }
     var contactsGranted by remember {
         mutableStateOf(
             ContextCompat.checkSelfPermission(context, Manifest.permission.READ_CONTACTS) ==
@@ -76,6 +77,7 @@ internal fun rememberSettingsPermissionHost(
     var showUsageDisclosure by remember { mutableStateOf(false) }
 
     fun refreshStatuses() {
+        homeRoleHeld = deviceActions.isHomeRoleHeld()
         contactsGranted = ContextCompat.checkSelfPermission(
             context,
             Manifest.permission.READ_CONTACTS,
@@ -213,6 +215,7 @@ internal fun rememberSettingsPermissionHost(
 
     return SettingsPermissionHostState(
         state = SettingsPermissionState(
+            homeRoleHeld = homeRoleHeld,
             usageAccessGranted = usageAccessGranted,
             notificationAccessGranted = notificationAccessGranted,
             contactsGranted = contactsGranted,
@@ -229,6 +232,7 @@ internal fun rememberSettingsPermissionHost(
             lockServiceEnabled = lockServiceEnabled,
         ),
         actions = SettingsPermissionActions(
+            manageHomeRole = deviceActions::openHomeSettings,
             requestUsageAccess = { showUsageDisclosure = true },
             manageUsageAccess = { usageAccessSettings.launch(usageInsights.accessSettingsIntent()) },
             requestNotificationAccess = { showNotificationDisclosure = true },

@@ -21,7 +21,6 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.AddToHomeScreen
 import androidx.compose.material.icons.filled.Apps
 import androidx.compose.material.icons.filled.GridView
-import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Palette
 import androidx.compose.material.icons.filled.Restore
 import androidx.compose.material.icons.filled.Translate
@@ -36,11 +35,9 @@ import com.katoaapps.openminilaunch.features.localization.SupportedAppLanguages
 @Composable
 internal fun LauncherSettingsPage(
     store: LauncherStore,
-    requestHomeRole: () -> Unit,
     onNavigate: (SettingsDestination) -> Unit,
     goBack: () -> Unit,
 ) {
-    val appName = stringResource(R.string.app_name)
     val context = LocalContext.current
     val languageSummary = if (SupportedAppLanguages.isSupportedByDevice()) {
         SupportedAppLanguages.selectedLanguageTag(context)?.let { selected ->
@@ -51,26 +48,18 @@ internal fun LauncherSettingsPage(
     } else {
         stringResource(R.string.app_language_requires_android_13_short)
     }
-    SettingsPage(stringResource(R.string.launcher), goBack) {
-        SectionLabel(stringResource(R.string.system_roles))
-        SettingsRow(
-            stringResource(R.string.default_home_app),
-            stringResource(R.string.choose_as_launcher, appName),
-            Icons.Default.Home,
-            onClick = requestHomeRole,
-        )
-        HorizontalDivider(color = Sage)
+    SettingsPage(stringResource(R.string.settings_section_home), goBack) {
         SectionLabel(stringResource(R.string.customize))
-        SettingsRow(
-            stringResource(R.string.language),
-            languageSummary,
-            Icons.Default.Translate,
-        ) { onNavigate(SettingsDestination.LANGUAGE) }
         SettingsRow(
             stringResource(R.string.appearance),
             stringResource(R.string.appearance_summary, stringResource(store.themePreference.labelRes)),
             Icons.Default.Palette,
         ) { onNavigate(SettingsDestination.APPEARANCE) }
+        SettingsRow(
+            stringResource(R.string.language),
+            languageSummary,
+            Icons.Default.Translate,
+        ) { onNavigate(SettingsDestination.LANGUAGE) }
     }
 }
 

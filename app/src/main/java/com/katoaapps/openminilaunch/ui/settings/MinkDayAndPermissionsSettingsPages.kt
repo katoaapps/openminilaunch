@@ -15,6 +15,7 @@ import androidx.compose.material.icons.filled.Apps
 import androidx.compose.material.icons.filled.BubbleChart
 import androidx.compose.material.icons.filled.Contacts
 import androidx.compose.material.icons.filled.Forum
+import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material.icons.filled.Pets
@@ -58,11 +59,20 @@ internal fun MinkDaySettingsPage(
 internal fun PermissionsSettingsPage(
     state: SettingsPermissionState,
     actions: SettingsPermissionActions,
+    requestHomeRole: () -> Unit,
     goBack: () -> Unit,
 ) {
     val appName = stringResource(R.string.app_name)
     SettingsPage(stringResource(R.string.permissions), goBack) {
         Text(stringResource(R.string.permissions_description), color = Muted, fontSize = Dimens.sp13)
+        PermissionCard(
+            title = stringResource(R.string.default_home_app),
+            description = stringResource(R.string.choose_as_launcher, appName),
+            granted = state.homeRoleHeld,
+            icon = Icons.Default.Home,
+            onGrant = requestHomeRole,
+            onManage = actions.manageHomeRole,
+        )
         PermissionCard(
             title = stringResource(R.string.mink_day_usage),
             description = stringResource(R.string.mink_day_usage_permission_description),

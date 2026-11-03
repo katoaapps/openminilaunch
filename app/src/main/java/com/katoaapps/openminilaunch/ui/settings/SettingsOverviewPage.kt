@@ -76,9 +76,9 @@ private fun HomeSettingsSection(
     onNavigate: (SettingsDestination) -> Unit,
     goBack: () -> Unit,
 ) {
-    SettingsPage(stringResource(R.string.settings_section_home), goBack) {
+    SettingsPage(stringResource(R.string.launcher), goBack) {
         SettingsCategoryRow(
-            title = stringResource(R.string.launcher),
+            title = stringResource(R.string.settings_section_home),
             subtitle = stringResource(R.string.settings_launcher_home_summary),
             status = stringResource(store.themePreference.labelRes),
             icon = Icons.Default.Home,
