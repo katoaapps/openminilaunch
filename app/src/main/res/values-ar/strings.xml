@@ -616,7 +616,7 @@
     <string name="terms_of_use">شروط الاستخدام</string>
     <string name="terms_summary">المسؤوليات والضمانات وقيود فقدان البيانات</string>
     <string name="repeat_tutorial">كرر البرنامج التعليمي</string>
-    <string name="repeat_tutorial_summary">مراجعة الإعداد وMagic Box وMink’s Day والمحادثات والأدوات والأذونات</string>
+    <string name="repeat_tutorial_summary">راجع الإعداد الأساسي وجولة ميزات الشاشة الرئيسية</string>
     <string name="github_update_checks">التحقق من تحديث GitHub</string>
     <string name="github_update_checks_description">قم بالفحص مرتين يوميًا على الأكثر؛ إظهار بطاقة التحديث وأيقونة رأس الصفحة الرئيسية عند الحاجة</string>
     <string name="update_available">التحديث متاح</string>
@@ -1058,4 +1058,17 @@
     <string name="onboarding_contacts_setup_description">تواصل مع الأصدقاء والعائلة والزملاء دون البحث بين التطبيقات. اكتب @ لإعداد رسالة أو # لبدء مكالمة.</string>
     <string name="onboarding_messages_setup_description">اكتب @ واختر التطبيق الذي تستخدمه بالفعل. يجهز Mink الرسالة، ويمكن لكل شخص في المفضلة استخدام تطبيق مختلف لاحقًا.</string>
     <string name="onboarding_messages_draft_note">تبدأ المراسلة التلقائية مفعّلة. تستخدم رسائل النظام SMS المباشر بعد أن يصبح وصول Android جاهزًا، بينما تفتح التطبيقات المتكاملة مسودة مجهزة.</string>
+    <string name="home_tour_title">بعض الأشياء لتجربتها</string>
+    <string name="home_tour_mini_apps_title">تنقّل بين التطبيقات المصغّرة</string>
+    <string name="home_tour_mini_apps_description">اسحب لأعلى أو لأسفل في MinkSpace للتنقل بين التطبيقات المصغّرة التي فعّلتها.</string>
+    <string name="home_tour_shortcuts_title">رتّب اختصاراتك</string>
+    <string name="home_tour_shortcuts_description">اضغط مطولًا على أي اختصار في الشاشة الرئيسية، ثم اسحب الاختصارات إلى الترتيب الذي تريده.</string>
+    <string name="home_tour_conversations_title">أبقِ محادثاتك قريبة</string>
+    <string name="home_tour_conversations_description">اضغط على رمز المحادثات أعلى الشاشة الرئيسية لعرض المحادثات النشطة والأشخاص المفضلين لديك.</string>
+    <string name="home_tour_widgets_title">أضف أدواتك</string>
+    <string name="home_tour_widgets_description">اسحب لليسار من الشاشة الرئيسية لفتح صفحة الأدوات وإضافة ما يصل إلى ثماني أدوات Android.</string>
+    <string name="home_tour_mink_day_title">ضع حدودًا باستخدام Mink’s Day</string>
+    <string name="home_tour_mink_day_description">ضع حدًا يوميًا إجماليًا للتطبيقات التي تشتت انتباهك وتابع وقت استخدامها.</string>
+    <string name="home_tour_appearance_title">اجعل الشاشة الرئيسية تناسبك</string>
+    <string name="home_tour_appearance_description">افتح المظهر في الإعدادات لاختيار الخلفية والأيقونات والخطوط والألوان والمزيد.</string>
 </resources>

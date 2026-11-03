@@ -41,6 +41,7 @@ import com.katoaapps.openminilaunch.ui.launcher.layout.LauncherHomePager
 import com.katoaapps.openminilaunch.ui.launcher.layout.WIDGET_PAGE
 import com.katoaapps.openminilaunch.ui.magic.rememberMagicBoxSessionState
 import com.katoaapps.openminilaunch.ui.onboarding.FeatureUpdateDialog
+import com.katoaapps.openminilaunch.ui.onboarding.HomeFeatureTour
 import com.katoaapps.openminilaunch.ui.onboarding.OnboardingScreen
 import com.katoaapps.openminilaunch.ui.settings.SettingsDestination
 import com.katoaapps.openminilaunch.ui.settings.SettingsScreen
@@ -52,6 +53,7 @@ import com.katoaapps.openminilaunch.ui.minkspace.todo.TodosScreen
 import com.katoaapps.openminilaunch.ui.profile.openVirtualContactCard
 
 private const val FEATURE_UPDATE_ID = "v310_whats_new_v1"
+private const val HOME_FEATURE_TOUR_ID = "home_feature_tour_v2"
 
 @Composable
 internal fun MiniLaunchApp(
@@ -66,6 +68,9 @@ internal fun MiniLaunchApp(
     var showTutorial by rememberSaveable { mutableStateOf(!store.onboardingComplete) }
     var showUpdateNotice by rememberSaveable {
         mutableStateOf(store.onboardingComplete && !store.hasSeenUpdate(FEATURE_UPDATE_ID))
+    }
+    var showHomeFeatureTour by rememberSaveable {
+        mutableStateOf(store.onboardingComplete && !store.hasSeenUpdate(HOME_FEATURE_TOUR_ID))
     }
     var tutorialRun by rememberSaveable { mutableIntStateOf(0) }
     val homeMagicBoxSessionState = rememberMagicBoxSessionState()
@@ -135,6 +140,10 @@ internal fun MiniLaunchApp(
                             store.completeOnboarding()
                             store.markUpdateSeen(FEATURE_UPDATE_ID)
                             showTutorial = false
+                            screen = Screen.HOME
+                            focusedLauncherPage = HOME_PAGE
+                            homePageRequestToken++
+                            showHomeFeatureTour = true
                             if (!actions.isHomeRoleHeld()) requestHomeRole()
                         },
                     )
@@ -158,7 +167,7 @@ internal fun MiniLaunchApp(
                                 homePageRequestToken = homePageRequestToken,
                                 keyboardInputEnabled =
                                     (twoPanelActive || launcherPagerState.currentPage == HOME_PAGE) &&
-                                        !showTutorial && !showUpdateNotice,
+                                        !showTutorial && !showUpdateNotice && !showHomeFeatureTour,
                                 homeRequestToken = homeRequestToken,
                                 magicBoxSessionState = homeMagicBoxSessionState,
                                 openSettings = { destination ->
@@ -239,6 +248,14 @@ internal fun MiniLaunchApp(
                 onNotNow = {
                     store.markUpdateSeen(FEATURE_UPDATE_ID)
                     showUpdateNotice = false
+                },
+            )
+        }
+        if (showHomeFeatureTour && !showTutorial && !showUpdateNotice) {
+            HomeFeatureTour(
+                onDismiss = {
+                    store.markUpdateSeen(HOME_FEATURE_TOUR_ID)
+                    showHomeFeatureTour = false
                 },
             )
         }

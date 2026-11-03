@@ -608,7 +608,7 @@
     <string name="terms_of_use">이용약관</string>
     <string name="terms_summary">책임, 보증 및 데이터 손실 제한</string>
     <string name="repeat_tutorial">튜토리얼 반복</string>
-    <string name="repeat_tutorial_summary">설정, Magic Box, Mink’s Day, 대화, 위젯 및 권한 검토</string>
+    <string name="repeat_tutorial_summary">필수 설정과 홈 기능 둘러보기를 다시 확인하세요</string>
     <string name="github_update_checks">GitHub 업데이트 확인</string>
     <string name="github_update_checks_description">하루에 최대 두 번 확인하세요. 필요할 때 업데이트 카드와 홈 헤더 아이콘 표시</string>
     <string name="update_available">업데이트 가능</string>
@@ -1018,4 +1018,17 @@
     <string name="onboarding_contacts_setup_description">앱을 찾아다니지 않고 친구, 가족, 동료에게 연락하세요. @를 입력해 메시지를 준비하거나 #로 통화를 시작할 수 있습니다.</string>
     <string name="onboarding_messages_setup_description">@를 입력하고 평소 사용하는 앱을 선택하세요. Mink가 메시지를 준비하며, 나중에 즐겨찾기마다 다른 앱을 사용할 수 있습니다.</string>
     <string name="onboarding_messages_draft_note">자동 메시지는 처음부터 켜져 있습니다. Android 접근 권한이 준비되면 시스템 메시지는 SMS를 바로 보내고, 연동 앱은 준비된 초안을 엽니다.</string>
+    <string name="home_tour_title">이 기능들을 사용해 보세요</string>
+    <string name="home_tour_mini_apps_title">Mini Apps 둘러보기</string>
+    <string name="home_tour_mini_apps_description">MinkSpace에서 위아래로 스와이프해 활성화한 Mini Apps 사이를 이동하세요.</string>
+    <string name="home_tour_shortcuts_title">바로가기 정렬하기</string>
+    <string name="home_tour_shortcuts_description">홈의 바로가기를 길게 누른 다음 원하는 순서로 드래그하세요.</string>
+    <string name="home_tour_conversations_title">대화를 가까이에</string>
+    <string name="home_tour_conversations_description">홈 상단의 대화 아이콘을 탭해 진행 중인 대화와 즐겨찾는 사람을 확인하세요.</string>
+    <string name="home_tour_widgets_title">위젯 추가하기</string>
+    <string name="home_tour_widgets_description">홈에서 왼쪽으로 스와이프해 위젯 페이지를 열고 Android 위젯을 최대 8개 추가하세요.</string>
+    <string name="home_tour_mink_day_title">Mink’s Day로 사용 제한 설정</string>
+    <string name="home_tour_mink_day_description">방해가 되는 앱의 일일 총 사용 한도를 정하고 사용 시간을 확인하세요.</string>
+    <string name="home_tour_appearance_title">홈 화면을 내 스타일로</string>
+    <string name="home_tour_appearance_description">설정의 모양에서 배경화면, 아이콘, 글꼴, 색상 등을 선택하세요.</string>
 </resources>

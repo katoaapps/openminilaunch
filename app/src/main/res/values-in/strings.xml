@@ -608,7 +608,7 @@
     <string name="terms_of_use">Ketentuan penggunaan</string>
     <string name="terms_summary">Tanggung jawab, jaminan, dan batasan kehilangan data</string>
     <string name="repeat_tutorial">Ulangi tutorialnya</string>
-    <string name="repeat_tutorial_summary">Penyiapan tinjauan, Magic Box, Mink’s Day, Percakapan, widget, dan izin</string>
+    <string name="repeat_tutorial_summary">Tinjau penyiapan penting dan tur fitur Beranda</string>
     <string name="github_update_checks">Pemeriksaan pembaruan GitHub</string>
     <string name="github_update_checks_description">Periksa paling banyak dua kali sehari; tampilkan kartu pembaruan dan ikon header Beranda bila diperlukan</string>
     <string name="update_available">Pembaruan tersedia</string>
@@ -1018,4 +1018,17 @@
     <string name="onboarding_contacts_setup_description">Hubungi teman, keluarga, dan kolega tanpa mencari-cari di berbagai aplikasi. Ketik @ untuk menyiapkan pesan atau # untuk memulai panggilan.</string>
     <string name="onboarding_messages_setup_description">Ketik @ dan pilih aplikasi yang sudah Anda gunakan. Mink menyiapkan pesan, dan setiap Favorit dapat memakai aplikasi lain nanti.</string>
     <string name="onboarding_messages_draft_note">Pesan otomatis aktif sejak awal. Pesan Sistem memakai SMS langsung setelah akses Android siap; aplikasi terintegrasi membuka draf yang telah disiapkan.</string>
+    <string name="home_tour_title">Beberapa hal untuk dicoba</string>
+    <string name="home_tour_mini_apps_title">Jelajahi Mini Apps</string>
+    <string name="home_tour_mini_apps_description">Geser ke atas atau bawah di MinkSpace untuk berpindah di antara Mini Apps yang telah diaktifkan.</string>
+    <string name="home_tour_shortcuts_title">Atur pintasan Anda</string>
+    <string name="home_tour_shortcuts_description">Tekan dan tahan pintasan apa pun di Beranda, lalu seret pintasan ke urutan yang Anda inginkan.</string>
+    <string name="home_tour_conversations_title">Dekatkan percakapan Anda</string>
+    <string name="home_tour_conversations_description">Ketuk ikon percakapan di bagian atas Beranda untuk melihat percakapan aktif dan orang favorit Anda.</string>
+    <string name="home_tour_widgets_title">Tambahkan widget Anda</string>
+    <string name="home_tour_widgets_description">Geser ke kiri dari Beranda untuk membuka halaman widget dan menambahkan hingga delapan widget Android.</string>
+    <string name="home_tour_mink_day_title">Atur batas dengan Mink’s Day</string>
+    <string name="home_tour_mink_day_description">Tetapkan batas harian gabungan untuk aplikasi pengalih perhatian dan lihat waktu penggunaannya.</string>
+    <string name="home_tour_appearance_title">Sesuaikan layar utama</string>
+    <string name="home_tour_appearance_description">Buka Tampilan di Setelan untuk memilih wallpaper, ikon, font, warna, dan lainnya.</string>
 </resources>

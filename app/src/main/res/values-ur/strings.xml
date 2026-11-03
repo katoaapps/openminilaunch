@@ -608,7 +608,7 @@
     <string name="terms_of_use">استعمال کی شرائط</string>
     <string name="terms_summary">ذمہ داریاں، وارنٹی، اور ڈیٹا کے نقصان کی حدود</string>
     <string name="repeat_tutorial">ٹیوٹوریل کو دہرائیں۔</string>
-    <string name="repeat_tutorial_summary">سیٹ اپ کا جائزہ لیں، Magic Box، Mink’s Day، بات چیت، ویجٹ، اور اجازتیں</string>
+    <string name="repeat_tutorial_summary">ضروری سیٹ اپ اور ہوم فیچر ٹور دوبارہ دیکھیں</string>
     <string name="github_update_checks">GitHub اپ ڈیٹ چیک کرتا ہے۔</string>
     <string name="github_update_checks_description">دن میں زیادہ سے زیادہ دو بار چیک کریں؛ ضرورت پڑنے پر اپ ڈیٹ کارڈ اور ہوم ہیڈر آئیکن دکھائیں۔</string>
     <string name="update_available">اپ ڈیٹ دستیاب ہے۔</string>
@@ -1018,4 +1018,17 @@
     <string name="onboarding_contacts_setup_description">ایپس تلاش کیے بغیر دوستوں، خاندان اور ساتھیوں تک پہنچیں۔ پیغام تیار کرنے کے لیے @ یا کال شروع کرنے کے لیے # ٹائپ کریں۔</string>
     <string name="onboarding_messages_setup_description">@ ٹائپ کریں اور اپنی استعمال کی ایپ منتخب کریں۔ Mink پیغام تیار کرتا ہے اور بعد میں ہر پسندیدہ فرد کے لیے الگ ایپ منتخب کی جا سکتی ہے۔</string>
     <string name="onboarding_messages_draft_note">خودکار پیغام رسانی شروع سے فعال ہوتی ہے۔ Android رسائی تیار ہونے پر سسٹم میسیجز براہ راست SMS بھیجتا ہے، جبکہ مربوط ایپس تیار مسودہ کھولتی ہیں۔</string>
+    <string name="home_tour_title">آزمانے کے لیے چند چیزیں</string>
+    <string name="home_tour_mini_apps_title">Mini Apps میں جائیں</string>
+    <string name="home_tour_mini_apps_description">فعال Mini Apps کے درمیان جانے کے لیے MinkSpace پر اوپر یا نیچے سوائپ کریں۔</string>
+    <string name="home_tour_shortcuts_title">اپنے شارٹ کٹس ترتیب دیں</string>
+    <string name="home_tour_shortcuts_description">ہوم کے کسی بھی شارٹ کٹ کو دبائے رکھیں، پھر شارٹ کٹس کو اپنی پسند کی ترتیب میں گھسیٹیں۔</string>
+    <string name="home_tour_conversations_title">گفتگو قریب رکھیں</string>
+    <string name="home_tour_conversations_description">فعال گفتگو اور پسندیدہ لوگوں کو دیکھنے کے لیے ہوم کے اوپر گفتگو کے آئیکن کو ٹیپ کریں۔</string>
+    <string name="home_tour_widgets_title">اپنے ویجٹس شامل کریں</string>
+    <string name="home_tour_widgets_description">ویجٹ صفحہ کھولنے کے لیے ہوم سے بائیں سوائپ کریں اور زیادہ سے زیادہ آٹھ Android ویجٹس شامل کریں۔</string>
+    <string name="home_tour_mink_day_title">Mink’s Day کے ساتھ حدود مقرر کریں</string>
+    <string name="home_tour_mink_day_description">توجہ بھٹکانے والی ایپس کے لیے مشترکہ یومیہ حد مقرر کریں اور ان کے استعمال کا وقت دیکھیں۔</string>
+    <string name="home_tour_appearance_title">ہوم کو اپنا بنائیں</string>
+    <string name="home_tour_appearance_description">وال پیپر، آئیکنز، فونٹس، رنگ اور مزید منتخب کرنے کے لیے سیٹنگز میں ظاہری شکل کھولیں۔</string>
 </resources>

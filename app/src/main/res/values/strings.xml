@@ -661,7 +661,7 @@
     <string name="terms_of_use">Terms of use</string>
     <string name="terms_summary">Responsibilities, warranties, and data-loss limitations</string>
     <string name="repeat_tutorial">Repeat tutorial</string>
-    <string name="repeat_tutorial_summary">Review setup, Magic Box, Mink’s Day, Conversations, widgets, and permissions</string>
+    <string name="repeat_tutorial_summary">Review essential setup and the Home feature tour</string>
     <string name="github_update_checks">GitHub update checks</string>
     <string name="github_update_checks_description">Check at most twice a day; show an update card and Home header icon when needed</string>
     <string name="update_available">Update available</string>
@@ -1127,4 +1127,17 @@
     <string name="onboarding_contacts_setup_description">Reach friends, family, and colleagues without hunting through apps. Type @ to prepare a message or # to start a call.</string>
     <string name="onboarding_messages_setup_description">Type @ and choose the app you already use. Mink prepares the message, and individual Favorites can use a different app later.</string>
     <string name="onboarding_messages_draft_note">Automatic messaging starts on. System Messages uses direct carrier SMS once Android access is ready; integrated apps open a prepared draft.</string>
+    <string name="home_tour_title">A few things to try</string>
+    <string name="home_tour_mini_apps_title">Move through Mini Apps</string>
+    <string name="home_tour_mini_apps_description">Swipe up or down on MinkSpace to move between the Mini Apps you have enabled.</string>
+    <string name="home_tour_shortcuts_title">Arrange your shortcuts</string>
+    <string name="home_tour_shortcuts_description">Press and hold any Home shortcut, then drag the shortcuts into the order you want.</string>
+    <string name="home_tour_conversations_title">Keep conversations close</string>
+    <string name="home_tour_conversations_description">Tap the conversation icon at the top of Home to view active conversations and your favorite people.</string>
+    <string name="home_tour_widgets_title">Add your widgets</string>
+    <string name="home_tour_widgets_description">Swipe left from Home to open the widget page and add up to eight Android widgets.</string>
+    <string name="home_tour_mink_day_title">Set limits with Mink’s Day</string>
+    <string name="home_tour_mink_day_description">Set a collective daily limit for distracting apps and keep their usage time visible.</string>
+    <string name="home_tour_appearance_title">Make Home yours</string>
+    <string name="home_tour_appearance_description">Open Appearance in Settings to choose your wallpaper, icons, fonts, colors, and more.</string>
 </resources>

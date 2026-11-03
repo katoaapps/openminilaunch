@@ -608,7 +608,7 @@
     <string name="terms_of_use">使用條款</string>
     <string name="terms_summary">責任、保養同埋數據丟失限制</string>
     <string name="repeat_tutorial">重複教學</string>
-    <string name="repeat_tutorial_summary">睇返設定、 Magic Box 、 Mink’s Day 、對話、小工具同權限</string>
+    <string name="repeat_tutorial_summary">重溫基本設定同主畫面功能導覽</string>
     <string name="github_update_checks">GitHub 更新檢查</string>
     <string name="github_update_checks_description">每日最多檢查兩次；喺需要嗰陣顯示更新卡同埋主頁標題圖示</string>
     <string name="update_available">可以更新</string>
@@ -1018,4 +1018,17 @@
     <string name="onboarding_contacts_setup_description">唔使逐個應用程式搵，就可以聯絡朋友、家人同同事。輸入 @ 準備訊息，或者輸入 # 開始通話。</string>
     <string name="onboarding_messages_setup_description">輸入 @，再揀你慣用嘅應用程式。Mink 會準備訊息，之後亦可以為每個收藏聯絡人揀唔同應用程式。</string>
     <string name="onboarding_messages_draft_note">自動訊息預設已開啟。Android 存取權準備好之後，系統訊息會直接傳送電訊商 SMS；整合應用程式會開啟準備好嘅草稿。</string>
+    <string name="home_tour_title">可以試吓呢幾樣</string>
+    <string name="home_tour_mini_apps_title">瀏覽迷你應用程式</string>
+    <string name="home_tour_mini_apps_description">喺 MinkSpace 向上或向下掃，就可以瀏覽你已啟用嘅迷你應用程式。</string>
+    <string name="home_tour_shortcuts_title">排列你嘅捷徑</string>
+    <string name="home_tour_shortcuts_description">長按主畫面上任何捷徑，再拖曳捷徑去你想要嘅次序。</string>
+    <string name="home_tour_conversations_title">對話隨手可及</string>
+    <string name="home_tour_conversations_description">撳主畫面頂部嘅對話圖示，查看進行中嘅對話同你收藏嘅聯絡人。</string>
+    <string name="home_tour_widgets_title">加入你嘅小工具</string>
+    <string name="home_tour_widgets_description">喺主畫面向左掃，打開小工具頁面並加入最多八個 Android 小工具。</string>
+    <string name="home_tour_mink_day_title">使用 Mink’s Day 設定限制</string>
+    <string name="home_tour_mink_day_description">為令你分心嘅應用程式設定每日總限額，並查看使用時間。</string>
+    <string name="home_tour_appearance_title">打造你嘅主畫面</string>
+    <string name="home_tour_appearance_description">喺「設定」開啟「外觀」，選擇牆紙、圖示、字型、顏色等。</string>
 </resources>

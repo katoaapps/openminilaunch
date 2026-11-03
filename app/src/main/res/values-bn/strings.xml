@@ -608,7 +608,7 @@
     <string name="terms_of_use">ব্যবহারের শর্তাবলী</string>
     <string name="terms_summary">দায়িত্ব, ওয়্যারেন্টি, এবং ডেটা হারানোর সীমাবদ্ধতা</string>
     <string name="repeat_tutorial">টিউটোরিয়াল পুনরাবৃত্তি করুন</string>
-    <string name="repeat_tutorial_summary">পর্যালোচনা সেটআপ, Magic Box, Mink’s Day, কথোপকথন, উইজেট এবং অনুমতি</string>
+    <string name="repeat_tutorial_summary">প্রয়োজনীয় সেটআপ ও হোম ফিচার ট্যুর আবার দেখুন</string>
     <string name="github_update_checks">GitHub আপডেট চেক</string>
     <string name="github_update_checks_description">দিনে সর্বোচ্চ দুবার চেক করুন; প্রয়োজনে একটি আপডেট কার্ড এবং হোম হেডার আইকন দেখান</string>
     <string name="update_available">আপডেট উপলব্ধ</string>
@@ -1018,4 +1018,17 @@
     <string name="onboarding_contacts_setup_description">অ্যাপ খুঁজে না বেড়িয়ে বন্ধু, পরিবার ও সহকর্মীদের কাছে পৌঁছান। বার্তা প্রস্তুত করতে @ বা কল শুরু করতে # টাইপ করুন।</string>
     <string name="onboarding_messages_setup_description">@ টাইপ করে আপনার পরিচিত অ্যাপটি বেছে নিন। Mink বার্তা প্রস্তুত করবে এবং পরে প্রতিটি ফেভারিটের জন্য আলাদা অ্যাপ বেছে নেওয়া যাবে।</string>
     <string name="onboarding_messages_draft_note">অটোমেটিক মেসেজিং শুরু থেকেই চালু থাকে। Android অ্যাক্সেস প্রস্তুত হলে সিস্টেম মেসেজ সরাসরি SMS পাঠায়; ইন্টিগ্রেটেড অ্যাপ প্রস্তুত খসড়া খোলে।</string>
+    <string name="home_tour_title">কয়েকটি জিনিস চেষ্টা করুন</string>
+    <string name="home_tour_mini_apps_title">Mini Apps ঘুরে দেখুন</string>
+    <string name="home_tour_mini_apps_description">সক্রিয় করা Mini Apps-এর মধ্যে যেতে MinkSpace-এ উপরে বা নিচে সোয়াইপ করুন।</string>
+    <string name="home_tour_shortcuts_title">শর্টকাট সাজান</string>
+    <string name="home_tour_shortcuts_description">হোমের যেকোনো শর্টকাট চেপে ধরে আপনার পছন্দের ক্রমে টেনে নিন।</string>
+    <string name="home_tour_conversations_title">কথোপকথন কাছে রাখুন</string>
+    <string name="home_tour_conversations_description">সক্রিয় কথোপকথন ও প্রিয় মানুষদের দেখতে হোমের উপরের কথোপকথন আইকনে ট্যাপ করুন।</string>
+    <string name="home_tour_widgets_title">উইজেট যোগ করুন</string>
+    <string name="home_tour_widgets_description">উইজেট পৃষ্ঠা খুলতে হোম থেকে বাঁদিকে সোয়াইপ করুন এবং সর্বোচ্চ আটটি Android উইজেট যোগ করুন।</string>
+    <string name="home_tour_mink_day_title">Mink’s Day দিয়ে সীমা নির্ধারণ করুন</string>
+    <string name="home_tour_mink_day_description">মনোযোগ বিঘ্নকারী অ্যাপগুলোর জন্য সম্মিলিত দৈনিক সীমা নির্ধারণ করুন এবং ব্যবহারের সময় দেখুন।</string>
+    <string name="home_tour_appearance_title">হোমকে নিজের মতো করুন</string>
+    <string name="home_tour_appearance_description">ওয়ালপেপার, আইকন, ফন্ট, রং এবং আরও কিছু বেছে নিতে সেটিংসে Appearance খুলুন।</string>
 </resources>

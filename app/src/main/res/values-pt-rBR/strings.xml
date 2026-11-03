@@ -608,7 +608,7 @@
     <string name="terms_of_use">Termos de uso</string>
     <string name="terms_summary">Responsabilidades, garantias e limitações de perda de dados</string>
     <string name="repeat_tutorial">Repetir tutorial</string>
-    <string name="repeat_tutorial_summary">Revise a configuração, Magic Box, Mink’s Day, conversas, widgets e permissões</string>
+    <string name="repeat_tutorial_summary">Revise a configuração essencial e o tour de recursos da tela inicial</string>
     <string name="github_update_checks">Verificações de atualização GitHub</string>
     <string name="github_update_checks_description">Verifique no máximo duas vezes ao dia; mostrar um cartão de atualização e um ícone de cabeçalho inicial quando necessário</string>
     <string name="update_available">Atualização disponível</string>
@@ -1018,4 +1018,17 @@
     <string name="onboarding_contacts_setup_description">Fale com amigos, família e colegas sem procurar entre apps. Digite @ para preparar uma mensagem ou # para iniciar uma chamada.</string>
     <string name="onboarding_messages_setup_description">Digite @ e escolha o app que você já usa. O Mink prepara a mensagem, e cada Favorito poderá usar outro app depois.</string>
     <string name="onboarding_messages_draft_note">As mensagens automáticas começam ativadas. Mensagens do sistema usa SMS direto quando o acesso do Android estiver pronto; apps integrados abrem um rascunho preparado.</string>
+    <string name="home_tour_title">Algumas coisas para experimentar</string>
+    <string name="home_tour_mini_apps_title">Navegue pelos Mini Apps</string>
+    <string name="home_tour_mini_apps_description">Deslize para cima ou para baixo no MinkSpace para navegar pelos Mini Apps ativados.</string>
+    <string name="home_tour_shortcuts_title">Organize seus atalhos</string>
+    <string name="home_tour_shortcuts_description">Toque e segure qualquer atalho da tela inicial e arraste os atalhos para a ordem desejada.</string>
+    <string name="home_tour_conversations_title">Mantenha as conversas por perto</string>
+    <string name="home_tour_conversations_description">Toque no ícone de conversas no topo da tela inicial para ver conversas ativas e pessoas favoritas.</string>
+    <string name="home_tour_widgets_title">Adicione seus widgets</string>
+    <string name="home_tour_widgets_description">Deslize para a esquerda na tela inicial para abrir a página de widgets e adicionar até oito widgets do Android.</string>
+    <string name="home_tour_mink_day_title">Defina limites com o Mink’s Day</string>
+    <string name="home_tour_mink_day_description">Defina um limite diário conjunto para apps que distraem e acompanhe o tempo de uso.</string>
+    <string name="home_tour_appearance_title">Deixe a tela inicial com a sua cara</string>
+    <string name="home_tour_appearance_description">Abra Aparência nas Configurações para escolher papel de parede, ícones, fontes, cores e muito mais.</string>
 </resources>

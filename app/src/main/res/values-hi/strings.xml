@@ -608,7 +608,7 @@
     <string name="terms_of_use">उपयोग की शर्तें</string>
     <string name="terms_summary">जिम्मेदारियाँ, वारंटी और डेटा-हानि सीमाएँ</string>
     <string name="repeat_tutorial">ट्यूटोरियल दोहराएँ</string>
-    <string name="repeat_tutorial_summary">समीक्षा सेटअप, Magic Box, Mink’s Day, वार्तालाप, विजेट और अनुमतियाँ</string>
+    <string name="repeat_tutorial_summary">ज़रूरी सेटअप और होम फ़ीचर टूर फिर से देखें</string>
     <string name="github_update_checks">GitHub अद्यतन जाँच</string>
     <string name="github_update_checks_description">दिन में अधिकतम दो बार जाँच करें; जरूरत पड़ने पर अपडेट कार्ड और होम हेडर आइकन दिखाएं</string>
     <string name="update_available">अपडेट उपलब्ध है</string>
@@ -1018,4 +1018,17 @@
     <string name="onboarding_contacts_setup_description">ऐप ढूँढे बिना दोस्तों, परिवार और सहकर्मियों तक पहुँचें। संदेश तैयार करने के लिए @ या कॉल शुरू करने के लिए # टाइप करें।</string>
     <string name="onboarding_messages_setup_description">@ टाइप करें और वह ऐप चुनें जिसका आप पहले से उपयोग करते हैं। Mink संदेश तैयार करता है और बाद में हर पसंदीदा व्यक्ति के लिए अलग ऐप चुना जा सकता है।</string>
     <string name="onboarding_messages_draft_note">ऑटोमैटिक मैसेजिंग शुरू से चालू रहती है। Android एक्सेस तैयार होने पर सिस्टम संदेश सीधे SMS भेजता है; इंटीग्रेटेड ऐप तैयार ड्राफ़्ट खोलते हैं।</string>
+    <string name="home_tour_title">कुछ चीज़ें आज़माएँ</string>
+    <string name="home_tour_mini_apps_title">Mini Apps में जाएँ</string>
+    <string name="home_tour_mini_apps_description">चालू किए गए Mini Apps के बीच जाने के लिए MinkSpace पर ऊपर या नीचे स्वाइप करें।</string>
+    <string name="home_tour_shortcuts_title">अपने शॉर्टकट सजाएँ</string>
+    <string name="home_tour_shortcuts_description">होम के किसी भी शॉर्टकट को दबाकर रखें, फिर उन्हें मनचाहे क्रम में खींचें।</string>
+    <string name="home_tour_conversations_title">बातचीत पास रखें</string>
+    <string name="home_tour_conversations_description">सक्रिय बातचीत और पसंदीदा लोगों को देखने के लिए होम के ऊपर बातचीत आइकन पर टैप करें।</string>
+    <string name="home_tour_widgets_title">अपने विजेट जोड़ें</string>
+    <string name="home_tour_widgets_description">विजेट पेज खोलने के लिए होम से बाईं ओर स्वाइप करें और अधिकतम आठ Android विजेट जोड़ें।</string>
+    <string name="home_tour_mink_day_title">Mink’s Day से सीमाएँ तय करें</string>
+    <string name="home_tour_mink_day_description">ध्यान भटकाने वाले ऐप्स के लिए एक संयुक्त दैनिक सीमा तय करें और उनका उपयोग समय देखें।</string>
+    <string name="home_tour_appearance_title">होम को अपना बनाएँ</string>
+    <string name="home_tour_appearance_description">वॉलपेपर, आइकन, फ़ॉन्ट, रंग और बहुत कुछ चुनने के लिए सेटिंग में दिखावट खोलें।</string>
 </resources>

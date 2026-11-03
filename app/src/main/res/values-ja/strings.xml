@@ -608,7 +608,7 @@
     <string name="terms_of_use">利用規約</string>
     <string name="terms_summary">責任、保証、およびデータ損失の制限</string>
     <string name="repeat_tutorial">チュートリアルを繰り返す</string>
-    <string name="repeat_tutorial_summary">セットアップ、Magic Box、Mink’s Day、会話、ウィジェット、権限を確認する</string>
+    <string name="repeat_tutorial_summary">基本設定とホーム機能ツアーをもう一度見る</string>
     <string name="github_update_checks">GitHub 更新チェック</string>
     <string name="github_update_checks_description">多くても 1 日に 2 回チェックしてください。必要に応じてアップデート カードとホーム ヘッダー アイコンを表示します</string>
     <string name="update_available">利用可能なアップデート</string>
@@ -1018,4 +1018,17 @@
     <string name="onboarding_contacts_setup_description">アプリを探し回らずに、友人、家族、同僚へ連絡できます。@ でメッセージを準備し、# で通話を始めます。</string>
     <string name="onboarding_messages_setup_description">@ を入力して、いつも使うアプリを選びます。Mink がメッセージを準備し、お気に入りごとに後から別のアプリを指定できます。</string>
     <string name="onboarding_messages_draft_note">自動メッセージは最初からオンです。Android のアクセス準備が整うとシステムメッセージは SMS を直接送信し、連携アプリは作成済みの下書きを開きます。</string>
+    <string name="home_tour_title">試してみたいこと</string>
+    <string name="home_tour_mini_apps_title">Mini Apps を切り替える</string>
+    <string name="home_tour_mini_apps_description">MinkSpace を上下にスワイプして、有効にした Mini Apps を切り替えます。</string>
+    <string name="home_tour_shortcuts_title">ショートカットを並べ替える</string>
+    <string name="home_tour_shortcuts_description">ホームのショートカットを長押しし、好きな順番にドラッグします。</string>
+    <string name="home_tour_conversations_title">会話をすぐそばに</string>
+    <string name="home_tour_conversations_description">ホーム上部の会話アイコンをタップして、進行中の会話やお気に入りの人を表示します。</string>
+    <string name="home_tour_widgets_title">ウィジェットを追加</string>
+    <string name="home_tour_widgets_description">ホームから左へスワイプしてウィジェットページを開き、最大 8 個の Android ウィジェットを追加します。</string>
+    <string name="home_tour_mink_day_title">Mink’s Day で制限を設定</string>
+    <string name="home_tour_mink_day_description">気が散るアプリに 1 日の合計制限を設定し、使用時間を確認できます。</string>
+    <string name="home_tour_appearance_title">ホームを自分らしく</string>
+    <string name="home_tour_appearance_description">設定の「外観」を開いて、壁紙、アイコン、フォント、色などを選べます。</string>
 </resources>

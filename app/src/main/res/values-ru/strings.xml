@@ -612,7 +612,7 @@
     <string name="terms_of_use">Условия использования</string>
     <string name="terms_summary">Ответственность, гарантии и ограничения потери данных</string>
     <string name="repeat_tutorial">Повторить урок</string>
-    <string name="repeat_tutorial_summary">Просмотр настроек, Magic Box, Mink’s Day, беседы, виджеты и разрешения</string>
+    <string name="repeat_tutorial_summary">Повторить основную настройку и обзор функций главного экрана</string>
     <string name="github_update_checks">Проверка обновлений GitHub</string>
     <string name="github_update_checks_description">Проверяйте не более двух раз в день; показывать карточку обновления и значок заголовка «Главная», когда это необходимо</string>
     <string name="update_available">Доступно обновление</string>
@@ -1038,4 +1038,17 @@
     <string name="onboarding_contacts_setup_description">Связывайтесь с друзьями, близкими и коллегами, не разыскивая нужное приложение. Введите @, чтобы подготовить сообщение, или #, чтобы начать вызов.</string>
     <string name="onboarding_messages_setup_description">Введите @ и выберите привычное приложение. Mink подготовит сообщение, а для каждого контакта в Избранном позже можно выбрать другое приложение.</string>
     <string name="onboarding_messages_draft_note">Автоматические сообщения включены сразу. Системные сообщения отправляют SMS напрямую, когда Android предоставит доступ; интегрированные приложения открывают готовый черновик.</string>
+    <string name="home_tour_title">Несколько возможностей</string>
+    <string name="home_tour_mini_apps_title">Переключайте Mini Apps</string>
+    <string name="home_tour_mini_apps_description">Проведите вверх или вниз по MinkSpace, чтобы переключаться между включёнными Mini Apps.</string>
+    <string name="home_tour_shortcuts_title">Расставьте ярлыки</string>
+    <string name="home_tour_shortcuts_description">Нажмите и удерживайте любой ярлык на главном экране, затем перетащите ярлыки в нужном порядке.</string>
+    <string name="home_tour_conversations_title">Держите беседы рядом</string>
+    <string name="home_tour_conversations_description">Нажмите значок бесед вверху главного экрана, чтобы увидеть активные беседы и избранных людей.</string>
+    <string name="home_tour_widgets_title">Добавьте виджеты</string>
+    <string name="home_tour_widgets_description">Проведите влево от главного экрана, чтобы открыть страницу виджетов и добавить до восьми виджетов Android.</string>
+    <string name="home_tour_mink_day_title">Установите ограничения с Mink’s Day</string>
+    <string name="home_tour_mink_day_description">Задайте общий дневной лимит для отвлекающих приложений и следите за временем их использования.</string>
+    <string name="home_tour_appearance_title">Настройте главный экран под себя</string>
+    <string name="home_tour_appearance_description">Откройте раздел «Оформление» в настройках, чтобы выбрать обои, значки, шрифты, цвета и многое другое.</string>
 </resources>
