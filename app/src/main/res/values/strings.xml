@@ -236,6 +236,18 @@
     <string name="shortcut_messenger">Messenger</string>
     <string name="shortcut_files">Files</string>
     <string name="quick_drawer">Quick Drawer</string>
+    <string name="quick_drawer_apps_description">Choose the apps kept one tap away in Quick Drawer.</string>
+    <string name="quick_drawer_controls">Drawer controls</string>
+    <string name="show_minkpad_button">Show MinkPad button</string>
+    <string name="show_minkpad_button_description">Keep Bluetooth keyboard, trackpad, and remote controls in Quick Drawer</string>
+    <string name="show_private_space_button">Show Private Space button</string>
+    <string name="show_private_space_button_description">Open your device’s private apps from Quick Drawer</string>
+    <string name="show_work_profile_button">Show Work profile button</string>
+    <string name="show_work_profile_button_description">Open managed work apps from Quick Drawer</string>
+    <string name="quick_drawer_color">Drawer color</string>
+    <string name="quick_drawer_color_description">Choose the background color used by Quick Drawer.</string>
+    <string name="use_theme_color">Use theme color</string>
+    <string name="reset_quick_drawer_color">Use theme color instead</string>
     <string name="shortcut_slot">Shortcut %1$d</string>
     <string name="shortcut_default">Default · %1$s</string>
     <string name="choose_app_or_keep_default">Choose an app or app shortcut, or keep %1$s</string>
@@ -697,6 +709,7 @@
     <string name="no_apps_found">No apps found.</string>
     <string name="apps">Apps</string>
     <string name="app_shortcuts">Shortcuts</string>
+    <string name="app_grid">App Grid</string>
     <string name="work_profile">Work profile</string>
     <string name="work_apps">Work Apps</string>
     <string name="work_apps_description">Apps managed by your organization stay in this separate drawer. They remain searchable in Magic Box and can be pinned when you choose them.</string>

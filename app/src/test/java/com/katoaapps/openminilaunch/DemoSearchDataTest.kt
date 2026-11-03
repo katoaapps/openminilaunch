@@ -3,7 +3,7 @@ package com.katoaapps.openminilaunch
 import com.katoaapps.openminilaunch.features.demo.DemoSearchData
 import com.katoaapps.openminilaunch.features.demo.DemoHomeData
 import com.katoaapps.openminilaunch.features.demo.DemoHomeProfile
-import com.katoaapps.openminilaunch.model.Shortcut
+import com.katoaapps.openminilaunch.model.AppGridSlot
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Test
@@ -25,13 +25,13 @@ class DemoSearchDataTest {
     fun everyDemoHomeProfileProvidesACompleteRepeatableScene() {
         DemoHomeProfile.entries.forEach { profile ->
             val todos = DemoHomeData.todos(profile)
-            val shortcuts = DemoHomeData.shortcutOrder(profile)
+            val appGridSlots = DemoHomeData.appGridOrder(profile)
 
             assertEquals(5, todos.size)
             assertEquals(todos.size, todos.map { it.id }.distinct().size)
             assertEquals(1, todos.count { it.completed })
-            assertEquals(Shortcut.entries.toSet(), shortcuts.toSet())
-            assertEquals(Shortcut.entries.size, shortcuts.size)
+            assertEquals(AppGridSlot.entries.toSet(), appGridSlots.toSet())
+            assertEquals(AppGridSlot.entries.size, appGridSlots.size)
         }
     }
 

@@ -11,9 +11,9 @@ internal fun LauncherStore.createPortableBackup(appVersion: String): LauncherBac
         sourceAppVersion = appVersion,
         exportedAtMillis = System.currentTimeMillis(),
         launcher = LauncherBackupLayout(
-            shortcutTargets = shortcutTargets.toMap(),
-            shortcutOrder = shortcutOrder.toList(),
-            confirmedShortcutChoices = confirmedShortcutChoices.toList(),
+            appGridTargets = appGridTargets.toMap(),
+            appGridOrder = appGridOrder.toList(),
+            confirmedAppGridChoices = confirmedAppGridChoices.toList(),
             drawerTargets = drawerTargets.toList(),
             libraryShortcutTargets = libraryShortcutTargets.toList(),
         ),
@@ -42,6 +42,12 @@ internal fun LauncherStore.createPortableBackup(appVersion: String): LauncherBac
             preferredMessagingPackage = preferredMessagingPackage,
             callAutomatically = callAutomatically,
             preferredCallingPackage = preferredCallingPackage,
+            quickDrawer = QuickDrawerBackupSettings(
+                showMinkPad = showMinkPadInQuickDrawer,
+                showPrivateSpace = showPrivateSpaceInQuickDrawer,
+                showWorkProfile = showWorkProfileInQuickDrawer,
+                colorArgb = quickDrawerColorArgb,
+            ),
             preferredAiPackage = preferredAiPackage,
             preferredWebPackage = preferredWebPackage,
             usesAutomaticSocialApps = usesAutomaticSocialApps,
@@ -63,9 +69,9 @@ internal fun LauncherStore.restorePortableBackup(backup: LauncherBackup) {
     if (demoSearchDataEnabled) toggleDemoSearchData()
     val settings = backup.settings
     replaceLauncherSelectionsFromBackup(
-        shortcutTargets = backup.launcher.shortcutTargets,
-        shortcutOrder = backup.launcher.shortcutOrder,
-        confirmedShortcutChoices = backup.launcher.confirmedShortcutChoices,
+        appGridTargets = backup.launcher.appGridTargets,
+        appGridOrder = backup.launcher.appGridOrder,
+        confirmedAppGridChoices = backup.launcher.confirmedAppGridChoices,
         drawerTargets = backup.launcher.drawerTargets,
         libraryShortcutTargets = backup.launcher.libraryShortcutTargets,
     )
@@ -115,6 +121,12 @@ internal fun LauncherStore.restorePortableBackup(backup: LauncherBackup) {
     updateCallAutomatically(settings.callAutomatically)
     settings.preferredCallingPackage?.let(::setPreferredCallingApp)
         ?: resetPreferredCallingApp()
+    settings.quickDrawer?.let { quickDrawer ->
+        updateShowMinkPadInQuickDrawer(quickDrawer.showMinkPad)
+        updateShowPrivateSpaceInQuickDrawer(quickDrawer.showPrivateSpace)
+        updateShowWorkProfileInQuickDrawer(quickDrawer.showWorkProfile)
+        setQuickDrawerColor(quickDrawer.colorArgb)
+    }
     settings.preferredAiPackage?.let(::setPreferredAiApp) ?: resetPreferredAiApp()
     settings.preferredWebPackage?.let(::setPreferredWebApp) ?: resetPreferredWebApp()
 

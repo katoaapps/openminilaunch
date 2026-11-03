@@ -229,6 +229,18 @@
     <string name="shortcut_messenger">Messenger</string>
     <string name="shortcut_files">فائلیں</string>
     <string name="quick_drawer">Quick Drawer</string>
+    <string name="quick_drawer_apps_description">Quick Drawer میں ایک ٹیپ سے کھلنے والی ایپس منتخب کریں۔</string>
+    <string name="quick_drawer_controls">ڈراور کنٹرولز</string>
+    <string name="show_minkpad_button">MinkPad بٹن دکھائیں</string>
+    <string name="show_minkpad_button_description">Bluetooth کی بورڈ، ٹریک پیڈ اور ریموٹ کنٹرول کو Quick Drawer میں رکھیں</string>
+    <string name="show_private_space_button">نجی جگہ کا بٹن دکھائیں</string>
+    <string name="show_private_space_button_description">اپنے آلے کی نجی ایپس Quick Drawer سے کھولیں</string>
+    <string name="show_work_profile_button">ورک پروفائل بٹن دکھائیں</string>
+    <string name="show_work_profile_button_description">منظم ورک ایپس Quick Drawer سے کھولیں</string>
+    <string name="quick_drawer_color">ڈراور کا رنگ</string>
+    <string name="quick_drawer_color_description">Quick Drawer کے پس منظر کا رنگ منتخب کریں۔</string>
+    <string name="use_theme_color">تھیم کا رنگ استعمال کریں</string>
+    <string name="reset_quick_drawer_color">تھیم کا رنگ استعمال کریں</string>
     <string name="shortcut_slot">شارٹ کٹ %1$d</string>
     <string name="shortcut_default">ڈیفالٹ · %1$s</string>
     <string name="choose_app_or_keep_default">ایک ایپ یا ایپ شارٹ کٹ منتخب کریں، یا %1$s رکھیں</string>
@@ -642,6 +654,7 @@
     <string name="no_apps_found">کوئی ایپس نہیں ملی۔</string>
     <string name="apps">ایپس</string>
     <string name="app_shortcuts">شارٹ کٹس</string>
+    <string name="app_grid">ایپ گرڈ</string>
     <string name="work_profile">ورک پروفائل</string>
     <string name="work_apps">ورک ایپس</string>
     <string name="work_apps_description">آپ کی تنظیم کے زیر انتظام ایپس اس الگ دراز میں رہتی ہیں۔ انہیں Magic Box میں تلاش اور منتخب کر کے پن کیا جا سکتا ہے۔</string>

@@ -12,7 +12,7 @@ internal enum class SettingsDestination {
     APPEARANCE_ICONS,
     APPEARANCE_LAYOUT_CLOCK,
     MINK_SPACE,
-    SHORTCUTS,
+    APP_GRID,
     QUICK_DRAWER,
     PRIVACY_APPS,
     PIN_SHORTCUT_REQUESTS,
@@ -75,9 +75,13 @@ internal fun settingsPathTo(destination: SettingsDestination): List<SettingsDest
         destination,
     )
     SettingsDestination.MINK_SPACE -> listOf(SettingsDestination.OVERVIEW)
-    SettingsDestination.SHORTCUTS,
-    SettingsDestination.QUICK_DRAWER,
-    SettingsDestination.PRIVACY_APPS -> listOf(SettingsDestination.OVERVIEW, destination)
+    SettingsDestination.APP_GRID,
+    SettingsDestination.QUICK_DRAWER -> listOf(SettingsDestination.OVERVIEW, destination)
+    SettingsDestination.PRIVACY_APPS -> listOf(
+        SettingsDestination.OVERVIEW,
+        SettingsDestination.QUICK_DRAWER,
+        destination,
+    )
     SettingsDestination.APPEARANCE_WALLPAPER,
     SettingsDestination.APPEARANCE_ICONS,
     SettingsDestination.APPEARANCE_LAYOUT_CLOCK -> listOf(
@@ -88,7 +92,7 @@ internal fun settingsPathTo(destination: SettingsDestination): List<SettingsDest
     )
     SettingsDestination.PIN_SHORTCUT_REQUESTS -> listOf(
         SettingsDestination.OVERVIEW,
-        SettingsDestination.SHORTCUTS,
+        SettingsDestination.APP_GRID,
         destination,
     )
     SettingsDestination.FILE_SEARCH -> listOf(

@@ -4,10 +4,11 @@ import android.content.SharedPreferences
 import com.katoaapps.openminilaunch.features.minkspace.todo.TodoItem
 import com.katoaapps.openminilaunch.model.MAX_DRAWER_APPS
 import com.katoaapps.openminilaunch.model.SearchFolder
-import com.katoaapps.openminilaunch.model.Shortcut
+import com.katoaapps.openminilaunch.model.AppGridSlot
 import com.katoaapps.openminilaunch.model.WidgetGridSize
-import com.katoaapps.openminilaunch.model.configurableShortcuts
-import com.katoaapps.openminilaunch.model.shortcutFromStoredName
+import com.katoaapps.openminilaunch.model.appGridSlotFromStoredName
+import com.katoaapps.openminilaunch.model.configurableAppGridSlots
+import com.katoaapps.openminilaunch.model.normalizedAppGridOrder
 import org.json.JSONArray
 import org.json.JSONObject
 
@@ -25,27 +26,27 @@ internal class LauncherStorePersistence(private val prefs: SharedPreferences) {
 
     fun load(maxSearchHistory: Int, maxWidgets: Int): LauncherStoreSnapshot = runCatching {
         val shortcuts = JSONObject(prefs.getString(SHORTCUTS_KEY, "{}") ?: "{}")
-        val shortcutTargets = buildMap {
-            Shortcut.entries.forEach { shortcut ->
-                shortcuts.optString(shortcut.name).takeIf(String::isNotBlank)?.let { put(shortcut, it) }
+        val appGridTargets = buildMap {
+            AppGridSlot.entries.forEach { slot ->
+                shortcuts.optString(slot.name).takeIf(String::isNotBlank)?.let { put(slot, it) }
             }
         }
 
         val savedOrder = JSONArray(prefs.getString(SHORTCUT_ORDER_KEY, "[]") ?: "[]")
-        val shortcutOrder = buildList {
+        val appGridOrder = normalizedAppGridOrder(buildList {
             repeat(savedOrder.length()) { index ->
-                shortcutFromStoredName(savedOrder.optString(index))
+                appGridSlotFromStoredName(savedOrder.optString(index))
                     ?.let { if (it !in this) add(it) }
             }
-            Shortcut.entries.forEach { if (it !in this) add(it) }
-        }
+            AppGridSlot.entries.forEach { if (it !in this) add(it) }
+        })
 
         val confirmed = JSONArray(prefs.getString(CONFIRMED_SHORTCUTS_KEY, "[]") ?: "[]")
         val confirmedChoices = buildList {
-            addAll(shortcutTargets.keys.filter { it in configurableShortcuts })
+            addAll(appGridTargets.keys.filter { it in configurableAppGridSlots })
             repeat(confirmed.length()) { index ->
-                shortcutFromStoredName(confirmed.optString(index))
-                    ?.takeIf { it in configurableShortcuts }
+                appGridSlotFromStoredName(confirmed.optString(index))
+                    ?.takeIf { it in configurableAppGridSlots }
                     ?.let { if (it !in this) add(it) }
             }
         }
@@ -95,9 +96,9 @@ internal class LauncherStorePersistence(private val prefs: SharedPreferences) {
         }
 
         LauncherStoreSnapshot(
-            shortcutTargets = shortcutTargets,
-            shortcutOrder = shortcutOrder,
-            confirmedShortcutChoices = confirmedChoices,
+            appGridTargets = appGridTargets,
+            appGridOrder = appGridOrder,
+            confirmedAppGridChoices = confirmedChoices,
             drawerTargets = drawerTargets,
             libraryShortcutTargets = libraryShortcutTargets,
             searchFolders = searchFolders,
@@ -116,14 +117,14 @@ internal class LauncherStorePersistence(private val prefs: SharedPreferences) {
     }
 
     fun saveLauncherSelections(
-        shortcutTargets: Map<Shortcut, String>,
-        confirmedShortcutChoices: List<Shortcut>,
+        appGridTargets: Map<AppGridSlot, String>,
+        confirmedAppGridChoices: List<AppGridSlot>,
         drawerTargets: List<String>,
         libraryShortcutTargets: List<String>,
     ) {
-        val shortcuts = JSONObject().apply { shortcutTargets.forEach { (key, value) -> put(key.name, value) } }
+        val shortcuts = JSONObject().apply { appGridTargets.forEach { (key, value) -> put(key.name, value) } }
         val drawer = JSONArray().apply { drawerTargets.forEach(::put) }
-        val confirmed = JSONArray().apply { confirmedShortcutChoices.forEach { put(it.name) } }
+        val confirmed = JSONArray().apply { confirmedAppGridChoices.forEach { put(it.name) } }
         val libraryShortcuts = JSONArray().apply { libraryShortcutTargets.forEach(::put) }
         prefs.edit()
             .putString(SHORTCUTS_KEY, shortcuts.toString())
@@ -144,7 +145,7 @@ internal class LauncherStorePersistence(private val prefs: SharedPreferences) {
         prefs.edit().putString(SEARCH_HISTORY_KEY, JSONArray().apply { history.forEach(::put) }.toString()).apply()
     }
 
-    fun saveShortcutOrder(order: List<Shortcut>) {
+    fun saveAppGridOrder(order: List<AppGridSlot>) {
         prefs.edit().putString(
             SHORTCUT_ORDER_KEY,
             JSONArray().apply { order.forEach { put(it.name) } }.toString(),
@@ -182,9 +183,9 @@ internal class LauncherStorePersistence(private val prefs: SharedPreferences) {
 }
 
 internal data class LauncherStoreSnapshot(
-    val shortcutTargets: Map<Shortcut, String> = emptyMap(),
-    val shortcutOrder: List<Shortcut> = Shortcut.entries,
-    val confirmedShortcutChoices: List<Shortcut> = emptyList(),
+    val appGridTargets: Map<AppGridSlot, String> = emptyMap(),
+    val appGridOrder: List<AppGridSlot> = AppGridSlot.entries,
+    val confirmedAppGridChoices: List<AppGridSlot> = emptyList(),
     val drawerTargets: List<String> = emptyList(),
     val libraryShortcutTargets: List<String> = emptyList(),
     val searchFolders: List<SearchFolder> = emptyList(),

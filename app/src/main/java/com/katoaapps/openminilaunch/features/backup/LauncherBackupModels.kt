@@ -5,7 +5,7 @@ import com.katoaapps.openminilaunch.model.FontAppearance
 import com.katoaapps.openminilaunch.model.MinkAppPauseMode
 import com.katoaapps.openminilaunch.model.PinShortcutRequestPresentation
 import com.katoaapps.openminilaunch.model.PalettePreference
-import com.katoaapps.openminilaunch.model.Shortcut
+import com.katoaapps.openminilaunch.model.AppGridSlot
 import com.katoaapps.openminilaunch.model.ThemePreference
 import com.katoaapps.openminilaunch.features.minkspace.todo.TodoItem
 import com.katoaapps.openminilaunch.features.minkspace.MinkSpaceMiniApp
@@ -31,11 +31,18 @@ internal data class LauncherBackup(
 )
 
 internal data class LauncherBackupLayout(
-    val shortcutTargets: Map<Shortcut, String>,
-    val shortcutOrder: List<Shortcut>,
-    val confirmedShortcutChoices: List<Shortcut>,
+    val appGridTargets: Map<AppGridSlot, String>,
+    val appGridOrder: List<AppGridSlot>,
+    val confirmedAppGridChoices: List<AppGridSlot>,
     val drawerTargets: List<String>,
     val libraryShortcutTargets: List<String>,
+)
+
+internal data class QuickDrawerBackupSettings(
+    val showMinkPad: Boolean,
+    val showPrivateSpace: Boolean,
+    val showWorkProfile: Boolean,
+    val colorArgb: Int?,
 )
 
 internal data class LauncherBackupSettings(
@@ -76,4 +83,6 @@ internal data class LauncherBackupSettings(
     val pinShortcutRequestPresentation: PinShortcutRequestPresentation,
     val minkPadPreferences: com.katoaapps.minkpad.core.MinkPadPreferences? = null,
     val fontAppearance: FontAppearance = FontAppearance(),
+    /** Null means this backup predates Quick Drawer appearance and control preferences. */
+    val quickDrawer: QuickDrawerBackupSettings? = null,
 )

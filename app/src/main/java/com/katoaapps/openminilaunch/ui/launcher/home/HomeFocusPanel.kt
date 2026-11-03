@@ -53,7 +53,7 @@ internal fun BoxScope.HomeFocusPanel(
     openTodos: () -> Unit,
     openVCardSettings: () -> Unit,
     openMinkSpaceSettings: () -> Unit,
-    openShortcutSettings: () -> Unit,
+    openAppGridSettings: () -> Unit,
     onTodoCenterChanged: (Offset) -> Unit,
     onPausedApp: (String) -> Unit,
     onOpenDrawer: () -> Unit,
@@ -143,14 +143,14 @@ internal fun BoxScope.HomeFocusPanel(
                         )
                     },
                 )
-                if (expansionLayout.shortcutWidth > Dimens.dp1) {
+                if (expansionLayout.appGridWidth > Dimens.dp1) {
                     Box(
                         Modifier
-                            .width(expansionLayout.shortcutWidth)
+                            .width(expansionLayout.appGridWidth)
                             .fillMaxHeight()
-                            .graphicsLayer { alpha = expansionLayout.shortcutAlpha },
+                            .graphicsLayer { alpha = expansionLayout.appGridAlpha },
                     ) {
-                        ShortcutGrid(
+                        AppGrid(
                             store = store,
                             actions = actions,
                             appAccessState = appAccessState,
@@ -162,7 +162,7 @@ internal fun BoxScope.HomeFocusPanel(
                                     Toast.LENGTH_LONG,
                                 ).show()
                             },
-                            onConfigureExtraApp = openShortcutSettings,
+                            onConfigureExtraApp = openAppGridSettings,
                             compact = qwertyHome,
                             contentColor = contentColor,
                             itemContainerColor = contentColor.copy(alpha = .09f),

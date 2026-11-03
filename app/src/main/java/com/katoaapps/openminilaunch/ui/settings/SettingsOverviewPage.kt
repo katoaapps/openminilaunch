@@ -7,7 +7,6 @@ import androidx.compose.material.icons.automirrored.filled.Chat
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Assistant
 import androidx.compose.material.icons.filled.Apps
-import androidx.compose.material.icons.filled.GridView
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.ImportExport
 import androidx.compose.material.icons.filled.Info
@@ -16,7 +15,6 @@ import androidx.compose.material.icons.filled.Pets
 import androidx.compose.material.icons.filled.Phone
 import androidx.compose.material.icons.filled.Security
 import androidx.compose.material.icons.filled.Settings
-import androidx.compose.material.icons.filled.Shield
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -24,7 +22,6 @@ import com.katoaapps.openminilaunch.BuildConfig
 import com.katoaapps.openminilaunch.R
 import com.katoaapps.openminilaunch.data.LauncherStore
 import com.katoaapps.openminilaunch.features.minkpad.MinkPadLauncherEntry
-import com.katoaapps.openminilaunch.model.MAX_DRAWER_APPS
 import com.katoaapps.openminilaunch.platform.DeviceActions
 import com.katoaapps.openminilaunch.ui.profile.openVirtualContactCard
 import com.katoaapps.openminilaunch.ui.theme.socialGoalLabel
@@ -84,20 +81,10 @@ private fun HomeSettingsSection(
             icon = Icons.Default.Home,
         ) { onNavigate(SettingsDestination.LAUNCHER) }
         SettingsCategoryRow(
-            title = stringResource(R.string.app_shortcuts),
+            title = stringResource(R.string.app_grid),
             subtitle = stringResource(R.string.home_shortcuts_description_v2),
-            icon = Icons.Default.GridView,
-        ) { onNavigate(SettingsDestination.SHORTCUTS) }
-        SettingsCategoryRow(
-            title = stringResource(R.string.quick_drawer),
-            subtitle = stringResource(R.string.magic_box_find_other_apps),
-            status = stringResource(
-                R.string.count_of_max,
-                store.drawerTargets.size,
-                MAX_DRAWER_APPS,
-            ),
             icon = Icons.Default.Apps,
-        ) { onNavigate(SettingsDestination.QUICK_DRAWER) }
+        ) { onNavigate(SettingsDestination.APP_GRID) }
         SettingsCategoryRow(
             title = stringResource(R.string.messaging),
             subtitle = stringResource(R.string.settings_messaging_summary),
@@ -112,11 +99,6 @@ private fun HomeSettingsSection(
                 ?: actions.defaultCallingAppLabel(),
             icon = Icons.Default.Phone,
         ) { onNavigate(SettingsDestination.CALLING) }
-        SettingsCategoryRow(
-            title = stringResource(R.string.privacy_apps),
-            subtitle = stringResource(R.string.privacy_apps_settings_summary),
-            icon = Icons.Default.Shield,
-        ) { onNavigate(SettingsDestination.PRIVACY_APPS) }
     }
 }
 

@@ -229,6 +229,18 @@
     <string name="shortcut_messenger">Messenger</string>
     <string name="shortcut_files">檔案</string>
     <string name="quick_drawer">Quick Drawer</string>
+    <string name="quick_drawer_apps_description">揀選放喺 Quick Drawer 入面、一撳就開到嘅應用程式。</string>
+    <string name="quick_drawer_controls">抽屜控制</string>
+    <string name="show_minkpad_button">顯示 MinkPad 按鈕</string>
+    <string name="show_minkpad_button_description">將藍牙鍵盤、觸控板同遙控器保留喺 Quick Drawer</string>
+    <string name="show_private_space_button">顯示私人空間按鈕</string>
+    <string name="show_private_space_button_description">由 Quick Drawer 開啟裝置嘅私人應用程式</string>
+    <string name="show_work_profile_button">顯示工作設定檔按鈕</string>
+    <string name="show_work_profile_button_description">由 Quick Drawer 開啟受管理嘅工作應用程式</string>
+    <string name="quick_drawer_color">抽屜顏色</string>
+    <string name="quick_drawer_color_description">揀選 Quick Drawer 使用嘅背景顏色。</string>
+    <string name="use_theme_color">使用主題顏色</string>
+    <string name="reset_quick_drawer_color">改用主題顏色</string>
     <string name="shortcut_slot">快捷方式 %1$d</string>
     <string name="shortcut_default">預設 · %1$s</string>
     <string name="choose_app_or_keep_default">選擇應用程式或應用程式捷徑，或保留 %1$s</string>
@@ -642,6 +654,7 @@
     <string name="no_apps_found">搵唔到應用程式。</string>
     <string name="apps">應用程式</string>
     <string name="app_shortcuts">捷徑</string>
+    <string name="app_grid">應用程式網格</string>
     <string name="work_profile">工作簡介</string>
     <string name="work_apps">工作應用程式</string>
     <string name="work_apps_description">由你嘅機構管理嘅應用程式會保留喺呢個獨立抽屜。你仍然可以喺 Magic Box 搜尋，亦可以喺揀選後固定。</string>

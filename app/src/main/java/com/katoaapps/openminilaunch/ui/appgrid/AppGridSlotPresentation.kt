@@ -1,18 +1,11 @@
-package com.katoaapps.openminilaunch.ui.shortcuts
-
-import com.katoaapps.openminilaunch.R
-import com.katoaapps.openminilaunch.model.Shortcut
-import com.katoaapps.openminilaunch.model.configurableShortcuts
-import com.katoaapps.openminilaunch.platform.DeviceActions
-import com.katoaapps.openminilaunch.ui.components.LauncherTargetIcon
-import com.katoaapps.openminilaunch.ui.theme.*
+package com.katoaapps.openminilaunch.ui.appgrid
 
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
@@ -37,30 +30,37 @@ import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
+import com.katoaapps.openminilaunch.R
+import com.katoaapps.openminilaunch.model.AppGridSlot
+import com.katoaapps.openminilaunch.model.configurableAppGridSlots
+import com.katoaapps.openminilaunch.platform.DeviceActions
+import com.katoaapps.openminilaunch.ui.components.LauncherTargetIcon
+import com.katoaapps.openminilaunch.ui.theme.Dimens
+import com.katoaapps.openminilaunch.ui.theme.Muted
 
-internal fun Shortcut.defaultIcon(): ImageVector = when (this) {
-    Shortcut.NOTE -> Icons.Default.EditNote
-    Shortcut.EVENT -> Icons.Default.Event
-    Shortcut.WEATHER -> Icons.Default.Cloud
-    Shortcut.CALL -> Icons.Default.Call
-    Shortcut.MESSAGE -> Icons.AutoMirrored.Filled.Message
-    Shortcut.FILES -> Icons.Default.FolderOpen
-    Shortcut.EXTRA -> Icons.Default.AddCircle
-    Shortcut.DRAWER -> Icons.Default.GridView
+internal fun AppGridSlot.defaultIcon(): ImageVector = when (this) {
+    AppGridSlot.NOTE -> Icons.Default.EditNote
+    AppGridSlot.EVENT -> Icons.Default.Event
+    AppGridSlot.WEATHER -> Icons.Default.Cloud
+    AppGridSlot.CALL -> Icons.Default.Call
+    AppGridSlot.MESSAGE -> Icons.AutoMirrored.Filled.Message
+    AppGridSlot.FILES -> Icons.Default.FolderOpen
+    AppGridSlot.EXTRA -> Icons.Default.AddCircle
+    AppGridSlot.DRAWER -> Icons.Default.GridView
 }
 
 @Composable
-internal fun Shortcut.displayLabel(): String = stringResource(labelRes)
+internal fun AppGridSlot.displayLabel(): String = stringResource(labelRes)
 
 @Composable
-internal fun Shortcut.displaySlotLabel(): String {
-    val slot = configurableShortcuts.indexOf(this)
+internal fun AppGridSlot.displaySlotLabel(): String {
+    val slot = configurableAppGridSlots.indexOf(this)
     return if (slot >= 0) stringResource(R.string.shortcut_slot, slot + 1) else displayLabel()
 }
 
 @Composable
-internal fun ShortcutAssignmentRow(
-    shortcut: Shortcut,
+internal fun AppGridSlotAssignmentRow(
+    slot: AppGridSlot,
     targetKey: String?,
     actions: DeviceActions,
     subtitle: String,
@@ -90,7 +90,7 @@ internal fun ShortcutAssignmentRow(
                 LauncherTargetIcon(target, actions, targetIconSize, contentDescription = target.label)
             } else {
                 Icon(
-                    shortcut.defaultIcon(),
+                    slot.defaultIcon(),
                     null,
                     Modifier.size(builtInIconSize),
                     tint = MaterialTheme.colorScheme.onSurface,
@@ -99,7 +99,7 @@ internal fun ShortcutAssignmentRow(
         }
         Column(Modifier.weight(1f).padding(horizontal = textPadding)) {
             Text(
-                shortcut.displaySlotLabel(),
+                slot.displaySlotLabel(),
                 fontWeight = FontWeight.SemiBold,
                 fontSize = if (compact) Dimens.sp13 else Dimens.sp14,
                 maxLines = 1,

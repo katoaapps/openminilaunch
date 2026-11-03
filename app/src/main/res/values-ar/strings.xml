@@ -229,6 +229,18 @@
     <string name="shortcut_messenger">Messenger</string>
     <string name="shortcut_files">ملفات</string>
     <string name="quick_drawer">Quick Drawer</string>
+    <string name="quick_drawer_apps_description">اختر التطبيقات التي تريد الوصول إليها بنقرة واحدة في Quick Drawer.</string>
+    <string name="quick_drawer_controls">عناصر تحكم الدرج</string>
+    <string name="show_minkpad_button">إظهار زر MinkPad</string>
+    <string name="show_minkpad_button_description">احتفظ بلوحة مفاتيح Bluetooth ولوحة التتبع وجهاز التحكم في Quick Drawer</string>
+    <string name="show_private_space_button">إظهار زر المساحة الخاصة</string>
+    <string name="show_private_space_button_description">افتح التطبيقات الخاصة على جهازك من Quick Drawer</string>
+    <string name="show_work_profile_button">إظهار زر الملف الشخصي للعمل</string>
+    <string name="show_work_profile_button_description">افتح تطبيقات العمل المُدارة من Quick Drawer</string>
+    <string name="quick_drawer_color">لون الدرج</string>
+    <string name="quick_drawer_color_description">اختر لون خلفية Quick Drawer.</string>
+    <string name="use_theme_color">استخدام لون المظهر</string>
+    <string name="reset_quick_drawer_color">استخدام لون المظهر بدلاً من ذلك</string>
     <string name="shortcut_slot">الاختصار %1$d</string>
     <string name="shortcut_default">الافتراضي · %1$s</string>
     <string name="choose_app_or_keep_default">اختر تطبيقًا أو اختصارًا للتطبيق، أو احتفظ بـ %1$s</string>
@@ -646,6 +658,7 @@
     <string name="no_apps_found">لم يتم العثور على أي تطبيقات.</string>
     <string name="apps">تطبيقات</string>
     <string name="app_shortcuts">الاختصارات</string>
+    <string name="app_grid">شبكة التطبيقات</string>
     <string name="work_profile">الملف الشخصي للعمل</string>
     <string name="work_apps">تطبيقات العمل</string>
     <string name="work_apps_description">تبقى التطبيقات التي تديرها مؤسستك في هذا الدرج المنفصل. ويمكن البحث عنها في Magic Box وتثبيتها عند اختيارها.</string>

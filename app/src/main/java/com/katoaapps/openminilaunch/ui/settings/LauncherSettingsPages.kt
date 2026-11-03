@@ -4,12 +4,12 @@ import com.katoaapps.openminilaunch.R
 import com.katoaapps.openminilaunch.data.LauncherStore
 import com.katoaapps.openminilaunch.model.MAX_DRAWER_APPS
 import com.katoaapps.openminilaunch.model.PinShortcutRequestPresentation
-import com.katoaapps.openminilaunch.model.Shortcut
+import com.katoaapps.openminilaunch.model.AppGridSlot
 import com.katoaapps.openminilaunch.platform.DeviceActions
 import com.katoaapps.openminilaunch.ui.components.SectionLabel
 import com.katoaapps.openminilaunch.ui.components.SettingsRow
-import com.katoaapps.openminilaunch.ui.shortcuts.ShortcutAssignmentRow
-import com.katoaapps.openminilaunch.ui.shortcuts.displayLabel
+import com.katoaapps.openminilaunch.ui.appgrid.AppGridSlotAssignmentRow
+import com.katoaapps.openminilaunch.ui.appgrid.displayLabel
 import com.katoaapps.openminilaunch.ui.theme.Dimens
 import com.katoaapps.openminilaunch.ui.theme.Muted
 import com.katoaapps.openminilaunch.ui.theme.Sage
@@ -22,7 +22,6 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.AddToHomeScreen
 import androidx.compose.material.icons.filled.Apps
-import androidx.compose.material.icons.filled.GridView
 import androidx.compose.material.icons.filled.Palette
 import androidx.compose.material.icons.filled.Restore
 import androidx.compose.material.icons.filled.Translate
@@ -66,33 +65,33 @@ internal fun LauncherSettingsPage(
 }
 
 @Composable
-internal fun ShortcutsSettingsPage(
+internal fun AppGridSettingsPage(
     store: LauncherStore,
     actions: DeviceActions,
-    onPickShortcut: (Shortcut) -> Unit,
+    onPickAppGridSlot: (AppGridSlot) -> Unit,
     onNavigate: (SettingsDestination) -> Unit,
     goBack: () -> Unit,
 ) {
     val context = LocalContext.current
-    SettingsPage(stringResource(R.string.app_shortcuts), goBack) {
+    SettingsPage(stringResource(R.string.app_grid), goBack) {
         SectionLabel(stringResource(R.string.home_shortcuts))
         Text(
             stringResource(R.string.home_shortcuts_description_v2),
             color = Muted,
             fontSize = Dimens.sp13,
         )
-        store.shortcutOrder.chunked(2).forEach { rowShortcuts ->
+        store.appGridOrder.chunked(2).forEach { rowSlots ->
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.spacedBy(Dimens.dp8),
             ) {
-                rowShortcuts.forEach { shortcut ->
-                    val targetKey = store.shortcutTargets[shortcut]
-                    ShortcutAssignmentRow(
-                        shortcut = shortcut,
+                rowSlots.forEach { slot ->
+                    val targetKey = store.appGridTargets[slot]
+                    AppGridSlotAssignmentRow(
+                        slot = slot,
                         targetKey = targetKey,
                         actions = actions,
-                        subtitle = if (shortcut == Shortcut.DRAWER) {
+                        subtitle = if (slot == AppGridSlot.DRAWER) {
                             stringResource(
                                 R.string.count_of_max,
                                 store.drawerTargets.size,
@@ -100,20 +99,20 @@ internal fun ShortcutsSettingsPage(
                             )
                         } else {
                             targetKey?.let(actions::launcherTargetLabel)
-                                ?: stringResource(R.string.shortcut_default, shortcut.displayLabel())
+                                ?: stringResource(R.string.shortcut_default, slot.displayLabel())
                         },
                         modifier = Modifier.weight(1f),
                         compact = true,
                         onClick = {
-                            if (shortcut == Shortcut.DRAWER) {
+                            if (slot == AppGridSlot.DRAWER) {
                                 onNavigate(SettingsDestination.QUICK_DRAWER)
                             } else {
-                                onPickShortcut(shortcut)
+                                onPickAppGridSlot(slot)
                             }
                         },
                     )
                 }
-                if (rowShortcuts.size == 1) Spacer(Modifier.weight(1f))
+                if (rowSlots.size == 1) Spacer(Modifier.weight(1f))
             }
         }
         SettingsRow(
@@ -121,7 +120,7 @@ internal fun ShortcutsSettingsPage(
             stringResource(R.string.reset_home_grid_order_description),
             Icons.Default.Restore,
         ) {
-            store.resetShortcutOrder()
+            store.resetAppGridOrder()
             Toast.makeText(
                 context,
                 context.getString(R.string.shortcut_order_reset),
@@ -140,22 +139,5 @@ internal fun ShortcutsSettingsPage(
             ),
             Icons.AutoMirrored.Filled.AddToHomeScreen,
         ) { onNavigate(SettingsDestination.PIN_SHORTCUT_REQUESTS) }
-    }
-}
-
-@Composable
-internal fun QuickDrawerSettingsPage(
-    store: LauncherStore,
-    onPickDrawer: () -> Unit,
-    goBack: () -> Unit,
-) {
-    SettingsPage(stringResource(R.string.quick_drawer), goBack) {
-        SettingsRow(
-            stringResource(R.string.selected_apps),
-            stringResource(R.string.count_of_max, store.drawerTargets.size, MAX_DRAWER_APPS),
-            Icons.Default.Apps,
-            onClick = onPickDrawer,
-        )
-        Text(stringResource(R.string.magic_box_find_other_apps), color = Muted, fontSize = Dimens.sp13)
     }
 }

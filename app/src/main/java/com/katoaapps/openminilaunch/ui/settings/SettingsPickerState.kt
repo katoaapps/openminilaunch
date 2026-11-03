@@ -6,10 +6,10 @@ import com.katoaapps.openminilaunch.features.contacts.CallingAppOption
 import com.katoaapps.openminilaunch.model.LaunchableApp
 import com.katoaapps.openminilaunch.model.LauncherAppTarget
 import com.katoaapps.openminilaunch.model.LauncherShortcutTarget
-import com.katoaapps.openminilaunch.model.Shortcut
+import com.katoaapps.openminilaunch.model.AppGridSlot
 
 internal sealed interface SettingsPicker {
-    data class ShortcutApp(val shortcut: Shortcut) : SettingsPicker
+    data class AppGridSlotPicker(val slot: AppGridSlot) : SettingsPicker
     data object DrawerApps : SettingsPicker
     data object PrivateContainerGateway : SettingsPicker
     data object CuratedAiApp : SettingsPicker

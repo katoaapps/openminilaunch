@@ -229,6 +229,18 @@
     <string name="shortcut_messenger">Messenger</string>
     <string name="shortcut_files">ファイル</string>
     <string name="quick_drawer">Quick Drawer</string>
+    <string name="quick_drawer_apps_description">Quick Drawer からワンタップで開くアプリを選択します。</string>
+    <string name="quick_drawer_controls">ドロワーの操作</string>
+    <string name="show_minkpad_button">MinkPad ボタンを表示</string>
+    <string name="show_minkpad_button_description">Bluetooth キーボード、トラックパッド、リモコンを Quick Drawer から開けるようにします</string>
+    <string name="show_private_space_button">プライベート スペース ボタンを表示</string>
+    <string name="show_private_space_button_description">端末のプライベート アプリを Quick Drawer から開きます</string>
+    <string name="show_work_profile_button">仕事用プロファイル ボタンを表示</string>
+    <string name="show_work_profile_button_description">管理対象の仕事用アプリを Quick Drawer から開きます</string>
+    <string name="quick_drawer_color">ドロワーの色</string>
+    <string name="quick_drawer_color_description">Quick Drawer の背景色を選択します。</string>
+    <string name="use_theme_color">テーマの色を使用</string>
+    <string name="reset_quick_drawer_color">テーマの色に戻す</string>
     <string name="shortcut_slot">ショートカット %1$d</string>
     <string name="shortcut_default">デフォルト・%1$s</string>
     <string name="choose_app_or_keep_default">アプリまたはアプリのショートカットを選択するか、%1$s のままにしてください</string>
@@ -642,6 +654,7 @@
     <string name="no_apps_found">アプリが見つかりませんでした。</string>
     <string name="apps">アプリ</string>
     <string name="app_shortcuts">ショートカット</string>
+    <string name="app_grid">アプリグリッド</string>
     <string name="work_profile">仕事用プロファイル</string>
     <string name="work_apps">仕事用アプリ</string>
     <string name="work_apps_description">組織が管理するアプリは、この別のドロワーに表示されます。Magic Box で検索でき、選択して固定することもできます。</string>

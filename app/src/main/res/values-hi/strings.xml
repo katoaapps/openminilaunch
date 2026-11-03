@@ -229,6 +229,18 @@
     <string name="shortcut_messenger">Messenger</string>
     <string name="shortcut_files">फ़ाइलें</string>
     <string name="quick_drawer">Quick Drawer</string>
+    <string name="quick_drawer_apps_description">Quick Drawer में एक टैप से खुलने वाले ऐप चुनें।</string>
+    <string name="quick_drawer_controls">ड्रॉअर नियंत्रण</string>
+    <string name="show_minkpad_button">MinkPad बटन दिखाएं</string>
+    <string name="show_minkpad_button_description">Bluetooth कीबोर्ड, ट्रैकपैड और रिमोट कंट्रोल को Quick Drawer में रखें</string>
+    <string name="show_private_space_button">निजी स्पेस बटन दिखाएं</string>
+    <string name="show_private_space_button_description">अपने डिवाइस के निजी ऐप Quick Drawer से खोलें</string>
+    <string name="show_work_profile_button">कार्य प्रोफ़ाइल बटन दिखाएं</string>
+    <string name="show_work_profile_button_description">प्रबंधित कार्य ऐप Quick Drawer से खोलें</string>
+    <string name="quick_drawer_color">ड्रॉअर का रंग</string>
+    <string name="quick_drawer_color_description">Quick Drawer के बैकग्राउंड का रंग चुनें।</string>
+    <string name="use_theme_color">थीम का रंग इस्तेमाल करें</string>
+    <string name="reset_quick_drawer_color">थीम का रंग इस्तेमाल करें</string>
     <string name="shortcut_slot">शॉर्टकट %1$d</string>
     <string name="shortcut_default">डिफ़ॉल्ट · %1$s</string>
     <string name="choose_app_or_keep_default">कोई ऐप या ऐप शॉर्टकट चुनें, या %1$s रखें</string>
@@ -642,6 +654,7 @@
     <string name="no_apps_found">कोई ऐप्स नहीं मिला.</string>
     <string name="apps">ऐप्स</string>
     <string name="app_shortcuts">शॉर्टकट</string>
+    <string name="app_grid">ऐप ग्रिड</string>
     <string name="work_profile">कार्य प्रोफ़ाइल</string>
     <string name="work_apps">कार्य ऐप्स</string>
     <string name="work_apps_description">आपके संगठन द्वारा प्रबंधित ऐप्स इस अलग ड्रॉअर में रहते हैं। इन्हें Magic Box में खोजा जा सकता है और चुने जाने पर पिन किया जा सकता है।</string>

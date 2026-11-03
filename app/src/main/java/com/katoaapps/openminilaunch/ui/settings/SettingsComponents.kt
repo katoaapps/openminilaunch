@@ -98,6 +98,7 @@ private fun <T> AppPickerDialogContent(
     selected: Set<String>,
     appKey: (T) -> String,
     appLabel: (T) -> String,
+    appSearchText: (T) -> String = appLabel,
     appIcon: @Composable (T, Dp) -> Unit,
     onApp: (T) -> Unit,
     onReset: (() -> Unit)? = null,
@@ -115,16 +116,25 @@ private fun <T> AppPickerDialogContent(
     onSupportingAction: () -> Unit = {},
     selectedItems: List<T> = apps,
     categoryContent: (@Composable () -> Unit)? = null,
-    customListContent: (@Composable () -> Unit)? = null,
+    customListContent: (@Composable (List<T>) -> Unit)? = null,
 ) {
+    var query by rememberSaveable { mutableStateOf("") }
+    val visibleApps = remember(apps, query) {
+        val normalizedQuery = query.trim()
+        if (normalizedQuery.isBlank()) {
+            apps
+        } else {
+            apps.filter { appSearchText(it).contains(normalizedQuery, ignoreCase = true) }
+        }
+    }
     val gridState = rememberLazyGridState()
     var requestedLetter by remember { mutableStateOf('A') }
-    LaunchedEffect(requestedLetter, apps) {
-        if (apps.isNotEmpty()) {
-            val index = apps.indexOfFirst {
+    LaunchedEffect(requestedLetter, visibleApps) {
+        if (visibleApps.isNotEmpty()) {
+            val index = visibleApps.indexOfFirst {
                 (appLabel(it).firstOrNull()?.uppercaseChar() ?: 'Z') >= requestedLetter
             }
-                .let { if (it < 0) apps.lastIndex else it }
+                .let { if (it < 0) visibleApps.lastIndex else it }
             if (index >= 0) gridState.scrollToItem(index)
         }
     }
@@ -143,6 +153,23 @@ private fun <T> AppPickerDialogContent(
                     IconButton(onClick = onDismiss) { Icon(Icons.Default.Close, stringResource(R.string.close)) }
                 }
                 categoryContent?.invoke()
+                OutlinedTextField(
+                    value = query,
+                    onValueChange = { query = it },
+                    placeholder = { Text(stringResource(R.string.search_apps)) },
+                    leadingIcon = { Icon(Icons.Default.Search, null) },
+                    trailingIcon = if (query.isNotEmpty()) {
+                        {
+                            IconButton(onClick = { query = "" }) {
+                                Icon(Icons.Default.Close, stringResource(R.string.clear_search))
+                            }
+                        }
+                    } else {
+                        null
+                    },
+                    singleLine = true,
+                    modifier = Modifier.fillMaxWidth().padding(bottom = Dimens.dp8),
+                )
                 supportingText?.let { guide ->
                     Surface(
                         color = MaterialTheme.colorScheme.secondaryContainer,
@@ -223,8 +250,10 @@ private fun <T> AppPickerDialogContent(
                         CircularProgressIndicator(Modifier.align(Alignment.Center), color = MaterialTheme.colorScheme.onSurface)
                     } else if (apps.isEmpty()) {
                         Text(emptyMessage ?: stringResource(R.string.no_apps_found), Modifier.align(Alignment.Center).padding(Dimens.dp24), textAlign = TextAlign.Center, color = Muted)
+                    } else if (visibleApps.isEmpty()) {
+                        Text(stringResource(R.string.no_matching_apps), Modifier.align(Alignment.Center).padding(Dimens.dp24), textAlign = TextAlign.Center, color = Muted)
                     } else if (customListContent != null) {
-                        customListContent()
+                        customListContent(visibleApps)
                     } else {
                         LazyVerticalGrid(
                             columns = GridCells.Fixed(3),
@@ -232,7 +261,7 @@ private fun <T> AppPickerDialogContent(
                             contentPadding = PaddingValues(top = Dimens.dp8, bottom = Dimens.dp8, end = Dimens.dp34),
                             modifier = Modifier.fillMaxSize(),
                         ) {
-                            items(apps, key = appKey) { app ->
+                            items(visibleApps, key = appKey) { app ->
                                 val isSelected = appKey(app) in selected
                                 Column(
                                     Modifier.padding(Dimens.dp4).clip(RoundedCornerShape(Dimens.dp16))
@@ -252,10 +281,12 @@ private fun <T> AppPickerDialogContent(
                                 }
                             }
                         }
-                        AlphabetRail(
-                            onLetterSelected = { requestedLetter = it },
-                            modifier = Modifier.align(Alignment.CenterEnd),
-                        )
+                        if (query.isBlank()) {
+                            AlphabetRail(
+                                onLetterSelected = { requestedLetter = it },
+                                modifier = Modifier.align(Alignment.CenterEnd),
+                            )
+                        }
                     }
                 }
             }
@@ -303,6 +334,9 @@ internal fun LauncherTargetPickerDialog(
         selected = selected,
         appKey = LauncherTarget::selectionKey,
         appLabel = LauncherTarget::label,
+        appSearchText = { target ->
+            "${target.label} ${target.packageName} ${actions.appLabel(target.packageName)}"
+        },
         appIcon = { target, size -> LauncherTargetIcon(target, actions, size) },
         onApp = onTarget,
         onReset = onReset,
@@ -354,9 +388,9 @@ internal fun LauncherTargetPickerDialog(
             }
         },
         customListContent = if (selectedCategory == LauncherTargetCategory.SHORTCUTS) {
-            {
+            { filteredTargets ->
                 LauncherShortcutGroupList(
-                    shortcuts = visibleTargets.filterIsInstance<LauncherShortcutTarget>(),
+                    shortcuts = filteredTargets.filterIsInstance<LauncherShortcutTarget>(),
                     apps = apps,
                     selected = selected,
                     actions = actions,

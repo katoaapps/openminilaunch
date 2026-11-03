@@ -336,28 +336,28 @@ class DeviceActions(private val context: Context) {
         return discoveredClock?.let(::launchLauncherTarget) == true
     }
 
-    fun launchShortcut(shortcut: Shortcut, assignedTarget: String?, openDrawer: () -> Unit) {
-        if (!assignedTarget.isNullOrBlank() && shortcut != Shortcut.DRAWER) {
+    fun launchAppGridSlot(slot: AppGridSlot, assignedTarget: String?, openDrawer: () -> Unit) {
+        if (!assignedTarget.isNullOrBlank() && slot != AppGridSlot.DRAWER) {
             launchLauncherSelection(assignedTarget)
             return
         }
-        when (shortcut) {
-            Shortcut.NOTE -> createNote("")
-            Shortcut.EVENT -> start(Intent(Intent.ACTION_INSERT).setData(CalendarContract.Events.CONTENT_URI))
-            Shortcut.WEATHER -> start(Intent(Intent.ACTION_VIEW, Uri.parse("https://weather.com/")))
-            Shortcut.EXTRA -> openDrawer()
-            Shortcut.CALL -> start(Intent(Intent.ACTION_DIAL))
-            Shortcut.MESSAGE -> launchDefaultMessagesApp()
-            Shortcut.FILES -> openFilesApp()
-            Shortcut.DRAWER -> openDrawer()
+        when (slot) {
+            AppGridSlot.NOTE -> createNote("")
+            AppGridSlot.EVENT -> start(Intent(Intent.ACTION_INSERT).setData(CalendarContract.Events.CONTENT_URI))
+            AppGridSlot.WEATHER -> start(Intent(Intent.ACTION_VIEW, Uri.parse("https://weather.com/")))
+            AppGridSlot.EXTRA -> openDrawer()
+            AppGridSlot.CALL -> start(Intent(Intent.ACTION_DIAL))
+            AppGridSlot.MESSAGE -> launchDefaultMessagesApp()
+            AppGridSlot.FILES -> openFilesApp()
+            AppGridSlot.DRAWER -> openDrawer()
         }
     }
 
-    fun shortcutTargetPackage(shortcut: Shortcut, assignedTarget: String?): String? {
-        if (!assignedTarget.isNullOrBlank() && shortcut != Shortcut.DRAWER) {
+    fun appGridSlotTargetPackage(slot: AppGridSlot, assignedTarget: String?): String? {
+        if (!assignedTarget.isNullOrBlank() && slot != AppGridSlot.DRAWER) {
             return resolveLauncherSelection(assignedTarget).takeUnless(LauncherTarget::isWorkProfile)?.packageName
         }
-        return if (shortcut == Shortcut.MESSAGE) Telephony.Sms.getDefaultSmsPackage(context) else null
+        return if (slot == AppGridSlot.MESSAGE) Telephony.Sms.getDefaultSmsPackage(context) else null
     }
 
     fun searchContacts(query: String, useDemoData: Boolean = false): List<ContactResult> {

@@ -14,7 +14,7 @@ internal fun visibleTodoItemsForHeight(availableHeightDp: Float): Int = when {
     else -> 5
 }
 
-internal fun shortcutCellSizeDp(availableWidthDp: Float, availableHeightDp: Float): Float {
+internal fun appGridSlotCellSizeDp(availableWidthDp: Float, availableHeightDp: Float): Float {
     val horizontalGap = 4f
     val verticalGaps = 12f
     val widthBound = (availableWidthDp - horizontalGap) / 2f

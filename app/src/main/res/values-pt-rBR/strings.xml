@@ -229,6 +229,18 @@
     <string name="shortcut_messenger">Messenger</string>
     <string name="shortcut_files">Arquivos</string>
     <string name="quick_drawer">Quick Drawer</string>
+    <string name="quick_drawer_apps_description">Escolha os aplicativos que ficarão a um toque de distância no Quick Drawer.</string>
+    <string name="quick_drawer_controls">Controles da gaveta</string>
+    <string name="show_minkpad_button">Mostrar botão do MinkPad</string>
+    <string name="show_minkpad_button_description">Mantenha teclado Bluetooth, trackpad e controle remoto no Quick Drawer</string>
+    <string name="show_private_space_button">Mostrar botão do Espaço privado</string>
+    <string name="show_private_space_button_description">Abra os aplicativos privados do dispositivo pelo Quick Drawer</string>
+    <string name="show_work_profile_button">Mostrar botão do perfil de trabalho</string>
+    <string name="show_work_profile_button_description">Abra aplicativos de trabalho gerenciados pelo Quick Drawer</string>
+    <string name="quick_drawer_color">Cor da gaveta</string>
+    <string name="quick_drawer_color_description">Escolha a cor de fundo usada pelo Quick Drawer.</string>
+    <string name="use_theme_color">Usar a cor do tema</string>
+    <string name="reset_quick_drawer_color">Usar a cor do tema</string>
     <string name="shortcut_slot">Atalho %1$d</string>
     <string name="shortcut_default">Padrão · %1$s</string>
     <string name="choose_app_or_keep_default">Escolha um aplicativo ou atalho de aplicativo ou mantenha %1$s</string>
@@ -642,6 +654,7 @@
     <string name="no_apps_found">Nenhum aplicativo encontrado.</string>
     <string name="apps">Aplicativos</string>
     <string name="app_shortcuts">Atalhos</string>
+    <string name="app_grid">Grade de apps</string>
     <string name="work_profile">Perfil de trabalho</string>
     <string name="work_apps">Apps de trabalho</string>
     <string name="work_apps_description">Os apps gerenciados pela sua organização ficam nesta gaveta separada. Eles continuam pesquisáveis na Magic Box e podem ser fixados quando você os escolher.</string>

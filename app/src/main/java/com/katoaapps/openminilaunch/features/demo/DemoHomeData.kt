@@ -4,7 +4,7 @@ import androidx.annotation.ColorRes
 import androidx.annotation.StringRes
 import com.katoaapps.openminilaunch.R
 import com.katoaapps.openminilaunch.features.minkspace.todo.TodoItem
-import com.katoaapps.openminilaunch.model.Shortcut
+import com.katoaapps.openminilaunch.model.AppGridSlot
 
 internal enum class DemoHomeProfile(
     @param:StringRes val labelRes: Int,
@@ -91,23 +91,23 @@ internal object DemoHomeData {
             )
         }
 
-    fun shortcutOrder(profile: DemoHomeProfile): List<Shortcut> = when (profile) {
-        DemoHomeProfile.CLASSIC -> Shortcut.entries
+    fun appGridOrder(profile: DemoHomeProfile): List<AppGridSlot> = when (profile) {
+        DemoHomeProfile.CLASSIC -> AppGridSlot.entries
         DemoHomeProfile.WORK -> listOf(
-            Shortcut.FILES, Shortcut.EVENT, Shortcut.NOTE, Shortcut.EXTRA,
-            Shortcut.MESSAGE, Shortcut.CALL, Shortcut.WEATHER, Shortcut.DRAWER,
+            AppGridSlot.FILES, AppGridSlot.EVENT, AppGridSlot.NOTE, AppGridSlot.EXTRA,
+            AppGridSlot.MESSAGE, AppGridSlot.CALL, AppGridSlot.WEATHER, AppGridSlot.DRAWER,
         )
         DemoHomeProfile.NIGHT -> listOf(
-            Shortcut.WEATHER, Shortcut.EXTRA, Shortcut.NOTE, Shortcut.EVENT,
-            Shortcut.CALL, Shortcut.MESSAGE, Shortcut.FILES, Shortcut.DRAWER,
+            AppGridSlot.WEATHER, AppGridSlot.EXTRA, AppGridSlot.NOTE, AppGridSlot.EVENT,
+            AppGridSlot.CALL, AppGridSlot.MESSAGE, AppGridSlot.FILES, AppGridSlot.DRAWER,
         )
         DemoHomeProfile.PERSONAL -> listOf(
-            Shortcut.MESSAGE, Shortcut.CALL, Shortcut.EVENT, Shortcut.EXTRA,
-            Shortcut.NOTE, Shortcut.WEATHER, Shortcut.FILES, Shortcut.DRAWER,
+            AppGridSlot.MESSAGE, AppGridSlot.CALL, AppGridSlot.EVENT, AppGridSlot.EXTRA,
+            AppGridSlot.NOTE, AppGridSlot.WEATHER, AppGridSlot.FILES, AppGridSlot.DRAWER,
         )
         DemoHomeProfile.FRESH -> listOf(
-            Shortcut.NOTE, Shortcut.FILES, Shortcut.EVENT, Shortcut.EXTRA,
-            Shortcut.MESSAGE, Shortcut.WEATHER, Shortcut.CALL, Shortcut.DRAWER,
+            AppGridSlot.NOTE, AppGridSlot.FILES, AppGridSlot.EVENT, AppGridSlot.EXTRA,
+            AppGridSlot.MESSAGE, AppGridSlot.WEATHER, AppGridSlot.CALL, AppGridSlot.DRAWER,
         )
     }
 

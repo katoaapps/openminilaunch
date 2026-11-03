@@ -64,8 +64,10 @@ import com.katoaapps.openminilaunch.features.apps.PendingPinShortcut
 import com.katoaapps.openminilaunch.model.MAX_DRAWER_APPS
 import com.katoaapps.openminilaunch.model.PinShortcutDestination
 import com.katoaapps.openminilaunch.model.PinShortcutRequestPresentation
-import com.katoaapps.openminilaunch.model.configurableShortcuts
+import com.katoaapps.openminilaunch.model.configurableAppGridSlots
 import com.katoaapps.openminilaunch.platform.DeviceActions
+import com.katoaapps.openminilaunch.ui.appgrid.displaySlotLabel
+import com.katoaapps.openminilaunch.ui.appgrid.displayLabel
 import com.katoaapps.openminilaunch.ui.theme.Dimens
 import com.katoaapps.openminilaunch.ui.theme.Muted
 import com.katoaapps.openminilaunch.ui.theme.Rust
@@ -249,7 +251,7 @@ private fun PinShortcutPlacementList(
     modifier: Modifier = Modifier,
     contentPadding: PaddingValues,
 ) {
-    val homeDestinations = configurableShortcuts.map(PinShortcutDestination::HomeSlot)
+    val homeDestinations = configurableAppGridSlots.map(PinShortcutDestination::HomeSlot)
     LazyColumn(
         modifier = modifier.fillMaxSize(),
         contentPadding = contentPadding,
@@ -279,13 +281,13 @@ private fun PinShortcutPlacementList(
         }
         item { DestinationSectionLabel(stringResource(R.string.home_shortcuts)) }
         items(homeDestinations, key = PinShortcutDestination::key) { destination ->
-            val currentKey = store.shortcutTargets[destination.shortcut]
+            val currentKey = store.appGridTargets[destination.slot]
             DestinationRow(
-                title = destination.shortcut.displaySlotLabel(),
+                title = destination.slot.displaySlotLabel(),
                 subtitle = currentKey?.let(actions::launcherTargetLabel)
                     ?: stringResource(
                         R.string.shortcut_default,
-                        destination.shortcut.displayLabel(),
+                        destination.slot.displayLabel(),
                     ),
                 selected = selectedKey == destination.key,
                 onClick = { onSelect(destination.key) },

@@ -164,6 +164,33 @@ class LauncherBackupCodecTest {
         assertNull(restored.settings.preferredCallingPackage)
     }
 
+    @Test fun quickDrawerPreferencesSurvivePortableBackupRoundTrip() {
+        val sample = sampleBackup(twoPanelMode = true)
+        val original = sample.copy(
+            settings = sample.settings.copy(
+                quickDrawer = QuickDrawerBackupSettings(
+                    showMinkPad = false,
+                    showPrivateSpace = false,
+                    showWorkProfile = false,
+                    colorArgb = 0xFF123456.toInt(),
+                ),
+            ),
+        )
+
+        val restored = LauncherBackupCodec.decode(LauncherBackupCodec.encode(original))
+
+        assertEquals(original.settings.quickDrawer, restored.settings.quickDrawer)
+    }
+
+    @Test fun olderBackupWithoutQuickDrawerPreferencesLeavesCurrentPreferencesAlone() {
+        val json = JSONObject(LauncherBackupCodec.encode(sampleBackup(twoPanelMode = true)))
+        json.getJSONObject("settings").remove("quickDrawer")
+
+        val restored = LauncherBackupCodec.decode(json.toString())
+
+        assertNull(restored.settings.quickDrawer)
+    }
+
     @Test fun olderBackupWithoutAutomaticMessagingPreferenceKeepsProductDefaultEnabled() {
         val json = JSONObject(LauncherBackupCodec.encode(sampleBackup(twoPanelMode = true)))
         json.getJSONObject("settings").getJSONObject("messaging")
@@ -193,7 +220,8 @@ class LauncherBackupCodecTest {
 
         val restored = LauncherBackupCodec.decode(json.toString())
 
-        assertEquals(com.katoaapps.openminilaunch.model.Shortcut.EXTRA, restored.launcher.shortcutOrder.first())
+        assertEquals(com.katoaapps.openminilaunch.model.AppGridSlot.EXTRA, restored.launcher.appGridOrder.first())
+        assertEquals(com.katoaapps.openminilaunch.model.AppGridSlot.DRAWER, restored.launcher.appGridOrder.last())
     }
 
     @Test fun minkSpaceBackupFromBeforeVCardEnablesVCardDuringMigration() {
@@ -228,9 +256,9 @@ class LauncherBackupCodecTest {
         sourceAppVersion = "test",
         exportedAtMillis = 0L,
         launcher = LauncherBackupLayout(
-            shortcutTargets = emptyMap(),
-            shortcutOrder = emptyList(),
-            confirmedShortcutChoices = emptyList(),
+            appGridTargets = emptyMap(),
+            appGridOrder = emptyList(),
+            confirmedAppGridChoices = emptyList(),
             drawerTargets = emptyList(),
             libraryShortcutTargets = emptyList(),
         ),

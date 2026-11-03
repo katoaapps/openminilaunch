@@ -16,8 +16,8 @@ import org.junit.Test
 class SettingsNavigationTest {
     @Test fun deepLinksToHomeSectionsFromTheirSectionRoot() {
         assertEquals(
-            listOf(SettingsDestination.OVERVIEW, SettingsDestination.SHORTCUTS),
-            settingsPathTo(SettingsDestination.SHORTCUTS),
+            listOf(SettingsDestination.OVERVIEW, SettingsDestination.APP_GRID),
+            settingsPathTo(SettingsDestination.APP_GRID),
         )
         assertEquals(
             listOf(SettingsDestination.OVERVIEW, SettingsDestination.QUICK_DRAWER),
@@ -46,11 +46,22 @@ class SettingsNavigationTest {
         )
     }
 
+    @Test fun privateSpaceSettingsNestUnderQuickDrawer() {
+        assertEquals(
+            listOf(
+                SettingsDestination.OVERVIEW,
+                SettingsDestination.QUICK_DRAWER,
+                SettingsDestination.PRIVACY_APPS,
+            ),
+            settingsPathTo(SettingsDestination.PRIVACY_APPS),
+        )
+    }
+
     @Test fun pinShortcutRequestsNestUnderShortcuts() {
         assertEquals(
             listOf(
                 SettingsDestination.OVERVIEW,
-                SettingsDestination.SHORTCUTS,
+                SettingsDestination.APP_GRID,
                 SettingsDestination.PIN_SHORTCUT_REQUESTS,
             ),
             settingsPathTo(SettingsDestination.PIN_SHORTCUT_REQUESTS),
@@ -134,7 +145,7 @@ class SettingsNavigationTest {
 
     @Test fun selectingCurrentSectionReturnsToItsRoot() {
         val home = SettingsRoute(SettingsSection.HOME, SettingsDestination.OVERVIEW)
-        val shortcuts = SettingsRoute(SettingsSection.HOME, SettingsDestination.SHORTCUTS)
+        val shortcuts = SettingsRoute(SettingsSection.HOME, SettingsDestination.APP_GRID)
 
         assertEquals(
             listOf(home),

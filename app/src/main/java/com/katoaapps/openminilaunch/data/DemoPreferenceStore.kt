@@ -10,7 +10,7 @@ import androidx.core.content.ContextCompat
 import com.katoaapps.openminilaunch.features.demo.DemoHomeData
 import com.katoaapps.openminilaunch.features.demo.DemoHomeProfile
 import com.katoaapps.openminilaunch.features.minkspace.todo.TodoStore
-import com.katoaapps.openminilaunch.model.Shortcut
+import com.katoaapps.openminilaunch.model.AppGridSlot
 
 internal class DemoPreferenceStore(
     private val context: Context,
@@ -65,8 +65,8 @@ internal class DemoPreferenceStore(
     fun effectiveBackgroundColor(normalColor: Int?): Int? =
         if (enabled) backgroundColorArgb else normalColor
 
-    fun effectiveShortcutOrder(normalOrder: List<Shortcut>): List<Shortcut> =
-        if (enabled) DemoHomeData.shortcutOrder(profile) else normalOrder
+    fun effectiveAppGridOrder(normalOrder: List<AppGridSlot>): List<AppGridSlot> =
+        if (enabled) DemoHomeData.appGridOrder(profile) else normalOrder
 
     private fun applyProfile(newProfile: DemoHomeProfile) {
         panelColorArgb = ContextCompat.getColor(context, newProfile.panelColorRes)

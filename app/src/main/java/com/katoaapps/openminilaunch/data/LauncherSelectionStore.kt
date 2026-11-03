@@ -3,92 +3,95 @@ package com.katoaapps.openminilaunch.data
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateMapOf
 import com.katoaapps.openminilaunch.model.MAX_DRAWER_APPS
-import com.katoaapps.openminilaunch.model.Shortcut
-import com.katoaapps.openminilaunch.model.configurableShortcuts
+import com.katoaapps.openminilaunch.model.AppGridSlot
+import com.katoaapps.openminilaunch.model.configurableAppGridSlots
+import com.katoaapps.openminilaunch.model.normalizedAppGridOrder
 
 internal class LauncherSelectionStore(private val persistence: LauncherStorePersistence) {
-    val shortcutTargets = mutableStateMapOf<Shortcut, String>()
-    val shortcutOrder = mutableStateListOf<Shortcut>()
-    val confirmedShortcutChoices = mutableStateListOf<Shortcut>()
+    val appGridTargets = mutableStateMapOf<AppGridSlot, String>()
+    val appGridOrder = mutableStateListOf<AppGridSlot>()
+    val confirmedAppGridChoices = mutableStateListOf<AppGridSlot>()
     val drawerTargets = mutableStateListOf<String>()
     val libraryShortcutTargets = mutableStateListOf<String>()
 
     fun restore(snapshot: LauncherStoreSnapshot) {
-        shortcutTargets.putAll(snapshot.shortcutTargets)
-        shortcutOrder.addAll(snapshot.shortcutOrder)
-        confirmedShortcutChoices.addAll(snapshot.confirmedShortcutChoices)
+        appGridTargets.putAll(snapshot.appGridTargets)
+        appGridOrder.addAll(normalizedAppGridOrder(snapshot.appGridOrder))
+        confirmedAppGridChoices.addAll(snapshot.confirmedAppGridChoices)
         drawerTargets.addAll(snapshot.drawerTargets)
         libraryShortcutTargets.addAll(snapshot.libraryShortcutTargets)
     }
 
-    fun assignShortcut(shortcut: Shortcut, targetKey: String) {
-        shortcutTargets[shortcut] = targetKey
-        confirmShortcut(shortcut)
+    fun assignAppGridSlot(slot: AppGridSlot, targetKey: String) {
+        appGridTargets[slot] = targetKey
+        confirmAppGridSlot(slot)
         saveSelections()
     }
 
-    fun resetShortcut(shortcut: Shortcut) {
-        shortcutTargets.remove(shortcut)
-        confirmShortcut(shortcut)
+    fun resetAppGridSlot(slot: AppGridSlot) {
+        appGridTargets.remove(slot)
+        confirmAppGridSlot(slot)
         saveSelections()
     }
 
     fun confirmSystemDefaults() {
-        configurableShortcuts.forEach { shortcut ->
-            if (shortcut !in confirmedShortcutChoices) {
-                shortcutTargets.remove(shortcut)
-                confirmedShortcutChoices += shortcut
+        configurableAppGridSlots.forEach { slot ->
+            if (slot !in confirmedAppGridChoices) {
+                appGridTargets.remove(slot)
+                confirmedAppGridChoices += slot
             }
         }
         saveSelections()
     }
 
-    fun hasConfirmedAll(): Boolean = configurableShortcuts.all(confirmedShortcutChoices::contains)
+    fun hasConfirmedAll(): Boolean = configurableAppGridSlots.all(confirmedAppGridChoices::contains)
 
-    fun moveShortcut(shortcut: Shortcut, targetIndex: Int) {
-        val from = shortcutOrder.indexOf(shortcut)
-        if (from < 0 || targetIndex !in shortcutOrder.indices || from == targetIndex) return
-        shortcutOrder.removeAt(from)
-        shortcutOrder.add(targetIndex, shortcut)
-        persistence.saveShortcutOrder(shortcutOrder)
+    fun moveAppGridSlot(slot: AppGridSlot, targetIndex: Int) {
+        if (slot == AppGridSlot.DRAWER) return
+        val reordered = appGridOrder.filterNot { it == AppGridSlot.DRAWER }.toMutableList()
+        val from = reordered.indexOf(slot)
+        val destination = targetIndex.coerceIn(0, reordered.lastIndex)
+        if (from < 0 || from == destination) return
+        reordered.removeAt(from)
+        reordered.add(destination, slot)
+        appGridOrder.clear()
+        appGridOrder.addAll(normalizedAppGridOrder(reordered))
+        persistence.saveAppGridOrder(appGridOrder)
     }
 
-    fun resetShortcutOrder() {
-        shortcutOrder.clear()
-        shortcutOrder.addAll(Shortcut.entries)
-        persistence.saveShortcutOrder(shortcutOrder)
+    fun resetAppGridOrder() {
+        appGridOrder.clear()
+        appGridOrder.addAll(AppGridSlot.entries)
+        persistence.saveAppGridOrder(appGridOrder)
     }
 
-    fun setShortcutOrder(order: List<Shortcut>) {
-        if (order.size != Shortcut.entries.size || order.toSet() != Shortcut.entries.toSet()) return
-        shortcutOrder.clear()
-        shortcutOrder.addAll(order)
-        persistence.saveShortcutOrder(shortcutOrder)
+    fun setAppGridOrder(order: List<AppGridSlot>) {
+        if (order.size != AppGridSlot.entries.size || order.toSet() != AppGridSlot.entries.toSet()) return
+        appGridOrder.clear()
+        appGridOrder.addAll(normalizedAppGridOrder(order))
+        persistence.saveAppGridOrder(appGridOrder)
     }
 
     fun replaceFromBackup(
-        restoredTargets: Map<Shortcut, String>,
-        restoredOrder: List<Shortcut>,
-        restoredConfirmedChoices: List<Shortcut>,
+        restoredTargets: Map<AppGridSlot, String>,
+        restoredOrder: List<AppGridSlot>,
+        restoredConfirmedChoices: List<AppGridSlot>,
         restoredDrawerTargets: List<String>,
         restoredLibraryTargets: List<String>,
     ) {
-        shortcutTargets.clear()
-        shortcutTargets.putAll(
-            restoredTargets.filter { (shortcut, target) ->
-                shortcut in configurableShortcuts && target.isNotBlank()
+        appGridTargets.clear()
+        appGridTargets.putAll(
+            restoredTargets.filter { (slot, target) ->
+                slot in configurableAppGridSlots && target.isNotBlank()
             },
         )
 
-        shortcutOrder.clear()
-        shortcutOrder.addAll(
-            restoredOrder.takeIf { it.size == Shortcut.entries.size && it.toSet() == Shortcut.entries.toSet() }
-                ?: Shortcut.entries,
-        )
+        appGridOrder.clear()
+        appGridOrder.addAll(normalizedAppGridOrder(restoredOrder))
 
-        confirmedShortcutChoices.clear()
-        confirmedShortcutChoices.addAll(
-            restoredConfirmedChoices.filter { it in configurableShortcuts }.distinct(),
+        confirmedAppGridChoices.clear()
+        confirmedAppGridChoices.addAll(
+            restoredConfirmedChoices.filter { it in configurableAppGridSlots }.distinct(),
         )
 
         drawerTargets.clear()
@@ -98,7 +101,7 @@ internal class LauncherSelectionStore(private val persistence: LauncherStorePers
         libraryShortcutTargets.addAll(restoredLibraryTargets.filter(String::isNotBlank).distinct())
 
         saveSelections()
-        persistence.saveShortcutOrder(shortcutOrder)
+        persistence.saveAppGridOrder(appGridOrder)
     }
 
     fun toggleDrawerApp(targetKey: String) {
@@ -131,11 +134,11 @@ internal class LauncherSelectionStore(private val persistence: LauncherStorePers
     /** Converts package-only settings to personal-profile activity keys without assigning work copies. */
     fun migrateSelections(normalize: (String) -> String?) {
         var changed = false
-        shortcutTargets.keys.toList().forEach { shortcut ->
-            val saved = shortcutTargets[shortcut] ?: return@forEach
+        appGridTargets.keys.toList().forEach { slot ->
+            val saved = appGridTargets[slot] ?: return@forEach
             val migrated = normalize(saved) ?: return@forEach
             if (migrated != saved) {
-                shortcutTargets[shortcut] = migrated
+                appGridTargets[slot] = migrated
                 changed = true
             }
         }
@@ -151,14 +154,14 @@ internal class LauncherSelectionStore(private val persistence: LauncherStorePers
         if (changed) saveSelections()
     }
 
-    private fun confirmShortcut(shortcut: Shortcut) {
-        if (shortcut !in confirmedShortcutChoices) confirmedShortcutChoices += shortcut
+    private fun confirmAppGridSlot(slot: AppGridSlot) {
+        if (slot !in confirmedAppGridChoices) confirmedAppGridChoices += slot
     }
 
     private fun saveSelections() {
         persistence.saveLauncherSelections(
-            shortcutTargets,
-            confirmedShortcutChoices,
+            appGridTargets,
+            confirmedAppGridChoices,
             drawerTargets,
             libraryShortcutTargets,
         )

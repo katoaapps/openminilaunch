@@ -229,6 +229,18 @@
     <string name="shortcut_messenger">Messenger</string>
     <string name="shortcut_files">File</string>
     <string name="quick_drawer">Quick Drawer</string>
+    <string name="quick_drawer_apps_description">Pilih aplikasi yang selalu mudah dijangkau di Quick Drawer.</string>
+    <string name="quick_drawer_controls">Kontrol laci</string>
+    <string name="show_minkpad_button">Tampilkan tombol MinkPad</string>
+    <string name="show_minkpad_button_description">Simpan keyboard Bluetooth, trackpad, dan remote control di Quick Drawer</string>
+    <string name="show_private_space_button">Tampilkan tombol Ruang Pribadi</string>
+    <string name="show_private_space_button_description">Buka aplikasi pribadi perangkat dari Quick Drawer</string>
+    <string name="show_work_profile_button">Tampilkan tombol profil kerja</string>
+    <string name="show_work_profile_button_description">Buka aplikasi kerja terkelola dari Quick Drawer</string>
+    <string name="quick_drawer_color">Warna laci</string>
+    <string name="quick_drawer_color_description">Pilih warna latar belakang Quick Drawer.</string>
+    <string name="use_theme_color">Gunakan warna tema</string>
+    <string name="reset_quick_drawer_color">Gunakan warna tema</string>
     <string name="shortcut_slot">Pintasan %1$d</string>
     <string name="shortcut_default">Bawaan · %1$s</string>
     <string name="choose_app_or_keep_default">Pilih aplikasi atau pintasan aplikasi, atau pertahankan %1$s</string>
@@ -642,6 +654,7 @@
     <string name="no_apps_found">Tidak ada aplikasi yang ditemukan.</string>
     <string name="apps">Aplikasi</string>
     <string name="app_shortcuts">Jalan pintas</string>
+    <string name="app_grid">Kisi aplikasi</string>
     <string name="work_profile">Profil kerja</string>
     <string name="work_apps">Aplikasi kerja</string>
     <string name="work_apps_description">Aplikasi yang dikelola organisasi Anda berada di laci terpisah ini. Aplikasi tetap dapat dicari di Magic Box dan disematkan saat Anda memilihnya.</string>

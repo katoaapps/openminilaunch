@@ -229,6 +229,18 @@
     <string name="shortcut_messenger">Messenger</string>
     <string name="shortcut_files">Fichiers</string>
     <string name="quick_drawer">Quick Drawer</string>
+    <string name="quick_drawer_apps_description">Choisissez les applications à garder à portée de main dans Quick Drawer.</string>
+    <string name="quick_drawer_controls">Commandes du tiroir</string>
+    <string name="show_minkpad_button">Afficher le bouton MinkPad</string>
+    <string name="show_minkpad_button_description">Gardez le clavier Bluetooth, le pavé tactile et la télécommande dans Quick Drawer</string>
+    <string name="show_private_space_button">Afficher le bouton Espace privé</string>
+    <string name="show_private_space_button_description">Ouvrez les applications privées de votre appareil depuis Quick Drawer</string>
+    <string name="show_work_profile_button">Afficher le bouton du profil professionnel</string>
+    <string name="show_work_profile_button_description">Ouvrez les applications professionnelles gérées depuis Quick Drawer</string>
+    <string name="quick_drawer_color">Couleur du tiroir</string>
+    <string name="quick_drawer_color_description">Choisissez la couleur de fond de Quick Drawer.</string>
+    <string name="use_theme_color">Utiliser la couleur du thème</string>
+    <string name="reset_quick_drawer_color">Utiliser plutôt la couleur du thème</string>
     <string name="shortcut_slot">Raccourci %1$d</string>
     <string name="shortcut_default">Par défaut · %1$s</string>
     <string name="choose_app_or_keep_default">Choisissez une application ou un raccourci d\'application, ou conservez %1$s</string>
@@ -642,6 +654,7 @@
     <string name="no_apps_found">Aucune application trouvée.</string>
     <string name="apps">Applications</string>
     <string name="app_shortcuts">Raccourcis</string>
+    <string name="app_grid">Grille d’applications</string>
     <string name="work_profile">Profil de travail</string>
     <string name="work_apps">Applications professionnelles</string>
     <string name="work_apps_description">Les applications gérées par votre organisation restent dans ce tiroir séparé. Elles restent accessibles dans Magic Box et peuvent être épinglées lorsque vous les choisissez.</string>

@@ -199,7 +199,7 @@ internal fun HomeScreen(
                             openTodos = openTodos,
                             openVCardSettings = openVCardSettings,
                             openMinkSpaceSettings = { openSettings(SettingsDestination.MINK_SPACE) },
-                            openShortcutSettings = { openSettings(SettingsDestination.SHORTCUTS) },
+                            openAppGridSettings = { openSettings(SettingsDestination.APP_GRID) },
                             onTodoCenterChanged = { widgetCenter = it },
                             onPausedApp = { pausedAppPackage = it },
                             onOpenDrawer = { drawerOpen = true },

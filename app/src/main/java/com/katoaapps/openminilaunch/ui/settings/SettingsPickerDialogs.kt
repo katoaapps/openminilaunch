@@ -18,8 +18,8 @@ import com.katoaapps.openminilaunch.model.MAX_DRAWER_APPS
 import com.katoaapps.openminilaunch.model.LauncherTarget
 import com.katoaapps.openminilaunch.model.LaunchableApp
 import com.katoaapps.openminilaunch.platform.DeviceActions
-import com.katoaapps.openminilaunch.ui.shortcuts.displayLabel
-import com.katoaapps.openminilaunch.ui.shortcuts.displaySlotLabel
+import com.katoaapps.openminilaunch.ui.appgrid.displayLabel
+import com.katoaapps.openminilaunch.ui.appgrid.displaySlotLabel
 import com.katoaapps.openminilaunch.ui.wellbeing.SocialAppsDialog
 
 @Composable
@@ -39,7 +39,7 @@ internal fun SettingsPickerDialogs(
     onPickerChange: (SettingsPicker?) -> Unit,
 ) {
     when (picker) {
-        is SettingsPicker.ShortcutApp -> ShortcutAppPicker(
+        is SettingsPicker.AppGridSlotPicker -> AppGridSlotPickerDialog(
             picker = picker,
             store = store,
             actions = actions,
@@ -156,21 +156,21 @@ internal fun SettingsPickerDialogs(
 }
 
 @Composable
-private fun ShortcutAppPicker(
-    picker: SettingsPicker.ShortcutApp,
+private fun AppGridSlotPickerDialog(
+    picker: SettingsPicker.AppGridSlotPicker,
     store: LauncherStore,
     actions: DeviceActions,
     installedApps: LauncherAppListLoadState,
     installedShortcuts: LauncherShortcutListLoadState,
     onDismiss: () -> Unit,
 ) {
-    val shortcut = picker.shortcut
+    val slot = picker.slot
     val showSamsungWeatherGuide = Build.MANUFACTURER.equals("samsung", ignoreCase = true)
     LauncherTargetPickerDialog(
-        title = stringResource(R.string.choose_app_for_shortcut, shortcut.displaySlotLabel()),
+        title = stringResource(R.string.choose_app_for_shortcut, slot.displaySlotLabel()),
         apps = installedApps.apps,
         shortcuts = installedShortcuts.shortcuts,
-        selected = setOfNotNull(store.shortcutTargets[shortcut]),
+        selected = setOfNotNull(store.appGridTargets[slot]),
         actions = actions,
         appsLoading = !installedApps.loaded,
         shortcutsLoading = !installedShortcuts.loaded,
@@ -178,16 +178,16 @@ private fun ShortcutAppPicker(
         supportingActionLabel = if (showSamsungWeatherGuide) stringResource(R.string.open_apps_settings) else null,
         onSupportingAction = actions::openInstalledAppsSettings,
         onTarget = {
-            store.assignShortcut(shortcut, it.selectionKey)
+            store.assignAppGridSlot(slot, it.selectionKey)
             actions.syncPinnedSelectionsFrom(store)
             onDismiss()
         },
         onReset = {
-            store.resetShortcut(shortcut)
+            store.resetAppGridSlot(slot)
             actions.syncPinnedSelectionsFrom(store)
             onDismiss()
         },
-        resetLabel = stringResource(R.string.restore_shortcut_default, shortcut.displayLabel()),
+        resetLabel = stringResource(R.string.restore_shortcut_default, slot.displayLabel()),
         onDismiss = onDismiss,
     )
 }

@@ -3,7 +3,7 @@ package com.katoaapps.openminilaunch.ui.settings
 import androidx.compose.runtime.Composable
 import com.katoaapps.openminilaunch.data.LauncherStore
 import com.katoaapps.openminilaunch.model.SearchFolder
-import com.katoaapps.openminilaunch.model.Shortcut
+import com.katoaapps.openminilaunch.model.AppGridSlot
 import com.katoaapps.openminilaunch.platform.DeviceActions
 
 /** Renders one Settings destination. Navigation and system launchers stay in the coordinator. */
@@ -23,7 +23,7 @@ internal fun SettingsDestinationContent(
     onExitSettings: () -> Unit,
     onOpenTodos: () -> Unit,
     onIconStyleApplied: () -> Unit,
-    onPickShortcut: (Shortcut) -> Unit,
+    onPickAppGridSlot: (AppGridSlot) -> Unit,
     onPickDrawer: () -> Unit,
     onPickPrivateContainerGateway: () -> Unit,
     onPickWeb: () -> Unit,
@@ -77,16 +77,18 @@ internal fun SettingsDestinationContent(
             openTodos = onOpenTodos,
             goBack = onNavigateBack,
         )
-        SettingsDestination.SHORTCUTS -> ShortcutsSettingsPage(
+        SettingsDestination.APP_GRID -> AppGridSettingsPage(
             store = store,
             actions = actions,
-            onPickShortcut = onPickShortcut,
+            onPickAppGridSlot = onPickAppGridSlot,
             onNavigate = onNavigate,
             goBack = onNavigateBack,
         )
         SettingsDestination.QUICK_DRAWER -> QuickDrawerSettingsPage(
             store = store,
+            actions = actions,
             onPickDrawer = onPickDrawer,
+            onNavigate = onNavigate,
             goBack = onNavigateBack,
         )
         SettingsDestination.PRIVACY_APPS -> PrivacyAppsSettingsPage(

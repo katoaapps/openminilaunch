@@ -43,6 +43,7 @@ class LauncherStore private constructor(context: Context) {
     private val appDiscoveryPreferences = AppDiscoveryPreferenceStore(prefs)
     private val appBubblePreferences = AppBubblePreferenceStore(prefs)
     private val privateContainerPreferences = PrivateContainerPreferenceStore(prefs)
+    private val quickDrawerPreferences = QuickDrawerPreferenceStore(prefs)
     private val minkSpacePreferences = MinkSpacePreferenceStore(prefs)
     private val minkSpaceWidgetStore = MinkSpaceWidgetStore(prefs)
     private val homeWallpaperRepository = HomeWallpaperRepository(appContext)
@@ -56,16 +57,16 @@ class LauncherStore private constructor(context: Context) {
     val todos get() = todoStore.items
     internal val savedTodosForBackup get() = persistence.loadTodos()
     /** Stable launcher target keys. Legacy package-only values are migrated after discovery. */
-    val shortcutTargets get() = launcherSelections.shortcutTargets
-    val shortcutOrder get() = launcherSelections.shortcutOrder
-    val confirmedShortcutChoices get() = launcherSelections.confirmedShortcutChoices
+    val appGridTargets get() = launcherSelections.appGridTargets
+    val appGridOrder get() = launcherSelections.appGridOrder
+    val confirmedAppGridChoices get() = launcherSelections.confirmedAppGridChoices
     /** Stable launcher target keys, allowing personal and work copies of one package to coexist. */
     val drawerTargets get() = launcherSelections.drawerTargets
     /** App-published shortcuts shown in Magic Box search and the All Apps carousel. */
     val libraryShortcutTargets get() = launcherSelections.libraryShortcutTargets
     val pinnedLauncherSelectionKeys: List<String>
         get() = (
-            shortcutTargets.values + drawerTargets + libraryShortcutTargets +
+            appGridTargets.values + drawerTargets + libraryShortcutTargets +
                 listOfNotNull(privateContainerGatewaySelectionKey)
             ).distinct()
     val searchFolders get() = searchStore.folders
@@ -123,6 +124,10 @@ class LauncherStore private constructor(context: Context) {
     val includeAppShortcutsInDiscovery get() = appDiscoveryPreferences.includeAppShortcuts
     val automaticAppBubbleTargets get() = appBubblePreferences.automaticTargetKeys
     val privateContainerGatewaySelectionKey get() = privateContainerPreferences.gatewaySelectionKey
+    val showMinkPadInQuickDrawer get() = quickDrawerPreferences.showMinkPadButton
+    val showPrivateSpaceInQuickDrawer get() = quickDrawerPreferences.showPrivateSpaceButton
+    val showWorkProfileInQuickDrawer get() = quickDrawerPreferences.showWorkProfileButton
+    val quickDrawerColorArgb get() = quickDrawerPreferences.colorArgb
     internal val minkSpaceMiniAppOrder get() = minkSpacePreferences.order
     internal val enabledMinkSpaceMiniApps get() = minkSpacePreferences.enabledMiniApps
     internal val minkSpaceWidgetId get() = minkSpaceWidgetStore.appWidgetId
@@ -156,8 +161,8 @@ class LauncherStore private constructor(context: Context) {
         } else {
             effectiveAppBackgroundColorArgb
         }
-    val effectiveShortcutOrder: List<Shortcut>
-        get() = demoPreferences.effectiveShortcutOrder(shortcutOrder)
+    val effectiveAppGridOrder: List<AppGridSlot>
+        get() = demoPreferences.effectiveAppGridOrder(appGridOrder)
 
     init {
         if (fontAppearance.source == FontSource.CUSTOM && !hasCustomFont) {
@@ -213,12 +218,12 @@ class LauncherStore private constructor(context: Context) {
         todoStore.replaceFromBackup(items)
     }
 
-    fun assignShortcut(shortcut: Shortcut, targetKey: String) {
-        launcherSelections.assignShortcut(shortcut, targetKey)
+    fun assignAppGridSlot(slot: AppGridSlot, targetKey: String) {
+        launcherSelections.assignAppGridSlot(slot, targetKey)
     }
 
-    fun resetShortcut(shortcut: Shortcut) {
-        launcherSelections.resetShortcut(shortcut)
+    fun resetAppGridSlot(slot: AppGridSlot) {
+        launcherSelections.resetAppGridSlot(slot)
     }
 
     fun confirmSystemDefaultsForUnselectedShortcuts() {
@@ -227,29 +232,29 @@ class LauncherStore private constructor(context: Context) {
 
     fun hasConfirmedAllShortcutChoices(): Boolean = launcherSelections.hasConfirmedAll()
 
-    fun moveShortcut(shortcut: Shortcut, targetIndex: Int) {
-        launcherSelections.moveShortcut(shortcut, targetIndex)
+    fun moveAppGridSlot(slot: AppGridSlot, targetIndex: Int) {
+        launcherSelections.moveAppGridSlot(slot, targetIndex)
     }
 
-    fun resetShortcutOrder() {
-        launcherSelections.resetShortcutOrder()
+    fun resetAppGridOrder() {
+        launcherSelections.resetAppGridOrder()
     }
 
-    fun setShortcutOrder(order: List<Shortcut>) {
-        launcherSelections.setShortcutOrder(order)
+    fun setAppGridOrder(order: List<AppGridSlot>) {
+        launcherSelections.setAppGridOrder(order)
     }
 
     internal fun replaceLauncherSelectionsFromBackup(
-        shortcutTargets: Map<Shortcut, String>,
-        shortcutOrder: List<Shortcut>,
-        confirmedShortcutChoices: List<Shortcut>,
+        appGridTargets: Map<AppGridSlot, String>,
+        appGridOrder: List<AppGridSlot>,
+        confirmedAppGridChoices: List<AppGridSlot>,
         drawerTargets: List<String>,
         libraryShortcutTargets: List<String>,
     ) {
         launcherSelections.replaceFromBackup(
-            restoredTargets = shortcutTargets,
-            restoredOrder = shortcutOrder,
-            restoredConfirmedChoices = confirmedShortcutChoices,
+            restoredTargets = appGridTargets,
+            restoredOrder = appGridOrder,
+            restoredConfirmedChoices = confirmedAppGridChoices,
             restoredDrawerTargets = drawerTargets,
             restoredLibraryTargets = libraryShortcutTargets,
         )
@@ -286,6 +291,22 @@ class LauncherStore private constructor(context: Context) {
 
     fun clearPrivateContainerGateway() {
         privateContainerPreferences.clearGateway()
+    }
+
+    fun updateShowMinkPadInQuickDrawer(enabled: Boolean) {
+        quickDrawerPreferences.updateShowMinkPadButton(enabled)
+    }
+
+    fun updateShowPrivateSpaceInQuickDrawer(enabled: Boolean) {
+        quickDrawerPreferences.updateShowPrivateSpaceButton(enabled)
+    }
+
+    fun updateShowWorkProfileInQuickDrawer(enabled: Boolean) {
+        quickDrawerPreferences.updateShowWorkProfileButton(enabled)
+    }
+
+    fun setQuickDrawerColor(argb: Int?) {
+        quickDrawerPreferences.setColor(argb)
     }
 
     internal fun replaceAutomaticAppBubbleTargets(targetKeys: Collection<String>) {

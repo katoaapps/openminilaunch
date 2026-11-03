@@ -229,6 +229,18 @@
     <string name="shortcut_messenger">Messenger</string>
     <string name="shortcut_files">Файлы</string>
     <string name="quick_drawer">Quick Drawer</string>
+    <string name="quick_drawer_apps_description">Выберите приложения, которые будут доступны одним касанием в Quick Drawer.</string>
+    <string name="quick_drawer_controls">Элементы управления</string>
+    <string name="show_minkpad_button">Показывать кнопку MinkPad</string>
+    <string name="show_minkpad_button_description">Доступ к Bluetooth-клавиатуре, трекпаду и пульту из Quick Drawer</string>
+    <string name="show_private_space_button">Показывать кнопку личного пространства</string>
+    <string name="show_private_space_button_description">Открывайте личные приложения устройства из Quick Drawer</string>
+    <string name="show_work_profile_button">Показывать кнопку рабочего профиля</string>
+    <string name="show_work_profile_button_description">Открывайте управляемые рабочие приложения из Quick Drawer</string>
+    <string name="quick_drawer_color">Цвет панели</string>
+    <string name="quick_drawer_color_description">Выберите цвет фона Quick Drawer.</string>
+    <string name="use_theme_color">Использовать цвет темы</string>
+    <string name="reset_quick_drawer_color">Использовать цвет темы</string>
     <string name="shortcut_slot">Ярлык %1$d</string>
     <string name="shortcut_default">По умолчанию · %1$s</string>
     <string name="choose_app_or_keep_default">Выберите приложение или ярлык приложения или сохраните %1$s.</string>
@@ -644,6 +656,7 @@
     <string name="no_apps_found">Приложения не найдены.</string>
     <string name="apps">Приложения</string>
     <string name="app_shortcuts">Ярлыки</string>
+    <string name="app_grid">Сетка приложений</string>
     <string name="work_profile">Профиль работы</string>
     <string name="work_apps">Рабочие приложения</string>
     <string name="work_apps_description">Приложения, управляемые вашей организацией, находятся в отдельном списке. Их по-прежнему можно искать в Magic Box и закреплять после выбора.</string>

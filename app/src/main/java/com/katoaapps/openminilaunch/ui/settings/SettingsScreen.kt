@@ -39,7 +39,7 @@ internal fun SettingsScreen(
     var appListRefresh by remember { mutableIntStateOf(0) }
     val launcherAppsRevision by actions.launcherAppsRevision.collectAsState()
     val launcherShortcutsRevision by actions.launcherShortcutsRevision.collectAsState()
-    val loadLauncherTargets = picker is SettingsPicker.ShortcutApp ||
+    val loadLauncherTargets = picker is SettingsPicker.AppGridSlotPicker ||
         picker == SettingsPicker.DrawerApps ||
         picker == SettingsPicker.PrivateContainerGateway
     val installedApps by produceState(
@@ -271,7 +271,7 @@ internal fun SettingsScreen(
                 onExitSettings = ::navigateBack,
                 onOpenTodos = openTodos,
                 onIconStyleApplied = onIconStyleApplied,
-                onPickShortcut = { picker = SettingsPicker.ShortcutApp(it) },
+                onPickAppGridSlot = { picker = SettingsPicker.AppGridSlotPicker(it) },
                 onPickDrawer = { picker = SettingsPicker.DrawerApps },
                 onPickPrivateContainerGateway = {
                     picker = SettingsPicker.PrivateContainerGateway

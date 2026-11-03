@@ -229,6 +229,18 @@
     <string name="shortcut_messenger">Messenger</string>
     <string name="shortcut_files">ফাইল</string>
     <string name="quick_drawer">Quick Drawer</string>
+    <string name="quick_drawer_apps_description">Quick Drawer থেকে এক ট্যাপে খোলার অ্যাপ বেছে নিন।</string>
+    <string name="quick_drawer_controls">ড্রয়ার নিয়ন্ত্রণ</string>
+    <string name="show_minkpad_button">MinkPad বোতাম দেখান</string>
+    <string name="show_minkpad_button_description">Bluetooth কীবোর্ড, ট্র্যাকপ্যাড ও রিমোট কন্ট্রোল Quick Drawer-এ রাখুন</string>
+    <string name="show_private_space_button">ব্যক্তিগত স্থান বোতাম দেখান</string>
+    <string name="show_private_space_button_description">Quick Drawer থেকে ডিভাইসের ব্যক্তিগত অ্যাপ খুলুন</string>
+    <string name="show_work_profile_button">কাজের প্রোফাইল বোতাম দেখান</string>
+    <string name="show_work_profile_button_description">Quick Drawer থেকে পরিচালিত কাজের অ্যাপ খুলুন</string>
+    <string name="quick_drawer_color">ড্রয়ারের রঙ</string>
+    <string name="quick_drawer_color_description">Quick Drawer-এর পটভূমির রঙ বেছে নিন।</string>
+    <string name="use_theme_color">থিমের রঙ ব্যবহার করুন</string>
+    <string name="reset_quick_drawer_color">থিমের রঙ ব্যবহার করুন</string>
     <string name="shortcut_slot">শর্টকাট %1$d</string>
     <string name="shortcut_default">ডিফল্ট · %1$s</string>
     <string name="choose_app_or_keep_default">একটি অ্যাপ বা অ্যাপ শর্টকাট বেছে নিন বা %1$s রাখুন</string>
@@ -642,6 +654,7 @@
     <string name="no_apps_found">কোনো অ্যাপ পাওয়া যায়নি।</string>
     <string name="apps">অ্যাপস</string>
     <string name="app_shortcuts">শর্টকাট</string>
+    <string name="app_grid">অ্যাপ গ্রিড</string>
     <string name="work_profile">কাজের প্রোফাইল</string>
     <string name="work_apps">কাজের অ্যাপ</string>
     <string name="work_apps_description">আপনার প্রতিষ্ঠান পরিচালিত অ্যাপগুলো এই আলাদা ড্রয়ারে থাকে। এগুলো Magic Box-এ খোঁজা যায় এবং বেছে নিয়ে পিন করা যায়।</string>

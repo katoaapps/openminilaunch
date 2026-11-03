@@ -229,6 +229,18 @@
     <string name="shortcut_messenger">Messenger</string>
     <string name="shortcut_files">Archivos</string>
     <string name="quick_drawer">Quick Drawer</string>
+    <string name="quick_drawer_apps_description">Elige las aplicaciones que quieres tener a un toque en Quick Drawer.</string>
+    <string name="quick_drawer_controls">Controles del cajón</string>
+    <string name="show_minkpad_button">Mostrar botón de MinkPad</string>
+    <string name="show_minkpad_button_description">Mantén el teclado Bluetooth, el panel táctil y el control remoto en Quick Drawer</string>
+    <string name="show_private_space_button">Mostrar botón de Espacio privado</string>
+    <string name="show_private_space_button_description">Abre las aplicaciones privadas del dispositivo desde Quick Drawer</string>
+    <string name="show_work_profile_button">Mostrar botón del perfil de trabajo</string>
+    <string name="show_work_profile_button_description">Abre las aplicaciones de trabajo administradas desde Quick Drawer</string>
+    <string name="quick_drawer_color">Color del cajón</string>
+    <string name="quick_drawer_color_description">Elige el color de fondo de Quick Drawer.</string>
+    <string name="use_theme_color">Usar color del tema</string>
+    <string name="reset_quick_drawer_color">Usar el color del tema</string>
     <string name="shortcut_slot">Acceso directo %1$d</string>
     <string name="shortcut_default">Predeterminado · %1$s</string>
     <string name="choose_app_or_keep_default">Elija una aplicación o un acceso directo a una aplicación, o conserve %1$s</string>
@@ -642,6 +654,7 @@
     <string name="no_apps_found">No se encontraron aplicaciones.</string>
     <string name="apps">Aplicaciones</string>
     <string name="app_shortcuts">Atajos</string>
+    <string name="app_grid">Cuadrícula de aplicaciones</string>
     <string name="work_profile">Perfil de trabajo</string>
     <string name="work_apps">Aplicaciones de trabajo</string>
     <string name="work_apps_description">Las aplicaciones administradas por tu organización permanecen en este cajón separado. Se pueden buscar en Magic Box y fijar cuando las elijas.</string>

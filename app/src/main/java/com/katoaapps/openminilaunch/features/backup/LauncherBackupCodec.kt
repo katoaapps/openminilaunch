@@ -11,9 +11,10 @@ import com.katoaapps.openminilaunch.model.MinkAppPauseMode
 import com.katoaapps.openminilaunch.model.normalizeHomePanelTransparency
 import com.katoaapps.openminilaunch.model.PinShortcutRequestPresentation
 import com.katoaapps.openminilaunch.model.PalettePreference
-import com.katoaapps.openminilaunch.model.Shortcut
-import com.katoaapps.openminilaunch.model.configurableShortcuts
-import com.katoaapps.openminilaunch.model.shortcutFromStoredName
+import com.katoaapps.openminilaunch.model.AppGridSlot
+import com.katoaapps.openminilaunch.model.appGridSlotFromStoredName
+import com.katoaapps.openminilaunch.model.configurableAppGridSlots
+import com.katoaapps.openminilaunch.model.normalizedAppGridOrder
 import com.katoaapps.openminilaunch.model.ThemePreference
 import com.katoaapps.openminilaunch.features.minkspace.todo.TodoItem
 import com.katoaapps.openminilaunch.features.minkspace.MinkSpaceMiniApp
@@ -67,30 +68,30 @@ internal object LauncherBackupCodec {
 
     private fun encodeLauncher(layout: LauncherBackupLayout) = JSONObject().apply {
         put("shortcutTargets", JSONObject().apply {
-            layout.shortcutTargets.forEach { (shortcut, target) -> put(shortcut.name, target) }
+            layout.appGridTargets.forEach { (slot, target) -> put(slot.name, target) }
         })
-        put("shortcutOrder", layout.shortcutOrder.namesJsonArray())
-        put("confirmedShortcutChoices", layout.confirmedShortcutChoices.namesJsonArray())
+        put("shortcutOrder", layout.appGridOrder.namesJsonArray())
+        put("confirmedShortcutChoices", layout.confirmedAppGridChoices.namesJsonArray())
         put("drawerTargets", layout.drawerTargets.stringsJsonArray())
         put("libraryShortcutTargets", layout.libraryShortcutTargets.stringsJsonArray())
     }
 
     private fun decodeLauncher(json: JSONObject): LauncherBackupLayout {
         val targetJson = json.optJSONObject("shortcutTargets") ?: JSONObject()
-        val shortcutTargets = buildMap {
-            Shortcut.entries.forEach { shortcut ->
-                targetJson.optString(shortcut.name).safeTarget()?.let { put(shortcut, it) }
+        val appGridTargets = buildMap {
+            AppGridSlot.entries.forEach { slot ->
+                targetJson.optString(slot.name).safeTarget()?.let { put(slot, it) }
             }
         }
-        val savedOrder = json.optJSONArray("shortcutOrder").shortcutValues()
-        val shortcutOrder = (savedOrder + Shortcut.entries).distinct()
+        val savedOrder = json.optJSONArray("shortcutOrder").appGridSlotValues()
+        val appGridOrder = normalizedAppGridOrder(savedOrder)
 
         return LauncherBackupLayout(
-            shortcutTargets = shortcutTargets,
-            shortcutOrder = shortcutOrder,
-            confirmedShortcutChoices = json.optJSONArray("confirmedShortcutChoices")
-                .shortcutValues()
-                .filter { it in configurableShortcuts }
+            appGridTargets = appGridTargets,
+            appGridOrder = appGridOrder,
+            confirmedAppGridChoices = json.optJSONArray("confirmedShortcutChoices")
+                .appGridSlotValues()
+                .filter { it in configurableAppGridSlots }
                 .distinct(),
             drawerTargets = json.optJSONArray("drawerTargets").safeTargets(),
             libraryShortcutTargets = json.optJSONArray("libraryShortcutTargets").safeTargets(),
@@ -148,6 +149,14 @@ internal object LauncherBackupCodec {
             put("callAutomatically", settings.callAutomatically)
             putNullable("preferredCallingPackage", settings.preferredCallingPackage)
         })
+        settings.quickDrawer?.let { quickDrawer ->
+            put("quickDrawer", JSONObject().apply {
+                put("showMinkPad", quickDrawer.showMinkPad)
+                put("showPrivateSpace", quickDrawer.showPrivateSpace)
+                put("showWorkProfile", quickDrawer.showWorkProfile)
+                putNullable("colorArgb", quickDrawer.colorArgb)
+            })
+        }
         put("minkDay", JSONObject().apply {
             put("usesAutomaticSocialApps", settings.usesAutomaticSocialApps)
             put("socialPackages", settings.socialPackages.stringsJsonArray())
@@ -164,6 +173,7 @@ internal object LauncherBackupCodec {
         val magicBox = json.getJSONObject("magicBox")
         val messaging = json.getJSONObject("messaging")
         val calling = json.optJSONObject("calling")
+        val quickDrawer = json.optJSONObject("quickDrawer")
         val minkDay = json.getJSONObject("minkDay")
         val minkSpace = json.optJSONObject("minkSpace")
         val minkSpaceOrder = minkSpace?.optJSONArray("order")?.minkSpaceMiniApps()
@@ -222,6 +232,14 @@ internal object LauncherBackupCodec {
             preferredMessagingPackage = messaging.optNullableString("preferredMessagingPackage")?.safePackage(),
             callAutomatically = calling?.optBoolean("callAutomatically", false) ?: false,
             preferredCallingPackage = calling?.optNullableString("preferredCallingPackage")?.safePackage(),
+            quickDrawer = quickDrawer?.let { drawer ->
+                QuickDrawerBackupSettings(
+                    showMinkPad = drawer.optBoolean("showMinkPad", true),
+                    showPrivateSpace = drawer.optBoolean("showPrivateSpace", true),
+                    showWorkProfile = drawer.optBoolean("showWorkProfile", true),
+                    colorArgb = drawer.optNullableInt("colorArgb"),
+                )
+            },
             preferredAiPackage = magicBox.optNullableString("preferredAiPackage")?.safePackage(),
             preferredWebPackage = magicBox.optNullableString("preferredWebPackage")?.safePackage(),
             usesAutomaticSocialApps = minkDay.optBoolean("usesAutomaticSocialApps", true),
@@ -261,10 +279,10 @@ internal object LauncherBackupCodec {
         }
     }
 
-    private fun JSONArray?.shortcutValues(): List<Shortcut> = buildList {
-        val source = this@shortcutValues ?: return@buildList
+    private fun JSONArray?.appGridSlotValues(): List<AppGridSlot> = buildList {
+        val source = this@appGridSlotValues ?: return@buildList
         repeat(minOf(source.length(), MAX_ENUM_VALUES)) { index ->
-            val value = shortcutFromStoredName(source.optString(index))
+            val value = appGridSlotFromStoredName(source.optString(index))
             value?.let { if (it !in this) add(it) }
         }
     }

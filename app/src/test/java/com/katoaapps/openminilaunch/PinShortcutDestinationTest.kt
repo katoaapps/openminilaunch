@@ -1,7 +1,7 @@
 package com.katoaapps.openminilaunch
 
 import com.katoaapps.openminilaunch.model.PinShortcutDestination
-import com.katoaapps.openminilaunch.model.Shortcut
+import com.katoaapps.openminilaunch.model.AppGridSlot
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNull
 import org.junit.Test
@@ -9,7 +9,7 @@ import org.junit.Test
 class PinShortcutDestinationTest {
     @Test fun restoresEachDestinationFromItsSavedKey() {
         val destinations = listOf(
-            PinShortcutDestination.HomeSlot(Shortcut.NOTE),
+            PinShortcutDestination.HomeSlot(AppGridSlot.NOTE),
             PinShortcutDestination.AddToDrawer,
             PinShortcutDestination.AddToLibrary,
             PinShortcutDestination.ReplaceDrawerSlot(4),

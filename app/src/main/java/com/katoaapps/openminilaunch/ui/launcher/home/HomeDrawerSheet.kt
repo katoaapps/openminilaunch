@@ -48,6 +48,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
@@ -65,8 +66,7 @@ import com.katoaapps.openminilaunch.ui.components.CenteredActionPrompt
 import com.katoaapps.openminilaunch.ui.components.LauncherTargetIcon
 import com.katoaapps.openminilaunch.ui.settings.SettingsDestination
 import com.katoaapps.openminilaunch.ui.theme.Dimens
-import com.katoaapps.openminilaunch.ui.theme.Muted
-import com.katoaapps.openminilaunch.ui.theme.Sage
+import com.katoaapps.openminilaunch.ui.theme.readableContentColor
 import kotlin.math.ceil
 
 @Composable
@@ -78,10 +78,13 @@ internal fun HomeDrawerSheet(
     openSettings: (SettingsDestination) -> Unit,
 ) {
     val context = LocalContext.current
+    val drawerColor = store.quickDrawerColorArgb?.let(::Color) ?: MaterialTheme.colorScheme.background
+    val drawerContentColor = readableContentColor(drawerColor)
     ModalBottomSheet(
         onDismissRequest = onDismiss,
         sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true),
-        containerColor = MaterialTheme.colorScheme.background,
+        containerColor = drawerColor,
+        contentColor = drawerContentColor,
     ) {
         Text(
             stringResource(R.string.your_drawer),
@@ -91,6 +94,7 @@ internal fun HomeDrawerSheet(
         )
         when {
             store.drawerTargets.isEmpty() -> EmptyDrawer(
+                contentColor = drawerContentColor,
                 onChooseApps = {
                     onDismiss()
                     openSettings(SettingsDestination.QUICK_DRAWER)
@@ -104,6 +108,7 @@ internal fun HomeDrawerSheet(
                 store = store,
                 actions = actions,
                 appAccessState = appAccessState,
+                contentColor = drawerContentColor,
                 onLaunched = onDismiss,
             )
         }
@@ -112,13 +117,15 @@ internal fun HomeDrawerSheet(
             horizontalArrangement = Arrangement.spacedBy(Dimens.dp8),
             verticalAlignment = Alignment.Bottom,
         ) {
-            FilledTonalIconButton(
-                onClick = {
-                    onDismiss()
-                    MinkPadLauncherEntry.open(context)
-                },
-            ) {
-                MinkPadDrawerIcon()
+            if (store.showMinkPadInQuickDrawer) {
+                FilledTonalIconButton(
+                    onClick = {
+                        onDismiss()
+                        MinkPadLauncherEntry.open(context)
+                    },
+                ) {
+                    MinkPadDrawerIcon()
+                }
             }
             FlowRow(
                 Modifier.weight(1f),
@@ -126,8 +133,11 @@ internal fun HomeDrawerSheet(
                 verticalArrangement = Arrangement.spacedBy(Dimens.dp8),
             ) {
                 if (
-                    store.demoSearchDataEnabled ||
-                    actions.privateContainerEntryPointAvailable(store.privateContainerGatewaySelectionKey)
+                    store.showPrivateSpaceInQuickDrawer &&
+                    (
+                        store.demoSearchDataEnabled ||
+                            actions.privateContainerEntryPointAvailable(store.privateContainerGatewaySelectionKey)
+                    )
                 ) {
                     FilledTonalButton(
                         onClick = {
@@ -142,7 +152,10 @@ internal fun HomeDrawerSheet(
                         )
                     }
                 }
-                if (store.demoSearchDataEnabled || actions.workProfileAvailable()) {
+                if (
+                    store.showWorkProfileInQuickDrawer &&
+                    (store.demoSearchDataEnabled || actions.workProfileAvailable())
+                ) {
                     FilledTonalButton(
                         onClick = {
                             onDismiss()
@@ -203,7 +216,10 @@ private fun MinkPadDrawerIcon() {
 }
 
 @Composable
-private fun EmptyDrawer(onChooseApps: () -> Unit) {
+private fun EmptyDrawer(
+    contentColor: Color,
+    onChooseApps: () -> Unit,
+) {
     CenteredActionPrompt(
         icon = Icons.Default.Apps,
         title = stringResource(R.string.empty_drawer),
@@ -211,8 +227,8 @@ private fun EmptyDrawer(onChooseApps: () -> Unit) {
         actionLabel = stringResource(R.string.choose_apps),
         actionIcon = Icons.Default.Add,
         onAction = onChooseApps,
-        iconColor = Sage,
-        mutedContentColor = Muted,
+        iconColor = contentColor,
+        mutedContentColor = contentColor.copy(alpha = .68f),
         modifier = Modifier.fillMaxWidth(),
     )
 }
@@ -222,6 +238,7 @@ private fun DrawerApps(
     store: LauncherStore,
     actions: DeviceActions,
     appAccessState: MinkAppAccessState,
+    contentColor: Color,
     onLaunched: () -> Unit,
 ) {
     val context = LocalContext.current
@@ -234,7 +251,7 @@ private fun DrawerApps(
         Text(
             stringResource(R.string.drawer_apps_paused),
             Modifier.fillMaxWidth().padding(horizontal = Dimens.dp28, vertical = Dimens.dp24),
-            color = Muted,
+            color = contentColor.copy(alpha = .68f),
         )
     }
     val drawerRows = ceil(visibleDrawerTargets.size / 2f).toInt()
@@ -260,7 +277,10 @@ private fun DrawerApps(
                         ).show()
                     }
                 },
-                colors = ListItemDefaults.colors(containerColor = MaterialTheme.colorScheme.background),
+                colors = ListItemDefaults.colors(
+                    containerColor = Color.Transparent,
+                    headlineColor = contentColor,
+                ),
             )
         }
     }

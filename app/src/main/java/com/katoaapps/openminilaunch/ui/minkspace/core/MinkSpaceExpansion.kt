@@ -27,8 +27,8 @@ private fun <T> minkSpaceExpansionSpec(): FiniteAnimationSpec<T> = tween(
 internal data class MinkSpaceExpansionLayout(
     val contentPadding: Dp,
     val contentSpacing: Dp,
-    val shortcutWidth: Dp,
-    val shortcutAlpha: Float,
+    val appGridWidth: Dp,
+    val appGridAlpha: Float,
 )
 
 @Composable
@@ -52,12 +52,12 @@ internal fun animateMinkSpaceExpansionLayout(
         animationSpec = minkSpaceExpansionSpec(),
         label = "MinkSpace panel spacing",
     )
-    val shortcutWidth by animateDpAsState(
+    val appGridWidth by animateDpAsState(
         targetValue = if (expanded) Dimens.dp0 else collapsedShortcutWidth,
         animationSpec = minkSpaceExpansionSpec(),
         label = "MinkSpace shortcut width",
     )
-    val shortcutAlpha by animateFloatAsState(
+    val appGridAlpha by animateFloatAsState(
         targetValue = if (expanded) 0f else 1f,
         animationSpec = minkSpaceExpansionSpec(),
         label = "MinkSpace shortcut alpha",
@@ -65,8 +65,8 @@ internal fun animateMinkSpaceExpansionLayout(
     return MinkSpaceExpansionLayout(
         contentPadding = contentPadding,
         contentSpacing = contentSpacing,
-        shortcutWidth = shortcutWidth,
-        shortcutAlpha = shortcutAlpha,
+        appGridWidth = appGridWidth,
+        appGridAlpha = appGridAlpha,
     )
 }
 

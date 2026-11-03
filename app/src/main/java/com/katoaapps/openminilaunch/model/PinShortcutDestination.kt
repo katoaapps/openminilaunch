@@ -4,8 +4,8 @@ package com.katoaapps.openminilaunch.model
 internal sealed interface PinShortcutDestination {
     val key: String
 
-    data class HomeSlot(val shortcut: Shortcut) : PinShortcutDestination {
-        override val key: String = "home:${shortcut.name}"
+    data class HomeSlot(val slot: AppGridSlot) : PinShortcutDestination {
+        override val key: String = "home:${slot.name}"
     }
 
     data object AddToDrawer : PinShortcutDestination {
@@ -27,7 +27,7 @@ internal sealed interface PinShortcutDestination {
             val parts = key?.split(':') ?: return null
             return when {
                 parts.size == 2 && parts[0] == "home" ->
-                    runCatching { HomeSlot(Shortcut.valueOf(parts[1])) }.getOrNull()
+                    runCatching { HomeSlot(AppGridSlot.valueOf(parts[1])) }.getOrNull()
                 parts.size == 3 && parts[0] == "drawer" && parts[1] == "replace" ->
                     parts[2].toIntOrNull()?.takeIf { it >= 0 }?.let(::ReplaceDrawerSlot)
                 else -> null
