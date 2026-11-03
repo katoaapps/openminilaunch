@@ -19,6 +19,10 @@ class SettingsNavigationTest {
             listOf(SettingsDestination.OVERVIEW, SettingsDestination.SHORTCUTS),
             settingsPathTo(SettingsDestination.SHORTCUTS),
         )
+        assertEquals(
+            listOf(SettingsDestination.OVERVIEW, SettingsDestination.QUICK_DRAWER),
+            settingsPathTo(SettingsDestination.QUICK_DRAWER),
+        )
     }
 
     @Test fun appearanceSectionsNestUnderAppearance() {
@@ -78,6 +82,7 @@ class SettingsNavigationTest {
     @Test fun destinationsBelongToTheExpectedPrimarySection() {
         assertEquals(SettingsSection.HOME, settingsSectionFor(SettingsDestination.MESSAGING))
         assertEquals(SettingsSection.HOME, settingsSectionFor(SettingsDestination.CALLING))
+        assertEquals(SettingsSection.HOME, settingsSectionFor(SettingsDestination.QUICK_DRAWER))
         assertEquals(SettingsSection.MINI_APPS, settingsSectionFor(SettingsDestination.MINK_SPACE))
         assertEquals(SettingsSection.MAGIC_BOX, settingsSectionFor(SettingsDestination.FILE_SEARCH))
         assertEquals(SettingsSection.ADVANCED, settingsSectionFor(SettingsDestination.MINK_DAY))

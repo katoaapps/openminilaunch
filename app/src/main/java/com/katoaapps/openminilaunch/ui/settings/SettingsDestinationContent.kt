@@ -81,8 +81,12 @@ internal fun SettingsDestinationContent(
             store = store,
             actions = actions,
             onPickShortcut = onPickShortcut,
-            onPickDrawer = onPickDrawer,
             onNavigate = onNavigate,
+            goBack = onNavigateBack,
+        )
+        SettingsDestination.QUICK_DRAWER -> QuickDrawerSettingsPage(
+            store = store,
+            onPickDrawer = onPickDrawer,
             goBack = onNavigateBack,
         )
         SettingsDestination.PRIVACY_APPS -> PrivacyAppsSettingsPage(

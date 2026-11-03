@@ -5,7 +5,6 @@ import com.katoaapps.openminilaunch.data.LauncherStore
 import com.katoaapps.openminilaunch.model.MAX_DRAWER_APPS
 import com.katoaapps.openminilaunch.model.PinShortcutRequestPresentation
 import com.katoaapps.openminilaunch.model.Shortcut
-import com.katoaapps.openminilaunch.model.configurableShortcuts
 import com.katoaapps.openminilaunch.platform.DeviceActions
 import com.katoaapps.openminilaunch.ui.components.SectionLabel
 import com.katoaapps.openminilaunch.ui.components.SettingsRow
@@ -16,7 +15,10 @@ import com.katoaapps.openminilaunch.ui.theme.Muted
 import com.katoaapps.openminilaunch.ui.theme.Sage
 
 import android.widget.Toast
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.AddToHomeScreen
 import androidx.compose.material.icons.filled.Apps
@@ -68,27 +70,51 @@ internal fun ShortcutsSettingsPage(
     store: LauncherStore,
     actions: DeviceActions,
     onPickShortcut: (Shortcut) -> Unit,
-    onPickDrawer: () -> Unit,
     onNavigate: (SettingsDestination) -> Unit,
     goBack: () -> Unit,
 ) {
     val context = LocalContext.current
-    SettingsPage(stringResource(R.string.shortcuts_and_drawer), goBack) {
+    SettingsPage(stringResource(R.string.app_shortcuts), goBack) {
         SectionLabel(stringResource(R.string.home_shortcuts))
         Text(
             stringResource(R.string.home_shortcuts_description_v2),
             color = Muted,
             fontSize = Dimens.sp13,
         )
-        configurableShortcuts.forEach { shortcut ->
-            val targetKey = store.shortcutTargets[shortcut]
-            ShortcutAssignmentRow(
-                shortcut = shortcut,
-                targetKey = targetKey,
-                actions = actions,
-                subtitle = targetKey?.let(actions::launcherTargetLabel)
-                    ?: stringResource(R.string.shortcut_default, shortcut.displayLabel()),
-            ) { onPickShortcut(shortcut) }
+        store.shortcutOrder.chunked(2).forEach { rowShortcuts ->
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(Dimens.dp8),
+            ) {
+                rowShortcuts.forEach { shortcut ->
+                    val targetKey = store.shortcutTargets[shortcut]
+                    ShortcutAssignmentRow(
+                        shortcut = shortcut,
+                        targetKey = targetKey,
+                        actions = actions,
+                        subtitle = if (shortcut == Shortcut.DRAWER) {
+                            stringResource(
+                                R.string.count_of_max,
+                                store.drawerTargets.size,
+                                MAX_DRAWER_APPS,
+                            )
+                        } else {
+                            targetKey?.let(actions::launcherTargetLabel)
+                                ?: stringResource(R.string.shortcut_default, shortcut.displayLabel())
+                        },
+                        modifier = Modifier.weight(1f),
+                        compact = true,
+                        onClick = {
+                            if (shortcut == Shortcut.DRAWER) {
+                                onNavigate(SettingsDestination.QUICK_DRAWER)
+                            } else {
+                                onPickShortcut(shortcut)
+                            }
+                        },
+                    )
+                }
+                if (rowShortcuts.size == 1) Spacer(Modifier.weight(1f))
+            }
         }
         SettingsRow(
             stringResource(R.string.reset_home_grid_order),
@@ -103,15 +129,6 @@ internal fun ShortcutsSettingsPage(
             ).show()
         }
         HorizontalDivider(color = Sage)
-        SectionLabel(stringResource(R.string.app_drawer))
-        SettingsRow(
-            stringResource(R.string.selected_apps),
-            stringResource(R.string.count_of_max, store.drawerTargets.size, MAX_DRAWER_APPS),
-            Icons.Default.Apps,
-            onClick = onPickDrawer,
-        )
-        Text(stringResource(R.string.magic_box_find_other_apps), color = Muted, fontSize = Dimens.sp13)
-        HorizontalDivider(color = Sage)
         SectionLabel(stringResource(R.string.add_to_home_requests))
         SettingsRow(
             stringResource(R.string.add_to_home_confirmation),
@@ -123,5 +140,22 @@ internal fun ShortcutsSettingsPage(
             ),
             Icons.AutoMirrored.Filled.AddToHomeScreen,
         ) { onNavigate(SettingsDestination.PIN_SHORTCUT_REQUESTS) }
+    }
+}
+
+@Composable
+internal fun QuickDrawerSettingsPage(
+    store: LauncherStore,
+    onPickDrawer: () -> Unit,
+    goBack: () -> Unit,
+) {
+    SettingsPage(stringResource(R.string.quick_drawer), goBack) {
+        SettingsRow(
+            stringResource(R.string.selected_apps),
+            stringResource(R.string.count_of_max, store.drawerTargets.size, MAX_DRAWER_APPS),
+            Icons.Default.Apps,
+            onClick = onPickDrawer,
+        )
+        Text(stringResource(R.string.magic_box_find_other_apps), color = Muted, fontSize = Dimens.sp13)
     }
 }

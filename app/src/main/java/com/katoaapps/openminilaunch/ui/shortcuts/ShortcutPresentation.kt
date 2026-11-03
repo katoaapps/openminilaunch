@@ -64,30 +64,60 @@ internal fun ShortcutAssignmentRow(
     targetKey: String?,
     actions: DeviceActions,
     subtitle: String,
+    modifier: Modifier = Modifier,
+    compact: Boolean = false,
     onClick: () -> Unit,
 ) {
+    val outerPadding = if (compact) Dimens.dp8 else Dimens.dp12
+    val iconContainerSize = if (compact) Dimens.dp34 else Dimens.dp42
+    val iconContainerRadius = if (compact) Dimens.dp10 else Dimens.dp12
+    val targetIconSize = if (compact) Dimens.dp26 else Dimens.dp32
+    val builtInIconSize = if (compact) Dimens.dp21 else Dimens.dp25
+    val textPadding = if (compact) Dimens.dp8 else Dimens.dp12
     Row(
-        Modifier.fillMaxWidth().clip(RoundedCornerShape(Dimens.dp16))
+        modifier.fillMaxWidth().clip(RoundedCornerShape(Dimens.dp16))
             .background(MaterialTheme.colorScheme.surfaceContainerLow)
-            .clickable(onClick = onClick).padding(Dimens.dp12),
+            .clickable(onClick = onClick).padding(outerPadding),
         verticalAlignment = Alignment.CenterVertically,
     ) {
         Box(
-            Modifier.size(Dimens.dp42).clip(RoundedCornerShape(Dimens.dp12))
+            Modifier.size(iconContainerSize).clip(RoundedCornerShape(iconContainerRadius))
                 .background(MaterialTheme.colorScheme.surfaceContainerHigh),
             contentAlignment = Alignment.Center,
         ) {
             if (targetKey != null) {
                 val target = actions.resolveLauncherSelection(targetKey)
-                LauncherTargetIcon(target, actions, Dimens.dp32, contentDescription = target.label)
+                LauncherTargetIcon(target, actions, targetIconSize, contentDescription = target.label)
             } else {
-                Icon(shortcut.defaultIcon(), null, Modifier.size(Dimens.dp25), tint = MaterialTheme.colorScheme.onSurface)
+                Icon(
+                    shortcut.defaultIcon(),
+                    null,
+                    Modifier.size(builtInIconSize),
+                    tint = MaterialTheme.colorScheme.onSurface,
+                )
             }
         }
-        Column(Modifier.weight(1f).padding(horizontal = Dimens.dp12)) {
-            Text(shortcut.displaySlotLabel(), fontWeight = FontWeight.SemiBold)
-            Text(subtitle, color = Muted, fontSize = Dimens.sp12, maxLines = 1, overflow = TextOverflow.Ellipsis)
+        Column(Modifier.weight(1f).padding(horizontal = textPadding)) {
+            Text(
+                shortcut.displaySlotLabel(),
+                fontWeight = FontWeight.SemiBold,
+                fontSize = if (compact) Dimens.sp13 else Dimens.sp14,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+            )
+            Text(
+                subtitle,
+                color = Muted,
+                fontSize = if (compact) Dimens.sp11 else Dimens.sp12,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+            )
         }
-        Icon(Icons.Default.ChevronRight, null, tint = Muted)
+        Icon(
+            Icons.Default.ChevronRight,
+            null,
+            modifier = Modifier.size(if (compact) Dimens.dp18 else Dimens.dp24),
+            tint = Muted,
+        )
     }
 }

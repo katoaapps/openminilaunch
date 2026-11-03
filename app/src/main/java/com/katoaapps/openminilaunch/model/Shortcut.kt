@@ -11,7 +11,7 @@ enum class Shortcut(@param:StringRes val labelRes: Int) {
     CALL(R.string.shortcut_call),
     MESSAGE(R.string.shortcut_messenger),
     FILES(R.string.shortcut_files),
-    DRAWER(R.string.shortcut_top_eight),
+    DRAWER(R.string.quick_drawer),
 }
 
 internal const val MAX_DRAWER_APPS = 8

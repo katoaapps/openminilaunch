@@ -291,11 +291,11 @@ private fun PinShortcutPlacementList(
                 onClick = { onSelect(destination.key) },
             )
         }
-        item { DestinationSectionLabel(stringResource(R.string.shortcut_top_eight)) }
+        item { DestinationSectionLabel(stringResource(R.string.quick_drawer)) }
         if (store.drawerTargets.size < MAX_DRAWER_APPS) {
             item(PinShortcutDestination.AddToDrawer.key) {
                 DestinationRow(
-                    title = stringResource(R.string.add_to_top_eight),
+                    title = stringResource(R.string.add_to_quick_drawer),
                     subtitle = stringResource(
                         R.string.count_of_max,
                         store.drawerTargets.size,
@@ -310,7 +310,7 @@ private fun PinShortcutPlacementList(
         items(store.drawerTargets.size, key = { "drawer-slot-$it" }) { index ->
             val destination = PinShortcutDestination.ReplaceDrawerSlot(index)
             DestinationRow(
-                title = stringResource(R.string.replace_top_eight_item, index + 1),
+                title = stringResource(R.string.replace_quick_drawer_item, index + 1),
                 subtitle = actions.launcherTargetLabel(store.drawerTargets[index]),
                 selected = selectedKey == destination.key,
                 onClick = { onSelect(destination.key) },

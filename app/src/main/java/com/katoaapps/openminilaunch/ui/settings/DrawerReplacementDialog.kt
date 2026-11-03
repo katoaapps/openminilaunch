@@ -35,7 +35,7 @@ import com.katoaapps.openminilaunch.ui.components.minkDialogWidth
 import com.katoaapps.openminilaunch.ui.theme.Dimens
 import com.katoaapps.openminilaunch.ui.theme.Muted
 
-/** Chooses the exact Top 8 position replaced when the drawer is already full. */
+/** Chooses the exact Quick Drawer position replaced when the drawer is already full. */
 @Composable
 internal fun DrawerReplacementDialog(
     replacement: LauncherTarget,
@@ -82,7 +82,7 @@ internal fun DrawerReplacementDialog(
                             },
                             supportingContent = {
                                 Text(
-                                    stringResource(R.string.replace_top_eight_item, index + 1),
+                                    stringResource(R.string.replace_quick_drawer_item, index + 1),
                                     color = Muted,
                                 )
                             },

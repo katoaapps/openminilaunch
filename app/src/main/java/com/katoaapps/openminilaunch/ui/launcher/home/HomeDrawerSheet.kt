@@ -93,7 +93,7 @@ internal fun HomeDrawerSheet(
             store.drawerTargets.isEmpty() -> EmptyDrawer(
                 onChooseApps = {
                     onDismiss()
-                    openSettings(SettingsDestination.SHORTCUTS)
+                    openSettings(SettingsDestination.QUICK_DRAWER)
                 },
             )
             !appAccessState.isResolved -> Box(
