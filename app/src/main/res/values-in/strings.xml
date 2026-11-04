@@ -246,6 +246,14 @@
     <string name="home_shortcut_and_folder">Pintasan dan folder layar utama</string>
     <string name="folder_name">Nama folder</string>
     <string name="folder_color">Warna folder</string>
+    <string name="folder_indicator">Indikator folder</string>
+    <string name="folder_indicator_stacked">Ikon bertumpuk</string>
+    <string name="folder_indicator_grid">Kisi ikon</string>
+    <string name="folder_animation">Animasi folder</string>
+    <string name="folder_animation_grow_spin">Membesar dan berputar</string>
+    <string name="folder_animation_appear">Muncul</string>
+    <string name="folder_animation_ripple">Muncul beriak</string>
+    <string name="folder_animation_rise">Naik</string>
     <string name="default_appearance">Default</string>
     <string name="theme_system">Sistem</string>
     <string name="theme_light">Ringan</string>

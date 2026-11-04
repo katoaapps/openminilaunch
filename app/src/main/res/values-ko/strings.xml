@@ -246,6 +246,14 @@
     <string name="home_shortcut_and_folder">홈 바로가기 및 폴더</string>
     <string name="folder_name">폴더 이름</string>
     <string name="folder_color">폴더 색상</string>
+    <string name="folder_indicator">폴더 표시</string>
+    <string name="folder_indicator_stacked">겹친 아이콘</string>
+    <string name="folder_indicator_grid">아이콘 그리드</string>
+    <string name="folder_animation">폴더 애니메이션</string>
+    <string name="folder_animation_grow_spin">커지며 회전</string>
+    <string name="folder_animation_appear">나타나기</string>
+    <string name="folder_animation_ripple">물결처럼 나타나기</string>
+    <string name="folder_animation_rise">위로 나타나기</string>
     <string name="default_appearance">기본값</string>
     <string name="theme_system">시스템</string>
     <string name="theme_light">빛</string>

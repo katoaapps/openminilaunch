@@ -5,7 +5,9 @@ import com.katoaapps.openminilaunch.features.profile.ProfileCard
 import com.katoaapps.openminilaunch.features.profile.ProfileLink
 import com.katoaapps.openminilaunch.features.profile.ProfileLinkType
 import com.katoaapps.openminilaunch.model.AppFolderConfig
+import com.katoaapps.openminilaunch.model.AppFolderAnimationStyle
 import com.katoaapps.openminilaunch.model.AppFolderColorMode
+import com.katoaapps.openminilaunch.model.AppFolderIndicatorStyle
 import com.katoaapps.openminilaunch.model.AppGridAssignment
 import com.katoaapps.openminilaunch.model.AppGridSlot
 import com.katoaapps.openminilaunch.model.FontAppearance
@@ -213,6 +215,70 @@ class LauncherBackupCodecTest {
 
         assertEquals(original.launcher.appGridAssignments, restored.launcher.appGridAssignments)
         assertEquals(original.launcher.appFolders, restored.launcher.appFolders)
+    }
+
+    @Test fun folderIndicatorStyleSurvivesPortableBackupRoundTrip() {
+        val sample = sampleBackup(twoPanelMode = true)
+        val original = sample.copy(
+            settings = sample.settings.copy(folderIndicatorStyle = AppFolderIndicatorStyle.GRID),
+        )
+
+        val restored = LauncherBackupCodec.decode(LauncherBackupCodec.encode(original))
+
+        assertEquals(AppFolderIndicatorStyle.GRID, restored.settings.folderIndicatorStyle)
+    }
+
+    @Test fun folderAnimationStyleSurvivesPortableBackupRoundTrip() {
+        val sample = sampleBackup(twoPanelMode = true)
+        val original = sample.copy(
+            settings = sample.settings.copy(folderAnimationStyle = AppFolderAnimationStyle.RIPPLE),
+        )
+
+        val restored = LauncherBackupCodec.decode(LauncherBackupCodec.encode(original))
+
+        assertEquals(AppFolderAnimationStyle.RIPPLE, restored.settings.folderAnimationStyle)
+    }
+
+    @Test fun backupWithoutFolderIndicatorStyleLeavesCurrentPreferenceAlone() {
+        val json = JSONObject(LauncherBackupCodec.encode(sampleBackup(twoPanelMode = true)))
+        json.getJSONObject("settings").remove("appGrid")
+
+        val restored = LauncherBackupCodec.decode(json.toString())
+
+        assertNull(restored.settings.folderIndicatorStyle)
+    }
+
+    @Test fun backupWithoutFolderAnimationStyleLeavesCurrentPreferenceAlone() {
+        val sample = sampleBackup(twoPanelMode = true)
+        val original = sample.copy(
+            settings = sample.settings.copy(folderIndicatorStyle = AppFolderIndicatorStyle.GRID),
+        )
+        val json = JSONObject(LauncherBackupCodec.encode(original))
+        json.getJSONObject("settings").getJSONObject("appGrid").remove("folderAnimationStyle")
+
+        val restored = LauncherBackupCodec.decode(json.toString())
+
+        assertNull(restored.settings.folderAnimationStyle)
+    }
+
+    @Test fun unknownFolderPresentationStylesAreIgnored() {
+        val sample = sampleBackup(twoPanelMode = true)
+        val original = sample.copy(
+            settings = sample.settings.copy(
+                folderIndicatorStyle = AppFolderIndicatorStyle.GRID,
+                folderAnimationStyle = AppFolderAnimationStyle.RIPPLE,
+            ),
+        )
+        val json = JSONObject(LauncherBackupCodec.encode(original))
+        json.getJSONObject("settings").getJSONObject("appGrid").apply {
+            put("folderIndicatorStyle", "FUTURE_INDICATOR")
+            put("folderAnimationStyle", "FUTURE_ANIMATION")
+        }
+
+        val restored = LauncherBackupCodec.decode(json.toString())
+
+        assertNull(restored.settings.folderIndicatorStyle)
+        assertNull(restored.settings.folderAnimationStyle)
     }
 
     @Test fun olderFolderColorWithoutModeRestoresAsCustom() {

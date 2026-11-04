@@ -5,6 +5,8 @@ import com.katoaapps.openminilaunch.features.minkspace.todo.TodoItem
 import com.katoaapps.openminilaunch.features.profile.ProfileCard
 import com.katoaapps.openminilaunch.features.profile.ProfileLink
 import com.katoaapps.openminilaunch.model.AppFolderConfig
+import com.katoaapps.openminilaunch.model.AppFolderAnimationStyle
+import com.katoaapps.openminilaunch.model.AppFolderIndicatorStyle
 import com.katoaapps.openminilaunch.model.AppGridAssignment
 import com.katoaapps.openminilaunch.model.AppGridSlot
 import com.katoaapps.openminilaunch.model.FontAppearance
@@ -80,4 +82,8 @@ internal data class LauncherBackupSettings(
     val fontAppearance: FontAppearance = FontAppearance(),
     /** Null means this backup predates Quick Drawer appearance and control preferences. */
     val quickDrawer: QuickDrawerConfig? = null,
+    /** Null means this backup predates the folder-indicator preference. */
+    val folderIndicatorStyle: AppFolderIndicatorStyle? = null,
+    /** Null means this backup predates the folder-animation preference. */
+    val folderAnimationStyle: AppFolderAnimationStyle? = null,
 )

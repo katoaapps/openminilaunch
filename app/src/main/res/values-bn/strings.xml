@@ -246,6 +246,14 @@
     <string name="home_shortcut_and_folder">হোম শর্টকাট ও ফোল্ডার</string>
     <string name="folder_name">ফোল্ডারের নাম</string>
     <string name="folder_color">ফোল্ডারের রং</string>
+    <string name="folder_indicator">ফোল্ডার নির্দেশক</string>
+    <string name="folder_indicator_stacked">স্তূপীকৃত আইকন</string>
+    <string name="folder_indicator_grid">আইকন গ্রিড</string>
+    <string name="folder_animation">ফোল্ডার অ্যানিমেশন</string>
+    <string name="folder_animation_grow_spin">বড় হয়ে ঘোরা</string>
+    <string name="folder_animation_appear">দেখানো</string>
+    <string name="folder_animation_ripple">ঢেউয়ের মতো আসা</string>
+    <string name="folder_animation_rise">উপরে ওঠা</string>
     <string name="default_appearance">ডিফল্ট</string>
     <string name="theme_system">সিস্টেম</string>
     <string name="theme_light">আলো</string>

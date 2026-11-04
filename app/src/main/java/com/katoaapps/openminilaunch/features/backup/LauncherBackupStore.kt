@@ -44,6 +44,8 @@ internal fun LauncherStore.createPortableBackup(appVersion: String): LauncherBac
             callAutomatically = callAutomatically,
             preferredCallingPackage = preferredCallingPackage,
             quickDrawer = quickDrawerConfig,
+            folderIndicatorStyle = folderIndicatorStyle,
+            folderAnimationStyle = folderAnimationStyle,
             preferredAiPackage = preferredAiPackage,
             preferredWebPackage = preferredWebPackage,
             usesAutomaticSocialApps = usesAutomaticSocialApps,
@@ -104,6 +106,8 @@ internal fun LauncherStore.restorePortableBackup(backup: LauncherBackup) {
 
     updateOpenSoftwareKeyboardOnHome(settings.openSoftwareKeyboardOnHome)
     updateIncludeAppShortcutsInDiscovery(settings.includeAppShortcutsInDiscovery)
+    settings.folderIndicatorStyle?.let(::updateFolderIndicatorStyle)
+    settings.folderAnimationStyle?.let(::updateFolderAnimationStyle)
     replaceAutomaticAppBubbleTargets(settings.automaticAppBubbleTargets)
     if (settings.minkSpaceMiniAppOrder != null && settings.enabledMinkSpaceMiniApps != null) {
         replaceMinkSpacePreferencesFromBackup(

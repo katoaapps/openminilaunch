@@ -246,6 +246,14 @@
     <string name="home_shortcut_and_folder">主畫面捷徑與資料夾</string>
     <string name="folder_name">資料夾名稱</string>
     <string name="folder_color">資料夾顏色</string>
+    <string name="folder_indicator">資料夾顯示方式</string>
+    <string name="folder_indicator_stacked">疊放圖示</string>
+    <string name="folder_indicator_grid">圖示網格</string>
+    <string name="folder_animation">資料夾動畫</string>
+    <string name="folder_animation_grow_spin">放大並旋轉</string>
+    <string name="folder_animation_appear">顯示</string>
+    <string name="folder_animation_ripple">波紋展開</string>
+    <string name="folder_animation_rise">向上浮現</string>
     <string name="default_appearance">預設</string>
     <string name="theme_system">系統</string>
     <string name="theme_light">光</string>

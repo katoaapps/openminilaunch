@@ -246,6 +246,14 @@
     <string name="home_shortcut_and_folder">Ярлык и папка на главном экране</string>
     <string name="folder_name">Название папки</string>
     <string name="folder_color">Цвет папки</string>
+    <string name="folder_indicator">Индикатор папки</string>
+    <string name="folder_indicator_stacked">Стопка значков</string>
+    <string name="folder_indicator_grid">Сетка значков</string>
+    <string name="folder_animation">Анимация папки</string>
+    <string name="folder_animation_grow_spin">Увеличение и вращение</string>
+    <string name="folder_animation_appear">Появление</string>
+    <string name="folder_animation_ripple">Волной</string>
+    <string name="folder_animation_rise">Снизу вверх</string>
     <string name="default_appearance">По умолчанию</string>
     <string name="theme_system">Система</string>
     <string name="theme_light">Свет</string>

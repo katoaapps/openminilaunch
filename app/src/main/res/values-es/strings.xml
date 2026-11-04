@@ -246,6 +246,14 @@
     <string name="home_shortcut_and_folder">Acceso directo y carpeta de inicio</string>
     <string name="folder_name">Nombre de la carpeta</string>
     <string name="folder_color">Color de la carpeta</string>
+    <string name="folder_indicator">Indicador de carpeta</string>
+    <string name="folder_indicator_stacked">Iconos apilados</string>
+    <string name="folder_indicator_grid">Cuadrícula de iconos</string>
+    <string name="folder_animation">Animación de carpeta</string>
+    <string name="folder_animation_grow_spin">Crecer y girar</string>
+    <string name="folder_animation_appear">Aparecer</string>
+    <string name="folder_animation_ripple">Entrada en cascada</string>
+    <string name="folder_animation_rise">Subir</string>
     <string name="default_appearance">Predeterminado</string>
     <string name="theme_system">Sistema</string>
     <string name="theme_light">Luz</string>

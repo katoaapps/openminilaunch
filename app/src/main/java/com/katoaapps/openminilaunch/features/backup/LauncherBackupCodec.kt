@@ -3,7 +3,9 @@ package com.katoaapps.openminilaunch.features.backup
 import com.katoaapps.openminilaunch.features.minkspace.MinkSpaceMiniApp
 import com.katoaapps.openminilaunch.features.minkspace.todo.TodoItem
 import com.katoaapps.openminilaunch.model.AppFolderConfig
+import com.katoaapps.openminilaunch.model.AppFolderAnimationStyle
 import com.katoaapps.openminilaunch.model.AppFolderColorMode
+import com.katoaapps.openminilaunch.model.AppFolderIndicatorStyle
 import com.katoaapps.openminilaunch.model.AppGridAssignment
 import com.katoaapps.openminilaunch.model.AppGridSlot
 import com.katoaapps.openminilaunch.model.FontAppearance
@@ -203,6 +205,12 @@ internal object LauncherBackupCodec {
                 putNullable("colorArgb", quickDrawer.colorArgb)
             })
         }
+        if (settings.folderIndicatorStyle != null || settings.folderAnimationStyle != null) {
+            put("appGrid", JSONObject().apply {
+                settings.folderIndicatorStyle?.let { put("folderIndicatorStyle", it.name) }
+                settings.folderAnimationStyle?.let { put("folderAnimationStyle", it.name) }
+            })
+        }
         put("minkDay", JSONObject().apply {
             put("usesAutomaticSocialApps", settings.usesAutomaticSocialApps)
             put("socialPackages", settings.socialPackages.stringsJsonArray())
@@ -222,6 +230,7 @@ internal object LauncherBackupCodec {
         val messaging = json.getJSONObject("messaging")
         val calling = json.optJSONObject("calling")
         val quickDrawer = json.optJSONObject("quickDrawer")
+        val appGrid = json.optJSONObject("appGrid")
         val minkDay = json.getJSONObject("minkDay")
         val minkSpace = json.optJSONObject("minkSpace")
         val minkSpaceOrder = minkSpace?.optJSONArray("order")?.minkSpaceMiniApps()
@@ -291,6 +300,10 @@ internal object LauncherBackupCodec {
                     colorArgb = drawer.optNullableInt("colorArgb"),
                 )
             },
+            folderIndicatorStyle = appGrid
+                ?.enumValueOrNull<AppFolderIndicatorStyle>("folderIndicatorStyle"),
+            folderAnimationStyle = appGrid
+                ?.enumValueOrNull<AppFolderAnimationStyle>("folderAnimationStyle"),
             preferredAiPackage = magicBox.optNullableString("preferredAiPackage")?.safePackage(),
             preferredWebPackage = magicBox.optNullableString("preferredWebPackage")?.safePackage(),
             usesAutomaticSocialApps = minkDay.optBoolean("usesAutomaticSocialApps", true),
@@ -377,6 +390,11 @@ internal object LauncherBackupCodec {
 
     private inline fun <reified T : Enum<T>> JSONObject.enumValue(key: String, fallback: T): T =
         runCatching { enumValueOf<T>(optString(key)) }.getOrDefault(fallback)
+
+    private inline fun <reified T : Enum<T>> JSONObject.enumValueOrNull(key: String): T? =
+        optString(key)
+            .takeIf(String::isNotBlank)
+            ?.let { runCatching { enumValueOf<T>(it) }.getOrNull() }
 
     private fun JSONArray?.safeTargets(): List<String> = safeStrings(MAX_TARGET_LENGTH)
 

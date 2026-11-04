@@ -246,6 +246,14 @@
     <string name="home_shortcut_and_folder">اختصار ومجلد الشاشة الرئيسية</string>
     <string name="folder_name">اسم المجلد</string>
     <string name="folder_color">لون المجلد</string>
+    <string name="folder_indicator">مؤشر المجلد</string>
+    <string name="folder_indicator_stacked">أيقونات متراكبة</string>
+    <string name="folder_indicator_grid">شبكة أيقونات</string>
+    <string name="folder_animation">رسوم المجلد المتحركة</string>
+    <string name="folder_animation_grow_spin">تكبير ودوران</string>
+    <string name="folder_animation_appear">ظهور</string>
+    <string name="folder_animation_ripple">تموّج للداخل</string>
+    <string name="folder_animation_rise">ارتفاع للداخل</string>
     <string name="default_appearance">افتراضي</string>
     <string name="theme_system">النظام</string>
     <string name="theme_light">ضوء</string>

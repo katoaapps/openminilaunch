@@ -172,6 +172,7 @@ internal fun AppGridOrderEditor(
                                         defaultColor = MaterialTheme.colorScheme.surfaceContainerHigh,
                                         themeColor = MaterialTheme.colorScheme.primaryContainer,
                                     ) ?: MaterialTheme.colorScheme.surfaceContainerHigh,
+                                    indicatorStyle = store.folderIndicatorStyle,
                                 )
                             }
                         }

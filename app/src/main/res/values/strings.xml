@@ -253,6 +253,14 @@
     <string name="home_shortcut_and_folder">Home shortcut &amp; folder</string>
     <string name="folder_name">Folder name</string>
     <string name="folder_color">Folder color</string>
+    <string name="folder_indicator">Folder indicator</string>
+    <string name="folder_indicator_stacked">Stacked icons</string>
+    <string name="folder_indicator_grid">Icon grid</string>
+    <string name="folder_animation">Folder animation</string>
+    <string name="folder_animation_grow_spin">Grow &amp; spin</string>
+    <string name="folder_animation_appear">Appear</string>
+    <string name="folder_animation_ripple">Ripple in</string>
+    <string name="folder_animation_rise">Rise in</string>
     <string name="default_appearance">Default</string>
     <string name="theme_system">System</string>
     <string name="theme_light">Light</string>

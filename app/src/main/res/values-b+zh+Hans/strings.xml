@@ -246,6 +246,14 @@
     <string name="home_shortcut_and_folder">主屏幕快捷方式和文件夹</string>
     <string name="folder_name">文件夹名称</string>
     <string name="folder_color">文件夹颜色</string>
+    <string name="folder_indicator">文件夹显示方式</string>
+    <string name="folder_indicator_stacked">堆叠图标</string>
+    <string name="folder_indicator_grid">图标网格</string>
+    <string name="folder_animation">文件夹动画</string>
+    <string name="folder_animation_grow_spin">放大并旋转</string>
+    <string name="folder_animation_appear">显示</string>
+    <string name="folder_animation_ripple">涟漪展开</string>
+    <string name="folder_animation_rise">上浮显示</string>
     <string name="default_appearance">默认</string>
     <string name="theme_system">系统</string>
     <string name="theme_light">光</string>

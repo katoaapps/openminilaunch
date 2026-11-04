@@ -1,6 +1,5 @@
 package com.katoaapps.openminilaunch.ui.appgrid
 
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -13,7 +12,7 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.lazy.grid.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
@@ -34,7 +33,6 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalFocusManager
@@ -42,10 +40,12 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.window.Dialog
 import com.katoaapps.openminilaunch.R
 import com.katoaapps.openminilaunch.model.AppFolderColorMode
 import com.katoaapps.openminilaunch.model.AppFolderConfig
+import com.katoaapps.openminilaunch.model.AppFolderAnimationStyle
 import com.katoaapps.openminilaunch.model.MAX_APP_FOLDER_NAME_LENGTH
 import com.katoaapps.openminilaunch.model.LauncherTarget
 import com.katoaapps.openminilaunch.platform.DeviceActions
@@ -62,6 +62,7 @@ import com.katoaapps.openminilaunch.ui.wellbeing.MinkPausedBadge
 @Composable
 internal fun AppFolderContentsDialog(
     folder: AppFolderConfig,
+    animationStyle: AppFolderAnimationStyle,
     actions: DeviceActions,
     isPaused: (LauncherTarget) -> Boolean,
     onTarget: (LauncherTarget) -> Unit,
@@ -150,41 +151,43 @@ internal fun AppFolderContentsDialog(
                         horizontalArrangement = Arrangement.spacedBy(Dimens.dp8),
                         verticalArrangement = Arrangement.spacedBy(Dimens.dp8),
                     ) {
-                        items(targets, key = LauncherTarget::selectionKey) { target ->
-                            Column(
-                                Modifier.clip(RoundedCornerShape(Dimens.dp16))
-                                    .background(folderContentColor.copy(alpha = .10f))
-                                    .clickable {
-                                        commitAppearance()
-                                        onTarget(target)
+                        itemsIndexed(targets, key = { _, target -> target.selectionKey }) { index, target ->
+                            AnimatedFolderEntry(style = animationStyle, index = index) {
+                                Column(
+                                    Modifier.fillMaxWidth()
+                                        .clickable {
+                                            commitAppearance()
+                                            onTarget(target)
+                                        }
+                                        .padding(horizontal = Dimens.dp4, vertical = Dimens.dp8),
+                                    horizontalAlignment = Alignment.CenterHorizontally,
+                                ) {
+                                    Box(Modifier.size(Dimens.dp48), contentAlignment = Alignment.Center) {
+                                        if (target.isAvailable) {
+                                            LauncherTargetIcon(target, actions, Dimens.dp48)
+                                        } else {
+                                            UnavailableLauncherTargetIcon(
+                                                size = Dimens.dp48,
+                                                contentDescription = stringResource(R.string.app_unavailable),
+                                            )
+                                        }
+                                        if (target.isAvailable && isPaused(target)) {
+                                            MinkPausedBadge(Modifier.align(Alignment.Center))
+                                        }
                                     }
-                                    .padding(Dimens.dp8),
-                                horizontalAlignment = Alignment.CenterHorizontally,
-                            ) {
-                                Box(Modifier.size(Dimens.dp48), contentAlignment = Alignment.Center) {
-                                    if (target.isAvailable) {
-                                        LauncherTargetIcon(target, actions, Dimens.dp48)
-                                    } else {
-                                        UnavailableLauncherTargetIcon(
-                                            size = Dimens.dp48,
-                                            contentDescription = stringResource(R.string.app_unavailable),
-                                        )
-                                    }
-                                    if (target.isAvailable && isPaused(target)) {
-                                        MinkPausedBadge(Modifier.align(Alignment.Center))
-                                    }
+                                    Text(
+                                        if (target.isAvailable) {
+                                            target.label
+                                        } else {
+                                            stringResource(R.string.app_unavailable)
+                                        },
+                                        modifier = Modifier.padding(top = Dimens.dp6),
+                                        textAlign = TextAlign.Center,
+                                        fontSize = Dimens.sp11,
+                                        maxLines = 2,
+                                        overflow = TextOverflow.Ellipsis,
+                                    )
                                 }
-                                Text(
-                                    if (target.isAvailable) {
-                                        target.label
-                                    } else {
-                                        stringResource(R.string.app_unavailable)
-                                    },
-                                    modifier = Modifier.padding(top = Dimens.dp6),
-                                    textAlign = TextAlign.Center,
-                                    fontSize = Dimens.sp11,
-                                    maxLines = 2,
-                                )
                             }
                         }
                     }

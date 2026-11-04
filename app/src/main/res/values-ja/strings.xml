@@ -246,6 +246,14 @@
     <string name="home_shortcut_and_folder">ホームのショートカットとフォルダー</string>
     <string name="folder_name">フォルダー名</string>
     <string name="folder_color">フォルダーの色</string>
+    <string name="folder_indicator">フォルダー表示</string>
+    <string name="folder_indicator_stacked">重なったアイコン</string>
+    <string name="folder_indicator_grid">アイコングリッド</string>
+    <string name="folder_animation">フォルダーアニメーション</string>
+    <string name="folder_animation_grow_spin">拡大して回転</string>
+    <string name="folder_animation_appear">表示</string>
+    <string name="folder_animation_ripple">波紋のように表示</string>
+    <string name="folder_animation_rise">上昇して表示</string>
     <string name="default_appearance">デフォルト</string>
     <string name="theme_system">システム</string>
     <string name="theme_light">ライト</string>

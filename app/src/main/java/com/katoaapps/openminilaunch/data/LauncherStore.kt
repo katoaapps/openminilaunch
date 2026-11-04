@@ -39,6 +39,7 @@ class LauncherStore private constructor(context: Context) {
     private val minkDayPreferences = MinkDayPreferenceStore(prefs)
     private val updatePreferences = UpdatePreferenceStore(prefs)
     private val appDiscoveryPreferences = AppDiscoveryPreferenceStore(prefs)
+    private val appGridPreferences = AppGridPreferenceStore(prefs)
     private val appBubblePreferences = AppBubblePreferenceStore(prefs)
     private val privateContainerPreferences = PrivateContainerPreferenceStore(prefs)
     private val quickDrawerPreferences = QuickDrawerPreferenceStore(prefs)
@@ -123,6 +124,8 @@ class LauncherStore private constructor(context: Context) {
     val githubUpdateChecksEnabled get() = updatePreferences.checksEnabled
     val latestGitHubReleaseTag get() = updatePreferences.latestReleaseTag
     val includeAppShortcutsInDiscovery get() = appDiscoveryPreferences.includeAppShortcuts
+    val folderIndicatorStyle get() = appGridPreferences.folderIndicatorStyle
+    val folderAnimationStyle get() = appGridPreferences.folderAnimationStyle
     val automaticAppBubbleTargets get() = appBubblePreferences.automaticTargetKeys
     val privateContainerGatewaySelectionKey get() = privateContainerPreferences.gatewaySelectionKey
     val showMinkPadInQuickDrawer get() = quickDrawerPreferences.showMinkPadButton
@@ -306,6 +309,14 @@ class LauncherStore private constructor(context: Context) {
 
     fun updateIncludeAppShortcutsInDiscovery(enabled: Boolean) {
         appDiscoveryPreferences.updateIncludeAppShortcuts(enabled)
+    }
+
+    fun updateFolderIndicatorStyle(style: AppFolderIndicatorStyle) {
+        appGridPreferences.updateFolderIndicatorStyle(style)
+    }
+
+    fun updateFolderAnimationStyle(style: AppFolderAnimationStyle) {
+        appGridPreferences.updateFolderAnimationStyle(style)
     }
 
     fun setAppBubbleAutomatic(targetKey: String, enabled: Boolean) {

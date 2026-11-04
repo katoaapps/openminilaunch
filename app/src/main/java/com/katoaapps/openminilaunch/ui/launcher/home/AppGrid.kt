@@ -152,6 +152,7 @@ internal fun AppGrid(
                                         defaultColor = itemContainerColor,
                                         themeColor = MaterialTheme.colorScheme.primaryContainer,
                                     ),
+                                    indicatorStyle = store.folderIndicatorStyle,
                                 )
                             } else if (hasAssignedTarget) {
                                 LauncherTargetIcon(
@@ -190,6 +191,7 @@ internal fun AppGrid(
         } else {
             AppFolderContentsDialog(
                 folder = folder,
+                animationStyle = store.folderAnimationStyle,
                 actions = actions,
                 isPaused = appAccessState::isPaused,
                 onTarget = { target ->

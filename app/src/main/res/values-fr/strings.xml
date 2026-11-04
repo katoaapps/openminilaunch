@@ -246,6 +246,14 @@
     <string name="home_shortcut_and_folder">Raccourci et dossier d’accueil</string>
     <string name="folder_name">Nom du dossier</string>
     <string name="folder_color">Couleur du dossier</string>
+    <string name="folder_indicator">Indicateur de dossier</string>
+    <string name="folder_indicator_stacked">Icônes empilées</string>
+    <string name="folder_indicator_grid">Grille d’icônes</string>
+    <string name="folder_animation">Animation du dossier</string>
+    <string name="folder_animation_grow_spin">Agrandir et pivoter</string>
+    <string name="folder_animation_appear">Apparaître</string>
+    <string name="folder_animation_ripple">Apparition en cascade</string>
+    <string name="folder_animation_rise">Monter</string>
     <string name="default_appearance">Par défaut</string>
     <string name="theme_system">Système</string>
     <string name="theme_light">Lumière</string>

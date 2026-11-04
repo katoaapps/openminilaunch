@@ -1,19 +1,29 @@
 package com.katoaapps.openminilaunch.ui.settings
 
+import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Palette
 import androidx.compose.material.icons.filled.Translate
 import androidx.compose.runtime.Composable
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import com.katoaapps.openminilaunch.R
 import com.katoaapps.openminilaunch.data.LauncherStore
 import com.katoaapps.openminilaunch.features.localization.SupportedAppLanguages
+import com.katoaapps.openminilaunch.model.AppFolderAnimationStyle
+import com.katoaapps.openminilaunch.model.AppFolderIndicatorStyle
 import com.katoaapps.openminilaunch.model.AppGridSlot
 import com.katoaapps.openminilaunch.platform.DeviceActions
+import com.katoaapps.openminilaunch.ui.appgrid.FolderAnimationInlinePreview
 import com.katoaapps.openminilaunch.ui.appgrid.AppGridOrderEditor
 import com.katoaapps.openminilaunch.ui.components.SectionLabel
+import com.katoaapps.openminilaunch.ui.components.SettingsDropdownOption
+import com.katoaapps.openminilaunch.ui.components.SettingsDropdownRow
 import com.katoaapps.openminilaunch.ui.components.SettingsRow
+import com.katoaapps.openminilaunch.ui.theme.Dimens
 
 @Composable
 internal fun LauncherSettingsPage(
@@ -67,5 +77,57 @@ internal fun AppGridSettingsPage(
                 }
             },
         )
+        Row(
+            Modifier.fillMaxWidth(),
+            horizontalArrangement = Arrangement.spacedBy(Dimens.dp8),
+        ) {
+            SettingsDropdownRow(
+                title = stringResource(R.string.folder_indicator),
+                selectedValue = store.folderIndicatorStyle,
+                options = listOf(
+                    SettingsDropdownOption(
+                        AppFolderIndicatorStyle.STACKED,
+                        stringResource(R.string.folder_indicator_stacked),
+                    ),
+                    SettingsDropdownOption(
+                        AppFolderIndicatorStyle.GRID,
+                        stringResource(R.string.folder_indicator_grid),
+                    ),
+                ),
+                onValueSelected = store::updateFolderIndicatorStyle,
+                modifier = Modifier.weight(1f),
+            )
+            SettingsDropdownRow(
+                title = stringResource(R.string.folder_animation),
+                selectedValue = store.folderAnimationStyle,
+                options = listOf(
+                    SettingsDropdownOption(
+                        AppFolderAnimationStyle.RIPPLE,
+                        stringResource(R.string.folder_animation_ripple),
+                    ),
+                    SettingsDropdownOption(
+                        AppFolderAnimationStyle.GROW_AND_SPIN,
+                        stringResource(R.string.folder_animation_grow_spin),
+                    ),
+                    SettingsDropdownOption(
+                        AppFolderAnimationStyle.APPEAR,
+                        stringResource(R.string.folder_animation_appear),
+                    ),
+                    SettingsDropdownOption(
+                        AppFolderAnimationStyle.RISE,
+                        stringResource(R.string.folder_animation_rise),
+                    ),
+                ),
+                onValueSelected = store::updateFolderAnimationStyle,
+                modifier = Modifier.weight(1f),
+                valuePreview = {
+                    FolderAnimationInlinePreview(
+                        style = store.folderAnimationStyle,
+                        targetKeys = store.appFolders.firstOrNull()?.orderedTargetKeys.orEmpty(),
+                        actions = actions,
+                    )
+                },
+            )
+        }
     }
 }

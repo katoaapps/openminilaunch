@@ -246,6 +246,14 @@
     <string name="home_shortcut_and_folder">होम शॉर्टकट और फ़ोल्डर</string>
     <string name="folder_name">फ़ोल्डर का नाम</string>
     <string name="folder_color">फ़ोल्डर का रंग</string>
+    <string name="folder_indicator">फ़ोल्डर संकेतक</string>
+    <string name="folder_indicator_stacked">स्टैक किए गए आइकन</string>
+    <string name="folder_indicator_grid">आइकन ग्रिड</string>
+    <string name="folder_animation">फ़ोल्डर ऐनिमेशन</string>
+    <string name="folder_animation_grow_spin">बढ़ें और घूमें</string>
+    <string name="folder_animation_appear">दिखाई दें</string>
+    <string name="folder_animation_ripple">लहर की तरह आएँ</string>
+    <string name="folder_animation_rise">ऊपर उठें</string>
     <string name="default_appearance">डिफ़ॉल्ट</string>
     <string name="theme_system">सिस्टम</string>
     <string name="theme_light">रोशनी</string>

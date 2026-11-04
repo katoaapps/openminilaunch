@@ -246,6 +246,14 @@
     <string name="home_shortcut_and_folder">Atalho e pasta da tela inicial</string>
     <string name="folder_name">Nome da pasta</string>
     <string name="folder_color">Cor da pasta</string>
+    <string name="folder_indicator">Indicador de pasta</string>
+    <string name="folder_indicator_stacked">Ícones empilhados</string>
+    <string name="folder_indicator_grid">Grade de ícones</string>
+    <string name="folder_animation">Animação da pasta</string>
+    <string name="folder_animation_grow_spin">Crescer e girar</string>
+    <string name="folder_animation_appear">Aparecer</string>
+    <string name="folder_animation_ripple">Entrada em cascata</string>
+    <string name="folder_animation_rise">Subir</string>
     <string name="default_appearance">Padrão</string>
     <string name="theme_system">Sistema</string>
     <string name="theme_light">Luz</string>
