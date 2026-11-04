@@ -87,7 +87,7 @@ internal fun TodosScreen(store: LauncherStore, actions: DeviceActions, goBack: (
         lazyListState = listState,
         scrollThresholdPadding = WindowInsets.systemBars.asPaddingValues(),
     ) { from, to ->
-        visibleTodos.add(to.index, visibleTodos.removeAt(from.index))
+        visibleTodos.moveItem(from.index, to.index)
         hapticFeedback.performHapticFeedback(HapticFeedbackType.TextHandleMove)
     }
     LaunchedEffect(store.todos.toList(), draggedTodoId) {
@@ -188,11 +188,11 @@ internal fun TodosScreen(store: LauncherStore, actions: DeviceActions, goBack: (
                             )
                             Icon(
                                 Icons.Default.DragHandle,
-                                contentDescription = stringResource(R.string.hold_drag_reorder),
+                                contentDescription = stringResource(R.string.drag_to_reorder),
                                 tint = Muted,
                                 modifier = Modifier
                                     .size(Dimens.dp44)
-                                    .longPressDraggableHandle(
+                                    .draggableHandle(
                                         interactionSource = interactionSource,
                                         onDragStarted = {
                                             draggedTodoId = item.id

@@ -218,7 +218,6 @@
     <string name="reset_to_chooser">Restablecer al selector</string>
     <string name="use_system_browser">Usar el navegador del sistema</string>
     <string name="choose_on_first_use">Elija en el primer uso</string>
-    <string name="selected_tap_to_remove">SELECCIONADO · TOCA PARA ELIMINAR</string>
     <string name="tracked_tap_to_remove">SELECCIONADO · TOCA PARA ELIMINAR</string>
     <string name="remove_app">Quitar %1$s</string>
     <string name="shortcut_note">Nota</string>
@@ -244,8 +243,8 @@
     <string name="shortcut_slot">Acceso directo %1$d</string>
     <string name="shortcut_default">Predeterminado · %1$s</string>
     <string name="choose_app_or_keep_default">Elija una aplicación o un acceso directo a una aplicación, o conserve %1$s</string>
-    <string name="choose_app_for_shortcut">Elija el objetivo para %1$s</string>
-    <string name="restore_shortcut_default">Restaurar el valor predeterminado de %1$s</string>
+    <string name="home_shortcut_and_folder">Acceso directo y carpeta de inicio</string>
+    <string name="folder_name">Nombre de la carpeta</string>
     <string name="theme_system">Sistema</string>
     <string name="theme_light">Luz</string>
     <string name="theme_dark">oscuro</string>
@@ -257,8 +256,6 @@
     <string name="reply_unavailable">Respuesta no disponible</string>
     <string name="send_reply">Enviar respuesta</string>
     <string name="settings">Configuración</string>
-    <string name="cancel_shortcut_reorder">Cancelar reordenación de accesos directos</string>
-    <string name="save_shortcut_order">Guardar orden de atajos</string>
     <string name="whats_new">¿Qué hay de nuevo?</string>
     <string name="update_notice_two_panel_heading">Un Hogar más amplio, cuando lo desees</string>
     <string name="update_notice_two_panel_title">Dos paneles para pantallas grandes</string>
@@ -441,8 +438,6 @@
     <string name="mink_day_onboarding_short_description">Deslícese hacia la derecha desde Inicio para obtener información local diaria y controles opcionales de pausa de aplicaciones. Desliza hacia la izquierda o usa Atrás para regresar a Inicio.</string>
     <string name="six_shortcuts_any_apps">Seis atajos, seis aplicaciones cualesquiera</string>
     <string name="six_shortcuts_any_apps_description">Cada ranura configurable mantiene su valor predeterminado integrado hasta que asignas una aplicación. El icono de su aplicación se hace cargo de Inicio.</string>
-    <string name="arrange_grid">Organiza tu cuadrícula</string>
-    <string name="arrange_grid_description">Mantenga presionado cualquier atajo de Inicio para ingresar al modo de edición, luego arrastre los atajos en su orden preferido.</string>
     <string name="active_and_local">Activo y local</string>
     <string name="active_and_local_description">%1$s no mantiene el historial de conversaciones. El texto del mensaje y las respuestas permanecen en la memoria y nunca se envían a Katoa Apps.</string>
     <string name="permissions_onboarding_intro">%1$s solo solicita acceso vinculado a las funciones que utiliza.</string>
@@ -520,10 +515,7 @@
     <string name="customize">PERSONALIZAR</string>
     <string name="appearance">Apariencia</string>
     <string name="appearance_summary">Tema %1$s · Panel y colores de fondo</string>
-    <string name="home_shortcuts">ATAJOS A CASA</string>
-    <string name="reset_home_grid_order">Restablecer el orden de la red de inicio</string>
-    <string name="reset_home_grid_order_description">Devolver los atajos al orden original 4×2</string>
-    <string name="shortcut_order_reset">Restablecer orden de acceso directo</string>
+    <string name="home_shortcuts">ATAJOS Y CARPETAS DE INICIO</string>
     <string name="selected_apps">Aplicaciones seleccionadas</string>
     <string name="count_of_max">%1$d de %2$d</string>
     <string name="magic_box_find_other_apps">¿Usar? en Magic Box para encontrar cualquier otra aplicación instalada.</string>
@@ -665,18 +657,9 @@
     <string name="work_apps_empty">No hay aplicaciones de trabajo disponibles.</string>
     <string name="work_profile_state_change_failed">Android no pudo cambiar el estado del perfil de trabajo.</string>
     <string name="no_app_shortcuts_found">No se encontraron accesos directos a aplicaciones. Se debe seleccionar MinkLauncher como su aplicación Inicio y las aplicaciones deben publicar accesos directos antes de que puedan aparecer aquí.</string>
-    <string name="add_to_home_requests">AÑADIR A PETICIONES A DOMICILIO</string>
-    <string name="add_to_home_confirmation">Agregar a la confirmación de inicio</string>
-    <string name="pin_shortcut_presentation_description">Elija cómo MinkLauncher pregunta dónde colocar los accesos directos solicitados desde otra aplicación.</string>
-    <string name="presentation">PRESENTACIÓN</string>
-    <string name="pin_shortcut_full_page">Página completa</string>
-    <string name="pin_shortcut_full_page_description">Una página estable con los detalles de los accesos directos, cada destino y un botón de confirmación fijo.</string>
-    <string name="pin_shortcut_confirmation_sheet">Hoja de confirmación</string>
-    <string name="pin_shortcut_confirmation_sheet_description">Una superposición más rápida que mantiene visible la aplicación solicitante detrás de ella y se puede deslizar.</string>
-    <string name="pin_shortcut_test_instructions">Para compararlos, seleccione una presentación y use Agregar a la pantalla de inicio dentro de una aplicación que admita accesos directos fijados Android.</string>
     <string name="add_shortcut">Agregar acceso directo</string>
     <string name="choose_shortcut_destination">¿Adónde debería ir este atajo?</string>
-    <string name="choose_shortcut_destination_description">Hágalo apto para búsquedas, elija un espacio de Inicio o colóquelo en Quick Drawer. Al seleccionar una posición ocupada, se reemplaza su elemento actual.</string>
+    <string name="choose_shortcut_destination_description">Hágalo apto para búsquedas, elija un espacio de Inicio o colóquelo en Quick Drawer.</string>
     <string name="add_to_search_and_all_apps">Buscar y todas las aplicaciones</string>
     <string name="add_to_search_and_all_apps_description">Encuentra este atajo con ? o búsquelo en Todas las aplicaciones</string>
     <string name="add_to_quick_drawer">Añadir a Quick Drawer</string>
@@ -781,7 +764,7 @@
     <string name="todo_page_title">Tareas pendientes</string>
     <string name="add_todo">Agregar una tarea pendiente</string>
     <string name="nothing_here_yet">Nada aquí todavía.</string>
-    <string name="hold_drag_reorder">Mantenga presionado y arrastre para reordenar</string>
+    <string name="drag_to_reorder">Arrastra para reordenar</string>
     <string name="edit_todo">Editar tarea pendiente</string>
     <string name="delete_todo_title">¿Eliminar esta tarea pendiente?</string>
     <string name="delete_todo_description">“%1$s” se eliminará permanentemente.</string>
@@ -894,6 +877,7 @@
         <item quantity="other">%1$d seleccionado. Solo estas aplicaciones aparecen en tu seguimiento y totales.</item>
     </plurals>
     <string name="find_app">Encuentra una aplicación</string>
+    <string name="reinstall">Reinstalar</string>
     <string name="no_launchable_apps">No se encontraron aplicaciones ejecutables</string>
     <string name="no_matching_apps">No hay aplicaciones coincidentes</string>
     <string name="android_default_social">Android predeterminado: Social</string>
@@ -1004,7 +988,7 @@
     <string name="moto_secure_unavailable">No se pudo abrir Moto Secure.</string>
     <string name="shortcut_extra">Aplicación adicional</string>
     <string name="expand_vcard">Expandir vCard</string>
-    <string name="home_shortcuts_description_v2">Cada uno de los siete espacios puede abrir cualquier aplicación instalada. Los espacios sin cambios conservan la acción integrada que se muestra abajo; Quick Drawer sigue integrado.</string>
+    <string name="home_shortcuts_description_v2">Elige aplicaciones individuales o combínalas en carpetas.</string>
     <string name="less_visual_noise_description_v2">Una página de inicio enfocada, siete espacios para aplicaciones, un acceso directo Quick Drawer integrado y una rueda enfocada para cada aplicación instalada.</string>
     <string name="profile_onboarding_description_v2">Tu vCard está en MinkSpace junto a tus otras miniaplicaciones. Expándela para mostrar el código QR o toca la miniaplicación de tareas para administrarlas.</string>
     <string name="calling">Llamadas</string>
@@ -1028,7 +1012,7 @@
     <string name="home_tour_mini_apps_title">Recorre las Mini Apps</string>
     <string name="home_tour_mini_apps_description">Desliza hacia arriba o abajo en MinkSpace para recorrer las Mini Apps que hayas activado.</string>
     <string name="home_tour_shortcuts_title">Ordena tus accesos directos</string>
-    <string name="home_tour_shortcuts_description">Mantén pulsado cualquier acceso directo de Inicio y arrástralos hasta dejarlos en el orden que quieras.</string>
+    <string name="home_tour_shortcuts_description">Abre Cuadrícula de apps en Ajustes para organizar los accesos directos, las carpetas y su orden.</string>
     <string name="home_tour_conversations_title">Mantén cerca tus conversaciones</string>
     <string name="home_tour_conversations_description">Toca el icono de conversaciones en la parte superior de Inicio para ver conversaciones activas y personas favoritas.</string>
     <string name="home_tour_widgets_title">Añade tus widgets</string>

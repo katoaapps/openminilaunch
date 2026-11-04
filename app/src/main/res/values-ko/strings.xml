@@ -218,7 +218,6 @@
     <string name="reset_to_chooser">선택기로 재설정</string>
     <string name="use_system_browser">시스템 브라우저 사용</string>
     <string name="choose_on_first_use">처음 사용할 때 선택</string>
-    <string name="selected_tap_to_remove">선택됨 · 삭제하려면 탭하세요.</string>
     <string name="tracked_tap_to_remove">선택됨 · 삭제하려면 탭하세요.</string>
     <string name="remove_app">%1$s 제거</string>
     <string name="shortcut_note">참고</string>
@@ -244,8 +243,8 @@
     <string name="shortcut_slot">바로가기 %1$d</string>
     <string name="shortcut_default">기본값 · %1$s</string>
     <string name="choose_app_or_keep_default">앱 또는 앱 바로가기를 선택하거나 %1$s를 유지하세요.</string>
-    <string name="choose_app_for_shortcut">%1$s의 대상 선택</string>
-    <string name="restore_shortcut_default">%1$s 기본값 복원</string>
+    <string name="home_shortcut_and_folder">홈 바로가기 및 폴더</string>
+    <string name="folder_name">폴더 이름</string>
     <string name="theme_system">시스템</string>
     <string name="theme_light">빛</string>
     <string name="theme_dark">어둠</string>
@@ -257,8 +256,6 @@
     <string name="reply_unavailable">답장할 수 없음</string>
     <string name="send_reply">답장 보내기</string>
     <string name="settings">설정</string>
-    <string name="cancel_shortcut_reorder">바로가기 재정렬 취소</string>
-    <string name="save_shortcut_order">바로가기 순서 저장</string>
     <string name="whats_new">새로운 소식</string>
     <string name="update_notice_two_panel_heading">원할 때 더 넓은 집</string>
     <string name="update_notice_two_panel_title">대형 디스플레이용 패널 2개</string>
@@ -441,8 +438,6 @@
     <string name="mink_day_onboarding_short_description">홈에서 오른쪽으로 스와이프하면 지역별 일일 정보와 선택적인 앱 일시 중지 제어 기능을 확인할 수 있습니다. 홈으로 돌아가려면 왼쪽으로 스와이프하거나 뒤로를 사용하세요.</string>
     <string name="six_shortcuts_any_apps">6개의 바로가기, 6개의 앱</string>
     <string name="six_shortcuts_any_apps_description">구성 가능한 각 슬롯은 앱을 할당할 때까지 내장된 기본값을 유지합니다. 그런 다음 앱 아이콘이 홈을 대신합니다.</string>
-    <string name="arrange_grid">그리드를 정렬하세요</string>
-    <string name="arrange_grid_description">홈 바로가기를 길게 눌러 편집 모드로 들어간 다음 바로가기를 원하는 순서로 드래그하세요.</string>
     <string name="active_and_local">활성 및 로컬</string>
     <string name="active_and_local_description">%1$s는 대화 기록을 보관하지 않습니다. 메시지 텍스트와 답글은 메모리에 남아 있으며 Katoa Apps로 전송되지 않습니다.</string>
     <string name="permissions_onboarding_intro">%1$s는 귀하가 사용하는 기능과 관련된 액세스만 요청합니다.</string>
@@ -520,10 +515,7 @@
     <string name="customize">사용자 정의</string>
     <string name="appearance">외관</string>
     <string name="appearance_summary">%1$s 테마 · 패널 및 배경색</string>
-    <string name="home_shortcuts">홈 바로가기</string>
-    <string name="reset_home_grid_order">홈 그리드 순서 재설정</string>
-    <string name="reset_home_grid_order_description">단축키를 원래의 4 × 2 순서로 되돌리기</string>
-    <string name="shortcut_order_reset">바로가기 순서 재설정</string>
+    <string name="home_shortcuts">홈 바로가기 및 폴더</string>
     <string name="selected_apps">선택된 앱</string>
     <string name="count_of_max">%2$d의 %1$d</string>
     <string name="magic_box_find_other_apps">사용 ? Magic Box에서 설치된 다른 앱을 찾으세요.</string>
@@ -665,18 +657,9 @@
     <string name="work_apps_empty">사용 가능한 업무용 앱이 없습니다.</string>
     <string name="work_profile_state_change_failed">Android에서 직장 프로필 상태를 변경할 수 없습니다.</string>
     <string name="no_app_shortcuts_found">앱 바로가기를 찾을 수 없습니다. MinkLauncher를 홈 앱으로 선택해야 하며, 앱이 여기에 표시되려면 바로가기를 게시해야 합니다.</string>
-    <string name="add_to_home_requests">홈 요청에 추가</string>
-    <string name="add_to_home_confirmation">홈 확인에 추가</string>
-    <string name="pin_shortcut_presentation_description">MinkLauncher가 다른 앱에서 요청한 바로가기를 어디에 배치할지 묻는 방법을 선택하세요.</string>
-    <string name="presentation">프레젠테이션</string>
-    <string name="pin_shortcut_full_page">전체 페이지</string>
-    <string name="pin_shortcut_full_page_description">바로가기 세부정보, 모든 목적지, 고정된 확인 버튼이 포함된 안정적인 페이지입니다.</string>
-    <string name="pin_shortcut_confirmation_sheet">확인서</string>
-    <string name="pin_shortcut_confirmation_sheet_description">요청하는 앱을 뒤에 표시하고 스와이프하여 없앨 수 있는 더 빠른 오버레이입니다.</string>
-    <string name="pin_shortcut_test_instructions">이를 비교하려면 프레젠테이션을 선택하고 Android 고정된 바로가기를 지원하는 앱 내에서 홈 화면에 추가를 사용하세요.</string>
     <string name="add_shortcut">바로가기 추가</string>
     <string name="choose_shortcut_destination">이 지름길은 어디로 가야 할까요?</string>
-    <string name="choose_shortcut_destination_description">검색 가능하게 만들고, 홈 슬롯을 선택하거나 Quick Drawer에 배치하세요. 사용 중인 위치를 선택하면 현재 항목이 대체됩니다.</string>
+    <string name="choose_shortcut_destination_description">검색 가능하게 만들고, 홈 슬롯을 선택하거나 Quick Drawer에 배치하세요.</string>
     <string name="add_to_search_and_all_apps">검색 및 모든 앱</string>
     <string name="add_to_search_and_all_apps_description">\?로 이 단축키를 찾으세요. 또는 모든 앱에서 찾아보세요.</string>
     <string name="add_to_quick_drawer">Quick Drawer에 추가</string>
@@ -781,7 +764,7 @@
     <string name="todo_page_title">할 일</string>
     <string name="add_todo">할 일 추가</string>
     <string name="nothing_here_yet">아직 아무것도 없습니다.</string>
-    <string name="hold_drag_reorder">재정렬하려면 길게 누른 채 드래그하세요.</string>
+    <string name="drag_to_reorder">드래그하여 순서를 변경하세요.</string>
     <string name="edit_todo">할 일 편집</string>
     <string name="delete_todo_title">이 할 일을 삭제하시겠습니까?</string>
     <string name="delete_todo_description">“%1$s”가 영구적으로 제거됩니다.</string>
@@ -894,6 +877,7 @@
         <item quantity="other">%1$d가 선택되었습니다. 추적 및 총계에는 이러한 앱만 표시됩니다.</item>
     </plurals>
     <string name="find_app">앱 찾기</string>
+    <string name="reinstall">다시 설치</string>
     <string name="no_launchable_apps">실행 가능한 앱이 없습니다.</string>
     <string name="no_matching_apps">일치하는 앱이 없습니다.</string>
     <string name="android_default_social">Android 기본값: 소셜</string>
@@ -1004,7 +988,7 @@
     <string name="moto_secure_unavailable">Moto Secure를 열 수 없습니다.</string>
     <string name="shortcut_extra">추가 앱</string>
     <string name="expand_vcard">vCard 펼치기</string>
-    <string name="home_shortcuts_description_v2">7개의 각 슬롯에서 설치된 앱을 열 수 있습니다. 변경하지 않은 슬롯은 아래에 표시된 기본 동작을 유지하며 Quick Drawer는 계속 기본으로 제공됩니다.</string>
+    <string name="home_shortcuts_description_v2">앱 하나를 선택하거나 여러 앱을 폴더로 묶으세요.</string>
     <string name="less_visual_noise_description_v2">하나의 집중형 홈 페이지, 7개의 앱 슬롯, 기본 제공 Quick Drawer 바로가기, 설치된 각 앱을 위한 집중형 휠.</string>
     <string name="profile_onboarding_description_v2">vCard는 다른 미니 앱과 함께 MinkSpace에 있습니다. 펼치면 QR 코드가 나타나며, 할 일 미니 앱을 탭하면 작업을 관리할 수 있습니다.</string>
     <string name="calling">통화</string>
@@ -1028,7 +1012,7 @@
     <string name="home_tour_mini_apps_title">Mini Apps 둘러보기</string>
     <string name="home_tour_mini_apps_description">MinkSpace에서 위아래로 스와이프해 활성화한 Mini Apps 사이를 이동하세요.</string>
     <string name="home_tour_shortcuts_title">바로가기 정렬하기</string>
-    <string name="home_tour_shortcuts_description">홈의 바로가기를 길게 누른 다음 원하는 순서로 드래그하세요.</string>
+    <string name="home_tour_shortcuts_description">설정에서 앱 그리드를 열어 홈 바로가기, 폴더 및 순서를 정리하세요.</string>
     <string name="home_tour_conversations_title">대화를 가까이에</string>
     <string name="home_tour_conversations_description">홈 상단의 대화 아이콘을 탭해 진행 중인 대화와 즐겨찾는 사람을 확인하세요.</string>
     <string name="home_tour_widgets_title">위젯 추가하기</string>

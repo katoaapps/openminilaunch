@@ -1,23 +1,25 @@
 package com.katoaapps.openminilaunch.features.apps
 
-import com.katoaapps.openminilaunch.model.LauncherAppTarget
-import com.katoaapps.openminilaunch.model.LauncherTarget
-import com.katoaapps.openminilaunch.model.launcherAppIdentity
-import com.katoaapps.openminilaunch.features.privatespace.AndroidProfileClassifier
-import com.katoaapps.openminilaunch.features.privatespace.AndroidProfileKind
-
 import android.content.ComponentName
 import android.content.Context
-import com.katoaapps.openminilaunch.features.minkpad.MinkPadLauncherEntry
-import com.katoaapps.openminilaunch.R
 import android.content.pm.LauncherActivityInfo
 import android.content.pm.LauncherApps
 import android.graphics.drawable.Drawable
 import android.os.Process
 import android.os.UserHandle
 import android.os.UserManager
+import com.katoaapps.openminilaunch.R
+import com.katoaapps.openminilaunch.features.minkpad.MinkPadLauncherEntry
+import com.katoaapps.openminilaunch.features.privatespace.AndroidProfileClassifier
+import com.katoaapps.openminilaunch.features.privatespace.AndroidProfileKind
+import com.katoaapps.openminilaunch.model.LauncherAppTarget
+import com.katoaapps.openminilaunch.model.LauncherTarget
+import com.katoaapps.openminilaunch.model.launcherAppIdentity
+import kotlinx.coroutines.flow.MutableSharedFlow
 import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.SharedFlow
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.asSharedFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 
@@ -33,6 +35,10 @@ internal class LauncherAppRepository private constructor(context: Context) {
     private val dynamicCalendarIcons = DynamicCalendarIconResolver(appContext, densityDpi)
     private val revisionState = MutableStateFlow(0L)
     val revision: StateFlow<Long> = revisionState.asStateFlow()
+    private val packageRemovalEvents = MutableSharedFlow<LauncherPackageRemoval>(
+        extraBufferCapacity = 8,
+    )
+    val packageRemovals: SharedFlow<LauncherPackageRemoval> = packageRemovalEvents.asSharedFlow()
 
     private val cacheLock = Any()
     @Volatile private var targetsCache: List<LauncherAppTarget>? = null
@@ -40,7 +46,14 @@ internal class LauncherAppRepository private constructor(context: Context) {
     private val dynamicIconMonitor = DynamicLauncherIconMonitor(appContext, ::invalidate)
 
     private val callback = object : LauncherApps.Callback() {
-        override fun onPackageRemoved(packageName: String, user: UserHandle) = invalidate()
+        override fun onPackageRemoved(packageName: String, user: UserHandle) {
+            invalidate()
+            userManager?.getSerialNumberForUser(user)
+                ?.takeIf { it >= 0 }
+                ?.let { userSerial ->
+                    packageRemovalEvents.tryEmit(LauncherPackageRemoval(packageName, userSerial))
+                }
+        }
         override fun onPackageAdded(packageName: String, user: UserHandle) = invalidate()
         override fun onPackageChanged(packageName: String, user: UserHandle) = invalidate()
         override fun onPackagesAvailable(packageNames: Array<out String>, user: UserHandle, replacing: Boolean) = invalidate()
@@ -49,6 +62,15 @@ internal class LauncherAppRepository private constructor(context: Context) {
 
     init {
         runCatching { launcherApps?.registerCallback(callback) }
+    }
+
+    fun isPackageInstalled(packageName: String, userSerial: Long): Boolean {
+        val service = launcherApps ?: return false
+        val user = accessibleProfiles(service).firstOrNull {
+            userManager?.getSerialNumberForUser(it) == userSerial
+        } ?: return false
+        return runCatching { service.getApplicationInfo(packageName, 0, user) != null }
+            .getOrDefault(false)
     }
 
     fun targets(): List<LauncherAppTarget> {

@@ -1,6 +1,5 @@
 package com.katoaapps.openminilaunch.ui.launcher.home
 
-import android.widget.Toast
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -24,11 +23,9 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.layout.positionInRoot
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.unit.Dp
-import com.katoaapps.openminilaunch.R
 import com.katoaapps.openminilaunch.data.LauncherStore
 import com.katoaapps.openminilaunch.features.wellbeing.MinkAppAccessState
 import com.katoaapps.openminilaunch.platform.DeviceActions
@@ -59,7 +56,6 @@ internal fun BoxScope.HomeFocusPanel(
     onOpenDrawer: () -> Unit,
 ) {
     val minkSpaceExpanded = minkSpacePresentation.isExpanded
-    val context = LocalContext.current
     val configuration = LocalConfiguration.current
     val fontScale = LocalDensity.current.fontScale
     val panelColor = Color(store.effectiveHomePanelColorArgb).copy(
@@ -155,13 +151,6 @@ internal fun BoxScope.HomeFocusPanel(
                             actions = actions,
                             appAccessState = appAccessState,
                             onPausedApp = onPausedApp,
-                            onUnavailableApp = { label ->
-                                Toast.makeText(
-                                    context,
-                                    context.getString(R.string.launcher_app_unavailable, label),
-                                    Toast.LENGTH_LONG,
-                                ).show()
-                            },
                             onConfigureExtraApp = openAppGridSettings,
                             compact = qwertyHome,
                             contentColor = contentColor,

@@ -15,7 +15,6 @@ internal enum class SettingsDestination {
     APP_GRID,
     QUICK_DRAWER,
     PRIVACY_APPS,
-    PIN_SHORTCUT_REQUESTS,
     APP_BUBBLES,
     MINK_ASSISTANT,
     MESSAGING,
@@ -88,11 +87,6 @@ internal fun settingsPathTo(destination: SettingsDestination): List<SettingsDest
         SettingsDestination.OVERVIEW,
         SettingsDestination.LAUNCHER,
         SettingsDestination.APPEARANCE,
-        destination,
-    )
-    SettingsDestination.PIN_SHORTCUT_REQUESTS -> listOf(
-        SettingsDestination.OVERVIEW,
-        SettingsDestination.APP_GRID,
         destination,
     )
     SettingsDestination.FILE_SEARCH -> listOf(

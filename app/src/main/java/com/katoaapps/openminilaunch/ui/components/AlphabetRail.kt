@@ -28,43 +28,35 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.layout.onSizeChanged
-import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.font.FontWeight
 import com.katoaapps.openminilaunch.ui.theme.Dimens
 import com.katoaapps.openminilaunch.ui.theme.MinkWhite
 import com.katoaapps.openminilaunch.ui.theme.Rust
-import kotlin.math.abs
 import kotlin.math.roundToInt
 
-/** A height-aware A-Z rail that maps the full drag range even when letters must be sampled. */
+/** A compact A-to-Z rail: endpoints stay visible and the active letter replaces one middle dot. */
 @Composable
 internal fun AlphabetRail(
     onLetterSelected: (Char) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val letters = remember { ('A'..'Z').toList() }
-    val density = LocalDensity.current
     var railHeightPx by remember { mutableIntStateOf(1) }
-    var renderedLetterHeightPx by remember { mutableIntStateOf(0) }
     var selectedIndex by remember { mutableIntStateOf(0) }
     var dragging by remember { mutableStateOf(false) }
-    val fallbackLetterHeightPx = with(density) { Dimens.dp13.toPx() } * density.fontScale
-    val minimumLetterHeightPx = maxOf(
-        fallbackLetterHeightPx,
-        renderedLetterHeightPx * LETTER_HEIGHT_SAFETY_MULTIPLIER,
-    )
-    val visibleIndices = remember(railHeightPx, minimumLetterHeightPx, selectedIndex) {
-        visibleAlphabetIndices(
+    val markers = remember(selectedIndex) {
+        alphabetRailMarkers(
             letterCount = letters.size,
-            availableHeightPx = railHeightPx,
-            minimumLetterHeightPx = minimumLetterHeightPx,
+            markerCount = ALPHABET_RAIL_MARKER_COUNT,
             selectedIndex = selectedIndex,
         )
     }
 
-    fun select(index: Int) {
-        selectedIndex = index.coerceIn(letters.indices)
-        onLetterSelected(letters[selectedIndex])
+    fun select(index: Int, force: Boolean = false) {
+        val nextIndex = index.coerceIn(letters.indices)
+        if (!force && nextIndex == selectedIndex) return
+        selectedIndex = nextIndex
+        onLetterSelected(letters[nextIndex])
     }
 
     Box(modifier.width(Dimens.dp84).fillMaxHeight()) {
@@ -95,10 +87,15 @@ internal fun AlphabetRail(
                 horizontalAlignment = Alignment.CenterHorizontally,
                 verticalArrangement = Arrangement.SpaceEvenly,
             ) {
-                visibleIndices.forEach { index ->
-                    val active = index == selectedIndex
+                markers.forEachIndexed { markerIndex, displayedLetterIndex ->
+                    val active = displayedLetterIndex == selectedIndex
+                    val tapIndex = alphabetIndexForMarker(
+                        markerIndex = markerIndex,
+                        markerCount = markers.size,
+                        letterCount = letters.size,
+                    )
                     Text(
-                        letters[index].toString(),
+                        displayedLetterIndex?.let { letters[it].toString() } ?: "·",
                         fontSize = Dimens.sp9,
                         fontWeight = FontWeight.Bold,
                         color = if (active) MaterialTheme.colorScheme.onSurface else Rust.copy(alpha = .72f),
@@ -108,12 +105,7 @@ internal fun AlphabetRail(
                                 scaleX = scale
                                 scaleY = scale
                             }
-                            .clickable { select(index) }
-                            .onSizeChanged { size ->
-                                if (size.height > renderedLetterHeightPx) {
-                                    renderedLetterHeightPx = size.height
-                                }
-                            }
+                            .clickable { select(tapIndex, force = true) }
                             .padding(horizontal = Dimens.dp6),
                     )
                 }
@@ -139,29 +131,32 @@ internal fun AlphabetRail(
     }
 }
 
-private const val LETTER_HEIGHT_SAFETY_MULTIPLIER = 1.12f
+private const val ALPHABET_RAIL_MARKER_COUNT = 8
 
-internal fun visibleAlphabetIndices(
+internal fun alphabetRailMarkers(
     letterCount: Int,
-    availableHeightPx: Int,
-    minimumLetterHeightPx: Float,
+    markerCount: Int,
     selectedIndex: Int,
-): List<Int> {
+): List<Int?> {
     if (letterCount <= 0) return emptyList()
     if (letterCount == 1) return listOf(0)
-    val capacity = (availableHeightPx / minimumLetterHeightPx.coerceAtLeast(1f)).toInt()
-        .coerceIn(5.coerceAtMost(letterCount), letterCount)
-    if (capacity == letterCount) return (0 until letterCount).toList()
-
-    val lastIndex = letterCount - 1
-    val sampled = (0 until capacity)
-        .map { position -> (position * lastIndex.toFloat() / (capacity - 1)).roundToInt() }
-        .distinct()
-        .toMutableList()
-    val safeSelected = selectedIndex.coerceIn(0, lastIndex)
-    if (safeSelected !in sampled && sampled.size > 2) {
-        val replacement = (1 until sampled.lastIndex).minBy { abs(sampled[it] - safeSelected) }
-        sampled[replacement] = safeSelected
+    val safeMarkerCount = markerCount.coerceAtLeast(2)
+    val lastLetterIndex = letterCount - 1
+    val safeSelectedIndex = selectedIndex.coerceIn(0, lastLetterIndex)
+    val selectedMarker = (
+        safeSelectedIndex * (safeMarkerCount - 1).toFloat() / lastLetterIndex
+        ).roundToInt()
+    return List(safeMarkerCount) { markerIndex ->
+        when (markerIndex) {
+            0 -> 0
+            safeMarkerCount - 1 -> lastLetterIndex
+            selectedMarker -> safeSelectedIndex
+            else -> null
+        }
     }
-    return sampled.distinct().sorted()
+}
+
+private fun alphabetIndexForMarker(markerIndex: Int, markerCount: Int, letterCount: Int): Int {
+    if (letterCount <= 1 || markerCount <= 1) return 0
+    return (markerIndex * (letterCount - 1).toFloat() / (markerCount - 1)).roundToInt()
 }

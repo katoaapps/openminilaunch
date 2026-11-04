@@ -7,10 +7,10 @@ package com.katoaapps.openminilaunch.ui.launcher
 
 import android.app.Activity
 import androidx.activity.compose.BackHandler
-import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.isImeVisible
+import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -40,6 +40,7 @@ import com.katoaapps.openminilaunch.ui.launcher.layout.HOME_PAGE
 import com.katoaapps.openminilaunch.ui.launcher.layout.LauncherHomePager
 import com.katoaapps.openminilaunch.ui.launcher.layout.WIDGET_PAGE
 import com.katoaapps.openminilaunch.ui.magic.rememberMagicBoxSessionState
+import com.katoaapps.openminilaunch.ui.minkspace.todo.TodosScreen
 import com.katoaapps.openminilaunch.ui.onboarding.FeatureUpdateDialog
 import com.katoaapps.openminilaunch.ui.onboarding.HomeFeatureTour
 import com.katoaapps.openminilaunch.ui.onboarding.OnboardingScreen
@@ -49,11 +50,13 @@ import com.katoaapps.openminilaunch.ui.theme.FontAppearanceTheme
 import com.katoaapps.openminilaunch.ui.theme.MinkLauncherTheme
 import com.katoaapps.openminilaunch.ui.theme.MinkTransparent
 import com.katoaapps.openminilaunch.ui.theme.minkDarkTheme
-import com.katoaapps.openminilaunch.ui.minkspace.todo.TodosScreen
 import com.katoaapps.openminilaunch.ui.profile.openVirtualContactCard
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.flow.collect
 
 private const val FEATURE_UPDATE_ID = "v310_whats_new_v1"
 private const val HOME_FEATURE_TOUR_ID = "home_feature_tour_v2"
+private const val PACKAGE_REMOVAL_CONFIRMATION_MS = 750L
 
 @Composable
 internal fun MiniLaunchApp(
@@ -88,6 +91,24 @@ internal fun MiniLaunchApp(
             screen = Screen.HOME
             focusedLauncherPage = HOME_PAGE
             homePageRequestToken++
+        }
+    }
+    LaunchedEffect(actions, store) {
+        actions.launcherPackageRemovals.collect { removal ->
+            // Package replacement can briefly resemble removal on some OEMs. Confirm the package
+            // is truly gone before destroying a user's saved launcher placement.
+            delay(PACKAGE_REMOVAL_CONFIRMATION_MS)
+            if (!actions.isLauncherPackageInstalled(removal)) {
+                val changed = store.pruneLauncherTargets { selectionKey ->
+                    actions.resolveLauncherSelection(selectionKey).let { target ->
+                        target.packageName == removal.packageName &&
+                            target.userSerial == removal.userSerial
+                    }
+                }
+                if (changed) {
+                    actions.syncPinnedLauncherShortcuts(store.pinnedLauncherSelectionKeys)
+                }
+            }
         }
     }
     val context = LocalContext.current

@@ -218,7 +218,6 @@
     <string name="reset_to_chooser">Сбросить настройки</string>
     <string name="use_system_browser">Используйте системный браузер</string>
     <string name="choose_on_first_use">Выбирайте при первом использовании</string>
-    <string name="selected_tap_to_remove">ВЫБРАНО · НАЖМИТЕ, ЧТОБЫ УДАЛИТЬ</string>
     <string name="tracked_tap_to_remove">ВЫБРАНО · НАЖМИТЕ, ЧТОБЫ УДАЛИТЬ</string>
     <string name="remove_app">Удалить %1$s</string>
     <string name="shortcut_note">Примечание</string>
@@ -244,8 +243,8 @@
     <string name="shortcut_slot">Ярлык %1$d</string>
     <string name="shortcut_default">По умолчанию · %1$s</string>
     <string name="choose_app_or_keep_default">Выберите приложение или ярлык приложения или сохраните %1$s.</string>
-    <string name="choose_app_for_shortcut">Выберите цель для %1$s</string>
-    <string name="restore_shortcut_default">Восстановить %1$s по умолчанию</string>
+    <string name="home_shortcut_and_folder">Ярлык и папка на главном экране</string>
+    <string name="folder_name">Название папки</string>
     <string name="theme_system">Система</string>
     <string name="theme_light">Свет</string>
     <string name="theme_dark">Темный</string>
@@ -257,8 +256,6 @@
     <string name="reply_unavailable">Ответ недоступен</string>
     <string name="send_reply">Отправить ответ</string>
     <string name="settings">Настройки</string>
-    <string name="cancel_shortcut_reorder">Отменить изменение порядка ярлыков</string>
-    <string name="save_shortcut_order">Сохранить порядок ярлыков</string>
     <string name="whats_new">Что нового</string>
     <string name="update_notice_two_panel_heading">Более широкий дом, когда вы этого хотите</string>
     <string name="update_notice_two_panel_title">Две панели для больших дисплеев</string>
@@ -441,8 +438,6 @@
     <string name="mink_day_onboarding_short_description">Проведите пальцем вправо от главного экрана, чтобы получить локальную ежедневную информацию и дополнительные элементы управления приостановкой приложения. Проведите пальцем влево или используйте «Назад», чтобы вернуться домой.</string>
     <string name="six_shortcuts_any_apps">Шесть ярлыков, любые шесть приложений</string>
     <string name="six_shortcuts_any_apps_description">Каждый настраиваемый слот сохраняет свои встроенные настройки по умолчанию, пока вы не назначите приложение. Значок его приложения затем занимает место на главном экране.</string>
-    <string name="arrange_grid">Организуйте свою сетку</string>
-    <string name="arrange_grid_description">Нажмите и удерживайте любой ярлык «Домой», чтобы войти в режим редактирования, затем перетащите ярлыки в желаемом порядке.</string>
     <string name="active_and_local">Активный и локальный</string>
     <string name="active_and_local_description">%1$s не сохраняет историю разговоров. Текст сообщения и ответы остаются в памяти и никогда не отправляются на Katoa Apps.</string>
     <string name="permissions_onboarding_intro">%1$s запрашивает только доступ, связанный с используемыми вами функциями.</string>
@@ -520,10 +515,7 @@
     <string name="customize">НАСТРАИВАТЬ</string>
     <string name="appearance">Внешний вид</string>
     <string name="appearance_summary">Тема %1$s · Цвета панели и фона</string>
-    <string name="home_shortcuts">ЯРЛЫКИ НА ГЛАВНУЮ</string>
-    <string name="reset_home_grid_order">Сбросить порядок домашней сетки</string>
-    <string name="reset_home_grid_order_description">Вернуть ярлыки в исходный порядок 4 × 2.</string>
-    <string name="shortcut_order_reset">Сброс быстрого заказа</string>
+    <string name="home_shortcuts">ЯРЛЫКИ И ПАПКИ ГЛАВНОГО ЭКРАНА</string>
     <string name="selected_apps">Выбранные приложения</string>
     <string name="count_of_max">%1$d из %2$d</string>
     <string name="magic_box_find_other_apps">Использовать? в Magic Box, чтобы найти любое другое установленное приложение.</string>
@@ -667,18 +659,9 @@
     <string name="work_apps_empty">Нет доступных рабочих приложений.</string>
     <string name="work_profile_state_change_failed">Android не удалось изменить состояние рабочего профиля.</string>
     <string name="no_app_shortcuts_found">Ярлыки приложений не найдены. MinkLauncher должен быть выбран в качестве домашнего приложения, а приложения должны публиковать ярлыки, прежде чем они смогут появиться здесь.</string>
-    <string name="add_to_home_requests">ДОБАВИТЬ В ГЛАВНЫЕ ЗАПРОСЫ</string>
-    <string name="add_to_home_confirmation">Добавить на главную подтверждение</string>
-    <string name="pin_shortcut_presentation_description">Выберите, как MinkLauncher будет запрашивать место размещения ярлыков, запрошенных из другого приложения.</string>
-    <string name="presentation">ПРЕЗЕНТАЦИЯ</string>
-    <string name="pin_shortcut_full_page">Полная страница</string>
-    <string name="pin_shortcut_full_page_description">Стабильная страница с подробной информацией о ярлыках, всеми пунктами назначения и фиксированной кнопкой подтверждения.</string>
-    <string name="pin_shortcut_confirmation_sheet">Лист подтверждения</string>
-    <string name="pin_shortcut_confirmation_sheet_description">Более быстрое наложение, благодаря которому запрашивающее приложение остается видимым и его можно смахнуть.</string>
-    <string name="pin_shortcut_test_instructions">Чтобы сравнить их, выберите презентацию и используйте «Добавить на главный экран» в приложении, поддерживающем закрепленные ярлыки Android.</string>
     <string name="add_shortcut">Добавить ярлык</string>
     <string name="choose_shortcut_destination">Куда должен идти этот ярлык?</string>
-    <string name="choose_shortcut_destination_description">Сделайте его доступным для поиска, выберите домашний слот или поместите его в Quick Drawer. Выбор занятой позиции заменяет текущий элемент.</string>
+    <string name="choose_shortcut_destination_description">Сделайте его доступным для поиска, выберите домашний слот или поместите его в Quick Drawer.</string>
     <string name="add_to_search_and_all_apps">Поиск и все приложения</string>
     <string name="add_to_search_and_all_apps_description">Найдите этот ярлык с помощью ? или перейдите к нему во всех приложениях</string>
     <string name="add_to_quick_drawer">Добавить в Quick Drawer</string>
@@ -791,7 +774,7 @@
     <string name="todo_page_title">Дела</string>
     <string name="add_todo">Добавить задачу</string>
     <string name="nothing_here_yet">Здесь пока ничего.</string>
-    <string name="hold_drag_reorder">Удерживайте и перетащите, чтобы изменить порядок</string>
+    <string name="drag_to_reorder">Перетащите, чтобы изменить порядок</string>
     <string name="edit_todo">Изменить задачу</string>
     <string name="delete_todo_title">Удалить это дело?</string>
     <string name="delete_todo_description">«%1$s» будет удалено навсегда.</string>
@@ -912,6 +895,7 @@
         <item quantity="other">%1$d выбран. Только эти приложения отображаются в вашем журнале и итоговых показателях.</item>
     </plurals>
     <string name="find_app">Найти приложение</string>
+    <string name="reinstall">Переустановить</string>
     <string name="no_launchable_apps">Запускаемые приложения не найдены</string>
     <string name="no_matching_apps">Нет подходящих приложений</string>
     <string name="android_default_social">Android по умолчанию: Социальные сети</string>
@@ -1022,7 +1006,7 @@
     <string name="moto_secure_unavailable">Не удалось открыть Moto Secure.</string>
     <string name="shortcut_extra">Дополнительное приложение</string>
     <string name="expand_vcard">Развернуть vCard</string>
-    <string name="home_shortcuts_description_v2">Каждый из семи слотов может открыть любое установленное приложение. Неизменённые слоты сохраняют встроенное действие, показанное ниже; Quick Drawer остаётся встроенным.</string>
+    <string name="home_shortcuts_description_v2">Выберите одно приложение или объедините несколько в папку.</string>
     <string name="less_visual_noise_description_v2">Одна сфокусированная домашняя страница, семь слотов приложений, встроенный ярлык Quick Drawer и колесо для каждого установленного приложения.</string>
     <string name="profile_onboarding_description_v2">Ваша vCard находится в MinkSpace рядом с другими мини-приложениями. Разверните её, чтобы показать QR-код, или нажмите мини-приложение задач для управления ими.</string>
     <string name="calling">Звонки</string>
@@ -1046,7 +1030,7 @@
     <string name="home_tour_mini_apps_title">Переключайте Mini Apps</string>
     <string name="home_tour_mini_apps_description">Проведите вверх или вниз по MinkSpace, чтобы переключаться между включёнными Mini Apps.</string>
     <string name="home_tour_shortcuts_title">Расставьте ярлыки</string>
-    <string name="home_tour_shortcuts_description">Нажмите и удерживайте любой ярлык на главном экране, затем перетащите ярлыки в нужном порядке.</string>
+    <string name="home_tour_shortcuts_description">Откройте «Сетку приложений» в настройках, чтобы упорядочить ярлыки, папки и их порядок.</string>
     <string name="home_tour_conversations_title">Держите беседы рядом</string>
     <string name="home_tour_conversations_description">Нажмите значок бесед вверху главного экрана, чтобы увидеть активные беседы и избранных людей.</string>
     <string name="home_tour_widgets_title">Добавьте виджеты</string>

@@ -218,7 +218,6 @@
     <string name="reset_to_chooser">Setel ulang ke pemilih</string>
     <string name="use_system_browser">Gunakan browser sistem</string>
     <string name="choose_on_first_use">Pilih pada penggunaan pertama</string>
-    <string name="selected_tap_to_remove">TERPILIH · KETUK UNTUK MENGHAPUS</string>
     <string name="tracked_tap_to_remove">TERPILIH · KETUK UNTUK MENGHAPUS</string>
     <string name="remove_app">Hapus %1$s</string>
     <string name="shortcut_note">Catatan</string>
@@ -244,8 +243,8 @@
     <string name="shortcut_slot">Pintasan %1$d</string>
     <string name="shortcut_default">Bawaan · %1$s</string>
     <string name="choose_app_or_keep_default">Pilih aplikasi atau pintasan aplikasi, atau pertahankan %1$s</string>
-    <string name="choose_app_for_shortcut">Pilih target untuk %1$s</string>
-    <string name="restore_shortcut_default">Kembalikan %1$s default</string>
+    <string name="home_shortcut_and_folder">Pintasan dan folder layar utama</string>
+    <string name="folder_name">Nama folder</string>
     <string name="theme_system">Sistem</string>
     <string name="theme_light">Ringan</string>
     <string name="theme_dark">Gelap</string>
@@ -257,8 +256,6 @@
     <string name="reply_unavailable">Balasan tidak tersedia</string>
     <string name="send_reply">Kirim balasan</string>
     <string name="settings">Pengaturan</string>
-    <string name="cancel_shortcut_reorder">Batalkan pemesanan ulang pintasan</string>
-    <string name="save_shortcut_order">Simpan urutan pintasan</string>
     <string name="whats_new">Apa yang baru</string>
     <string name="update_notice_two_panel_heading">Rumah yang lebih luas, kapan pun Anda menginginkannya</string>
     <string name="update_notice_two_panel_title">Dua panel untuk tampilan besar</string>
@@ -441,8 +438,6 @@
     <string name="mink_day_onboarding_short_description">Geser ke kanan dari Beranda untuk melihat wawasan harian lokal dan kontrol jeda aplikasi opsional. Gesek ke kiri atau gunakan Kembali untuk kembali ke Beranda.</string>
     <string name="six_shortcuts_any_apps">Enam pintasan, enam aplikasi apa saja</string>
     <string name="six_shortcuts_any_apps_description">Setiap slot yang dapat dikonfigurasi mempertahankan default bawaannya hingga Anda menetapkan aplikasi. Ikon aplikasinya kemudian mengambil alih Beranda.</string>
-    <string name="arrange_grid">Atur kisi-kisi Anda</string>
-    <string name="arrange_grid_description">Tekan lama pintasan Beranda mana pun untuk masuk ke mode edit, lalu seret pintasan ke urutan pilihan Anda.</string>
     <string name="active_and_local">Aktif dan lokal</string>
     <string name="active_and_local_description">%1$s tidak menyimpan riwayat percakapan. Teks pesan dan balasannya tetap ada di memori dan tidak pernah dikirim ke Katoa Apps.</string>
     <string name="permissions_onboarding_intro">%1$s hanya meminta akses yang terkait dengan fitur yang Anda gunakan.</string>
@@ -520,10 +515,7 @@
     <string name="customize">SESUAIKAN</string>
     <string name="appearance">Penampilan</string>
     <string name="appearance_summary">Tema %1$s · Warna panel dan latar belakang</string>
-    <string name="home_shortcuts">PINTAS RUMAH</string>
-    <string name="reset_home_grid_order">Atur ulang urutan jaringan Rumah</string>
-    <string name="reset_home_grid_order_description">Kembalikan pintasan ke urutan 4×2 asli</string>
-    <string name="shortcut_order_reset">Reset pesanan pintasan</string>
+    <string name="home_shortcuts">PINTASAN &amp; FOLDER BERANDA</string>
     <string name="selected_apps">Aplikasi yang dipilih</string>
     <string name="count_of_max">%1$d dari %2$d</string>
     <string name="magic_box_find_other_apps">Gunakan? di Magic Box untuk menemukan aplikasi terinstal lainnya.</string>
@@ -665,18 +657,9 @@
     <string name="work_apps_empty">Tidak ada aplikasi kerja yang tersedia.</string>
     <string name="work_profile_state_change_failed">Android tidak dapat mengubah status profil kerja.</string>
     <string name="no_app_shortcuts_found">Tidak ada pintasan aplikasi yang ditemukan. MinkLauncher harus dipilih sebagai aplikasi Beranda Anda, dan aplikasi harus memublikasikan pintasan sebelum dapat muncul di sini.</string>
-    <string name="add_to_home_requests">TAMBAHKAN KE PERMINTAAN RUMAH</string>
-    <string name="add_to_home_confirmation">Konfirmasi Tambahkan ke Beranda</string>
-    <string name="pin_shortcut_presentation_description">Pilih cara MinkLauncher menanyakan lokasi menempatkan pintasan yang diminta dari aplikasi lain.</string>
-    <string name="presentation">PRESENTASI</string>
-    <string name="pin_shortcut_full_page">Halaman penuh</string>
-    <string name="pin_shortcut_full_page_description">Halaman stabil dengan detail pintasan, setiap tujuan, dan tombol konfirmasi tetap.</string>
-    <string name="pin_shortcut_confirmation_sheet">Lembar konfirmasi</string>
-    <string name="pin_shortcut_confirmation_sheet_description">Hamparan lebih cepat yang membuat aplikasi yang meminta tetap terlihat di belakangnya dan dapat digeser.</string>
-    <string name="pin_shortcut_test_instructions">Untuk membandingkannya, pilih presentasi dan gunakan Tambahkan ke layar Utama di dalam aplikasi yang mendukung pintasan yang disematkan Android.</string>
     <string name="add_shortcut">Tambahkan pintasan</string>
     <string name="choose_shortcut_destination">Ke mana jalan pintas ini harus diarahkan?</string>
-    <string name="choose_shortcut_destination_description">Jadikan dapat dicari, pilih slot Beranda, atau letakkan di Quick Drawer. Memilih posisi yang terisi akan menggantikan item saat ini.</string>
+    <string name="choose_shortcut_destination_description">Jadikan dapat dicari, pilih slot Beranda, atau letakkan di Quick Drawer.</string>
     <string name="add_to_search_and_all_apps">Pencarian &amp; Semua Aplikasi</string>
     <string name="add_to_search_and_all_apps_description">Temukan pintasan ini dengan ? atau telusuri di Semua Aplikasi</string>
     <string name="add_to_quick_drawer">Tambahkan ke Quick Drawer</string>
@@ -781,7 +764,7 @@
     <string name="todo_page_title">Agenda</string>
     <string name="add_todo">Tambahkan tugas</string>
     <string name="nothing_here_yet">Belum ada apa pun di sini.</string>
-    <string name="hold_drag_reorder">Tahan dan seret untuk menyusun ulang</string>
+    <string name="drag_to_reorder">Seret untuk menyusun ulang</string>
     <string name="edit_todo">Sunting tugas yang harus dilakukan</string>
     <string name="delete_todo_title">Hapus agenda ini?</string>
     <string name="delete_todo_description">“%1$s” akan dihapus secara permanen.</string>
@@ -894,6 +877,7 @@
         <item quantity="other">%1$d dipilih. Hanya aplikasi ini yang muncul di jejak dan total Anda.</item>
     </plurals>
     <string name="find_app">Temukan aplikasi</string>
+    <string name="reinstall">Instal ulang</string>
     <string name="no_launchable_apps">Tidak ditemukan aplikasi yang dapat diluncurkan</string>
     <string name="no_matching_apps">Tidak ada aplikasi yang cocok</string>
     <string name="android_default_social">Android bawaan: Sosial</string>
@@ -1004,7 +988,7 @@
     <string name="moto_secure_unavailable">Moto Secure tidak dapat dibuka.</string>
     <string name="shortcut_extra">Aplikasi tambahan</string>
     <string name="expand_vcard">Perluas vCard</string>
-    <string name="home_shortcuts_description_v2">Masing-masing dari tujuh slot dapat membuka aplikasi apa pun yang terinstal. Slot yang tidak diubah mempertahankan tindakan bawaan yang ditampilkan di bawah; Quick Drawer tetap menjadi bawaan.</string>
+    <string name="home_shortcuts_description_v2">Pilih satu aplikasi atau gabungkan beberapa aplikasi ke dalam folder.</string>
     <string name="less_visual_noise_description_v2">Satu halaman beranda yang terfokus, tujuh slot aplikasi, pintasan Quick Drawer bawaan, dan roda terfokus untuk setiap aplikasi yang terinstal.</string>
     <string name="profile_onboarding_description_v2">vCard Anda berada di MinkSpace bersama aplikasi mini lainnya. Perluas untuk menampilkan kode QR, atau ketuk aplikasi mini tugas untuk mengelola tugas.</string>
     <string name="calling">Panggilan</string>
@@ -1028,7 +1012,7 @@
     <string name="home_tour_mini_apps_title">Jelajahi Mini Apps</string>
     <string name="home_tour_mini_apps_description">Geser ke atas atau bawah di MinkSpace untuk berpindah di antara Mini Apps yang telah diaktifkan.</string>
     <string name="home_tour_shortcuts_title">Atur pintasan Anda</string>
-    <string name="home_tour_shortcuts_description">Tekan dan tahan pintasan apa pun di Beranda, lalu seret pintasan ke urutan yang Anda inginkan.</string>
+    <string name="home_tour_shortcuts_description">Buka Kisi Aplikasi di Setelan untuk mengatur pintasan Beranda, folder, dan urutannya.</string>
     <string name="home_tour_conversations_title">Dekatkan percakapan Anda</string>
     <string name="home_tour_conversations_description">Ketuk ikon percakapan di bagian atas Beranda untuk melihat percakapan aktif dan orang favorit Anda.</string>
     <string name="home_tour_widgets_title">Tambahkan widget Anda</string>

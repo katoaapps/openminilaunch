@@ -19,11 +19,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -74,7 +70,6 @@ internal fun LauncherShortcutGroupList(
             )
     }
     val listState = rememberLazyListState()
-    var requestedLetter by remember { mutableStateOf('A') }
     val groupStartIndices = remember(groups) {
         buildList {
             var itemIndex = 0
@@ -84,15 +79,6 @@ internal fun LauncherShortcutGroupList(
             }
         }
     }
-    LaunchedEffect(requestedLetter, groups, groupStartIndices) {
-        if (groups.isNotEmpty()) {
-            val groupIndex = groups.indexOfFirst {
-                (it.appLabel.firstOrNull()?.uppercaseChar() ?: 'Z') >= requestedLetter
-            }.let { if (it < 0) groups.lastIndex else it }
-            listState.scrollToItem(groupStartIndices[groupIndex])
-        }
-    }
-
     Box(Modifier.fillMaxSize()) {
         LazyColumn(
             Modifier.fillMaxSize(),
@@ -134,7 +120,12 @@ internal fun LauncherShortcutGroupList(
             }
         }
         AlphabetRail(
-            onLetterSelected = { requestedLetter = it },
+            onLetterSelected = { requestedLetter ->
+                val groupIndex = groups.indexOfFirst {
+                    (it.appLabel.firstOrNull()?.uppercaseChar() ?: 'Z') >= requestedLetter
+                }.let { if (it < 0) groups.lastIndex else it }
+                if (groupIndex >= 0) listState.requestScrollToItem(groupStartIndices[groupIndex])
+            },
             modifier = Modifier.align(Alignment.CenterEnd),
         )
     }

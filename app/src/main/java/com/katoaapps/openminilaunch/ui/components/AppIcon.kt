@@ -19,6 +19,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Apps
+import androidx.compose.material.icons.filled.Block
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -131,6 +132,26 @@ internal fun LauncherTargetIcon(
         themedTint = appearance.minkAppIconTint(themedTint),
         contentDescription = contentDescription,
     )
+}
+
+/** Generic mark for a saved launcher target whose app/profile is not currently available. */
+@Composable
+internal fun UnavailableLauncherTargetIcon(
+    size: Dp,
+    contentDescription: String? = null,
+) {
+    Box(
+        Modifier.size(size).clip(CircleShape)
+            .background(MaterialTheme.colorScheme.surfaceContainerHighest),
+        contentAlignment = Alignment.Center,
+    ) {
+        Icon(
+            Icons.Default.Block,
+            contentDescription,
+            Modifier.size(size * .58f),
+            tint = MaterialTheme.colorScheme.onSurfaceVariant,
+        )
+    }
 }
 
 @Composable

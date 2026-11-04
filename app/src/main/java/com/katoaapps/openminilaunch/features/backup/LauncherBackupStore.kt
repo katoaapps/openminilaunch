@@ -1,9 +1,9 @@
 package com.katoaapps.openminilaunch.features.backup
 
 import com.katoaapps.openminilaunch.data.LauncherStore
-import com.katoaapps.openminilaunch.model.IconSource
-import com.katoaapps.openminilaunch.model.FontSource
 import com.katoaapps.openminilaunch.features.profile.ProfileState
+import com.katoaapps.openminilaunch.model.FontSource
+import com.katoaapps.openminilaunch.model.IconSource
 
 internal fun LauncherStore.createPortableBackup(appVersion: String): LauncherBackup {
     val profile = profileRepository.state as? ProfileState.Ready
@@ -11,7 +11,8 @@ internal fun LauncherStore.createPortableBackup(appVersion: String): LauncherBac
         sourceAppVersion = appVersion,
         exportedAtMillis = System.currentTimeMillis(),
         launcher = LauncherBackupLayout(
-            appGridTargets = appGridTargets.toMap(),
+            appGridAssignments = appGridAssignments.toMap(),
+            appFolders = appFolders.toList(),
             appGridOrder = appGridOrder.toList(),
             confirmedAppGridChoices = confirmedAppGridChoices.toList(),
             drawerTargets = drawerTargets.toList(),
@@ -42,12 +43,7 @@ internal fun LauncherStore.createPortableBackup(appVersion: String): LauncherBac
             preferredMessagingPackage = preferredMessagingPackage,
             callAutomatically = callAutomatically,
             preferredCallingPackage = preferredCallingPackage,
-            quickDrawer = QuickDrawerBackupSettings(
-                showMinkPad = showMinkPadInQuickDrawer,
-                showPrivateSpace = showPrivateSpaceInQuickDrawer,
-                showWorkProfile = showWorkProfileInQuickDrawer,
-                colorArgb = quickDrawerColorArgb,
-            ),
+            quickDrawer = quickDrawerConfig,
             preferredAiPackage = preferredAiPackage,
             preferredWebPackage = preferredWebPackage,
             usesAutomaticSocialApps = usesAutomaticSocialApps,
@@ -55,7 +51,6 @@ internal fun LauncherStore.createPortableBackup(appVersion: String): LauncherBac
             socialGoalHours = socialGoalHours,
             minkAppPauseMode = minkAppPauseMode,
             githubUpdateChecksEnabled = githubUpdateChecksEnabled,
-            pinShortcutRequestPresentation = pinShortcutRequestPresentation,
             minkPadPreferences = minkPadPreferences.state.value,
             fontAppearance = fontAppearance,
         ),
@@ -69,10 +64,11 @@ internal fun LauncherStore.restorePortableBackup(backup: LauncherBackup) {
     if (demoSearchDataEnabled) toggleDemoSearchData()
     val settings = backup.settings
     replaceLauncherSelectionsFromBackup(
-        appGridTargets = backup.launcher.appGridTargets,
+        appGridAssignments = backup.launcher.appGridAssignments,
+        appFolders = backup.launcher.appFolders,
         appGridOrder = backup.launcher.appGridOrder,
         confirmedAppGridChoices = backup.launcher.confirmedAppGridChoices,
-        drawerTargets = backup.launcher.drawerTargets,
+        drawerTargets = settings.quickDrawer?.orderedTargetKeys ?: backup.launcher.drawerTargets,
         libraryShortcutTargets = backup.launcher.libraryShortcutTargets,
     )
     replaceTodosFromBackup(backup.todos)
@@ -136,6 +132,5 @@ internal fun LauncherStore.restorePortableBackup(backup: LauncherBackup) {
     else replaceSocialApps(settings.socialPackages.toSet())
 
     setGitHubUpdateChecksEnabled(settings.githubUpdateChecksEnabled)
-    setPinShortcutRequestPresentation(settings.pinShortcutRequestPresentation)
     settings.minkPadPreferences?.let(minkPadPreferences::update)
 }

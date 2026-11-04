@@ -218,7 +218,6 @@
     <string name="reset_to_chooser">चयनकर्ता पर रीसेट करें</string>
     <string name="use_system_browser">सिस्टम ब्राउज़र का उपयोग करें</string>
     <string name="choose_on_first_use">पहले उपयोग पर चुनें</string>
-    <string name="selected_tap_to_remove">चयनित · हटाने के लिए टैप करें</string>
     <string name="tracked_tap_to_remove">चयनित · हटाने के लिए टैप करें</string>
     <string name="remove_app">%1$s निकालें</string>
     <string name="shortcut_note">नोट</string>
@@ -244,8 +243,8 @@
     <string name="shortcut_slot">शॉर्टकट %1$d</string>
     <string name="shortcut_default">डिफ़ॉल्ट · %1$s</string>
     <string name="choose_app_or_keep_default">कोई ऐप या ऐप शॉर्टकट चुनें, या %1$s रखें</string>
-    <string name="choose_app_for_shortcut">%1$s के लिए लक्ष्य चुनें</string>
-    <string name="restore_shortcut_default">%1$s डिफ़ॉल्ट पुनर्स्थापित करें</string>
+    <string name="home_shortcut_and_folder">होम शॉर्टकट और फ़ोल्डर</string>
+    <string name="folder_name">फ़ोल्डर का नाम</string>
     <string name="theme_system">सिस्टम</string>
     <string name="theme_light">रोशनी</string>
     <string name="theme_dark">अंधेरा</string>
@@ -257,8 +256,6 @@
     <string name="reply_unavailable">उत्तर अनुपलब्ध</string>
     <string name="send_reply">उत्तर भेजें</string>
     <string name="settings">सेटिंग्स</string>
-    <string name="cancel_shortcut_reorder">शॉर्टकट पुनः क्रम रद्द करें</string>
-    <string name="save_shortcut_order">शॉर्टकट ऑर्डर सहेजें</string>
     <string name="whats_new">नया क्या है</string>
     <string name="update_notice_two_panel_heading">एक विस्तृत घर, जब आप चाहें</string>
     <string name="update_notice_two_panel_title">बड़े डिस्प्ले के लिए दो पैनल</string>
@@ -441,8 +438,6 @@
     <string name="mink_day_onboarding_short_description">स्थानीय दैनिक जानकारी और वैकल्पिक ऐप-पॉज़िंग नियंत्रणों के लिए होम से दाईं ओर स्वाइप करें। घर लौटने के लिए बाईं ओर स्वाइप करें या वापस का उपयोग करें।</string>
     <string name="six_shortcuts_any_apps">छह शॉर्टकट, कोई छह ऐप्स</string>
     <string name="six_shortcuts_any_apps_description">जब तक आप कोई ऐप असाइन नहीं करते, प्रत्येक कॉन्फ़िगर करने योग्य स्लॉट अपना अंतर्निहित डिफ़ॉल्ट रखता है। इसके बाद इसका ऐप आइकन होम पर आ जाता है।</string>
-    <string name="arrange_grid">अपना ग्रिड व्यवस्थित करें</string>
-    <string name="arrange_grid_description">संपादन मोड में प्रवेश करने के लिए किसी भी होम शॉर्टकट को लंबे समय तक दबाएं, फिर शॉर्टकट को अपने पसंदीदा क्रम में खींचें।</string>
     <string name="active_and_local">सक्रिय और स्थानीय</string>
     <string name="active_and_local_description">%1$s बातचीत का इतिहास नहीं रखता. संदेश पाठ और उत्तर स्मृति में रहते हैं और कभी भी Katoa Apps पर नहीं भेजे जाते हैं।</string>
     <string name="permissions_onboarding_intro">%1$s केवल आपके द्वारा उपयोग की जाने वाली सुविधाओं से जुड़ी पहुंच मांगता है।</string>
@@ -520,10 +515,7 @@
     <string name="customize">अनुकूलित करें</string>
     <string name="appearance">दिखावट</string>
     <string name="appearance_summary">%1$s थीम · पैनल और पृष्ठभूमि रंग</string>
-    <string name="home_shortcuts">घरेलू शॉर्टकट</string>
-    <string name="reset_home_grid_order">होम ग्रिड ऑर्डर रीसेट करें</string>
-    <string name="reset_home_grid_order_description">शॉर्टकट को मूल 4×2 क्रम पर लौटाएँ</string>
-    <string name="shortcut_order_reset">शॉर्टकट ऑर्डर रीसेट</string>
+    <string name="home_shortcuts">होम शॉर्टकट और फ़ोल्डर</string>
     <string name="selected_apps">चयनित ऐप्स</string>
     <string name="count_of_max">%2$d का %1$d</string>
     <string name="magic_box_find_other_apps">उपयोग करें ? किसी अन्य इंस्टॉल किए गए ऐप को ढूंढने के लिए Magic Box में।</string>
@@ -665,18 +657,9 @@
     <string name="work_apps_empty">कोई कार्य ऐप उपलब्ध नहीं है।</string>
     <string name="work_profile_state_change_failed">Android कार्य प्रोफ़ाइल की स्थिति नहीं बदल सका।</string>
     <string name="no_app_shortcuts_found">कोई ऐप शॉर्टकट नहीं मिला. MinkLauncher को आपके होम ऐप के रूप में चुना जाना चाहिए, और ऐप्स को यहां प्रदर्शित होने से पहले शॉर्टकट प्रकाशित करने होंगे।</string>
-    <string name="add_to_home_requests">घरेलू अनुरोधों में जोड़ें</string>
-    <string name="add_to_home_confirmation">होम पुष्टिकरण में जोड़ें</string>
-    <string name="pin_shortcut_presentation_description">चुनें कि MinkLauncher कैसे पूछता है कि किसी अन्य ऐप से अनुरोधित शॉर्टकट कहां रखें।</string>
-    <string name="presentation">प्रस्तुति</string>
-    <string name="pin_shortcut_full_page">पूरा पेज</string>
-    <string name="pin_shortcut_full_page_description">शॉर्टकट विवरण, प्रत्येक गंतव्य और एक निश्चित पुष्टिकरण बटन वाला एक स्थिर पृष्ठ।</string>
-    <string name="pin_shortcut_confirmation_sheet">पुष्टि पत्र</string>
-    <string name="pin_shortcut_confirmation_sheet_description">एक तेज़ ओवरले जो अनुरोध करने वाले ऐप को इसके पीछे दृश्यमान रखता है और उसे स्वाइप किया जा सकता है।</string>
-    <string name="pin_shortcut_test_instructions">उनकी तुलना करने के लिए, एक प्रस्तुति का चयन करें और एक ऐप के अंदर होम स्क्रीन पर जोड़ें का उपयोग करें जो Android पिन किए गए शॉर्टकट का समर्थन करता है।</string>
     <string name="add_shortcut">शॉर्टकट जोड़ें</string>
     <string name="choose_shortcut_destination">यह शॉर्टकट कहां जाना चाहिए?</string>
-    <string name="choose_shortcut_destination_description">इसे खोजने योग्य बनाएं, होम स्लॉट चुनें, या इसे Quick Drawer में रखें। किसी उपयोग में मौजूद स्थान को चुनने पर उसका वर्तमान आइटम बदल जाता है।</string>
+    <string name="choose_shortcut_destination_description">इसे खोजने योग्य बनाएं, होम स्लॉट चुनें, या इसे Quick Drawer में रखें।</string>
     <string name="add_to_search_and_all_apps">खोजें और सभी ऐप्स</string>
     <string name="add_to_search_and_all_apps_description">इस शॉर्टकट को खोजें? या इसे सभी ऐप्स में ब्राउज़ करें</string>
     <string name="add_to_quick_drawer">Quick Drawer में जोड़ें</string>
@@ -781,7 +764,7 @@
     <string name="todo_page_title">करने योग्य</string>
     <string name="add_todo">एक कार्य जोड़ें</string>
     <string name="nothing_here_yet">अभी तक यहां कुछ भी नहीं है.</string>
-    <string name="hold_drag_reorder">पुन: व्यवस्थित करने के लिए पकड़ें और खींचें</string>
+    <string name="drag_to_reorder">क्रम बदलने के लिए खींचें</string>
     <string name="edit_todo">करने योग्य कार्य संपादित करें</string>
     <string name="delete_todo_title">यह कार्य हटाएं?</string>
     <string name="delete_todo_description">"%1$s" को स्थायी रूप से हटा दिया जाएगा।</string>
@@ -894,6 +877,7 @@
         <item quantity="other">%1$d चयनित. केवल ये ऐप्स आपके ट्रेल और कुल योग में दिखाई देते हैं।</item>
     </plurals>
     <string name="find_app">एक ऐप ढूंढें</string>
+    <string name="reinstall">फिर से इंस्टॉल करें</string>
     <string name="no_launchable_apps">कोई लॉन्च करने योग्य ऐप्स नहीं मिला</string>
     <string name="no_matching_apps">कोई मेल खाता ऐप्स नहीं</string>
     <string name="android_default_social">Android डिफ़ॉल्ट: सामाजिक</string>
@@ -1004,7 +988,7 @@
     <string name="moto_secure_unavailable">Moto Secure नहीं खोला जा सका।</string>
     <string name="shortcut_extra">अतिरिक्त ऐप</string>
     <string name="expand_vcard">vCard फैलाएँ</string>
-    <string name="home_shortcuts_description_v2">सातों स्लॉट में से हर एक कोई भी इंस्टॉल किया गया ऐप खोल सकता है। बिना बदले स्लॉट नीचे दिखाई गई बिल्ट-इन कार्रवाई रखते हैं; Quick Drawer बिल्ट-इन रहता है।</string>
+    <string name="home_shortcuts_description_v2">एक ऐप चुनें या कई ऐप को फ़ोल्डर में जोड़ें।</string>
     <string name="less_visual_noise_description_v2">एक केंद्रित होम पेज, सात ऐप स्लॉट, एक बिल्ट-इन Quick Drawer शॉर्टकट और हर इंस्टॉल किए गए ऐप के लिए एक केंद्रित व्हील।</string>
     <string name="profile_onboarding_description_v2">आपका vCard आपके अन्य मिनी-ऐप्स के साथ MinkSpace में रहता है। QR कोड दिखाने के लिए इसे फैलाएँ, या काम प्रबंधित करने के लिए टू-डू मिनी-ऐप पर टैप करें।</string>
     <string name="calling">कॉलिंग</string>
@@ -1028,7 +1012,7 @@
     <string name="home_tour_mini_apps_title">Mini Apps में जाएँ</string>
     <string name="home_tour_mini_apps_description">चालू किए गए Mini Apps के बीच जाने के लिए MinkSpace पर ऊपर या नीचे स्वाइप करें।</string>
     <string name="home_tour_shortcuts_title">अपने शॉर्टकट सजाएँ</string>
-    <string name="home_tour_shortcuts_description">होम के किसी भी शॉर्टकट को दबाकर रखें, फिर उन्हें मनचाहे क्रम में खींचें।</string>
+    <string name="home_tour_shortcuts_description">होम शॉर्टकट, फ़ोल्डर और उनका क्रम व्यवस्थित करने के लिए सेटिंग में ऐप ग्रिड खोलें।</string>
     <string name="home_tour_conversations_title">बातचीत पास रखें</string>
     <string name="home_tour_conversations_description">सक्रिय बातचीत और पसंदीदा लोगों को देखने के लिए होम के ऊपर बातचीत आइकन पर टैप करें।</string>
     <string name="home_tour_widgets_title">अपने विजेट जोड़ें</string>

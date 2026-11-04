@@ -218,7 +218,6 @@
     <string name="reset_to_chooser">منتخب کنندہ پر ری سیٹ کریں۔</string>
     <string name="use_system_browser">سسٹم براؤزر استعمال کریں۔</string>
     <string name="choose_on_first_use">پہلے استعمال پر انتخاب کریں۔</string>
-    <string name="selected_tap_to_remove">منتخب کردہ · ہٹانے کے لیے تھپتھپائیں۔</string>
     <string name="tracked_tap_to_remove">منتخب کردہ · ہٹانے کے لیے تھپتھپائیں۔</string>
     <string name="remove_app">%1$s کو ہٹا دیں۔</string>
     <string name="shortcut_note">نوٹ</string>
@@ -244,8 +243,8 @@
     <string name="shortcut_slot">شارٹ کٹ %1$d</string>
     <string name="shortcut_default">ڈیفالٹ · %1$s</string>
     <string name="choose_app_or_keep_default">ایک ایپ یا ایپ شارٹ کٹ منتخب کریں، یا %1$s رکھیں</string>
-    <string name="choose_app_for_shortcut">%1$s کے لیے ہدف منتخب کریں۔</string>
-    <string name="restore_shortcut_default">%1$s ڈیفالٹ بحال کریں۔</string>
+    <string name="home_shortcut_and_folder">ہوم شارٹ کٹ اور فولڈر</string>
+    <string name="folder_name">فولڈر کا نام</string>
     <string name="theme_system">سسٹم</string>
     <string name="theme_light">روشنی</string>
     <string name="theme_dark">اندھیرا</string>
@@ -257,8 +256,6 @@
     <string name="reply_unavailable">جواب دستیاب نہیں ہے۔</string>
     <string name="send_reply">جواب بھیجیں۔</string>
     <string name="settings">ترتیبات</string>
-    <string name="cancel_shortcut_reorder">شارٹ کٹ ری آرڈر منسوخ کریں۔</string>
-    <string name="save_shortcut_order">شارٹ کٹ آرڈر کو محفوظ کریں۔</string>
     <string name="whats_new">نیا کیا ہے۔</string>
     <string name="update_notice_two_panel_heading">ایک وسیع تر گھر، جب آپ چاہیں۔</string>
     <string name="update_notice_two_panel_title">بڑے ڈسپلے کے لیے دو پینل</string>
@@ -441,8 +438,6 @@
     <string name="mink_day_onboarding_short_description">مقامی روزانہ کی بصیرت اور اختیاری ایپ کو روکنے کے کنٹرولز کے لیے گھر سے دائیں سوائپ کریں۔ گھر واپس جانے کے لیے بائیں طرف سوائپ کریں یا واپس استعمال کریں۔</string>
     <string name="six_shortcuts_any_apps">چھ شارٹ کٹس، کوئی بھی چھ ایپس</string>
     <string name="six_shortcuts_any_apps_description">ہر قابل ترتیب سلاٹ اس وقت تک پہلے سے طے شدہ رکھتا ہے جب تک کہ آپ کسی ایپ کو تفویض نہیں کرتے ہیں۔ اس کے ایپ کا آئیکن پھر ہوم پر لے جاتا ہے۔</string>
-    <string name="arrange_grid">اپنے گرڈ کو ترتیب دیں۔</string>
-    <string name="arrange_grid_description">ترمیم کے موڈ میں داخل ہونے کے لیے کسی بھی ہوم شارٹ کٹ کو دیر تک دبائیں، پھر شارٹ کٹس کو اپنی ترجیحی ترتیب میں گھسیٹیں۔</string>
     <string name="active_and_local">فعال اور مقامی</string>
     <string name="active_and_local_description">%1$s گفتگو کی سرگزشت کو برقرار نہیں رکھتا ہے۔ پیغام کا متن اور جوابات میموری میں رہتے ہیں اور کبھی بھی Katoa Apps پر نہیں بھیجے جاتے ہیں۔</string>
     <string name="permissions_onboarding_intro">%1$s صرف آپ کے استعمال کردہ خصوصیات سے منسلک رسائی کے لیے پوچھتا ہے۔</string>
@@ -520,10 +515,7 @@
     <string name="customize">اپنی مرضی کے مطابق بنائیں</string>
     <string name="appearance">ظاہری شکل</string>
     <string name="appearance_summary">%1$s تھیم · پینل اور پس منظر کے رنگ</string>
-    <string name="home_shortcuts">ہوم شارٹ کٹس</string>
-    <string name="reset_home_grid_order">ہوم گرڈ آرڈر کو دوبارہ ترتیب دیں۔</string>
-    <string name="reset_home_grid_order_description">اصل 4 × 2 آرڈر پر شارٹ کٹ واپس کریں۔</string>
-    <string name="shortcut_order_reset">شارٹ کٹ آرڈر ری سیٹ</string>
+    <string name="home_shortcuts">ہوم شارٹ کٹس اور فولڈرز</string>
     <string name="selected_apps">منتخب کردہ ایپس</string>
     <string name="count_of_max">%1$d از %2$d</string>
     <string name="magic_box_find_other_apps">کسی دوسری انسٹال کردہ ایپ کو تلاش کرنے کے لیے Magic Box میں ? استعمال کریں۔</string>
@@ -665,18 +657,9 @@
     <string name="work_apps_empty">کوئی ورک ایپ دستیاب نہیں ہے۔</string>
     <string name="work_profile_state_change_failed">Android ورک پروفائل کی حالت تبدیل نہیں کر سکا۔</string>
     <string name="no_app_shortcuts_found">کوئی ایپ شارٹ کٹ نہیں ملا۔ MinkLauncher کو آپ کی ہوم ایپ کے بطور منتخب کیا جانا چاہیے، اور ایپس کو یہاں ظاہر ہونے سے پہلے شارٹ کٹس شائع کرنا چاہیے۔</string>
-    <string name="add_to_home_requests">گھریلو درخواستوں میں شامل کریں۔</string>
-    <string name="add_to_home_confirmation">ہوم تصدیق میں شامل کریں۔</string>
-    <string name="pin_shortcut_presentation_description">منتخب کریں کہ کس طرح MinkLauncher پوچھتا ہے کہ دوسری ایپ سے درخواست کردہ شارٹ کٹس کہاں رکھنا ہے۔</string>
-    <string name="presentation">پریزنٹیشن</string>
-    <string name="pin_shortcut_full_page">پورا صفحہ</string>
-    <string name="pin_shortcut_full_page_description">شارٹ کٹ تفصیلات، ہر منزل، اور تصدیقی بٹن کے ساتھ ایک مستحکم صفحہ۔</string>
-    <string name="pin_shortcut_confirmation_sheet">تصدیقی پرچہ</string>
-    <string name="pin_shortcut_confirmation_sheet_description">ایک تیز تر اوورلے جو درخواست کرنے والی ایپ کو اپنے پیچھے دکھائی دیتا ہے اور اسے سوائپ کیا جا سکتا ہے۔</string>
-    <string name="pin_shortcut_test_instructions">ان کا موازنہ کرنے کے لیے، ایک پریزنٹیشن منتخب کریں اور Android پن کیے ہوئے شارٹ کٹس کو سپورٹ کرنے والی ایپ کے اندر ہوم اسکرین میں شامل کریں کا استعمال کریں۔</string>
     <string name="add_shortcut">شارٹ کٹ شامل کریں۔</string>
     <string name="choose_shortcut_destination">یہ شارٹ کٹ کہاں جانا چاہیے؟</string>
-    <string name="choose_shortcut_destination_description">اسے تلاش کے قابل بنائیں، ہوم سلاٹ منتخب کریں، یا اسے Quick Drawer میں رکھیں۔ کسی استعمال شدہ پوزیشن کو منتخب کرنے سے موجودہ آئٹم بدل جائے گا۔</string>
+    <string name="choose_shortcut_destination_description">اسے تلاش کے قابل بنائیں، ہوم سلاٹ منتخب کریں، یا اسے Quick Drawer میں رکھیں۔</string>
     <string name="add_to_search_and_all_apps">تلاش اور تمام ایپس</string>
     <string name="add_to_search_and_all_apps_description">اس شارٹ کٹ کو ? کے ساتھ تلاش کریں یا اسے تمام ایپس میں براؤز کریں۔</string>
     <string name="add_to_quick_drawer">Quick Drawer میں شامل کریں۔</string>
@@ -781,7 +764,7 @@
     <string name="todo_page_title">کرنا</string>
     <string name="add_todo">ایک کام شامل کریں۔</string>
     <string name="nothing_here_yet">ابھی تک یہاں کچھ نہیں ہے۔</string>
-    <string name="hold_drag_reorder">دوبارہ ترتیب دینے کے لیے پکڑ کر گھسیٹیں۔</string>
+    <string name="drag_to_reorder">دوبارہ ترتیب دینے کے لیے گھسیٹیں۔</string>
     <string name="edit_todo">کام میں ترمیم کریں۔</string>
     <string name="delete_todo_title">اس کام کو حذف کریں؟</string>
     <string name="delete_todo_description">"%1$s" کو مستقل طور پر ہٹا دیا جائے گا۔</string>
@@ -894,6 +877,7 @@
         <item quantity="other">%1$d منتخب کیا گیا۔ صرف یہ ایپس آپ کے ٹریل اور ٹوٹل میں ظاہر ہوتی ہیں۔</item>
     </plurals>
     <string name="find_app">ایک ایپ تلاش کریں۔</string>
+    <string name="reinstall">دوبارہ انسٹال کریں</string>
     <string name="no_launchable_apps">کوئی لانچ کرنے کے قابل ایپس نہیں ملے</string>
     <string name="no_matching_apps">کوئی مماثل ایپس نہیں ہیں۔</string>
     <string name="android_default_social">Android ڈیفالٹ: سماجی</string>
@@ -1004,7 +988,7 @@
     <string name="moto_secure_unavailable">Moto Secure نہیں کھولا جا سکا۔</string>
     <string name="shortcut_extra">اضافی ایپ</string>
     <string name="expand_vcard">vCard پھیلائیں</string>
-    <string name="home_shortcuts_description_v2">ساتوں سلاٹس میں سے ہر ایک کسی بھی انسٹال شدہ ایپ کو کھول سکتا ہے۔ غیر تبدیل شدہ سلاٹس نیچے دکھائی گئی بلٹ ان کارروائی برقرار رکھتے ہیں؛ Quick Drawer بلٹ ان رہتا ہے۔</string>
+    <string name="home_shortcuts_description_v2">ایک ایپ منتخب کریں یا متعدد ایپس کو فولڈر میں جمع کریں۔</string>
     <string name="less_visual_noise_description_v2">ایک فوکسڈ ہوم پیج، سات ایپ سلاٹس، ایک بلٹ ان Quick Drawer شارٹ کٹ، اور ہر انسٹال شدہ ایپ کے لیے ایک فوکسڈ وہیل۔</string>
     <string name="profile_onboarding_description_v2">آپ کا vCard دوسری منی ایپس کے ساتھ MinkSpace میں موجود ہے۔ QR کوڈ دکھانے کے لیے اسے پھیلائیں، یا کام سنبھالنے کے لیے ٹو ڈو منی ایپ کو تھپتھپائیں۔</string>
     <string name="calling">کالنگ</string>
@@ -1028,7 +1012,7 @@
     <string name="home_tour_mini_apps_title">Mini Apps میں جائیں</string>
     <string name="home_tour_mini_apps_description">فعال Mini Apps کے درمیان جانے کے لیے MinkSpace پر اوپر یا نیچے سوائپ کریں۔</string>
     <string name="home_tour_shortcuts_title">اپنے شارٹ کٹس ترتیب دیں</string>
-    <string name="home_tour_shortcuts_description">ہوم کے کسی بھی شارٹ کٹ کو دبائے رکھیں، پھر شارٹ کٹس کو اپنی پسند کی ترتیب میں گھسیٹیں۔</string>
+    <string name="home_tour_shortcuts_description">ہوم شارٹ کٹس، فولڈرز اور ان کی ترتیب منظم کرنے کے لیے سیٹنگز میں ایپ گرڈ کھولیں۔</string>
     <string name="home_tour_conversations_title">گفتگو قریب رکھیں</string>
     <string name="home_tour_conversations_description">فعال گفتگو اور پسندیدہ لوگوں کو دیکھنے کے لیے ہوم کے اوپر گفتگو کے آئیکن کو ٹیپ کریں۔</string>
     <string name="home_tour_widgets_title">اپنے ویجٹس شامل کریں</string>

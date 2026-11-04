@@ -1,16 +1,19 @@
 package com.katoaapps.openminilaunch.features.backup
 
-import com.katoaapps.openminilaunch.model.IconAppearance
-import com.katoaapps.openminilaunch.model.FontAppearance
-import com.katoaapps.openminilaunch.model.FontSource
-import com.katoaapps.openminilaunch.model.MinkAppPauseMode
-import com.katoaapps.openminilaunch.model.PinShortcutRequestPresentation
-import com.katoaapps.openminilaunch.model.PalettePreference
-import com.katoaapps.openminilaunch.model.ThemePreference
+import com.katoaapps.openminilaunch.features.minkspace.MinkSpaceMiniApp
 import com.katoaapps.openminilaunch.features.profile.ProfileCard
 import com.katoaapps.openminilaunch.features.profile.ProfileLink
 import com.katoaapps.openminilaunch.features.profile.ProfileLinkType
-import com.katoaapps.openminilaunch.features.minkspace.MinkSpaceMiniApp
+import com.katoaapps.openminilaunch.model.AppFolderConfig
+import com.katoaapps.openminilaunch.model.AppGridAssignment
+import com.katoaapps.openminilaunch.model.AppGridSlot
+import com.katoaapps.openminilaunch.model.FontAppearance
+import com.katoaapps.openminilaunch.model.FontSource
+import com.katoaapps.openminilaunch.model.IconAppearance
+import com.katoaapps.openminilaunch.model.MinkAppPauseMode
+import com.katoaapps.openminilaunch.model.PalettePreference
+import com.katoaapps.openminilaunch.model.QuickDrawerConfig
+import com.katoaapps.openminilaunch.model.ThemePreference
 import org.json.JSONObject
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNull
@@ -168,7 +171,8 @@ class LauncherBackupCodecTest {
         val sample = sampleBackup(twoPanelMode = true)
         val original = sample.copy(
             settings = sample.settings.copy(
-                quickDrawer = QuickDrawerBackupSettings(
+                quickDrawer = QuickDrawerConfig(
+                    orderedTargetKeys = listOf("app:0:com.example/.MainActivity"),
                     showMinkPad = false,
                     showPrivateSpace = false,
                     showWorkProfile = false,
@@ -180,6 +184,80 @@ class LauncherBackupCodecTest {
         val restored = LauncherBackupCodec.decode(LauncherBackupCodec.encode(original))
 
         assertEquals(original.settings.quickDrawer, restored.settings.quickDrawer)
+    }
+
+    @Test fun appFolderAssignmentsSurvivePortableBackupRoundTrip() {
+        val sample = sampleBackup(twoPanelMode = true)
+        val folder = AppFolderConfig(
+            id = "folder-1",
+            customName = "Travel",
+            orderedTargetKeys = listOf(
+                "app:0:com.example.maps/.MainActivity",
+                "app:0:com.example.transit/.MainActivity",
+            ),
+        )
+        val original = sample.copy(
+            launcher = sample.launcher.copy(
+                appGridAssignments = mapOf(
+                    AppGridSlot.NOTE to AppGridAssignment.Target("app:0:com.example.notes/.MainActivity"),
+                    AppGridSlot.EVENT to AppGridAssignment.Folder(folder.id),
+                ),
+                appFolders = listOf(folder),
+            ),
+        )
+
+        val restored = LauncherBackupCodec.decode(LauncherBackupCodec.encode(original))
+
+        assertEquals(original.launcher.appGridAssignments, restored.launcher.appGridAssignments)
+        assertEquals(original.launcher.appFolders, restored.launcher.appFolders)
+    }
+
+    @Test fun appFolderWritesFirstItemForPreFolderBackupReaders() {
+        val sample = sampleBackup(twoPanelMode = true)
+        val folder = AppFolderConfig(
+            id = "folder-1",
+            orderedTargetKeys = listOf(
+                "app:0:com.example.maps/.MainActivity",
+                "app:0:com.example.transit/.MainActivity",
+            ),
+        )
+        val backup = sample.copy(
+            launcher = sample.launcher.copy(
+                appGridAssignments = mapOf(
+                    AppGridSlot.EVENT to AppGridAssignment.Folder(folder.id),
+                ),
+                appFolders = listOf(folder),
+            ),
+        )
+
+        val launcherJson = JSONObject(LauncherBackupCodec.encode(backup))
+            .getJSONObject("launcher")
+
+        assertEquals(
+            folder.orderedTargetKeys.first(),
+            launcherJson.getJSONObject("shortcutTargets").getString(AppGridSlot.EVENT.name),
+        )
+    }
+
+    @Test fun targetAssignmentsRestoreFromLegacyShortcutTargets() {
+        val sample = sampleBackup(twoPanelMode = true)
+        val original = sample.copy(
+            launcher = sample.launcher.copy(
+                appGridAssignments = mapOf(
+                    AppGridSlot.NOTE to AppGridAssignment.Target("app:0:com.example.notes/.MainActivity"),
+                ),
+            ),
+        )
+        val json = JSONObject(LauncherBackupCodec.encode(original))
+        json.getJSONObject("launcher").apply {
+            remove("appGridAssignments")
+            remove("appFolders")
+        }
+
+        val restored = LauncherBackupCodec.decode(json.toString())
+
+        assertEquals(original.launcher.appGridAssignments, restored.launcher.appGridAssignments)
+        assertEquals(emptyList<AppFolderConfig>(), restored.launcher.appFolders)
     }
 
     @Test fun olderBackupWithoutQuickDrawerPreferencesLeavesCurrentPreferencesAlone() {
@@ -256,7 +334,8 @@ class LauncherBackupCodecTest {
         sourceAppVersion = "test",
         exportedAtMillis = 0L,
         launcher = LauncherBackupLayout(
-            appGridTargets = emptyMap(),
+            appGridAssignments = emptyMap(),
+            appFolders = emptyList(),
             appGridOrder = emptyList(),
             confirmedAppGridChoices = emptyList(),
             drawerTargets = emptyList(),
@@ -296,7 +375,6 @@ class LauncherBackupCodecTest {
             socialGoalHours = 1,
             minkAppPauseMode = MinkAppPauseMode.NEVER,
             githubUpdateChecksEnabled = true,
-            pinShortcutRequestPresentation = PinShortcutRequestPresentation.FULL_PAGE,
         ),
         todos = emptyList(),
         profile = null,

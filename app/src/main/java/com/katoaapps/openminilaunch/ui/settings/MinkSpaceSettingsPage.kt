@@ -47,6 +47,7 @@ import com.katoaapps.openminilaunch.data.LauncherStore
 import com.katoaapps.openminilaunch.features.minkspace.MinkSpaceMiniApp
 import com.katoaapps.openminilaunch.platform.DeviceActions
 import com.katoaapps.openminilaunch.ui.components.SectionLabel
+import com.katoaapps.openminilaunch.ui.components.moveItem
 import com.katoaapps.openminilaunch.ui.minkspace.core.MinkSpaceMiniAppCatalog
 import com.katoaapps.openminilaunch.ui.minkspace.core.MinkSpaceMiniAppManifest
 import com.katoaapps.openminilaunch.ui.minkspace.core.MinkSpaceMiniAppSettingsTarget
@@ -82,7 +83,7 @@ internal fun MinkSpaceSettingsPage(
         val fromIndex = visibleMiniApps.indexOfFirst { it.stableId == from.key }
         val toIndex = visibleMiniApps.indexOfFirst { it.stableId == to.key }
         if (fromIndex >= 0 && toIndex >= 0 && fromIndex != toIndex) {
-            visibleMiniApps.add(toIndex, visibleMiniApps.removeAt(fromIndex))
+            visibleMiniApps.moveItem(fromIndex, toIndex)
             hapticFeedback.performHapticFeedback(HapticFeedbackType.TextHandleMove)
         }
     }
@@ -164,11 +165,11 @@ internal fun MinkSpaceSettingsPage(
                     dragHandle = {
                         Icon(
                             imageVector = Icons.Default.DragHandle,
-                            contentDescription = stringResource(R.string.hold_drag_reorder),
+                            contentDescription = stringResource(R.string.drag_to_reorder),
                             tint = if (isDragging) Rust else Muted,
                             modifier = Modifier
                                 .size(Dimens.dp44)
-                                .longPressDraggableHandle(
+                                .draggableHandle(
                                     interactionSource = interactionSource,
                                     onDragStarted = {
                                         draggedMiniApp = miniApp

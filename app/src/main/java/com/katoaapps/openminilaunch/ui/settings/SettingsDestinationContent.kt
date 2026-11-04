@@ -97,10 +97,6 @@ internal fun SettingsDestinationContent(
             onPickGateway = onPickPrivateContainerGateway,
             goBack = onNavigateBack,
         )
-        SettingsDestination.PIN_SHORTCUT_REQUESTS -> PinShortcutRequestsSettingsPage(
-            store = store,
-            goBack = onNavigateBack,
-        )
         SettingsDestination.APP_BUBBLES -> AppBubbleSettingsPage(
             store = store,
             actions = actions,

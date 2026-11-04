@@ -1,5 +1,10 @@
 package com.katoaapps.openminilaunch.data
 
+import android.content.Context
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.setValue
+import androidx.core.content.ContextCompat
 import com.katoaapps.openminilaunch.R
 import com.katoaapps.openminilaunch.features.appearance.BundledHomeThemeCatalog
 import com.katoaapps.openminilaunch.features.appearance.BundledWallpaperCatalog
@@ -7,17 +12,11 @@ import com.katoaapps.openminilaunch.features.appearance.CustomFontRepository
 import com.katoaapps.openminilaunch.features.appearance.HomeWallpaperRepository
 import com.katoaapps.openminilaunch.features.appearance.WATERMELON_PILL_COLOR_ARGB
 import com.katoaapps.openminilaunch.features.demo.DemoHomeProfile
+import com.katoaapps.openminilaunch.features.minkspace.MinkSpaceMiniApp
 import com.katoaapps.openminilaunch.features.minkspace.todo.TodoItem
 import com.katoaapps.openminilaunch.features.minkspace.todo.TodoStore
 import com.katoaapps.openminilaunch.features.profile.ProfileRepository
-import com.katoaapps.openminilaunch.features.minkspace.MinkSpaceMiniApp
 import com.katoaapps.openminilaunch.model.*
-
-import android.content.Context
-import androidx.core.content.ContextCompat
-import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.setValue
 
 class LauncherStore private constructor(context: Context) {
     private val appContext = context.applicationContext
@@ -39,7 +38,6 @@ class LauncherStore private constructor(context: Context) {
     private val callingPreferences = CallingPreferenceStore(prefs)
     private val minkDayPreferences = MinkDayPreferenceStore(prefs)
     private val updatePreferences = UpdatePreferenceStore(prefs)
-    private val pinShortcutPreferences = PinShortcutPreferenceStore(prefs)
     private val appDiscoveryPreferences = AppDiscoveryPreferenceStore(prefs)
     private val appBubblePreferences = AppBubblePreferenceStore(prefs)
     private val privateContainerPreferences = PrivateContainerPreferenceStore(prefs)
@@ -56,8 +54,9 @@ class LauncherStore private constructor(context: Context) {
     internal val demoHomeProfile get() = demoPreferences.profile
     val todos get() = todoStore.items
     internal val savedTodosForBackup get() = persistence.loadTodos()
-    /** Stable launcher target keys. Legacy package-only values are migrated after discovery. */
-    val appGridTargets get() = launcherSelections.appGridTargets
+    /** Typed App Grid contents. Legacy package-only target values migrate after discovery. */
+    val appGridAssignments get() = launcherSelections.appGridAssignments
+    val appFolders get() = launcherSelections.appFolders
     val appGridOrder get() = launcherSelections.appGridOrder
     val confirmedAppGridChoices get() = launcherSelections.confirmedAppGridChoices
     /** Stable launcher target keys, allowing personal and work copies of one package to coexist. */
@@ -66,7 +65,10 @@ class LauncherStore private constructor(context: Context) {
     val libraryShortcutTargets get() = launcherSelections.libraryShortcutTargets
     val pinnedLauncherSelectionKeys: List<String>
         get() = (
-            appGridTargets.values + drawerTargets + libraryShortcutTargets +
+            appGridAssignments.values.mapNotNull(AppGridAssignment::targetKeyOrNull) +
+                appGridAssignments.values.filterIsInstance<AppGridAssignment.Folder>()
+                    .flatMap { appFolder(it.folderId)?.orderedTargetKeys.orEmpty() } +
+                drawerTargets + libraryShortcutTargets +
                 listOfNotNull(privateContainerGatewaySelectionKey)
             ).distinct()
     val searchFolders get() = searchStore.folders
@@ -120,7 +122,6 @@ class LauncherStore private constructor(context: Context) {
     val demoSearchDataEnabled get() = demoPreferences.enabled
     val githubUpdateChecksEnabled get() = updatePreferences.checksEnabled
     val latestGitHubReleaseTag get() = updatePreferences.latestReleaseTag
-    val pinShortcutRequestPresentation get() = pinShortcutPreferences.requestPresentation
     val includeAppShortcutsInDiscovery get() = appDiscoveryPreferences.includeAppShortcuts
     val automaticAppBubbleTargets get() = appBubblePreferences.automaticTargetKeys
     val privateContainerGatewaySelectionKey get() = privateContainerPreferences.gatewaySelectionKey
@@ -128,6 +129,14 @@ class LauncherStore private constructor(context: Context) {
     val showPrivateSpaceInQuickDrawer get() = quickDrawerPreferences.showPrivateSpaceButton
     val showWorkProfileInQuickDrawer get() = quickDrawerPreferences.showWorkProfileButton
     val quickDrawerColorArgb get() = quickDrawerPreferences.colorArgb
+    val quickDrawerConfig: QuickDrawerConfig
+        get() = QuickDrawerConfig(
+            orderedTargetKeys = drawerTargets.toList(),
+            showMinkPad = showMinkPadInQuickDrawer,
+            showPrivateSpace = showPrivateSpaceInQuickDrawer,
+            showWorkProfile = showWorkProfileInQuickDrawer,
+            colorArgb = quickDrawerColorArgb,
+        )
     internal val minkSpaceMiniAppOrder get() = minkSpacePreferences.order
     internal val enabledMinkSpaceMiniApps get() = minkSpacePreferences.enabledMiniApps
     internal val minkSpaceWidgetId get() = minkSpaceWidgetStore.appWidgetId
@@ -218,13 +227,29 @@ class LauncherStore private constructor(context: Context) {
         todoStore.replaceFromBackup(items)
     }
 
-    fun assignAppGridSlot(slot: AppGridSlot, targetKey: String) {
-        launcherSelections.assignAppGridSlot(slot, targetKey)
+    fun placePinnedAppGridTarget(slot: AppGridSlot, targetKey: String) {
+        launcherSelections.placePinnedAppGridTarget(slot, targetKey)
     }
 
-    fun resetAppGridSlot(slot: AppGridSlot) {
-        launcherSelections.resetAppGridSlot(slot)
+    fun appGridAssignment(slot: AppGridSlot): AppGridAssignment =
+        launcherSelections.appGridAssignment(slot)
+
+    fun appGridTargetKey(slot: AppGridSlot): String? = launcherSelections.appGridTargetKey(slot)
+
+    fun appFolder(folderId: String): AppFolderConfig? = launcherSelections.appFolder(folderId)
+
+    fun appGridSelectionKeys(slot: AppGridSlot): List<String> = launcherSelections.appGridSelectionKeys(slot)
+
+    fun saveAppGridSelection(
+        slot: AppGridSlot,
+        selectedTargetKeys: List<String>,
+        folderName: String?,
+    ) {
+        launcherSelections.saveAppGridSelection(slot, selectedTargetKeys, folderName)
     }
+
+    fun pruneLauncherTargets(shouldRemove: (String) -> Boolean): Boolean =
+        launcherSelections.pruneLauncherTargets(shouldRemove)
 
     fun confirmSystemDefaultsForUnselectedShortcuts() {
         launcherSelections.confirmSystemDefaults()
@@ -232,27 +257,21 @@ class LauncherStore private constructor(context: Context) {
 
     fun hasConfirmedAllShortcutChoices(): Boolean = launcherSelections.hasConfirmedAll()
 
-    fun moveAppGridSlot(slot: AppGridSlot, targetIndex: Int) {
-        launcherSelections.moveAppGridSlot(slot, targetIndex)
-    }
-
-    fun resetAppGridOrder() {
-        launcherSelections.resetAppGridOrder()
-    }
-
     fun setAppGridOrder(order: List<AppGridSlot>) {
         launcherSelections.setAppGridOrder(order)
     }
 
     internal fun replaceLauncherSelectionsFromBackup(
-        appGridTargets: Map<AppGridSlot, String>,
+        appGridAssignments: Map<AppGridSlot, AppGridAssignment>,
+        appFolders: List<AppFolderConfig>,
         appGridOrder: List<AppGridSlot>,
         confirmedAppGridChoices: List<AppGridSlot>,
         drawerTargets: List<String>,
         libraryShortcutTargets: List<String>,
     ) {
         launcherSelections.replaceFromBackup(
-            restoredTargets = appGridTargets,
+            restoredAssignments = appGridAssignments,
+            restoredFolders = appFolders,
             restoredOrder = appGridOrder,
             restoredConfirmedChoices = confirmedAppGridChoices,
             restoredDrawerTargets = drawerTargets,
@@ -260,9 +279,8 @@ class LauncherStore private constructor(context: Context) {
         )
     }
 
-    fun toggleDrawerApp(targetKey: String) {
-        launcherSelections.toggleDrawerApp(targetKey)
-    }
+    fun setDrawerTargets(targetKeys: List<String>): Boolean =
+        launcherSelections.setDrawerTargets(targetKeys)
 
     fun addDrawerTarget(targetKey: String): Boolean = launcherSelections.addDrawerTarget(targetKey)
 
@@ -271,10 +289,6 @@ class LauncherStore private constructor(context: Context) {
 
     fun addLibraryShortcut(targetKey: String) {
         launcherSelections.addLibraryShortcut(targetKey)
-    }
-
-    fun setPinShortcutRequestPresentation(presentation: PinShortcutRequestPresentation) {
-        pinShortcutPreferences.updateRequestPresentation(presentation)
     }
 
     fun updateIncludeAppShortcutsInDiscovery(enabled: Boolean) {

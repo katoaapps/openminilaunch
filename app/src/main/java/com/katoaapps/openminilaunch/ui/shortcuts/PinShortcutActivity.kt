@@ -46,7 +46,6 @@ class PinShortcutActivity : ComponentActivity() {
                 }
                 PinShortcutRequestHost(
                     pending = pending,
-                    presentation = store.pinShortcutRequestPresentation,
                     store = store,
                     actions = actions,
                     onConfirm = { destination -> completeRequest(pending, destination) },
@@ -66,7 +65,7 @@ class PinShortcutActivity : ComponentActivity() {
 
         val targetKey = pending.target.selectionKey
         when (destination) {
-            is PinShortcutDestination.HomeSlot -> store.assignAppGridSlot(destination.slot, targetKey)
+            is PinShortcutDestination.HomeSlot -> store.placePinnedAppGridTarget(destination.slot, targetKey)
             PinShortcutDestination.AddToDrawer -> store.addDrawerTarget(targetKey)
             PinShortcutDestination.AddToLibrary -> store.addLibraryShortcut(targetKey)
             is PinShortcutDestination.ReplaceDrawerSlot -> {

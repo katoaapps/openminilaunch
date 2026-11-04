@@ -57,17 +57,6 @@ class SettingsNavigationTest {
         )
     }
 
-    @Test fun pinShortcutRequestsNestUnderShortcuts() {
-        assertEquals(
-            listOf(
-                SettingsDestination.OVERVIEW,
-                SettingsDestination.APP_GRID,
-                SettingsDestination.PIN_SHORTCUT_REQUESTS,
-            ),
-            settingsPathTo(SettingsDestination.PIN_SHORTCUT_REQUESTS),
-        )
-    }
-
     @Test fun magicBoxDetailsReturnDirectlyToTheirSectionRoot() {
         assertEquals(
             listOf(SettingsDestination.OVERVIEW, SettingsDestination.FILE_SEARCH),

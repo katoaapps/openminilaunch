@@ -1,10 +1,10 @@
 package com.katoaapps.openminilaunch.ui.settings
 
 import android.content.Context
-import android.os.Build
 import android.widget.Toast
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
@@ -14,12 +14,13 @@ import com.katoaapps.openminilaunch.R
 import com.katoaapps.openminilaunch.data.LauncherStore
 import com.katoaapps.openminilaunch.features.messaging.MessagingProviderCatalog
 import com.katoaapps.openminilaunch.features.wellbeing.UsageInsightsRepository
+import com.katoaapps.openminilaunch.model.AppGridAssignment
 import com.katoaapps.openminilaunch.model.MAX_DRAWER_APPS
 import com.katoaapps.openminilaunch.model.LauncherTarget
 import com.katoaapps.openminilaunch.model.LaunchableApp
 import com.katoaapps.openminilaunch.platform.DeviceActions
-import com.katoaapps.openminilaunch.ui.appgrid.displayLabel
-import com.katoaapps.openminilaunch.ui.appgrid.displaySlotLabel
+import com.katoaapps.openminilaunch.ui.appgrid.AppGridSelectionDialog
+import com.katoaapps.openminilaunch.ui.components.moveItem
 import com.katoaapps.openminilaunch.ui.wellbeing.SocialAppsDialog
 
 @Composable
@@ -39,12 +40,22 @@ internal fun SettingsPickerDialogs(
     onPickerChange: (SettingsPicker?) -> Unit,
 ) {
     when (picker) {
-        is SettingsPicker.AppGridSlotPicker -> AppGridSlotPickerDialog(
-            picker = picker,
-            store = store,
+        is SettingsPicker.AppGridSlotPicker -> AppGridSelectionDialog(
+            slot = picker.slot,
+            initialSelectionKeys = store.appGridSelectionKeys(picker.slot),
+            initialFolderName = (store.appGridAssignment(picker.slot) as? AppGridAssignment.Folder)
+                ?.folderId
+                ?.let(store::appFolder)
+                ?.customName,
             actions = actions,
-            installedApps = installedApps,
-            installedShortcuts = installedShortcuts,
+            apps = installedApps.apps,
+            shortcuts = installedShortcuts.shortcuts,
+            appsLoading = !installedApps.loaded,
+            shortcutsLoading = !installedShortcuts.loaded,
+            onSave = { selection, folderName ->
+                store.saveAppGridSelection(picker.slot, selection, folderName)
+                actions.syncPinnedSelectionsFrom(store)
+            },
             onDismiss = { onPickerChange(null) },
         )
         SettingsPicker.DrawerApps -> DrawerAppsPicker(
@@ -156,43 +167,6 @@ internal fun SettingsPickerDialogs(
 }
 
 @Composable
-private fun AppGridSlotPickerDialog(
-    picker: SettingsPicker.AppGridSlotPicker,
-    store: LauncherStore,
-    actions: DeviceActions,
-    installedApps: LauncherAppListLoadState,
-    installedShortcuts: LauncherShortcutListLoadState,
-    onDismiss: () -> Unit,
-) {
-    val slot = picker.slot
-    val showSamsungWeatherGuide = Build.MANUFACTURER.equals("samsung", ignoreCase = true)
-    LauncherTargetPickerDialog(
-        title = stringResource(R.string.choose_app_for_shortcut, slot.displaySlotLabel()),
-        apps = installedApps.apps,
-        shortcuts = installedShortcuts.shortcuts,
-        selected = setOfNotNull(store.appGridTargets[slot]),
-        actions = actions,
-        appsLoading = !installedApps.loaded,
-        shortcutsLoading = !installedShortcuts.loaded,
-        supportingText = if (showSamsungWeatherGuide) stringResource(R.string.samsung_weather_guide) else null,
-        supportingActionLabel = if (showSamsungWeatherGuide) stringResource(R.string.open_apps_settings) else null,
-        onSupportingAction = actions::openInstalledAppsSettings,
-        onTarget = {
-            store.assignAppGridSlot(slot, it.selectionKey)
-            actions.syncPinnedSelectionsFrom(store)
-            onDismiss()
-        },
-        onReset = {
-            store.resetAppGridSlot(slot)
-            actions.syncPinnedSelectionsFrom(store)
-            onDismiss()
-        },
-        resetLabel = stringResource(R.string.restore_shortcut_default, slot.displayLabel()),
-        onDismiss = onDismiss,
-    )
-}
-
-@Composable
 private fun DrawerAppsPicker(
     store: LauncherStore,
     actions: DeviceActions,
@@ -201,50 +175,65 @@ private fun DrawerAppsPicker(
     installedShortcuts: LauncherShortcutListLoadState,
     onDismiss: () -> Unit,
 ) {
+    val draftSelection = remember {
+        mutableStateListOf<String>().apply { addAll(store.drawerTargets) }
+    }
     var pendingReplacement by remember { mutableStateOf<LauncherTarget?>(null) }
     LauncherTargetPickerDialog(
         title = pluralStringResource(
             R.plurals.drawer_apps_title,
-            store.drawerTargets.size,
-            store.drawerTargets.size,
+            draftSelection.size,
+            draftSelection.size,
             MAX_DRAWER_APPS,
         ),
         apps = installedApps.apps,
         shortcuts = installedShortcuts.shortcuts,
-        selected = store.drawerTargets.toSet(),
+        selected = draftSelection.toSet(),
+        selectedOrder = draftSelection.toList(),
         actions = actions,
         appsLoading = !installedApps.loaded,
         shortcutsLoading = !installedShortcuts.loaded,
         onTarget = { target ->
-            val fillingDrawer = target.selectionKey !in store.drawerTargets &&
-                store.drawerTargets.size == MAX_DRAWER_APPS - 1
-            store.toggleDrawerApp(target.selectionKey)
-            actions.syncPinnedSelectionsFrom(store)
-            if (fillingDrawer) {
-                Toast.makeText(
-                    context,
-                    context.resources.getQuantityString(
-                        R.plurals.apps_selected,
-                        MAX_DRAWER_APPS,
-                        MAX_DRAWER_APPS,
-                    ),
-                    Toast.LENGTH_SHORT,
-                ).show()
+            if (target.selectionKey in draftSelection) {
+                draftSelection.remove(target.selectionKey)
+            } else if (draftSelection.size < MAX_DRAWER_APPS) {
+                draftSelection += target.selectionKey
+                if (draftSelection.size == MAX_DRAWER_APPS) {
+                    Toast.makeText(
+                        context,
+                        context.resources.getQuantityString(
+                            R.plurals.apps_selected,
+                            MAX_DRAWER_APPS,
+                            MAX_DRAWER_APPS,
+                        ),
+                        Toast.LENGTH_SHORT,
+                    ).show()
+                }
             }
         },
         onSelectionLimit = { pendingReplacement = it },
+        onMoveSelected = { fromIndex, toIndex ->
+            draftSelection.moveItem(fromIndex, toIndex)
+        },
+        onDone = {
+            if (store.setDrawerTargets(draftSelection)) {
+                actions.syncPinnedSelectionsFrom(store)
+            }
+            onDismiss()
+        },
         onDismiss = onDismiss,
         multiSelect = true,
         selectionLimit = MAX_DRAWER_APPS,
+        showSearch = false,
     )
     pendingReplacement?.let { replacement ->
         DrawerReplacementDialog(
             replacement = replacement,
-            currentSelectionKeys = store.drawerTargets.toList(),
+            currentSelectionKeys = draftSelection.toList(),
             actions = actions,
             onReplace = { index ->
-                if (store.replaceDrawerTarget(index, replacement.selectionKey)) {
-                    actions.syncPinnedSelectionsFrom(store)
+                if (index in draftSelection.indices) {
+                    draftSelection[index] = replacement.selectionKey
                 }
                 pendingReplacement = null
             },

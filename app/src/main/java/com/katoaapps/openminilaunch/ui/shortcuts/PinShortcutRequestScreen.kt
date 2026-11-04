@@ -1,5 +1,3 @@
-@file:OptIn(androidx.compose.material3.ExperimentalMaterial3Api::class)
-
 package com.katoaapps.openminilaunch.ui.shortcuts
 
 import android.graphics.drawable.Drawable
@@ -13,7 +11,6 @@ import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -28,7 +25,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.GridView
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.material.icons.filled.Work
@@ -37,12 +33,10 @@ import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
-import androidx.compose.material3.ModalBottomSheet
 import androidx.compose.material3.RadioButton
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -54,6 +48,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
@@ -61,13 +56,13 @@ import androidx.core.graphics.drawable.toBitmap
 import com.katoaapps.openminilaunch.R
 import com.katoaapps.openminilaunch.data.LauncherStore
 import com.katoaapps.openminilaunch.features.apps.PendingPinShortcut
+import com.katoaapps.openminilaunch.model.AppGridAssignment
 import com.katoaapps.openminilaunch.model.MAX_DRAWER_APPS
 import com.katoaapps.openminilaunch.model.PinShortcutDestination
-import com.katoaapps.openminilaunch.model.PinShortcutRequestPresentation
 import com.katoaapps.openminilaunch.model.configurableAppGridSlots
 import com.katoaapps.openminilaunch.platform.DeviceActions
-import com.katoaapps.openminilaunch.ui.appgrid.displaySlotLabel
 import com.katoaapps.openminilaunch.ui.appgrid.displayLabel
+import com.katoaapps.openminilaunch.ui.appgrid.displaySlotLabel
 import com.katoaapps.openminilaunch.ui.theme.Dimens
 import com.katoaapps.openminilaunch.ui.theme.Muted
 import com.katoaapps.openminilaunch.ui.theme.Rust
@@ -75,7 +70,6 @@ import com.katoaapps.openminilaunch.ui.theme.Rust
 @Composable
 internal fun PinShortcutRequestHost(
     pending: PendingPinShortcut?,
-    presentation: PinShortcutRequestPresentation,
     store: LauncherStore,
     actions: DeviceActions,
     onConfirm: (PinShortcutDestination) -> Boolean,
@@ -93,34 +87,19 @@ internal fun PinShortcutRequestHost(
         if (selected != null && !onConfirm(selected)) showError = true
     }
 
-    when (presentation) {
-        PinShortcutRequestPresentation.FULL_PAGE -> PinShortcutFullPage(
-            pending = pending,
-            store = store,
-            actions = actions,
-            selectedKey = selectedKey,
-            showError = showError,
-            onSelect = {
-                selectedKey = it
-                showError = false
-            },
-            onConfirm = confirm,
-            onCancel = onCancel,
-        )
-        PinShortcutRequestPresentation.CONFIRMATION_SHEET -> PinShortcutConfirmationSheet(
-            pending = pending,
-            store = store,
-            actions = actions,
-            selectedKey = selectedKey,
-            showError = showError,
-            onSelect = {
-                selectedKey = it
-                showError = false
-            },
-            onConfirm = confirm,
-            onCancel = onCancel,
-        )
-    }
+    PinShortcutFullPage(
+        pending = pending,
+        store = store,
+        actions = actions,
+        selectedKey = selectedKey,
+        showError = showError,
+        onSelect = {
+            selectedKey = it
+            showError = false
+        },
+        onConfirm = confirm,
+        onCancel = onCancel,
+    )
 }
 
 @Composable
@@ -188,60 +167,6 @@ private fun PinShortcutFullPage(
 }
 
 @Composable
-private fun PinShortcutConfirmationSheet(
-    pending: PendingPinShortcut,
-    store: LauncherStore,
-    actions: DeviceActions,
-    selectedKey: String?,
-    showError: Boolean,
-    onSelect: (String) -> Unit,
-    onConfirm: () -> Unit,
-    onCancel: () -> Unit,
-) {
-    Box(
-        Modifier.fillMaxSize().background(MaterialTheme.colorScheme.scrim.copy(alpha = .5f)),
-    ) {
-        ModalBottomSheet(
-            onDismissRequest = onCancel,
-            modifier = Modifier.widthIn(max = Dimens.dp720).fillMaxWidth(),
-            sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true),
-            containerColor = MaterialTheme.colorScheme.surface,
-        ) {
-            Column(Modifier.fillMaxHeight(.9f).navigationBarsPadding()) {
-                Row(
-                    Modifier.fillMaxWidth().padding(horizontal = Dimens.dp18),
-                    verticalAlignment = Alignment.CenterVertically,
-                ) {
-                    Text(
-                        stringResource(R.string.add_shortcut),
-                        Modifier.weight(1f),
-                        fontSize = Dimens.sp24,
-                        fontWeight = FontWeight.Black,
-                    )
-                    IconButton(onClick = onCancel) {
-                        Icon(Icons.Default.Close, stringResource(R.string.cancel))
-                    }
-                }
-                PinShortcutPlacementList(
-                    pending = pending,
-                    store = store,
-                    actions = actions,
-                    selectedKey = selectedKey,
-                    onSelect = onSelect,
-                    modifier = Modifier.weight(1f),
-                    contentPadding = PaddingValues(horizontal = Dimens.dp18, vertical = Dimens.dp8),
-                )
-                ConfirmationBar(
-                    selected = PinShortcutDestination.fromKey(selectedKey),
-                    showError = showError,
-                    onConfirm = onConfirm,
-                )
-            }
-        }
-    }
-}
-
-@Composable
 private fun PinShortcutPlacementList(
     pending: PendingPinShortcut,
     store: LauncherStore,
@@ -281,10 +206,20 @@ private fun PinShortcutPlacementList(
         }
         item { DestinationSectionLabel(stringResource(R.string.home_shortcuts)) }
         items(homeDestinations, key = PinShortcutDestination::key) { destination ->
-            val currentKey = store.appGridTargets[destination.slot]
+            val assignment = store.appGridAssignment(destination.slot)
+            val folder = (assignment as? AppGridAssignment.Folder)?.let {
+                store.appFolder(it.folderId)
+            }
+            val currentKey = store.appGridTargetKey(destination.slot)
             DestinationRow(
                 title = destination.slot.displaySlotLabel(),
-                subtitle = currentKey?.let(actions::launcherTargetLabel)
+                subtitle = folder?.let {
+                    it.customName ?: pluralStringResource(
+                        R.plurals.apps_selected,
+                        it.orderedTargetKeys.size,
+                        it.orderedTargetKeys.size,
+                    )
+                } ?: currentKey?.let(actions::launcherTargetLabel)
                     ?: stringResource(
                         R.string.shortcut_default,
                         destination.slot.displayLabel(),
@@ -294,7 +229,10 @@ private fun PinShortcutPlacementList(
             )
         }
         item { DestinationSectionLabel(stringResource(R.string.quick_drawer)) }
-        if (store.drawerTargets.size < MAX_DRAWER_APPS) {
+        if (
+            store.drawerTargets.size < MAX_DRAWER_APPS &&
+            pending.target.selectionKey !in store.drawerTargets
+        ) {
             item(PinShortcutDestination.AddToDrawer.key) {
                 DestinationRow(
                     title = stringResource(R.string.add_to_quick_drawer),

@@ -218,7 +218,6 @@
     <string name="reset_to_chooser">Réinitialiser au sélecteur</string>
     <string name="use_system_browser">Utiliser le navigateur système</string>
     <string name="choose_on_first_use">Choisissez dès la première utilisation</string>
-    <string name="selected_tap_to_remove">SÉLECTIONNÉ · APPUYEZ POUR RETIRER</string>
     <string name="tracked_tap_to_remove">SÉLECTIONNÉ · APPUYEZ POUR RETIRER</string>
     <string name="remove_app">Supprimer %1$s</string>
     <string name="shortcut_note">Remarque</string>
@@ -244,8 +243,8 @@
     <string name="shortcut_slot">Raccourci %1$d</string>
     <string name="shortcut_default">Par défaut · %1$s</string>
     <string name="choose_app_or_keep_default">Choisissez une application ou un raccourci d\'application, ou conservez %1$s</string>
-    <string name="choose_app_for_shortcut">Choisir la cible pour %1$s</string>
-    <string name="restore_shortcut_default">Restaurer les valeurs par défaut du %1$s</string>
+    <string name="home_shortcut_and_folder">Raccourci et dossier d’accueil</string>
+    <string name="folder_name">Nom du dossier</string>
     <string name="theme_system">Système</string>
     <string name="theme_light">Lumière</string>
     <string name="theme_dark">Sombre</string>
@@ -257,8 +256,6 @@
     <string name="reply_unavailable">Réponse indisponible</string>
     <string name="send_reply">Envoyer la réponse</string>
     <string name="settings">Paramètres</string>
-    <string name="cancel_shortcut_reorder">Annuler la réorganisation des raccourcis</string>
-    <string name="save_shortcut_order">Enregistrer l\'ordre des raccourcis</string>
     <string name="whats_new">Quoi de neuf</string>
     <string name="update_notice_two_panel_heading">Une maison plus grande, quand vous le souhaitez</string>
     <string name="update_notice_two_panel_title">Deux panneaux pour les grands écrans</string>
@@ -441,8 +438,6 @@
     <string name="mink_day_onboarding_short_description">Faites glisser votre doigt depuis Accueil pour obtenir des informations quotidiennes locales et des commandes facultatives de pause des applications. Faites glisser votre doigt vers la gauche ou utilisez Retour pour revenir à la page d\'accueil.</string>
     <string name="six_shortcuts_any_apps">Six raccourcis, six applications au choix</string>
     <string name="six_shortcuts_any_apps_description">Chaque emplacement configurable conserve sa valeur par défaut intégrée jusqu\'à ce que vous attribuiez une application. Son icône d\'application prend alors le relais sur Accueil.</string>
-    <string name="arrange_grid">Disposez votre grille</string>
-    <string name="arrange_grid_description">Appuyez longuement sur n\'importe quel raccourci Accueil pour passer en mode édition, puis faites glisser les raccourcis dans votre ordre préféré.</string>
     <string name="active_and_local">Actif et local</string>
     <string name="active_and_local_description">%1$s ne conserve pas l\'historique des conversations. Le texte du message et les réponses restent en mémoire et ne sont jamais envoyés à Katoa Apps.</string>
     <string name="permissions_onboarding_intro">%1$s demande uniquement un accès lié aux fonctionnalités que vous utilisez.</string>
@@ -520,10 +515,7 @@
     <string name="customize">PERSONNALISER</string>
     <string name="appearance">Apparence</string>
     <string name="appearance_summary">Thème %1$s · Couleurs du panneau et de l\'arrière-plan</string>
-    <string name="home_shortcuts">RACCOURCIS POUR LA MAISON</string>
-    <string name="reset_home_grid_order">Réinitialiser l\'ordre du réseau d\'accueil</string>
-    <string name="reset_home_grid_order_description">Renvoyer les raccourcis à la commande 4 × 2 d\'origine</string>
-    <string name="shortcut_order_reset">Réinitialisation de l\'ordre des raccourcis</string>
+    <string name="home_shortcuts">RACCOURCIS ET DOSSIERS D’ACCUEIL</string>
     <string name="selected_apps">Applications sélectionnées</string>
     <string name="count_of_max">%1$d ou %2$d</string>
     <string name="magic_box_find_other_apps">Utiliser ? dans le Magic Box pour trouver toute autre application installée.</string>
@@ -665,18 +657,9 @@
     <string name="work_apps_empty">Aucune application professionnelle n’est disponible.</string>
     <string name="work_profile_state_change_failed">Android n’a pas pu modifier l’état du profil professionnel.</string>
     <string name="no_app_shortcuts_found">Aucun raccourci d\'application trouvé. MinkLauncher doit être sélectionné comme application Accueil et les applications doivent publier des raccourcis avant de pouvoir apparaître ici.</string>
-    <string name="add_to_home_requests">AJOUTER AUX DEMANDES DE MAISON</string>
-    <string name="add_to_home_confirmation">Confirmation Ajouter à l\'accueil</string>
-    <string name="pin_shortcut_presentation_description">Choisissez comment MinkLauncher demande où placer les raccourcis demandés depuis une autre application.</string>
-    <string name="presentation">PRÉSENTATION</string>
-    <string name="pin_shortcut_full_page">Pleine page</string>
-    <string name="pin_shortcut_full_page_description">Une page stable avec les détails du raccourci, chaque destination et un bouton de confirmation fixe.</string>
-    <string name="pin_shortcut_confirmation_sheet">Feuille de confirmation</string>
-    <string name="pin_shortcut_confirmation_sheet_description">Une superposition plus rapide qui maintient l\'application demandeuse visible derrière elle et peut être effacée.</string>
-    <string name="pin_shortcut_test_instructions">Pour les comparer, sélectionnez une présentation et utilisez Ajouter à l\'écran d\'accueil dans une application prenant en charge les raccourcis épinglés Android.</string>
     <string name="add_shortcut">Ajouter un raccourci</string>
     <string name="choose_shortcut_destination">Où doit aller ce raccourci ?</string>
-    <string name="choose_shortcut_destination_description">Rendez-le consultable, choisissez un emplacement d\'accueil ou placez-le dans Quick Drawer. La sélection d\'une position occupée remplace son élément actuel.</string>
+    <string name="choose_shortcut_destination_description">Rendez-le consultable, choisissez un emplacement d\'accueil ou placez-le dans Quick Drawer.</string>
     <string name="add_to_search_and_all_apps">Recherche et toutes les applications</string>
     <string name="add_to_search_and_all_apps_description">Trouvez ce raccourci avec ? ou accédez-y dans Toutes les applications</string>
     <string name="add_to_quick_drawer">Ajouter à Quick Drawer</string>
@@ -781,7 +764,7 @@
     <string name="todo_page_title">À faire</string>
     <string name="add_todo">Ajouter une tâche</string>
     <string name="nothing_here_yet">Rien ici encore.</string>
-    <string name="hold_drag_reorder">Maintenez et faites glisser pour réorganiser</string>
+    <string name="drag_to_reorder">Faites glisser pour réorganiser</string>
     <string name="edit_todo">Modifier la tâche</string>
     <string name="delete_todo_title">Supprimer cette tâche ?</string>
     <string name="delete_todo_description">« %1$s » sera définitivement supprimé.</string>
@@ -894,6 +877,7 @@
         <item quantity="other">%1$d sélectionné. Seules ces applications apparaissent dans votre parcours et vos totaux.</item>
     </plurals>
     <string name="find_app">Trouver une application</string>
+    <string name="reinstall">Réinstaller</string>
     <string name="no_launchable_apps">Aucune application lançable trouvée</string>
     <string name="no_matching_apps">Aucune application correspondante</string>
     <string name="android_default_social">Android par défaut : Social</string>
@@ -1004,7 +988,7 @@
     <string name="moto_secure_unavailable">Impossible d’ouvrir Moto Secure.</string>
     <string name="shortcut_extra">Application supplémentaire</string>
     <string name="expand_vcard">Développer la vCard</string>
-    <string name="home_shortcuts_description_v2">Chacun des sept emplacements peut ouvrir une application installée. Les emplacements inchangés conservent l’action intégrée indiquée ci-dessous ; Quick Drawer reste intégré.</string>
+    <string name="home_shortcuts_description_v2">Choisissez des applications ou regroupez-les dans des dossiers.</string>
     <string name="less_visual_noise_description_v2">Une page d’accueil ciblée, sept emplacements d’applications, un raccourci Quick Drawer intégré et une roue ciblée pour chaque application installée.</string>
     <string name="profile_onboarding_description_v2">Votre vCard se trouve dans MinkSpace avec vos autres mini-applications. Développez-la pour afficher le code QR ou touchez la mini-application des tâches pour les gérer.</string>
     <string name="calling">Appels</string>
@@ -1028,7 +1012,7 @@
     <string name="home_tour_mini_apps_title">Parcourez les Mini Apps</string>
     <string name="home_tour_mini_apps_description">Balayez vers le haut ou le bas dans MinkSpace pour parcourir les Mini Apps activées.</string>
     <string name="home_tour_shortcuts_title">Organisez vos raccourcis</string>
-    <string name="home_tour_shortcuts_description">Appuyez longuement sur un raccourci de l’écran d’accueil, puis faites-les glisser dans l’ordre souhaité.</string>
+    <string name="home_tour_shortcuts_description">Ouvrez Grille d’apps dans les paramètres pour organiser les raccourcis, les dossiers et leur ordre.</string>
     <string name="home_tour_conversations_title">Gardez vos conversations à portée</string>
     <string name="home_tour_conversations_description">Touchez l’icône des conversations en haut de l’écran d’accueil pour voir les conversations actives et vos contacts favoris.</string>
     <string name="home_tour_widgets_title">Ajoutez vos widgets</string>

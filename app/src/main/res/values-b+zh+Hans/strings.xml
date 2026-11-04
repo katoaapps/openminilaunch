@@ -218,7 +218,6 @@
     <string name="reset_to_chooser">重置为选择器</string>
     <string name="use_system_browser">使用系统浏览器</string>
     <string name="choose_on_first_use">首次使用时选择</string>
-    <string name="selected_tap_to_remove">已选择 · 点击删除</string>
     <string name="tracked_tap_to_remove">已选择 · 点击删除</string>
     <string name="remove_app">删除%1$s</string>
     <string name="shortcut_note">注意事项</string>
@@ -244,8 +243,8 @@
     <string name="shortcut_slot">快捷方式 %1$d</string>
     <string name="shortcut_default">默认·%1$s</string>
     <string name="choose_app_or_keep_default">选择应用程序或应用程序快捷方式，或保留 %1$s</string>
-    <string name="choose_app_for_shortcut">选择 %1$s 的目标</string>
-    <string name="restore_shortcut_default">恢复%1$s默认值</string>
+    <string name="home_shortcut_and_folder">主屏幕快捷方式和文件夹</string>
+    <string name="folder_name">文件夹名称</string>
     <string name="theme_system">系统</string>
     <string name="theme_light">光</string>
     <string name="theme_dark">黑暗</string>
@@ -257,8 +256,6 @@
     <string name="reply_unavailable">无法回复</string>
     <string name="send_reply">发送回复</string>
     <string name="settings">设置</string>
-    <string name="cancel_shortcut_reorder">取消快捷方式重新排序</string>
-    <string name="save_shortcut_order">保存快捷顺序</string>
     <string name="whats_new">最新消息</string>
     <string name="update_notice_two_panel_heading">当你需要时，一个更广阔的家</string>
     <string name="update_notice_two_panel_title">用于大型显示器的两个面板</string>
@@ -441,8 +438,6 @@
     <string name="mink_day_onboarding_short_description">从主页向右滑动即可获取本地每日见解和可选的应用程序暂停控件。向左滑动或使用“返回”返回主页。</string>
     <string name="six_shortcuts_any_apps">六个快捷方式，任意六个应用程序</string>
     <string name="six_shortcuts_any_apps_description">每个可配置插槽都会保留其内置默认值，直到您分配应用程序为止。然后它的应用程序图标接管主页。</string>
-    <string name="arrange_grid">安排你的网格</string>
-    <string name="arrange_grid_description">长按任意主页快捷方式进入编辑模式，然后将快捷方式拖动到您喜欢的顺序。</string>
     <string name="active_and_local">活跃且本地化</string>
     <string name="active_and_local_description">%1$s 不保留对话历史记录。消息文本和回复保留在内存中，并且永远不会发送到 Katoa Apps。</string>
     <string name="permissions_onboarding_intro">%1$s 仅要求与您使用的功能相关的访问权限。</string>
@@ -520,10 +515,7 @@
     <string name="customize">定制</string>
     <string name="appearance">外观</string>
     <string name="appearance_summary">%1$s主题·面板和背景颜色</string>
-    <string name="home_shortcuts">主页快捷键</string>
-    <string name="reset_home_grid_order">重置家庭网格顺序</string>
-    <string name="reset_home_grid_order_description">将快捷方式恢复到原始 4 × 2 顺序</string>
-    <string name="shortcut_order_reset">快捷指令重置</string>
+    <string name="home_shortcuts">主页快捷方式与文件夹</string>
     <string name="selected_apps">选定的应用程序</string>
     <string name="count_of_max">%1$d 之 %2$d</string>
     <string name="magic_box_find_other_apps">在 Magic Box 中使用 ? 查找任何其他已安装的应用程序。</string>
@@ -665,18 +657,9 @@
     <string name="work_apps_empty">没有可用的工作应用。</string>
     <string name="work_profile_state_change_failed">Android 无法更改工作资料状态。</string>
     <string name="no_app_shortcuts_found">未找到应用程序快捷方式。必须选择 MinkLauncher 作为您的家庭应用程序，并且应用程序必须发布快捷方式才能显示在此处。</string>
-    <string name="add_to_home_requests">添加到主页请求</string>
-    <string name="add_to_home_confirmation">添加到主页确认</string>
-    <string name="pin_shortcut_presentation_description">选择 MinkLauncher 如何询问在何处放置其他应用程序请求的快捷方式。</string>
-    <string name="presentation">演示</string>
-    <string name="pin_shortcut_full_page">整页</string>
-    <string name="pin_shortcut_full_page_description">一个稳定的页面，包含快捷方式详细信息、每个目的地和固定的确认按钮。</string>
-    <string name="pin_shortcut_confirmation_sheet">确认单</string>
-    <string name="pin_shortcut_confirmation_sheet_description">更快的覆盖，使发出请求的应用程序在其后面可见并且可以滑动。</string>
-    <string name="pin_shortcut_test_instructions">要比较它们，请选择一个演示文稿，然后在支持 Android 固定快捷方式的应用程序中使用“添加到主屏幕”。</string>
     <string name="add_shortcut">添加快捷方式</string>
     <string name="choose_shortcut_destination">这条捷径应该去哪里？</string>
-    <string name="choose_shortcut_destination_description">使其可搜索、选择主位置或将其放入 Quick Drawer。选择已占用的位置会替换其当前项目。</string>
+    <string name="choose_shortcut_destination_description">使其可搜索、选择主位置或将其放入 Quick Drawer。</string>
     <string name="add_to_search_and_all_apps">搜索和所有应用程序</string>
     <string name="add_to_search_and_all_apps_description">使用 ? 查找此快捷方式，或在所有应用程序中浏览它</string>
     <string name="add_to_quick_drawer">添加到 Quick Drawer</string>
@@ -781,7 +764,7 @@
     <string name="todo_page_title">待办事项</string>
     <string name="add_todo">添加待办事项</string>
     <string name="nothing_here_yet">这里还什么都没有。</string>
-    <string name="hold_drag_reorder">按住并拖动以重新排序</string>
+    <string name="drag_to_reorder">拖动以重新排序</string>
     <string name="edit_todo">编辑待办事项</string>
     <string name="delete_todo_title">删除此待办事项吗？</string>
     <string name="delete_todo_description">“%1$s”将被永久删除。</string>
@@ -894,6 +877,7 @@
         <item quantity="other">已选择 %1$d。只有这些应用程序会出现在您的跟踪和总计中。</item>
     </plurals>
     <string name="find_app">查找应用程序</string>
+    <string name="reinstall">重新安装</string>
     <string name="no_launchable_apps">找不到可启动的应用程序</string>
     <string name="no_matching_apps">没有匹配的应用程序</string>
     <string name="android_default_social">Android 默认：社交</string>
@@ -1004,7 +988,7 @@
     <string name="moto_secure_unavailable">无法打开 Moto Secure。</string>
     <string name="shortcut_extra">额外应用</string>
     <string name="expand_vcard">展开 vCard</string>
-    <string name="home_shortcuts_description_v2">七个栏位都可以打开任意已安装的应用。未更改的栏位会保留下方显示的内置操作；Quick Drawer 仍为内置功能。</string>
+    <string name="home_shortcuts_description_v2">选择单个应用，或将多个应用组合到文件夹中。</string>
     <string name="less_visual_noise_description_v2">一个专注的主页、七个应用栏位、内置的 Quick Drawer 快捷方式，以及面向每个已安装应用的专注转盘。</string>
     <string name="profile_onboarding_description_v2">你的 vCard 位于 MinkSpace 中，与其他迷你应用并列。展开即可显示二维码，或点按待办事项迷你应用来管理任务。</string>
     <string name="calling">通话</string>
@@ -1028,7 +1012,7 @@
     <string name="home_tour_mini_apps_title">浏览迷你应用</string>
     <string name="home_tour_mini_apps_description">在 MinkSpace 中向上或向下滑动，即可浏览已启用的迷你应用。</string>
     <string name="home_tour_shortcuts_title">排列快捷方式</string>
-    <string name="home_tour_shortcuts_description">长按主屏幕上的任意快捷方式，然后拖动快捷方式，按您想要的顺序排列。</string>
+    <string name="home_tour_shortcuts_description">在“设置”中打开“应用网格”，排列主屏幕快捷方式、文件夹及其顺序。</string>
     <string name="home_tour_conversations_title">随时查看对话</string>
     <string name="home_tour_conversations_description">点按主屏幕顶部的对话图标，查看当前对话和收藏联系人。</string>
     <string name="home_tour_widgets_title">添加小部件</string>

@@ -218,7 +218,6 @@
     <string name="reset_to_chooser">Redefinir para seletor</string>
     <string name="use_system_browser">Usar o navegador do sistema</string>
     <string name="choose_on_first_use">Escolha no primeiro uso</string>
-    <string name="selected_tap_to_remove">SELECIONADO · TOQUE PARA REMOVER</string>
     <string name="tracked_tap_to_remove">SELECIONADO · TOQUE PARA REMOVER</string>
     <string name="remove_app">Remover %1$s</string>
     <string name="shortcut_note">Nota</string>
@@ -244,8 +243,8 @@
     <string name="shortcut_slot">Atalho %1$d</string>
     <string name="shortcut_default">Padrão · %1$s</string>
     <string name="choose_app_or_keep_default">Escolha um aplicativo ou atalho de aplicativo ou mantenha %1$s</string>
-    <string name="choose_app_for_shortcut">Escolha o destino para %1$s</string>
-    <string name="restore_shortcut_default">Restaurar o padrão %1$s</string>
+    <string name="home_shortcut_and_folder">Atalho e pasta da tela inicial</string>
+    <string name="folder_name">Nome da pasta</string>
     <string name="theme_system">Sistema</string>
     <string name="theme_light">Luz</string>
     <string name="theme_dark">Escuro</string>
@@ -257,8 +256,6 @@
     <string name="reply_unavailable">Resposta indisponível</string>
     <string name="send_reply">Enviar resposta</string>
     <string name="settings">Configurações</string>
-    <string name="cancel_shortcut_reorder">Cancelar reordenação de atalho</string>
-    <string name="save_shortcut_order">Salvar ordem de atalho</string>
     <string name="whats_new">O que há de novo</string>
     <string name="update_notice_two_panel_heading">Uma casa mais ampla, quando você quiser</string>
     <string name="update_notice_two_panel_title">Dois painéis para displays grandes</string>
@@ -441,8 +438,6 @@
     <string name="mink_day_onboarding_short_description">Deslize para a direita na página inicial para obter informações diárias locais e controles opcionais de pausa de aplicativos. Deslize para a esquerda ou use Voltar para voltar para casa.</string>
     <string name="six_shortcuts_any_apps">Seis atalhos, seis aplicativos quaisquer</string>
     <string name="six_shortcuts_any_apps_description">Cada slot configurável mantém seu padrão integrado até você atribuir um aplicativo. O ícone do aplicativo assume o controle da página inicial.</string>
-    <string name="arrange_grid">Organize sua grade</string>
-    <string name="arrange_grid_description">Mantenha pressionado qualquer atalho da página inicial para entrar no modo de edição e arraste os atalhos na ordem de sua preferência.</string>
     <string name="active_and_local">Ativo e local</string>
     <string name="active_and_local_description">%1$s não mantém histórico de conversas. O texto da mensagem e as respostas permanecem na memória e nunca são enviadas para Katoa Apps.</string>
     <string name="permissions_onboarding_intro">%1$s solicita apenas acesso vinculado aos recursos que você usa.</string>
@@ -520,10 +515,7 @@
     <string name="customize">PERSONALIZAR</string>
     <string name="appearance">Aparência</string>
     <string name="appearance_summary">Tema %1$s · Cores do painel e de fundo</string>
-    <string name="home_shortcuts">ATALHOS PARA CASA</string>
-    <string name="reset_home_grid_order">Redefinir ordem da grade inicial</string>
-    <string name="reset_home_grid_order_description">Retorne os atalhos à ordem 4 × 2 original</string>
-    <string name="shortcut_order_reset">Redefinição de ordem de atalho</string>
+    <string name="home_shortcuts">ATALHOS E PASTAS DA TELA INICIAL</string>
     <string name="selected_apps">Aplicativos selecionados</string>
     <string name="count_of_max">%1$d de %2$d</string>
     <string name="magic_box_find_other_apps">Usar? no Magic Box para encontrar qualquer outro aplicativo instalado.</string>
@@ -665,18 +657,9 @@
     <string name="work_apps_empty">Nenhum app de trabalho está disponível.</string>
     <string name="work_profile_state_change_failed">O Android não conseguiu alterar o estado do perfil de trabalho.</string>
     <string name="no_app_shortcuts_found">Nenhum atalho de aplicativo encontrado. MinkLauncher deve ser selecionado como seu aplicativo Home, e os aplicativos devem publicar atalhos antes que possam aparecer aqui.</string>
-    <string name="add_to_home_requests">ADICIONAR AOS PEDIDOS DE CASA</string>
-    <string name="add_to_home_confirmation">Confirmação de Adicionar à página inicial</string>
-    <string name="pin_shortcut_presentation_description">Escolha como MinkLauncher pergunta onde colocar os atalhos solicitados de outro aplicativo.</string>
-    <string name="presentation">APRESENTAÇÃO</string>
-    <string name="pin_shortcut_full_page">Página inteira</string>
-    <string name="pin_shortcut_full_page_description">Uma página estável com detalhes de atalho, todos os destinos e um botão de confirmação fixo.</string>
-    <string name="pin_shortcut_confirmation_sheet">Folha de confirmação</string>
-    <string name="pin_shortcut_confirmation_sheet_description">Uma sobreposição mais rápida que mantém o aplicativo solicitante visível e pode ser removido.</string>
-    <string name="pin_shortcut_test_instructions">Para compará-los, selecione uma apresentação e use Adicionar à tela inicial dentro de um aplicativo que suporte atalhos fixados Android.</string>
     <string name="add_shortcut">Adicionar atalho</string>
     <string name="choose_shortcut_destination">Para onde esse atalho deve ir?</string>
-    <string name="choose_shortcut_destination_description">Torne-o pesquisável, escolha um espaço inicial ou coloque-o no Quick Drawer. Selecionar uma posição ocupada substitui seu item atual.</string>
+    <string name="choose_shortcut_destination_description">Torne-o pesquisável, escolha um espaço inicial ou coloque-o no Quick Drawer.</string>
     <string name="add_to_search_and_all_apps">Pesquisa e todos os aplicativos</string>
     <string name="add_to_search_and_all_apps_description">Encontre este atalho com ? ou navegue até ele em Todos os aplicativos</string>
     <string name="add_to_quick_drawer">Adicionar ao Quick Drawer</string>
@@ -781,7 +764,7 @@
     <string name="todo_page_title">Tarefas</string>
     <string name="add_todo">Adicione uma tarefa</string>
     <string name="nothing_here_yet">Nada aqui ainda.</string>
-    <string name="hold_drag_reorder">Segure e arraste para reordenar</string>
+    <string name="drag_to_reorder">Arraste para reordenar</string>
     <string name="edit_todo">Editar tarefas</string>
     <string name="delete_todo_title">Excluir esta tarefa?</string>
     <string name="delete_todo_description">“%1$s” será removido permanentemente.</string>
@@ -894,6 +877,7 @@
         <item quantity="other">%1$d selecionado. Somente esses aplicativos aparecem em sua trilha e totais.</item>
     </plurals>
     <string name="find_app">Encontre um aplicativo</string>
+    <string name="reinstall">Reinstalar</string>
     <string name="no_launchable_apps">Nenhum aplicativo inicializável encontrado</string>
     <string name="no_matching_apps">Nenhum aplicativo correspondente</string>
     <string name="android_default_social">Padrão Android: Social</string>
@@ -1004,7 +988,7 @@
     <string name="moto_secure_unavailable">Não foi possível abrir o Moto Secure.</string>
     <string name="shortcut_extra">Aplicativo extra</string>
     <string name="expand_vcard">Expandir vCard</string>
-    <string name="home_shortcuts_description_v2">Cada um dos sete espaços pode abrir qualquer aplicativo instalado. Os espaços inalterados mantêm a ação integrada mostrada abaixo; o Quick Drawer continua integrado.</string>
+    <string name="home_shortcuts_description_v2">Escolha um aplicativo ou combine vários em pastas.</string>
     <string name="less_visual_noise_description_v2">Uma página inicial focada, sete espaços de aplicativos, um atalho Quick Drawer integrado e uma roda focada para cada aplicativo instalado.</string>
     <string name="profile_onboarding_description_v2">Seu vCard fica no MinkSpace ao lado dos outros miniaplicativos. Expanda-o para revelar o código QR ou toque no miniaplicativo de tarefas para gerenciá-las.</string>
     <string name="calling">Chamadas</string>
@@ -1028,7 +1012,7 @@
     <string name="home_tour_mini_apps_title">Navegue pelos Mini Apps</string>
     <string name="home_tour_mini_apps_description">Deslize para cima ou para baixo no MinkSpace para navegar pelos Mini Apps ativados.</string>
     <string name="home_tour_shortcuts_title">Organize seus atalhos</string>
-    <string name="home_tour_shortcuts_description">Toque e segure qualquer atalho da tela inicial e arraste os atalhos para a ordem desejada.</string>
+    <string name="home_tour_shortcuts_description">Abra a Grade de apps nos Ajustes para organizar atalhos, pastas e sua ordem.</string>
     <string name="home_tour_conversations_title">Mantenha as conversas por perto</string>
     <string name="home_tour_conversations_description">Toque no ícone de conversas no topo da tela inicial para ver conversas ativas e pessoas favoritas.</string>
     <string name="home_tour_widgets_title">Adicione seus widgets</string>

@@ -2,12 +2,15 @@ package com.katoaapps.openminilaunch.data
 
 import android.content.SharedPreferences
 import com.katoaapps.openminilaunch.features.minkspace.todo.TodoItem
+import com.katoaapps.openminilaunch.model.AppFolderConfig
+import com.katoaapps.openminilaunch.model.AppGridAssignment
+import com.katoaapps.openminilaunch.model.AppGridSlot
 import com.katoaapps.openminilaunch.model.MAX_DRAWER_APPS
 import com.katoaapps.openminilaunch.model.SearchFolder
-import com.katoaapps.openminilaunch.model.AppGridSlot
 import com.katoaapps.openminilaunch.model.WidgetGridSize
 import com.katoaapps.openminilaunch.model.appGridSlotFromStoredName
 import com.katoaapps.openminilaunch.model.configurableAppGridSlots
+import com.katoaapps.openminilaunch.model.legacyTargetKey
 import com.katoaapps.openminilaunch.model.normalizedAppGridOrder
 import org.json.JSONArray
 import org.json.JSONObject
@@ -26,11 +29,27 @@ internal class LauncherStorePersistence(private val prefs: SharedPreferences) {
 
     fun load(maxSearchHistory: Int, maxWidgets: Int): LauncherStoreSnapshot = runCatching {
         val shortcuts = JSONObject(prefs.getString(SHORTCUTS_KEY, "{}") ?: "{}")
-        val appGridTargets = buildMap {
+        val legacyAppGridAssignments = buildMap<AppGridSlot, AppGridAssignment> {
             AppGridSlot.entries.forEach { slot ->
-                shortcuts.optString(slot.name).takeIf(String::isNotBlank)?.let { put(slot, it) }
+                shortcuts.optString(slot.name).takeIf(String::isNotBlank)?.let { targetKey ->
+                    put(slot, AppGridAssignment.Target(targetKey))
+                }
             }
         }
+        val appGridAssignments = if (prefs.contains(APP_GRID_ASSIGNMENTS_KEY)) {
+            val assignments = JSONObject(prefs.getString(APP_GRID_ASSIGNMENTS_KEY, "{}") ?: "{}")
+            buildMap<AppGridSlot, AppGridAssignment> {
+                configurableAppGridSlots.forEach { slot ->
+                    assignments.optJSONObject(slot.name)
+                        ?.toAppGridAssignment()
+                        ?.let { put(slot, it) }
+                }
+            }
+        } else {
+            legacyAppGridAssignments
+        }
+        val appFolders = JSONArray(prefs.getString(APP_FOLDERS_KEY, "[]") ?: "[]")
+            .appFolderConfigs()
 
         val savedOrder = JSONArray(prefs.getString(SHORTCUT_ORDER_KEY, "[]") ?: "[]")
         val appGridOrder = normalizedAppGridOrder(buildList {
@@ -43,7 +62,7 @@ internal class LauncherStorePersistence(private val prefs: SharedPreferences) {
 
         val confirmed = JSONArray(prefs.getString(CONFIRMED_SHORTCUTS_KEY, "[]") ?: "[]")
         val confirmedChoices = buildList {
-            addAll(appGridTargets.keys.filter { it in configurableAppGridSlots })
+            addAll(appGridAssignments.keys.filter { it in configurableAppGridSlots })
             repeat(confirmed.length()) { index ->
                 appGridSlotFromStoredName(confirmed.optString(index))
                     ?.takeIf { it in configurableAppGridSlots }
@@ -96,7 +115,8 @@ internal class LauncherStorePersistence(private val prefs: SharedPreferences) {
         }
 
         LauncherStoreSnapshot(
-            appGridTargets = appGridTargets,
+            appGridAssignments = appGridAssignments,
+            appFolders = appFolders,
             appGridOrder = appGridOrder,
             confirmedAppGridChoices = confirmedChoices,
             drawerTargets = drawerTargets,
@@ -117,16 +137,40 @@ internal class LauncherStorePersistence(private val prefs: SharedPreferences) {
     }
 
     fun saveLauncherSelections(
-        appGridTargets: Map<AppGridSlot, String>,
+        appGridAssignments: Map<AppGridSlot, AppGridAssignment>,
+        appFolders: List<AppFolderConfig>,
         confirmedAppGridChoices: List<AppGridSlot>,
         drawerTargets: List<String>,
         libraryShortcutTargets: List<String>,
     ) {
-        val shortcuts = JSONObject().apply { appGridTargets.forEach { (key, value) -> put(key.name, value) } }
+        val assignments = JSONObject().apply {
+            appGridAssignments.forEach { (slot, assignment) ->
+                assignment.toJson()?.let { put(slot.name, it) }
+            }
+        }
+        val foldersById = appFolders.associateBy(AppFolderConfig::id)
+        // Keep the original target-only object current so pre-folder builds can restore
+        // a folder slot as its first app instead of treating the slot as empty.
+        val shortcuts = JSONObject().apply {
+            appGridAssignments.forEach { (slot, assignment) ->
+                assignment.legacyTargetKey(foldersById::get)?.let { put(slot.name, it) }
+            }
+        }
+        val folders = JSONArray().apply {
+            appFolders.forEach { folder ->
+                put(JSONObject().apply {
+                    put("id", folder.id)
+                    folder.customName?.let { put("customName", it) }
+                    put("targetKeys", JSONArray(folder.orderedTargetKeys))
+                })
+            }
+        }
         val drawer = JSONArray().apply { drawerTargets.forEach(::put) }
         val confirmed = JSONArray().apply { confirmedAppGridChoices.forEach { put(it.name) } }
         val libraryShortcuts = JSONArray().apply { libraryShortcutTargets.forEach(::put) }
         prefs.edit()
+            .putString(APP_GRID_ASSIGNMENTS_KEY, assignments.toString())
+            .putString(APP_FOLDERS_KEY, folders.toString())
             .putString(SHORTCUTS_KEY, shortcuts.toString())
             .putString(CONFIRMED_SHORTCUTS_KEY, confirmed.toString())
             .putString(DRAWER_KEY, drawer.toString())
@@ -167,7 +211,54 @@ internal class LauncherStorePersistence(private val prefs: SharedPreferences) {
             .apply()
     }
 
+    private fun JSONObject.toAppGridAssignment(): AppGridAssignment? = when (optString("type")) {
+        "target" -> optString("selectionKey")
+            .takeIf(String::isNotBlank)
+            ?.let(AppGridAssignment::Target)
+        "folder" -> optString("folderId")
+            .takeIf(String::isNotBlank)
+            ?.let(AppGridAssignment::Folder)
+        else -> null
+    }
+
+    private fun AppGridAssignment.toJson(): JSONObject? = when (this) {
+        AppGridAssignment.DefaultAction -> null
+        is AppGridAssignment.Target -> JSONObject()
+            .put("type", "target")
+            .put("selectionKey", selectionKey)
+        is AppGridAssignment.Folder -> JSONObject()
+            .put("type", "folder")
+            .put("folderId", folderId)
+    }
+
+    private fun JSONArray.appFolderConfigs(): List<AppFolderConfig> = buildList {
+        repeat(length()) { index ->
+            val folder = optJSONObject(index) ?: return@repeat
+            val id = folder.optString("id").trim()
+            if (id.isEmpty() || any { it.id == id }) return@repeat
+            val targets = folder.optJSONArray("targetKeys") ?: JSONArray()
+            add(
+                AppFolderConfig(
+                    id = id,
+                    customName = folder.optString("customName")
+                        .ifBlank { folder.optString("name") }
+                        .trim()
+                        .takeIf(String::isNotEmpty),
+                    orderedTargetKeys = buildList {
+                        repeat(targets.length()) { targetIndex ->
+                            targets.optString(targetIndex).trim().takeIf(String::isNotEmpty)?.let { key ->
+                                if (key !in this) add(key)
+                            }
+                        }
+                    },
+                ),
+            )
+        }
+    }
+
     private companion object {
+        const val APP_FOLDERS_KEY = "app_folders"
+        const val APP_GRID_ASSIGNMENTS_KEY = "app_grid_assignments"
         const val CONFIRMED_SHORTCUTS_KEY = "confirmed_shortcut_choices"
         const val DRAWER_KEY = "drawer"
         const val LIBRARY_SHORTCUTS_KEY = "library_shortcuts"
@@ -183,7 +274,8 @@ internal class LauncherStorePersistence(private val prefs: SharedPreferences) {
 }
 
 internal data class LauncherStoreSnapshot(
-    val appGridTargets: Map<AppGridSlot, String> = emptyMap(),
+    val appGridAssignments: Map<AppGridSlot, AppGridAssignment> = emptyMap(),
+    val appFolders: List<AppFolderConfig> = emptyList(),
     val appGridOrder: List<AppGridSlot> = AppGridSlot.entries,
     val confirmedAppGridChoices: List<AppGridSlot> = emptyList(),
     val drawerTargets: List<String> = emptyList(),

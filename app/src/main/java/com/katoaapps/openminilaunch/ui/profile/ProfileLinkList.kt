@@ -39,6 +39,7 @@ import androidx.compose.ui.text.font.FontWeight
 import com.katoaapps.openminilaunch.R
 import com.katoaapps.openminilaunch.data.LauncherStore
 import com.katoaapps.openminilaunch.features.profile.ProfileLink
+import com.katoaapps.openminilaunch.ui.components.moveItem
 import com.katoaapps.openminilaunch.ui.theme.Dimens
 import com.katoaapps.openminilaunch.ui.theme.Muted
 import com.katoaapps.openminilaunch.ui.theme.Rust
@@ -63,7 +64,7 @@ internal fun SelectedProfileLinks(
     val listState = rememberLazyListState()
     val haptics = LocalHapticFeedback.current
     val reorder = rememberReorderableLazyListState(listState) { from, to ->
-        visible.add(to.index, visible.removeAt(from.index))
+        visible.moveItem(from.index, to.index)
     }
     LazyColumn(
         modifier = Modifier.fillMaxWidth().heightIn(max = Dimens.dp280),
@@ -81,8 +82,8 @@ internal fun SelectedProfileLinks(
                     dragHandle = {
                         Icon(
                             Icons.Default.DragHandle,
-                            stringResource(R.string.hold_drag_reorder),
-                            Modifier.size(Dimens.dp44).longPressDraggableHandle(
+                            stringResource(R.string.drag_to_reorder),
+                            Modifier.size(Dimens.dp44).draggableHandle(
                                 interactionSource = interaction,
                                 onDragStarted = {
                                     dragging = true

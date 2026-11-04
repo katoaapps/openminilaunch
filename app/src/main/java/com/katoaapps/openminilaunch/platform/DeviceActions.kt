@@ -9,6 +9,7 @@ import com.katoaapps.openminilaunch.features.ai.AiHandoffResult
 import com.katoaapps.openminilaunch.features.ai.AiProviderCatalog
 import com.katoaapps.openminilaunch.features.ai.AiProviderOption
 import com.katoaapps.openminilaunch.features.apps.LauncherAppRepository
+import com.katoaapps.openminilaunch.features.apps.LauncherPackageRemoval
 import com.katoaapps.openminilaunch.features.apps.LauncherShortcutRepository
 import com.katoaapps.openminilaunch.features.apps.LegacyLauncherShortcutRepository
 import com.katoaapps.openminilaunch.features.privatespace.PrivateSpaceRepository
@@ -54,6 +55,7 @@ import android.provider.ContactsContract
 import android.provider.Telephony
 import android.telephony.PhoneNumberUtils
 import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.flow.SharedFlow
 
 class DeviceActions(private val context: Context) {
     private val permissionSettings = PermissionSettingsNavigator(context)
@@ -65,6 +67,8 @@ class DeviceActions(private val context: Context) {
     private val workProfileRepository = WorkProfileRepository.get(context)
     val launcherAppsRevision: StateFlow<Long> = launcherAppRepository.revision
     val launcherShortcutsRevision: StateFlow<Long> = launcherShortcutRepository.revision
+    internal val launcherPackageRemovals: SharedFlow<LauncherPackageRemoval> =
+        launcherAppRepository.packageRemovals
     private val labelCache = mutableMapOf<String, String>()
     private val contactSearch = ContactSearch(context)
     private val shareTargetDiscovery = ShareTargetDiscovery(context)
@@ -201,6 +205,9 @@ class DeviceActions(private val context: Context) {
         launcherAppRepository.invalidate()
         launcherShortcutRepository.invalidate()
     }
+
+    internal fun isLauncherPackageInstalled(removal: LauncherPackageRemoval): Boolean =
+        launcherAppRepository.isPackageInstalled(removal.packageName, removal.userSerial)
 
     fun refreshDynamicLauncherIcons() {
         launcherAppRepository.refreshDynamicIconsIfDateChanged()

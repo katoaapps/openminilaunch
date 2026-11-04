@@ -218,7 +218,6 @@
     <string name="reset_to_chooser">セレクターにリセット</string>
     <string name="use_system_browser">システムブラウザを使用する</string>
     <string name="choose_on_first_use">初回使用時に選択してください</string>
-    <string name="selected_tap_to_remove">選択済み · タップして削除します</string>
     <string name="tracked_tap_to_remove">選択済み · タップして削除します</string>
     <string name="remove_app">%1$s を削除</string>
     <string name="shortcut_note">注記</string>
@@ -244,8 +243,8 @@
     <string name="shortcut_slot">ショートカット %1$d</string>
     <string name="shortcut_default">デフォルト・%1$s</string>
     <string name="choose_app_or_keep_default">アプリまたはアプリのショートカットを選択するか、%1$s のままにしてください</string>
-    <string name="choose_app_for_shortcut">%1$s のターゲットを選択してください</string>
-    <string name="restore_shortcut_default">%1$s をデフォルトに戻す</string>
+    <string name="home_shortcut_and_folder">ホームのショートカットとフォルダー</string>
+    <string name="folder_name">フォルダー名</string>
     <string name="theme_system">システム</string>
     <string name="theme_light">ライト</string>
     <string name="theme_dark">暗い</string>
@@ -257,8 +256,6 @@
     <string name="reply_unavailable">返信不可</string>
     <string name="send_reply">返信を送信</string>
     <string name="settings">設定</string>
-    <string name="cancel_shortcut_reorder">ショートカットの並べ替えをキャンセルする</string>
-    <string name="save_shortcut_order">ショートカットの順序を保存する</string>
     <string name="whats_new">新機能</string>
     <string name="update_notice_two_panel_heading">必要なときに、より広い家を</string>
     <string name="update_notice_two_panel_title">大型ディスプレイ用の 2 つのパネル</string>
@@ -441,8 +438,6 @@
     <string name="mink_day_onboarding_short_description">ホームから右にスワイプすると、ローカルの毎日の分析情報とオプションのアプリ一時停止コントロールが表示されます。左にスワイプするか、「戻る」を使用してホームに戻ります。</string>
     <string name="six_shortcuts_any_apps">6 つのショートカット、6 つのアプリ</string>
     <string name="six_shortcuts_any_apps_description">構成可能な各スロットは、アプリを割り当てるまで、組み込みのデフォルトを維持します。そのアプリのアイコンがホームを引き継ぎます。</string>
-    <string name="arrange_grid">グリッドを配置する</string>
-    <string name="arrange_grid_description">ホーム ショートカットのいずれかを長押しして編集モードに入り、ショートカットを希望の順序にドラッグします。</string>
     <string name="active_and_local">アクティブでローカルな</string>
     <string name="active_and_local_description">%1$s は会話履歴を保持しません。メッセージ テキストと返信はメモリに残り、Katoa Apps に送信されることはありません。</string>
     <string name="permissions_onboarding_intro">%1$s は、使用する機能に関連付けられたアクセスのみを要求します。</string>
@@ -520,10 +515,7 @@
     <string name="customize">カスタマイズ</string>
     <string name="appearance">外観</string>
     <string name="appearance_summary">%1$s テーマ · パネルと背景の色</string>
-    <string name="home_shortcuts">ホームショートカット</string>
-    <string name="reset_home_grid_order">ホームグリッドの順序をリセット</string>
-    <string name="reset_home_grid_order_description">ショートカットを元の4×2の順序に戻す</string>
-    <string name="shortcut_order_reset">ショートカットの順序をリセット</string>
+    <string name="home_shortcuts">ホームのショートカットとフォルダ</string>
     <string name="selected_apps">選択したアプリ</string>
     <string name="count_of_max">%1$d/%2$d</string>
     <string name="magic_box_find_other_apps">Magic Box で ? を使って、インストール済みの他のアプリを見つけます。</string>
@@ -665,18 +657,9 @@
     <string name="work_apps_empty">利用できる仕事用アプリはありません。</string>
     <string name="work_profile_state_change_failed">Android は仕事用プロファイルの状態を変更できませんでした。</string>
     <string name="no_app_shortcuts_found">アプリのショートカットが見つかりません。 MinkLauncher をホーム アプリとして選択する必要があり、アプリがここに表示される前にショートカットを公開する必要があります。</string>
-    <string name="add_to_home_requests">ホームリクエストに追加</string>
-    <string name="add_to_home_confirmation">ホームに追加の確認</string>
-    <string name="pin_shortcut_presentation_description">MinkLauncher が別のアプリから要求されたショートカットを配置する場所を尋ねる方法を選択します。</string>
-    <string name="presentation">プレゼンテーション</string>
-    <string name="pin_shortcut_full_page">全ページ</string>
-    <string name="pin_shortcut_full_page_description">ショートカットの詳細、すべての宛先、および固定の確認ボタンを備えた安定したページ。</string>
-    <string name="pin_shortcut_confirmation_sheet">確認シート</string>
-    <string name="pin_shortcut_confirmation_sheet_description">要求元のアプリをその背後に表示し、スワイプして消すことができる、より高速なオーバーレイ。</string>
-    <string name="pin_shortcut_test_instructions">それらを比較するには、プレゼンテーションを選択し、Android 固定ショートカットをサポートするアプリ内で [ホーム画面に追加] を使用します。</string>
     <string name="add_shortcut">ショートカットを追加</string>
     <string name="choose_shortcut_destination">このショートカットはどこに行くべきですか?</string>
-    <string name="choose_shortcut_destination_description">検索可能にするか、ホームスロットを選択するか、Quick Drawer に配置します。使用中の位置を選択すると、現在の項目が置き換えられます。</string>
+    <string name="choose_shortcut_destination_description">検索可能にするか、ホームスロットを選択するか、Quick Drawer に配置します。</string>
     <string name="add_to_search_and_all_apps">検索とすべてのアプリ</string>
     <string name="add_to_search_and_all_apps_description">\? でこのショートカットを見つけます。または、[すべてのアプリ] で参照します</string>
     <string name="add_to_quick_drawer">Quick Drawer に追加</string>
@@ -781,7 +764,7 @@
     <string name="todo_page_title">やるべきこと</string>
     <string name="add_todo">To-Doを追加する</string>
     <string name="nothing_here_yet">ここにはまだ何もありません。</string>
-    <string name="hold_drag_reorder">押したままドラッグして並べ替えます</string>
+    <string name="drag_to_reorder">ドラッグして並べ替えます</string>
     <string name="edit_todo">To-Doを編集する</string>
     <string name="delete_todo_title">この ToDo を削除しますか?</string>
     <string name="delete_todo_description">「%1$s」は完全に削除されます。</string>
@@ -894,6 +877,7 @@
         <item quantity="other">%1$d が選択されました。これらのアプリのみが証跡と合計に表示されます。</item>
     </plurals>
     <string name="find_app">アプリを探す</string>
+    <string name="reinstall">再インストール</string>
     <string name="no_launchable_apps">起動可能なアプリが見つかりません</string>
     <string name="no_matching_apps">マッチングアプリがない</string>
     <string name="android_default_social">Android デフォルト: ソーシャル</string>
@@ -1004,7 +988,7 @@
     <string name="moto_secure_unavailable">Moto Secure を開けませんでした。</string>
     <string name="shortcut_extra">追加アプリ</string>
     <string name="expand_vcard">vCard を展開</string>
-    <string name="home_shortcuts_description_v2">7 つの各スロットで任意のインストール済みアプリを開けます。変更していないスロットは下に示す組み込みアクションを維持し、Quick Drawer は引き続き組み込まれています。</string>
+    <string name="home_shortcuts_description_v2">アプリを1つ選ぶか、複数のアプリをフォルダにまとめます。</string>
     <string name="less_visual_noise_description_v2">1 つの集中型ホームページ、7 つのアプリスロット、組み込みの Quick Drawer ショートカット、インストール済みの各アプリ用の集中型ホイール。</string>
     <string name="profile_onboarding_description_v2">vCard は他のミニアプリと並んで MinkSpace にあります。展開すると QR コードが表示され、ToDo ミニアプリをタップするとタスクを管理できます。</string>
     <string name="calling">通話</string>
@@ -1028,7 +1012,7 @@
     <string name="home_tour_mini_apps_title">Mini Apps を切り替える</string>
     <string name="home_tour_mini_apps_description">MinkSpace を上下にスワイプして、有効にした Mini Apps を切り替えます。</string>
     <string name="home_tour_shortcuts_title">ショートカットを並べ替える</string>
-    <string name="home_tour_shortcuts_description">ホームのショートカットを長押しし、好きな順番にドラッグします。</string>
+    <string name="home_tour_shortcuts_description">設定の「アプリグリッド」で、ホームのショートカット、フォルダ、順序を変更できます。</string>
     <string name="home_tour_conversations_title">会話をすぐそばに</string>
     <string name="home_tour_conversations_description">ホーム上部の会話アイコンをタップして、進行中の会話やお気に入りの人を表示します。</string>
     <string name="home_tour_widgets_title">ウィジェットを追加</string>

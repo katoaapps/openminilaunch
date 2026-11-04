@@ -1,37 +1,19 @@
 package com.katoaapps.openminilaunch.ui.settings
 
-import com.katoaapps.openminilaunch.R
-import com.katoaapps.openminilaunch.data.LauncherStore
-import com.katoaapps.openminilaunch.model.MAX_DRAWER_APPS
-import com.katoaapps.openminilaunch.model.PinShortcutRequestPresentation
-import com.katoaapps.openminilaunch.model.AppGridSlot
-import com.katoaapps.openminilaunch.platform.DeviceActions
-import com.katoaapps.openminilaunch.ui.components.SectionLabel
-import com.katoaapps.openminilaunch.ui.components.SettingsRow
-import com.katoaapps.openminilaunch.ui.appgrid.AppGridSlotAssignmentRow
-import com.katoaapps.openminilaunch.ui.appgrid.displayLabel
-import com.katoaapps.openminilaunch.ui.theme.Dimens
-import com.katoaapps.openminilaunch.ui.theme.Muted
-import com.katoaapps.openminilaunch.ui.theme.Sage
-
-import android.widget.Toast
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.AddToHomeScreen
-import androidx.compose.material.icons.filled.Apps
 import androidx.compose.material.icons.filled.Palette
-import androidx.compose.material.icons.filled.Restore
 import androidx.compose.material.icons.filled.Translate
-import androidx.compose.material3.HorizontalDivider
-import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import com.katoaapps.openminilaunch.R
+import com.katoaapps.openminilaunch.data.LauncherStore
 import com.katoaapps.openminilaunch.features.localization.SupportedAppLanguages
+import com.katoaapps.openminilaunch.model.AppGridSlot
+import com.katoaapps.openminilaunch.platform.DeviceActions
+import com.katoaapps.openminilaunch.ui.appgrid.AppGridOrderEditor
+import com.katoaapps.openminilaunch.ui.components.SectionLabel
+import com.katoaapps.openminilaunch.ui.components.SettingsRow
 
 @Composable
 internal fun LauncherSettingsPage(
@@ -72,72 +54,18 @@ internal fun AppGridSettingsPage(
     onNavigate: (SettingsDestination) -> Unit,
     goBack: () -> Unit,
 ) {
-    val context = LocalContext.current
     SettingsPage(stringResource(R.string.app_grid), goBack) {
         SectionLabel(stringResource(R.string.home_shortcuts))
-        Text(
-            stringResource(R.string.home_shortcuts_description_v2),
-            color = Muted,
-            fontSize = Dimens.sp13,
-        )
-        store.appGridOrder.chunked(2).forEach { rowSlots ->
-            Row(
-                modifier = Modifier.fillMaxWidth(),
-                horizontalArrangement = Arrangement.spacedBy(Dimens.dp8),
-            ) {
-                rowSlots.forEach { slot ->
-                    val targetKey = store.appGridTargets[slot]
-                    AppGridSlotAssignmentRow(
-                        slot = slot,
-                        targetKey = targetKey,
-                        actions = actions,
-                        subtitle = if (slot == AppGridSlot.DRAWER) {
-                            stringResource(
-                                R.string.count_of_max,
-                                store.drawerTargets.size,
-                                MAX_DRAWER_APPS,
-                            )
-                        } else {
-                            targetKey?.let(actions::launcherTargetLabel)
-                                ?: stringResource(R.string.shortcut_default, slot.displayLabel())
-                        },
-                        modifier = Modifier.weight(1f),
-                        compact = true,
-                        onClick = {
-                            if (slot == AppGridSlot.DRAWER) {
-                                onNavigate(SettingsDestination.QUICK_DRAWER)
-                            } else {
-                                onPickAppGridSlot(slot)
-                            }
-                        },
-                    )
+        AppGridOrderEditor(
+            store = store,
+            actions = actions,
+            onSlotClick = { slot ->
+                if (slot == AppGridSlot.DRAWER) {
+                    onNavigate(SettingsDestination.QUICK_DRAWER)
+                } else {
+                    onPickAppGridSlot(slot)
                 }
-                if (rowSlots.size == 1) Spacer(Modifier.weight(1f))
-            }
-        }
-        SettingsRow(
-            stringResource(R.string.reset_home_grid_order),
-            stringResource(R.string.reset_home_grid_order_description),
-            Icons.Default.Restore,
-        ) {
-            store.resetAppGridOrder()
-            Toast.makeText(
-                context,
-                context.getString(R.string.shortcut_order_reset),
-                Toast.LENGTH_SHORT,
-            ).show()
-        }
-        HorizontalDivider(color = Sage)
-        SectionLabel(stringResource(R.string.add_to_home_requests))
-        SettingsRow(
-            stringResource(R.string.add_to_home_confirmation),
-            stringResource(
-                when (store.pinShortcutRequestPresentation) {
-                    PinShortcutRequestPresentation.FULL_PAGE -> R.string.pin_shortcut_full_page
-                    PinShortcutRequestPresentation.CONFIRMATION_SHEET -> R.string.pin_shortcut_confirmation_sheet
-                },
-            ),
-            Icons.AutoMirrored.Filled.AddToHomeScreen,
-        ) { onNavigate(SettingsDestination.PIN_SHORTCUT_REQUESTS) }
+            },
+        )
     }
 }

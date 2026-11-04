@@ -1,50 +1,29 @@
 package com.katoaapps.openminilaunch
 
-import com.katoaapps.openminilaunch.ui.components.visibleAlphabetIndices
+import com.katoaapps.openminilaunch.ui.components.alphabetRailMarkers
 import org.junit.Assert.assertEquals
-import org.junit.Assert.assertTrue
 import org.junit.Test
 
 class AlphabetRailTest {
     @Test
-    fun fullHeightShowsEveryLetter() {
+    fun railAlwaysShowsEndpointsWithDotsBetween() {
         assertEquals(
-            (0 until 26).toList(),
-            visibleAlphabetIndices(
+            listOf(0, null, null, null, null, null, null, 25),
+            alphabetRailMarkers(
                 letterCount = 26,
-                availableHeightPx = 520,
-                minimumLetterHeightPx = 13f,
-                selectedIndex = 12,
+                markerCount = 8,
+                selectedIndex = 0,
             ),
         )
     }
 
     @Test
-    fun compactHeightKeepsEndpointsAndCurrentLetterVisible() {
-        val visible = visibleAlphabetIndices(
-            letterCount = 26,
-            availableHeightPx = 130,
-            minimumLetterHeightPx = 13f,
-            selectedIndex = 19,
-        )
+    fun activeMiddleLetterReplacesItsNearestDot() {
+        val markers = alphabetRailMarkers(letterCount = 26, markerCount = 8, selectedIndex = 12)
 
-        assertEquals(10, visible.size)
-        assertEquals(0, visible.first())
-        assertEquals(25, visible.last())
-        assertTrue(19 in visible)
-        assertEquals(visible.sorted(), visible)
-    }
-
-    @Test
-    fun tinyHeightStillProvidesUsableRail() {
-        val visible = visibleAlphabetIndices(
-            letterCount = 26,
-            availableHeightPx = 20,
-            minimumLetterHeightPx = 13f,
-            selectedIndex = 7,
-        )
-
-        assertEquals(5, visible.size)
-        assertTrue(listOf(0, 7, 25).all(visible::contains))
+        assertEquals(8, markers.size)
+        assertEquals(0, markers.first())
+        assertEquals(25, markers.last())
+        assertEquals(12, markers[3])
     }
 }

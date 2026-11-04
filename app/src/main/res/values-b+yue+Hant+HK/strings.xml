@@ -218,7 +218,6 @@
     <string name="reset_to_chooser">重設去選擇器</string>
     <string name="use_system_browser">用系統瀏覽器</string>
     <string name="choose_on_first_use">喺第一次使用嗰陣揀</string>
-    <string name="selected_tap_to_remove">選取 · 㩒一下就可以移除</string>
     <string name="tracked_tap_to_remove">選取 · 㩒一下就可以移除</string>
     <string name="remove_app">移除 %1$s</string>
     <string name="shortcut_note">注意</string>
@@ -244,8 +243,8 @@
     <string name="shortcut_slot">快捷方式 %1$d</string>
     <string name="shortcut_default">預設 · %1$s</string>
     <string name="choose_app_or_keep_default">選擇應用程式或應用程式捷徑，或保留 %1$s</string>
-    <string name="choose_app_for_shortcut">為 %1$s 選擇目標</string>
-    <string name="restore_shortcut_default">還原 %1$s 預設值</string>
+    <string name="home_shortcut_and_folder">主畫面捷徑與資料夾</string>
+    <string name="folder_name">資料夾名稱</string>
     <string name="theme_system">系統</string>
     <string name="theme_light">光</string>
     <string name="theme_dark">黑暗</string>
@@ -257,8 +256,6 @@
     <string name="reply_unavailable">回覆唔到</string>
     <string name="send_reply">發送回覆</string>
     <string name="settings">設定</string>
-    <string name="cancel_shortcut_reorder">取消捷徑重新排序</string>
-    <string name="save_shortcut_order">儲存捷徑順序</string>
     <string name="whats_new">有咩新嘢</string>
     <string name="update_notice_two_panel_heading">更廣闊嘅家，當你想要嘅時候</string>
     <string name="update_notice_two_panel_title">兩個面板用於大型顯示器</string>
@@ -441,8 +438,6 @@
     <string name="mink_day_onboarding_short_description">喺主頁向右滑動，就可以睇到本地每日分析資料同埋可選嘅應用程式暫停控制項。向左滑動或者用返去返回主頁。</string>
     <string name="six_shortcuts_any_apps">六個捷徑，任何六個應用程式</string>
     <string name="six_shortcuts_any_apps_description">每個可配置嘅插槽都會保留內置預設，直至你指派應用程式為止。然後佢嘅應用程式圖示就會接管主頁。</string>
-    <string name="arrange_grid">排列你嘅網格</string>
-    <string name="arrange_grid_description">長按任何主頁捷徑就可以進入編輯模式，然後將捷徑拖曳到你喜愛嘅順序。</string>
     <string name="active_and_local">活躍同埋本地</string>
     <string name="active_and_local_description">%1$s 唔會保留對話記錄。訊息文字同回覆會保留喺記憶體入面，而且永遠唔會傳送去 Katoa Apps 。</string>
     <string name="permissions_onboarding_intro">%1$s 只會要求同你用緊嘅功能相關嘅存取權。</string>
@@ -520,10 +515,7 @@
     <string name="customize">定制</string>
     <string name="appearance">外觀</string>
     <string name="appearance_summary">%1$s 主題 · 面板和背景顏色</string>
-    <string name="home_shortcuts">家居捷徑</string>
-    <string name="reset_home_grid_order">重設主頁網格順序</string>
-    <string name="reset_home_grid_order_description">將捷徑返回原本嘅 4 × 2 順序</string>
-    <string name="shortcut_order_reset">捷徑順序重設</string>
+    <string name="home_shortcuts">主頁捷徑與資料夾</string>
     <string name="selected_apps">所選應用程式</string>
     <string name="count_of_max">%2$d 嘅 %1$d</string>
     <string name="magic_box_find_other_apps">喺 Magic Box 入面用 ? 搵任何其他安裝咗嘅應用程式。</string>
@@ -665,18 +657,9 @@
     <string name="work_apps_empty">冇可用嘅工作應用程式。</string>
     <string name="work_profile_state_change_failed">Android 無法更改工作設定檔狀態。</string>
     <string name="no_app_shortcuts_found">搵唔到應用程式捷徑。 MinkLauncher 必須被選為你嘅主頁應用程式，而應用程式必須發佈捷徑先可以喺呢度顯示。</string>
-    <string name="add_to_home_requests">加入家居要求</string>
-    <string name="add_to_home_confirmation">加入主頁確認</string>
-    <string name="pin_shortcut_presentation_description">揀 MinkLauncher 點樣問將另一個應用程式要求嘅捷徑放喺邊度。</string>
-    <string name="presentation">簡報</string>
-    <string name="pin_shortcut_full_page">全頁</string>
-    <string name="pin_shortcut_full_page_description">穩定嘅頁面，有捷徑詳情、每個目的地同埋固定嘅確認掣。</string>
-    <string name="pin_shortcut_confirmation_sheet">確認表</string>
-    <string name="pin_shortcut_confirmation_sheet_description">更快嘅重疊，令要求嘅應用程式喺佢後面可見，亦可以滑動走。</string>
-    <string name="pin_shortcut_test_instructions">如果要比較佢哋，揀一個簡報，然後喺支援 Android 固定捷徑嘅應用程式入面用「新增至主畫面」。</string>
     <string name="add_shortcut">加捷徑</string>
     <string name="choose_shortcut_destination">呢個捷徑應該去邊？</string>
-    <string name="choose_shortcut_destination_description">令佢可以搜尋，揀一個主頁插槽，或者將佢放喺 Quick Drawer。揀一個已佔用嘅位置就會取代而家嘅項目。</string>
+    <string name="choose_shortcut_destination_description">令佢可以搜尋，揀一個主頁插槽，或者將佢放喺 Quick Drawer。</string>
     <string name="add_to_search_and_all_apps">搜尋同所有應用程式</string>
     <string name="add_to_search_and_all_apps_description">用 ? 搵呢個捷徑，或者喺所有應用程式入面瀏覽佢</string>
     <string name="add_to_quick_drawer">加入 Quick Drawer</string>
@@ -781,7 +764,7 @@
     <string name="todo_page_title">待辦事項</string>
     <string name="add_todo">加個待辦事項</string>
     <string name="nothing_here_yet">呢度仲未有嘢。</string>
-    <string name="hold_drag_reorder">按住同拖曳就可以重新排序</string>
+    <string name="drag_to_reorder">拖曳以重新排序</string>
     <string name="edit_todo">編輯待辦事項</string>
     <string name="delete_todo_title">刪除呢個待辦事項？</string>
     <string name="delete_todo_description">「 %1$s 」將會被永久移除。</string>
@@ -894,6 +877,7 @@
         <item quantity="other">選擇咗 %1$d 。只有呢啲應用程式會出現喺你嘅蹤跡同總數入面。</item>
     </plurals>
     <string name="find_app">搵個應用程式</string>
+    <string name="reinstall">重新安裝</string>
     <string name="no_launchable_apps">搵唔到可以啟動嘅應用程式</string>
     <string name="no_matching_apps">冇匹配嘅應用程式</string>
     <string name="android_default_social">Android 預設：社交</string>
@@ -1004,7 +988,7 @@
     <string name="moto_secure_unavailable">無法開啟 Moto Secure。</string>
     <string name="shortcut_extra">額外應用程式</string>
     <string name="expand_vcard">展開 vCard</string>
-    <string name="home_shortcuts_description_v2">七個欄位都可以開啟任何已安裝嘅應用程式。未更改嘅欄位會保留下方顯示嘅內置操作；Quick Drawer 仍然係內置功能。</string>
+    <string name="home_shortcuts_description_v2">選擇單一應用程式，或將多個應用程式組合成資料夾。</string>
     <string name="less_visual_noise_description_v2">一個專注嘅主畫面、七個應用程式欄位、內置 Quick Drawer 捷徑，同埋為每個已安裝應用程式而設嘅專注轉盤。</string>
     <string name="profile_onboarding_description_v2">你嘅 vCard 會放喺 MinkSpace，同其他迷你應用程式並列。展開即可顯示 QR 碼，或者撳待辦事項迷你應用程式管理工作。</string>
     <string name="calling">打電話</string>
@@ -1028,7 +1012,7 @@
     <string name="home_tour_mini_apps_title">瀏覽迷你應用程式</string>
     <string name="home_tour_mini_apps_description">喺 MinkSpace 向上或向下掃，就可以瀏覽你已啟用嘅迷你應用程式。</string>
     <string name="home_tour_shortcuts_title">排列你嘅捷徑</string>
-    <string name="home_tour_shortcuts_description">長按主畫面上任何捷徑，再拖曳捷徑去你想要嘅次序。</string>
+    <string name="home_tour_shortcuts_description">喺設定入面打開應用程式格，排列主畫面捷徑、資料夾同次序。</string>
     <string name="home_tour_conversations_title">對話隨手可及</string>
     <string name="home_tour_conversations_description">撳主畫面頂部嘅對話圖示，查看進行中嘅對話同你收藏嘅聯絡人。</string>
     <string name="home_tour_widgets_title">加入你嘅小工具</string>

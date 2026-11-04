@@ -1,27 +1,32 @@
 package com.katoaapps.openminilaunch.features.backup
 
-import com.katoaapps.openminilaunch.model.IconAppearance
-import com.katoaapps.openminilaunch.model.IconSource
+import com.katoaapps.openminilaunch.features.minkspace.MinkSpaceMiniApp
+import com.katoaapps.openminilaunch.features.minkspace.todo.TodoItem
+import com.katoaapps.openminilaunch.model.AppFolderConfig
+import com.katoaapps.openminilaunch.model.AppGridAssignment
+import com.katoaapps.openminilaunch.model.AppGridSlot
 import com.katoaapps.openminilaunch.model.FontAppearance
 import com.katoaapps.openminilaunch.model.FontSource
-import com.katoaapps.openminilaunch.model.normalizeFontSizeScale
+import com.katoaapps.openminilaunch.model.IconAppearance
+import com.katoaapps.openminilaunch.model.IconSource
+import com.katoaapps.openminilaunch.model.MAX_APP_FOLDER_NAME_LENGTH
 import com.katoaapps.openminilaunch.model.MAX_SOCIAL_GOAL_HOURS
 import com.katoaapps.openminilaunch.model.MIN_SOCIAL_GOAL_HOURS
 import com.katoaapps.openminilaunch.model.MinkAppPauseMode
-import com.katoaapps.openminilaunch.model.normalizeHomePanelTransparency
-import com.katoaapps.openminilaunch.model.PinShortcutRequestPresentation
 import com.katoaapps.openminilaunch.model.PalettePreference
-import com.katoaapps.openminilaunch.model.AppGridSlot
+import com.katoaapps.openminilaunch.model.QuickDrawerConfig
+import com.katoaapps.openminilaunch.model.ThemePreference
 import com.katoaapps.openminilaunch.model.appGridSlotFromStoredName
 import com.katoaapps.openminilaunch.model.configurableAppGridSlots
+import com.katoaapps.openminilaunch.model.legacyTargetKey
+import com.katoaapps.openminilaunch.model.normalizeFontSizeScale
+import com.katoaapps.openminilaunch.model.normalizeHomePanelTransparency
 import com.katoaapps.openminilaunch.model.normalizedAppGridOrder
-import com.katoaapps.openminilaunch.model.ThemePreference
-import com.katoaapps.openminilaunch.features.minkspace.todo.TodoItem
-import com.katoaapps.openminilaunch.features.minkspace.MinkSpaceMiniApp
 import org.json.JSONArray
 import org.json.JSONObject
 
 internal object LauncherBackupCodec {
+    private const val MAX_APP_FOLDERS = 64
     private const val MAX_TARGETS = 1_000
     private const val MAX_TODOS = 5_000
     private const val MAX_TARGET_LENGTH = 2_048
@@ -54,12 +59,13 @@ internal object LauncherBackupCodec {
             "Unsupported OpenMink backup version"
         }
         val profile = root.optJSONObject("profile")?.let(ProfileBackupCodec::decode)
+        val launcher = decodeLauncher(root.getJSONObject("launcher"))
 
         return LauncherBackup(
             sourceAppVersion = root.optString("sourceAppVersion").safeText(80),
             exportedAtMillis = root.optLong("exportedAtMillis", 0L),
-            launcher = decodeLauncher(root.getJSONObject("launcher")),
-            settings = decodeSettings(root.getJSONObject("settings")),
+            launcher = launcher,
+            settings = decodeSettings(root.getJSONObject("settings"), launcher.drawerTargets),
             todos = decodeTodos(root.optJSONArray("todos") ?: JSONArray()),
             profile = profile?.first,
             profileLinks = profile?.second.orEmpty(),
@@ -67,8 +73,25 @@ internal object LauncherBackupCodec {
     }
 
     private fun encodeLauncher(layout: LauncherBackupLayout) = JSONObject().apply {
+        val foldersById = layout.appFolders.associateBy(AppFolderConfig::id)
         put("shortcutTargets", JSONObject().apply {
-            layout.appGridTargets.forEach { (slot, target) -> put(slot.name, target) }
+            layout.appGridAssignments.forEach { (slot, assignment) ->
+                assignment.legacyTargetKey(foldersById::get)?.let { put(slot.name, it) }
+            }
+        })
+        put("appGridAssignments", JSONObject().apply {
+            layout.appGridAssignments.forEach { (slot, assignment) ->
+                assignment.toJson()?.let { put(slot.name, it) }
+            }
+        })
+        put("appFolders", JSONArray().apply {
+            layout.appFolders.forEach { folder ->
+                put(JSONObject().apply {
+                    put("id", folder.id)
+                    folder.customName?.let { put("customName", it) }
+                    put("targetKeys", folder.orderedTargetKeys.stringsJsonArray())
+                })
+            }
         })
         put("shortcutOrder", layout.appGridOrder.namesJsonArray())
         put("confirmedShortcutChoices", layout.confirmedAppGridChoices.namesJsonArray())
@@ -78,16 +101,32 @@ internal object LauncherBackupCodec {
 
     private fun decodeLauncher(json: JSONObject): LauncherBackupLayout {
         val targetJson = json.optJSONObject("shortcutTargets") ?: JSONObject()
-        val appGridTargets = buildMap {
+        val legacyAssignments = buildMap<AppGridSlot, AppGridAssignment> {
             AppGridSlot.entries.forEach { slot ->
-                targetJson.optString(slot.name).safeTarget()?.let { put(slot, it) }
+                targetJson.optString(slot.name).safeTarget()?.let { targetKey ->
+                    put(slot, AppGridAssignment.Target(targetKey))
+                }
             }
         }
+        val assignmentJson = json.optJSONObject("appGridAssignments")
+        val appGridAssignments = if (assignmentJson != null) {
+            buildMap<AppGridSlot, AppGridAssignment> {
+                configurableAppGridSlots.forEach { slot ->
+                    assignmentJson.optJSONObject(slot.name)
+                        ?.toAppGridAssignment()
+                        ?.let { put(slot, it) }
+                }
+            }
+        } else {
+            legacyAssignments
+        }
+        val appFolders = json.optJSONArray("appFolders").appFolderConfigs()
         val savedOrder = json.optJSONArray("shortcutOrder").appGridSlotValues()
         val appGridOrder = normalizedAppGridOrder(savedOrder)
 
         return LauncherBackupLayout(
-            appGridTargets = appGridTargets,
+            appGridAssignments = appGridAssignments,
+            appFolders = appFolders,
             appGridOrder = appGridOrder,
             confirmedAppGridChoices = json.optJSONArray("confirmedShortcutChoices")
                 .appGridSlotValues()
@@ -151,6 +190,7 @@ internal object LauncherBackupCodec {
         })
         settings.quickDrawer?.let { quickDrawer ->
             put("quickDrawer", JSONObject().apply {
+                put("orderedTargetKeys", quickDrawer.orderedTargetKeys.stringsJsonArray())
                 put("showMinkPad", quickDrawer.showMinkPad)
                 put("showPrivateSpace", quickDrawer.showPrivateSpace)
                 put("showWorkProfile", quickDrawer.showWorkProfile)
@@ -164,11 +204,13 @@ internal object LauncherBackupCodec {
             put("pauseMode", settings.minkAppPauseMode.name)
         })
         put("githubUpdateChecksEnabled", settings.githubUpdateChecksEnabled)
-        put("pinShortcutRequestPresentation", settings.pinShortcutRequestPresentation.name)
         settings.minkPadPreferences?.let { put("minkPad", MinkPadBackupCodec.encode(it)) }
     }
 
-    private fun decodeSettings(json: JSONObject): LauncherBackupSettings {
+    private fun decodeSettings(
+        json: JSONObject,
+        legacyDrawerTargets: List<String>,
+    ): LauncherBackupSettings {
         val appearance = json.getJSONObject("appearance")
         val magicBox = json.getJSONObject("magicBox")
         val messaging = json.getJSONObject("messaging")
@@ -233,7 +275,10 @@ internal object LauncherBackupCodec {
             callAutomatically = calling?.optBoolean("callAutomatically", false) ?: false,
             preferredCallingPackage = calling?.optNullableString("preferredCallingPackage")?.safePackage(),
             quickDrawer = quickDrawer?.let { drawer ->
-                QuickDrawerBackupSettings(
+                QuickDrawerConfig(
+                    orderedTargetKeys = drawer.optJSONArray("orderedTargetKeys")
+                        ?.safeTargets()
+                        ?: legacyDrawerTargets,
                     showMinkPad = drawer.optBoolean("showMinkPad", true),
                     showPrivateSpace = drawer.optBoolean("showPrivateSpace", true),
                     showWorkProfile = drawer.optBoolean("showWorkProfile", true),
@@ -248,10 +293,6 @@ internal object LauncherBackupCodec {
                 .coerceIn(MIN_SOCIAL_GOAL_HOURS, MAX_SOCIAL_GOAL_HOURS),
             minkAppPauseMode = minkDay.enumValue("pauseMode", MinkAppPauseMode.NEVER),
             githubUpdateChecksEnabled = json.optBoolean("githubUpdateChecksEnabled", true),
-            pinShortcutRequestPresentation = json.enumValue(
-                "pinShortcutRequestPresentation",
-                PinShortcutRequestPresentation.FULL_PAGE,
-            ),
             minkPadPreferences = json.optJSONObject("minkPad")?.let(MinkPadBackupCodec::decode),
         )
     }
@@ -284,6 +325,44 @@ internal object LauncherBackupCodec {
         repeat(minOf(source.length(), MAX_ENUM_VALUES)) { index ->
             val value = appGridSlotFromStoredName(source.optString(index))
             value?.let { if (it !in this) add(it) }
+        }
+    }
+
+    private fun JSONObject.toAppGridAssignment(): AppGridAssignment? = when (optString("type")) {
+        "target" -> optString("selectionKey").safeTarget()?.let(AppGridAssignment::Target)
+        "folder" -> optString("folderId")
+            .safeText(128)
+            .takeIf(String::isNotBlank)
+            ?.let(AppGridAssignment::Folder)
+        else -> null
+    }
+
+    private fun AppGridAssignment.toJson(): JSONObject? = when (this) {
+        AppGridAssignment.DefaultAction -> null
+        is AppGridAssignment.Target -> JSONObject()
+            .put("type", "target")
+            .put("selectionKey", selectionKey)
+        is AppGridAssignment.Folder -> JSONObject()
+            .put("type", "folder")
+            .put("folderId", folderId)
+    }
+
+    private fun JSONArray?.appFolderConfigs(): List<AppFolderConfig> = buildList {
+        val source = this@appFolderConfigs ?: return@buildList
+        repeat(minOf(source.length(), MAX_APP_FOLDERS)) { index ->
+            val folder = source.optJSONObject(index) ?: return@repeat
+            val id = folder.optString("id").safeText(128)
+            if (id.isBlank() || any { it.id == id }) return@repeat
+            add(
+                AppFolderConfig(
+                    id = id,
+                    customName = folder.optString("customName")
+                        .ifBlank { folder.optString("name") }
+                        .safeText(MAX_APP_FOLDER_NAME_LENGTH)
+                        .takeIf(String::isNotBlank),
+                    orderedTargetKeys = folder.optJSONArray("targetKeys").safeTargets(),
+                ),
+            )
         }
     }
 

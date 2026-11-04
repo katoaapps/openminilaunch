@@ -24,7 +24,6 @@ import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
-import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.OpenInNew
@@ -104,6 +103,7 @@ private fun <T> AppPickerDialogContent(
     onReset: (() -> Unit)? = null,
     resetLabel: String? = null,
     onDismiss: () -> Unit,
+    onDone: (() -> Unit)? = null,
     multiSelect: Boolean = false,
     selectionLimit: Int = 5,
     loading: Boolean = true,
@@ -115,7 +115,10 @@ private fun <T> AppPickerDialogContent(
     supportingActionLabel: String? = null,
     onSupportingAction: () -> Unit = {},
     selectedItems: List<T> = apps,
+    selectedItemsContent: (@Composable (List<T>) -> Unit)? = null,
+    showSearch: Boolean = true,
     categoryContent: (@Composable () -> Unit)? = null,
+    configurationContent: (@Composable () -> Unit)? = null,
     customListContent: (@Composable (List<T>) -> Unit)? = null,
 ) {
     var query by rememberSaveable { mutableStateOf("") }
@@ -128,16 +131,6 @@ private fun <T> AppPickerDialogContent(
         }
     }
     val gridState = rememberLazyGridState()
-    var requestedLetter by remember { mutableStateOf('A') }
-    LaunchedEffect(requestedLetter, visibleApps) {
-        if (visibleApps.isNotEmpty()) {
-            val index = visibleApps.indexOfFirst {
-                (appLabel(it).firstOrNull()?.uppercaseChar() ?: 'Z') >= requestedLetter
-            }
-                .let { if (it < 0) visibleApps.lastIndex else it }
-            if (index >= 0) gridState.scrollToItem(index)
-        }
-    }
     Dialog(
         onDismissRequest = onDismiss,
         properties = MinkDialogDefaults.properties,
@@ -150,26 +143,35 @@ private fun <T> AppPickerDialogContent(
             Column(Modifier.padding(Dimens.dp14)) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     Text(title, Modifier.weight(1f), fontWeight = FontWeight.Black, fontSize = Dimens.sp18)
-                    IconButton(onClick = onDismiss) { Icon(Icons.Default.Close, stringResource(R.string.close)) }
+                    if (onDone != null) {
+                        TextButton(onClick = onDone) { Text(stringResource(R.string.done)) }
+                    } else {
+                        IconButton(onClick = onDismiss) {
+                            Icon(Icons.Default.Close, stringResource(R.string.close))
+                        }
+                    }
                 }
                 categoryContent?.invoke()
-                OutlinedTextField(
-                    value = query,
-                    onValueChange = { query = it },
-                    placeholder = { Text(stringResource(R.string.search_apps)) },
-                    leadingIcon = { Icon(Icons.Default.Search, null) },
-                    trailingIcon = if (query.isNotEmpty()) {
-                        {
-                            IconButton(onClick = { query = "" }) {
-                                Icon(Icons.Default.Close, stringResource(R.string.clear_search))
+                configurationContent?.invoke()
+                if (showSearch) {
+                    OutlinedTextField(
+                        value = query,
+                        onValueChange = { query = it },
+                        placeholder = { Text(stringResource(R.string.search_apps)) },
+                        leadingIcon = { Icon(Icons.Default.Search, null) },
+                        trailingIcon = if (query.isNotEmpty()) {
+                            {
+                                IconButton(onClick = { query = "" }) {
+                                    Icon(Icons.Default.Close, stringResource(R.string.clear_search))
+                                }
                             }
-                        }
-                    } else {
-                        null
-                    },
-                    singleLine = true,
-                    modifier = Modifier.fillMaxWidth().padding(bottom = Dimens.dp8),
-                )
+                        } else {
+                            null
+                        },
+                        singleLine = true,
+                        modifier = Modifier.fillMaxWidth().padding(bottom = Dimens.dp8),
+                    )
+                }
                 supportingText?.let { guide ->
                     Surface(
                         color = MaterialTheme.colorScheme.secondaryContainer,
@@ -209,39 +211,17 @@ private fun <T> AppPickerDialogContent(
                     }
                 }
                 if (multiSelect && selected.isNotEmpty()) {
-                    Text(
-                        stringResource(R.string.selected_tap_to_remove),
-                        color = Muted,
-                        fontSize = Dimens.sp10,
-                        fontWeight = FontWeight.Bold,
-                        letterSpacing = Dimens.sp1,
-                        modifier = Modifier.padding(top = Dimens.dp4, bottom = Dimens.dp6),
-                    )
                     val selectedApps = selectedItems.filter { appKey(it) in selected }.take(selectionLimit)
-                    LazyRow(
-                        Modifier.fillMaxWidth(),
-                        horizontalArrangement = Arrangement.spacedBy(Dimens.dp6),
-                    ) {
-                        lazyRowItems(selectedApps, key = appKey) { app ->
-                            Column(
-                                Modifier.width(Dimens.dp64).clip(RoundedCornerShape(Dimens.dp12))
-                                    .background(MaterialTheme.colorScheme.surfaceContainerLow)
-                                    .clickable { onApp(app) }.padding(horizontal = Dimens.dp3, vertical = Dimens.dp6),
-                                horizontalAlignment = Alignment.CenterHorizontally,
-                            ) {
-                                Box {
-                                    appIcon(app, Dimens.dp30)
-                                    Surface(
-                                        modifier = Modifier.align(Alignment.TopEnd).offset(x = Dimens.dp5, y = -Dimens.dp5),
-                                        shape = CircleShape,
-                                        color = MaterialTheme.colorScheme.error,
-                                    ) {
-                                        Icon(Icons.Default.Close, stringResource(R.string.remove_app, appLabel(app)), Modifier.size(Dimens.dp14), tint = MaterialTheme.colorScheme.onError)
-                                    }
-                                }
-                                Text(appLabel(app), fontSize = Dimens.sp9, maxLines = 1, textAlign = TextAlign.Center, modifier = Modifier.padding(top = Dimens.dp3))
-                            }
-                        }
+                    if (selectedItemsContent != null) {
+                        selectedItemsContent(selectedApps)
+                    } else {
+                        PickerSelectedItemsRow(
+                            items = selectedApps,
+                            itemKey = appKey,
+                            itemLabel = appLabel,
+                            itemIcon = appIcon,
+                            onItem = onApp,
+                        )
                     }
                     HorizontalDivider(Modifier.padding(top = Dimens.dp8), color = Sage)
                 }
@@ -283,7 +263,12 @@ private fun <T> AppPickerDialogContent(
                         }
                         if (query.isBlank()) {
                             AlphabetRail(
-                                onLetterSelected = { requestedLetter = it },
+                                onLetterSelected = { requestedLetter ->
+                                    val index = visibleApps.indexOfFirst {
+                                        (appLabel(it).firstOrNull()?.uppercaseChar() ?: 'Z') >= requestedLetter
+                                    }.let { if (it < 0) visibleApps.lastIndex else it }
+                                    if (index >= 0) gridState.requestScrollToItem(index)
+                                },
                                 modifier = Modifier.align(Alignment.CenterEnd),
                             )
                         }
@@ -300,11 +285,13 @@ internal fun LauncherTargetPickerDialog(
     apps: List<LauncherAppTarget>,
     shortcuts: List<LauncherShortcutTarget>,
     selected: Set<String>,
+    selectedOrder: List<String> = selected.toList(),
     actions: DeviceActions,
     onTarget: (LauncherTarget) -> Unit,
     onReset: (() -> Unit)? = null,
     resetLabel: String? = null,
     onDismiss: () -> Unit,
+    onDone: (() -> Unit)? = null,
     multiSelect: Boolean = false,
     selectionLimit: Int = 5,
     appsLoading: Boolean = true,
@@ -313,12 +300,21 @@ internal fun LauncherTargetPickerDialog(
     supportingText: String? = null,
     supportingActionLabel: String? = null,
     onSupportingAction: () -> Unit = {},
+    showSearch: Boolean = true,
+    onMoveSelected: ((fromIndex: Int, toIndex: Int) -> Unit)? = null,
+    configurationContent: (@Composable () -> Unit)? = null,
 ) {
     var selectedCategory by rememberSaveable { mutableStateOf(LauncherTargetCategory.APPS) }
-    val allTargets = remember(apps, shortcuts, selected) {
-        (apps + shortcuts + selected.map(actions::resolveLauncherSelection))
+    val allTargets = remember(apps, shortcuts, selectedOrder) {
+        (apps + shortcuts + selectedOrder.map(actions::resolveLauncherSelection).filter(LauncherTarget::isAvailable))
             .distinctBy(LauncherTarget::selectionKey)
             .sortedBy { it.label.lowercase() }
+    }
+    val selectedTargets = remember(apps, shortcuts, selectedOrder) {
+        val availableTargets = (apps + shortcuts).associateBy(LauncherTarget::selectionKey)
+        selectedOrder.map { selectionKey ->
+            availableTargets[selectionKey] ?: actions.resolveLauncherSelection(selectionKey)
+        }
     }
     val visibleTargets = remember(allTargets, selectedCategory) {
         allTargets.filter { target ->
@@ -342,6 +338,7 @@ internal fun LauncherTargetPickerDialog(
         onReset = onReset,
         resetLabel = resetLabel,
         onDismiss = onDismiss,
+        onDone = onDone,
         multiSelect = multiSelect,
         selectionLimit = selectionLimit,
         loading = when (selectedCategory) {
@@ -356,7 +353,21 @@ internal fun LauncherTargetPickerDialog(
         supportingText = supportingText,
         supportingActionLabel = supportingActionLabel,
         onSupportingAction = onSupportingAction,
-        selectedItems = allTargets,
+        selectedItems = selectedTargets,
+        selectedItemsContent = if (onMoveSelected != null) {
+            { selectedTargets ->
+                ReorderableLauncherTargetGrid(
+                    targets = selectedTargets,
+                    actions = actions,
+                    onMove = onMoveSelected,
+                    onRemove = onTarget,
+                )
+            }
+        } else {
+            null
+        },
+        showSearch = showSearch,
+        configurationContent = configurationContent,
         categoryContent = {
             Row(
                 Modifier.fillMaxWidth().padding(bottom = Dimens.dp8),
@@ -404,6 +415,43 @@ internal fun LauncherTargetPickerDialog(
             null
         },
     )
+}
+
+@Composable
+private fun <T> PickerSelectedItemsRow(
+    items: List<T>,
+    itemKey: (T) -> String,
+    itemLabel: (T) -> String,
+    itemIcon: @Composable (T, Dp) -> Unit,
+    onItem: (T) -> Unit,
+) {
+    LazyRow(
+        Modifier.fillMaxWidth().height(Dimens.dp44),
+        horizontalArrangement = Arrangement.spacedBy(Dimens.dp6),
+    ) {
+        lazyRowItems(items, key = itemKey) { item ->
+            Surface(
+                modifier = Modifier.clip(RoundedCornerShape(Dimens.dp12)).clickable { onItem(item) },
+                shape = RoundedCornerShape(Dimens.dp12),
+                color = MaterialTheme.colorScheme.surfaceContainerLow,
+            ) {
+                Row(
+                    Modifier.padding(horizontal = Dimens.dp8, vertical = Dimens.dp6),
+                    verticalAlignment = Alignment.CenterVertically,
+                    horizontalArrangement = Arrangement.spacedBy(Dimens.dp6),
+                ) {
+                    itemIcon(item, Dimens.dp24)
+                    Text(itemLabel(item), fontSize = Dimens.sp10, maxLines = 1)
+                    Icon(
+                        Icons.Default.Close,
+                        stringResource(R.string.remove_app, itemLabel(item)),
+                        Modifier.size(Dimens.dp14),
+                        tint = MaterialTheme.colorScheme.error,
+                    )
+                }
+            }
+        }
+    }
 }
 
 private enum class LauncherTargetCategory { APPS, SHORTCUTS }

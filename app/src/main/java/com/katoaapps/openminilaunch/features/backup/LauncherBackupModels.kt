@@ -1,16 +1,18 @@
 package com.katoaapps.openminilaunch.features.backup
 
-import com.katoaapps.openminilaunch.model.IconAppearance
-import com.katoaapps.openminilaunch.model.FontAppearance
-import com.katoaapps.openminilaunch.model.MinkAppPauseMode
-import com.katoaapps.openminilaunch.model.PinShortcutRequestPresentation
-import com.katoaapps.openminilaunch.model.PalettePreference
-import com.katoaapps.openminilaunch.model.AppGridSlot
-import com.katoaapps.openminilaunch.model.ThemePreference
-import com.katoaapps.openminilaunch.features.minkspace.todo.TodoItem
 import com.katoaapps.openminilaunch.features.minkspace.MinkSpaceMiniApp
+import com.katoaapps.openminilaunch.features.minkspace.todo.TodoItem
 import com.katoaapps.openminilaunch.features.profile.ProfileCard
 import com.katoaapps.openminilaunch.features.profile.ProfileLink
+import com.katoaapps.openminilaunch.model.AppFolderConfig
+import com.katoaapps.openminilaunch.model.AppGridAssignment
+import com.katoaapps.openminilaunch.model.AppGridSlot
+import com.katoaapps.openminilaunch.model.FontAppearance
+import com.katoaapps.openminilaunch.model.IconAppearance
+import com.katoaapps.openminilaunch.model.MinkAppPauseMode
+import com.katoaapps.openminilaunch.model.PalettePreference
+import com.katoaapps.openminilaunch.model.QuickDrawerConfig
+import com.katoaapps.openminilaunch.model.ThemePreference
 
 internal const val LAUNCHER_BACKUP_FORMAT = "minklauncher-open-backup"
 // Keep schema 3 while new fields remain optional. OpenMink 1.5.5 ignores unknown JSON keys,
@@ -31,18 +33,12 @@ internal data class LauncherBackup(
 )
 
 internal data class LauncherBackupLayout(
-    val appGridTargets: Map<AppGridSlot, String>,
+    val appGridAssignments: Map<AppGridSlot, AppGridAssignment>,
+    val appFolders: List<AppFolderConfig>,
     val appGridOrder: List<AppGridSlot>,
     val confirmedAppGridChoices: List<AppGridSlot>,
     val drawerTargets: List<String>,
     val libraryShortcutTargets: List<String>,
-)
-
-internal data class QuickDrawerBackupSettings(
-    val showMinkPad: Boolean,
-    val showPrivateSpace: Boolean,
-    val showWorkProfile: Boolean,
-    val colorArgb: Int?,
 )
 
 internal data class LauncherBackupSettings(
@@ -80,9 +76,8 @@ internal data class LauncherBackupSettings(
     val socialGoalHours: Int,
     val minkAppPauseMode: MinkAppPauseMode,
     val githubUpdateChecksEnabled: Boolean,
-    val pinShortcutRequestPresentation: PinShortcutRequestPresentation,
     val minkPadPreferences: com.katoaapps.minkpad.core.MinkPadPreferences? = null,
     val fontAppearance: FontAppearance = FontAppearance(),
     /** Null means this backup predates Quick Drawer appearance and control preferences. */
-    val quickDrawer: QuickDrawerBackupSettings? = null,
+    val quickDrawer: QuickDrawerConfig? = null,
 )

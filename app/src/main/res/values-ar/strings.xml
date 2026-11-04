@@ -218,7 +218,6 @@
     <string name="reset_to_chooser">إعادة التعيين إلى المختار</string>
     <string name="use_system_browser">استخدم متصفح النظام</string>
     <string name="choose_on_first_use">اختر عند الاستخدام الأول</string>
-    <string name="selected_tap_to_remove">تم التحديد · انقر للإزالة</string>
     <string name="tracked_tap_to_remove">تم التحديد · انقر للإزالة</string>
     <string name="remove_app">إزالة %1$s</string>
     <string name="shortcut_note">ملاحظة</string>
@@ -244,8 +243,8 @@
     <string name="shortcut_slot">الاختصار %1$d</string>
     <string name="shortcut_default">الافتراضي · %1$s</string>
     <string name="choose_app_or_keep_default">اختر تطبيقًا أو اختصارًا للتطبيق، أو احتفظ بـ %1$s</string>
-    <string name="choose_app_for_shortcut">اختر الهدف لـ %1$s</string>
-    <string name="restore_shortcut_default">استعادة الوضع الافتراضي لـ %1$s</string>
+    <string name="home_shortcut_and_folder">اختصار ومجلد الشاشة الرئيسية</string>
+    <string name="folder_name">اسم المجلد</string>
     <string name="theme_system">النظام</string>
     <string name="theme_light">ضوء</string>
     <string name="theme_dark">الظلام</string>
@@ -257,8 +256,6 @@
     <string name="reply_unavailable">الرد غير متاح</string>
     <string name="send_reply">إرسال الرد</string>
     <string name="settings">الإعدادات</string>
-    <string name="cancel_shortcut_reorder">إلغاء إعادة ترتيب الاختصارات</string>
-    <string name="save_shortcut_order">حفظ ترتيب الاختصار</string>
     <string name="whats_new">ما هو الجديد</string>
     <string name="update_notice_two_panel_heading">منزل أوسع، عندما تريد ذلك</string>
     <string name="update_notice_two_panel_title">لوحتان للشاشات الكبيرة</string>
@@ -441,8 +438,6 @@
     <string name="mink_day_onboarding_short_description">اسحب لليمين من الصفحة الرئيسية للحصول على رؤى يومية محلية وعناصر تحكم اختيارية لإيقاف التطبيق مؤقتًا. اسحب لليسار أو استخدم "رجوع" للعودة إلى الصفحة الرئيسية.</string>
     <string name="six_shortcuts_any_apps">ستة اختصارات، أي ستة تطبيقات</string>
     <string name="six_shortcuts_any_apps_description">تحتفظ كل فتحة قابلة للتكوين بوضعها الافتراضي المدمج حتى تقوم بتعيين تطبيق. ثم ينتقل رمز التطبيق الخاص به إلى الصفحة الرئيسية.</string>
-    <string name="arrange_grid">ترتيب الشبكة الخاصة بك</string>
-    <string name="arrange_grid_description">اضغط لفترة طويلة على أي اختصار في الصفحة الرئيسية للدخول إلى وضع التحرير، ثم اسحب الاختصارات إلى الترتيب المفضل لديك.</string>
     <string name="active_and_local">النشطة والمحلية</string>
     <string name="active_and_local_description">%1$s لا يحتفظ بسجل المحادثات. يظل نص الرسالة والردود في الذاكرة ولا يتم إرسالها مطلقًا إلى Katoa Apps.</string>
     <string name="permissions_onboarding_intro">يطلب %1$s فقط الوصول المرتبط بالميزات التي تستخدمها.</string>
@@ -520,10 +515,7 @@
     <string name="customize">تخصيص</string>
     <string name="appearance">المظهر</string>
     <string name="appearance_summary">موضوع %1$s · ألوان اللوحة والخلفية</string>
-    <string name="home_shortcuts">اختصارات الصفحة الرئيسية</string>
-    <string name="reset_home_grid_order">إعادة ضبط ترتيب الشبكة الرئيسية</string>
-    <string name="reset_home_grid_order_description">قم بإرجاع الاختصارات إلى الترتيب الأصلي 4 × 2</string>
-    <string name="shortcut_order_reset">إعادة تعيين ترتيب الاختصار</string>
+    <string name="home_shortcuts">اختصارات ومجلدات الصفحة الرئيسية</string>
     <string name="selected_apps">التطبيقات المختارة</string>
     <string name="count_of_max">%1$d من %2$d</string>
     <string name="magic_box_find_other_apps">استخدام ? في Magic Box للعثور على أي تطبيق آخر مثبت.</string>
@@ -669,18 +661,9 @@
     <string name="work_apps_empty">لا تتوفر تطبيقات عمل.</string>
     <string name="work_profile_state_change_failed">تعذر على Android تغيير حالة الملف الشخصي للعمل.</string>
     <string name="no_app_shortcuts_found">لم يتم العثور على اختصارات للتطبيق. يجب تحديد MinkLauncher كتطبيق Home، ويجب أن تنشر التطبيقات الاختصارات قبل أن تظهر هنا.</string>
-    <string name="add_to_home_requests">أضف إلى طلبات المنزل</string>
-    <string name="add_to_home_confirmation">إضافة إلى تأكيد الصفحة الرئيسية</string>
-    <string name="pin_shortcut_presentation_description">اختر كيف يسأل MinkLauncher عن مكان وضع الاختصارات المطلوبة من تطبيق آخر.</string>
-    <string name="presentation">العرض التقديمي</string>
-    <string name="pin_shortcut_full_page">صفحة كاملة</string>
-    <string name="pin_shortcut_full_page_description">صفحة ثابتة تحتوي على تفاصيل الاختصار وكل وجهة وزر تأكيد ثابت.</string>
-    <string name="pin_shortcut_confirmation_sheet">ورقة التأكيد</string>
-    <string name="pin_shortcut_confirmation_sheet_description">تراكب أسرع يبقي التطبيق المطلوب مرئيًا خلفه ويمكن تمريره بعيدًا.</string>
-    <string name="pin_shortcut_test_instructions">لمقارنتها، حدد عرضًا تقديميًا واستخدم "إضافة إلى الشاشة الرئيسية" داخل تطبيق يدعم الاختصارات المثبتة Android.</string>
     <string name="add_shortcut">أضف الاختصار</string>
     <string name="choose_shortcut_destination">أين يجب أن يذهب هذا الاختصار؟</string>
-    <string name="choose_shortcut_destination_description">اجعله قابلاً للبحث، أو اختر خانة رئيسية، أو ضعه في Quick Drawer. يؤدي تحديد موضع مشغول إلى استبدال العنصر الحالي.</string>
+    <string name="choose_shortcut_destination_description">اجعله قابلاً للبحث، أو اختر خانة رئيسية، أو ضعه في Quick Drawer.</string>
     <string name="add_to_search_and_all_apps">البحث وجميع التطبيقات</string>
     <string name="add_to_search_and_all_apps_description">ابحث عن هذا الاختصار باستخدام ? أو تصفحه في جميع التطبيقات</string>
     <string name="add_to_quick_drawer">أضف إلى Quick Drawer</string>
@@ -801,7 +784,7 @@
     <string name="todo_page_title">المهام</string>
     <string name="add_todo">أضف مهمة</string>
     <string name="nothing_here_yet">لا شيء هنا بعد.</string>
-    <string name="hold_drag_reorder">اضغط مع الاستمرار واسحب لإعادة الترتيب</string>
+    <string name="drag_to_reorder">اسحب لإعادة الترتيب</string>
     <string name="edit_todo">تحرير المهام</string>
     <string name="delete_todo_title">هل تريد حذف هذه المهمة؟</string>
     <string name="delete_todo_description">ستتم إزالة "%1$s" نهائيًا.</string>
@@ -930,6 +913,7 @@
         <item quantity="other">تم تحديد %1$d. تظهر هذه التطبيقات فقط في مسارك وإجمالياتك.</item>
     </plurals>
     <string name="find_app">ابحث عن تطبيق</string>
+    <string name="reinstall">إعادة التثبيت</string>
     <string name="no_launchable_apps">لم يتم العثور على تطبيقات قابلة للتشغيل</string>
     <string name="no_matching_apps">لا توجد تطبيقات مطابقة</string>
     <string name="android_default_social">Android الافتراضي: اجتماعي</string>
@@ -1040,7 +1024,7 @@
     <string name="moto_secure_unavailable">تعذر فتح Moto Secure.</string>
     <string name="shortcut_extra">تطبيق إضافي</string>
     <string name="expand_vcard">توسيع vCard</string>
-    <string name="home_shortcuts_description_v2">يمكن لكل واحدة من الخانات السبع فتح أي تطبيق مثبت. تحتفظ الخانات غير المعدلة بالإجراء المدمج الموضح أدناه؛ ويظل Quick Drawer مدمجًا.</string>
+    <string name="home_shortcuts_description_v2">اختر تطبيقات فردية أو اجمعها في مجلدات.</string>
     <string name="less_visual_noise_description_v2">صفحة رئيسية واحدة مركزة، وسبع خانات للتطبيقات، واختصار Quick Drawer مدمج، وعجلة مركزة لكل تطبيق مثبت.</string>
     <string name="profile_onboarding_description_v2">توجد vCard الخاصة بك في MinkSpace بجانب تطبيقاتك المصغرة الأخرى. وسّعها لإظهار رمز QR، أو اضغط على تطبيق المهام المصغر لإدارة المهام.</string>
     <string name="calling">المكالمات</string>
@@ -1064,7 +1048,7 @@
     <string name="home_tour_mini_apps_title">تنقّل بين التطبيقات المصغّرة</string>
     <string name="home_tour_mini_apps_description">اسحب لأعلى أو لأسفل في MinkSpace للتنقل بين التطبيقات المصغّرة التي فعّلتها.</string>
     <string name="home_tour_shortcuts_title">رتّب اختصاراتك</string>
-    <string name="home_tour_shortcuts_description">اضغط مطولًا على أي اختصار في الشاشة الرئيسية، ثم اسحب الاختصارات إلى الترتيب الذي تريده.</string>
+    <string name="home_tour_shortcuts_description">افتح شبكة التطبيقات في الإعدادات لترتيب اختصارات الشاشة الرئيسية والمجلدات وترتيبها.</string>
     <string name="home_tour_conversations_title">أبقِ محادثاتك قريبة</string>
     <string name="home_tour_conversations_description">اضغط على رمز المحادثات أعلى الشاشة الرئيسية لعرض المحادثات النشطة والأشخاص المفضلين لديك.</string>
     <string name="home_tour_widgets_title">أضف أدواتك</string>
