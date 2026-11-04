@@ -245,6 +245,8 @@
     <string name="choose_app_or_keep_default">اختر تطبيقًا أو اختصارًا للتطبيق، أو احتفظ بـ %1$s</string>
     <string name="home_shortcut_and_folder">اختصار ومجلد الشاشة الرئيسية</string>
     <string name="folder_name">اسم المجلد</string>
+    <string name="folder_color">لون المجلد</string>
+    <string name="default_appearance">افتراضي</string>
     <string name="theme_system">النظام</string>
     <string name="theme_light">ضوء</string>
     <string name="theme_dark">الظلام</string>

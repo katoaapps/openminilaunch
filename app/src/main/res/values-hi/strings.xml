@@ -245,6 +245,8 @@
     <string name="choose_app_or_keep_default">कोई ऐप या ऐप शॉर्टकट चुनें, या %1$s रखें</string>
     <string name="home_shortcut_and_folder">होम शॉर्टकट और फ़ोल्डर</string>
     <string name="folder_name">फ़ोल्डर का नाम</string>
+    <string name="folder_color">फ़ोल्डर का रंग</string>
+    <string name="default_appearance">डिफ़ॉल्ट</string>
     <string name="theme_system">सिस्टम</string>
     <string name="theme_light">रोशनी</string>
     <string name="theme_dark">अंधेरा</string>

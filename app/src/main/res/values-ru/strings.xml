@@ -245,6 +245,8 @@
     <string name="choose_app_or_keep_default">Выберите приложение или ярлык приложения или сохраните %1$s.</string>
     <string name="home_shortcut_and_folder">Ярлык и папка на главном экране</string>
     <string name="folder_name">Название папки</string>
+    <string name="folder_color">Цвет папки</string>
+    <string name="default_appearance">По умолчанию</string>
     <string name="theme_system">Система</string>
     <string name="theme_light">Свет</string>
     <string name="theme_dark">Темный</string>

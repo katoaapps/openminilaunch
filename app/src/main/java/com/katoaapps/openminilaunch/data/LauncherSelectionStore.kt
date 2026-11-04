@@ -3,6 +3,7 @@ package com.katoaapps.openminilaunch.data
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateMapOf
 import com.katoaapps.openminilaunch.model.AppFolderConfig
+import com.katoaapps.openminilaunch.model.AppFolderColorMode
 import com.katoaapps.openminilaunch.model.AppGridAssignment
 import com.katoaapps.openminilaunch.model.AppGridSlot
 import com.katoaapps.openminilaunch.model.MAX_APP_FOLDER_NAME_LENGTH
@@ -11,6 +12,7 @@ import com.katoaapps.openminilaunch.model.configurableAppGridSlots
 import com.katoaapps.openminilaunch.model.normalizedAppFolders
 import com.katoaapps.openminilaunch.model.normalizedAppGridAssignments
 import com.katoaapps.openminilaunch.model.normalizedAppGridOrder
+import com.katoaapps.openminilaunch.model.normalized
 import com.katoaapps.openminilaunch.model.placePinnedTarget
 import com.katoaapps.openminilaunch.model.pruneAppGridTargets
 import com.katoaapps.openminilaunch.model.targetKeyOrNull
@@ -77,7 +79,6 @@ internal class LauncherSelectionStore(private val persistence: LauncherStorePers
     fun saveAppGridSelection(
         slot: AppGridSlot,
         selectedTargetKeys: List<String>,
-        folderName: String?,
     ) {
         if (slot !in configurableAppGridSlots) return
         val targets = selectedTargetKeys.map(String::trim).filter(String::isNotEmpty).distinct()
@@ -90,11 +91,10 @@ internal class LauncherSelectionStore(private val persistence: LauncherStorePers
                     ?.let(::appFolder)
                 val folder = AppFolderConfig(
                     id = existingFolder?.id ?: UUID.randomUUID().toString(),
-                    customName = folderName
-                        ?.trim()
-                        ?.take(MAX_APP_FOLDER_NAME_LENGTH)
-                        ?.takeIf(String::isNotEmpty),
+                    customName = existingFolder?.customName,
                     orderedTargetKeys = targets,
+                    colorMode = existingFolder?.colorMode ?: AppFolderColorMode.DEFAULT,
+                    colorArgb = existingFolder?.colorArgb,
                 )
                 val existingIndex = appFolders.indexOfFirst { it.id == folder.id }
                 if (existingIndex >= 0) appFolders[existingIndex] = folder else appFolders += folder
@@ -103,6 +103,28 @@ internal class LauncherSelectionStore(private val persistence: LauncherStorePers
         }
         replaceAppGridAssignment(slot, assignment)
         confirmAppGridSlot(slot)
+        saveSelections()
+    }
+
+    fun updateAppFolderAppearance(
+        folderId: String,
+        customName: String?,
+        colorMode: AppFolderColorMode,
+        colorArgb: Int?,
+    ) {
+        val index = appFolders.indexOfFirst { it.id == folderId }
+        if (index < 0) return
+        val current = appFolders[index]
+        val updated = current.copy(
+            customName = customName
+                ?.trim()
+                ?.take(MAX_APP_FOLDER_NAME_LENGTH)
+                ?.takeIf(String::isNotEmpty),
+            colorMode = colorMode,
+            colorArgb = colorArgb,
+        ).normalized()
+        if (updated == current) return
+        appFolders[index] = updated
         saveSelections()
     }
 

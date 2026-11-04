@@ -245,6 +245,8 @@
     <string name="choose_app_or_keep_default">Choisissez une application ou un raccourci d\'application, ou conservez %1$s</string>
     <string name="home_shortcut_and_folder">Raccourci et dossier d’accueil</string>
     <string name="folder_name">Nom du dossier</string>
+    <string name="folder_color">Couleur du dossier</string>
+    <string name="default_appearance">Par défaut</string>
     <string name="theme_system">Système</string>
     <string name="theme_light">Lumière</string>
     <string name="theme_dark">Sombre</string>

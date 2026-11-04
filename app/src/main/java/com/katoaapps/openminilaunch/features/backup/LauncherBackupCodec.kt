@@ -3,6 +3,7 @@ package com.katoaapps.openminilaunch.features.backup
 import com.katoaapps.openminilaunch.features.minkspace.MinkSpaceMiniApp
 import com.katoaapps.openminilaunch.features.minkspace.todo.TodoItem
 import com.katoaapps.openminilaunch.model.AppFolderConfig
+import com.katoaapps.openminilaunch.model.AppFolderColorMode
 import com.katoaapps.openminilaunch.model.AppGridAssignment
 import com.katoaapps.openminilaunch.model.AppGridSlot
 import com.katoaapps.openminilaunch.model.FontAppearance
@@ -17,6 +18,7 @@ import com.katoaapps.openminilaunch.model.PalettePreference
 import com.katoaapps.openminilaunch.model.QuickDrawerConfig
 import com.katoaapps.openminilaunch.model.ThemePreference
 import com.katoaapps.openminilaunch.model.appGridSlotFromStoredName
+import com.katoaapps.openminilaunch.model.appFolderColorMode
 import com.katoaapps.openminilaunch.model.configurableAppGridSlots
 import com.katoaapps.openminilaunch.model.legacyTargetKey
 import com.katoaapps.openminilaunch.model.normalizeFontSizeScale
@@ -90,6 +92,10 @@ internal object LauncherBackupCodec {
                     put("id", folder.id)
                     folder.customName?.let { put("customName", it) }
                     put("targetKeys", folder.orderedTargetKeys.stringsJsonArray())
+                    if (folder.colorMode != AppFolderColorMode.DEFAULT) {
+                        put("colorMode", folder.colorMode.name)
+                    }
+                    putNullable("colorArgb", folder.colorArgb)
                 })
             }
         })
@@ -353,6 +359,7 @@ internal object LauncherBackupCodec {
             val folder = source.optJSONObject(index) ?: return@repeat
             val id = folder.optString("id").safeText(128)
             if (id.isBlank() || any { it.id == id }) return@repeat
+            val colorArgb = folder.optNullableInt("colorArgb")
             add(
                 AppFolderConfig(
                     id = id,
@@ -361,6 +368,8 @@ internal object LauncherBackupCodec {
                         .safeText(MAX_APP_FOLDER_NAME_LENGTH)
                         .takeIf(String::isNotBlank),
                     orderedTargetKeys = folder.optJSONArray("targetKeys").safeTargets(),
+                    colorMode = appFolderColorMode(folder.optString("colorMode").takeIf(String::isNotBlank), colorArgb),
+                    colorArgb = colorArgb,
                 ),
             )
         }

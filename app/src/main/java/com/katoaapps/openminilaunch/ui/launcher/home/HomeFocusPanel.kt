@@ -1,5 +1,7 @@
 package com.katoaapps.openminilaunch.ui.launcher.home
 
+import androidx.compose.foundation.BorderStroke
+import androidx.compose.foundation.background
 import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
@@ -33,7 +35,8 @@ import com.katoaapps.openminilaunch.ui.minkspace.core.MinkSpaceHost
 import com.katoaapps.openminilaunch.ui.minkspace.core.MinkSpacePresentationState
 import com.katoaapps.openminilaunch.ui.minkspace.core.animateMinkSpaceExpansionLayout
 import com.katoaapps.openminilaunch.ui.theme.Dimens
-import com.katoaapps.openminilaunch.ui.theme.compositeColor
+import com.katoaapps.openminilaunch.ui.theme.cathedralGlassBrush
+import com.katoaapps.openminilaunch.ui.theme.cathedralGlassCompositeColor
 import com.katoaapps.openminilaunch.ui.theme.readableContentColor
 
 @Composable
@@ -58,11 +61,14 @@ internal fun BoxScope.HomeFocusPanel(
     val minkSpaceExpanded = minkSpacePresentation.isExpanded
     val configuration = LocalConfiguration.current
     val fontScale = LocalDensity.current.fontScale
-    val panelColor = Color(store.effectiveHomePanelColorArgb).copy(
-        alpha = 1f - store.homePanelTransparency,
+    val panelColor = Color(store.effectiveHomePanelColorArgb)
+    val panelTransparency = store.homePanelTransparency
+    val panelOpacity = 1f - panelTransparency
+    val visiblePanelColor = cathedralGlassCompositeColor(
+        baseColor = panelColor,
+        transparency = panelTransparency,
+        backdropColor = launcherBackgroundColor(store),
     )
-    val panelOpacity = panelColor.alpha
-    val visiblePanelColor = compositeColor(panelColor, launcherBackgroundColor(store))
     val contentColor = store.fontAppearance.colorArgb?.let(::Color)
         ?: readableContentColor(visiblePanelColor)
     val mutedColor = contentColor.copy(alpha = .68f)
@@ -95,9 +101,12 @@ internal fun BoxScope.HomeFocusPanel(
     Surface(
         modifier = focusModifier.widthIn(max = Dimens.dp620),
         shape = RoundedCornerShape(if (qwertyHome) Dimens.dp26 else Dimens.dp34),
-        color = panelColor,
+        color = if (panelTransparency > 0f) Color.Transparent else panelColor,
         contentColor = contentColor,
-        shadowElevation = if (store.homePanelTransparency > 0f) {
+        border = panelTransparency.takeIf { it > 0f }?.let {
+            BorderStroke(Dimens.dp1, contentColor.copy(alpha = .18f))
+        },
+        shadowElevation = if (panelTransparency > 0f) {
             Dimens.dp0
         } else if (isSystemInDarkTheme()) {
             Dimens.dp2
@@ -106,7 +115,15 @@ internal fun BoxScope.HomeFocusPanel(
         },
         tonalElevation = Dimens.dp1 * panelOpacity,
     ) {
-        BoxWithConstraints(Modifier.fillMaxSize()) {
+        BoxWithConstraints(
+            Modifier.fillMaxSize().then(
+                if (panelTransparency > 0f) {
+                    Modifier.background(cathedralGlassBrush(panelColor, panelTransparency))
+                } else {
+                    Modifier
+                },
+            ),
+        ) {
             val expansionLayout = animateMinkSpaceExpansionLayout(
                 expanded = minkSpaceExpanded,
                 compact = qwertyHome,

@@ -245,6 +245,8 @@
     <string name="choose_app_or_keep_default">選擇應用程式或應用程式捷徑，或保留 %1$s</string>
     <string name="home_shortcut_and_folder">主畫面捷徑與資料夾</string>
     <string name="folder_name">資料夾名稱</string>
+    <string name="folder_color">資料夾顏色</string>
+    <string name="default_appearance">預設</string>
     <string name="theme_system">系統</string>
     <string name="theme_light">光</string>
     <string name="theme_dark">黑暗</string>

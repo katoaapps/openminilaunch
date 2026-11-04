@@ -47,6 +47,7 @@ import com.katoaapps.openminilaunch.ui.appgrid.AppFolderContentsDialog
 import com.katoaapps.openminilaunch.ui.appgrid.AppFolderIcon
 import com.katoaapps.openminilaunch.ui.appgrid.AppGridSelectionDialog
 import com.katoaapps.openminilaunch.ui.appgrid.UnavailableLauncherTargetDialog
+import com.katoaapps.openminilaunch.ui.appgrid.backgroundColor
 import com.katoaapps.openminilaunch.ui.appgrid.defaultIcon
 import com.katoaapps.openminilaunch.ui.appgrid.displayLabel
 import com.katoaapps.openminilaunch.ui.components.LauncherTargetIcon
@@ -137,7 +138,7 @@ internal fun AppGrid(
                                 .size(slotSize)
                                 .animateItem()
                                 .clip(RoundedCornerShape(if (compact) Dimens.dp14 else Dimens.dp18))
-                                .background(itemContainerColor)
+                                .background(if (folder != null) Color.Transparent else itemContainerColor)
                                 .then(interactionModifier)
                                 .padding(if (hasAssignedTarget || hasFolder) Dimens.dp0 else Dimens.dp6),
                             contentAlignment = Alignment.Center,
@@ -146,7 +147,11 @@ internal fun AppGrid(
                                 AppFolderIcon(
                                     targetKeys = folder.orderedTargetKeys,
                                     actions = actions,
-                                    size = (slotSize * .58f).coerceIn(Dimens.dp32, Dimens.dp48),
+                                    size = slotSize,
+                                    backgroundColor = folder.backgroundColor(
+                                        defaultColor = itemContainerColor,
+                                        themeColor = MaterialTheme.colorScheme.primaryContainer,
+                                    ),
                                 )
                             } else if (hasAssignedTarget) {
                                 LauncherTargetIcon(
@@ -195,6 +200,14 @@ internal fun AppGrid(
                     }
                     openFolderSlot = null
                 },
+                onAppearanceChange = { customName, colorMode, colorArgb ->
+                    store.updateAppFolderAppearance(
+                        folder.id,
+                        customName,
+                        colorMode,
+                        colorArgb,
+                    )
+                },
                 onEdit = {
                     openFolderSlot = null
                     editingSelectionSlot = slot
@@ -207,19 +220,14 @@ internal fun AppGrid(
     editingSelectionSlot?.let { slot ->
         val editorApps = remember(slot, launcherAppsRevision) { actions.installedApps() }
         val editorShortcuts = remember(slot, launcherShortcutsRevision) { actions.installedShortcuts() }
-        val initialFolderName = (store.appGridAssignment(slot) as? AppGridAssignment.Folder)
-            ?.folderId
-            ?.let(store::appFolder)
-            ?.customName
         AppGridSelectionDialog(
             slot = slot,
             initialSelectionKeys = store.appGridSelectionKeys(slot),
-            initialFolderName = initialFolderName,
             actions = actions,
             apps = editorApps,
             shortcuts = editorShortcuts,
-            onSave = { selection, folderName ->
-                store.saveAppGridSelection(slot, selection, folderName)
+            onSave = { selection ->
+                store.saveAppGridSelection(slot, selection)
                 actions.syncPinnedLauncherShortcuts(store.pinnedLauncherSelectionKeys)
             },
             onDismiss = { editingSelectionSlot = null },

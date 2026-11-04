@@ -245,6 +245,8 @@
     <string name="choose_app_or_keep_default">Elija una aplicación o un acceso directo a una aplicación, o conserve %1$s</string>
     <string name="home_shortcut_and_folder">Acceso directo y carpeta de inicio</string>
     <string name="folder_name">Nombre de la carpeta</string>
+    <string name="folder_color">Color de la carpeta</string>
+    <string name="default_appearance">Predeterminado</string>
     <string name="theme_system">Sistema</string>
     <string name="theme_light">Luz</string>
     <string name="theme_dark">oscuro</string>

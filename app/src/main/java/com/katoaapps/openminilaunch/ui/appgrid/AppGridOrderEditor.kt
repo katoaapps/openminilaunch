@@ -168,6 +168,10 @@ internal fun AppGridOrderEditor(
                                     targetKeys = folder?.orderedTargetKeys.orEmpty(),
                                     actions = actions,
                                     size = Dimens.dp30,
+                                    backgroundColor = folder?.backgroundColor(
+                                        defaultColor = MaterialTheme.colorScheme.surfaceContainerHigh,
+                                        themeColor = MaterialTheme.colorScheme.primaryContainer,
+                                    ) ?: MaterialTheme.colorScheme.surfaceContainerHigh,
                                 )
                             }
                         }

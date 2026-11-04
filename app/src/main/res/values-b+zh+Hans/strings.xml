@@ -245,6 +245,8 @@
     <string name="choose_app_or_keep_default">选择应用程序或应用程序快捷方式，或保留 %1$s</string>
     <string name="home_shortcut_and_folder">主屏幕快捷方式和文件夹</string>
     <string name="folder_name">文件夹名称</string>
+    <string name="folder_color">文件夹颜色</string>
+    <string name="default_appearance">默认</string>
     <string name="theme_system">系统</string>
     <string name="theme_light">光</string>
     <string name="theme_dark">黑暗</string>

@@ -245,6 +245,8 @@
     <string name="choose_app_or_keep_default">Pilih aplikasi atau pintasan aplikasi, atau pertahankan %1$s</string>
     <string name="home_shortcut_and_folder">Pintasan dan folder layar utama</string>
     <string name="folder_name">Nama folder</string>
+    <string name="folder_color">Warna folder</string>
+    <string name="default_appearance">Default</string>
     <string name="theme_system">Sistem</string>
     <string name="theme_light">Ringan</string>
     <string name="theme_dark">Gelap</string>

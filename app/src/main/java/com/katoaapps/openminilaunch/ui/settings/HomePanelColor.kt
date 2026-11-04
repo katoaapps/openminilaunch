@@ -84,34 +84,56 @@ internal fun PillTransparencyControl(
     transparency: Float,
     onTransparencyChanged: (Float) -> Unit,
 ) {
+    TransparencyControl(
+        transparency = transparency,
+        maximumTransparency = MAX_HOME_PANEL_TRANSPARENCY,
+        titleRes = R.string.home_panel_transparency,
+        valueRes = R.string.home_panel_transparency_value,
+        descriptionRes = R.string.home_panel_transparency_description,
+        onTransparencyCommitted = onTransparencyChanged,
+    )
+}
+
+@Composable
+internal fun TransparencyControl(
+    transparency: Float,
+    maximumTransparency: Float,
+    @androidx.annotation.StringRes titleRes: Int,
+    @androidx.annotation.StringRes valueRes: Int,
+    @androidx.annotation.StringRes descriptionRes: Int? = null,
+    onTransparencyPreviewed: (Float) -> Unit = {},
+    onTransparencyCommitted: (Float) -> Unit,
+) {
     var sliderTransparency by remember(transparency) { mutableFloatStateOf(transparency) }
     Column(verticalArrangement = Arrangement.spacedBy(Dimens.dp5)) {
         Row(Modifier.fillMaxWidth(), verticalAlignment = Alignment.CenterVertically) {
             Text(
-                stringResource(R.string.home_panel_transparency),
+                stringResource(titleRes),
                 fontWeight = FontWeight.Bold,
                 modifier = Modifier.weight(1f),
             )
             Text(
-                stringResource(
-                    R.string.home_panel_transparency_value,
-                    (sliderTransparency * 100).roundToInt(),
-                ),
+                stringResource(valueRes, (sliderTransparency * 100).roundToInt()),
                 color = MaterialTheme.colorScheme.primary,
                 fontWeight = FontWeight.Black,
             )
         }
         Slider(
             value = sliderTransparency,
-            onValueChange = { sliderTransparency = it },
-            onValueChangeFinished = { onTransparencyChanged(sliderTransparency) },
-            valueRange = 0f..MAX_HOME_PANEL_TRANSPARENCY,
+            onValueChange = {
+                sliderTransparency = it
+                onTransparencyPreviewed(it)
+            },
+            onValueChangeFinished = { onTransparencyCommitted(sliderTransparency) },
+            valueRange = 0f..maximumTransparency,
         )
-        Text(
-            stringResource(R.string.home_panel_transparency_description),
-            color = Muted,
-            fontSize = Dimens.sp12,
-        )
+        descriptionRes?.let { description ->
+            Text(
+                stringResource(description),
+                color = Muted,
+                fontSize = Dimens.sp12,
+            )
+        }
     }
 }
 
@@ -237,6 +259,10 @@ internal fun AppearanceColorDialog(
     colorHotphrases: Map<String, Int>,
     onConfirm: (String, Int) -> Unit,
     onDismiss: () -> Unit,
+    onUseThemeColor: (() -> Unit)? = null,
+    @androidx.annotation.StringRes useThemeColorLabelRes: Int = R.string.use_theme_color,
+    onUseDefaultAppearance: (() -> Unit)? = null,
+    @androidx.annotation.StringRes defaultAppearanceLabelRes: Int = R.string.default_appearance,
 ) {
     val initialHsv = remember(initialArgb) {
         FloatArray(3).also { android.graphics.Color.colorToHSV(initialArgb, it) }
@@ -319,11 +345,27 @@ internal fun AppearanceColorDialog(
                     keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Ascii),
                     modifier = Modifier.fillMaxWidth(),
                 )
+                onUseThemeColor?.let { useThemeColor ->
+                    OutlinedButton(
+                        onClick = useThemeColor,
+                        modifier = Modifier.fillMaxWidth(),
+                    ) { Text(stringResource(useThemeColorLabelRes)) }
+                }
+                onUseDefaultAppearance?.let { useDefaultAppearance ->
+                    OutlinedButton(
+                        onClick = useDefaultAppearance,
+                        modifier = Modifier.fillMaxWidth(),
+                    ) { Text(stringResource(defaultAppearanceLabelRes)) }
+                }
                 Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.End) {
                     TextButton(onClick = onDismiss) { Text(stringResource(R.string.cancel)) }
                     Spacer(Modifier.size(Dimens.dp8))
                     Button(
-                        onClick = { parseColorInput(hexText)?.let { onConfirm(hexText, it) } },
+                        onClick = {
+                            parseColorInput(hexText)?.let {
+                                onConfirm(hexText, it)
+                            }
+                        },
                         enabled = parseColorInput(hexText) != null,
                     ) { Text(stringResource(R.string.apply)) }
                 }

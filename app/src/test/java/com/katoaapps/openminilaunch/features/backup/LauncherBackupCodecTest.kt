@@ -5,6 +5,7 @@ import com.katoaapps.openminilaunch.features.profile.ProfileCard
 import com.katoaapps.openminilaunch.features.profile.ProfileLink
 import com.katoaapps.openminilaunch.features.profile.ProfileLinkType
 import com.katoaapps.openminilaunch.model.AppFolderConfig
+import com.katoaapps.openminilaunch.model.AppFolderColorMode
 import com.katoaapps.openminilaunch.model.AppGridAssignment
 import com.katoaapps.openminilaunch.model.AppGridSlot
 import com.katoaapps.openminilaunch.model.FontAppearance
@@ -195,6 +196,8 @@ class LauncherBackupCodecTest {
                 "app:0:com.example.maps/.MainActivity",
                 "app:0:com.example.transit/.MainActivity",
             ),
+            colorMode = AppFolderColorMode.CUSTOM,
+            colorArgb = 0xFF123456.toInt(),
         )
         val original = sample.copy(
             launcher = sample.launcher.copy(
@@ -210,6 +213,35 @@ class LauncherBackupCodecTest {
 
         assertEquals(original.launcher.appGridAssignments, restored.launcher.appGridAssignments)
         assertEquals(original.launcher.appFolders, restored.launcher.appFolders)
+    }
+
+    @Test fun olderFolderColorWithoutModeRestoresAsCustom() {
+        val sample = sampleBackup(twoPanelMode = true)
+        val folder = AppFolderConfig(
+            id = "folder-1",
+            orderedTargetKeys = listOf(
+                "app:0:com.example.maps/.MainActivity",
+                "app:0:com.example.transit/.MainActivity",
+            ),
+            colorMode = AppFolderColorMode.CUSTOM,
+            colorArgb = 0xFF123456.toInt(),
+        )
+        val original = sample.copy(
+            launcher = sample.launcher.copy(
+                appGridAssignments = mapOf(AppGridSlot.EVENT to AppGridAssignment.Folder(folder.id)),
+                appFolders = listOf(folder),
+            ),
+        )
+        val json = JSONObject(LauncherBackupCodec.encode(original))
+        json.getJSONObject("launcher")
+            .getJSONArray("appFolders")
+            .getJSONObject(0)
+            .remove("colorMode")
+
+        val restored = LauncherBackupCodec.decode(json.toString()).launcher.appFolders.single()
+
+        assertEquals(AppFolderColorMode.CUSTOM, restored.colorMode)
+        assertEquals(0xFF123456.toInt(), restored.colorArgb)
     }
 
     @Test fun appFolderWritesFirstItemForPreFolderBackupReaders() {

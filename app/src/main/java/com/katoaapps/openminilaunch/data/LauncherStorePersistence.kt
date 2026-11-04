@@ -3,12 +3,14 @@ package com.katoaapps.openminilaunch.data
 import android.content.SharedPreferences
 import com.katoaapps.openminilaunch.features.minkspace.todo.TodoItem
 import com.katoaapps.openminilaunch.model.AppFolderConfig
+import com.katoaapps.openminilaunch.model.AppFolderColorMode
 import com.katoaapps.openminilaunch.model.AppGridAssignment
 import com.katoaapps.openminilaunch.model.AppGridSlot
 import com.katoaapps.openminilaunch.model.MAX_DRAWER_APPS
 import com.katoaapps.openminilaunch.model.SearchFolder
 import com.katoaapps.openminilaunch.model.WidgetGridSize
 import com.katoaapps.openminilaunch.model.appGridSlotFromStoredName
+import com.katoaapps.openminilaunch.model.appFolderColorMode
 import com.katoaapps.openminilaunch.model.configurableAppGridSlots
 import com.katoaapps.openminilaunch.model.legacyTargetKey
 import com.katoaapps.openminilaunch.model.normalizedAppGridOrder
@@ -162,6 +164,10 @@ internal class LauncherStorePersistence(private val prefs: SharedPreferences) {
                     put("id", folder.id)
                     folder.customName?.let { put("customName", it) }
                     put("targetKeys", JSONArray(folder.orderedTargetKeys))
+                    if (folder.colorMode != AppFolderColorMode.DEFAULT) {
+                        put("colorMode", folder.colorMode.name)
+                    }
+                    folder.colorArgb?.let { put("colorArgb", it) }
                 })
             }
         }
@@ -237,6 +243,7 @@ internal class LauncherStorePersistence(private val prefs: SharedPreferences) {
             val id = folder.optString("id").trim()
             if (id.isEmpty() || any { it.id == id }) return@repeat
             val targets = folder.optJSONArray("targetKeys") ?: JSONArray()
+            val colorArgb = folder.optNullableInt("colorArgb")
             add(
                 AppFolderConfig(
                     id = id,
@@ -251,10 +258,15 @@ internal class LauncherStorePersistence(private val prefs: SharedPreferences) {
                             }
                         }
                     },
+                    colorMode = appFolderColorMode(folder.optString("colorMode").takeIf(String::isNotBlank), colorArgb),
+                    colorArgb = colorArgb,
                 ),
             )
         }
     }
+
+    private fun JSONObject.optNullableInt(key: String): Int? =
+        if (has(key) && !isNull(key)) optInt(key) else null
 
     private companion object {
         const val APP_FOLDERS_KEY = "app_folders"

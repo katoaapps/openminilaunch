@@ -245,6 +245,8 @@
     <string name="choose_app_or_keep_default">Escolha um aplicativo ou atalho de aplicativo ou mantenha %1$s</string>
     <string name="home_shortcut_and_folder">Atalho e pasta da tela inicial</string>
     <string name="folder_name">Nome da pasta</string>
+    <string name="folder_color">Cor da pasta</string>
+    <string name="default_appearance">Padrão</string>
     <string name="theme_system">Sistema</string>
     <string name="theme_light">Luz</string>
     <string name="theme_dark">Escuro</string>

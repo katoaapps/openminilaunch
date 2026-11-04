@@ -11,11 +11,27 @@ class AppFolderConfigTest {
             id = "  folder-1  ",
             customName = "  Travel  ",
             orderedTargetKeys = listOf(" maps ", "", "maps", " transit "),
+            colorMode = AppFolderColorMode.CUSTOM,
+            colorArgb = 0xFF123456.toInt(),
         ).normalized()
 
         assertEquals("folder-1", normalized.id)
         assertEquals("Travel", normalized.customName)
         assertEquals(listOf("maps", "transit"), normalized.orderedTargetKeys)
+        assertEquals(AppFolderColorMode.CUSTOM, normalized.colorMode)
+        assertEquals(0xFF123456.toInt(), normalized.colorArgb)
+    }
+
+    @Test
+    fun `custom appearance without a color safely returns to default`() {
+        val normalized = AppFolderConfig(
+            id = "folder-1",
+            orderedTargetKeys = listOf("maps", "messages"),
+            colorMode = AppFolderColorMode.CUSTOM,
+        ).normalized()
+
+        assertEquals(AppFolderColorMode.DEFAULT, normalized.colorMode)
+        assertEquals(null, normalized.colorArgb)
     }
 
     @Test

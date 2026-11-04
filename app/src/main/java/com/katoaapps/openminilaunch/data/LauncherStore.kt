@@ -243,9 +243,22 @@ class LauncherStore private constructor(context: Context) {
     fun saveAppGridSelection(
         slot: AppGridSlot,
         selectedTargetKeys: List<String>,
-        folderName: String?,
     ) {
-        launcherSelections.saveAppGridSelection(slot, selectedTargetKeys, folderName)
+        launcherSelections.saveAppGridSelection(slot, selectedTargetKeys)
+    }
+
+    fun updateAppFolderAppearance(
+        folderId: String,
+        customName: String?,
+        colorMode: AppFolderColorMode,
+        colorArgb: Int?,
+    ) {
+        launcherSelections.updateAppFolderAppearance(
+            folderId,
+            customName,
+            colorMode,
+            colorArgb,
+        )
     }
 
     fun pruneLauncherTargets(shouldRemove: (String) -> Boolean): Boolean =

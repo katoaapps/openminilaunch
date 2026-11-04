@@ -245,6 +245,8 @@
     <string name="choose_app_or_keep_default">একটি অ্যাপ বা অ্যাপ শর্টকাট বেছে নিন বা %1$s রাখুন</string>
     <string name="home_shortcut_and_folder">হোম শর্টকাট ও ফোল্ডার</string>
     <string name="folder_name">ফোল্ডারের নাম</string>
+    <string name="folder_color">ফোল্ডারের রং</string>
+    <string name="default_appearance">ডিফল্ট</string>
     <string name="theme_system">সিস্টেম</string>
     <string name="theme_light">আলো</string>
     <string name="theme_dark">অন্ধকার</string>

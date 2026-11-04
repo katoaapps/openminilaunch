@@ -14,7 +14,6 @@ import com.katoaapps.openminilaunch.R
 import com.katoaapps.openminilaunch.data.LauncherStore
 import com.katoaapps.openminilaunch.features.messaging.MessagingProviderCatalog
 import com.katoaapps.openminilaunch.features.wellbeing.UsageInsightsRepository
-import com.katoaapps.openminilaunch.model.AppGridAssignment
 import com.katoaapps.openminilaunch.model.MAX_DRAWER_APPS
 import com.katoaapps.openminilaunch.model.LauncherTarget
 import com.katoaapps.openminilaunch.model.LaunchableApp
@@ -43,17 +42,13 @@ internal fun SettingsPickerDialogs(
         is SettingsPicker.AppGridSlotPicker -> AppGridSelectionDialog(
             slot = picker.slot,
             initialSelectionKeys = store.appGridSelectionKeys(picker.slot),
-            initialFolderName = (store.appGridAssignment(picker.slot) as? AppGridAssignment.Folder)
-                ?.folderId
-                ?.let(store::appFolder)
-                ?.customName,
             actions = actions,
             apps = installedApps.apps,
             shortcuts = installedShortcuts.shortcuts,
             appsLoading = !installedApps.loaded,
             shortcutsLoading = !installedShortcuts.loaded,
-            onSave = { selection, folderName ->
-                store.saveAppGridSelection(picker.slot, selection, folderName)
+            onSave = { selection ->
+                store.saveAppGridSelection(picker.slot, selection)
                 actions.syncPinnedSelectionsFrom(store)
             },
             onDismiss = { onPickerChange(null) },

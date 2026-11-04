@@ -245,6 +245,8 @@
     <string name="choose_app_or_keep_default">Choose an app or app shortcut, or keep %1$s</string>
     <string name="home_shortcut_and_folder">Home shortcut &amp; folder</string>
     <string name="folder_name">Folder name</string>
+    <string name="folder_color">Folder colour</string>
+    <string name="default_appearance">Default</string>
     <string name="theme_system">System</string>
     <string name="theme_light">Light</string>
     <string name="theme_dark">Dark</string>

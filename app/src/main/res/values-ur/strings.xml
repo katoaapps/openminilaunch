@@ -245,6 +245,8 @@
     <string name="choose_app_or_keep_default">ایک ایپ یا ایپ شارٹ کٹ منتخب کریں، یا %1$s رکھیں</string>
     <string name="home_shortcut_and_folder">ہوم شارٹ کٹ اور فولڈر</string>
     <string name="folder_name">فولڈر کا نام</string>
+    <string name="folder_color">فولڈر کا رنگ</string>
+    <string name="default_appearance">ڈیفالٹ</string>
     <string name="theme_system">سسٹم</string>
     <string name="theme_light">روشنی</string>
     <string name="theme_dark">اندھیرا</string>
