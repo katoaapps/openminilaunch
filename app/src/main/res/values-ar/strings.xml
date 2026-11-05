@@ -1001,7 +1001,7 @@
     <string name="profile_link_paypal">PayPal</string>
     <string name="profile_link_cash_app">Cash App</string>
     <string name="profile_link_custom_url">Custom URL</string>
-    <string name="profile_backup_privacy_warning">vCard contact details and links are included in exported backup JSON as readable text. Contact photos are never included.</string>
+    <string name="profile_backup_privacy_warning">تتضمن نسخة JSON الاحتياطية المصدّرة تفاصيل vCard وأسماء المفضلة التي أنشأها Mink وأرقام الهواتف وعناوين موفري الخدمة ومسارات التطبيقات كنص قابل للقراءة. ولا يتم تضمين صور جهات الاتصال مطلقًا.</string>
     <string name="profile_backup_export_title">Export readable vCard details?</string>
     <string name="update_notice_profile_heading">Your contact card, one flip away</string>
     <string name="update_notice_profile_title">A local virtual contact card and QR</string>
@@ -1076,4 +1076,8 @@
     <string name="home_tour_appearance_description">افتح المظهر في الإعدادات لاختيار الخلفية والأيقونات والخطوط والألوان والمزيد.</string>
     <string name="conversation_tour_messages_description">اعرض محادثات الرسائل والبريد الإلكتروني النشطة من الإشعارات، ثم افتح إحداها للرد أو لعرض المحادثة كاملة.</string>
     <string name="conversation_tour_favorites_description">اعرض الأشخاص المميزين بنجمة في جهات اتصال Android، أو أضف أشخاصًا من التطبيقات المتكاملة، لتبقى أهم محادثاتك قريبة.</string>
+    <string name="compatible_calling_apps">تطبيقات الاتصال المتوافقة</string>
+    <string name="calling_app_unavailable">%1$s غير متاح لهذه المكالمة.</string>
+    <string name="sensitive_backup_export_title">هل تريد تصدير تفاصيل جهات الاتصال القابلة للقراءة؟</string>
+    <string name="favorite_contacts_backup_import_description">ستتم إضافة المفضلة التي أنشأها Mink في هذه النسخة الاحتياطية دون إزالة المفضلة الموجودة بالفعل على هذا الجهاز.</string>
 </resources>

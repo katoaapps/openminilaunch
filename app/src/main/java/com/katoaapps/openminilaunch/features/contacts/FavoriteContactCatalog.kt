@@ -18,4 +18,19 @@ internal object FavoriteContactCatalog {
             collator.compare(first.displayName, second.displayName)
         }
     }
+
+    fun applyOrder(
+        contacts: List<FavoriteContact>,
+        orderedStorageKeys: List<String>,
+    ): List<FavoriteContact> {
+        val rank = orderedStorageKeys.withIndex().associate { it.value to it.index }
+        return contacts.withIndex()
+            .sortedWith(
+                compareBy<IndexedValue<FavoriteContact>>(
+                    { rank[it.value.id.storageKey] ?: Int.MAX_VALUE },
+                    IndexedValue<FavoriteContact>::index,
+                ),
+            )
+            .map(IndexedValue<FavoriteContact>::value)
+    }
 }

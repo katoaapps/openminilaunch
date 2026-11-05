@@ -3,6 +3,7 @@ package com.katoaapps.openminilaunch.features.contacts
 import android.content.Context
 import com.katoaapps.openminilaunch.model.FavoriteContactId
 import com.katoaapps.openminilaunch.model.FavoriteIntegratedContact
+import com.katoaapps.openminilaunch.model.IntegratedContactCallEndpoint
 import com.katoaapps.openminilaunch.model.IntegratedContactEndpoint
 import com.katoaapps.openminilaunch.model.LauncherShortcutTarget
 import com.katoaapps.openminilaunch.model.ProviderAddressType
@@ -21,11 +22,9 @@ internal enum class FavoriteIntegratedContactAddResult {
 }
 
 /**
- * Encrypted, local-only ownership for favorites connected to provider-owned conversations.
- *
- * Unlike Android favorites, these records belong to Mink. They are deliberately kept out of
- * portable backups because shortcut ids, provider addresses, and Android user serials are either
- * sensitive or installation-specific.
+ * Encrypted local ownership for favorites connected to provider-owned conversations or calls.
+ * Portable exports carry a deliberately readable copy after an explicit privacy warning; the
+ * normal on-device store remains encrypted and excluded from Android Auto Backup.
  */
 internal class FavoriteIntegratedContactStore(
     private val persistence: EncryptedFavoriteIntegratedContactPersistence,
@@ -69,6 +68,34 @@ internal class FavoriteIntegratedContactStore(
         return add(endpoint, cleanName)
     }
 
+    /** Adds a call-only favorite through Android's standard phone-number contract. */
+    @Synchronized
+    fun addCall(
+        packageName: String?,
+        phoneNumber: String,
+        displayName: String,
+    ): FavoriteIntegratedContactAddResult {
+        val endpoint = callEndpoint(packageName, phoneNumber)
+            ?: return FavoriteIntegratedContactAddResult.FAILED
+        val cleanName = displayName.cleanFavoriteName()
+            ?: return FavoriteIntegratedContactAddResult.FAILED
+        val current = allContacts()
+        if (current.hasCallEndpoint(endpoint, excluding = null)) {
+            return FavoriteIntegratedContactAddResult.DUPLICATE
+        }
+        val updated = current + FavoriteIntegratedContact(
+            id = FavoriteContactId.Integrated(UUID.randomUUID().toString()),
+            displayName = cleanName,
+            endpoints = emptyList(),
+            callEndpoint = endpoint,
+        )
+        return if (save(updated)) {
+            FavoriteIntegratedContactAddResult.ADDED
+        } else {
+            FavoriteIntegratedContactAddResult.FAILED
+        }
+    }
+
     @Synchronized
     fun remove(id: FavoriteContactId.Integrated): Boolean {
         val current = allContacts()
@@ -100,6 +127,48 @@ internal class FavoriteIntegratedContactStore(
             address = address,
         ) ?: return false
         return replaceEndpoint(id, replacement)
+    }
+
+    /** Adds or changes this favorite's standard phone-number calling route. */
+    @Synchronized
+    fun updateCall(
+        id: FavoriteContactId.Integrated,
+        packageName: String?,
+        phoneNumber: String,
+    ): Boolean {
+        val replacement = callEndpoint(packageName, phoneNumber) ?: return false
+        val current = allContacts()
+        val contactIndex = current.indexOfFirst { it.id == id }
+        if (contactIndex == -1 || current.hasCallEndpoint(replacement, excluding = id)) return false
+        val updated = current.toMutableList().apply {
+            this[contactIndex] = this[contactIndex].copy(callEndpoint = replacement)
+        }
+        return save(updated)
+    }
+
+    /**
+     * Imports Mink-owned people without deleting contacts already created on this installation.
+     * Existing local ids and endpoint identities win so importing an older backup is non-destructive.
+     */
+    @Synchronized
+    fun mergeFromBackup(imported: List<FavoriteIntegratedContact>): Int {
+        val merged = allContacts().toMutableList()
+        var added = 0
+        imported.forEach { contact ->
+            if (contact.displayName.cleanFavoriteName() != contact.displayName ||
+                (contact.endpoints.isEmpty() && contact.callEndpoint == null) ||
+                contact.endpoints.any { !it.isValid() } ||
+                contact.callEndpoint?.isValid() == false ||
+                merged.any { it.id == contact.id } ||
+                contact.endpoints.any { endpoint -> merged.hasEndpoint(endpoint, excluding = null) } ||
+                contact.callEndpoint?.let { merged.hasCallEndpoint(it, excluding = null) } == true
+            ) {
+                return@forEach
+            }
+            merged += contact
+            added++
+        }
+        return if (added == 0 || save(merged)) added else 0
     }
 
     private fun add(
@@ -156,6 +225,18 @@ internal class FavoriteIntegratedContactStore(
         )
     }
 
+    private fun callEndpoint(
+        packageName: String?,
+        phoneNumber: String,
+    ): IntegratedContactCallEndpoint.PhoneNumber? {
+        val cleanPackage = packageName?.trim()?.takeIf(String::isNotBlank)
+        val cleanNumber = phoneNumber.cleanCallNumber() ?: return null
+        return IntegratedContactCallEndpoint.PhoneNumber(
+            number = cleanNumber,
+            packageName = cleanPackage,
+        )
+    }
+
     private fun save(contacts: List<FavoriteIntegratedContact>): Boolean {
         if (!persistence.save(contacts)) return false
         cachedContacts = contacts
@@ -192,4 +273,11 @@ private fun List<FavoriteIntegratedContact>.hasEndpoint(
     excluding: FavoriteContactId.Integrated?,
 ): Boolean = any { contact ->
     contact.id != excluding && contact.endpoints.any { it.identity == endpoint.identity }
+}
+
+private fun List<FavoriteIntegratedContact>.hasCallEndpoint(
+    endpoint: IntegratedContactCallEndpoint,
+    excluding: FavoriteContactId.Integrated?,
+): Boolean = any { contact ->
+    contact.id != excluding && contact.callEndpoint?.identity == endpoint.identity
 }

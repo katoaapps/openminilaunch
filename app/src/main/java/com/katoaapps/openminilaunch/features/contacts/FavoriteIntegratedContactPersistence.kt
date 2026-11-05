@@ -2,6 +2,7 @@ package com.katoaapps.openminilaunch.features.contacts
 
 import com.katoaapps.openminilaunch.model.FavoriteContactId
 import com.katoaapps.openminilaunch.model.FavoriteIntegratedContact
+import com.katoaapps.openminilaunch.model.IntegratedContactCallEndpoint
 import com.katoaapps.openminilaunch.model.IntegratedContactEndpoint
 import com.katoaapps.openminilaunch.model.ProviderAddressType
 import java.io.ByteArrayInputStream
@@ -38,13 +39,20 @@ internal object FavoriteIntegratedContactCodec {
         require(endpointIdentities.distinct().size == endpointIdentities.size) {
             "Duplicate integrated endpoint identity"
         }
+        val callEndpointIdentities = contacts.mapNotNull(FavoriteIntegratedContact::callEndpoint)
+            .map(IntegratedContactCallEndpoint::identity)
+        require(callEndpointIdentities.distinct().size == callEndpointIdentities.size) {
+            "Duplicate integrated call endpoint identity"
+        }
         return ByteArrayOutputStream().use { bytes ->
             DataOutputStream(bytes).use { output ->
                 output.writeInt(PAYLOAD_MAGIC)
                 output.writeInt(PAYLOAD_VERSION)
                 output.writeInt(contacts.size)
                 contacts.sortedBy { it.id.localId }.forEach { contact ->
-                    require(contact.endpoints.isNotEmpty()) { "Integrated contact needs an endpoint" }
+                    require(contact.endpoints.isNotEmpty() || contact.callEndpoint != null) {
+                        "Integrated contact needs an endpoint"
+                    }
                     require(contact.endpoints.size <= MAX_ENDPOINTS_PER_CONTACT) {
                         "Too many integrated contact endpoints"
                     }
@@ -69,6 +77,15 @@ internal object FavoriteIntegratedContactCodec {
                             }
                         }
                     }
+                    output.writeBoolean(contact.callEndpoint != null)
+                    when (val call = contact.callEndpoint) {
+                        is IntegratedContactCallEndpoint.PhoneNumber -> {
+                            output.writeInt(CALL_ENDPOINT_PHONE)
+                            output.writeBoundedString(call.number, MAX_ADDRESS_BYTES)
+                            output.writeNullableBoundedString(call.packageName, MAX_PACKAGE_BYTES)
+                        }
+                        null -> Unit
+                    }
                 }
             }
             bytes.toByteArray()
@@ -86,6 +103,7 @@ internal object FavoriteIntegratedContactCodec {
             if (count !in 0..MAX_CONTACTS) throw IOException("Invalid integrated contact count")
             val seenIds = mutableSetOf<String>()
             val seenEndpoints = mutableSetOf<String>()
+            val seenCallEndpoints = mutableSetOf<String>()
             buildList(count) {
                 repeat(count) {
                     val localId = input.readBoundedString(MAX_LOCAL_ID_BYTES)
@@ -94,7 +112,9 @@ internal object FavoriteIntegratedContactCodec {
                         throw IOException("Invalid integrated contact identity")
                     }
                     val endpointCount = input.readInt()
-                    if (endpointCount !in 1..MAX_ENDPOINTS_PER_CONTACT) {
+                    if (endpointCount !in 0..MAX_ENDPOINTS_PER_CONTACT ||
+                        (version < 3 && endpointCount == 0)
+                    ) {
                         throw IOException("Invalid integrated endpoint count")
                     }
                     val endpoints = buildList(endpointCount) {
@@ -114,11 +134,28 @@ internal object FavoriteIntegratedContactCodec {
                             add(endpoint)
                         }
                     }
+                    val callEndpoint = if (version >= 3 && input.readBoolean()) {
+                        when (input.readInt()) {
+                            CALL_ENDPOINT_PHONE -> IntegratedContactCallEndpoint.PhoneNumber(
+                                number = input.readBoundedString(MAX_ADDRESS_BYTES),
+                                packageName = input.readNullableBoundedString(MAX_PACKAGE_BYTES),
+                            )
+                            else -> throw IOException("Unknown integrated call endpoint type")
+                        }.also { call ->
+                            if (!call.isValid() || !seenCallEndpoints.add(call.identity)) {
+                                throw IOException("Invalid integrated call endpoint identity")
+                            }
+                        }
+                    } else null
+                    if (endpoints.isEmpty() && callEndpoint == null) {
+                        throw IOException("Integrated contact has no endpoint")
+                    }
                     add(
                         FavoriteIntegratedContact(
                             id = FavoriteContactId.Integrated(localId),
                             displayName = displayName,
                             endpoints = endpoints,
+                            callEndpoint = callEndpoint,
                         ),
                     )
                 }
@@ -180,9 +217,10 @@ internal object FavoriteIntegratedContactCodec {
 
     private const val PAYLOAD_MAGIC = 0x4D_49_43_50 // MICP
     private const val MIN_SUPPORTED_PAYLOAD_VERSION = 1
-    private const val PAYLOAD_VERSION = 2
+    private const val PAYLOAD_VERSION = 3
     private const val ENDPOINT_SHORTCUT = 1
     private const val ENDPOINT_PROVIDER_ADDRESS = 2
+    private const val CALL_ENDPOINT_PHONE = 1
     private const val MAX_CONTACTS = 256
     private const val MAX_ENDPOINTS_PER_CONTACT = 8
     private const val MAX_LOCAL_ID_BYTES = 128

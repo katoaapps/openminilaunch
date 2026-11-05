@@ -1,263 +1,300 @@
 package com.katoaapps.openminilaunch.ui.conversations
 
+import androidx.compose.animation.core.animateFloatAsState
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
+import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.PaddingValues
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.lazy.grid.GridCells
+import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
+import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.automirrored.filled.Message
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.ContactPage
-import androidx.compose.material.icons.filled.Download
-import androidx.compose.material.icons.filled.Phone
-import androidx.compose.material.icons.filled.Refresh
+import androidx.compose.material.icons.filled.DragHandle
 import androidx.compose.material3.Button
 import androidx.compose.material3.Card
 import androidx.compose.material3.CardDefaults
 import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.FilledTonalIconButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.graphicsLayer
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
+import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
+import androidx.compose.ui.unit.dp
+import androidx.compose.ui.zIndex
 import com.katoaapps.openminilaunch.R
 import com.katoaapps.openminilaunch.model.FavoriteAndroidContact
 import com.katoaapps.openminilaunch.model.FavoriteContact
 import com.katoaapps.openminilaunch.model.FavoriteContactId
 import com.katoaapps.openminilaunch.model.FavoriteIntegratedContact
+import com.katoaapps.openminilaunch.ui.components.moveItem
 import com.katoaapps.openminilaunch.ui.theme.Dimens
 import com.katoaapps.openminilaunch.ui.theme.Muted
 import com.katoaapps.openminilaunch.ui.theme.Rust
+import sh.calvin.reorderable.ReorderableItem
+import sh.calvin.reorderable.rememberReorderableLazyGridState
 
 @Composable
 internal fun FavoriteContactsList(
     contacts: List<FavoriteContact>,
     integratedAvailability: Map<FavoriteContactId.Integrated, FavoriteIntegratedContactAvailability>,
+    integratedCallAvailability: Map<FavoriteContactId.Integrated, FavoriteIntegratedCallAvailability?>,
     onOpen: (FavoriteContact) -> Unit,
-    onMessage: (FavoriteContact) -> Unit,
-    onCall: (FavoriteAndroidContact) -> Unit,
-    onInstallProvider: (FavoriteIntegratedContact) -> Unit,
     onAddPerson: () -> Unit,
+    onReorder: (List<FavoriteContactId>) -> Unit,
 ) {
-    LazyColumn(
-        modifier = Modifier.fillMaxSize().padding(horizontal = Dimens.dp18),
-        verticalArrangement = Arrangement.spacedBy(Dimens.dp10),
-    ) {
-        item {
-            Row(
-                Modifier.fillMaxWidth().padding(top = Dimens.dp4),
-                verticalAlignment = Alignment.CenterVertically,
-            ) {
-                Text(
-                    stringResource(R.string.starred_contacts),
-                    Modifier.weight(1f),
-                    letterSpacing = Dimens.sp1,
-                    fontWeight = FontWeight.Black,
-                    fontSize = Dimens.sp12,
-                )
-                IconButton(onClick = onAddPerson) {
-                    Icon(
-                        Icons.Default.Add,
-                        stringResource(R.string.add_person),
+    val visibleContacts = remember { mutableStateListOf<FavoriteContact>() }
+    var draggedContact by remember { mutableStateOf<FavoriteContactId?>(null) }
+    val gridState = rememberLazyGridState()
+    val hapticFeedback = LocalHapticFeedback.current
+    val reorderableState = rememberReorderableLazyGridState(gridState) { from, to ->
+        if (visibleContacts.moveItem(from.index, to.index)) {
+            hapticFeedback.performHapticFeedback(HapticFeedbackType.TextHandleMove)
+        }
+    }
+
+    LaunchedEffect(contacts, draggedContact) {
+        if (draggedContact == null && visibleContacts.toList() != contacts) {
+            visibleContacts.clear()
+            visibleContacts.addAll(contacts)
+        }
+    }
+
+    Column(Modifier.fillMaxSize()) {
+        Row(
+            Modifier.fillMaxWidth().padding(horizontal = Dimens.dp18, vertical = Dimens.dp4),
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            Text(
+                stringResource(R.string.starred_contacts),
+                Modifier.weight(1f),
+                letterSpacing = Dimens.sp1,
+                fontWeight = FontWeight.Black,
+                fontSize = Dimens.sp12,
+            )
+            IconButton(onClick = onAddPerson) {
+                Icon(Icons.Default.Add, stringResource(R.string.add_person))
+            }
+        }
+        LazyVerticalGrid(
+            columns = GridCells.Fixed(3),
+            state = gridState,
+            modifier = Modifier.fillMaxSize(),
+            contentPadding = PaddingValues(
+                start = Dimens.dp18,
+                end = Dimens.dp18,
+                bottom = Dimens.dp28,
+            ),
+            horizontalArrangement = Arrangement.spacedBy(Dimens.dp8),
+            verticalArrangement = Arrangement.spacedBy(Dimens.dp8),
+        ) {
+            items(visibleContacts, key = { it.id.storageKey }) { contact ->
+                ReorderableItem(reorderableState, key = contact.id.storageKey) { isDragging ->
+                    val interactionSource = remember { MutableInteractionSource() }
+                    val scale by animateFloatAsState(
+                        targetValue = if (isDragging) 1.04f else 1f,
+                        label = "favorite contact drag scale",
                     )
+                    val elevation by animateFloatAsState(
+                        targetValue = if (isDragging) 12f else 0f,
+                        label = "favorite contact drag elevation",
+                    )
+                    val dragHandle: @Composable () -> Unit = {
+                        Icon(
+                            Icons.Default.DragHandle,
+                            stringResource(R.string.drag_to_reorder),
+                            Modifier
+                                .size(Dimens.dp28)
+                                .draggableHandle(
+                                    interactionSource = interactionSource,
+                                    onDragStarted = {
+                                        draggedContact = contact.id
+                                        hapticFeedback.performHapticFeedback(
+                                            HapticFeedbackType.LongPress,
+                                        )
+                                    },
+                                    onDragStopped = {
+                                        onReorder(visibleContacts.map(FavoriteContact::id))
+                                        draggedContact = null
+                                    },
+                                )
+                                .padding(Dimens.dp4),
+                            tint = if (isDragging) MaterialTheme.colorScheme.primary else Muted,
+                        )
+                    }
+                    val cardModifier = Modifier
+                        .fillMaxWidth()
+                        .zIndex(if (isDragging) 1f else 0f)
+                        .graphicsLayer {
+                            scaleX = scale
+                            scaleY = scale
+                            shadowElevation = elevation
+                        }
+
+                    when (contact) {
+                        is FavoriteAndroidContact -> FavoriteAndroidContactCard(
+                            contact = contact,
+                            modifier = cardModifier,
+                            dragHandle = dragHandle,
+                            onOpen = onOpen,
+                        )
+                        is FavoriteIntegratedContact -> FavoriteIntegratedContactCard(
+                            contact = contact,
+                            availability = integratedAvailability[contact.id],
+                            callAvailability = integratedCallAvailability[contact.id],
+                            modifier = cardModifier,
+                            dragHandle = dragHandle,
+                            onOpen = onOpen,
+                        )
+                    }
                 }
             }
         }
-        items(contacts, key = { it.id.storageKey }) { contact ->
-            when (contact) {
-                is FavoriteAndroidContact -> FavoriteAndroidContactCard(
-                    contact = contact,
-                    onOpen = onOpen,
-                    onMessage = onMessage,
-                    onCall = onCall,
-                )
-                is FavoriteIntegratedContact -> FavoriteIntegratedContactCard(
-                    contact = contact,
-                    availability = integratedAvailability[contact.id],
-                    onOpen = onOpen,
-                    onMessage = onMessage,
-                    onInstallProvider = onInstallProvider,
-                )
-            }
-        }
-        item { Spacer(Modifier.height(Dimens.dp28)) }
     }
 }
 
 @Composable
 private fun FavoriteAndroidContactCard(
     contact: FavoriteAndroidContact,
+    modifier: Modifier,
+    dragHandle: @Composable () -> Unit,
     onOpen: (FavoriteContact) -> Unit,
-    onMessage: (FavoriteContact) -> Unit,
-    onCall: (FavoriteAndroidContact) -> Unit,
 ) {
-    Card(
-        modifier = Modifier.fillMaxWidth().clickable { onOpen(contact) },
-        shape = RoundedCornerShape(Dimens.dp18),
-        colors = CardDefaults.cardColors(
-            containerColor = MaterialTheme.colorScheme.surfaceContainerLow,
-        ),
-    ) {
-        Row(
-            Modifier.fillMaxWidth().padding(Dimens.dp12),
-            verticalAlignment = Alignment.CenterVertically,
-        ) {
-            FavoriteContactAvatar(contact.displayName, contact.photoUri)
-            Column(Modifier.weight(1f).padding(horizontal = Dimens.dp12)) {
-                Text(
-                    contact.displayName,
-                    fontWeight = FontWeight.Bold,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis,
-                )
-                Text(
-                    contact.organization
-                        ?: contact.phones.firstOrNull()?.label
-                        ?: stringResource(R.string.no_phone_numbers),
-                    color = Muted,
-                    fontSize = Dimens.sp11,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis,
-                )
-            }
-            FilledTonalIconButton(
-                onClick = { onMessage(contact) },
-                enabled = contact.phones.isNotEmpty(),
-            ) {
-                Icon(
-                    Icons.AutoMirrored.Filled.Message,
-                    stringResource(R.string.message_contact, contact.displayName),
-                    Modifier.size(Dimens.dp18),
-                )
-            }
-            FilledTonalIconButton(
-                onClick = { onCall(contact) },
-                enabled = contact.phones.isNotEmpty(),
-                modifier = Modifier.padding(start = Dimens.dp4),
-            ) {
-                Icon(
-                    Icons.Default.Phone,
-                    stringResource(R.string.call_contact, contact.displayName),
-                    Modifier.size(Dimens.dp18),
-                )
-            }
-        }
-    }
+    FavoriteContactGridCard(
+        contact = contact,
+        modifier = modifier,
+        dragHandle = dragHandle,
+        photoUri = contact.photoUri,
+        detail = contact.organization
+            ?: contact.phones.firstOrNull()?.label
+            ?: stringResource(R.string.no_phone_numbers),
+        error = false,
+        onOpen = onOpen,
+    )
 }
 
 @Composable
 private fun FavoriteIntegratedContactCard(
     contact: FavoriteIntegratedContact,
     availability: FavoriteIntegratedContactAvailability?,
+    callAvailability: FavoriteIntegratedCallAvailability?,
+    modifier: Modifier,
+    dragHandle: @Composable () -> Unit,
     onOpen: (FavoriteContact) -> Unit,
-    onMessage: (FavoriteContact) -> Unit,
-    onInstallProvider: (FavoriteIntegratedContact) -> Unit,
 ) {
+    val hasMessage = contact.endpoints.isNotEmpty()
     val resolvedAvailability = availability
         ?: FavoriteIntegratedContactAvailability.ConversationUnavailable(
             stringResource(R.string.integrated_contact),
         )
-    val providerLabel = resolvedAvailability.providerLabel
+    val providerLabel = if (hasMessage) {
+        resolvedAvailability.providerLabel
+    } else {
+        callAvailability?.appLabel ?: stringResource(R.string.use_system_calling_app)
+    }
+    val unavailable = if (hasMessage) {
+        resolvedAvailability !is FavoriteIntegratedContactAvailability.Available
+    } else {
+        callAvailability?.available == false
+    }
+    val detail = if (!hasMessage) {
+        if (unavailable) {
+            stringResource(R.string.calling_app_unavailable, providerLabel)
+        } else {
+            providerLabel
+        }
+    } else when (resolvedAvailability) {
+        is FavoriteIntegratedContactAvailability.Available -> providerLabel
+        is FavoriteIntegratedContactAvailability.AppNotInstalled ->
+            stringResource(R.string.provider_not_installed, providerLabel)
+        is FavoriteIntegratedContactAvailability.ConversationUnavailable ->
+            stringResource(R.string.provider_conversation_unavailable, providerLabel)
+    }
+
+    FavoriteContactGridCard(
+        contact = contact,
+        modifier = modifier,
+        dragHandle = dragHandle,
+        photoUri = null,
+        detail = detail,
+        error = unavailable,
+        onOpen = onOpen,
+    )
+}
+
+@Composable
+private fun FavoriteContactGridCard(
+    contact: FavoriteContact,
+    modifier: Modifier,
+    dragHandle: @Composable () -> Unit,
+    photoUri: String?,
+    detail: String,
+    error: Boolean,
+    onOpen: (FavoriteContact) -> Unit,
+) {
     Card(
-        modifier = Modifier.fillMaxWidth().clickable { onOpen(contact) },
+        modifier = modifier.clickable { onOpen(contact) },
         shape = RoundedCornerShape(Dimens.dp18),
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.surfaceContainerLow,
         ),
     ) {
-        Row(
-            Modifier.fillMaxWidth().padding(Dimens.dp12),
-            verticalAlignment = Alignment.CenterVertically,
+        Column(
+            Modifier.fillMaxWidth().heightIn(min = 124.dp).padding(Dimens.dp8),
+            horizontalAlignment = Alignment.CenterHorizontally,
         ) {
-            FavoriteContactAvatar(contact.displayName, null)
-            Column(Modifier.weight(1f).padding(horizontal = Dimens.dp12)) {
-                Text(
-                    contact.displayName,
-                    fontWeight = FontWeight.Bold,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis,
-                )
-                Text(
-                    when (resolvedAvailability) {
-                        is FavoriteIntegratedContactAvailability.Available -> providerLabel
-                        is FavoriteIntegratedContactAvailability.AppNotInstalled ->
-                            stringResource(R.string.provider_not_installed, providerLabel)
-                        is FavoriteIntegratedContactAvailability.ConversationUnavailable ->
-                            stringResource(
-                                R.string.provider_conversation_unavailable,
-                                providerLabel,
-                            )
-                    },
-                    color = if (
-                        resolvedAvailability is FavoriteIntegratedContactAvailability.Available
-                    ) {
-                        Muted
-                    } else {
-                        MaterialTheme.colorScheme.error
-                    },
-                    fontSize = Dimens.sp11,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis,
-                )
-            }
-            FilledTonalIconButton(
-                onClick = {
-                    when (resolvedAvailability) {
-                        is FavoriteIntegratedContactAvailability.Available -> onMessage(contact)
-                        is FavoriteIntegratedContactAvailability.AppNotInstalled -> {
-                            if (resolvedAvailability.installAvailable) onInstallProvider(contact)
-                            else onOpen(contact)
-                        }
-                        is FavoriteIntegratedContactAvailability.ConversationUnavailable ->
-                            onOpen(contact)
-                    }
-                },
-            ) {
-                when (resolvedAvailability) {
-                    is FavoriteIntegratedContactAvailability.Available -> Icon(
-                        Icons.AutoMirrored.Filled.Message,
-                        stringResource(R.string.message_contact, contact.displayName),
-                        Modifier.size(Dimens.dp18),
-                    )
-                    is FavoriteIntegratedContactAvailability.AppNotInstalled -> Icon(
-                        if (resolvedAvailability.installAvailable) {
-                            Icons.Default.Download
-                        } else {
-                            Icons.Default.Refresh
-                        },
-                        if (resolvedAvailability.installAvailable) {
-                            stringResource(R.string.install_provider, providerLabel)
-                        } else {
-                            stringResource(R.string.reconnect_conversation)
-                        },
-                        Modifier.size(Dimens.dp18),
-                    )
-                    is FavoriteIntegratedContactAvailability.ConversationUnavailable -> Icon(
-                        Icons.Default.Refresh,
-                        stringResource(R.string.reconnect_conversation),
-                        Modifier.size(Dimens.dp18),
-                    )
+            Box(Modifier.fillMaxWidth()) {
+                Box(Modifier.align(Alignment.CenterStart)) { dragHandle() }
+                Box(Modifier.align(Alignment.Center)) {
+                    FavoriteContactAvatar(contact.displayName, photoUri, size = Dimens.dp40)
                 }
             }
+            Text(
+                contact.displayName,
+                modifier = Modifier.fillMaxWidth().padding(top = Dimens.dp8),
+                fontWeight = FontWeight.Bold,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+                textAlign = TextAlign.Center,
+            )
+            Text(
+                detail,
+                modifier = Modifier.fillMaxWidth().heightIn(min = Dimens.dp30),
+                color = if (error) MaterialTheme.colorScheme.error else Muted,
+                fontSize = Dimens.sp11,
+                maxLines = 2,
+                overflow = TextOverflow.Ellipsis,
+                textAlign = TextAlign.Center,
+            )
         }
     }
 }

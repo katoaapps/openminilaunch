@@ -1,6 +1,7 @@
 package com.katoaapps.openminilaunch.ui.conversations
 
 import com.katoaapps.openminilaunch.model.FavoriteIntegratedContact
+import com.katoaapps.openminilaunch.model.IntegratedContactCallEndpoint
 import com.katoaapps.openminilaunch.model.IntegratedContactEndpoint
 import com.katoaapps.openminilaunch.model.LauncherShortcutTarget
 import com.katoaapps.openminilaunch.model.launcherShortcutSelectionKey
@@ -23,6 +24,11 @@ internal sealed interface FavoriteIntegratedContactAvailability {
         override val providerLabel: String,
     ) : FavoriteIntegratedContactAvailability
 }
+
+internal data class FavoriteIntegratedCallAvailability(
+    val appLabel: String,
+    val available: Boolean,
+)
 
 internal fun DeviceActions.resolveIntegratedContact(
     endpoint: IntegratedContactEndpoint.ConversationShortcut,
@@ -62,4 +68,14 @@ internal fun DeviceActions.integratedContactAvailability(
             )
         }
     }
+}
+
+internal fun DeviceActions.integratedCallAvailability(
+    contact: FavoriteIntegratedContact,
+): FavoriteIntegratedCallAvailability? = when (val endpoint = contact.callEndpoint) {
+    is IntegratedContactCallEndpoint.PhoneNumber -> FavoriteIntegratedCallAvailability(
+        appLabel = endpoint.packageName?.let(::appLabel) ?: defaultCallingAppLabel(),
+        available = isCallingAppAvailable(endpoint.number, endpoint.packageName),
+    )
+    null -> null
 }

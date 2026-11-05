@@ -12,6 +12,8 @@ import com.katoaapps.openminilaunch.features.appearance.CustomFontRepository
 import com.katoaapps.openminilaunch.features.appearance.HomeWallpaperRepository
 import com.katoaapps.openminilaunch.features.appearance.WATERMELON_PILL_COLOR_ARGB
 import com.katoaapps.openminilaunch.features.demo.DemoHomeProfile
+import com.katoaapps.openminilaunch.features.contacts.FavoriteIntegratedContactStore
+import com.katoaapps.openminilaunch.features.contacts.FavoriteContactOrderStore
 import com.katoaapps.openminilaunch.features.minkspace.MinkSpaceMiniApp
 import com.katoaapps.openminilaunch.features.minkspace.todo.TodoItem
 import com.katoaapps.openminilaunch.features.minkspace.todo.TodoStore
@@ -50,6 +52,8 @@ class LauncherStore private constructor(context: Context) {
     var customFontRevision by mutableIntStateOf(0)
         private set
     internal val profileRepository = ProfileRepository(appContext)
+    internal val favoriteIntegratedContactStore = FavoriteIntegratedContactStore(appContext)
+    internal val favoriteContactOrderStore = FavoriteContactOrderStore(appContext)
     internal val minkPadPreferences = com.katoaapps.openminilaunch.features.minkpad.minkPadRepository(appContext).preferences
     private val demoPreferences: DemoPreferenceStore = DemoPreferenceStore(appContext, prefs, todoStore)
     internal val demoHomeProfile get() = demoPreferences.profile

@@ -61,6 +61,11 @@ internal fun LauncherStore.createPortableBackup(appVersion: String): LauncherBac
         profile = profile?.card?.copy(hasPortrait = false),
         profileLinks = profile?.links.orEmpty(),
         widgetRecipes = portableWidgetRestoreRecipes(),
+        integratedContacts = favoriteIntegratedContactStore.contacts(),
+        integratedContactOrder = favoriteIntegratedContactStore.contacts()
+            .map { it.id.localId }
+            .toSet()
+            .let(favoriteContactOrderStore::portableIntegratedOrder),
     )
 }
 
@@ -145,6 +150,17 @@ internal fun LauncherStore.restorePortableBackup(
 
     setGitHubUpdateChecksEnabled(settings.githubUpdateChecksEnabled)
     settings.minkPadPreferences?.let(minkPadPreferences::update)
+    backup.integratedContacts?.let { importedContacts ->
+        favoriteIntegratedContactStore.mergeFromBackup(importedContacts)
+        backup.integratedContactOrder?.let { importedOrder ->
+            val availableIds = favoriteIntegratedContactStore.contacts()
+                .map { it.id.localId }
+                .toSet()
+            favoriteContactOrderStore.restoreIntegratedOrder(
+                importedOrder.filter(availableIds::contains),
+            )
+        }
+    }
 
     return if (restoreWidgetPlaceholders) {
         importWidgetRestoreRecipes(backup.widgetRecipes)

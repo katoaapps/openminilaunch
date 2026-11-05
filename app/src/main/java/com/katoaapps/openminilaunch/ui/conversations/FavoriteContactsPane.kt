@@ -28,13 +28,13 @@ import com.katoaapps.openminilaunch.features.contacts.FavoriteAndroidContactsRep
 import com.katoaapps.openminilaunch.features.contacts.FavoriteContactCatalog
 import com.katoaapps.openminilaunch.features.contacts.FavoriteContactRouteStore
 import com.katoaapps.openminilaunch.features.contacts.FavoriteIntegratedContactAddResult
-import com.katoaapps.openminilaunch.features.contacts.FavoriteIntegratedContactStore
 import com.katoaapps.openminilaunch.model.CommunicationRecipient
 import com.katoaapps.openminilaunch.model.AndroidContactPhone
 import com.katoaapps.openminilaunch.model.AndroidPhoneSelection
 import com.katoaapps.openminilaunch.model.ContactAppRoute
 import com.katoaapps.openminilaunch.model.FavoriteAndroidContact
 import com.katoaapps.openminilaunch.model.FavoriteIntegratedContact
+import com.katoaapps.openminilaunch.model.IntegratedContactCallEndpoint
 import com.katoaapps.openminilaunch.model.IntegratedContactEndpoint
 import com.katoaapps.openminilaunch.model.LauncherShortcutTarget
 import com.katoaapps.openminilaunch.model.favoritePhoneFingerprint
@@ -125,9 +125,8 @@ private fun FavoriteContactsContent(
         }
     }
     val routeStore = remember(context) { FavoriteContactRouteStore(context.applicationContext) }
-    val integratedStore = remember(context) {
-        FavoriteIntegratedContactStore(context.applicationContext)
-    }
+    val orderStore = store.favoriteContactOrderStore
+    val integratedStore = store.favoriteIntegratedContactStore
     val scope = rememberCoroutineScope()
     val revision = repository?.revision?.collectAsState()?.value ?: 0L
     val shortcutsRevision by actions.launcherShortcutsRevision.collectAsState()
@@ -135,6 +134,8 @@ private fun FavoriteContactsContent(
     var selectedContact by remember { mutableStateOf<FavoriteAndroidContact?>(null) }
     var pendingPhoneChoice by remember { mutableStateOf<PendingPhoneChoice?>(null) }
     var routeRevision by remember { mutableIntStateOf(0) }
+    var orderRevision by remember { mutableIntStateOf(0) }
+    var pendingFavoriteOrder by remember { mutableStateOf<List<String>?>(null) }
     var integratedRevision by remember { mutableIntStateOf(0) }
     var selectedIntegratedContact by remember { mutableStateOf<FavoriteIntegratedContact?>(null) }
     var reconnectingIntegratedContact by remember {
@@ -166,6 +167,18 @@ private fun FavoriteContactsContent(
             }
         }
     }
+    fun requestCall(phone: String, packageName: String?) {
+        if (
+            store.callAutomatically && supportsDirectCalls(context) &&
+            ContextCompat.checkSelfPermission(context, Manifest.permission.CALL_PHONE) !=
+            PackageManager.PERMISSION_GRANTED
+        ) {
+            pendingAutomaticCall = phone to packageName
+            callPermissionLauncher.launch(Manifest.permission.CALL_PHONE)
+        } else {
+            openCall(phone, packageName, store.callAutomatically)
+        }
+    }
     val integratedContacts by produceState<List<FavoriteIntegratedContact>?>(
         initialValue = null,
         key1 = integratedStore,
@@ -176,8 +189,10 @@ private fun FavoriteContactsContent(
     val actionAppOptions by produceState(
         initialValue = FavoriteActionAppOptions(),
         key1 = selectedContact?.id,
+        key2 = showAddPerson,
+        key3 = resumeRevision,
     ) {
-        value = if (selectedContact == null) {
+        value = if (selectedContact == null && !showAddPerson) {
             FavoriteActionAppOptions()
         } else {
             withContext(Dispatchers.IO) {
@@ -222,13 +237,21 @@ private fun FavoriteContactsContent(
         }
     }
     val locale = context.resources.configuration.locales[0]
-    val favoriteContacts = remember(contacts, integratedContacts, locale) {
+    val favoriteContacts = remember(
+        contacts,
+        integratedContacts,
+        locale,
+        orderRevision,
+        pendingFavoriteOrder,
+    ) {
         contacts?.let { androidContacts -> integratedContacts?.let { ownedContacts ->
-            FavoriteContactCatalog.combine(
+            val combined = FavoriteContactCatalog.combine(
                 androidContacts = androidContacts,
                 integratedContacts = ownedContacts,
                 locale = locale,
             )
+            pendingFavoriteOrder?.let { FavoriteContactCatalog.applyOrder(combined, it) }
+                ?: orderStore.applyTo(combined)
         } }
     }
     val integratedAvailability = remember(
@@ -238,6 +261,14 @@ private fun FavoriteContactsContent(
     ) {
         integratedContacts.orEmpty().associate { contact ->
             contact.id to actions.integratedContactAvailability(contact)
+        }
+    }
+    val integratedCallAvailability = remember(
+        integratedContacts,
+        resumeRevision,
+    ) {
+        integratedContacts.orEmpty().associate { contact ->
+            contact.id to actions.integratedCallAvailability(contact)
         }
     }
 
@@ -271,16 +302,7 @@ private fun FavoriteContactsContent(
             }
             FavoriteContactAction.CALL -> {
                 val packageName = routes.call.resolvePackage(store.preferredCallingPackage)
-                if (
-                    store.callAutomatically && supportsDirectCalls(context) &&
-                    ContextCompat.checkSelfPermission(context, Manifest.permission.CALL_PHONE) !=
-                    PackageManager.PERMISSION_GRANTED
-                ) {
-                    pendingAutomaticCall = phone.rawNumber to packageName
-                    callPermissionLauncher.launch(Manifest.permission.CALL_PHONE)
-                } else {
-                    openCall(phone.rawNumber, packageName, store.callAutomatically)
-                }
+                requestCall(phone.rawNumber, packageName)
             }
         }
         selectedContact = null
@@ -335,6 +357,19 @@ private fun FavoriteContactsContent(
         ).show()
     }
 
+    fun callIntegratedContact(contact: FavoriteIntegratedContact) {
+        val endpoint = contact.callEndpoint as? IntegratedContactCallEndpoint.PhoneNumber
+        if (endpoint == null) {
+            Toast.makeText(
+                context,
+                context.getString(R.string.no_phone_numbers),
+                Toast.LENGTH_SHORT,
+            ).show()
+            return
+        }
+        requestCall(endpoint.number, endpoint.packageName)
+    }
+
     when {
         favoriteContacts == null -> FavoriteContactsLoadingState()
         favoriteContacts.isEmpty() -> FavoriteContactsEmptyState(
@@ -346,38 +381,25 @@ private fun FavoriteContactsContent(
         else -> FavoriteContactsList(
             contacts = favoriteContacts,
             integratedAvailability = integratedAvailability,
+            integratedCallAvailability = integratedCallAvailability,
             onOpen = { contact ->
                 when (contact) {
                     is FavoriteAndroidContact -> selectedContact = contact
                     is FavoriteIntegratedContact -> selectedIntegratedContact = contact
                 }
             },
-            onMessage = { contact ->
-                when (contact) {
-                    is FavoriteAndroidContact -> requestAction(contact, FavoriteContactAction.MESSAGE)
-                    is FavoriteIntegratedContact -> composeIntegratedMessage(contact)
-                }
-            },
-            onCall = { requestAction(it, FavoriteContactAction.CALL) },
-            onInstallProvider = { contact ->
-                val state = integratedAvailability[contact.id]
-                val packageName = contact.endpoints.firstOrNull()?.packageName
-                if (
-                    state !is FavoriteIntegratedContactAvailability.AppNotInstalled ||
-                    packageName == null ||
-                    !actions.openMessagingProviderInstallPage(packageName)
-                ) {
-                    Toast.makeText(
-                        context,
-                        context.getString(
-                            R.string.could_not_open_app,
-                            state?.providerLabel ?: contact.displayName,
-                        ),
-                        Toast.LENGTH_SHORT,
-                    ).show()
-                }
-            },
             onAddPerson = { showAddPerson = true },
+            onReorder = { orderedIds ->
+                val orderedKeys = orderedIds.map { it.storageKey }
+                pendingFavoriteOrder = orderedKeys
+                scope.launch {
+                    val saved = withContext(Dispatchers.IO) {
+                        orderStore.updateVisibleOrder(orderedKeys)
+                    }
+                    if (saved) orderRevision++
+                    pendingFavoriteOrder = null
+                }
+            },
         )
     }
 
@@ -439,9 +461,14 @@ private fun FavoriteContactsContent(
         FavoriteIntegratedContactActionDialog(
             contact = contact,
             availability = availability,
+            callAvailability = integratedCallAvailability[contact.id],
             onMessage = {
                 selectedIntegratedContact = null
                 composeIntegratedMessage(contact)
+            },
+            onCall = {
+                selectedIntegratedContact = null
+                callIntegratedContact(contact)
             },
             onInstallProvider = {
                 val packageName = contact.endpoints.firstOrNull()?.packageName
@@ -553,6 +580,7 @@ private fun FavoriteContactsContent(
         AddIntegratedContactDialog(
             shortcuts = shortcuts,
             addressProviders = integratedAddressProviders,
+            callingApps = actionAppOptions.calling,
             actions = actions,
             onOpenContacts = {
                 showAddPerson = false
@@ -601,6 +629,32 @@ private fun FavoriteContactsContent(
                         FavoriteIntegratedContactAddResult.FAILED
                     }
                     when (result) {
+                        FavoriteIntegratedContactAddResult.ADDED -> {
+                            integratedRevision++
+                            showAddPerson = false
+                        }
+                        FavoriteIntegratedContactAddResult.DUPLICATE -> Toast.makeText(
+                            context,
+                            context.getString(R.string.favorite_already_added),
+                            Toast.LENGTH_SHORT,
+                        ).show()
+                        FavoriteIntegratedContactAddResult.FAILED -> Toast.makeText(
+                            context,
+                            context.getString(R.string.could_not_add_favorite),
+                            Toast.LENGTH_SHORT,
+                        ).show()
+                    }
+                }
+            },
+            onAddCall = { callingApp, number, displayName ->
+                scope.launch {
+                    when (withContext(Dispatchers.IO) {
+                        integratedStore.addCall(
+                            packageName = callingApp?.packageName,
+                            phoneNumber = number,
+                            displayName = displayName,
+                        )
+                    }) {
                         FavoriteIntegratedContactAddResult.ADDED -> {
                             integratedRevision++
                             showAddPerson = false

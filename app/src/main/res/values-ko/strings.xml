@@ -965,7 +965,7 @@
     <string name="profile_link_paypal">PayPal</string>
     <string name="profile_link_cash_app">Cash App</string>
     <string name="profile_link_custom_url">Custom URL</string>
-    <string name="profile_backup_privacy_warning">vCard contact details and links are included in exported backup JSON as readable text. Contact photos are never included.</string>
+    <string name="profile_backup_privacy_warning">내보낸 백업 JSON에는 vCard 세부 정보와 Mink에서 만든 즐겨찾기의 이름, 전화번호, 제공업체 주소 및 앱 경로가 읽을 수 있는 텍스트로 포함됩니다. 연락처 사진은 포함되지 않습니다.</string>
     <string name="profile_backup_export_title">Export readable vCard details?</string>
     <string name="update_notice_profile_heading">Your contact card, one flip away</string>
     <string name="update_notice_profile_title">A local virtual contact card and QR</string>
@@ -1040,4 +1040,8 @@
     <string name="home_tour_appearance_description">설정의 모양에서 배경화면, 아이콘, 글꼴, 색상 등을 선택하세요.</string>
     <string name="conversation_tour_messages_description">알림에서 진행 중인 메시지와 이메일 대화를 확인하고, 열어서 답장하거나 전체 대화를 볼 수 있습니다.</string>
     <string name="conversation_tour_favorites_description">Android 연락처에서 별표 표시한 사람을 보거나 연동 앱에서 사람을 추가해 중요한 대화를 가까이 두세요.</string>
+    <string name="compatible_calling_apps">호환되는 통화 앱</string>
+    <string name="calling_app_unavailable">%1$s은(는) 이 통화에 사용할 수 없습니다.</string>
+    <string name="sensitive_backup_export_title">읽을 수 있는 연락처 세부정보를 내보낼까요?</string>
+    <string name="favorite_contacts_backup_import_description">이 백업의 Mink에서 만든 즐겨찾기는 이 기기에 이미 있는 즐겨찾기를 삭제하지 않고 추가됩니다.</string>
 </resources>

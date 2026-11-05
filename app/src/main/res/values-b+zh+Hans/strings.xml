@@ -965,7 +965,7 @@
     <string name="profile_link_paypal">PayPal</string>
     <string name="profile_link_cash_app">Cash App</string>
     <string name="profile_link_custom_url">Custom URL</string>
-    <string name="profile_backup_privacy_warning">vCard contact details and links are included in exported backup JSON as readable text. Contact photos are never included.</string>
+    <string name="profile_backup_privacy_warning">导出的备份 JSON 会以可读文本包含 vCard 详细信息，以及由 Mink 创建的收藏联系人姓名、电话号码、服务商地址和应用路由。联系人照片永远不会包含在内。</string>
     <string name="profile_backup_export_title">Export readable vCard details?</string>
     <string name="update_notice_profile_heading">Your contact card, one flip away</string>
     <string name="update_notice_profile_title">A local virtual contact card and QR</string>
@@ -1040,4 +1040,8 @@
     <string name="home_tour_appearance_description">在“设置”中打开“外观”，选择壁纸、图标、字体、颜色等。</string>
     <string name="conversation_tour_messages_description">查看通知中的活跃消息和电子邮件对话，然后打开对话进行回复或查看完整内容。</string>
     <string name="conversation_tour_favorites_description">查看 Android 通讯录中已加星标的联系人，或从集成应用添加联系人，让重要对话触手可及。</string>
+    <string name="compatible_calling_apps">兼容的通话应用</string>
+    <string name="calling_app_unavailable">%1$s 无法用于此次通话。</string>
+    <string name="sensitive_backup_export_title">导出可读的联系人详情？</string>
+    <string name="favorite_contacts_backup_import_description">此备份中由 Mink 创建的收藏联系人将被添加，且不会移除此设备上已有的收藏联系人。</string>
 </resources>

@@ -3,6 +3,7 @@ package com.katoaapps.openminilaunch.features.contacts
 import com.katoaapps.openminilaunch.model.FavoriteContactId
 import com.katoaapps.openminilaunch.model.FavoriteAndroidContact
 import com.katoaapps.openminilaunch.model.FavoriteIntegratedContact
+import com.katoaapps.openminilaunch.model.IntegratedContactCallEndpoint
 import com.katoaapps.openminilaunch.model.IntegratedContactEndpoint
 import com.katoaapps.openminilaunch.model.LauncherShortcutTarget
 import com.katoaapps.openminilaunch.model.ProviderAddressType
@@ -56,6 +57,65 @@ class FavoriteIntegratedContactStoreTest {
                 FavoriteIntegratedContactCodec.encode(listOf(telegram)),
             ),
         )
+    }
+
+    @Test fun codecRoundTripPreservesCallOnlyFavorite() {
+        val caller = FavoriteIntegratedContact(
+            id = FavoriteContactId.Integrated("local-caller"),
+            displayName = "Mink Support",
+            endpoints = emptyList(),
+            callEndpoint = IntegratedContactCallEndpoint.PhoneNumber(
+                number = "+1 555 0100",
+                packageName = "us.zoom.videomeetings",
+            ),
+        )
+
+        assertEquals(
+            listOf(caller),
+            FavoriteIntegratedContactCodec.decode(
+                FavoriteIntegratedContactCodec.encode(listOf(caller)),
+            ),
+        )
+    }
+
+    @Test fun addingTheSameCompatibleCallTwiceIsRejected() {
+        val persistence = EncryptedFavoriteIntegratedContactPersistence(
+            MemoryContactDataStorage(),
+            testCipher(),
+        )
+        val store = FavoriteIntegratedContactStore(persistence)
+
+        assertEquals(
+            FavoriteIntegratedContactAddResult.ADDED,
+            store.addCall("us.zoom.videomeetings", "+1 555 0100", "Mink Support"),
+        )
+        assertEquals(
+            FavoriteIntegratedContactAddResult.DUPLICATE,
+            store.addCall("us.zoom.videomeetings", "+15550100", "Duplicate"),
+        )
+    }
+
+    @Test fun backupMergeAddsNewFavoritesWithoutReplacingExistingOnes() {
+        val persistence = EncryptedFavoriteIntegratedContactPersistence(
+            MemoryContactDataStorage(),
+            testCipher(),
+        )
+        assertTrue(persistence.save(listOf(may)))
+        val store = FavoriteIntegratedContactStore(persistence)
+        val caller = FavoriteIntegratedContact(
+            id = FavoriteContactId.Integrated("local-caller"),
+            displayName = "Mink Support",
+            endpoints = emptyList(),
+            callEndpoint = IntegratedContactCallEndpoint.PhoneNumber(
+                number = "+15550100",
+                packageName = null,
+            ),
+        )
+
+        assertEquals(1, store.mergeFromBackup(listOf(may, caller)))
+        assertEquals(setOf(may, caller), store.contacts().toSet())
+        assertEquals(0, store.mergeFromBackup(listOf(caller)))
+        assertEquals(setOf(may, caller), store.contacts().toSet())
     }
 
     @Test fun versionOneShortcutPayloadStillImports() {

@@ -1031,7 +1031,7 @@
     <string name="profile_link_paypal">PayPal</string>
     <string name="profile_link_cash_app">Cash App</string>
     <string name="profile_link_custom_url">Custom URL</string>
-    <string name="profile_backup_privacy_warning">vCard contact details and links are included in exported backup JSON as readable text. Contact photos are never included.</string>
+    <string name="profile_backup_privacy_warning">vCard details and Mink-created Favorite names, phone numbers, provider addresses, and app routes are included in exported backup JSON as readable text. Contact photos are never included.</string>
     <string name="profile_backup_export_title">Export readable vCard details?</string>
     <string name="update_notice_profile_heading">Your contact card, one flip away</string>
     <string name="update_notice_profile_title">A local virtual contact card and QR</string>
@@ -1086,6 +1086,8 @@
     <string name="call_with">Call with</string>
     <string name="use_messaging_setting">Use messaging setting</string>
     <string name="use_system_calling_app">Use system calling app</string>
+    <string name="compatible_calling_apps">Compatible calling apps</string>
+    <string name="calling_app_unavailable">%1$s is not available for this call.</string>
     <string name="use_calling_setting">Use calling setting</string>
     <string name="app_unavailable">Selected app unavailable</string>
     <string name="choose_phone_number">Choose a phone number</string>
@@ -1105,7 +1107,7 @@
     <string name="no_favorite_contacts_description">Star someone in Contacts or add a conversation from an integrated app.</string>
     <string name="open_contacts">Open Contacts</string>
     <string name="add_person">Add person</string>
-    <string name="add_person_description">Choose Contacts or an integrated app.</string>
+    <string name="add_person_description">Choose Contacts, an integrated app, or a compatible calling app.</string>
     <string name="no_integrated_contacts_available">No new app conversations are available right now.</string>
     <string name="display_name">Display name</string>
     <string name="add_by_phone_number">Enter phone number</string>
@@ -1149,4 +1151,6 @@
     <string name="home_tour_appearance_description">Open Appearance in Settings to choose your wallpaper, icons, fonts, colors, and more.</string>
     <string name="conversation_tour_messages_description">View active message and email conversations from notifications, then open one to reply or see the full conversation.</string>
     <string name="conversation_tour_favorites_description">See people starred in Android Contacts, or add people from integrated apps, so your most important conversations stay close.</string>
+    <string name="sensitive_backup_export_title">Export readable contact details?</string>
+    <string name="favorite_contacts_backup_import_description">Mink-created Favorites in this backup will be added without removing the ones already on this device.</string>
 </resources>

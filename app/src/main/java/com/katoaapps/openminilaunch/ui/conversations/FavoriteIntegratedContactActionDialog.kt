@@ -10,6 +10,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Message
 import androidx.compose.material.icons.filled.DeleteOutline
 import androidx.compose.material.icons.filled.Download
+import androidx.compose.material.icons.filled.Phone
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
@@ -33,7 +34,9 @@ import com.katoaapps.openminilaunch.ui.theme.Muted
 internal fun FavoriteIntegratedContactActionDialog(
     contact: FavoriteIntegratedContact,
     availability: FavoriteIntegratedContactAvailability,
+    callAvailability: FavoriteIntegratedCallAvailability?,
     onMessage: () -> Unit,
+    onCall: () -> Unit,
     onInstallProvider: () -> Unit,
     onReconnect: () -> Unit,
     onRemove: () -> Unit,
@@ -53,18 +56,45 @@ internal fun FavoriteIntegratedContactActionDialog(
                     fontWeight = FontWeight.Black,
                     modifier = Modifier.padding(top = Dimens.dp10),
                 )
+                val hasMessage = contact.endpoints.isNotEmpty()
+                val providerLabel = if (hasMessage) {
+                    availability.providerLabel
+                } else {
+                    callAvailability?.appLabel ?: stringResource(R.string.use_system_calling_app)
+                }
+                val callAppLabel = callAvailability?.appLabel
+                    ?: stringResource(R.string.use_system_calling_app)
                 Text(
-                    availability.providerLabel,
+                    providerLabel,
                     color = Muted,
                     modifier = Modifier.padding(top = Dimens.dp4),
                 )
-                UnavailableReason(availability)
-                AvailabilityAction(
-                    availability = availability,
-                    onMessage = onMessage,
-                    onInstallProvider = onInstallProvider,
-                    onReconnect = onReconnect,
-                )
+                if (hasMessage) {
+                    UnavailableReason(availability)
+                    AvailabilityAction(
+                        availability = availability,
+                        onMessage = onMessage,
+                        onInstallProvider = onInstallProvider,
+                        onReconnect = onReconnect,
+                    )
+                }
+                if (contact.callEndpoint != null) {
+                    if (callAvailability?.available == false) {
+                        Text(
+                            stringResource(R.string.calling_app_unavailable, callAppLabel),
+                            color = MaterialTheme.colorScheme.error,
+                            modifier = Modifier.padding(top = Dimens.dp4),
+                        )
+                    }
+                    PrimaryActionButton(
+                        label = stringResource(R.string.call),
+                        icon = {
+                            Icon(Icons.Default.Phone, null, Modifier.size(Dimens.dp18))
+                        },
+                        enabled = callAvailability?.available == true,
+                        onClick = onCall,
+                    )
+                }
                 TextButton(onClick = onRemove, modifier = Modifier.fillMaxWidth()) {
                     Icon(Icons.Default.DeleteOutline, null, Modifier.size(Dimens.dp18))
                     Text(
@@ -150,10 +180,12 @@ private fun ReconnectConversationButton(onReconnect: () -> Unit) {
 private fun PrimaryActionButton(
     label: String,
     icon: @Composable () -> Unit,
+    enabled: Boolean = true,
     onClick: () -> Unit,
 ) {
     Button(
         onClick = onClick,
+        enabled = enabled,
         modifier = Modifier.fillMaxWidth().padding(top = Dimens.dp18),
     ) {
         icon()

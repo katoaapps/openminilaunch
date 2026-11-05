@@ -18,6 +18,7 @@ import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.produceState
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
@@ -51,7 +52,15 @@ internal fun BackupRestoreSettingsPage(
     val context = LocalContext.current
     val scope = rememberCoroutineScope()
     var pendingImport by remember { mutableStateOf<LauncherBackup?>(null) }
-    var confirmProfileExport by remember { mutableStateOf(false) }
+    var confirmSensitiveExport by remember { mutableStateOf(false) }
+    val includesMinkFavoriteContacts by produceState(
+        initialValue = false,
+        key1 = store.favoriteIntegratedContactStore,
+    ) {
+        value = withContext(Dispatchers.IO) {
+            store.favoriteIntegratedContactStore.contacts().isNotEmpty()
+        }
+    }
     val exportSuccess = stringResource(R.string.backup_exported)
     val exportFailure = stringResource(R.string.backup_export_failed)
     val importFailure = stringResource(R.string.backup_import_failed)
@@ -97,8 +106,14 @@ internal fun BackupRestoreSettingsPage(
             subtitle = stringResource(R.string.export_backup_description),
             icon = Icons.Default.FileUpload,
             onClick = {
-                if (store.profileRepository.state is ProfileState.Ready) confirmProfileExport = true
-                else beginExport()
+                if (
+                    store.profileRepository.state is ProfileState.Ready ||
+                    includesMinkFavoriteContacts
+                ) {
+                    confirmSensitiveExport = true
+                } else {
+                    beginExport()
+                }
             },
         )
         SettingsRow(
@@ -127,21 +142,21 @@ internal fun BackupRestoreSettingsPage(
         )
     }
 
-    if (confirmProfileExport) {
+    if (confirmSensitiveExport) {
         AlertDialog(
-            onDismissRequest = { confirmProfileExport = false },
-            title = { Text(stringResource(R.string.profile_backup_export_title)) },
+            onDismissRequest = { confirmSensitiveExport = false },
+            title = { Text(stringResource(R.string.sensitive_backup_export_title)) },
             text = { Text(stringResource(R.string.profile_backup_privacy_warning)) },
             confirmButton = {
                 TextButton(
                     onClick = {
-                        confirmProfileExport = false
+                        confirmSensitiveExport = false
                         beginExport()
                     },
                 ) { Text(stringResource(R.string.continue_action)) }
             },
             dismissButton = {
-                TextButton(onClick = { confirmProfileExport = false }) {
+                TextButton(onClick = { confirmSensitiveExport = false }) {
                     Text(stringResource(R.string.cancel))
                 }
             },
@@ -169,6 +184,14 @@ internal fun BackupRestoreSettingsPage(
                             backup.todos.size,
                         ),
                     )
+                    if (backup.integratedContacts != null) {
+                        Text(
+                            stringResource(R.string.favorite_contacts_backup_import_description),
+                            color = Muted,
+                            fontSize = Dimens.sp11,
+                            modifier = Modifier.padding(top = Dimens.dp8),
+                        )
+                    }
                     if (backup.widgetRecipes.isNotEmpty()) {
                         Row(
                             Modifier.fillMaxWidth().padding(top = Dimens.dp12),

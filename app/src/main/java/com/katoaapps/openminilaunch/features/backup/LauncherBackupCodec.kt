@@ -57,6 +57,12 @@ internal object LauncherBackupCodec {
             }
         })
         put("widgets", encodeWidgetRecipes(backup.widgetRecipes))
+        backup.integratedContacts?.let {
+            put("favoriteContacts", FavoriteContactBackupCodec.encodeContacts(it))
+        }
+        backup.integratedContactOrder?.let { order ->
+            put("favoriteContactOrder", FavoriteContactBackupCodec.encodeOrder(order))
+        }
         backup.profile?.let { put("profile", ProfileBackupCodec.encode(it, backup.profileLinks)) }
         put("notIncluded", PORTABILITY_EXCLUSIONS.stringsJsonArray())
     }.toString(2)
@@ -79,6 +85,12 @@ internal object LauncherBackupCodec {
             profile = profile?.first,
             profileLinks = profile?.second.orEmpty(),
             widgetRecipes = decodeWidgetRecipes(root.optJSONArray("widgets")),
+            integratedContacts = if (root.has("favoriteContacts")) {
+                FavoriteContactBackupCodec.decodeContacts(root.optJSONArray("favoriteContacts"))
+            } else null,
+            integratedContactOrder = if (root.has("favoriteContactOrder")) {
+                FavoriteContactBackupCodec.decodeOrder(root.optJSONArray("favoriteContactOrder"))
+            } else null,
         )
     }
 

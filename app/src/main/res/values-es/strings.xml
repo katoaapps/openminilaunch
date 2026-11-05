@@ -965,7 +965,7 @@
     <string name="profile_link_paypal">PayPal</string>
     <string name="profile_link_cash_app">Cash App</string>
     <string name="profile_link_custom_url">Custom URL</string>
-    <string name="profile_backup_privacy_warning">vCard contact details and links are included in exported backup JSON as readable text. Contact photos are never included.</string>
+    <string name="profile_backup_privacy_warning">Los detalles de la vCard y los nombres, números de teléfono, direcciones de proveedor y rutas de aplicaciones de los favoritos creados en Mink se incluyen como texto legible en el archivo JSON de la copia de seguridad exportada. Las fotos de los contactos nunca se incluyen.</string>
     <string name="profile_backup_export_title">Export readable vCard details?</string>
     <string name="update_notice_profile_heading">Your contact card, one flip away</string>
     <string name="update_notice_profile_title">A local virtual contact card and QR</string>
@@ -1040,4 +1040,8 @@
     <string name="home_tour_appearance_description">Abre Apariencia en Ajustes para elegir el fondo de pantalla, los iconos, las fuentes, los colores y mucho más.</string>
     <string name="conversation_tour_messages_description">Consulta conversaciones activas de mensajes y correo desde las notificaciones y abre una para responder o ver la conversación completa.</string>
     <string name="conversation_tour_favorites_description">Consulta las personas favoritas en Contactos de Android o añade personas desde aplicaciones integradas para mantener cerca tus conversaciones más importantes.</string>
+    <string name="compatible_calling_apps">Aplicaciones de llamadas compatibles</string>
+    <string name="calling_app_unavailable">%1$s no está disponible para esta llamada.</string>
+    <string name="sensitive_backup_export_title">¿Exportar datos de contacto legibles?</string>
+    <string name="favorite_contacts_backup_import_description">Los favoritos creados en Mink incluidos en esta copia de seguridad se añadirán sin eliminar los que ya estén en este dispositivo.</string>
 </resources>

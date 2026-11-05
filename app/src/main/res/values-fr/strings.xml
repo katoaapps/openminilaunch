@@ -965,7 +965,7 @@
     <string name="profile_link_paypal">PayPal</string>
     <string name="profile_link_cash_app">Cash App</string>
     <string name="profile_link_custom_url">Custom URL</string>
-    <string name="profile_backup_privacy_warning">vCard contact details and links are included in exported backup JSON as readable text. Contact photos are never included.</string>
+    <string name="profile_backup_privacy_warning">Les détails de la vCard ainsi que les noms, numéros de téléphone, adresses de fournisseurs et itinéraires d’application des favoris créés dans Mink sont inclus en texte lisible dans le fichier JSON de sauvegarde exporté. Les photos des contacts ne sont jamais incluses.</string>
     <string name="profile_backup_export_title">Export readable vCard details?</string>
     <string name="update_notice_profile_heading">Your contact card, one flip away</string>
     <string name="update_notice_profile_title">A local virtual contact card and QR</string>
@@ -1040,4 +1040,8 @@
     <string name="home_tour_appearance_description">Ouvrez Apparence dans les réglages pour choisir le fond d’écran, les icônes, les polices, les couleurs et plus encore.</string>
     <string name="conversation_tour_messages_description">Consultez les conversations actives de messagerie et d’e-mail issues des notifications, puis ouvrez-en une pour répondre ou voir la conversation complète.</string>
     <string name="conversation_tour_favorites_description">Retrouvez les personnes favorites de Contacts Android ou ajoutez-en depuis les applications intégrées pour garder vos conversations importantes à portée.</string>
+    <string name="compatible_calling_apps">Applications d’appel compatibles</string>
+    <string name="calling_app_unavailable">%1$s n’est pas disponible pour cet appel.</string>
+    <string name="sensitive_backup_export_title">Exporter des coordonnées lisibles ?</string>
+    <string name="favorite_contacts_backup_import_description">Les favoris créés dans Mink et présents dans cette sauvegarde seront ajoutés sans supprimer ceux qui existent déjà sur cet appareil.</string>
 </resources>

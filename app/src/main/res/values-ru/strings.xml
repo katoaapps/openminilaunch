@@ -983,7 +983,7 @@
     <string name="profile_link_paypal">PayPal</string>
     <string name="profile_link_cash_app">Cash App</string>
     <string name="profile_link_custom_url">Custom URL</string>
-    <string name="profile_backup_privacy_warning">vCard contact details and links are included in exported backup JSON as readable text. Contact photos are never included.</string>
+    <string name="profile_backup_privacy_warning">Экспортируемая резервная копия JSON содержит данные vCard, а также имена, номера телефонов, адреса провайдеров и маршруты приложений для избранных контактов, созданных в Mink, в виде читаемого текста. Фотографии контактов никогда не включаются.</string>
     <string name="profile_backup_export_title">Export readable vCard details?</string>
     <string name="update_notice_profile_heading">Your contact card, one flip away</string>
     <string name="update_notice_profile_title">A local virtual contact card and QR</string>
@@ -1058,4 +1058,8 @@
     <string name="home_tour_appearance_description">Откройте раздел «Оформление» в настройках, чтобы выбрать обои, значки, шрифты, цвета и многое другое.</string>
     <string name="conversation_tour_messages_description">Просматривайте активные переписки и письма из уведомлений, а затем открывайте их, чтобы ответить или увидеть беседу целиком.</string>
     <string name="conversation_tour_favorites_description">Просматривайте людей, отмеченных звёздочкой в Контактах Android, или добавляйте людей из интегрированных приложений, чтобы важные беседы были под рукой.</string>
+    <string name="compatible_calling_apps">Совместимые приложения для звонков</string>
+    <string name="calling_app_unavailable">%1$s недоступно для этого звонка.</string>
+    <string name="sensitive_backup_export_title">Экспортировать читаемые данные контактов?</string>
+    <string name="favorite_contacts_backup_import_description">Избранные контакты, созданные в Mink и содержащиеся в этой резервной копии, будут добавлены без удаления уже имеющихся на устройстве.</string>
 </resources>

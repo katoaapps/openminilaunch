@@ -12,7 +12,12 @@ import com.katoaapps.openminilaunch.model.AppGridAssignment
 import com.katoaapps.openminilaunch.model.AppGridSlot
 import com.katoaapps.openminilaunch.model.FontAppearance
 import com.katoaapps.openminilaunch.model.FontSource
+import com.katoaapps.openminilaunch.model.FavoriteContactId
+import com.katoaapps.openminilaunch.model.FavoriteIntegratedContact
 import com.katoaapps.openminilaunch.model.IconAppearance
+import com.katoaapps.openminilaunch.model.IntegratedContactCallEndpoint
+import com.katoaapps.openminilaunch.model.IntegratedContactEndpoint
+import com.katoaapps.openminilaunch.model.ProviderAddressType
 import com.katoaapps.openminilaunch.model.MinkAppPauseMode
 import com.katoaapps.openminilaunch.model.PalettePreference
 import com.katoaapps.openminilaunch.model.QuickDrawerConfig
@@ -457,6 +462,68 @@ class LauncherBackupCodecTest {
         json.remove("widgets")
 
         assertEquals(emptyList<WidgetRestoreRecipe>(), LauncherBackupCodec.decode(json.toString()).widgetRecipes)
+    }
+
+    @Test fun minkCreatedFavoritesSurvivePortableBackupRoundTrip() {
+        val favorite = FavoriteIntegratedContact(
+            id = FavoriteContactId.Integrated("favorite-may"),
+            displayName = "May Wong",
+            endpoints = listOf(
+                IntegratedContactEndpoint.ProviderAddress(
+                    providerId = "whatsapp",
+                    packageName = "com.whatsapp",
+                    addressType = ProviderAddressType.PHONE,
+                    address = "+15550100",
+                ),
+            ),
+            callEndpoint = IntegratedContactCallEndpoint.PhoneNumber(
+                number = "+15550100",
+                packageName = "com.example.phone",
+            ),
+        )
+        val encoded = LauncherBackupCodec.encode(
+            sampleBackup(twoPanelMode = true).copy(integratedContacts = listOf(favorite)),
+        )
+
+        assertEquals(
+            listOf(favorite),
+            LauncherBackupCodec.decode(encoded).integratedContacts,
+        )
+        assertFalse(encoded.contains("contactUri"))
+        assertFalse(encoded.contains("photoUri"))
+    }
+
+    @Test fun olderBackupWithoutMinkCreatedFavoritesLeavesExistingFavoritesAlone() {
+        val json = JSONObject(
+            LauncherBackupCodec.encode(
+                sampleBackup(twoPanelMode = true).copy(integratedContacts = emptyList()),
+            ),
+        )
+        json.remove("favoriteContacts")
+
+        assertNull(LauncherBackupCodec.decode(json.toString()).integratedContacts)
+    }
+
+    @Test fun minkCreatedFavoriteOrderSurvivesPortableBackupRoundTrip() {
+        val order = listOf("favorite-gary", "favorite-may")
+        val encoded = LauncherBackupCodec.encode(
+            sampleBackup(twoPanelMode = true).copy(integratedContactOrder = order),
+        )
+
+        assertEquals(order, LauncherBackupCodec.decode(encoded).integratedContactOrder)
+    }
+
+    @Test fun olderBackupWithoutFavoriteOrderLeavesLocalOrderAlone() {
+        val json = JSONObject(
+            LauncherBackupCodec.encode(
+                sampleBackup(twoPanelMode = true).copy(
+                    integratedContactOrder = listOf("favorite-may"),
+                ),
+            ),
+        )
+        json.remove("favoriteContactOrder")
+
+        assertNull(LauncherBackupCodec.decode(json.toString()).integratedContactOrder)
     }
 
     @Test fun widgetRestoreRecipesAreCappedAndInvalidRecipesAreIgnored() {

@@ -47,6 +47,7 @@ import androidx.compose.ui.window.DialogProperties
 import com.katoaapps.openminilaunch.R
 import com.katoaapps.openminilaunch.features.contacts.FAVORITE_INTEGRATED_CONTACT_NAME_MAX_CHARS
 import com.katoaapps.openminilaunch.features.contacts.FAVORITE_PROVIDER_ADDRESS_MAX_CHARS
+import com.katoaapps.openminilaunch.features.contacts.CallingAppOption
 import com.katoaapps.openminilaunch.features.messaging.MessagingProviderOption
 import com.katoaapps.openminilaunch.model.FavoriteIntegratedContact
 import com.katoaapps.openminilaunch.model.LauncherShortcutTarget
@@ -62,21 +63,25 @@ import java.text.Collator
 internal fun AddIntegratedContactDialog(
     shortcuts: List<LauncherShortcutTarget>,
     addressProviders: List<MessagingProviderOption>,
+    callingApps: List<CallingAppOption>,
     actions: DeviceActions,
     onOpenContacts: () -> Unit,
     onAdd: (LauncherShortcutTarget, String) -> Unit,
     onAddAddress: (MessagingProviderOption, ProviderAddressType, String, String) -> Unit,
+    onAddCall: (CallingAppOption?, String, String) -> Unit,
     onDismiss: () -> Unit,
 ) {
     IntegratedContactPickerDialog(
         shortcuts = shortcuts,
         addressProviders = addressProviders,
+        callingApps = callingApps,
         actions = actions,
         mode = IntegratedContactPickerMode.ADD,
         displayName = "",
         onOpenContacts = onOpenContacts,
         onSelect = onAdd,
         onSelectAddress = onAddAddress,
+        onSelectCall = onAddCall,
         onDismiss = onDismiss,
     )
 }
@@ -94,6 +99,7 @@ internal fun ReconnectIntegratedContactDialog(
     IntegratedContactPickerDialog(
         shortcuts = shortcuts,
         addressProviders = addressProviders,
+        callingApps = emptyList(),
         actions = actions,
         mode = IntegratedContactPickerMode.RECONNECT,
         displayName = contact.displayName,
@@ -102,6 +108,7 @@ internal fun ReconnectIntegratedContactDialog(
         onSelectAddress = { provider, addressType, address, _ ->
             onReconnectAddress(provider, addressType, address)
         },
+        onSelectCall = { _, _, _ -> },
         onDismiss = onDismiss,
     )
 }
@@ -110,12 +117,14 @@ internal fun ReconnectIntegratedContactDialog(
 private fun IntegratedContactPickerDialog(
     shortcuts: List<LauncherShortcutTarget>,
     addressProviders: List<MessagingProviderOption>,
+    callingApps: List<CallingAppOption>,
     actions: DeviceActions,
     mode: IntegratedContactPickerMode,
     displayName: String,
     onOpenContacts: (() -> Unit)?,
     onSelect: (LauncherShortcutTarget, String) -> Unit,
     onSelectAddress: (MessagingProviderOption, ProviderAddressType, String, String) -> Unit,
+    onSelectCall: (CallingAppOption?, String, String) -> Unit,
     onDismiss: () -> Unit,
 ) {
     val collator = remember { Collator.getInstance() }
@@ -139,6 +148,12 @@ private fun IntegratedContactPickerDialog(
             .sortedWith { first, second -> collator.compare(first.label, second.label) }
     }
     var selectedProviderPackage by remember { mutableStateOf<String?>(null) }
+    var showingMessagingApps by remember(mode) {
+        mutableStateOf(mode == IntegratedContactPickerMode.RECONNECT)
+    }
+    var showingCallingApps by remember { mutableStateOf(false) }
+    var selectedCallingRoute by remember { mutableStateOf<CompatibleCallingRoute?>(null) }
+    var selectedPhoneNumber by remember { mutableStateOf("") }
     var selected by remember { mutableStateOf<LauncherShortcutTarget?>(null) }
     var selectedAddressType by remember { mutableStateOf<ProviderAddressType?>(null) }
     var selectedAddress by remember { mutableStateOf("") }
@@ -146,18 +161,34 @@ private fun IntegratedContactPickerDialog(
     val selectedProvider = providers.firstOrNull {
         it.packageName == selectedProviderPackage
     }
-    val returnToProviders = {
+    val returnToRoot = {
         selectedProviderPackage = null
+        showingMessagingApps = mode == IntegratedContactPickerMode.RECONNECT
+        showingCallingApps = false
+        selectedCallingRoute = null
+        selectedPhoneNumber = ""
         selected = null
         selectedAddressType = null
         selectedAddress = ""
         selectedDisplayName = displayName
     }
+    val navigateBack = {
+        when {
+            selectedProvider != null -> {
+                selectedProviderPackage = null
+                selected = null
+                selectedAddressType = null
+                selectedAddress = ""
+                selectedDisplayName = displayName
+            }
+            showingMessagingApps && mode == IntegratedContactPickerMode.ADD -> returnToRoot()
+            showingCallingApps -> returnToRoot()
+            else -> onDismiss()
+        }
+    }
 
     Dialog(
-        onDismissRequest = {
-            if (selectedProvider != null) returnToProviders() else onDismiss()
-        },
+        onDismissRequest = navigateBack,
         properties = DialogProperties(usePlatformDefaultWidth = false),
     ) {
         Surface(
@@ -173,8 +204,8 @@ private fun IntegratedContactPickerDialog(
                     Modifier.fillMaxWidth(),
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
-                    if (selectedProvider != null) {
-                        IconButton(onClick = returnToProviders) {
+                    if (selectedProvider != null || showingMessagingApps || showingCallingApps) {
+                        IconButton(onClick = navigateBack) {
                             Icon(
                                 Icons.AutoMirrored.Filled.ArrowBack,
                                 stringResource(R.string.back),
@@ -195,6 +226,11 @@ private fun IntegratedContactPickerDialog(
                         )
                         Text(
                             selectedProvider?.label
+                                ?: if (showingCallingApps) {
+                                    stringResource(R.string.compatible_calling_apps)
+                                } else if (showingMessagingApps) {
+                                    stringResource(R.string.messages)
+                                } else null
                                 ?: stringResource(
                                     if (mode == IntegratedContactPickerMode.ADD) {
                                         R.string.add_person_description
@@ -209,7 +245,7 @@ private fun IntegratedContactPickerDialog(
                         )
                     }
                 }
-                if (selectedProvider == null) {
+                if (selectedProvider == null && !showingMessagingApps && !showingCallingApps) {
                     LazyColumn(
                         modifier = Modifier.fillMaxWidth().weight(1f).padding(top = Dimens.dp12),
                         verticalArrangement = Arrangement.spacedBy(Dimens.dp8),
@@ -235,6 +271,45 @@ private fun IntegratedContactPickerDialog(
                                 )
                             }
                         }
+                        if (mode == IntegratedContactPickerMode.ADD) {
+                            item(key = "communication-actions") {
+                                Row(
+                                    modifier = Modifier.fillMaxWidth(),
+                                    horizontalArrangement = Arrangement.spacedBy(Dimens.dp8),
+                                ) {
+                                    AddPersonActionCard(
+                                        icon = {
+                                            Icon(
+                                                Icons.Default.AlternateEmail,
+                                                contentDescription = null,
+                                                modifier = Modifier.size(Dimens.dp30),
+                                            )
+                                        },
+                                        label = stringResource(R.string.message),
+                                        modifier = Modifier.weight(1f),
+                                        onClick = { showingMessagingApps = true },
+                                    )
+                                    AddPersonActionCard(
+                                        icon = {
+                                            Icon(
+                                                Icons.Default.Phone,
+                                                contentDescription = null,
+                                                modifier = Modifier.size(Dimens.dp30),
+                                            )
+                                        },
+                                        label = stringResource(R.string.call),
+                                        modifier = Modifier.weight(1f),
+                                        onClick = { showingCallingApps = true },
+                                    )
+                                }
+                            }
+                        }
+                    }
+                } else if (selectedProvider == null && showingMessagingApps) {
+                    LazyColumn(
+                        modifier = Modifier.fillMaxWidth().weight(1f).padding(top = Dimens.dp12),
+                        verticalArrangement = Arrangement.spacedBy(Dimens.dp8),
+                    ) {
                         items(providers, key = IntegratedContactProvider::packageName) { provider ->
                             AddPersonSourceRow(
                                 icon = {
@@ -264,12 +339,56 @@ private fun IntegratedContactPickerDialog(
                             }
                         }
                     }
+                } else if (showingCallingApps) {
+                    LazyColumn(
+                        modifier = Modifier.fillMaxWidth().weight(1f).padding(top = Dimens.dp12),
+                        verticalArrangement = Arrangement.spacedBy(Dimens.dp8),
+                    ) {
+                        item(key = "system-calling-app") {
+                            CallingAppRow(
+                                label = stringResource(R.string.use_system_calling_app),
+                                selected = selectedCallingRoute?.option == null &&
+                                    selectedCallingRoute != null,
+                                icon = {
+                                    Icon(
+                                        Icons.Default.Phone,
+                                        contentDescription = null,
+                                        modifier = Modifier.size(Dimens.dp34),
+                                    )
+                                },
+                                onClick = {
+                                    selectedCallingRoute = CompatibleCallingRoute(null)
+                                    selectedPhoneNumber = ""
+                                    selectedDisplayName = ""
+                                },
+                            )
+                        }
+                        items(callingApps, key = CallingAppOption::packageName) { app ->
+                            CallingAppRow(
+                                label = app.label,
+                                selected = selectedCallingRoute?.option?.packageName ==
+                                    app.packageName,
+                                icon = {
+                                    DrawableIcon(
+                                        drawable = actions.appIcon(app.packageName),
+                                        iconKey = "compatible-calling:${app.packageName}",
+                                        size = Dimens.dp34,
+                                    )
+                                },
+                                onClick = {
+                                    selectedCallingRoute = CompatibleCallingRoute(app)
+                                    selectedPhoneNumber = ""
+                                    selectedDisplayName = ""
+                                },
+                            )
+                        }
+                    }
                 } else {
                     LazyColumn(
                         modifier = Modifier.fillMaxWidth().weight(1f).padding(top = Dimens.dp12),
                         verticalArrangement = Arrangement.spacedBy(Dimens.dp8),
                     ) {
-                        selectedProvider.addressProvider?.addressTypes
+                        selectedProvider?.addressProvider?.addressTypes
                             ?.sortedBy(ProviderAddressType::ordinal)
                             ?.forEach { addressType ->
                                     item(key = "manual:${addressType.name}") {
@@ -314,7 +433,7 @@ private fun IntegratedContactPickerDialog(
                                     }
                                 }
                         items(
-                            selectedProvider.shortcuts,
+                            selectedProvider?.shortcuts.orEmpty(),
                             key = LauncherShortcutTarget::selectionKey,
                         ) { shortcut ->
                             val isSelected = selected?.selectionKey == shortcut.selectionKey
@@ -357,6 +476,18 @@ private fun IntegratedContactPickerDialog(
                         }
                     }
                 }
+                if (selectedCallingRoute != null) {
+                    OutlinedTextField(
+                        value = selectedPhoneNumber,
+                        onValueChange = {
+                            selectedPhoneNumber = it.take(FAVORITE_PROVIDER_ADDRESS_MAX_CHARS)
+                        },
+                        label = { Text(stringResource(R.string.phone_number)) },
+                        singleLine = true,
+                        keyboardOptions = KeyboardOptions(keyboardType = KeyboardType.Phone),
+                        modifier = Modifier.fillMaxWidth().padding(top = Dimens.dp12),
+                    )
+                }
                 if (selectedAddressType != null) {
                     OutlinedTextField(
                         value = selectedAddress,
@@ -388,7 +519,7 @@ private fun IntegratedContactPickerDialog(
                     )
                 }
                 if (mode == IntegratedContactPickerMode.ADD &&
-                    (selected != null || selectedAddressType != null)
+                    (selected != null || selectedAddressType != null || selectedCallingRoute != null)
                 ) {
                     OutlinedTextField(
                         value = selectedDisplayName,
@@ -420,10 +551,19 @@ private fun IntegratedContactPickerDialog(
                                         )
                                     }
                                 }
+                                ?: selectedCallingRoute?.let { route ->
+                                    onSelectCall(
+                                        route.option,
+                                        selectedPhoneNumber,
+                                        selectedDisplayName,
+                                    )
+                                }
                         },
                         enabled = selectedDisplayName.isNotBlank() && (
                             selected != null || selectedAddressType?.let {
                                 selectedAddress.isValidProviderAddress(it)
+                            } == true || selectedCallingRoute?.let {
+                                selectedPhoneNumber.trim().looksLikePhoneRecipient()
                             } == true
                         ),
                     ) {
@@ -484,12 +624,74 @@ private fun AddPersonSourceRow(
     }
 }
 
+@Composable
+private fun AddPersonActionCard(
+    icon: @Composable () -> Unit,
+    label: String,
+    modifier: Modifier = Modifier,
+    onClick: () -> Unit,
+) {
+    Surface(
+        modifier = modifier.clickable(onClick = onClick),
+        shape = RoundedCornerShape(Dimens.dp14),
+        color = MaterialTheme.colorScheme.surfaceContainerLow,
+    ) {
+        Column(
+            modifier = Modifier.padding(vertical = Dimens.dp16, horizontal = Dimens.dp10),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(Dimens.dp8),
+        ) {
+            icon()
+            Text(
+                label,
+                fontWeight = FontWeight.Bold,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+            )
+        }
+    }
+}
+
 private data class IntegratedContactProvider(
     val packageName: String,
     val label: String,
     val shortcuts: List<LauncherShortcutTarget>,
     val addressProvider: MessagingProviderOption?,
 )
+
+private data class CompatibleCallingRoute(val option: CallingAppOption?)
+
+@Composable
+private fun CallingAppRow(
+    label: String,
+    selected: Boolean,
+    icon: @Composable () -> Unit,
+    onClick: () -> Unit,
+) {
+    Surface(
+        modifier = Modifier.fillMaxWidth().clickable(onClick = onClick),
+        shape = RoundedCornerShape(Dimens.dp14),
+        color = if (selected) {
+            MaterialTheme.colorScheme.secondaryContainer
+        } else {
+            MaterialTheme.colorScheme.surfaceContainerLow
+        },
+    ) {
+        Row(
+            Modifier.fillMaxWidth().padding(Dimens.dp10),
+            verticalAlignment = Alignment.CenterVertically,
+        ) {
+            icon()
+            Text(
+                label,
+                modifier = Modifier.weight(1f).padding(start = Dimens.dp10),
+                fontWeight = FontWeight.Bold,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+            )
+        }
+    }
+}
 
 private fun String.isValidProviderAddress(type: ProviderAddressType): Boolean = when (type) {
     ProviderAddressType.PHONE -> trim().looksLikePhoneRecipient()

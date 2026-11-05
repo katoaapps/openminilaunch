@@ -34,6 +34,7 @@ internal data class FavoriteIntegratedContact(
     override val id: FavoriteContactId.Integrated,
     override val displayName: String,
     val endpoints: List<IntegratedContactEndpoint>,
+    val callEndpoint: IntegratedContactCallEndpoint? = null,
 ) : FavoriteContact
 
 /** The app-owned destination behind an integrated favorite. */
@@ -55,6 +56,18 @@ internal sealed interface IntegratedContactEndpoint {
         val addressType: ProviderAddressType,
         val address: String,
     ) : IntegratedContactEndpoint
+}
+
+/** A callable identity owned by Mink rather than Android Contacts. */
+internal sealed interface IntegratedContactCallEndpoint {
+    /**
+     * A standard Android phone-number route. The optional package is an installed app that
+     * explicitly advertises support for `tel:` intents; it is not a provider-native integration.
+     */
+    data class PhoneNumber(
+        val number: String,
+        val packageName: String?,
+    ) : IntegratedContactCallEndpoint
 }
 
 /** Explicit address forms verified by a provider integration. */

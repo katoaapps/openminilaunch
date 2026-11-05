@@ -10,6 +10,7 @@ import com.katoaapps.openminilaunch.model.AppFolderIndicatorStyle
 import com.katoaapps.openminilaunch.model.AppGridAssignment
 import com.katoaapps.openminilaunch.model.AppGridSlot
 import com.katoaapps.openminilaunch.model.FontAppearance
+import com.katoaapps.openminilaunch.model.FavoriteIntegratedContact
 import com.katoaapps.openminilaunch.model.IconAppearance
 import com.katoaapps.openminilaunch.model.MinkAppPauseMode
 import com.katoaapps.openminilaunch.model.PalettePreference
@@ -34,6 +35,10 @@ internal data class LauncherBackup(
     val profile: ProfileCard?,
     val profileLinks: List<ProfileLink>,
     val widgetRecipes: List<WidgetRestoreRecipe> = emptyList(),
+    /** Null means this backup predates portable Mink-created Favorites. */
+    val integratedContacts: List<FavoriteIntegratedContact>? = null,
+    /** Relative order for portable Mink-created Favorites; Android contact IDs stay local. */
+    val integratedContactOrder: List<String>? = null,
 )
 
 internal data class LauncherBackupLayout(

@@ -459,6 +459,14 @@ class DeviceActions(private val context: Context) {
             .toList()
     }
 
+    /** Whether the current device still exposes a handler for this standard Android call route. */
+    internal fun isCallingAppAvailable(phone: String, packageName: String?): Boolean {
+        val intent = Intent(Intent.ACTION_DIAL, Uri.parse("tel:${Uri.encode(phone)}"))
+        return canResolve(
+            if (packageName.isNullOrBlank()) intent else Intent(intent).setPackage(packageName),
+        )
+    }
+
     fun defaultCallingAppLabel(): String {
         val intent = Intent(Intent.ACTION_DIAL, Uri.parse("tel:+15551234567"))
         @Suppress("DEPRECATION")

@@ -965,7 +965,7 @@
     <string name="profile_link_paypal">PayPal</string>
     <string name="profile_link_cash_app">Cash App</string>
     <string name="profile_link_custom_url">Custom URL</string>
-    <string name="profile_backup_privacy_warning">vCard contact details and links are included in exported backup JSON as readable text. Contact photos are never included.</string>
+    <string name="profile_backup_privacy_warning">রপ্তানি করা ব্যাকআপ JSON-এ vCard-এর বিবরণ এবং Mink-এ তৈরি প্রিয় পরিচিতির নাম, ফোন নম্বর, প্রদানকারীর ঠিকানা ও অ্যাপ রুট পাঠযোগ্য টেক্সট হিসেবে অন্তর্ভুক্ত থাকে। পরিচিতির ছবি কখনো অন্তর্ভুক্ত করা হয় না।</string>
     <string name="profile_backup_export_title">Export readable vCard details?</string>
     <string name="update_notice_profile_heading">Your contact card, one flip away</string>
     <string name="update_notice_profile_title">A local virtual contact card and QR</string>
@@ -1040,4 +1040,8 @@
     <string name="home_tour_appearance_description">ওয়ালপেপার, আইকন, ফন্ট, রং এবং আরও কিছু বেছে নিতে সেটিংসে Appearance খুলুন।</string>
     <string name="conversation_tour_messages_description">নোটিফিকেশন থেকে সক্রিয় মেসেজ ও ইমেইল কথোপকথন দেখুন, তারপর উত্তর দিতে বা পুরো কথোপকথন দেখতে একটি খুলুন।</string>
     <string name="conversation_tour_favorites_description">Android Contacts-এ তারকা দেওয়া মানুষদের দেখুন, অথবা ইন্টিগ্রেটেড অ্যাপ থেকে মানুষ যোগ করুন, যাতে গুরুত্বপূর্ণ কথোপকথনগুলো কাছে থাকে।</string>
+    <string name="compatible_calling_apps">সামঞ্জস্যপূর্ণ কলিং অ্যাপ</string>
+    <string name="calling_app_unavailable">%1$s এই কলের জন্য উপলভ্য নয়।</string>
+    <string name="sensitive_backup_export_title">পাঠযোগ্য পরিচিতির বিবরণ রপ্তানি করবেন?</string>
+    <string name="favorite_contacts_backup_import_description">এই ব্যাকআপের Mink-এ তৈরি প্রিয় পরিচিতিগুলো যোগ করা হবে, তবে এই ডিভাইসে আগে থেকে থাকা প্রিয় পরিচিতিগুলো সরানো হবে না।</string>
 </resources>

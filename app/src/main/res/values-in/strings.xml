@@ -965,7 +965,7 @@
     <string name="profile_link_paypal">PayPal</string>
     <string name="profile_link_cash_app">Cash App</string>
     <string name="profile_link_custom_url">Custom URL</string>
-    <string name="profile_backup_privacy_warning">vCard contact details and links are included in exported backup JSON as readable text. Contact photos are never included.</string>
+    <string name="profile_backup_privacy_warning">Detail vCard serta nama Favorit buatan Mink, nomor telepon, alamat penyedia, dan rute aplikasi disertakan sebagai teks yang dapat dibaca dalam JSON cadangan yang diekspor. Foto kontak tidak pernah disertakan.</string>
     <string name="profile_backup_export_title">Export readable vCard details?</string>
     <string name="update_notice_profile_heading">Your contact card, one flip away</string>
     <string name="update_notice_profile_title">A local virtual contact card and QR</string>
@@ -1040,4 +1040,8 @@
     <string name="home_tour_appearance_description">Buka Tampilan di Setelan untuk memilih wallpaper, ikon, font, warna, dan lainnya.</string>
     <string name="conversation_tour_messages_description">Lihat percakapan pesan dan email aktif dari notifikasi, lalu buka salah satunya untuk membalas atau melihat percakapan lengkap.</string>
     <string name="conversation_tour_favorites_description">Lihat orang yang diberi bintang di Kontak Android atau tambahkan orang dari aplikasi terintegrasi agar percakapan penting tetap dekat.</string>
+    <string name="compatible_calling_apps">Aplikasi panggilan yang kompatibel</string>
+    <string name="calling_app_unavailable">%1$s tidak tersedia untuk panggilan ini.</string>
+    <string name="sensitive_backup_export_title">Ekspor detail kontak yang dapat dibaca?</string>
+    <string name="favorite_contacts_backup_import_description">Favorit buatan Mink dalam cadangan ini akan ditambahkan tanpa menghapus Favorit yang sudah ada di perangkat ini.</string>
 </resources>
