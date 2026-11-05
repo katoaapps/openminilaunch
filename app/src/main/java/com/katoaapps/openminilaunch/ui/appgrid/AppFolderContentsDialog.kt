@@ -18,6 +18,7 @@ import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Palette
 import androidx.compose.material3.Icon
@@ -25,7 +26,6 @@ import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
-import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -137,10 +137,12 @@ internal fun AppFolderContentsDialog(
                         IconButton(onClick = { showColorPicker = true }) {
                             Icon(Icons.Default.Palette, stringResource(R.string.folder_color))
                         }
-                        TextButton(onClick = {
+                        IconButton(onClick = {
                             commitAppearance()
                             onEdit()
-                        }) { Text(stringResource(R.string.edit)) }
+                        }) {
+                            Icon(Icons.Default.Add, stringResource(R.string.add))
+                        }
                         IconButton(onClick = ::commitAndDismiss) {
                             Icon(Icons.Default.Close, stringResource(R.string.close))
                         }

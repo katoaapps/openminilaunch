@@ -34,6 +34,7 @@ internal fun MinkSpaceHost(
     openVCardSettings: () -> Unit,
     openMinkSpaceSettings: () -> Unit,
     presentationState: MinkSpacePresentationState,
+    expandedPresentation: Boolean,
     modifier: Modifier = Modifier,
 ) {
     val dependencies = remember(
@@ -117,6 +118,7 @@ internal fun MinkSpaceHost(
                         contentColor = contentColor,
                         mutedContentColor = mutedContentColor,
                         containerColor = insetColor,
+                        expandedPresentation = expandedPresentation,
                         expansion = expansion,
                     ),
                     modifier = Modifier.fillMaxSize(),

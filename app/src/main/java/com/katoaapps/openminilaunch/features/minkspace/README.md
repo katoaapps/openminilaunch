@@ -50,6 +50,8 @@ internal class ExampleMinkSpaceApp(
 - `contentColor`, `mutedContentColor`, and `containerColor` are resolved by Home.
 - `Surface` draws the standard MinkSpace container.
 - `expansion` exposes `enabled`, `expanded`, `expand()`, and `collapse()`.
+- `expandedPresentation` stays true through the collapse animation so compact-only content does not
+  appear before the shared Home surface has finished shrinking.
 
 The scope deliberately does not expose `LauncherStore`, `DeviceActions`, Activities, or feature
 repositories. Pass those through the adapter constructor instead. This prevents MinkSpace from

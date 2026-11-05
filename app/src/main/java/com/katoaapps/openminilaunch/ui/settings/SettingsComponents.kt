@@ -244,7 +244,9 @@ private fun <T> AppPickerDialogContent(
                             items(visibleApps, key = appKey) { app ->
                                 val isSelected = appKey(app) in selected
                                 Column(
-                                    Modifier.padding(Dimens.dp4).clip(RoundedCornerShape(Dimens.dp16))
+                                    Modifier.padding(Dimens.dp4)
+                                        .height(Dimens.dp96)
+                                        .clip(RoundedCornerShape(Dimens.dp16))
                                         .background(if (isSelected) Sage else MaterialTheme.colorScheme.surfaceContainerLow)
                                         .clickable {
                                             if (multiSelect && !isSelected && selected.size >= selectionLimit) {
@@ -257,7 +259,13 @@ private fun <T> AppPickerDialogContent(
                                     horizontalAlignment = Alignment.CenterHorizontally,
                                 ) {
                                     appIcon(app, Dimens.dp48)
-                                    Text(appLabel(app), textAlign = TextAlign.Center, fontSize = Dimens.sp11, maxLines = 2, modifier = Modifier.padding(top = Dimens.dp6))
+                                    Text(
+                                        appLabel(app),
+                                        textAlign = TextAlign.Center,
+                                        fontSize = Dimens.sp11,
+                                        maxLines = 2,
+                                        modifier = Modifier.height(Dimens.dp32).padding(top = Dimens.dp6),
+                                    )
                                 }
                             }
                         }

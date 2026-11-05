@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
@@ -158,6 +159,7 @@ private fun ShortcutPickerCard(
 ) {
     Column(
         modifier.padding(Dimens.dp2)
+            .height(Dimens.dp96)
             .clip(RoundedCornerShape(Dimens.dp16))
             .background(if (selected) Sage else MaterialTheme.colorScheme.surfaceContainerLow)
             .clickable(onClick = onClick)
@@ -167,7 +169,7 @@ private fun ShortcutPickerCard(
         LauncherTargetIcon(shortcut, actions, Dimens.dp48)
         Text(
             shortcut.label,
-            modifier = Modifier.padding(top = Dimens.dp6),
+            modifier = Modifier.height(Dimens.dp32).padding(top = Dimens.dp6),
             textAlign = TextAlign.Center,
             fontSize = Dimens.sp11,
             fontWeight = FontWeight.Medium,

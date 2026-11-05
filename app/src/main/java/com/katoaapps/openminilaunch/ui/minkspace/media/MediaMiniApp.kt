@@ -19,6 +19,8 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.rememberUpdatedState
+import androidx.compose.runtime.snapshotFlow
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -33,7 +35,12 @@ import com.katoaapps.openminilaunch.ui.theme.Muted
 internal fun MediaMiniApp(
     items: List<MediaItem>,
     onOpenItem: (MediaItem) -> Unit,
+    expanded: Boolean = false,
+    expandedPresentation: Boolean = expanded,
+    onExpand: (() -> Unit)? = null,
     onManageMedia: (() -> Unit)? = null,
+    focusedItemKey: String? = null,
+    onFocusedItemChange: ((MediaItem) -> Unit)? = null,
     modifier: Modifier = Modifier,
     contentColor: Color = LocalContentColor.current,
     mutedContentColor: Color = Muted,
@@ -57,10 +64,32 @@ internal fun MediaMiniApp(
         return
     }
 
-    val pagerState = rememberPagerState(pageCount = { items.size })
+    val itemKeys = items.map { it.uri.toString() }
+    val initialPage = itemKeys.indexOf(focusedItemKey)
+        .takeIf { it >= 0 }
+        ?: 0
+    val pagerState = rememberPagerState(
+        initialPage = initialPage,
+        pageCount = { items.size },
+    )
     LaunchedEffect(items.size) {
         if (pagerState.currentPage > items.lastIndex) {
             pagerState.scrollToPage(items.lastIndex)
+        }
+    }
+    LaunchedEffect(focusedItemKey, itemKeys) {
+        val focusedIndex = itemKeys.indexOf(focusedItemKey)
+        if (focusedIndex >= 0 && focusedIndex != pagerState.currentPage) {
+            pagerState.animateScrollToPage(focusedIndex)
+        }
+    }
+    val currentOnFocusedItemChange = rememberUpdatedState(onFocusedItemChange)
+    val currentItems = rememberUpdatedState(items)
+    LaunchedEffect(pagerState) {
+        snapshotFlow { pagerState.settledPage }.collect { page ->
+            currentItems.value.getOrNull(page)?.let { item ->
+                currentOnFocusedItemChange.value?.invoke(item)
+            }
         }
     }
     Box(modifier) {
@@ -68,7 +97,14 @@ internal fun MediaMiniApp(
             items.getOrNull(page)?.let { item ->
                 MediaPreview(
                     item = item,
-                    onClick = { onOpenItem(item) },
+                    onClick = {
+                        if (!expanded && onExpand != null) {
+                            onExpand()
+                        } else {
+                            onOpenItem(item)
+                        }
+                    },
+                    fitCenter = expandedPresentation,
                     modifier = Modifier.fillMaxSize(),
                 )
             }

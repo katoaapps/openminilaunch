@@ -7,40 +7,31 @@ import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.compose.setContent
 import androidx.activity.enableEdgeToEdge
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
-import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.Delete
-import androidx.compose.material.icons.filled.KeyboardArrowDown
-import androidx.compose.material.icons.filled.KeyboardArrowUp
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
-import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.res.stringResource
-import androidx.compose.ui.text.font.FontWeight
-import androidx.compose.ui.text.style.TextOverflow
 import com.katoaapps.openminilaunch.R
 import com.katoaapps.openminilaunch.data.LauncherStore
 import com.katoaapps.openminilaunch.features.minkspace.media.MediaActions
@@ -49,7 +40,6 @@ import com.katoaapps.openminilaunch.features.minkspace.media.MediaRepository
 import com.katoaapps.openminilaunch.ui.components.PageHeader
 import com.katoaapps.openminilaunch.ui.theme.Dimens
 import com.katoaapps.openminilaunch.ui.theme.MinkLauncherTheme
-import com.katoaapps.openminilaunch.ui.theme.Muted
 
 class MediaLabActivity : ComponentActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -63,7 +53,6 @@ class MediaLabActivity : ComponentActivity() {
         }
     }
 }
-
 @Composable
 private fun MediaLabScreen(onClose: () -> Unit) {
     val context = androidx.compose.ui.platform.LocalContext.current
@@ -72,6 +61,15 @@ private fun MediaLabScreen(onClose: () -> Unit) {
         repository.add(it)
     }
     var pendingRemoval by remember { mutableStateOf<MediaItem?>(null) }
+    var focusedItemKey by rememberSaveable {
+        mutableStateOf(repository.items.firstOrNull()?.uri?.toString())
+    }
+
+    LaunchedEffect(repository.items.toList()) {
+        if (repository.items.none { it.uri.toString() == focusedItemKey }) {
+            focusedItemKey = repository.items.firstOrNull()?.uri?.toString()
+        }
+    }
 
     fun open(item: MediaItem) {
         if (!MediaActions.open(context, item)) {
@@ -102,28 +100,20 @@ private fun MediaLabScreen(onClose: () -> Unit) {
                 MediaMiniApp(
                     items = repository.items,
                     onOpenItem = ::open,
+                    focusedItemKey = focusedItemKey,
+                    onFocusedItemChange = { focusedItemKey = it.uri.toString() },
                     modifier = Modifier.fillMaxSize(),
                 )
             }
         }
         if (repository.items.isNotEmpty()) {
-            LazyColumn(
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .heightIn(max = Dimens.dp240)
-                    .padding(horizontal = Dimens.dp16, vertical = Dimens.dp8),
-                verticalArrangement = Arrangement.spacedBy(Dimens.dp6),
-            ) {
-                itemsIndexed(repository.items, key = { _, item -> item.uri.toString() }) { index, item ->
-                    MediaLibraryRow(
-                        item = item,
-                        first = index == 0,
-                        last = index == repository.items.lastIndex,
-                        onMove = { repository.move(item, it) },
-                        onRemove = { pendingRemoval = item },
-                    )
-                }
-            }
+            ReorderableMediaLibrary(
+                items = repository.items,
+                focusedItemKey = focusedItemKey,
+                onFocus = { focusedItemKey = it.uri.toString() },
+                onOrderChange = repository::setOrder,
+                onRemove = { pendingRemoval = it },
+            )
         }
     }
 
@@ -146,47 +136,5 @@ private fun MediaLabScreen(onClose: () -> Unit) {
                 }
             },
         )
-    }
-}
-
-@Composable
-private fun MediaLibraryRow(
-    item: MediaItem,
-    first: Boolean,
-    last: Boolean,
-    onMove: (Int) -> Unit,
-    onRemove: () -> Unit,
-) {
-    Surface(
-        shape = RoundedCornerShape(Dimens.dp14),
-        color = MaterialTheme.colorScheme.surfaceContainerLow,
-    ) {
-        Row(
-            modifier = Modifier.fillMaxWidth().padding(start = Dimens.dp12),
-            verticalAlignment = Alignment.CenterVertically,
-        ) {
-            Column(Modifier.weight(1f)) {
-                Text(
-                    text = item.displayName,
-                    fontWeight = FontWeight.SemiBold,
-                    maxLines = 1,
-                    overflow = TextOverflow.Ellipsis,
-                )
-                Text(
-                    text = if (item.isVideo) stringResource(R.string.video) else stringResource(R.string.image_or_gif),
-                    color = Muted,
-                    style = MaterialTheme.typography.bodySmall,
-                )
-            }
-            IconButton(onClick = { onMove(-1) }, enabled = !first) {
-                Icon(Icons.Default.KeyboardArrowUp, stringResource(R.string.move_up))
-            }
-            IconButton(onClick = { onMove(1) }, enabled = !last) {
-                Icon(Icons.Default.KeyboardArrowDown, stringResource(R.string.move_down))
-            }
-            IconButton(onClick = onRemove) {
-                Icon(Icons.Default.Delete, stringResource(R.string.remove))
-            }
-        }
     }
 }

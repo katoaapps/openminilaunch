@@ -149,6 +149,7 @@ internal fun BoxScope.HomeFocusPanel(
                     openVCardSettings = openVCardSettings,
                     openMinkSpaceSettings = openMinkSpaceSettings,
                     presentationState = minkSpacePresentation,
+                    expandedPresentation = expansionLayout.expandedPresentation,
                     modifier = Modifier.weight(1f).fillMaxHeight().onGloballyPositioned { coordinates ->
                         val origin = coordinates.positionInRoot()
                         onTodoCenterChanged(

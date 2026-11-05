@@ -41,12 +41,13 @@ internal class MediaRepository private constructor(context: Context) {
         save()
     }
 
-    fun move(item: MediaItem, direction: Int) {
-        val currentIndex = mutableItems.indexOf(item)
-        if (currentIndex < 0) return
-        val targetIndex = (currentIndex + direction).coerceIn(mutableItems.indices)
-        if (currentIndex == targetIndex) return
-        mutableItems.add(targetIndex, mutableItems.removeAt(currentIndex))
+    fun setOrder(orderedUris: List<Uri>) {
+        val itemsByUri = mutableItems.associateBy(MediaItem::uri)
+        val requestedItems = orderedUris.distinct().mapNotNull(itemsByUri::get)
+        val reorderedItems = requestedItems + mutableItems.filterNot { it.uri in orderedUris }
+        if (reorderedItems == mutableItems) return
+        mutableItems.clear()
+        mutableItems.addAll(reorderedItems)
         save()
     }
 

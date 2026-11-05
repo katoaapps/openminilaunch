@@ -23,6 +23,8 @@ internal class MinkSpaceScope internal constructor(
     val contentColor: Color,
     val mutedContentColor: Color,
     val containerColor: Color,
+    /** Remains true until the shared collapse animation has finished. */
+    val expandedPresentation: Boolean,
     val expansion: MinkSpaceExpansionController,
 ) {
     @Composable

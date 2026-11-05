@@ -33,6 +33,7 @@ import kotlinx.coroutines.withContext
 @Composable
 internal fun MediaPreview(
     item: MediaItem,
+    fitCenter: Boolean = false,
     onClick: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -55,9 +56,16 @@ internal fun MediaPreview(
     Box(modifier.clickable(onClick = onClick), contentAlignment = Alignment.Center) {
         AndroidView(
             factory = { imageContext ->
-                ImageView(imageContext).apply { scaleType = ImageView.ScaleType.CENTER_CROP }
+                ImageView(imageContext)
             },
-            update = { imageView -> imageView.setImageDrawable(drawable) },
+            update = { imageView ->
+                imageView.scaleType = if (fitCenter) {
+                    ImageView.ScaleType.FIT_CENTER
+                } else {
+                    ImageView.ScaleType.CENTER_CROP
+                }
+                imageView.setImageDrawable(drawable)
+            },
             modifier = Modifier.fillMaxSize(),
         )
         if (loading) CircularProgressIndicator()

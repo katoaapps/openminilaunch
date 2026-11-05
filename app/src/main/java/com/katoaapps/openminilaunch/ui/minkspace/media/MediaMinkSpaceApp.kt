@@ -30,6 +30,9 @@ internal class MediaMinkSpaceApp(
         scope.Surface(modifier = modifier) {
             MediaMiniApp(
                 items = repository.items,
+                expanded = scope.expansion.expanded,
+                expandedPresentation = scope.expandedPresentation,
+                onExpand = scope.expansion::expand,
                 onOpenItem = { item ->
                     if (!MediaActions.open(context, item)) {
                         Toast.makeText(context, R.string.media_open_failed, Toast.LENGTH_LONG).show()
@@ -48,6 +51,8 @@ internal class MediaMinkSpaceApp(
             miniApp = MinkSpaceMiniApp.MEDIA,
             labelRes = R.string.media,
             icon = Icons.Default.PhotoLibrary,
+            supportsExpansion = true,
+            showExpansionButton = true,
             settingsTarget = MinkSpaceMiniAppSettingsTarget.MEDIA,
         )
     }

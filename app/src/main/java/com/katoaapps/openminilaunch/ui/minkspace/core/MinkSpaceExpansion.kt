@@ -23,12 +23,16 @@ private fun <T> minkSpaceExpansionSpec(): FiniteAnimationSpec<T> = tween(
     easing = FastOutSlowInEasing,
 )
 
+internal fun shouldPresentExpandedContent(expanded: Boolean, appGridAlpha: Float): Boolean =
+    expanded || appGridAlpha < 1f
+
 @Immutable
 internal data class MinkSpaceExpansionLayout(
     val contentPadding: Dp,
     val contentSpacing: Dp,
     val appGridWidth: Dp,
     val appGridAlpha: Float,
+    val expandedPresentation: Boolean,
 )
 
 @Composable
@@ -67,6 +71,7 @@ internal fun animateMinkSpaceExpansionLayout(
         contentSpacing = contentSpacing,
         appGridWidth = appGridWidth,
         appGridAlpha = appGridAlpha,
+        expandedPresentation = shouldPresentExpandedContent(expanded, appGridAlpha),
     )
 }
 

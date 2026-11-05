@@ -21,13 +21,21 @@ class MinkSpacePresentationStateTest {
     @Test fun catalogDeclaresExpansionCapability() {
         assertFalse(MinkSpaceMiniAppCatalog.get(MinkSpaceMiniApp.TODO).supportsExpansion)
         assertFalse(MinkSpaceMiniAppCatalog.get(MinkSpaceMiniApp.CALCULATOR).supportsExpansion)
-        assertFalse(MinkSpaceMiniAppCatalog.get(MinkSpaceMiniApp.MEDIA).supportsExpansion)
+        assertTrue(MinkSpaceMiniAppCatalog.get(MinkSpaceMiniApp.MEDIA).supportsExpansion)
         assertTrue(MinkSpaceMiniAppCatalog.get(MinkSpaceMiniApp.MUSIC).supportsExpansion)
         assertTrue(MinkSpaceMiniAppCatalog.get(MinkSpaceMiniApp.WIDGET).supportsExpansion)
         assertTrue(MinkSpaceMiniAppCatalog.get(MinkSpaceMiniApp.VCARD).supportsExpansion)
+        assertTrue(MinkSpaceMiniAppCatalog.get(MinkSpaceMiniApp.MEDIA).showExpansionButton)
         assertTrue(MinkSpaceMiniAppCatalog.get(MinkSpaceMiniApp.WIDGET).showExpansionButton)
         assertFalse(MinkSpaceMiniAppCatalog.get(MinkSpaceMiniApp.MUSIC).showExpansionButton)
         assertFalse(MinkSpaceMiniAppCatalog.get(MinkSpaceMiniApp.VCARD).showExpansionButton)
+    }
+
+    @Test fun expandedPresentationLastsThroughTheCollapseAnimation() {
+        assertTrue(shouldPresentExpandedContent(expanded = true, appGridAlpha = 1f))
+        assertTrue(shouldPresentExpandedContent(expanded = false, appGridAlpha = 0f))
+        assertTrue(shouldPresentExpandedContent(expanded = false, appGridAlpha = .75f))
+        assertFalse(shouldPresentExpandedContent(expanded = false, appGridAlpha = 1f))
     }
 
     @Test fun standardExpansionButtonRequiresExpansionSupport() {
