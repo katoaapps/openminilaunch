@@ -51,6 +51,7 @@ class LauncherLibraryTest {
         val appLabel: (String) -> String = { "Maps" }
 
         assertEquals("Search - Maps", launcherDiscoveryLabel(search, appLabel))
+        assertEquals(true, launcherDiscoveryMatches(search, "", appLabel))
         assertEquals(true, launcherDiscoveryMatches(search, "sea", appLabel))
         assertEquals(true, launcherDiscoveryMatches(search, "map", appLabel))
         assertEquals(false, launcherDiscoveryMatches(search, "music", appLabel))

@@ -16,5 +16,4 @@ internal fun launcherDiscoveryMatches(
     target: LauncherTarget,
     query: String,
     packageLabel: (String) -> String,
-): Boolean = target.label.startsWith(query, ignoreCase = true) ||
-    (target !is LauncherAppTarget && packageLabel(target.packageName).startsWith(query, ignoreCase = true))
+): Boolean = query.isBlank() || AppSearchMatcher(packageLabel).match(target, query) != null

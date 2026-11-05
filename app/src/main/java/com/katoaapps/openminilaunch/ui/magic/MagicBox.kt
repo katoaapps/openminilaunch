@@ -6,9 +6,9 @@ import com.katoaapps.openminilaunch.R
 import com.katoaapps.openminilaunch.data.*
 import com.katoaapps.openminilaunch.model.*
 import com.katoaapps.openminilaunch.platform.*
-import com.katoaapps.openminilaunch.features.apps.launcherLibraryTargets
+import com.katoaapps.openminilaunch.features.apps.AppSearchMatcher
 import com.katoaapps.openminilaunch.features.apps.launcherDiscoveryLabel
-import com.katoaapps.openminilaunch.features.apps.launcherDiscoveryMatches
+import com.katoaapps.openminilaunch.features.apps.launcherLibraryTargets
 import com.katoaapps.openminilaunch.features.ai.*
 import com.katoaapps.openminilaunch.features.calendar.*
 import com.katoaapps.openminilaunch.features.calendar.engine.CalendarPhraseEngine
@@ -301,6 +301,7 @@ internal fun MagicBoxContent(
         }
     }
     val alwaysVisibleTargetKeys = store.pinnedLauncherSelectionKeys
+    val appSearchMatcher = remember(actions) { AppSearchMatcher(actions::appLabel) }
     val appResults = remember(
         prefix,
         searchTerm,
@@ -308,17 +309,17 @@ internal fun MagicBoxContent(
         launcherShortcutsRevision,
         alwaysVisibleTargetKeys,
         store.includeAppShortcutsInDiscovery,
+        appSearchMatcher,
     ) {
         if (prefix == '?' && searchTerm.isNotBlank()) {
-            launcherLibraryTargets(
+            val targets = launcherLibraryTargets(
                 apps = actions.installedApps(),
                 alwaysVisibleTargetKeys = alwaysVisibleTargetKeys,
                 appShortcuts = actions.installedShortcuts(),
                 includeAppShortcuts = store.includeAppShortcutsInDiscovery,
                 resolveTarget = actions::resolveLauncherSelection,
-            ).filter {
-                launcherDiscoveryMatches(it, searchTerm, actions::appLabel)
-            }.take(5)
+            )
+            appSearchMatcher.rank(targets, searchTerm).take(5).map { it.target }
         } else emptyList()
     }
     val visibleAppResults = remember(appResults, effectiveAppAccessState) {
