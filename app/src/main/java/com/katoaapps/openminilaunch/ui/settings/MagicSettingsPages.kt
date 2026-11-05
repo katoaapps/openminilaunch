@@ -15,6 +15,7 @@ import com.katoaapps.openminilaunch.ui.theme.Sage
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
@@ -27,6 +28,7 @@ import androidx.compose.material.icons.filled.CreateNewFolder
 import androidx.compose.material.icons.filled.Folder
 import androidx.compose.material.icons.filled.FolderOpen
 import androidx.compose.material.icons.filled.PhotoLibrary
+import androidx.compose.material.icons.filled.Keyboard
 import androidx.compose.material.icons.filled.Phone
 import androidx.compose.material.icons.filled.Public
 import androidx.compose.material3.HorizontalDivider
@@ -49,11 +51,18 @@ internal fun MagicBoxSettingsPage(
     mediaGranted: Boolean,
     onPickWeb: () -> Unit,
     onPickAi: () -> Unit,
+    onOpenKeyboard: () -> Unit,
     onOpenFileSearch: () -> Unit,
     onOpenAppBubbles: () -> Unit,
     goBack: () -> Unit,
 ) {
     SettingsPage(stringResource(R.string.magic_box), goBack) {
+        SettingsRow(
+            stringResource(R.string.launcher_keyboard),
+            stringResource(R.string.launcher_keyboard_summary),
+            Icons.Default.Keyboard,
+            onClick = onOpenKeyboard,
+        )
         SettingsRow(
             stringResource(R.string.app_bubbles_beta),
             stringResource(
@@ -65,19 +74,24 @@ internal fun MagicBoxSettingsPage(
         )
         HorizontalDivider(color = Sage)
         SectionLabel(stringResource(R.string.search))
-        SettingsRow(
-            stringResource(R.string.web_app),
-            store.preferredWebPackage?.let(actions::appLabel) ?: stringResource(R.string.system_browser),
-            Icons.Default.Public,
-            onClick = onPickWeb,
-        )
-        SettingsRow(
-            stringResource(R.string.ai_app),
-            store.preferredAiPackage?.let(actions::appLabel) ?: stringResource(R.string.choose_on_first_use),
-            Icons.Default.AutoAwesome,
-            onClick = onPickAi,
-        )
-        Text(stringResource(R.string.ai_provider_privacy_description), color = Muted, fontSize = Dimens.sp13)
+        Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(Dimens.dp8)) {
+            SearchAppCard(
+                title = stringResource(R.string.web_app),
+                value = store.preferredWebPackage?.let(actions::appLabel)
+                    ?: stringResource(R.string.system_browser),
+                icon = Icons.Default.Public,
+                onClick = onPickWeb,
+                modifier = Modifier.weight(1f),
+            )
+            SearchAppCard(
+                title = stringResource(R.string.ai_app),
+                value = store.preferredAiPackage?.let(actions::appLabel)
+                    ?: stringResource(R.string.choose_on_first_use),
+                icon = Icons.Default.AutoAwesome,
+                onClick = onPickAi,
+                modifier = Modifier.weight(1f),
+            )
+        }
         HorizontalDivider(color = Sage)
         SectionLabel(stringResource(R.string.files_section))
         SettingsRow(
@@ -90,6 +104,31 @@ internal fun MagicBoxSettingsPage(
             Icons.Default.FolderOpen,
             onClick = onOpenFileSearch,
         )
+    }
+}
+
+@Composable
+private fun SearchAppCard(
+    title: String,
+    value: String,
+    icon: androidx.compose.ui.graphics.vector.ImageVector,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    androidx.compose.material3.Surface(
+        onClick = onClick,
+        modifier = modifier,
+        shape = RoundedCornerShape(Dimens.dp14),
+        color = MaterialTheme.colorScheme.surfaceContainerLow,
+    ) {
+        androidx.compose.foundation.layout.Column(
+            Modifier.padding(Dimens.dp12),
+            verticalArrangement = Arrangement.spacedBy(Dimens.dp5),
+        ) {
+            Icon(icon, null, tint = MaterialTheme.colorScheme.primary)
+            Text(title, fontWeight = androidx.compose.ui.text.font.FontWeight.Bold)
+            Text(value, color = Muted, fontSize = Dimens.sp12, maxLines = 2)
+        }
     }
 }
 

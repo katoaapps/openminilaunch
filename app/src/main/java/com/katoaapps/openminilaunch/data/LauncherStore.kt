@@ -29,6 +29,7 @@ class LauncherStore private constructor(context: Context) {
     private val searchStore = SearchStore(persistence, MAX_SEARCH_HISTORY)
     private val widgetStore = WidgetStore(persistence, MAX_WIDGET_ENTRIES)
     private val generalPreferences = GeneralPreferenceStore(prefs)
+    private val launcherKeyboardPreferenceStore = LauncherKeyboardPreferenceStore(prefs)
     private val appearancePreferences = AppearancePreferenceStore(
         appContext,
         prefs,
@@ -84,6 +85,7 @@ class LauncherStore private constructor(context: Context) {
     val onboardingComplete get() = generalPreferences.onboardingComplete
     val hasOpenedClockFromDate get() = generalPreferences.hasOpenedClockFromDate
     val openSoftwareKeyboardOnHome get() = generalPreferences.openSoftwareKeyboardOnHome
+    internal val launcherKeyboardPreferences get() = launcherKeyboardPreferenceStore.preferences
     val themePreference get() = appearancePreferences.themePreference
     val palettePreference get() = appearancePreferences.palettePreference
     val hideStatusBar get() = appearancePreferences.hideStatusBar
@@ -369,6 +371,10 @@ class LauncherStore private constructor(context: Context) {
 
     fun updateOpenSoftwareKeyboardOnHome(enabled: Boolean) {
         generalPreferences.updateOpenSoftwareKeyboardOnHome(enabled)
+    }
+
+    internal fun updateLauncherKeyboardPreferences(preferences: LauncherKeyboardPreferences) {
+        launcherKeyboardPreferenceStore.update(preferences)
     }
 
     fun setGitHubUpdateChecksEnabled(enabled: Boolean) {

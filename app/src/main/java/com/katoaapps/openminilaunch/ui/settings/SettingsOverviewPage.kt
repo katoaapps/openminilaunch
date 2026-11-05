@@ -52,6 +52,7 @@ internal fun SettingsOverviewPage(
             mediaGranted = permissionState.mediaGranted,
             onPickWeb = onPickWeb,
             onPickAi = onPickAi,
+            onOpenKeyboard = { onNavigate(SettingsDestination.KEYBOARD) },
             onOpenFileSearch = { onNavigate(SettingsDestination.FILE_SEARCH) },
             onOpenAppBubbles = { onNavigate(SettingsDestination.APP_BUBBLES) },
             goBack = goBack,

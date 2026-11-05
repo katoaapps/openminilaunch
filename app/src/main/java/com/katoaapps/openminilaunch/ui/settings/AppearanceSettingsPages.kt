@@ -187,12 +187,6 @@ internal fun LayoutAndClockSettingsPage(store: LauncherStore, goBack: () -> Unit
         ClockAppearanceSettings(store)
         SectionLabel(stringResource(R.string.appearance_layout_section))
         SettingsSwitchRow(
-            title = stringResource(R.string.open_keyboard_on_home),
-            subtitle = stringResource(R.string.open_keyboard_on_home_description),
-            checked = store.openSoftwareKeyboardOnHome,
-            onCheckedChange = store::updateOpenSoftwareKeyboardOnHome,
-        )
-        SettingsSwitchRow(
             title = stringResource(R.string.hide_status_bar),
             subtitle = stringResource(R.string.hide_status_bar_description),
             checked = store.hideStatusBar,

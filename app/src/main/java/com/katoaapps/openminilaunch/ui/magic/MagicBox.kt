@@ -29,6 +29,7 @@ import com.katoaapps.openminilaunch.platform.mediaReadPermissions
 import com.katoaapps.openminilaunch.platform.supportsDirectCalls
 import com.katoaapps.openminilaunch.platform.supportsDirectSms
 import com.katoaapps.openminilaunch.ui.wellbeing.rememberMinkAppAccessState
+import com.katoaapps.openminilaunch.ui.keyboard.LauncherKeyboard
 
 import android.Manifest
 import android.content.Intent
@@ -58,6 +59,7 @@ import androidx.compose.ui.platform.LocalFocusManager
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.TextRange
+import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
@@ -93,6 +95,7 @@ internal fun MagicBoxContent(
         configuration.keyboard,
         configuration.hardKeyboardHidden,
     )
+    val useNativeLauncherKeyboard = keyboardInputEnabled && !useDirectHardwareInput
     val shouldAutoOpenOnHome = shouldAutoOpenSoftwareKeyboard(
         autoOpenSoftwareKeyboardOnHome,
         configuration.keyboard,
@@ -110,7 +113,7 @@ internal fun MagicBoxContent(
     var lockedPrefix by editorSession.lockedPrefixState
     var expanded by editorSession.expandedState
     var showKeyboardWhileCollapsed by remember {
-        mutableStateOf(shouldAutoOpenOnHome && !initiallyExpanded)
+        mutableStateOf(shouldAutoOpenOnHome && !useNativeLauncherKeyboard && !initiallyExpanded)
     }
     var hasContacts by remember {
         mutableStateOf(ContextCompat.checkSelfPermission(context, Manifest.permission.READ_CONTACTS) == PackageManager.PERMISSION_GRANTED)
@@ -196,7 +199,7 @@ internal fun MagicBoxContent(
     var textFieldPlaced by remember { mutableStateOf(false) }
     var armedTargetPlaced by remember { mutableStateOf(false) }
 
-    fun refocus(showSoftwareKeyboard: Boolean = true) {
+    fun refocus(showSoftwareKeyboard: Boolean = !useNativeLauncherKeyboard) {
         focusRequestShowsKeyboard = showSoftwareKeyboard
         focusRequestSerial += 1
     }
@@ -700,7 +703,7 @@ internal fun MagicBoxContent(
                 withFrameNanos { }
                 focusRequester.requestFocus()
                 withFrameNanos { }
-                keyboard?.show()
+                if (!useNativeLauncherKeyboard) keyboard?.show() else keyboard?.hide()
             } else {
                 while (!armedTargetPlaced) withFrameNanos { }
                 withFrameNanos { }
@@ -715,7 +718,11 @@ internal fun MagicBoxContent(
                 withFrameNanos { }
                 focusRequester.requestFocus()
                 withFrameNanos { }
-                if (showSoftwareKeyboardOnStart || !useDirectHardwareInput) keyboard?.show() else keyboard?.hide()
+                if (!useNativeLauncherKeyboard && (showSoftwareKeyboardOnStart || !useDirectHardwareInput)) {
+                    keyboard?.show()
+                } else {
+                    keyboard?.hide()
+                }
             }
         }
     }
@@ -727,12 +734,16 @@ internal fun MagicBoxContent(
             // Android can redeliver the launcher's Home intent while a fold changes displays.
             // Re-arm an idle field, but never erase an expanded draft as a side effect.
             clearCommand()
-            showKeyboardWhileCollapsed = true
+            if (useNativeLauncherKeyboard) {
+                keyboard?.hide()
+            } else {
+                showKeyboardWhileCollapsed = true
+            }
         }
     }
 
     LaunchedEffect(shouldAutoOpenOnHome) {
-        showKeyboardWhileCollapsed = shouldAutoOpenOnHome && !expanded
+        showKeyboardWhileCollapsed = shouldAutoOpenOnHome && !useNativeLauncherKeyboard && !expanded
     }
 
     LaunchedEffect(focusRequestSerial) {
@@ -742,7 +753,7 @@ internal fun MagicBoxContent(
             while (!textFieldPlaced) withFrameNanos { }
             withFrameNanos { }
             focusRequester.requestFocus()
-            if (focusRequestShowsKeyboard) {
+            if (focusRequestShowsKeyboard && !useNativeLauncherKeyboard) {
                 withFrameNanos { }
                 keyboard?.show()
             }
@@ -758,6 +769,23 @@ internal fun MagicBoxContent(
         onCommand = ::beginCollapsedHardwareInput,
     )
 
+    val launcherKeyboardPreferences = store.launcherKeyboardPreferences.copy(
+        heightDp = store.launcherKeyboardPreferences.heightDp.coerceAtMost(
+            (configuration.screenHeightDp - 168).coerceAtLeast(168).toFloat(),
+        ),
+    )
+    val onLauncherKeyboardValueChange: (TextFieldValue) -> Unit = { value ->
+        text = value
+        if (!noteMode && lockedPrefix == null && value.text.firstOrNull() != prefix) {
+            selectedRecipient = null
+        }
+    }
+    val showDockedLauncherKeyboard = useNativeLauncherKeyboard &&
+        shouldAutoOpenOnHome &&
+        !expanded &&
+        !smsFlow.sentConfirmationVisible &&
+        !todoCompletionPending
+
     BackHandler(enabled = expanded) { requestDismiss() }
 
     Box(modifier) {
@@ -772,7 +800,13 @@ internal fun MagicBoxContent(
                 .fillMaxWidth()
                 .fillMaxHeight()
                 .statusBarsPadding()
-                .imePadding()
+                .then(
+                    if (useNativeLauncherKeyboard) {
+                        Modifier.navigationBarsPadding()
+                    } else {
+                        Modifier.imePadding()
+                    },
+                )
                 .padding(horizontal = Dimens.dp18, vertical = Dimens.dp18),
             verticalArrangement = Arrangement.spacedBy(Dimens.dp8),
         ) {
@@ -887,11 +921,12 @@ internal fun MagicBoxContent(
                     }
                 },
                 prefix = prefix,
+                acceptPlatformTextInput = !useNativeLauncherKeyboard,
                 actionVisuals = actionVisuals,
                 actionContentColor = actionContentColor,
                 focusRequester = focusRequester,
                 interactionSource = inputSurfaceInteractionSource,
-                onRefocus = { refocus(showSoftwareKeyboard = !useDirectHardwareInput) },
+                onRefocus = { refocus(showSoftwareKeyboard = !useNativeLauncherKeyboard) },
                 onTextChange = { value ->
                     val correctedValue = initialHardwareKeyCorrection.correct(value)
                     text = correctedValue
@@ -915,11 +950,36 @@ internal fun MagicBoxContent(
                     if (noteMode) Modifier.weight(1f) else Modifier.heightIn(min = magicBoxMinimumHeight),
                 ),
             )
+
+            if (expanded && useNativeLauncherKeyboard) {
+                LauncherKeyboard(
+                    value = text,
+                    onValueChange = onLauncherKeyboardValueChange,
+                    preferences = launcherKeyboardPreferences,
+                    themePrimaryArgb = store.effectiveHomePanelColorArgb,
+                    themeSecondaryArgb = store.visibleAppBackgroundColorArgb
+                        ?: store.effectiveAppBackgroundColorArgb
+                        ?: 0xFFFFE9CB.toInt(),
+                    onSubmit = ::submit,
+                    multiline = noteMode,
+                    modifier = Modifier.fillMaxWidth(),
+                )
+            }
         }
 
         if (!expanded && !smsFlow.sentConfirmationVisible && !todoCompletionPending) {
             CollapsedMagicBar(
-                modifier = collapsedModifier.align(Alignment.BottomCenter),
+                modifier = collapsedModifier
+                    .then(
+                        if (showDockedLauncherKeyboard) {
+                            Modifier.padding(
+                                bottom = launcherKeyboardPreferences.heightDp.dp + Dimens.dp8,
+                            )
+                        } else {
+                            Modifier
+                        },
+                    )
+                    .align(Alignment.BottomCenter),
                 minimumHeight = magicBoxMinimumHeight,
                 armedFocusRequester = armedFocusRequester,
                 onArmedPlaced = { armedTargetPlaced = true },
@@ -934,9 +994,39 @@ internal fun MagicBoxContent(
                 onOpen = {
                     clearCommand()
                     expanded = true
-                    refocus(showSoftwareKeyboard = true)
+                    refocus(showSoftwareKeyboard = !useNativeLauncherKeyboard)
                 },
             )
+
+            if (showDockedLauncherKeyboard) {
+                LauncherKeyboard(
+                    value = text,
+                    onValueChange = { value ->
+                        val changed = value.text != text.text
+                        onLauncherKeyboardValueChange(value)
+                        if (changed) {
+                            expanded = true
+                            refocus(showSoftwareKeyboard = false)
+                        }
+                    },
+                    preferences = launcherKeyboardPreferences,
+                    themePrimaryArgb = store.effectiveHomePanelColorArgb,
+                    themeSecondaryArgb = store.visibleAppBackgroundColorArgb
+                        ?: store.effectiveAppBackgroundColorArgb
+                        ?: 0xFFFFE9CB.toInt(),
+                    onSubmit = ::submit,
+                    multiline = false,
+                    modifier = Modifier
+                        .align(Alignment.BottomCenter)
+                        .widthIn(max = Dimens.dp720)
+                        .navigationBarsPadding()
+                        .padding(
+                            start = Dimens.dp18,
+                            end = Dimens.dp18,
+                            bottom = Dimens.dp18,
+                        ),
+                )
+            }
         }
 
         SmsSentConfirmation(

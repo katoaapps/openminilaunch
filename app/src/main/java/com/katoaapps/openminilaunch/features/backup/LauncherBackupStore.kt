@@ -36,6 +36,7 @@ internal fun LauncherStore.createPortableBackup(appVersion: String): LauncherBac
             appBackgroundPresetId = appBackgroundPreset?.id,
             iconAppearance = iconAppearance,
             openSoftwareKeyboardOnHome = openSoftwareKeyboardOnHome,
+            launcherKeyboardPreferences = launcherKeyboardPreferences,
             includeAppShortcutsInDiscovery = includeAppShortcutsInDiscovery,
             automaticAppBubbleTargets = automaticAppBubbleTargets.toList(),
             minkSpaceMiniAppOrder = minkSpaceMiniAppOrder.filter { it.readyForHome },
@@ -118,6 +119,7 @@ internal fun LauncherStore.restorePortableBackup(
     setFontColor(settings.fontAppearance.colorArgb)
 
     updateOpenSoftwareKeyboardOnHome(settings.openSoftwareKeyboardOnHome)
+    settings.launcherKeyboardPreferences?.let(::updateLauncherKeyboardPreferences)
     updateIncludeAppShortcutsInDiscovery(settings.includeAppShortcutsInDiscovery)
     settings.folderIndicatorStyle?.let(::updateFolderIndicatorStyle)
     settings.folderAnimationStyle?.let(::updateFolderAnimationStyle)

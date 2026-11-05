@@ -19,6 +19,10 @@ import com.katoaapps.openminilaunch.model.IntegratedContactCallEndpoint
 import com.katoaapps.openminilaunch.model.IntegratedContactEndpoint
 import com.katoaapps.openminilaunch.model.ProviderAddressType
 import com.katoaapps.openminilaunch.model.MinkAppPauseMode
+import com.katoaapps.openminilaunch.model.LauncherKeyboardColorSource
+import com.katoaapps.openminilaunch.model.LauncherKeyboardLayout
+import com.katoaapps.openminilaunch.model.LauncherKeyboardPreferences
+import com.katoaapps.openminilaunch.model.LauncherKeyboardStyle
 import com.katoaapps.openminilaunch.model.PalettePreference
 import com.katoaapps.openminilaunch.model.QuickDrawerConfig
 import com.katoaapps.openminilaunch.model.ThemePreference
@@ -32,6 +36,39 @@ import org.junit.Assert.assertNull
 import org.junit.Test
 
 class LauncherBackupCodecTest {
+    @Test fun launcherKeyboardPreferencesSurvivePortableBackupRoundTrip() {
+        val keyboard = LauncherKeyboardPreferences(
+            style = LauncherKeyboardStyle.OUTLINED_SECONDARY,
+            layout = LauncherKeyboardLayout.DVORAK,
+            colorSource = LauncherKeyboardColorSource.CUSTOM,
+            customPrimaryArgb = 0xFF123456.toInt(),
+            customSecondaryArgb = 0xFFABCDEF.toInt(),
+            splitOnWideDisplays = true,
+            hapticFeedbackEnabled = false,
+            heightDp = 321f,
+        )
+        val sample = sampleBackup(twoPanelMode = true)
+        val restored = LauncherBackupCodec.decode(
+            LauncherBackupCodec.encode(sample.copy(settings = sample.settings.copy(launcherKeyboardPreferences = keyboard))),
+        )
+        assertEquals(keyboard, restored.settings.launcherKeyboardPreferences)
+    }
+
+    @Test fun olderBackupWithoutLauncherKeyboardLeavesCurrentPreferencesAlone() {
+        val sample = sampleBackup(twoPanelMode = true)
+        val json = JSONObject(
+            LauncherBackupCodec.encode(
+                sample.copy(
+                    settings = sample.settings.copy(
+                        launcherKeyboardPreferences = LauncherKeyboardPreferences(),
+                    ),
+                ),
+            ),
+        )
+        json.getJSONObject("settings").getJSONObject("magicBox").remove("launcherKeyboard")
+        assertNull(LauncherBackupCodec.decode(json.toString()).settings.launcherKeyboardPreferences)
+    }
+
     @Test fun palettePreferenceSurvivesPortableBackupRoundTrip() {
         val sample = sampleBackup(twoPanelMode = true)
         val original = sample.copy(

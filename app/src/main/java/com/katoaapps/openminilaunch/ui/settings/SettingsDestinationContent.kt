@@ -104,6 +104,10 @@ internal fun SettingsDestinationContent(
             permissionActions = permissionActions,
             goBack = onNavigateBack,
         )
+        SettingsDestination.KEYBOARD -> KeyboardSettingsPage(
+            store = store,
+            goBack = onNavigateBack,
+        )
         SettingsDestination.MINK_ASSISTANT -> MinkAssistantSettingsPage(
             assistantRoleHeld = permissionState.assistantRoleHeld,
             showAssistantDisclosure = permissionActions.showAssistantSetup,

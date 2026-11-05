@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- First-pass keyboard terminology intentionally falls back to English while the product
+     vocabulary is device-tested. Keep it isolated so translation work is easy to audit. -->
+<resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
+    <string name="launcher_keyboard">Keyboard</string>
+    <string name="launcher_keyboard_summary">Layout, colors, size, haptics, and wide-screen split</string>
+    <string name="keyboard_split_wide">Split keyboard on wide or large displays</string>
+    <string name="keyboard_split_wide_description">Separates the halves and repeats the center keys so either thumb can reach them.</string>
+    <string name="keyboard_haptic_feedback">Key feedback</string>
+    <string name="keyboard_haptic_feedback_description">Use a light vibration when a key is pressed.</string>
+    <string name="keyboard_layout">Key layout</string>
+    <string name="keyboard_style">Key style</string>
+    <string name="keyboard_theme_colors_description">Theme colors follow Launcher → Home → Appearance → Wallpaper &amp; background.</string>
+    <string name="keyboard_height">Keyboard height</string>
+    <string name="keyboard_height_value">%1$d dp</string>
+    <string name="keyboard_live_preview">Live keyboard preview</string>
+    <string name="keyboard_primary_color">Primary color</string>
+    <string name="keyboard_primary_color_description">Choose the keyboard’s first custom color.</string>
+    <string name="keyboard_secondary_color">Secondary color</string>
+    <string name="keyboard_secondary_color_description">Choose the keyboard’s second custom color.</string>
+    <string name="keyboard_colors_theme">Theme colors</string>
+    <string name="keyboard_colors_custom">Custom colors</string>
+    <string name="keyboard_style_flat_primary">Flat · Primary</string>
+    <string name="keyboard_style_flat_secondary">Flat · Secondary</string>
+    <string name="keyboard_style_raised_primary">Raised · Primary</string>
+    <string name="keyboard_style_raised_secondary">Raised · Secondary</string>
+    <string name="keyboard_style_outlined_primary">Outlined · Primary</string>
+    <string name="keyboard_style_outlined_secondary">Outlined · Secondary</string>
+    <string name="keyboard_layout_qwerty">QWERTY</string>
+    <string name="keyboard_layout_azerty">AZERTY</string>
+    <string name="keyboard_layout_qwertz">QWERTZ</string>
+    <string name="keyboard_layout_dvorak">Dvorak</string>
+    <string name="keyboard_layout_pinyin">Pinyin</string>
+    <string name="keyboard_layout_cangjie">Cangjie</string>
+    <string name="keyboard_layout_hangul">Hangul</string>
+    <string name="keyboard_layout_abugida">Devanagari</string>
+</resources>

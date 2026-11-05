@@ -16,6 +16,11 @@ import com.katoaapps.openminilaunch.model.MAX_APP_FOLDER_NAME_LENGTH
 import com.katoaapps.openminilaunch.model.MAX_SOCIAL_GOAL_HOURS
 import com.katoaapps.openminilaunch.model.MIN_SOCIAL_GOAL_HOURS
 import com.katoaapps.openminilaunch.model.MinkAppPauseMode
+import com.katoaapps.openminilaunch.model.LauncherKeyboardColorSource
+import com.katoaapps.openminilaunch.model.LauncherKeyboardLayout
+import com.katoaapps.openminilaunch.model.LauncherKeyboardPreferences
+import com.katoaapps.openminilaunch.model.LauncherKeyboardStyle
+import com.katoaapps.openminilaunch.model.normalizeLauncherKeyboardHeight
 import com.katoaapps.openminilaunch.model.PalettePreference
 import com.katoaapps.openminilaunch.model.QuickDrawerConfig
 import com.katoaapps.openminilaunch.model.ThemePreference
@@ -241,6 +246,18 @@ internal object LauncherBackupCodec {
             put("automaticAppBubbleTargets", settings.automaticAppBubbleTargets.stringsJsonArray())
             putNullable("preferredAiPackage", settings.preferredAiPackage)
             putNullable("preferredWebPackage", settings.preferredWebPackage)
+            settings.launcherKeyboardPreferences?.let { keyboard ->
+                put("launcherKeyboard", JSONObject().apply {
+                    put("style", keyboard.style.name)
+                    put("layout", keyboard.layout.name)
+                    put("colorSource", keyboard.colorSource.name)
+                    put("customPrimaryArgb", keyboard.customPrimaryArgb)
+                    put("customSecondaryArgb", keyboard.customSecondaryArgb)
+                    put("splitOnWideDisplays", keyboard.splitOnWideDisplays)
+                    put("hapticFeedbackEnabled", keyboard.hapticFeedbackEnabled)
+                    put("heightDp", keyboard.heightDp.toDouble())
+                })
+            }
         })
         settings.minkSpaceMiniAppOrder?.let { order ->
             put("minkSpace", JSONObject().apply {
@@ -293,6 +310,7 @@ internal object LauncherBackupCodec {
     ): LauncherBackupSettings {
         val appearance = json.getJSONObject("appearance")
         val magicBox = json.getJSONObject("magicBox")
+        val launcherKeyboard = magicBox.optJSONObject("launcherKeyboard")
         val messaging = json.getJSONObject("messaging")
         val calling = json.optJSONObject("calling")
         val quickDrawer = json.optJSONObject("quickDrawer")
@@ -345,6 +363,20 @@ internal object LauncherBackupCodec {
                 customFontName = appearance.optNullableString("customFontName")?.safeText(120),
             ),
             openSoftwareKeyboardOnHome = magicBox.optBoolean("openSoftwareKeyboardOnHome", true),
+            launcherKeyboardPreferences = launcherKeyboard?.let { keyboard ->
+                LauncherKeyboardPreferences(
+                    style = keyboard.enumValue("style", LauncherKeyboardStyle.RAISED_PRIMARY),
+                    layout = keyboard.enumValue("layout", LauncherKeyboardLayout.QWERTY),
+                    colorSource = keyboard.enumValue("colorSource", LauncherKeyboardColorSource.THEME),
+                    customPrimaryArgb = keyboard.optInt("customPrimaryArgb", 0xFF4B250F.toInt()),
+                    customSecondaryArgb = keyboard.optInt("customSecondaryArgb", 0xFFFFE9CB.toInt()),
+                    splitOnWideDisplays = keyboard.optBoolean("splitOnWideDisplays", false),
+                    hapticFeedbackEnabled = keyboard.optBoolean("hapticFeedbackEnabled", true),
+                    heightDp = normalizeLauncherKeyboardHeight(
+                        keyboard.optDouble("heightDp", 276.0).toFloat(),
+                    ),
+                )
+            },
             includeAppShortcutsInDiscovery = magicBox.optBoolean("includeAppShortcutsInDiscovery", false),
             automaticAppBubbleTargets = magicBox.optJSONArray("automaticAppBubbleTargets").safeTargets(),
             minkSpaceMiniAppOrder = minkSpaceOrder,

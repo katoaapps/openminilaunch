@@ -50,6 +50,7 @@ internal fun settingsSectionFor(destination: SettingsDestination): SettingsSecti
     SettingsDestination.MINK_SPACE -> SettingsSection.MINI_APPS
 
     SettingsDestination.APP_BUBBLES,
+    SettingsDestination.KEYBOARD,
     SettingsDestination.FILE_SEARCH -> SettingsSection.MAGIC_BOX
 
     SettingsDestination.MINK_ASSISTANT,

@@ -13,6 +13,7 @@ import com.katoaapps.openminilaunch.model.FontAppearance
 import com.katoaapps.openminilaunch.model.FavoriteIntegratedContact
 import com.katoaapps.openminilaunch.model.IconAppearance
 import com.katoaapps.openminilaunch.model.MinkAppPauseMode
+import com.katoaapps.openminilaunch.model.LauncherKeyboardPreferences
 import com.katoaapps.openminilaunch.model.PalettePreference
 import com.katoaapps.openminilaunch.model.QuickDrawerConfig
 import com.katoaapps.openminilaunch.model.ThemePreference
@@ -68,6 +69,8 @@ internal data class LauncherBackupSettings(
     val appBackgroundPresetId: String?,
     val iconAppearance: IconAppearance,
     val openSoftwareKeyboardOnHome: Boolean,
+    /** Null means this backup predates the launcher-owned keyboard. */
+    val launcherKeyboardPreferences: LauncherKeyboardPreferences? = null,
     val includeAppShortcutsInDiscovery: Boolean,
     val automaticAppBubbleTargets: List<String>,
     /** Null means this backup predates portable MinkSpace preferences. */

@@ -62,6 +62,10 @@ class SettingsNavigationTest {
             listOf(SettingsDestination.OVERVIEW, SettingsDestination.FILE_SEARCH),
             settingsPathTo(SettingsDestination.FILE_SEARCH),
         )
+        assertEquals(
+            listOf(SettingsDestination.OVERVIEW, SettingsDestination.KEYBOARD),
+            settingsPathTo(SettingsDestination.KEYBOARD),
+        )
     }
 
     @Test fun assistantMessagingAndCallingAreTopLevelDestinations() {
@@ -85,6 +89,7 @@ class SettingsNavigationTest {
         assertEquals(SettingsSection.HOME, settingsSectionFor(SettingsDestination.QUICK_DRAWER))
         assertEquals(SettingsSection.MINI_APPS, settingsSectionFor(SettingsDestination.MINK_SPACE))
         assertEquals(SettingsSection.MAGIC_BOX, settingsSectionFor(SettingsDestination.FILE_SEARCH))
+        assertEquals(SettingsSection.MAGIC_BOX, settingsSectionFor(SettingsDestination.KEYBOARD))
         assertEquals(SettingsSection.ADVANCED, settingsSectionFor(SettingsDestination.MINK_DAY))
         assertEquals(SettingsSection.MORE, settingsSectionFor(SettingsDestination.PERMISSIONS))
     }

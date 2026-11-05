@@ -52,6 +52,7 @@ internal fun MagicInputField(
     value: TextFieldValue,
     onValueChange: (TextFieldValue) -> Unit,
     prefix: Char?,
+    acceptPlatformTextInput: Boolean,
     focusRequester: FocusRequester,
     onPlaced: () -> Unit,
     onSubmit: () -> Unit,
@@ -89,6 +90,9 @@ internal fun MagicInputField(
     BasicTextField(
         value = value,
         onValueChange = updateValue,
+        // Mink's launcher keyboard updates [value] directly. Read-only mode keeps
+        // cursor and selection behavior without opening an Android IME connection.
+        readOnly = !acceptPlatformTextInput,
         modifier = modifier.focusRequester(focusRequester)
             .onGloballyPositioned { onPlaced() }
             .onPreviewKeyEvent { event ->
