@@ -36,9 +36,14 @@ internal class MinkSpacePreferenceStore(private val prefs: SharedPreferences) {
         restoredOrder: List<MinkSpaceMiniApp>,
         restoredEnabledMiniApps: Set<MinkSpaceMiniApp>,
     ) {
-        order = mergeVisibleMinkSpaceMiniAppOrder(order, restoredOrder)
-        enabledMiniApps = restoredEnabledMiniApps
-            .filterTo(mutableSetOf(), MinkSpaceMiniApp::readyForHome)
+        // Android widget bindings belong to this installation. Portable backups do not
+        // contain the AppWidget ID or its provider configuration, so importing one must
+        // not hide or reposition the widget that is already configured on this device.
+        order = mergePortableMinkSpaceMiniAppOrder(order, restoredOrder)
+        enabledMiniApps = mergePortableMinkSpaceEnabledMiniApps(
+            currentEnabledMiniApps = enabledMiniApps,
+            restoredEnabledMiniApps = restoredEnabledMiniApps,
+        )
 
         prefs.edit {
             putString(KEY_ORDER, order.joinToString(",") { it.stableId })
@@ -105,6 +110,51 @@ internal fun mergeVisibleMinkSpaceMiniAppOrder(
     val readyIterator = completeReadyOrder.iterator()
     return completeCurrentOrder.map { miniApp ->
         if (miniApp.readyForHome) readyIterator.next() else miniApp
+    }
+}
+
+/**
+ * Restores portable MinkSpace ordering without changing installation-local mini-apps.
+ *
+ * The Widget mini-app owns an Android AppWidget binding that cannot travel in a backup.
+ * It therefore keeps both its current position and its current visibility on import.
+ */
+internal fun mergePortableMinkSpaceMiniAppOrder(
+    currentOrder: List<MinkSpaceMiniApp>,
+    restoredOrder: List<MinkSpaceMiniApp>,
+): List<MinkSpaceMiniApp> {
+    val completeCurrentOrder = currentOrder.distinct() +
+        MinkSpaceMiniApp.entries.filterNot(currentOrder::contains)
+    val requestedPortableOrder = restoredOrder
+        .filter { it.readyForHome && it != MinkSpaceMiniApp.WIDGET }
+        .distinct()
+    val completePortableOrder = requestedPortableOrder + MinkSpaceMiniApp.entries.filter { miniApp ->
+        miniApp.readyForHome &&
+            miniApp != MinkSpaceMiniApp.WIDGET &&
+            miniApp !in requestedPortableOrder
+    }
+    val portableIterator = completePortableOrder.iterator()
+
+    return completeCurrentOrder.map { miniApp ->
+        if (miniApp.readyForHome && miniApp != MinkSpaceMiniApp.WIDGET) {
+            portableIterator.next()
+        } else {
+            miniApp
+        }
+    }
+}
+
+internal fun mergePortableMinkSpaceEnabledMiniApps(
+    currentEnabledMiniApps: Set<MinkSpaceMiniApp>,
+    restoredEnabledMiniApps: Set<MinkSpaceMiniApp>,
+): Set<MinkSpaceMiniApp> = buildSet {
+    addAll(
+        restoredEnabledMiniApps.filter { miniApp ->
+            miniApp.readyForHome && miniApp != MinkSpaceMiniApp.WIDGET
+        },
+    )
+    if (MinkSpaceMiniApp.WIDGET in currentEnabledMiniApps) {
+        add(MinkSpaceMiniApp.WIDGET)
     }
 }
 

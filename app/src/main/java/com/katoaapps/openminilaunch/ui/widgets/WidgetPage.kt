@@ -5,20 +5,13 @@ import android.appwidget.AppWidgetProviderInfo
 import android.os.Bundle
 import android.widget.Toast
 import androidx.compose.foundation.clickable
-import androidx.compose.foundation.layout.Arrangement
-import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
-import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.statusBarsPadding
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.itemsIndexed
-import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Widgets
@@ -43,6 +36,9 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import com.katoaapps.openminilaunch.R
 import com.katoaapps.openminilaunch.data.LauncherStore
+import com.katoaapps.openminilaunch.data.toWidgetProviderIdentity
+import com.katoaapps.openminilaunch.model.MAX_WIDGET_ENTRIES
+import com.katoaapps.openminilaunch.model.WidgetEntry
 import com.katoaapps.openminilaunch.model.WidgetGridSize
 import com.katoaapps.openminilaunch.platform.DeviceActions
 import com.katoaapps.openminilaunch.ui.components.CenteredActionPrompt
@@ -50,8 +46,6 @@ import com.katoaapps.openminilaunch.ui.launcher.MainActivity
 import com.katoaapps.openminilaunch.ui.launcher.home.launcherBackgroundContentColor
 import com.katoaapps.openminilaunch.ui.theme.Dimens
 import kotlin.math.roundToInt
-
-private const val MAX_WIDGETS = 8
 
 internal data class WidgetAppGroup(
     val packageName: String,
@@ -79,15 +73,32 @@ internal fun WidgetPage(store: LauncherStore, actions: DeviceActions, goHome: ()
     val manager = remember { AppWidgetManager.getInstance(context) }
     val host = activity.appWidgetHost
     var showPicker by remember { mutableStateOf(false) }
+    var replacementPlaceholder by remember {
+        mutableStateOf<WidgetEntry.RestorePlaceholder?>(null)
+    }
     var sizingProvider by remember { mutableStateOf<AppWidgetProviderInfo?>(null) }
+    var pendingReplacementEntryId by rememberSaveable { mutableStateOf<String?>(null) }
     var pendingColumns by rememberSaveable { mutableIntStateOf(0) }
     var pendingRows by rememberSaveable { mutableIntStateOf(0) }
     var paneWidthPx by remember { mutableIntStateOf(0) }
     var widgetInfoRevision by remember { mutableIntStateOf(0) }
     val launcherAppsRevision by actions.launcherAppsRevision.collectAsState()
-    val widgetListState = rememberLazyListState()
     val headerContentColor = launcherBackgroundContentColor(store, header = true)
     val backgroundContentColor = launcherBackgroundContentColor(store)
+    val homeScreenProviders = remember(launcherAppsRevision, widgetInfoRevision) {
+        manager.homeScreenProviders(context.packageManager)
+    }
+    val restorablePackageNames = store.widgetEntries.mapNotNull { entry ->
+        when (entry) {
+            is WidgetEntry.Bound -> entry.provider?.packageName
+            is WidgetEntry.RestorePlaceholder -> entry.recipe.provider.packageName
+        }
+    }.toSet()
+    val installedRestorablePackages = remember(restorablePackageNames, launcherAppsRevision) {
+        restorablePackageNames.filterTo(mutableSetOf()) { packageName ->
+            runCatching { context.packageManager.getApplicationInfo(packageName, 0) }.isSuccess
+        }
+    }
 
     val bindingController = rememberWidgetBindingController(
         onBound = { appWidgetId, info ->
@@ -96,13 +107,26 @@ internal fun WidgetPage(store: LauncherStore, actions: DeviceActions, goHome: ()
             } else {
                 widgetSizeRange(info, context.resources.displayMetrics.density).preferred
             }
-            store.addWidget(appWidgetId, size)
+            val replacedEntry = pendingReplacementEntryId?.let { replacementId ->
+                store.widgetEntries.firstOrNull { it.entryId == replacementId }
+            }
+            store.addWidget(
+                appWidgetId = appWidgetId,
+                size = size,
+                provider = info.toWidgetProviderIdentity(context.packageManager),
+                replacementEntryId = pendingReplacementEntryId,
+            )
+            if (replacedEntry is WidgetEntry.Bound && replacedEntry.appWidgetId != appWidgetId) {
+                runCatching { host.deleteAppWidgetId(replacedEntry.appWidgetId) }
+            }
             pendingColumns = 0
             pendingRows = 0
+            pendingReplacementEntryId = null
         },
         onFailed = { failure ->
             pendingColumns = 0
             pendingRows = 0
+            pendingReplacementEntryId = null
             if (failure == WidgetBindingFailure.BIND_LAUNCH_FAILED ||
                 failure == WidgetBindingFailure.CONFIGURATION_LAUNCH_FAILED
             ) {
@@ -115,8 +139,13 @@ internal fun WidgetPage(store: LauncherStore, actions: DeviceActions, goHome: ()
         },
     )
 
-    fun beginWidgetBinding(info: AppWidgetProviderInfo, size: WidgetGridSize) {
+    fun beginWidgetBinding(
+        info: AppWidgetProviderInfo,
+        size: WidgetGridSize,
+        replacementEntryId: String? = null,
+    ) {
         if (paneWidthPx <= 0) return
+        pendingReplacementEntryId = replacementEntryId
         pendingColumns = size.columns
         pendingRows = size.rows
         val contentWidthDp = paneWidthPx / density - widgetHorizontalPaddingDp
@@ -131,11 +160,20 @@ internal fun WidgetPage(store: LauncherStore, actions: DeviceActions, goHome: ()
         bindingController.begin(info, options)
     }
 
-    LaunchedEffect(widgetInfoRevision, launcherAppsRevision, store.widgetIds.size) {
-        store.widgetIds.toList().forEach { id ->
-            val info = manager.getAppWidgetInfo(id)
-            if (info != null && store.widgetSizes[id] == null) {
-                store.setWidgetSize(id, widgetSizeRange(info, context.resources.displayMetrics.density).preferred)
+    LaunchedEffect(widgetInfoRevision, launcherAppsRevision, store.widgetEntries.size) {
+        store.widgetEntries.toList().filterIsInstance<WidgetEntry.Bound>().forEach { entry ->
+            val info = manager.getAppWidgetInfo(entry.appWidgetId)
+            if (info != null) {
+                if (entry.gridSize == null) {
+                    store.setWidgetSize(
+                        entry.appWidgetId,
+                        widgetSizeRange(info, context.resources.displayMetrics.density).preferred,
+                    )
+                }
+                store.updateWidgetProvider(
+                    entry.appWidgetId,
+                    info.toWidgetProviderIdentity(context.packageManager),
+                )
             }
         }
     }
@@ -155,23 +193,16 @@ internal fun WidgetPage(store: LauncherStore, actions: DeviceActions, goHome: ()
                     fontSize = Dimens.sp26,
                     fontWeight = FontWeight.Black,
                 )
-                if (store.widgetIds.isNotEmpty()) {
-                    Text(
-                        stringResource(R.string.widget_count, store.widgetIds.size, MAX_WIDGETS),
-                        color = headerContentColor.copy(alpha = .64f),
-                        fontSize = Dimens.sp12,
-                    )
-                }
             }
             FilledTonalIconButton(
                 onClick = {
-                    if (store.widgetIds.size >= MAX_WIDGETS) {
+                    if (store.widgetEntries.size >= MAX_WIDGET_ENTRIES) {
                         Toast.makeText(
                             context,
                             context.resources.getQuantityString(
                                 R.plurals.maximum_widgets,
-                                MAX_WIDGETS,
-                                MAX_WIDGETS,
+                                MAX_WIDGET_ENTRIES,
+                                MAX_WIDGET_ENTRIES,
                             ),
                             Toast.LENGTH_SHORT,
                         ).show()
@@ -182,7 +213,7 @@ internal fun WidgetPage(store: LauncherStore, actions: DeviceActions, goHome: ()
             ) { Icon(Icons.Default.Add, stringResource(R.string.add_widget)) }
         }
 
-        if (store.widgetIds.isEmpty()) {
+        if (store.widgetEntries.isEmpty()) {
             CenteredActionPrompt(
                 icon = Icons.Default.Widgets,
                 title = stringResource(R.string.your_widget_page),
@@ -194,70 +225,67 @@ internal fun WidgetPage(store: LauncherStore, actions: DeviceActions, goHome: ()
                 modifier = Modifier.fillMaxSize(),
             )
         } else {
-            Box(Modifier.fillMaxSize()) {
-                LazyColumn(
-                    state = widgetListState,
-                    modifier = Modifier.fillMaxSize().padding(start = Dimens.dp20, end = Dimens.dp48),
-                    verticalArrangement = Arrangement.spacedBy(Dimens.dp20),
-                ) {
-                    itemsIndexed(store.widgetIds, key = { _, id -> id }) { index, id ->
-                        val info = remember(id, widgetInfoRevision, launcherAppsRevision) {
-                            manager.getAppWidgetInfo(id)
-                        }
-                        if (info != null) {
-                            WidgetPanel(
-                                host = host,
-                                id = id,
-                                info = info,
-                                gridSize = store.widgetSizes[id]
-                                    ?: widgetSizeRange(
-                                        info,
-                                        context.resources.displayMetrics.density,
-                                    ).preferred,
-                                canMoveUp = index > 0,
-                                canMoveDown = index < store.widgetIds.lastIndex,
-                                onMoveUp = { store.moveWidget(id, -1) },
-                                onMoveDown = { store.moveWidget(id, 1) },
-                                onRemove = {
-                                    store.removeWidget(id)
-                                    runCatching { host.deleteAppWidgetId(id) }
-                                },
-                                onResize = { store.setWidgetSize(id, it) },
-                            )
-                        } else {
-                            UnavailableWidgetPanel(
-                                onRetry = { widgetInfoRevision++ },
-                                onRemove = {
-                                    store.removeWidget(id)
-                                    runCatching { host.deleteAppWidgetId(id) }
-                                },
-                            )
-                        }
+            ReorderableWidgetColumn(
+                entries = store.widgetEntries,
+                host = host,
+                manager = manager,
+                availableProviders = homeScreenProviders,
+                installedPackages = installedRestorablePackages,
+                widgetInfoRevision = widgetInfoRevision,
+                launcherAppsRevision = launcherAppsRevision,
+                onRetryUnavailableWidget = { widgetInfoRevision++ },
+                onOrderChange = store::setWidgetOrder,
+                onRemove = { entry ->
+                    val removed = store.removeWidget(entry.entryId)
+                    if (removed is WidgetEntry.Bound) {
+                        runCatching { host.deleteAppWidgetId(removed.appWidgetId) }
                     }
-                    item { Spacer(Modifier.height(Dimens.dp32)) }
-                }
-                if (widgetListState.canScrollBackward || widgetListState.canScrollForward) {
-                    WidgetScrollIndicator(
-                        state = widgetListState,
-                        widgetCount = store.widgetIds.size,
-                        contentDescription = stringResource(R.string.scroll_widgets),
-                        modifier = Modifier.align(Alignment.CenterEnd).padding(end = Dimens.dp10),
+                },
+                onResize = store::setWidgetSize,
+                onBindReplacement = { entryId, info, size ->
+                    beginWidgetBinding(info, size, entryId)
+                },
+                onChooseReplacement = { replacementPlaceholder = it },
+                onReinstall = { provider ->
+                    actions.webSearch(
+                        query = "Download ${provider.appLabel.ifBlank { provider.packageName }} Android app",
+                        preferredPackage = store.preferredWebPackage,
                     )
-                }
-            }
+                },
+            )
         }
     }
 
     if (showPicker) {
         WidgetProviderDialog(
-            providers = manager.homeScreenProviders(context.packageManager),
+            providers = homeScreenProviders,
             actions = actions,
             onSelect = { info ->
                 showPicker = false
+                pendingReplacementEntryId = null
                 val range = widgetSizeRange(info, context.resources.displayMetrics.density)
                 if (range.isResizable) sizingProvider = info else beginWidgetBinding(info, range.preferred)
             },
             onDismiss = { showPicker = false },
+        )
+    }
+    replacementPlaceholder?.let { placeholder ->
+        WidgetProviderDialog(
+            providers = homeScreenProviders
+                .filter { it.provider.packageName == placeholder.recipe.provider.packageName },
+            actions = actions,
+            onSelect = { info ->
+                replacementPlaceholder = null
+                pendingReplacementEntryId = placeholder.entryId
+                val range = widgetSizeRange(info, context.resources.displayMetrics.density)
+                if (range.isResizable) sizingProvider = info
+                else beginWidgetBinding(info, range.preferred, placeholder.entryId)
+            },
+            onDismiss = { replacementPlaceholder = null },
+            presentation = WidgetPickerPresentation(
+                titleRes = R.string.choose_replacement_widget,
+                descriptionRes = R.string.choose_replacement_widget_description,
+            ),
         )
     }
     sizingProvider?.let { info ->
@@ -268,9 +296,12 @@ internal fun WidgetPage(store: LauncherStore, actions: DeviceActions, goHome: ()
             confirmLabelRes = R.string.add_widget,
             onConfirm = { size ->
                 sizingProvider = null
-                beginWidgetBinding(info, size)
+                beginWidgetBinding(info, size, pendingReplacementEntryId)
             },
-            onDismiss = { sizingProvider = null },
+            onDismiss = {
+                sizingProvider = null
+                pendingReplacementEntryId = null
+            },
         )
     }
     bindingController.configurationToConfirm?.let { info ->

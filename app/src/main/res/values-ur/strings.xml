@@ -495,11 +495,14 @@
     <string name="export_backup_description">ترتیبات، ایپ کے انتخاب، لے آؤٹ، اور کام کو محفوظ کریں۔</string>
     <string name="import_backup">بیک اپ درآمد کریں۔</string>
     <string name="import_backup_description">پہلے برآمد شدہ فائل کا جائزہ لیں اور بحال کریں۔</string>
-    <string name="backup_not_included_description">Android اجازتیں، سسٹم کے کردار، رسائی اور اطلاع تک رسائی، ویجیٹس، وال پیپر امیج فائلز، دستاویز فولڈر تک رسائی، اور حالیہ استفسار کی تاریخ شامل نہیں ہے۔ غیر دستیاب ایپس یا آئیکن پیک کے لیے انتخاب اس وقت تک واپس آ سکتے ہیں جب تک کہ وہ ایپس انسٹال اور دوبارہ منتخب نہ ہو جائیں۔</string>
+    <string name="backup_not_included_description">Android اجازتیں، سسٹم کے کردار، رسائی اور اطلاع تک رسائی، ویجیٹ کا مواد اور ایپ کی مخصوص ترتیبات، وال پیپر تصاویر، دستاویز فولڈر تک رسائی اور حالیہ تلاش کی تاریخ شامل نہیں ہیں۔ غیر دستیاب ایپس یا آئیکن پیک دوبارہ انسٹال اور منتخب ہونے تک متبادل ترتیبات استعمال کر سکتے ہیں۔</string>
     <string name="backup_exported">بیک اپ برآمد ہو گیا۔</string>
     <string name="backup_export_failed">بیک اپ برآمد نہیں کیا جا سکا</string>
     <string name="backup_import_failed">وہ فائل تعاون یافتہ OpenMink بیک اپ نہیں ہے۔</string>
-    <string name="backup_imported">بیک اپ بحال ہو گیا۔ Android اجازتوں کو دوبارہ فعال کریں اور دوبارہ ویجیٹس یا دستاویز کے فولڈرز شامل کریں۔</string>
+    <string name="backup_imported">بیک اپ بحال ہو گیا۔ Android اجازتیں دوبارہ فعال کریں اور ویجیٹ سیٹ اپ کی جگہوں یا دستاویز فولڈرز کا جائزہ لیں۔</string>
+    <string name="backup_imported_widget_limit">بیک اپ بحال ہو گیا۔ اس ڈیوائس پر ویجیٹ کی حد پوری ہونے کی وجہ سے %1$d ویجیٹ جگہیں چھوڑ دی گئیں۔</string>
+    <string name="restore_widget_placeholders">ویجیٹ سیٹ اپ کی جگہیں شامل کریں</string>
+    <string name="restore_widget_placeholders_description">موجودہ ویجیٹس رکھیں اور اس بیک اپ کے ویجیٹس دوبارہ سیٹ کرنے کے لیے %1$d جگہیں شامل کریں۔</string>
     <string name="confirm_backup_import">اس بیک اپ کو بحال کریں؟</string>
     <string name="confirm_backup_import_description">OpenMink %1$s · %2$s · %3$d to-dos\n\n یہ آپ کی موجودہ پورٹیبل ترتیبات، لانچر لے آؤٹ، ایپ کے انتخاب، اور کرنے والے کاموں کی جگہ لے لیتا ہے۔</string>
     <string name="unknown_date">نامعلوم تاریخ</string>
@@ -785,14 +788,18 @@
     <string name="widget_setup_confirmation_description">ویجیٹ سیٹ اپ مکمل ہو گیا، لیکن اس کی ایپ نے اس بات کی تصدیق نہیں کی کہ تبدیلیاں محفوظ ہوئیں یا نہیں۔ اگر سیٹ اپ درست لگتا ہے تو اسے استعمال کریں، ورنہ اپنے موجودہ ویجیٹس کو برقرار رکھنے کے لیے اسے رد کر دیں۔</string>
     <string name="use_widget">ویجیٹ استعمال کریں</string>
     <string name="widgets">وجیٹس</string>
-    <string name="widget_count">%1$d از %2$d</string>
     <plurals name="maximum_widgets">
         <item quantity="one">زیادہ سے زیادہ %1$d ویجیٹ</item>
         <item quantity="other">زیادہ سے زیادہ %1$d وجیٹس</item>
     </plurals>
     <string name="add_widget">ویجیٹ شامل کریں۔</string>
     <string name="your_widget_page">آپ کا ویجیٹ صفحہ</string>
-    <string name="your_widget_page_description">آٹھ Android وجیٹس تک شامل کریں۔ ان کی ایپس ان کے دکھائے جانے والے مواد کو کنٹرول کرتی ہیں۔</string>
+    <string name="your_widget_page_description">ایک نظر میں استعمال ہونے والی معلومات اور کنٹرولز کے لیے Android ویجیٹس شامل کریں۔</string>
+    <string name="widget_restore_ready_description">%1$s انسٹال ہے۔ اسے یہاں بحال کرنے کے لیے یہ ویجیٹ دوبارہ سیٹ کریں۔</string>
+    <string name="widget_restore_missing_app_description">یہ ویجیٹ دوبارہ سیٹ کرنے سے پہلے %1$s دوبارہ انسٹال کریں۔</string>
+    <string name="set_up_widget">ویجیٹ سیٹ کریں</string>
+    <string name="choose_replacement_widget">متبادل منتخب کریں</string>
+    <string name="choose_replacement_widget_description">اصل ویجیٹ اب دستیاب نہیں ہے۔ اسی ایپ سے دوسرا ویجیٹ منتخب کریں۔</string>
     <string name="widget_options">ویجیٹ کے اختیارات</string>
     <string name="widget_temporarily_unavailable">ویجیٹ عارضی طور پر دستیاب نہیں ہے۔</string>
     <string name="widget_temporarily_unavailable_description">MinkLauncher نے اس ویجیٹ کو اپنی جگہ پر رکھا۔ اس کی ایپ کے بعد دوبارہ کوشش کریں یا Android لوڈنگ مکمل ہو جائے، یا اسے دستی طور پر ہٹا دیں۔</string>
@@ -1026,7 +1033,7 @@
     <string name="home_tour_conversations_title">گفتگو قریب رکھیں</string>
     <string name="home_tour_conversations_description">فعال گفتگو اور پسندیدہ لوگوں کو دیکھنے کے لیے ہوم کے اوپر گفتگو کے آئیکن کو ٹیپ کریں۔</string>
     <string name="home_tour_widgets_title">اپنے ویجٹس شامل کریں</string>
-    <string name="home_tour_widgets_description">ویجٹ صفحہ کھولنے کے لیے ہوم سے بائیں سوائپ کریں اور زیادہ سے زیادہ آٹھ Android ویجٹس شامل کریں۔</string>
+    <string name="home_tour_widgets_description">ویجٹ صفحہ کھولنے کے لیے ہوم سے بائیں سوائپ کریں اور Android ویجٹس شامل کریں۔</string>
     <string name="home_tour_mink_day_title">Mink’s Day کے ساتھ حدود مقرر کریں</string>
     <string name="home_tour_mink_day_description">توجہ بھٹکانے والی ایپس کے لیے مشترکہ یومیہ حد مقرر کریں اور ان کے استعمال کا وقت دیکھیں۔</string>
     <string name="home_tour_appearance_title">ہوم کو اپنا بنائیں</string>

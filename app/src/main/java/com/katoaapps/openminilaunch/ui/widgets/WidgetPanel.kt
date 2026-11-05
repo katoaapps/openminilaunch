@@ -14,9 +14,8 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.ArrowDownward
-import androidx.compose.material.icons.filled.ArrowUpward
 import androidx.compose.material.icons.filled.Close
+import androidx.compose.material.icons.filled.Download
 import androidx.compose.material.icons.filled.MoreVert
 import androidx.compose.material.icons.filled.Refresh
 import androidx.compose.material.icons.filled.Widgets
@@ -49,51 +48,174 @@ import androidx.compose.ui.viewinterop.AndroidView
 import androidx.core.view.ViewCompat
 import com.katoaapps.openminilaunch.R
 import com.katoaapps.openminilaunch.model.WidgetGridSize
+import com.katoaapps.openminilaunch.model.WidgetProviderIdentity
 import com.katoaapps.openminilaunch.ui.theme.Dimens
 import com.katoaapps.openminilaunch.ui.theme.Muted
 import com.katoaapps.openminilaunch.ui.theme.displayLabel
 
 @Composable
-internal fun UnavailableWidgetPanel(onRetry: () -> Unit, onRemove: () -> Unit) {
+internal fun UnavailableWidgetPanel(
+    onRetry: () -> Unit,
+    onRemove: () -> Unit,
+    modifier: Modifier = Modifier,
+    dragHandle: @Composable () -> Unit,
+) {
     Surface(
-        modifier = Modifier.fillMaxWidth(),
+        modifier = modifier.fillMaxWidth(),
         shape = RoundedCornerShape(Dimens.dp24),
         color = MaterialTheme.colorScheme.surfaceContainerLow,
     ) {
-        Column(
-            Modifier.padding(Dimens.dp20),
-            horizontalAlignment = Alignment.CenterHorizontally,
-            verticalArrangement = Arrangement.spacedBy(Dimens.dp8),
-        ) {
-            Icon(
-                Icons.Default.Widgets,
-                null,
-                Modifier.size(Dimens.dp34),
-                tint = MaterialTheme.colorScheme.onSurfaceVariant,
-            )
-            Text(stringResource(R.string.widget_temporarily_unavailable), fontWeight = FontWeight.Bold)
-            Text(
-                stringResource(R.string.widget_temporarily_unavailable_description),
-                color = MaterialTheme.colorScheme.onSurfaceVariant,
-                fontSize = Dimens.sp12,
-            )
-            Row(horizontalArrangement = Arrangement.spacedBy(Dimens.dp8)) {
-                TextButton(onClick = onRetry) {
-                    Icon(Icons.Default.Refresh, null, Modifier.size(Dimens.dp18))
-                    Text(stringResource(R.string.retry), Modifier.padding(start = Dimens.dp6))
+        Column(Modifier.padding(Dimens.dp20)) {
+            Row(
+                Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                dragHandle()
+                Text(
+                    stringResource(R.string.widget_temporarily_unavailable),
+                    Modifier.weight(1f),
+                    fontWeight = FontWeight.Bold,
+                )
+            }
+            Column(
+                Modifier.fillMaxWidth(),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.spacedBy(Dimens.dp8),
+            ) {
+                Icon(
+                    Icons.Default.Widgets,
+                    null,
+                    Modifier.size(Dimens.dp34),
+                    tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                )
+                Text(
+                    stringResource(R.string.widget_temporarily_unavailable_description),
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    fontSize = Dimens.sp12,
+                )
+                Row(horizontalArrangement = Arrangement.spacedBy(Dimens.dp8)) {
+                    TextButton(onClick = onRetry) {
+                        Icon(Icons.Default.Refresh, null, Modifier.size(Dimens.dp18))
+                        Text(stringResource(R.string.retry), Modifier.padding(start = Dimens.dp6))
+                    }
+                    TextButton(onClick = onRemove) {
+                        Icon(
+                            Icons.Default.Close,
+                            null,
+                            Modifier.size(Dimens.dp18),
+                            tint = MaterialTheme.colorScheme.error,
+                        )
+                        Text(
+                            stringResource(R.string.remove),
+                            Modifier.padding(start = Dimens.dp6),
+                            color = MaterialTheme.colorScheme.error,
+                        )
+                    }
                 }
-                TextButton(onClick = onRemove) {
-                    Icon(
-                        Icons.Default.Close,
-                        null,
-                        Modifier.size(Dimens.dp18),
-                        tint = MaterialTheme.colorScheme.error,
-                    )
-                    Text(
-                        stringResource(R.string.remove),
-                        Modifier.padding(start = Dimens.dp6),
-                        color = MaterialTheme.colorScheme.error,
-                    )
+            }
+        }
+    }
+}
+
+@Composable
+internal fun RestorableWidgetPanel(
+    entryId: String,
+    provider: WidgetProviderIdentity,
+    gridSize: WidgetGridSize,
+    availableProviders: List<AppWidgetProviderInfo>,
+    packageInstalled: Boolean,
+    onBindReplacement: (String, AppWidgetProviderInfo, WidgetGridSize) -> Unit,
+    onChooseReplacement: () -> Unit,
+    onReinstall: (WidgetProviderIdentity) -> Unit,
+    onRemove: () -> Unit,
+    modifier: Modifier = Modifier,
+    dragHandle: @Composable () -> Unit,
+) {
+    val exactProvider = availableProviders.filter { info ->
+        info.provider.packageName == provider.packageName &&
+            info.provider.className == provider.className
+    }.singleOrNull()
+    val title = provider.widgetLabel.ifBlank { provider.appLabel.ifBlank { provider.packageName } }
+
+    Surface(
+        modifier = modifier.fillMaxWidth(),
+        shape = RoundedCornerShape(Dimens.dp24),
+        color = MaterialTheme.colorScheme.surfaceContainerLow,
+    ) {
+        Column(Modifier.padding(Dimens.dp20)) {
+            Row(
+                Modifier.fillMaxWidth(),
+                verticalAlignment = Alignment.CenterVertically,
+            ) {
+                dragHandle()
+                Text(title, Modifier.weight(1f), fontWeight = FontWeight.Bold)
+            }
+            Column(
+                Modifier.fillMaxWidth(),
+                horizontalAlignment = Alignment.CenterHorizontally,
+                verticalArrangement = Arrangement.spacedBy(Dimens.dp8),
+            ) {
+                Icon(
+                    Icons.Default.Widgets,
+                    null,
+                    Modifier.size(Dimens.dp34),
+                    tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                )
+                Text(
+                    stringResource(
+                        if (packageInstalled) {
+                            R.string.widget_restore_ready_description
+                        } else {
+                            R.string.widget_restore_missing_app_description
+                        },
+                        provider.appLabel.ifBlank { provider.packageName },
+                    ),
+                    color = MaterialTheme.colorScheme.onSurfaceVariant,
+                    fontSize = Dimens.sp12,
+                )
+                Row(horizontalArrangement = Arrangement.spacedBy(Dimens.dp8)) {
+                    TextButton(
+                        onClick = {
+                            when {
+                                exactProvider != null -> onBindReplacement(
+                                    entryId,
+                                    exactProvider,
+                                    gridSize,
+                                )
+                                packageInstalled -> onChooseReplacement()
+                                else -> onReinstall(provider)
+                            }
+                        },
+                    ) {
+                        Icon(
+                            if (packageInstalled) Icons.Default.Widgets else Icons.Default.Download,
+                            null,
+                            Modifier.size(Dimens.dp18),
+                        )
+                        Text(
+                            stringResource(
+                                when {
+                                    exactProvider != null -> R.string.set_up_widget
+                                    packageInstalled -> R.string.choose_replacement_widget
+                                    else -> R.string.reinstall
+                                },
+                            ),
+                            Modifier.padding(start = Dimens.dp6),
+                        )
+                    }
+                    TextButton(onClick = onRemove) {
+                        Icon(
+                            Icons.Default.Close,
+                            null,
+                            Modifier.size(Dimens.dp18),
+                            tint = MaterialTheme.colorScheme.error,
+                        )
+                        Text(
+                            stringResource(R.string.remove),
+                            Modifier.padding(start = Dimens.dp6),
+                            color = MaterialTheme.colorScheme.error,
+                        )
+                    }
                 }
             }
         }
@@ -106,12 +228,10 @@ internal fun WidgetPanel(
     id: Int,
     info: AppWidgetProviderInfo,
     gridSize: WidgetGridSize,
-    canMoveUp: Boolean,
-    canMoveDown: Boolean,
-    onMoveUp: () -> Unit,
-    onMoveDown: () -> Unit,
     onRemove: () -> Unit,
     onResize: (WidgetGridSize) -> Unit,
+    modifier: Modifier = Modifier,
+    dragHandle: @Composable () -> Unit,
 ) {
     val context = LocalContext.current
     val density = LocalDensity.current
@@ -125,20 +245,17 @@ internal fun WidgetPanel(
     val lastReportedSize = remember(id) { intArrayOf(0, 0) }
     val lastReportedView = remember(id) { arrayOfNulls<AppWidgetHostView>(1) }
 
-    Column(Modifier.fillMaxWidth()) {
+    Column(modifier.fillMaxWidth()) {
         WidgetPanelHeader(
             label = info.loadLabel(context.packageManager),
             gridSize = gridSize,
             sizeResizable = sizeRange.isResizable,
             menuExpanded = menuExpanded,
-            canMoveUp = canMoveUp,
-            canMoveDown = canMoveDown,
             onShowMenu = { menuExpanded = true },
             onDismissMenu = { menuExpanded = false },
             onResize = { menuExpanded = false; showResize = true },
-            onMoveUp = { menuExpanded = false; onMoveUp() },
-            onMoveDown = { menuExpanded = false; onMoveDown() },
             onRemove = { menuExpanded = false; onRemove() },
+            dragHandle = dragHandle,
         )
         BoxWithConstraints(Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
             val dimensions = widgetPanelDimensions(maxWidth.value, gridSize)
@@ -190,19 +307,17 @@ private fun WidgetPanelHeader(
     gridSize: WidgetGridSize,
     sizeResizable: Boolean,
     menuExpanded: Boolean,
-    canMoveUp: Boolean,
-    canMoveDown: Boolean,
     onShowMenu: () -> Unit,
     onDismissMenu: () -> Unit,
     onResize: () -> Unit,
-    onMoveUp: () -> Unit,
-    onMoveDown: () -> Unit,
     onRemove: () -> Unit,
+    dragHandle: @Composable () -> Unit,
 ) {
     Row(
         Modifier.fillMaxWidth().padding(start = Dimens.dp4, bottom = Dimens.dp6),
         verticalAlignment = Alignment.CenterVertically,
     ) {
+        dragHandle()
         Text(
             label,
             Modifier.weight(1f),
@@ -229,18 +344,6 @@ private fun WidgetPanelHeader(
                         onClick = onResize,
                     )
                 }
-                DropdownMenuItem(
-                    text = { Text(stringResource(R.string.move_up)) },
-                    leadingIcon = { Icon(Icons.Default.ArrowUpward, null) },
-                    enabled = canMoveUp,
-                    onClick = onMoveUp,
-                )
-                DropdownMenuItem(
-                    text = { Text(stringResource(R.string.move_down)) },
-                    leadingIcon = { Icon(Icons.Default.ArrowDownward, null) },
-                    enabled = canMoveDown,
-                    onClick = onMoveDown,
-                )
                 DropdownMenuItem(
                     text = { Text(stringResource(R.string.remove), color = MaterialTheme.colorScheme.error) },
                     leadingIcon = { Icon(Icons.Default.Close, null, tint = MaterialTheme.colorScheme.error) },

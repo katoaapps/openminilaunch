@@ -495,11 +495,14 @@
     <string name="export_backup_description">儲存設定、應用程式選擇、版面配置同埋待辦事項</string>
     <string name="import_backup">匯入備份</string>
     <string name="import_backup_description">睇返同埋還原之前匯出嘅檔案</string>
-    <string name="backup_not_included_description">唔包括 Android 權限、系統角色、冇障礙功能同通知存取權、小工具、壁紙圖片檔案、文件資料夾存取權同埋最近嘅查詢記錄。喺安裝同再次揀嗰啲應用程式之前，唔可用嘅應用程式或者圖示包嘅選項可能會回落。</string>
+    <string name="backup_not_included_description">備份唔包括 Android 權限、系統角色、無障礙功能同通知存取權、小工具內容同應用程式專屬設定、壁紙圖片檔案、文件資料夾存取權同最近嘅查詢記錄。未安裝嘅應用程式或者圖示包可能會暫時用替代選項，直到重新安裝同揀選。</string>
     <string name="backup_exported">備份已經匯出</string>
     <string name="backup_export_failed">匯出唔到備份</string>
     <string name="backup_import_failed">嗰個檔案唔係支援嘅 OpenMink 備份</string>
-    <string name="backup_imported">備份恢復咗。重新啟用 Android 權限，並再次新增小工具或文件資料夾。</string>
+    <string name="backup_imported">備份已恢復。請重新啟用 Android 權限，並檢查小工具設定位置或者文件資料夾。</string>
+    <string name="backup_imported_widget_limit">備份已恢復。呢部裝置已經去到小工具上限，所以略過咗 %1$d 個小工具位置。</string>
+    <string name="restore_widget_placeholders">加入小工具設定位置</string>
+    <string name="restore_widget_placeholders_description">保留而家嘅小工具，並加入 %1$d 個位置，等你可以重新設定備份入面嘅小工具。</string>
     <string name="confirm_backup_import">還原呢個備份？</string>
     <string name="confirm_backup_import_description">OpenMink %1$s · %2$s · %3$d 個待辦事項\n\n呢個會取代你而家嘅便攜式設定、啟動器版面配置、應用程式選擇同埋待辦事項。</string>
     <string name="unknown_date">未知日期</string>
@@ -785,14 +788,18 @@
     <string name="widget_setup_confirmation_description">小工具已完成設定，但個應用程式未確認變更係咪已儲存。如果設定睇落正確，請使用佢；否則請棄置，以保留目前嘅小工具不變。</string>
     <string name="use_widget">使用小工具</string>
     <string name="widgets">小工具</string>
-    <string name="widget_count">%2$d 嘅 %1$d</string>
     <plurals name="maximum_widgets">
         <item quantity="one">最多 %1$d 小工具</item>
         <item quantity="other">最多 %1$d 小工具</item>
     </plurals>
     <string name="add_widget">加入小工具</string>
     <string name="your_widget_page">你嘅小工具頁面</string>
-    <string name="your_widget_page_description">最多加八個 Android 小工具。佢哋嘅應用程式控制佢哋顯示嘅內容。</string>
+    <string name="your_widget_page_description">加入 Android 小工具，快速睇到你常用嘅資料同控制。</string>
+    <string name="widget_restore_ready_description">已經安裝 %1$s。重新設定呢個小工具就可以喺度恢復。</string>
+    <string name="widget_restore_missing_app_description">請先重新安裝 %1$s，再重新設定呢個小工具。</string>
+    <string name="set_up_widget">設定小工具</string>
+    <string name="choose_replacement_widget">揀替代小工具</string>
+    <string name="choose_replacement_widget_description">原本嘅小工具已經用唔到。請揀同一個應用程式嘅另一個小工具。</string>
     <string name="widget_options">小工具選項</string>
     <string name="widget_temporarily_unavailable">小工具暫時唔可用</string>
     <string name="widget_temporarily_unavailable_description">MinkLauncher 將呢個小工具保留喺原位。喺佢嘅應用程式或者 Android 載入完之後重試，或者手動移除佢。</string>
@@ -1026,7 +1033,7 @@
     <string name="home_tour_conversations_title">對話隨手可及</string>
     <string name="home_tour_conversations_description">撳主畫面頂部嘅對話圖示，查看進行中嘅對話同你收藏嘅聯絡人。</string>
     <string name="home_tour_widgets_title">加入你嘅小工具</string>
-    <string name="home_tour_widgets_description">喺主畫面向左掃，打開小工具頁面並加入最多八個 Android 小工具。</string>
+    <string name="home_tour_widgets_description">喺主畫面向左掃，打開小工具頁面並加入 Android 小工具。</string>
     <string name="home_tour_mink_day_title">使用 Mink’s Day 設定限制</string>
     <string name="home_tour_mink_day_description">為令你分心嘅應用程式設定每日總限額，並查看使用時間。</string>
     <string name="home_tour_appearance_title">打造你嘅主畫面</string>

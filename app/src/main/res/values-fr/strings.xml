@@ -495,11 +495,14 @@
     <string name="export_backup_description">Enregistrez les paramètres, les choix d\'applications, la mise en page et les tâches</string>
     <string name="import_backup">Importer une sauvegarde</string>
     <string name="import_backup_description">Examiner et restaurer un fichier précédemment exporté</string>
-    <string name="backup_not_included_description">Les autorisations Android, les rôles système, l\'accessibilité et l\'accès aux notifications, les widgets, les fichiers image de fond d\'écran, l\'accès aux dossiers de documents et l\'historique des requêtes récentes ne sont pas inclus. Les choix d\'applications ou de packs d\'icônes indisponibles peuvent revenir jusqu\'à ce que ces applications soient installées et sélectionnées à nouveau.</string>
+    <string name="backup_not_included_description">Les autorisations Android, les rôles système, l\'accessibilité et l\'accès aux notifications, le contenu et les réglages propres aux widgets, les fichiers image de fond d\'écran, l\'accès aux dossiers de documents et l\'historique des requêtes récentes ne sont pas inclus. Les choix d\'applications ou de packs d\'icônes indisponibles peuvent utiliser une solution de secours jusqu\'à leur réinstallation et leur nouvelle sélection.</string>
     <string name="backup_exported">Sauvegarde exportée</string>
     <string name="backup_export_failed">Impossible d\'exporter la sauvegarde</string>
     <string name="backup_import_failed">Ce fichier n\'est pas une sauvegarde OpenMink prise en charge</string>
-    <string name="backup_imported">Sauvegarde restaurée. Réactivez les autorisations Android et ajoutez à nouveau des widgets ou des dossiers de documents.</string>
+    <string name="backup_imported">Sauvegarde restaurée. Réactivez les autorisations Android et vérifiez les emplacements de configuration des widgets ou les dossiers de documents.</string>
+    <string name="backup_imported_widget_limit">Sauvegarde restaurée. %1$d emplacements de widgets ont été ignorés, car cet appareil a déjà atteint la limite.</string>
+    <string name="restore_widget_placeholders">Ajouter des emplacements de configuration de widgets</string>
+    <string name="restore_widget_placeholders_description">Conservez vos widgets actuels et ajoutez %1$d emplacements où les widgets de cette sauvegarde pourront être configurés à nouveau.</string>
     <string name="confirm_backup_import">Restaurer cette sauvegarde ?</string>
     <string name="confirm_backup_import_description">OpenMink %1$s · %2$s · %3$d tâches à faire\n\nCela remplace vos paramètres portables actuels, la disposition du lanceur, les choix d\'applications et les tâches à faire.</string>
     <string name="unknown_date">Date inconnue</string>
@@ -785,14 +788,18 @@
     <string name="widget_setup_confirmation_description">La configuration du widget est terminée, mais son application n’a pas confirmé l’enregistrement des modifications. Utilisez-le si la configuration vous semble correcte, ou supprimez-le pour conserver vos widgets actuels.</string>
     <string name="use_widget">Utiliser le widget</string>
     <string name="widgets">Widgets</string>
-    <string name="widget_count">%1$d ou %2$d</string>
     <plurals name="maximum_widgets">
         <item quantity="one">Maximum de widget %1$d</item>
         <item quantity="other">Maximum de widgets %1$d</item>
     </plurals>
     <string name="add_widget">Ajouter un widget</string>
     <string name="your_widget_page">Votre page de widgets</string>
-    <string name="your_widget_page_description">Ajoutez jusqu\'à huit widgets Android. Leurs applications contrôlent le contenu qu\'elles affichent.</string>
+    <string name="your_widget_page_description">Ajoutez des widgets Android pour les informations et commandes que vous consultez d\'un coup d\'œil.</string>
+    <string name="widget_restore_ready_description">%1$s est installée. Configurez à nouveau ce widget pour le restaurer ici.</string>
+    <string name="widget_restore_missing_app_description">Réinstallez %1$s avant de configurer à nouveau ce widget.</string>
+    <string name="set_up_widget">Configurer le widget</string>
+    <string name="choose_replacement_widget">Choisir un remplacement</string>
+    <string name="choose_replacement_widget_description">Le widget d\'origine n\'est plus disponible. Choisissez un autre widget de la même application.</string>
     <string name="widget_options">Options des widgets</string>
     <string name="widget_temporarily_unavailable">Widget temporairement indisponible</string>
     <string name="widget_temporarily_unavailable_description">MinkLauncher a conservé ce widget en place. Réessayez une fois le chargement de son application ou de Android terminé, ou supprimez-le manuellement.</string>
@@ -1026,7 +1033,7 @@
     <string name="home_tour_conversations_title">Gardez vos conversations à portée</string>
     <string name="home_tour_conversations_description">Touchez l’icône des conversations en haut de l’écran d’accueil pour voir les conversations actives et vos contacts favoris.</string>
     <string name="home_tour_widgets_title">Ajoutez vos widgets</string>
-    <string name="home_tour_widgets_description">Balayez vers la gauche depuis l’écran d’accueil pour ouvrir la page des widgets et ajouter jusqu’à huit widgets Android.</string>
+    <string name="home_tour_widgets_description">Balayez vers la gauche depuis l’écran d’accueil pour ouvrir la page des widgets et ajouter des widgets Android.</string>
     <string name="home_tour_mink_day_title">Fixez des limites avec Mink’s Day</string>
     <string name="home_tour_mink_day_description">Fixez une limite quotidienne globale aux applications qui vous distraient et suivez leur temps d’utilisation.</string>
     <string name="home_tour_appearance_title">Personnalisez l’accueil</string>

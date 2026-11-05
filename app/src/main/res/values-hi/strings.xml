@@ -495,11 +495,14 @@
     <string name="export_backup_description">सेटिंग्स, ऐप विकल्प, लेआउट और कार्य सहेजें</string>
     <string name="import_backup">बैकअप आयात करें</string>
     <string name="import_backup_description">पहले से निर्यात की गई फ़ाइल की समीक्षा करें और उसे पुनर्स्थापित करें</string>
-    <string name="backup_not_included_description">Android अनुमतियाँ, सिस्टम भूमिकाएँ, पहुँच और अधिसूचना पहुँच, विजेट, वॉलपेपर छवि फ़ाइलें, दस्तावेज़-फ़ोल्डर पहुँच और हाल का क्वेरी इतिहास शामिल नहीं हैं। अनुपलब्ध ऐप्स या आइकन पैक के लिए विकल्प तब तक वापस आ सकते हैं जब तक कि उन ऐप्स को इंस्टॉल और फिर से चयनित नहीं किया जाता है।</string>
+    <string name="backup_not_included_description">Android अनुमतियाँ, सिस्टम भूमिकाएँ, एक्सेसिबिलिटी और सूचना पहुँच, विजेट की सामग्री और ऐप-विशिष्ट सेटिंग, वॉलपेपर छवि फ़ाइलें, दस्तावेज़ फ़ोल्डर पहुँच और हाल का खोज इतिहास शामिल नहीं हैं। अनुपलब्ध ऐप या आइकन पैक दोबारा इंस्टॉल और चुने जाने तक वैकल्पिक सेटिंग इस्तेमाल कर सकते हैं।</string>
     <string name="backup_exported">बैकअप निर्यात किया गया</string>
     <string name="backup_export_failed">बैकअप निर्यात नहीं किया जा सका</string>
     <string name="backup_import_failed">वह फ़ाइल समर्थित OpenMink बैकअप नहीं है</string>
-    <string name="backup_imported">बैकअप पुनर्स्थापित किया गया. Android अनुमतियों को पुनः सक्षम करें और विजेट या दस्तावेज़ फ़ोल्डर फिर से जोड़ें।</string>
+    <string name="backup_imported">बैकअप पुनर्स्थापित हुआ। Android अनुमतियाँ फिर से चालू करें और विजेट सेटअप स्थानों या दस्तावेज़ फ़ोल्डरों की समीक्षा करें।</string>
+    <string name="backup_imported_widget_limit">बैकअप पुनर्स्थापित हुआ। इस डिवाइस पर विजेट सीमा पूरी होने के कारण %1$d विजेट स्थान छोड़ दिए गए।</string>
+    <string name="restore_widget_placeholders">विजेट सेटअप स्थान जोड़ें</string>
+    <string name="restore_widget_placeholders_description">अपने वर्तमान विजेट रखें और इस बैकअप के विजेट दोबारा सेट करने के लिए %1$d स्थान जोड़ें।</string>
     <string name="confirm_backup_import">इस बैकअप को पुनर्स्थापित करें?</string>
     <string name="confirm_backup_import_description">OpenMink %1$s · %2$s · %3$d to-dos\n\nयह आपकी वर्तमान पोर्टेबल सेटिंग्स, लॉन्चर लेआउट, ऐप विकल्प और कार्य को बदल देता है।</string>
     <string name="unknown_date">अज्ञात तिथि</string>
@@ -785,14 +788,18 @@
     <string name="widget_setup_confirmation_description">विजेट सेटअप पूरा हो गया, लेकिन उसके ऐप ने यह पुष्टि नहीं की कि बदलाव सहेजे गए हैं या नहीं। यदि सेटअप सही दिखता है तो इसका उपयोग करें, या अपने मौजूदा विजेट को अपरिवर्तित रखने के लिए इसे त्याग दें।</string>
     <string name="use_widget">विजेट का उपयोग करें</string>
     <string name="widgets">विजेट्स</string>
-    <string name="widget_count">%2$d का %1$d</string>
     <plurals name="maximum_widgets">
         <item quantity="one">अधिकतम %1$d विजेट</item>
         <item quantity="other">अधिकतम %1$d विजेट</item>
     </plurals>
     <string name="add_widget">विजेट जोड़ें</string>
     <string name="your_widget_page">आपका विजेट पृष्ठ</string>
-    <string name="your_widget_page_description">अधिकतम आठ Android विजेट जोड़ें। उनके ऐप्स उनके द्वारा प्रदर्शित सामग्री को नियंत्रित करते हैं।</string>
+    <string name="your_widget_page_description">एक नज़र में उपयोग की जाने वाली जानकारी और नियंत्रणों के लिए Android विजेट जोड़ें।</string>
+    <string name="widget_restore_ready_description">%1$s इंस्टॉल है। इसे यहाँ पुनर्स्थापित करने के लिए यह विजेट दोबारा सेट करें।</string>
+    <string name="widget_restore_missing_app_description">यह विजेट दोबारा सेट करने से पहले %1$s फिर से इंस्टॉल करें।</string>
+    <string name="set_up_widget">विजेट सेट करें</string>
+    <string name="choose_replacement_widget">विकल्प चुनें</string>
+    <string name="choose_replacement_widget_description">मूल विजेट अब उपलब्ध नहीं है। उसी ऐप से दूसरा विजेट चुनें।</string>
     <string name="widget_options">विजेट विकल्प</string>
     <string name="widget_temporarily_unavailable">विजेट अस्थायी रूप से अनुपलब्ध है</string>
     <string name="widget_temporarily_unavailable_description">MinkLauncher ने इस विजेट को यथास्थान रखा। इसके ऐप या Android के लोड होने के बाद पुनः प्रयास करें, या इसे मैन्युअल रूप से हटा दें।</string>
@@ -1026,7 +1033,7 @@
     <string name="home_tour_conversations_title">बातचीत पास रखें</string>
     <string name="home_tour_conversations_description">सक्रिय बातचीत और पसंदीदा लोगों को देखने के लिए होम के ऊपर बातचीत आइकन पर टैप करें।</string>
     <string name="home_tour_widgets_title">अपने विजेट जोड़ें</string>
-    <string name="home_tour_widgets_description">विजेट पेज खोलने के लिए होम से बाईं ओर स्वाइप करें और अधिकतम आठ Android विजेट जोड़ें।</string>
+    <string name="home_tour_widgets_description">विजेट पेज खोलने के लिए होम से बाईं ओर स्वाइप करें और Android विजेट जोड़ें।</string>
     <string name="home_tour_mink_day_title">Mink’s Day से सीमाएँ तय करें</string>
     <string name="home_tour_mink_day_description">ध्यान भटकाने वाले ऐप्स के लिए एक संयुक्त दैनिक सीमा तय करें और उनका उपयोग समय देखें।</string>
     <string name="home_tour_appearance_title">होम को अपना बनाएँ</string>

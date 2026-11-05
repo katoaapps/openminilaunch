@@ -495,11 +495,14 @@
     <string name="export_backup_description">保存设置、应用程序选择、布局和待办事项</string>
     <string name="import_backup">导入备份</string>
     <string name="import_backup_description">查看并恢复以前导出的文件</string>
-    <string name="backup_not_included_description">Android 权限、系统角色、可访问性和通知访问、小部件、壁纸图像文件、文档文件夹访问和最近查询历史记录不包括在内。不可用的应用程序或图标包的选择可能会回退，直到安装并再次选择这些应用程序为止。</string>
+    <string name="backup_not_included_description">备份不包括 Android 权限、系统角色、无障碍和通知访问权限、小部件内容及应用专属设置、壁纸图像文件、文档文件夹访问权限和最近查询历史记录。不可用的应用或图标包可能暂时使用备用选项，直到重新安装并选择它们。</string>
     <string name="backup_exported">备份导出</string>
     <string name="backup_export_failed">无法导出备份</string>
     <string name="backup_import_failed">该文件不是受支持的 OpenMink 备份</string>
-    <string name="backup_imported">备份已恢复。重新启用 Android 权限并再次添加小部件或文档文件夹。</string>
+    <string name="backup_imported">备份已恢复。请重新启用 Android 权限，并检查小部件设置占位或文档文件夹。</string>
+    <string name="backup_imported_widget_limit">备份已恢复。此设备已达到小部件上限，因此跳过了 %1$d 个小部件占位。</string>
+    <string name="restore_widget_placeholders">添加小部件设置占位</string>
+    <string name="restore_widget_placeholders_description">保留当前小部件，并添加 %1$d 个位置，以便重新设置此备份中的小部件。</string>
     <string name="confirm_backup_import">恢复这个备份吗？</string>
     <string name="confirm_backup_import_description">OpenMink %1$s · %2$s · %3$d 待办事项\n\n这将替换您当前的便携式设置、启动器布局、应用程序选择和待办事项。</string>
     <string name="unknown_date">日期未知</string>
@@ -785,14 +788,18 @@
     <string name="widget_setup_confirmation_description">小部件已完成设置，但其应用未确认更改是否已保存。如果设置看起来正确，请使用它；否则请将其丢弃，以保持当前小部件不变。</string>
     <string name="use_widget">使用小部件</string>
     <string name="widgets">小部件</string>
-    <string name="widget_count">%1$d 之 %2$d</string>
     <plurals name="maximum_widgets">
         <item quantity="one">最大 %1$d 小部件</item>
         <item quantity="other">最多 %1$d 小部件</item>
     </plurals>
     <string name="add_widget">添加小部件</string>
     <string name="your_widget_page">您的小部件页面</string>
-    <string name="your_widget_page_description">最多添加八个 Android 小部件。他们的应用程序控制他们显示的内容。</string>
+    <string name="your_widget_page_description">添加 Android 小部件，快速查看常用信息和控件。</string>
+    <string name="widget_restore_ready_description">已安装 %1$s。重新设置此小部件即可在这里恢复。</string>
+    <string name="widget_restore_missing_app_description">请先重新安装 %1$s，再重新设置此小部件。</string>
+    <string name="set_up_widget">设置小部件</string>
+    <string name="choose_replacement_widget">选择替代项</string>
+    <string name="choose_replacement_widget_description">原小部件已不可用。请选择同一应用中的其他小部件。</string>
     <string name="widget_options">小工具选项</string>
     <string name="widget_temporarily_unavailable">小部件暂时不可用</string>
     <string name="widget_temporarily_unavailable_description">MinkLauncher 将此小部件保留在适当的位置。其应用程序或 Android 完成加载后重试，或手动将其删除。</string>
@@ -1026,7 +1033,7 @@
     <string name="home_tour_conversations_title">随时查看对话</string>
     <string name="home_tour_conversations_description">点按主屏幕顶部的对话图标，查看当前对话和收藏联系人。</string>
     <string name="home_tour_widgets_title">添加小部件</string>
-    <string name="home_tour_widgets_description">从主屏幕向左滑动以打开小部件页面，并添加最多八个 Android 小部件。</string>
+    <string name="home_tour_widgets_description">从主屏幕向左滑动以打开小部件页面并添加 Android 小部件。</string>
     <string name="home_tour_mink_day_title">使用 Mink’s Day 设置限制</string>
     <string name="home_tour_mink_day_description">为分散注意力的应用设置每日总限额，并查看使用时间。</string>
     <string name="home_tour_appearance_title">打造你的主屏幕</string>

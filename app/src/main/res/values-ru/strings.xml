@@ -495,11 +495,14 @@
     <string name="export_backup_description">Сохраняйте настройки, выбор приложений, макет и задачи.</string>
     <string name="import_backup">Импортировать резервную копию</string>
     <string name="import_backup_description">Просмотр и восстановление ранее экспортированного файла</string>
-    <string name="backup_not_included_description">Разрешения Android, системные роли, специальные возможности и доступ к уведомлениям, виджеты, файлы изображений обоев, доступ к папкам документов и недавняя история запросов не включены. Выбор недоступных приложений или пакетов значков может быть отменен до тех пор, пока эти приложения не будут установлены и выбраны снова.</string>
+    <string name="backup_not_included_description">Разрешения Android, системные роли, специальные возможности и доступ к уведомлениям, содержимое и настройки виджетов, файлы обоев, доступ к папкам документов и недавняя история поиска не включаются. Для недоступных приложений и пакетов значков могут использоваться запасные настройки, пока они не будут снова установлены и выбраны.</string>
     <string name="backup_exported">Резервная копия экспортирована.</string>
     <string name="backup_export_failed">Не удалось экспортировать резервную копию</string>
     <string name="backup_import_failed">Этот файл не является поддерживаемой резервной копией OpenMink.</string>
-    <string name="backup_imported">Резервная копия восстановлена. Снова включите разрешения Android и снова добавьте виджеты или папки с документами.</string>
+    <string name="backup_imported">Резервная копия восстановлена. Снова включите разрешения Android и проверьте места для настройки виджетов и папки документов.</string>
+    <string name="backup_imported_widget_limit">Резервная копия восстановлена. Пропущено мест для виджетов: %1$d. На устройстве уже достигнут предел.</string>
+    <string name="restore_widget_placeholders">Добавить места для настройки виджетов</string>
+    <string name="restore_widget_placeholders_description">Сохранить текущие виджеты и добавить %1$d мест, где можно снова настроить виджеты из этой резервной копии.</string>
     <string name="confirm_backup_import">Восстановить эту резервную копию?</string>
     <string name="confirm_backup_import_description">OpenMink %1$s · %2$s · %3$d to-dos\n\nЭто заменяет текущие переносимые настройки, макет панели запуска, выбор приложений и списки дел.</string>
     <string name="unknown_date">Неизвестная дата</string>
@@ -795,7 +798,6 @@
     <string name="widget_setup_confirmation_description">Настройка виджета завершена, но приложение не подтвердило сохранение изменений. Используйте его, если настройка выглядит правильно, или удалите, чтобы оставить текущие виджеты без изменений.</string>
     <string name="use_widget">Использовать виджет</string>
     <string name="widgets">Виджеты</string>
-    <string name="widget_count">%1$d из %2$d</string>
     <plurals name="maximum_widgets">
         <item quantity="one">Максимум виджета %1$d</item>
         <item quantity="few">Максимум виджетов %1$d</item>
@@ -804,7 +806,12 @@
     </plurals>
     <string name="add_widget">Добавить виджет</string>
     <string name="your_widget_page">Страница вашего виджета</string>
-    <string name="your_widget_page_description">Добавьте до восьми виджетов Android. Их приложения контролируют отображаемый контент.</string>
+    <string name="your_widget_page_description">Добавляйте виджеты Android для нужной информации и элементов управления.</string>
+    <string name="widget_restore_ready_description">Приложение %1$s установлено. Настройте этот виджет снова, чтобы восстановить его здесь.</string>
+    <string name="widget_restore_missing_app_description">Переустановите %1$s, прежде чем снова настраивать этот виджет.</string>
+    <string name="set_up_widget">Настроить виджет</string>
+    <string name="choose_replacement_widget">Выбрать замену</string>
+    <string name="choose_replacement_widget_description">Исходный виджет больше недоступен. Выберите другой виджет из того же приложения.</string>
     <string name="widget_options">Параметры виджета</string>
     <string name="widget_temporarily_unavailable">Виджет временно недоступен</string>
     <string name="widget_temporarily_unavailable_description">MinkLauncher оставил этот виджет на месте. Повторите попытку после завершения загрузки приложения или Android или удалите его вручную.</string>
@@ -1044,7 +1051,7 @@
     <string name="home_tour_conversations_title">Держите беседы рядом</string>
     <string name="home_tour_conversations_description">Нажмите значок бесед вверху главного экрана, чтобы увидеть активные беседы и избранных людей.</string>
     <string name="home_tour_widgets_title">Добавьте виджеты</string>
-    <string name="home_tour_widgets_description">Проведите влево от главного экрана, чтобы открыть страницу виджетов и добавить до восьми виджетов Android.</string>
+    <string name="home_tour_widgets_description">Проведите влево от главного экрана, чтобы открыть страницу виджетов и добавить виджеты Android.</string>
     <string name="home_tour_mink_day_title">Установите ограничения с Mink’s Day</string>
     <string name="home_tour_mink_day_description">Задайте общий дневной лимит для отвлекающих приложений и следите за временем их использования.</string>
     <string name="home_tour_appearance_title">Настройте главный экран под себя</string>

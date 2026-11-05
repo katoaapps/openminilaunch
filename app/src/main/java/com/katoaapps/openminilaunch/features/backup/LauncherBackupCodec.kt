@@ -19,6 +19,10 @@ import com.katoaapps.openminilaunch.model.MinkAppPauseMode
 import com.katoaapps.openminilaunch.model.PalettePreference
 import com.katoaapps.openminilaunch.model.QuickDrawerConfig
 import com.katoaapps.openminilaunch.model.ThemePreference
+import com.katoaapps.openminilaunch.model.MAX_WIDGET_ENTRIES
+import com.katoaapps.openminilaunch.model.WidgetGridSize
+import com.katoaapps.openminilaunch.model.WidgetProviderIdentity
+import com.katoaapps.openminilaunch.model.WidgetRestoreRecipe
 import com.katoaapps.openminilaunch.model.appGridSlotFromStoredName
 import com.katoaapps.openminilaunch.model.appFolderColorMode
 import com.katoaapps.openminilaunch.model.configurableAppGridSlots
@@ -52,6 +56,7 @@ internal object LauncherBackupCodec {
                 })
             }
         })
+        put("widgets", encodeWidgetRecipes(backup.widgetRecipes))
         backup.profile?.let { put("profile", ProfileBackupCodec.encode(it, backup.profileLinks)) }
         put("notIncluded", PORTABILITY_EXCLUSIONS.stringsJsonArray())
     }.toString(2)
@@ -73,7 +78,56 @@ internal object LauncherBackupCodec {
             todos = decodeTodos(root.optJSONArray("todos") ?: JSONArray()),
             profile = profile?.first,
             profileLinks = profile?.second.orEmpty(),
+            widgetRecipes = decodeWidgetRecipes(root.optJSONArray("widgets")),
         )
+    }
+
+    private fun encodeWidgetRecipes(recipes: List<WidgetRestoreRecipe>) = JSONArray().apply {
+        recipes.distinctBy(WidgetRestoreRecipe::entryId)
+            .take(MAX_WIDGET_ENTRIES)
+            .forEach { recipe ->
+                put(
+                    JSONObject().apply {
+                        put("entryId", recipe.entryId)
+                        put("providerPackage", recipe.provider.packageName)
+                        put("providerClass", recipe.provider.className)
+                        put("appLabel", recipe.provider.appLabel)
+                        put("widgetLabel", recipe.provider.widgetLabel)
+                        put("columns", recipe.gridSize.columns)
+                        put("rows", recipe.gridSize.rows)
+                    },
+                )
+            }
+    }
+
+    private fun decodeWidgetRecipes(array: JSONArray?): List<WidgetRestoreRecipe> = buildList {
+        val source = array ?: return@buildList
+        repeat(minOf(source.length(), MAX_WIDGET_ENTRIES)) { index ->
+            val saved = source.optJSONObject(index) ?: return@repeat
+            val entryId = saved.optString("entryId").safeText(128)
+            val packageName = saved.optString("providerPackage").safeText(255)
+            val className = saved.optString("providerClass").safeText(512)
+            val columns = saved.optInt("columns", 0)
+            val rows = saved.optInt("rows", 0)
+            if (
+                entryId.isBlank() || packageName.isBlank() || className.isBlank() ||
+                columns !in 1..4 || rows !in 1..5 || any { it.entryId == entryId }
+            ) {
+                return@repeat
+            }
+            add(
+                WidgetRestoreRecipe(
+                    entryId = entryId,
+                    provider = WidgetProviderIdentity(
+                        packageName = packageName,
+                        className = className,
+                        appLabel = saved.optString("appLabel").safeText(160),
+                        widgetLabel = saved.optString("widgetLabel").safeText(160),
+                    ),
+                    gridSize = WidgetGridSize(columns, rows),
+                ),
+            )
+        }
     }
 
     private fun encodeLauncher(layout: LauncherBackupLayout) = JSONObject().apply {
@@ -443,7 +497,7 @@ internal object LauncherBackupCodec {
     private val PORTABILITY_EXCLUSIONS = listOf(
         "androidPermissionsAndSystemRoles",
         "accessibilityAndNotificationAccess",
-        "widgets",
+        "widgetProviderConfigurationAndContent",
         "documentFolderAccess",
         "wallpaperImage",
         "recentQueryHistory",

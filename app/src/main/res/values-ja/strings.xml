@@ -495,11 +495,14 @@
     <string name="export_backup_description">設定、アプリの選択、レイアウト、To-Do を保存します</string>
     <string name="import_backup">バックアップのインポート</string>
     <string name="import_backup_description">以前にエクスポートしたファイルを確認して復元する</string>
-    <string name="backup_not_included_description">Android 権限、システム ロール、アクセシビリティと通知アクセス、ウィジェット、壁紙画像ファイル、ドキュメント フォルダー アクセス、および最近のクエリ履歴は含まれません。使用できないアプリまたはアイコン パックの選択肢は、それらのアプリがインストールされて再度選択されるまでフォールバックされる場合があります。</string>
+    <string name="backup_not_included_description">Android の権限、システムロール、ユーザー補助と通知へのアクセス、ウィジェットの内容とアプリ固有の設定、壁紙画像ファイル、ドキュメントフォルダーへのアクセス、最近の検索履歴は含まれません。利用できないアプリやアイコンパックは、再インストールして選択し直すまで代替設定になる場合があります。</string>
     <string name="backup_exported">バックアップがエクスポートされました</string>
     <string name="backup_export_failed">バックアップをエクスポートできませんでした</string>
     <string name="backup_import_failed">そのファイルはサポートされている OpenMink バックアップではありません</string>
-    <string name="backup_imported">バックアップが復元されました。 Android 権限を再度有効にして、ウィジェットまたはドキュメント フォルダーを再度追加します。</string>
+    <string name="backup_imported">バックアップを復元しました。Android の権限を再度有効にし、ウィジェット設定用の場所やドキュメントフォルダーを確認してください。</string>
+    <string name="backup_imported_widget_limit">バックアップを復元しました。この端末は上限に達しているため、%1$d 個のウィジェット用の場所をスキップしました。</string>
+    <string name="restore_widget_placeholders">ウィジェット設定用の場所を追加</string>
+    <string name="restore_widget_placeholders_description">現在のウィジェットを残したまま、このバックアップのウィジェットを再設定できる場所を %1$d 個追加します。</string>
     <string name="confirm_backup_import">このバックアップを復元しますか?</string>
     <string name="confirm_backup_import_description">OpenMink %1$s · %2$s · %3$d 件の To-Do\n\n現在のポータブル設定、ランチャーのレイアウト、アプリの選択、To-Do を置き換えます。</string>
     <string name="unknown_date">日付不明</string>
@@ -785,14 +788,18 @@
     <string name="widget_setup_confirmation_description">ウィジェットの設定は完了しましたが、アプリから変更が保存されたかどうかの確認がありませんでした。設定に問題がなければ使用し、そうでなければ破棄して現在のウィジェットをそのまま残してください。</string>
     <string name="use_widget">ウィジェットを使用</string>
     <string name="widgets">ウィジェット</string>
-    <string name="widget_count">%1$d/%2$d</string>
     <plurals name="maximum_widgets">
         <item quantity="one">%1$d ウィジェットの最大数</item>
         <item quantity="other">%1$d ウィジェットの最大数</item>
     </plurals>
     <string name="add_widget">ウィジェットを追加する</string>
     <string name="your_widget_page">ウィジェットページ</string>
-    <string name="your_widget_page_description">最大 8 つの Android ウィジェットを追加します。彼らのアプリは、表示するコンテンツを制御します。</string>
+    <string name="your_widget_page_description">よく使う情報や操作をひと目で確認できる Android ウィジェットを追加します。</string>
+    <string name="widget_restore_ready_description">%1$s はインストール済みです。このウィジェットを再設定すると、ここに復元できます。</string>
+    <string name="widget_restore_missing_app_description">このウィジェットを再設定する前に、%1$s を再インストールしてください。</string>
+    <string name="set_up_widget">ウィジェットを設定</string>
+    <string name="choose_replacement_widget">代わりを選択</string>
+    <string name="choose_replacement_widget_description">元のウィジェットは利用できません。同じアプリから別のウィジェットを選んでください。</string>
     <string name="widget_options">ウィジェットのオプション</string>
     <string name="widget_temporarily_unavailable">ウィジェットは一時的に利用できなくなります</string>
     <string name="widget_temporarily_unavailable_description">MinkLauncher はこのウィジェットを所定の位置に保持しました。アプリまたは Android の読み込みが完了してから再試行するか、手動で削除してください。</string>
@@ -1026,7 +1033,7 @@
     <string name="home_tour_conversations_title">会話をすぐそばに</string>
     <string name="home_tour_conversations_description">ホーム上部の会話アイコンをタップして、進行中の会話やお気に入りの人を表示します。</string>
     <string name="home_tour_widgets_title">ウィジェットを追加</string>
-    <string name="home_tour_widgets_description">ホームから左へスワイプしてウィジェットページを開き、最大 8 個の Android ウィジェットを追加します。</string>
+    <string name="home_tour_widgets_description">ホームから左へスワイプしてウィジェットページを開き、Android ウィジェットを追加します。</string>
     <string name="home_tour_mink_day_title">Mink’s Day で制限を設定</string>
     <string name="home_tour_mink_day_description">気が散るアプリに 1 日の合計制限を設定し、使用時間を確認できます。</string>
     <string name="home_tour_appearance_title">ホームを自分らしく</string>

@@ -495,11 +495,14 @@
     <string name="export_backup_description">সেটিংস, অ্যাপ পছন্দ, লেআউট এবং করণীয় সংরক্ষণ করুন</string>
     <string name="import_backup">ব্যাকআপ আমদানি করুন</string>
     <string name="import_backup_description">পূর্বে রপ্তানি করা ফাইল পর্যালোচনা এবং পুনরুদ্ধার করুন</string>
-    <string name="backup_not_included_description">Android অনুমতি, সিস্টেমের ভূমিকা, অ্যাক্সেসযোগ্যতা এবং বিজ্ঞপ্তি অ্যাক্সেস, উইজেট, ওয়ালপেপার চিত্র ফাইল, নথি-ফোল্ডার অ্যাক্সেস, এবং সাম্প্রতিক ক্যোয়ারী ইতিহাস অন্তর্ভুক্ত করা হয় না। অনুপলব্ধ অ্যাপ বা আইকন প্যাকগুলির জন্য পছন্দগুলি ফিরে আসতে পারে যতক্ষণ না সেই অ্যাপগুলি ইনস্টল করা এবং আবার নির্বাচন করা হয়।</string>
+    <string name="backup_not_included_description">Android অনুমতি, সিস্টেমের ভূমিকা, অ্যাক্সেসিবিলিটি ও বিজ্ঞপ্তি অ্যাক্সেস, উইজেটের বিষয়বস্তু ও অ্যাপ-নির্দিষ্ট সেটিংস, ওয়ালপেপার ছবি, নথি ফোল্ডার অ্যাক্সেস এবং সাম্প্রতিক অনুসন্ধান ইতিহাস অন্তর্ভুক্ত নয়। অনুপলব্ধ অ্যাপ বা আইকন প্যাক পুনরায় ইনস্টল ও নির্বাচন না করা পর্যন্ত বিকল্প সেটিং ব্যবহার করতে পারে।</string>
     <string name="backup_exported">ব্যাকআপ রপ্তানি করা হয়েছে</string>
     <string name="backup_export_failed">ব্যাকআপ রপ্তানি করা যায়নি</string>
     <string name="backup_import_failed">এই ফাইলটি একটি সমর্থিত OpenMink ব্যাকআপ নয়৷</string>
-    <string name="backup_imported">ব্যাকআপ পুনরুদ্ধার করা হয়েছে। Android অনুমতিগুলি পুনরায় সক্ষম করুন এবং আবার উইজেট বা নথি ফোল্ডার যোগ করুন৷</string>
+    <string name="backup_imported">ব্যাকআপ পুনরুদ্ধার হয়েছে। Android অনুমতি আবার চালু করুন এবং উইজেট সেটআপের স্থান বা নথি ফোল্ডার পর্যালোচনা করুন।</string>
+    <string name="backup_imported_widget_limit">ব্যাকআপ পুনরুদ্ধার হয়েছে। এই ডিভাইসটি উইজেট সীমায় পৌঁছে যাওয়ায় %1$dটি উইজেটের স্থান বাদ দেওয়া হয়েছে।</string>
+    <string name="restore_widget_placeholders">উইজেট সেটআপের স্থান যোগ করুন</string>
+    <string name="restore_widget_placeholders_description">বর্তমান উইজেটগুলো রেখে এই ব্যাকআপের উইজেট আবার সেট করার জন্য %1$dটি স্থান যোগ করুন।</string>
     <string name="confirm_backup_import">এই ব্যাকআপ পুনরুদ্ধার করবেন?</string>
     <string name="confirm_backup_import_description">OpenMink %1$s · %2$s · %3$d to-dos\n\nএটি আপনার বর্তমান পোর্টেবল সেটিংস, লঞ্চার লেআউট, অ্যাপ পছন্দ এবং করণীয়গুলি প্রতিস্থাপন করে৷</string>
     <string name="unknown_date">অজানা তারিখ</string>
@@ -785,14 +788,18 @@
     <string name="widget_setup_confirmation_description">উইজেট সেটআপ শেষ হয়েছে, কিন্তু পরিবর্তনগুলি সংরক্ষিত হয়েছে কি না অ্যাপটি নিশ্চিত করেনি। সেটআপটি ঠিক মনে হলে এটি ব্যবহার করুন, নতুবা আপনার বর্তমান উইজেট অপরিবর্তিত রাখতে এটি বাতিল করুন।</string>
     <string name="use_widget">উইজেট ব্যবহার করুন</string>
     <string name="widgets">উইজেট</string>
-    <string name="widget_count">%2$d এর %1$d</string>
     <plurals name="maximum_widgets">
         <item quantity="one">সর্বাধিক %1$d উইজেট</item>
         <item quantity="other">সর্বাধিক %1$d উইজেট</item>
     </plurals>
     <string name="add_widget">উইজেট যোগ করুন</string>
     <string name="your_widget_page">আপনার উইজেট পাতা</string>
-    <string name="your_widget_page_description">আটটি পর্যন্ত Android উইজেট যোগ করুন। তাদের অ্যাপ্লিকেশানগুলি তাদের প্রদর্শিত সামগ্রী নিয়ন্ত্রণ করে৷</string>
+    <string name="your_widget_page_description">এক নজরে ব্যবহার করা তথ্য ও নিয়ন্ত্রণের জন্য Android উইজেট যোগ করুন।</string>
+    <string name="widget_restore_ready_description">%1$s ইনস্টল করা আছে। এখানে পুনরুদ্ধার করতে এই উইজেট আবার সেট করুন।</string>
+    <string name="widget_restore_missing_app_description">এই উইজেট আবার সেট করার আগে %1$s পুনরায় ইনস্টল করুন।</string>
+    <string name="set_up_widget">উইজেট সেট করুন</string>
+    <string name="choose_replacement_widget">বিকল্প বেছে নিন</string>
+    <string name="choose_replacement_widget_description">মূল উইজেটটি আর পাওয়া যাচ্ছে না। একই অ্যাপ থেকে অন্য একটি উইজেট বেছে নিন।</string>
     <string name="widget_options">উইজেট বিকল্প</string>
     <string name="widget_temporarily_unavailable">উইজেট সাময়িকভাবে অনুপলব্ধ৷</string>
     <string name="widget_temporarily_unavailable_description">MinkLauncher এই উইজেটটিকে যথাস্থানে রেখেছে। এটির অ্যাপ বা Android লোডিং শেষ হওয়ার পরে আবার চেষ্টা করুন, অথবা ম্যানুয়ালি সরিয়ে দিন।</string>
@@ -1026,7 +1033,7 @@
     <string name="home_tour_conversations_title">কথোপকথন কাছে রাখুন</string>
     <string name="home_tour_conversations_description">সক্রিয় কথোপকথন ও প্রিয় মানুষদের দেখতে হোমের উপরের কথোপকথন আইকনে ট্যাপ করুন।</string>
     <string name="home_tour_widgets_title">উইজেট যোগ করুন</string>
-    <string name="home_tour_widgets_description">উইজেট পৃষ্ঠা খুলতে হোম থেকে বাঁদিকে সোয়াইপ করুন এবং সর্বোচ্চ আটটি Android উইজেট যোগ করুন।</string>
+    <string name="home_tour_widgets_description">উইজেট পৃষ্ঠা খুলতে হোম থেকে বাঁদিকে সোয়াইপ করুন এবং Android উইজেট যোগ করুন।</string>
     <string name="home_tour_mink_day_title">Mink’s Day দিয়ে সীমা নির্ধারণ করুন</string>
     <string name="home_tour_mink_day_description">মনোযোগ বিঘ্নকারী অ্যাপগুলোর জন্য সম্মিলিত দৈনিক সীমা নির্ধারণ করুন এবং ব্যবহারের সময় দেখুন।</string>
     <string name="home_tour_appearance_title">হোমকে নিজের মতো করুন</string>

@@ -522,13 +522,16 @@
     <string name="export_backup_description">Save settings, app choices, layout, and to-dos</string>
     <string name="import_backup">Import backup</string>
     <string name="import_backup_description">Review and restore a previously exported file</string>
-    <string name="backup_not_included_description">Android permissions, system roles, accessibility and notification access, widgets, wallpaper image files, document-folder access, and recent query history are not included. Choices for unavailable apps or icon packs may fall back until those apps are installed and selected again.</string>
+    <string name="backup_not_included_description">Android permissions, system roles, accessibility and notification access, widget contents and app-specific widget settings, wallpaper image files, document-folder access, and recent query history are not included. Choices for unavailable apps or icon packs may fall back until those apps are installed and selected again.</string>
     <string name="backup_exported">Backup exported</string>
     <string name="backup_export_failed">Couldn’t export the backup</string>
     <string name="backup_import_failed">That file isn’t a supported OpenMink backup</string>
-    <string name="backup_imported">Backup restored. Re-enable Android permissions and add widgets or document folders again.</string>
+    <string name="backup_imported">Backup restored. Re-enable Android permissions and review any widget setup placeholders or document folders.</string>
+    <string name="backup_imported_widget_limit">Backup restored. %1$d widget placeholders were skipped because this device already reached the widget limit.</string>
     <string name="confirm_backup_import">Restore this backup?</string>
     <string name="confirm_backup_import_description">OpenMink %1$s · %2$s · %3$d to-dos\n\nThis replaces your current portable settings, launcher layout, app choices, and to-dos.</string>
+    <string name="restore_widget_placeholders">Add widget setup placeholders</string>
+    <string name="restore_widget_placeholders_description">Keep your current widgets and add %1$d places where widgets from this backup can be set up again.</string>
     <string name="backup_filename" translatable="false">MinkLauncher-OpenSource-backup-%1$s.json</string>
     <string name="unknown_date">Unknown date</string>
     <string name="unknown_version">unknown version</string>
@@ -848,17 +851,21 @@
     <string name="widget_setup_confirmation_description">The widget finished setup, but its app did not confirm whether the changes were saved. Use it if the setup looked right, or discard it to keep your current widgets unchanged.</string>
     <string name="use_widget">Use widget</string>
     <string name="widgets">Widgets</string>
-    <string name="widget_count">%1$d of %2$d</string>
     <plurals name="maximum_widgets">
         <item quantity="one">Maximum of %1$d widget</item>
         <item quantity="other">Maximum of %1$d widgets</item>
     </plurals>
     <string name="add_widget">Add widget</string>
     <string name="your_widget_page">Your widget page</string>
-    <string name="your_widget_page_description">Add up to eight Android widgets. Their apps control the content they display.</string>
+    <string name="your_widget_page_description">Add Android widgets for the glanceable information and controls you use.</string>
     <string name="widget_options">Widget options</string>
     <string name="widget_temporarily_unavailable">Widget temporarily unavailable</string>
     <string name="widget_temporarily_unavailable_description">MinkLauncher kept this widget in place. Retry after its app or Android finishes loading, or remove it manually.</string>
+    <string name="widget_restore_ready_description">%1$s is installed. Set this widget up again to restore it here.</string>
+    <string name="widget_restore_missing_app_description">Reinstall %1$s before setting this widget up again.</string>
+    <string name="set_up_widget">Set up widget</string>
+    <string name="choose_replacement_widget">Choose replacement</string>
+    <string name="choose_replacement_widget_description">The original widget is no longer available. Choose another widget from the same app.</string>
     <string name="retry">Retry</string>
     <string name="resize_widget">Resize · %1$s</string>
     <string name="move_up">Move up</string>
@@ -1135,7 +1142,7 @@
     <string name="home_tour_conversations_title">Keep conversations close</string>
     <string name="home_tour_conversations_description">Tap the conversation icon at the top of Home to view active conversations and your favorite people.</string>
     <string name="home_tour_widgets_title">Add your widgets</string>
-    <string name="home_tour_widgets_description">Swipe left from Home to open the widget page and add up to eight Android widgets.</string>
+    <string name="home_tour_widgets_description">Swipe left from Home to open the widget page and add Android widgets.</string>
     <string name="home_tour_mink_day_title">Set limits with Mink’s Day</string>
     <string name="home_tour_mink_day_description">Set a collective daily limit for distracting apps and keep their usage time visible.</string>
     <string name="home_tour_appearance_title">Make Home yours</string>

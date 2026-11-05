@@ -17,8 +17,12 @@ import com.katoaapps.openminilaunch.model.MinkAppPauseMode
 import com.katoaapps.openminilaunch.model.PalettePreference
 import com.katoaapps.openminilaunch.model.QuickDrawerConfig
 import com.katoaapps.openminilaunch.model.ThemePreference
+import com.katoaapps.openminilaunch.model.WidgetGridSize
+import com.katoaapps.openminilaunch.model.WidgetProviderIdentity
+import com.katoaapps.openminilaunch.model.WidgetRestoreRecipe
 import org.json.JSONObject
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNull
 import org.junit.Test
 
@@ -426,6 +430,59 @@ class LauncherBackupCodecTest {
         assertEquals("Mink User", restored.profile?.fullName)
         assertEquals(false, restored.profile?.hasPortrait)
         assertEquals("site", restored.profileLinks.single().id)
+    }
+
+    @Test fun widgetRestoreRecipesSurvivePortableBackupRoundTrip() {
+        val recipe = WidgetRestoreRecipe(
+            entryId = "widget-entry",
+            provider = WidgetProviderIdentity(
+                packageName = "com.example.widgets",
+                className = "com.example.widgets.WeatherWidget",
+                appLabel = "Example Weather",
+                widgetLabel = "Forecast",
+            ),
+            gridSize = WidgetGridSize(columns = 4, rows = 2),
+        )
+        val encoded = LauncherBackupCodec.encode(
+            sampleBackup(twoPanelMode = true).copy(widgetRecipes = listOf(recipe)),
+        )
+        val restored = LauncherBackupCodec.decode(encoded)
+
+        assertEquals(listOf(recipe), restored.widgetRecipes)
+        assertFalse(encoded.contains("appWidgetId"))
+    }
+
+    @Test fun olderBackupWithoutWidgetRecipesRestoresNoPlaceholders() {
+        val json = JSONObject(LauncherBackupCodec.encode(sampleBackup(twoPanelMode = true)))
+        json.remove("widgets")
+
+        assertEquals(emptyList<WidgetRestoreRecipe>(), LauncherBackupCodec.decode(json.toString()).widgetRecipes)
+    }
+
+    @Test fun widgetRestoreRecipesAreCappedAndInvalidRecipesAreIgnored() {
+        val recipes = (0 until 70).map { index ->
+            WidgetRestoreRecipe(
+                entryId = "widget-$index",
+                provider = WidgetProviderIdentity(
+                    packageName = "com.example.widgets",
+                    className = "com.example.widgets.Widget$index",
+                    appLabel = "Example",
+                    widgetLabel = "Widget $index",
+                ),
+                gridSize = WidgetGridSize(columns = 2, rows = 2),
+            )
+        }
+        val encoded = JSONObject(
+            LauncherBackupCodec.encode(
+                sampleBackup(twoPanelMode = true).copy(widgetRecipes = recipes),
+            ),
+        )
+        encoded.getJSONArray("widgets").getJSONObject(0).put("columns", 0)
+
+        val restored = LauncherBackupCodec.decode(encoded.toString())
+
+        assertEquals(63, restored.widgetRecipes.size)
+        assertEquals("widget-1", restored.widgetRecipes.first().entryId)
     }
 
     private fun sampleBackup(twoPanelMode: Boolean) = LauncherBackup(

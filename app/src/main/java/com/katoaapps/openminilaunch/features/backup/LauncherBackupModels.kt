@@ -15,6 +15,7 @@ import com.katoaapps.openminilaunch.model.MinkAppPauseMode
 import com.katoaapps.openminilaunch.model.PalettePreference
 import com.katoaapps.openminilaunch.model.QuickDrawerConfig
 import com.katoaapps.openminilaunch.model.ThemePreference
+import com.katoaapps.openminilaunch.model.WidgetRestoreRecipe
 
 internal const val LAUNCHER_BACKUP_FORMAT = "minklauncher-open-backup"
 // Keep schema 3 while new fields remain optional. OpenMink 1.5.5 ignores unknown JSON keys,
@@ -32,6 +33,7 @@ internal data class LauncherBackup(
     val todos: List<TodoItem>,
     val profile: ProfileCard?,
     val profileLinks: List<ProfileLink>,
+    val widgetRecipes: List<WidgetRestoreRecipe> = emptyList(),
 )
 
 internal data class LauncherBackupLayout(

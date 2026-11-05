@@ -495,11 +495,14 @@
     <string name="export_backup_description">Simpan pengaturan, pilihan aplikasi, tata letak, dan tugas</string>
     <string name="import_backup">Impor cadangan</string>
     <string name="import_backup_description">Tinjau dan pulihkan file yang diekspor sebelumnya</string>
-    <string name="backup_not_included_description">Izin Android, peran sistem, aksesibilitas dan akses notifikasi, widget, file gambar wallpaper, akses folder dokumen, dan riwayat kueri terkini tidak disertakan. Pilihan untuk aplikasi atau paket ikon yang tidak tersedia mungkin akan diubah hingga aplikasi tersebut diinstal dan dipilih kembali.</string>
+    <string name="backup_not_included_description">Izin Android, peran sistem, aksesibilitas dan akses notifikasi, isi widget serta pengaturan khusus aplikasinya, file gambar wallpaper, akses folder dokumen, dan riwayat kueri terkini tidak disertakan. Pilihan aplikasi atau paket ikon yang tidak tersedia mungkin memakai alternatif hingga aplikasi tersebut diinstal dan dipilih kembali.</string>
     <string name="backup_exported">Cadangan diekspor</string>
     <string name="backup_export_failed">Tidak dapat mengekspor cadangan</string>
     <string name="backup_import_failed">File tersebut bukan cadangan OpenMink yang didukung</string>
-    <string name="backup_imported">Cadangan dipulihkan. Aktifkan kembali izin Android dan tambahkan lagi widget atau folder dokumen.</string>
+    <string name="backup_imported">Cadangan dipulihkan. Aktifkan kembali izin Android dan tinjau ruang penyiapan widget atau folder dokumen.</string>
+    <string name="backup_imported_widget_limit">Cadangan dipulihkan. %1$d ruang widget dilewati karena perangkat ini sudah mencapai batas.</string>
+    <string name="restore_widget_placeholders">Tambahkan ruang penyiapan widget</string>
+    <string name="restore_widget_placeholders_description">Pertahankan widget saat ini dan tambahkan %1$d ruang untuk menyiapkan kembali widget dari cadangan ini.</string>
     <string name="confirm_backup_import">Pulihkan cadangan ini?</string>
     <string name="confirm_backup_import_description">OpenMink %1$s · %2$s · %3$d tugas\n\nIni menggantikan pengaturan portabel Anda saat ini, tata letak peluncur, pilihan aplikasi, dan tugas.</string>
     <string name="unknown_date">Tanggal tidak diketahui</string>
@@ -785,14 +788,18 @@
     <string name="widget_setup_confirmation_description">Penyiapan widget selesai, tetapi aplikasinya tidak mengonfirmasi apakah perubahan telah disimpan. Gunakan jika penyiapannya terlihat benar, atau buang agar widget Anda saat ini tetap tidak berubah.</string>
     <string name="use_widget">Gunakan widget</string>
     <string name="widgets">Widget</string>
-    <string name="widget_count">%1$d dari %2$d</string>
     <plurals name="maximum_widgets">
         <item quantity="one">Maksimal widget %1$d</item>
         <item quantity="other">Maksimal widget %1$d</item>
     </plurals>
     <string name="add_widget">Tambahkan widget</string>
     <string name="your_widget_page">Halaman widget Anda</string>
-    <string name="your_widget_page_description">Tambahkan hingga delapan widget Android. Aplikasi mereka mengontrol konten yang mereka tampilkan.</string>
+    <string name="your_widget_page_description">Tambahkan widget Android untuk informasi sekilas dan kontrol yang Anda gunakan.</string>
+    <string name="widget_restore_ready_description">%1$s sudah terinstal. Siapkan kembali widget ini untuk memulihkannya di sini.</string>
+    <string name="widget_restore_missing_app_description">Instal ulang %1$s sebelum menyiapkan kembali widget ini.</string>
+    <string name="set_up_widget">Siapkan widget</string>
+    <string name="choose_replacement_widget">Pilih pengganti</string>
+    <string name="choose_replacement_widget_description">Widget asli tidak lagi tersedia. Pilih widget lain dari aplikasi yang sama.</string>
     <string name="widget_options">Opsi widget</string>
     <string name="widget_temporarily_unavailable">Widget untuk sementara tidak tersedia</string>
     <string name="widget_temporarily_unavailable_description">MinkLauncher menyimpan widget ini di tempatnya. Coba lagi setelah aplikasinya atau Android selesai dimuat, atau hapus secara manual.</string>
@@ -1026,7 +1033,7 @@
     <string name="home_tour_conversations_title">Dekatkan percakapan Anda</string>
     <string name="home_tour_conversations_description">Ketuk ikon percakapan di bagian atas Beranda untuk melihat percakapan aktif dan orang favorit Anda.</string>
     <string name="home_tour_widgets_title">Tambahkan widget Anda</string>
-    <string name="home_tour_widgets_description">Geser ke kiri dari Beranda untuk membuka halaman widget dan menambahkan hingga delapan widget Android.</string>
+    <string name="home_tour_widgets_description">Geser ke kiri dari Beranda untuk membuka halaman widget dan menambahkan widget Android.</string>
     <string name="home_tour_mink_day_title">Atur batas dengan Mink’s Day</string>
     <string name="home_tour_mink_day_description">Tetapkan batas harian gabungan untuk aplikasi pengalih perhatian dan lihat waktu penggunaannya.</string>
     <string name="home_tour_appearance_title">Sesuaikan layar utama</string>

@@ -495,11 +495,14 @@
     <string name="export_backup_description">احفظ الإعدادات واختيارات التطبيقات والتخطيط والمهام</string>
     <string name="import_backup">استيراد نسخة احتياطية</string>
     <string name="import_backup_description">مراجعة واستعادة ملف تم تصديره مسبقًا</string>
-    <string name="backup_not_included_description">لا يتم تضمين أذونات Android، وأدوار النظام، وإمكانية الوصول والوصول إلى الإشعارات، وعناصر واجهة المستخدم، وملفات صور الخلفية، والوصول إلى مجلد المستندات، وسجل الاستعلام الحديث. قد تتراجع اختيارات التطبيقات أو حزم الأيقونات غير المتوفرة حتى يتم تثبيت تلك التطبيقات وتحديدها مرة أخرى.</string>
+    <string name="backup_not_included_description">لا تتضمن النسخة الاحتياطية أذونات Android وأدوار النظام وإمكانية الوصول والوصول إلى الإشعارات ومحتوى الأدوات وإعداداتها الخاصة بالتطبيق وملفات صور الخلفية والوصول إلى مجلد المستندات وسجل البحث الحديث. قد تستخدم التطبيقات أو حزم الأيقونات غير المتوفرة خيارات بديلة حتى تتم إعادة تثبيتها واختيارها.</string>
     <string name="backup_exported">تم تصدير النسخة الاحتياطية</string>
     <string name="backup_export_failed">تعذر تصدير النسخة الاحتياطية</string>
     <string name="backup_import_failed">هذا الملف ليس نسخة احتياطية مدعومة من OpenMink</string>
-    <string name="backup_imported">تمت استعادة النسخة الاحتياطية. أعد تمكين أذونات Android وأضف عناصر واجهة المستخدم أو مجلدات المستندات مرة أخرى.</string>
+    <string name="backup_imported">تمت استعادة النسخة الاحتياطية. أعد تمكين أذونات Android وراجع أماكن إعداد الأدوات أو مجلدات المستندات.</string>
+    <string name="backup_imported_widget_limit">تمت استعادة النسخة الاحتياطية. تم تخطي %1$d من أماكن الأدوات لأن هذا الجهاز وصل بالفعل إلى الحد الأقصى.</string>
+    <string name="restore_widget_placeholders">إضافة أماكن لإعداد الأدوات</string>
+    <string name="restore_widget_placeholders_description">احتفظ بأدواتك الحالية وأضف %1$d من الأماكن التي يمكن فيها إعداد أدوات هذه النسخة الاحتياطية مرة أخرى.</string>
     <string name="confirm_backup_import">هل تريد استعادة هذه النسخة الاحتياطية؟</string>
     <string name="confirm_backup_import_description">OpenMink %1$s · %2$s · %3$d to-dos\n\nيستبدل هذا إعداداتك المحمولة الحالية وتخطيط المشغل وخيارات التطبيقات والمهام.</string>
     <string name="unknown_date">تاريخ غير معروف</string>
@@ -805,7 +808,6 @@
     <string name="widget_setup_confirmation_description">اكتمل إعداد الأداة، لكن تطبيقها لم يؤكد ما إذا تم حفظ التغييرات. استخدمها إذا بدا الإعداد صحيحًا، أو تجاهلها للإبقاء على أدواتك الحالية دون تغيير.</string>
     <string name="use_widget">استخدام الأداة</string>
     <string name="widgets">الحاجيات</string>
-    <string name="widget_count">%1$d من %2$d</string>
     <plurals name="maximum_widgets">
         <item quantity="zero">الحد الأقصى لعناصر واجهة المستخدم %1$d</item>
         <item quantity="one">الحد الأقصى لعنصر واجهة المستخدم %1$d</item>
@@ -816,7 +818,12 @@
     </plurals>
     <string name="add_widget">إضافة القطعة</string>
     <string name="your_widget_page">صفحة القطعة الخاصة بك</string>
-    <string name="your_widget_page_description">أضف ما يصل إلى ثمانية عناصر واجهة مستخدم Android. تتحكم تطبيقاتهم في المحتوى الذي يعرضونه.</string>
+    <string name="your_widget_page_description">أضف أدوات Android للمعلومات وعناصر التحكم التي تستخدمها بنظرة سريعة.</string>
+    <string name="widget_restore_ready_description">تم تثبيت %1$s. أعد إعداد هذه الأداة لاستعادتها هنا.</string>
+    <string name="widget_restore_missing_app_description">أعد تثبيت %1$s قبل إعداد هذه الأداة مرة أخرى.</string>
+    <string name="set_up_widget">إعداد الأداة</string>
+    <string name="choose_replacement_widget">اختيار بديل</string>
+    <string name="choose_replacement_widget_description">لم تعد الأداة الأصلية متوفرة. اختر أداة أخرى من التطبيق نفسه.</string>
     <string name="widget_options">خيارات القطعة</string>
     <string name="widget_temporarily_unavailable">القطعة غير متاحة مؤقتا</string>
     <string name="widget_temporarily_unavailable_description">أبقى MinkLauncher هذه الأداة في مكانها. أعد المحاولة بعد انتهاء تحميل التطبيق أو Android، أو قم بإزالته يدويًا.</string>
@@ -1062,7 +1069,7 @@
     <string name="home_tour_conversations_title">أبقِ محادثاتك قريبة</string>
     <string name="home_tour_conversations_description">اضغط على رمز المحادثات أعلى الشاشة الرئيسية لعرض المحادثات النشطة والأشخاص المفضلين لديك.</string>
     <string name="home_tour_widgets_title">أضف أدواتك</string>
-    <string name="home_tour_widgets_description">اسحب لليسار من الشاشة الرئيسية لفتح صفحة الأدوات وإضافة ما يصل إلى ثماني أدوات Android.</string>
+    <string name="home_tour_widgets_description">اسحب لليسار من الشاشة الرئيسية لفتح صفحة الأدوات وإضافة أدوات Android.</string>
     <string name="home_tour_mink_day_title">ضع حدودًا باستخدام Mink’s Day</string>
     <string name="home_tour_mink_day_description">ضع حدًا يوميًا إجماليًا للتطبيقات التي تشتت انتباهك وتابع وقت استخدامها.</string>
     <string name="home_tour_appearance_title">اجعل الشاشة الرئيسية تناسبك</string>

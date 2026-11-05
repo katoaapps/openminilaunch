@@ -62,4 +62,62 @@ class MinkSpacePreferenceDefaultsTest {
             ),
         )
     }
+
+    @Test
+    fun portableRestoreKeepsWidgetInItsCurrentSlot() {
+        val currentOrder = listOf(
+            MinkSpaceMiniApp.TODO,
+            MinkSpaceMiniApp.WIDGET,
+            MinkSpaceMiniApp.CALCULATOR,
+            MinkSpaceMiniApp.RECORDER,
+            MinkSpaceMiniApp.MEDIA,
+            MinkSpaceMiniApp.MUSIC,
+            MinkSpaceMiniApp.VCARD,
+        )
+
+        assertEquals(
+            listOf(
+                MinkSpaceMiniApp.VCARD,
+                MinkSpaceMiniApp.WIDGET,
+                MinkSpaceMiniApp.MUSIC,
+                MinkSpaceMiniApp.RECORDER,
+                MinkSpaceMiniApp.MEDIA,
+                MinkSpaceMiniApp.CALCULATOR,
+                MinkSpaceMiniApp.TODO,
+            ),
+            mergePortableMinkSpaceMiniAppOrder(
+                currentOrder = currentOrder,
+                restoredOrder = listOf(
+                    MinkSpaceMiniApp.WIDGET,
+                    MinkSpaceMiniApp.VCARD,
+                    MinkSpaceMiniApp.MUSIC,
+                    MinkSpaceMiniApp.MEDIA,
+                    MinkSpaceMiniApp.CALCULATOR,
+                    MinkSpaceMiniApp.TODO,
+                ),
+            ),
+        )
+    }
+
+    @Test
+    fun portableRestoreKeepsConfiguredWidgetEnabled() {
+        assertEquals(
+            setOf(MinkSpaceMiniApp.MUSIC, MinkSpaceMiniApp.WIDGET),
+            mergePortableMinkSpaceEnabledMiniApps(
+                currentEnabledMiniApps = setOf(MinkSpaceMiniApp.TODO, MinkSpaceMiniApp.WIDGET),
+                restoredEnabledMiniApps = setOf(MinkSpaceMiniApp.MUSIC),
+            ),
+        )
+    }
+
+    @Test
+    fun portableRestoreDoesNotEnableWidgetFromAnotherInstallation() {
+        assertEquals(
+            setOf(MinkSpaceMiniApp.MUSIC),
+            mergePortableMinkSpaceEnabledMiniApps(
+                currentEnabledMiniApps = setOf(MinkSpaceMiniApp.TODO),
+                restoredEnabledMiniApps = setOf(MinkSpaceMiniApp.MUSIC, MinkSpaceMiniApp.WIDGET),
+            ),
+        )
+    }
 }

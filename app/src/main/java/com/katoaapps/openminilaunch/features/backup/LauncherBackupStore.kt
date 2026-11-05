@@ -1,6 +1,7 @@
 package com.katoaapps.openminilaunch.features.backup
 
 import com.katoaapps.openminilaunch.data.LauncherStore
+import com.katoaapps.openminilaunch.data.WidgetRecipeImportResult
 import com.katoaapps.openminilaunch.features.profile.ProfileState
 import com.katoaapps.openminilaunch.model.FontSource
 import com.katoaapps.openminilaunch.model.IconSource
@@ -59,10 +60,17 @@ internal fun LauncherStore.createPortableBackup(appVersion: String): LauncherBac
         todos = savedTodosForBackup,
         profile = profile?.card?.copy(hasPortrait = false),
         profileLinks = profile?.links.orEmpty(),
+        widgetRecipes = portableWidgetRestoreRecipes(),
     )
 }
 
-internal fun LauncherStore.restorePortableBackup(backup: LauncherBackup) {
+internal fun LauncherStore.restorePortableBackup(
+    backup: LauncherBackup,
+    restoreWidgetPlaceholders: Boolean = true,
+): WidgetRecipeImportResult {
+    // Android widget IDs, provider-owned configuration, and the MinkSpace widget binding
+    // remain installation-local. Portable provider recipes append setup placeholders without
+    // replacing widgets that are already configured on this installation.
     if (demoSearchDataEnabled) toggleDemoSearchData()
     val settings = backup.settings
     replaceLauncherSelectionsFromBackup(
@@ -137,4 +145,14 @@ internal fun LauncherStore.restorePortableBackup(backup: LauncherBackup) {
 
     setGitHubUpdateChecksEnabled(settings.githubUpdateChecksEnabled)
     settings.minkPadPreferences?.let(minkPadPreferences::update)
+
+    return if (restoreWidgetPlaceholders) {
+        importWidgetRestoreRecipes(backup.widgetRecipes)
+    } else {
+        WidgetRecipeImportResult(
+            added = 0,
+            alreadyPresent = 0,
+            skippedAtLimit = 0,
+        )
+    }
 }

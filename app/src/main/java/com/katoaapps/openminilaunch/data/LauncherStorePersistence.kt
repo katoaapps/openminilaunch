@@ -8,7 +8,10 @@ import com.katoaapps.openminilaunch.model.AppGridAssignment
 import com.katoaapps.openminilaunch.model.AppGridSlot
 import com.katoaapps.openminilaunch.model.MAX_DRAWER_APPS
 import com.katoaapps.openminilaunch.model.SearchFolder
+import com.katoaapps.openminilaunch.model.WidgetEntry
 import com.katoaapps.openminilaunch.model.WidgetGridSize
+import com.katoaapps.openminilaunch.model.WidgetProviderIdentity
+import com.katoaapps.openminilaunch.model.WidgetRestoreRecipe
 import com.katoaapps.openminilaunch.model.appGridSlotFromStoredName
 import com.katoaapps.openminilaunch.model.appFolderColorMode
 import com.katoaapps.openminilaunch.model.configurableAppGridSlots
@@ -16,6 +19,7 @@ import com.katoaapps.openminilaunch.model.legacyTargetKey
 import com.katoaapps.openminilaunch.model.normalizedAppGridOrder
 import org.json.JSONArray
 import org.json.JSONObject
+import java.util.UUID
 
 /** JSON serialization for LauncherStore. This keeps storage details out of its state API. */
 internal class LauncherStorePersistence(private val prefs: SharedPreferences) {
@@ -100,19 +104,31 @@ internal class LauncherStorePersistence(private val prefs: SharedPreferences) {
         }
 
         val widgets = JSONArray(prefs.getString(WIDGET_IDS_KEY, "[]") ?: "[]")
-        val widgetIds = buildList {
+        val legacyWidgetIds = buildList {
             repeat(minOf(widgets.length(), maxWidgets)) { index ->
                 widgets.optInt(index, -1).takeIf { it >= 0 }?.let(::add)
             }
         }
         val sizes = JSONObject(prefs.getString(WIDGET_SIZES_KEY, "{}") ?: "{}")
-        val widgetSizes = buildMap {
-            widgetIds.forEach { id ->
-                sizes.optJSONObject(id.toString())?.let { saved ->
-                    val columns = saved.optInt("columns", 0)
-                    val rows = saved.optInt("rows", 0)
-                    if (columns in 1..4 && rows in 1..5) put(id, WidgetGridSize(columns, rows))
-                }
+        val legacyWidgetSizes = legacyWidgetIds.associateWith { id ->
+            sizes.optJSONObject(id.toString()).widgetGridSize()
+        }
+        val widgetEntries = if (prefs.contains(WIDGET_ENTRIES_KEY)) {
+            reconcileWidgetEntriesWithLegacyBindings(
+                savedEntries = JSONArray(prefs.getString(WIDGET_ENTRIES_KEY, "[]") ?: "[]")
+                    .widgetEntries(maxWidgets),
+                legacyWidgetIds = legacyWidgetIds,
+                legacyWidgetSizes = legacyWidgetSizes,
+                maxWidgets = maxWidgets,
+            )
+        } else {
+            legacyWidgetIds.map { id ->
+                WidgetEntry.Bound(
+                    entryId = UUID.randomUUID().toString(),
+                    appWidgetId = id,
+                    gridSize = legacyWidgetSizes[id],
+                    provider = null,
+                )
             }
         }
 
@@ -125,8 +141,7 @@ internal class LauncherStorePersistence(private val prefs: SharedPreferences) {
             libraryShortcutTargets = libraryShortcutTargets,
             searchFolders = searchFolders,
             searchHistory = searchHistory,
-            widgetIds = widgetIds,
-            widgetSizes = widgetSizes,
+            widgetEntries = widgetEntries,
             socialPackages = prefs.getStringSet(SOCIAL_PACKAGES_KEY, emptySet()).orEmpty().sorted(),
         )
     }.getOrDefault(LauncherStoreSnapshot())
@@ -202,19 +217,104 @@ internal class LauncherStorePersistence(private val prefs: SharedPreferences) {
         ).apply()
     }
 
-    fun saveWidgets(widgetIds: List<Int>, widgetSizes: Map<Int, WidgetGridSize>) {
-        val widgets = JSONArray().apply { widgetIds.forEach(::put) }
+    fun saveWidgets(entries: List<WidgetEntry>) {
+        val boundWidgets = entries.filterIsInstance<WidgetEntry.Bound>()
+        val widgets = JSONArray().apply { boundWidgets.forEach { put(it.appWidgetId) } }
         val sizes = JSONObject().apply {
-            widgetIds.forEach { id ->
-                widgetSizes[id]?.let { size ->
-                    put(id.toString(), JSONObject().put("columns", size.columns).put("rows", size.rows))
+            boundWidgets.forEach { entry ->
+                entry.gridSize?.let { size ->
+                    put(
+                        entry.appWidgetId.toString(),
+                        JSONObject().put("columns", size.columns).put("rows", size.rows),
+                    )
                 }
+            }
+        }
+        val encodedEntries = JSONArray().apply {
+            entries.forEach { entry ->
+                put(
+                    JSONObject().apply {
+                        put("entryId", entry.entryId)
+                        put("columns", entry.gridSize?.columns)
+                        put("rows", entry.gridSize?.rows)
+                        when (entry) {
+                            is WidgetEntry.Bound -> {
+                                put("type", "bound")
+                                put("appWidgetId", entry.appWidgetId)
+                                entry.provider?.let { putWidgetProvider(it) }
+                            }
+                            is WidgetEntry.RestorePlaceholder -> {
+                                put("type", "restore")
+                                putWidgetProvider(entry.recipe.provider)
+                            }
+                        }
+                    },
+                )
             }
         }
         prefs.edit()
             .putString(WIDGET_IDS_KEY, widgets.toString())
             .putString(WIDGET_SIZES_KEY, sizes.toString())
+            .putString(WIDGET_ENTRIES_KEY, encodedEntries.toString())
             .apply()
+    }
+
+    private fun JSONArray.widgetEntries(maxWidgets: Int): List<WidgetEntry> = buildList {
+        repeat(minOf(length(), maxWidgets)) { index ->
+            val saved = optJSONObject(index) ?: return@repeat
+            val entryId = saved.optString("entryId").trim().take(128)
+            if (entryId.isBlank() || any { it.entryId == entryId }) return@repeat
+            val size = saved.widgetGridSize()
+            when (saved.optString("type")) {
+                "bound" -> saved.optInt("appWidgetId", -1)
+                    .takeIf { it >= 0 }
+                    ?.let { appWidgetId ->
+                        add(
+                            WidgetEntry.Bound(
+                                entryId = entryId,
+                                appWidgetId = appWidgetId,
+                                gridSize = size,
+                                provider = saved.widgetProviderIdentity(),
+                            ),
+                        )
+                    }
+                "restore" -> {
+                    val provider = saved.widgetProviderIdentity() ?: return@repeat
+                    val restoredSize = size ?: return@repeat
+                    add(
+                        WidgetEntry.RestorePlaceholder(
+                            WidgetRestoreRecipe(entryId, provider, restoredSize),
+                        ),
+                    )
+                }
+            }
+        }
+    }
+
+    private fun JSONObject?.widgetGridSize(): WidgetGridSize? {
+        val saved = this ?: return null
+        val columns = saved.optInt("columns", 0)
+        val rows = saved.optInt("rows", 0)
+        return if (columns in 1..4 && rows in 1..5) WidgetGridSize(columns, rows) else null
+    }
+
+    private fun JSONObject.widgetProviderIdentity(): WidgetProviderIdentity? {
+        val packageName = optString("providerPackage").trim().take(255)
+        val className = optString("providerClass").trim().take(512)
+        if (packageName.isBlank() || className.isBlank()) return null
+        return WidgetProviderIdentity(
+            packageName = packageName,
+            className = className,
+            appLabel = optString("appLabel").trim().take(160),
+            widgetLabel = optString("widgetLabel").trim().take(160),
+        )
+    }
+
+    private fun JSONObject.putWidgetProvider(provider: WidgetProviderIdentity) {
+        put("providerPackage", provider.packageName)
+        put("providerClass", provider.className)
+        put("appLabel", provider.appLabel)
+        put("widgetLabel", provider.widgetLabel)
     }
 
     private fun JSONObject.toAppGridAssignment(): AppGridAssignment? = when (optString("type")) {
@@ -281,6 +381,7 @@ internal class LauncherStorePersistence(private val prefs: SharedPreferences) {
         const val SOCIAL_PACKAGES_KEY = "social_packages"
         const val TODOS_KEY = "todos"
         const val WIDGET_IDS_KEY = "widget_ids"
+        const val WIDGET_ENTRIES_KEY = "widget_entries"
         const val WIDGET_SIZES_KEY = "widget_sizes"
     }
 }
@@ -294,7 +395,46 @@ internal data class LauncherStoreSnapshot(
     val libraryShortcutTargets: List<String> = emptyList(),
     val searchFolders: List<SearchFolder> = emptyList(),
     val searchHistory: List<String> = emptyList(),
-    val widgetIds: List<Int> = emptyList(),
-    val widgetSizes: Map<Int, WidgetGridSize> = emptyMap(),
+    val widgetEntries: List<WidgetEntry> = emptyList(),
     val socialPackages: List<String> = emptyList(),
 )
+
+/**
+ * Older builds only understand [legacyWidgetIds] and [legacyWidgetSizes]. If a user
+ * temporarily runs one of those builds, it can change the local Android widget bindings
+ * without updating the newer entry model. Reconcile those installation-local bindings
+ * while retaining portable restore placeholders that the older build cannot represent.
+ */
+internal fun reconcileWidgetEntriesWithLegacyBindings(
+    savedEntries: List<WidgetEntry>,
+    legacyWidgetIds: List<Int>,
+    legacyWidgetSizes: Map<Int, WidgetGridSize?>,
+    maxWidgets: Int,
+): List<WidgetEntry> {
+    val savedBoundEntries = savedEntries.filterIsInstance<WidgetEntry.Bound>()
+    val savedBoundIds = savedBoundEntries.map(WidgetEntry.Bound::appWidgetId)
+    val boundByWidgetId = savedBoundEntries.associateBy(WidgetEntry.Bound::appWidgetId)
+
+    if (savedBoundIds == legacyWidgetIds) {
+        return savedEntries.map { entry ->
+            if (entry is WidgetEntry.Bound) {
+                entry.copy(gridSize = legacyWidgetSizes[entry.appWidgetId] ?: entry.gridSize)
+            } else {
+                entry
+            }
+        }.take(maxWidgets)
+    }
+
+    val reconciledBoundEntries = legacyWidgetIds.distinct().map { appWidgetId ->
+        boundByWidgetId[appWidgetId]?.let { saved ->
+            saved.copy(gridSize = legacyWidgetSizes[appWidgetId] ?: saved.gridSize)
+        } ?: WidgetEntry.Bound(
+            entryId = UUID.randomUUID().toString(),
+            appWidgetId = appWidgetId,
+            gridSize = legacyWidgetSizes[appWidgetId],
+            provider = null,
+        )
+    }
+    val placeholders = savedEntries.filterIsInstance<WidgetEntry.RestorePlaceholder>()
+    return (reconciledBoundEntries + placeholders).take(maxWidgets)
+}

@@ -25,7 +25,7 @@ class LauncherStore private constructor(context: Context) {
     private val todoStore: TodoStore = TodoStore(persistence) { demoSearchDataEnabled }
     private val launcherSelections = LauncherSelectionStore(persistence)
     private val searchStore = SearchStore(persistence, MAX_SEARCH_HISTORY)
-    private val widgetStore = WidgetStore(persistence, MAX_WIDGETS)
+    private val widgetStore = WidgetStore(persistence, MAX_WIDGET_ENTRIES)
     private val generalPreferences = GeneralPreferenceStore(prefs)
     private val appearancePreferences = AppearancePreferenceStore(
         appContext,
@@ -74,8 +74,7 @@ class LauncherStore private constructor(context: Context) {
             ).distinct()
     val searchFolders get() = searchStore.folders
     val searchHistory get() = searchStore.history
-    val widgetIds get() = widgetStore.ids
-    val widgetSizes get() = widgetStore.sizes
+    internal val widgetEntries get() = widgetStore.entries
     val socialPackages get() = minkDayPreferences.socialPackages
     val usesAutomaticSocialApps get() = minkDayPreferences.usesAutomaticSocialApps
     val onboardingComplete get() = generalPreferences.onboardingComplete
@@ -208,7 +207,7 @@ class LauncherStore private constructor(context: Context) {
 
     private fun load() {
         todoStore.restoreSaved()
-        val saved = persistence.load(MAX_SEARCH_HISTORY, MAX_WIDGETS)
+        val saved = persistence.load(MAX_SEARCH_HISTORY, MAX_WIDGET_ENTRIES)
         launcherSelections.restore(saved)
         searchStore.restore(saved)
         widgetStore.restore(saved)
@@ -644,26 +643,55 @@ class LauncherStore private constructor(context: Context) {
         searchStore.clearHistory()
     }
 
-    fun addWidget(appWidgetId: Int, size: WidgetGridSize) {
-        widgetStore.add(appWidgetId, size)
+    internal fun addWidget(
+        appWidgetId: Int,
+        size: WidgetGridSize,
+        provider: WidgetProviderIdentity,
+        replacementEntryId: String? = null,
+    ) {
+        widgetStore.add(appWidgetId, size, provider, replacementEntryId)
     }
 
-    fun removeWidget(appWidgetId: Int) {
-        widgetStore.remove(appWidgetId)
-    }
+    internal fun removeWidget(entryId: String): WidgetEntry? = widgetStore.remove(entryId)
 
     fun setWidgetSize(appWidgetId: Int, size: WidgetGridSize) {
         widgetStore.setSize(appWidgetId, size)
     }
 
-    fun moveWidget(appWidgetId: Int, direction: Int) {
-        widgetStore.move(appWidgetId, direction)
+    internal fun updateWidgetProvider(appWidgetId: Int, provider: WidgetProviderIdentity) {
+        widgetStore.updateProvider(appWidgetId, provider)
+    }
+
+    fun setWidgetOrder(orderedEntryIds: List<String>) {
+        widgetStore.setOrder(orderedEntryIds)
+    }
+
+    internal fun importWidgetRestoreRecipes(
+        recipes: List<WidgetRestoreRecipe>,
+    ): WidgetRecipeImportResult = widgetStore.importRestoreRecipes(recipes)
+
+    internal fun portableWidgetRestoreRecipes(): List<WidgetRestoreRecipe> {
+        val manager = android.appwidget.AppWidgetManager.getInstance(appContext)
+        return widgetEntries.mapNotNull { entry ->
+            when (entry) {
+                is WidgetEntry.RestorePlaceholder -> entry.recipe
+                is WidgetEntry.Bound -> {
+                    val provider = manager.getAppWidgetInfo(entry.appWidgetId)
+                        ?.toWidgetProviderIdentity(appContext.packageManager)
+                        ?: entry.provider
+                        ?: return@mapNotNull null
+                    WidgetRestoreRecipe(
+                        entryId = entry.entryId,
+                        provider = provider,
+                        gridSize = entry.gridSize ?: WidgetGridSize(columns = 2, rows = 2),
+                    )
+                }
+            }
+        }.take(MAX_WIDGET_ENTRIES)
     }
 
     companion object {
         private const val MAX_SEARCH_HISTORY = 5
-        private const val MAX_WIDGETS = 8
-
         @Volatile
         private var instance: LauncherStore? = null
 
