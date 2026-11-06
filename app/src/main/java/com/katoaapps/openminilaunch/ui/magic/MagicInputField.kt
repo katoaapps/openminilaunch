@@ -16,6 +16,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusProperties
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
@@ -93,7 +94,9 @@ internal fun MagicInputField(
         // Mink's launcher keyboard updates [value] directly. Read-only mode keeps
         // cursor and selection behavior without opening an Android IME connection.
         readOnly = !acceptPlatformTextInput,
-        modifier = modifier.focusRequester(focusRequester)
+        modifier = modifier
+            .focusProperties { canFocus = acceptPlatformTextInput }
+            .focusRequester(focusRequester)
             .onGloballyPositioned { onPlaced() }
             .onPreviewKeyEvent { event ->
                 val nativeEvent = event.nativeKeyEvent

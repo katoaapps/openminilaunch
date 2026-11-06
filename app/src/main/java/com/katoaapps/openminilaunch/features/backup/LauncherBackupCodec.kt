@@ -370,7 +370,7 @@ internal object LauncherBackupCodec {
                     colorSource = keyboard.enumValue("colorSource", LauncherKeyboardColorSource.THEME),
                     customPrimaryArgb = keyboard.optInt("customPrimaryArgb", 0xFF4B250F.toInt()),
                     customSecondaryArgb = keyboard.optInt("customSecondaryArgb", 0xFFFFE9CB.toInt()),
-                    splitOnWideDisplays = keyboard.optBoolean("splitOnWideDisplays", false),
+                    splitOnWideDisplays = keyboard.optBoolean("splitOnWideDisplays", true),
                     hapticFeedbackEnabled = keyboard.optBoolean("hapticFeedbackEnabled", true),
                     heightDp = normalizeLauncherKeyboardHeight(
                         keyboard.optDouble("heightDp", 276.0).toFloat(),

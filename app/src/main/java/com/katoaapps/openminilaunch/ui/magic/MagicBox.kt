@@ -83,6 +83,7 @@ internal fun MagicBoxContent(
         finished()
     },
     onOpenTodos: (() -> Unit)? = null,
+    onOpenKeyboardSettings: () -> Unit = {},
     onSessionComplete: () -> Unit = {},
     onBubblePublished: () -> Unit = {},
     appBubbleHost: MagicAppBubbleHost = MagicAppBubbleHost.HOME,
@@ -714,14 +715,19 @@ internal fun MagicBoxContent(
             armedTargetPlaced = false
             if (expanded) showKeyboardWhileCollapsed = false
             if (expanded && focusRequestSerial == 0) {
-                while (!textFieldPlaced) withFrameNanos { }
-                withFrameNanos { }
-                focusRequester.requestFocus()
-                withFrameNanos { }
-                if (!useNativeLauncherKeyboard && (showSoftwareKeyboardOnStart || !useDirectHardwareInput)) {
-                    keyboard?.show()
-                } else {
+                if (useNativeLauncherKeyboard) {
                     keyboard?.hide()
+                    focusManager.clearFocus(force = true)
+                } else {
+                    while (!textFieldPlaced) withFrameNanos { }
+                    withFrameNanos { }
+                    focusRequester.requestFocus()
+                    withFrameNanos { }
+                    if (showSoftwareKeyboardOnStart || !useDirectHardwareInput) {
+                        keyboard?.show()
+                    } else {
+                        keyboard?.hide()
+                    }
                 }
             }
         }
@@ -748,14 +754,19 @@ internal fun MagicBoxContent(
 
     LaunchedEffect(focusRequestSerial) {
         if (focusRequestSerial > 0) {
-            // TextField focus can request bring-into-view. Wait until its newly docked parent
-            // has completed placement before requesting focus or showing the IME.
-            while (!textFieldPlaced) withFrameNanos { }
-            withFrameNanos { }
-            focusRequester.requestFocus()
-            if (focusRequestShowsKeyboard && !useNativeLauncherKeyboard) {
+            if (useNativeLauncherKeyboard) {
+                keyboard?.hide()
+                focusManager.clearFocus(force = true)
+            } else {
+                // TextField focus can request bring-into-view. Wait until its newly docked parent
+                // has completed placement before requesting focus or showing the IME.
+                while (!textFieldPlaced) withFrameNanos { }
                 withFrameNanos { }
-                keyboard?.show()
+                focusRequester.requestFocus()
+                if (focusRequestShowsKeyboard) {
+                    withFrameNanos { }
+                    keyboard?.show()
+                }
             }
         }
     }
@@ -785,6 +796,13 @@ internal fun MagicBoxContent(
         !expanded &&
         !smsFlow.sentConfirmationVisible &&
         !todoCompletionPending
+    val launcherKeyboardNavigationBottom = if (useNativeLauncherKeyboard) {
+        WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()
+    } else {
+        Dimens.dp0
+    }
+    val launcherKeyboardTotalHeight =
+        launcherKeyboardPreferences.heightDp.dp + launcherKeyboardNavigationBottom
 
     BackHandler(enabled = expanded) { requestDismiss() }
 
@@ -793,23 +811,35 @@ internal fun MagicBoxContent(
             Box(Modifier.matchParentSize().background(MinkBlack.copy(alpha = .48f)).clickable(onClick = { requestDismiss() }))
         }
 
-        Column(
+        Box(
             modifier = Modifier
-                .align(Alignment.Center)
-                .widthIn(max = Dimens.dp720)
-                .fillMaxWidth()
-                .fillMaxHeight()
+                .matchParentSize()
                 .statusBarsPadding()
                 .then(
-                    if (useNativeLauncherKeyboard) {
-                        Modifier.navigationBarsPadding()
-                    } else {
+                    if (!useNativeLauncherKeyboard) {
                         Modifier.imePadding()
+                    } else {
+                        Modifier
                     },
-                )
-                .padding(horizontal = Dimens.dp18, vertical = Dimens.dp18),
-            verticalArrangement = Arrangement.spacedBy(Dimens.dp8),
+                ),
         ) {
+            Column(
+                modifier = Modifier
+                    .align(Alignment.Center)
+                    .widthIn(max = Dimens.dp720)
+                    .fillMaxSize()
+                    .padding(
+                        start = Dimens.dp18,
+                        top = Dimens.dp18,
+                        end = Dimens.dp18,
+                        bottom = if (expanded && useNativeLauncherKeyboard) {
+                            Dimens.dp0
+                        } else {
+                            Dimens.dp18
+                        },
+                    ),
+                verticalArrangement = Arrangement.spacedBy(Dimens.dp8),
+            ) {
             if (!noteMode) {
                 if (expanded) {
                     MagicResultsPanel(
@@ -951,6 +981,15 @@ internal fun MagicBoxContent(
                 ),
             )
 
+                if (expanded && useNativeLauncherKeyboard) {
+                    Spacer(
+                        Modifier.height(
+                            launcherKeyboardTotalHeight + Dimens.dp8,
+                        ),
+                    )
+                }
+            }
+
             if (expanded && useNativeLauncherKeyboard) {
                 LauncherKeyboard(
                     value = text,
@@ -962,7 +1001,9 @@ internal fun MagicBoxContent(
                         ?: 0xFFFFE9CB.toInt(),
                     onSubmit = ::submit,
                     multiline = noteMode,
-                    modifier = Modifier.fillMaxWidth(),
+                    modifier = Modifier.align(Alignment.BottomCenter).fillMaxWidth(),
+                    onOpenSettings = onOpenKeyboardSettings,
+                    extendBehindNavigationBar = true,
                 )
             }
         }
@@ -973,6 +1014,8 @@ internal fun MagicBoxContent(
                     .then(
                         if (showDockedLauncherKeyboard) {
                             Modifier.padding(
+                                // Home's collapsed modifier already owns the navigation-bar inset.
+                                // Reserve only the visible key area here so the inset is not counted twice.
                                 bottom = launcherKeyboardPreferences.heightDp.dp + Dimens.dp8,
                             )
                         } else {
@@ -999,33 +1042,32 @@ internal fun MagicBoxContent(
             )
 
             if (showDockedLauncherKeyboard) {
-                LauncherKeyboard(
-                    value = text,
-                    onValueChange = { value ->
-                        val changed = value.text != text.text
-                        onLauncherKeyboardValueChange(value)
-                        if (changed) {
-                            expanded = true
-                            refocus(showSoftwareKeyboard = false)
-                        }
-                    },
-                    preferences = launcherKeyboardPreferences,
-                    themePrimaryArgb = store.effectiveHomePanelColorArgb,
-                    themeSecondaryArgb = store.visibleAppBackgroundColorArgb
-                        ?: store.effectiveAppBackgroundColorArgb
-                        ?: 0xFFFFE9CB.toInt(),
-                    onSubmit = ::submit,
-                    multiline = false,
+                Box(
                     modifier = Modifier
                         .align(Alignment.BottomCenter)
-                        .widthIn(max = Dimens.dp720)
-                        .navigationBarsPadding()
-                        .padding(
-                            start = Dimens.dp18,
-                            end = Dimens.dp18,
-                            bottom = Dimens.dp18,
-                        ),
-                )
+                        .fillMaxWidth(),
+                ) {
+                    LauncherKeyboard(
+                        value = text,
+                        onValueChange = { value ->
+                            val changed = value.text != text.text
+                            onLauncherKeyboardValueChange(value)
+                            if (changed) {
+                                expanded = true
+                            }
+                        },
+                        preferences = launcherKeyboardPreferences,
+                        themePrimaryArgb = store.effectiveHomePanelColorArgb,
+                        themeSecondaryArgb = store.visibleAppBackgroundColorArgb
+                            ?: store.effectiveAppBackgroundColorArgb
+                            ?: 0xFFFFE9CB.toInt(),
+                        onSubmit = ::submit,
+                        multiline = false,
+                        modifier = Modifier.fillMaxWidth(),
+                        onOpenSettings = onOpenKeyboardSettings,
+                        extendBehindNavigationBar = true,
+                    )
+                }
             }
         }
 

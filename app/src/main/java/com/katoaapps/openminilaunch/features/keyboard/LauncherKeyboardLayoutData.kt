@@ -14,6 +14,8 @@ internal data class LauncherKeyboardKey(
 internal data class SplitKeyboardRow(
     val left: List<LauncherKeyboardKey>,
     val right: List<LauncherKeyboardKey>,
+    val leftReachKey: LauncherKeyboardKey?,
+    val rightReachKey: LauncherKeyboardKey?,
 )
 
 internal val launcherKeyboardHotkeys = listOf("@", "#", "-", "/", "+", "?")
@@ -29,9 +31,9 @@ private val symbolRows = listOf(
 internal fun launcherKeyboardNumberKeys(symbols: Boolean): List<LauncherKeyboardKey> =
     launcherKeyboardNumbers.mapIndexed { index, number ->
         if (symbols) {
-            LauncherKeyboardKey(numberAlternates[index], secondaryLabel = number)
+            LauncherKeyboardKey(numberAlternates[index])
         } else {
-            LauncherKeyboardKey(number, secondaryLabel = numberAlternates[index])
+            LauncherKeyboardKey(number)
         }
     }
 
@@ -51,11 +53,24 @@ internal fun launcherKeyboardRows(
 }
 
 internal fun splitLauncherKeyboardRow(row: List<LauncherKeyboardKey>): SplitKeyboardRow {
-    if (row.size < 4) return SplitKeyboardRow(row, row)
-    val bridgeStart = minOf(4, row.size - 2)
+    if (row.size < 2) {
+        return SplitKeyboardRow(
+            left = row,
+            right = emptyList(),
+            leftReachKey = null,
+            rightReachKey = null,
+        )
+    }
+    val splitIndex = (row.size + 1) / 2
+    val left = row.take(splitIndex)
+    val right = row.drop(splitIndex)
     return SplitKeyboardRow(
-        left = row.take(bridgeStart + 2),
-        right = row.drop(bridgeStart),
+        left = left,
+        right = right,
+        // The center gap repeats the two boundary keys as invisible touch targets. This improves
+        // thumb reach without visually presenting duplicate letters to the user.
+        leftReachKey = right.firstOrNull(),
+        rightReachKey = left.lastOrNull(),
     )
 }
 
@@ -101,6 +116,21 @@ internal fun launcherKeyboardOutput(
 } else {
     key.output
 }
+
+internal fun launcherKeyboardDisplayLabel(
+    key: LauncherKeyboardKey,
+    uppercase: Boolean,
+    supportsCase: Boolean,
+): String = if (uppercase && supportsCase) {
+    key.label.uppercase(Locale.ROOT)
+} else {
+    key.label
+}
+
+internal fun launcherKeyboardUsesUppercase(
+    shiftOverride: Boolean?,
+    sentenceCaps: Boolean,
+): Boolean = shiftOverride ?: sentenceCaps
 
 private val SENTENCE_ENDINGS = setOf('.', '!', '?', '\n')
 

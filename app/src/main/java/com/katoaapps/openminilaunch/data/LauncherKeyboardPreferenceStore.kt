@@ -38,7 +38,7 @@ internal class LauncherKeyboardPreferenceStore(private val prefs: SharedPreferen
         colorSource = prefs.enumValue(COLOR_SOURCE_KEY, LauncherKeyboardColorSource.THEME),
         customPrimaryArgb = prefs.getInt(CUSTOM_PRIMARY_KEY, DEFAULT_KEYBOARD_PRIMARY_ARGB),
         customSecondaryArgb = prefs.getInt(CUSTOM_SECONDARY_KEY, DEFAULT_KEYBOARD_SECONDARY_ARGB),
-        splitOnWideDisplays = prefs.getBoolean(SPLIT_WIDE_KEY, false),
+        splitOnWideDisplays = prefs.getBoolean(SPLIT_WIDE_KEY, true),
         hapticFeedbackEnabled = prefs.getBoolean(HAPTIC_KEY, true),
         heightDp = normalizeLauncherKeyboardHeight(
             prefs.getFloat(HEIGHT_KEY, DEFAULT_KEYBOARD_HEIGHT_DP),

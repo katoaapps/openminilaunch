@@ -251,6 +251,7 @@ internal fun HomeScreen(
                     }
                 }
             },
+            onOpenKeyboardSettings = { openSettings(SettingsDestination.KEYBOARD) },
             onOpenTodos = openTodos,
             appAccessState = appAccessState,
         )
