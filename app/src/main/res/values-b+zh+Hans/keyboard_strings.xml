@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="launcher_keyboard">键盘</string>
+    <string name="launcher_keyboard_summary">布局、颜色、大小、触感反馈和宽屏分体</string>
+    <string name="keyboard_split_wide">在宽屏或大屏设备上分割键盘</string>
+    <string name="keyboard_split_wide_description">将键盘分成左右两侧，并重复中间按键，让两只拇指都能轻松触及。</string>
+    <string name="keyboard_haptic_feedback">按键反馈</string>
+    <string name="keyboard_haptic_feedback_description">按下按键时使用轻微振动。</string>
+    <string name="keyboard_layout">按键布局</string>
+    <string name="keyboard_style">按键样式</string>
+    <string name="keyboard_theme_colors_description">主题颜色跟随 启动器 → 主页 → 外观 → 壁纸和背景。</string>
+    <string name="keyboard_height">键盘高度</string>
+    <string name="keyboard_height_value">%1$d dp</string>
+    <string name="keyboard_live_preview">键盘实时预览</string>
+    <string name="keyboard_primary_color">主色</string>
+    <string name="keyboard_primary_color_description">选择键盘的第一种自定义颜色。</string>
+    <string name="keyboard_secondary_color">辅助色</string>
+    <string name="keyboard_secondary_color_description">选择键盘的第二种自定义颜色。</string>
+    <string name="keyboard_key_color">按键颜色</string>
+    <string name="keyboard_key_color_description">选择此样式使用的按键颜色。</string>
+    <string name="keyboard_use_palette_key_color">使用调色板颜色</string>
+    <string name="keyboard_colors_theme">主题颜色</string>
+    <string name="keyboard_colors_custom">自定义颜色</string>
+    <string name="keyboard_style_flat_primary">扁平 · 主色</string>
+    <string name="keyboard_style_flat_secondary">扁平 · 辅助色</string>
+    <string name="keyboard_style_raised_primary">立体 · 主色</string>
+    <string name="keyboard_style_raised_secondary">立体 · 辅助色</string>
+    <string name="keyboard_style_outlined_primary">描边 · 主色</string>
+    <string name="keyboard_style_outlined_secondary">描边 · 辅助色</string>
+    <string name="keyboard_layout_qwerty">QWERTY</string>
+    <string name="keyboard_layout_azerty">AZERTY</string>
+    <string name="keyboard_layout_qwertz">QWERTZ</string>
+    <string name="keyboard_layout_dvorak">Dvorak</string>
+    <string name="keyboard_layout_pinyin">拼音</string>
+    <string name="keyboard_layout_cangjie">仓颉</string>
+    <string name="keyboard_layout_hangul">韩文</string>
+    <string name="keyboard_layout_abugida">天城文</string>
+    <string name="keyboard_key_shift">上档</string>
+    <string name="keyboard_key_backspace">退格</string>
+    <string name="keyboard_key_space">空格</string>
+    <string name="keyboard_key_new_line">换行</string>
+    <string name="keyboard_key_search">搜索</string>
+</resources>

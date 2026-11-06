@@ -14,9 +14,9 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.ExperimentalComposeUiApi
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
-import androidx.compose.ui.focus.focusProperties
 import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
@@ -27,6 +27,8 @@ import androidx.compose.ui.input.key.key
 import androidx.compose.ui.input.key.onPreviewKeyEvent
 import androidx.compose.ui.input.key.type
 import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.platform.InterceptPlatformTextInput
+import androidx.compose.ui.platform.PlatformTextInputInterceptor
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextLayoutResult
 import androidx.compose.ui.text.TextStyle
@@ -37,6 +39,7 @@ import com.katoaapps.openminilaunch.features.magic.MAGIC_AI_PREFIX
 import com.katoaapps.openminilaunch.features.magic.MAGIC_NOTE_PREFIX
 import com.katoaapps.openminilaunch.ui.theme.MinkTransparent
 import com.katoaapps.openminilaunch.ui.theme.Muted
+import kotlinx.coroutines.awaitCancellation
 
 private val SEND_IME_PREFIXES = setOf('@', '#', '-', '+', '?')
 private val HARDWARE_SUBMIT_PREFIXES = setOf('@', '#', '-', '?')
@@ -47,7 +50,7 @@ internal data class MagicActionVisuals(
 )
 
 /** The single text-entry surface shared by expanded and note modes. */
-@OptIn(ExperimentalMaterial3Api::class)
+@OptIn(ExperimentalMaterial3Api::class, ExperimentalComposeUiApi::class)
 @Composable
 internal fun MagicInputField(
     value: TextFieldValue,
@@ -87,59 +90,68 @@ internal fun MagicInputField(
         onSearch = { onSubmit() },
         onSend = { onSubmit() },
     )
+    val blockPlatformIme = remember {
+        PlatformTextInputInterceptor { _, _ -> awaitCancellation() }
+    }
 
-    BasicTextField(
-        value = value,
-        onValueChange = updateValue,
-        // Mink's launcher keyboard updates [value] directly. Read-only mode keeps
-        // cursor and selection behavior without opening an Android IME connection.
-        readOnly = !acceptPlatformTextInput,
-        modifier = modifier
-            .focusProperties { canFocus = acceptPlatformTextInput }
-            .focusRequester(focusRequester)
-            .onGloballyPositioned { onPlaced() }
-            .onPreviewKeyEvent { event ->
-                val nativeEvent = event.nativeKeyEvent
-                if (event.type == KeyEventType.KeyUp) {
-                    onHardwareKeyUp(nativeEvent.keyCode)
-                }
-                if (prefix in HARDWARE_SUBMIT_PREFIXES && event.key == Key.Enter) {
-                    if (event.type == KeyEventType.KeyUp) onSubmit()
-                    true
-                } else {
-                    handleMagicHardwareEditing(
-                        event = event,
-                        value = value,
-                        textLayout = textLayout,
-                        preferredVerticalX = preferredVerticalX,
-                        onPreferredVerticalXChange = { preferredVerticalX = it },
-                        onValueChange = onValueChange,
-                    )
-                }
-            },
-        textStyle = LocalTextStyle.current.merge(
-            TextStyle(color = MaterialTheme.colorScheme.onSurface),
-        ),
-        minLines = minLines,
-        maxLines = maxLines,
-        keyboardOptions = keyboardOptions,
-        keyboardActions = keyboardActions,
-        interactionSource = interactionSource,
-        cursorBrush = SolidColor(MaterialTheme.colorScheme.primary),
-        onTextLayout = { textLayout = it },
-        decorationBox = { innerTextField ->
-            TextFieldDefaults.DecorationBox(
-                value = value.text,
-                innerTextField = innerTextField,
-                enabled = true,
-                singleLine = false,
-                visualTransformation = androidx.compose.ui.text.input.VisualTransformation.None,
-                interactionSource = interactionSource,
-                placeholder = {
-                    Text(stringResource(R.string.magic_box_hotkey_hint), color = Muted)
+    val textField = @Composable {
+        BasicTextField(
+            value = value,
+            onValueChange = updateValue,
+            modifier = modifier
+                .focusRequester(focusRequester)
+                .onGloballyPositioned { onPlaced() }
+                .onPreviewKeyEvent { event ->
+                    val nativeEvent = event.nativeKeyEvent
+                    if (event.type == KeyEventType.KeyUp) {
+                        onHardwareKeyUp(nativeEvent.keyCode)
+                    }
+                    if (prefix in HARDWARE_SUBMIT_PREFIXES && event.key == Key.Enter) {
+                        if (event.type == KeyEventType.KeyUp) onSubmit()
+                        true
+                    } else {
+                        handleMagicHardwareEditing(
+                            event = event,
+                            value = value,
+                            textLayout = textLayout,
+                            preferredVerticalX = preferredVerticalX,
+                            onPreferredVerticalXChange = { preferredVerticalX = it },
+                            onValueChange = onValueChange,
+                        )
+                    }
                 },
-                colors = colors,
-            )
-        },
-    )
+            textStyle = LocalTextStyle.current.merge(
+                TextStyle(color = MaterialTheme.colorScheme.onSurface),
+            ),
+            minLines = minLines,
+            maxLines = maxLines,
+            keyboardOptions = keyboardOptions,
+            keyboardActions = keyboardActions,
+            interactionSource = interactionSource,
+            cursorBrush = SolidColor(MaterialTheme.colorScheme.primary),
+            onTextLayout = { textLayout = it },
+            decorationBox = { innerTextField ->
+                TextFieldDefaults.DecorationBox(
+                    value = value.text,
+                    innerTextField = innerTextField,
+                    enabled = true,
+                    singleLine = false,
+                    visualTransformation = androidx.compose.ui.text.input.VisualTransformation.None,
+                    interactionSource = interactionSource,
+                    placeholder = {
+                        Text(stringResource(R.string.magic_box_hotkey_hint), color = Muted)
+                    },
+                    colors = colors,
+                )
+            },
+        )
+    }
+    if (acceptPlatformTextInput) {
+        textField()
+    } else {
+        InterceptPlatformTextInput(
+            interceptor = blockPlatformIme,
+            content = textField,
+        )
+    }
 }

@@ -18,6 +18,7 @@ import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Apps
 import androidx.compose.material.icons.filled.DragHandle
 import androidx.compose.material.icons.filled.Lock
 import androidx.compose.material3.Icon
@@ -47,6 +48,7 @@ import com.katoaapps.openminilaunch.R
 import com.katoaapps.openminilaunch.data.LauncherStore
 import com.katoaapps.openminilaunch.model.AppGridAssignment
 import com.katoaapps.openminilaunch.model.AppGridSlot
+import com.katoaapps.openminilaunch.model.LauncherTarget
 import com.katoaapps.openminilaunch.model.MAX_DRAWER_APPS
 import com.katoaapps.openminilaunch.platform.DeviceActions
 import com.katoaapps.openminilaunch.ui.components.LauncherTargetIcon
@@ -61,6 +63,7 @@ import sh.calvin.reorderable.rememberReorderableLazyGridState
 internal fun AppGridOrderEditor(
     store: LauncherStore,
     actions: DeviceActions,
+    resolvedTargets: Map<String, LauncherTarget>,
     onSlotClick: (AppGridSlot) -> Unit,
 ) {
     val storedOrder = store.appGridOrder.toList()
@@ -118,7 +121,8 @@ internal fun AppGridOrderEditor(
                         folder.orderedTargetKeys.size,
                         folder.orderedTargetKeys.size,
                     )
-                    else -> targetKey?.let(actions::launcherTargetLabel)
+                    else -> targetKey?.let(resolvedTargets::get)?.label
+                        ?: targetKey?.let { "…" }
                         ?: stringResource(R.string.shortcut_default, slot.displayLabel())
                 }
                 val scale by animateFloatAsState(
@@ -156,16 +160,27 @@ internal fun AppGridOrderEditor(
                                     Modifier.size(Dimens.dp28),
                                 )
                                 is AppGridAssignment.Target -> {
-                                    val target = actions.resolveLauncherSelection(assignment.selectionKey)
-                                    LauncherTargetIcon(
-                                        target = target,
-                                        actions = actions,
-                                        size = Dimens.dp30,
-                                        contentDescription = target.label,
-                                    )
+                                    val target = resolvedTargets[assignment.selectionKey]
+                                    if (target != null) {
+                                        LauncherTargetIcon(
+                                            target = target,
+                                            actions = actions,
+                                            size = Dimens.dp30,
+                                            contentDescription = target.label,
+                                        )
+                                    } else {
+                                        Icon(
+                                            Icons.Default.Apps,
+                                            contentDescription = null,
+                                            modifier = Modifier.size(Dimens.dp30),
+                                            tint = Muted,
+                                        )
+                                    }
                                 }
                                 is AppGridAssignment.Folder -> AppFolderIcon(
                                     targetKeys = folder?.orderedTargetKeys.orEmpty(),
+                                    resolvedTargets = folder?.orderedTargetKeys.orEmpty()
+                                        .mapNotNull(resolvedTargets::get),
                                     actions = actions,
                                     size = Dimens.dp30,
                                     backgroundColor = folder?.backgroundColor(

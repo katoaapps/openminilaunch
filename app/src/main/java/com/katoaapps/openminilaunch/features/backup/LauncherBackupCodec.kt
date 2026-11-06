@@ -253,6 +253,7 @@ internal object LauncherBackupCodec {
                     put("colorSource", keyboard.colorSource.name)
                     put("customPrimaryArgb", keyboard.customPrimaryArgb)
                     put("customSecondaryArgb", keyboard.customSecondaryArgb)
+                    keyboard.keyColorOverrideArgb?.let { put("keyColorOverrideArgb", it) }
                     put("splitOnWideDisplays", keyboard.splitOnWideDisplays)
                     put("hapticFeedbackEnabled", keyboard.hapticFeedbackEnabled)
                     put("heightDp", keyboard.heightDp.toDouble())
@@ -370,6 +371,7 @@ internal object LauncherBackupCodec {
                     colorSource = keyboard.enumValue("colorSource", LauncherKeyboardColorSource.THEME),
                     customPrimaryArgb = keyboard.optInt("customPrimaryArgb", 0xFF4B250F.toInt()),
                     customSecondaryArgb = keyboard.optInt("customSecondaryArgb", 0xFFFFE9CB.toInt()),
+                    keyColorOverrideArgb = keyboard.optNullableInt("keyColorOverrideArgb"),
                     splitOnWideDisplays = keyboard.optBoolean("splitOnWideDisplays", true),
                     hapticFeedbackEnabled = keyboard.optBoolean("hapticFeedbackEnabled", true),
                     heightDp = normalizeLauncherKeyboardHeight(

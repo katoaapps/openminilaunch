@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="launcher_keyboard">Teclado</string>
+    <string name="launcher_keyboard_summary">Layout, cores, tamanho, resposta tátil e divisão em telas grandes</string>
+    <string name="keyboard_split_wide">Dividir o teclado em telas grandes ou largas</string>
+    <string name="keyboard_split_wide_description">Separa as metades e repete as teclas centrais para que os dois polegares consigam alcançá-las.</string>
+    <string name="keyboard_haptic_feedback">Resposta das teclas</string>
+    <string name="keyboard_haptic_feedback_description">Usar uma vibração leve ao pressionar uma tecla.</string>
+    <string name="keyboard_layout">Layout das teclas</string>
+    <string name="keyboard_style">Estilo das teclas</string>
+    <string name="keyboard_theme_colors_description">As cores do tema seguem Launcher → Início → Aparência → Papel de parede e fundo.</string>
+    <string name="keyboard_height">Altura do teclado</string>
+    <string name="keyboard_height_value">%1$d dp</string>
+    <string name="keyboard_live_preview">Prévia do teclado</string>
+    <string name="keyboard_primary_color">Cor principal</string>
+    <string name="keyboard_primary_color_description">Escolha a primeira cor personalizada do teclado.</string>
+    <string name="keyboard_secondary_color">Cor secundária</string>
+    <string name="keyboard_secondary_color_description">Escolha a segunda cor personalizada do teclado.</string>
+    <string name="keyboard_key_color">Cor das teclas</string>
+    <string name="keyboard_key_color_description">Escolha a cor usada nas teclas deste estilo.</string>
+    <string name="keyboard_use_palette_key_color">Usar cor da paleta</string>
+    <string name="keyboard_colors_theme">Cores do tema</string>
+    <string name="keyboard_colors_custom">Cores personalizadas</string>
+    <string name="keyboard_style_flat_primary">Plano · Principal</string>
+    <string name="keyboard_style_flat_secondary">Plano · Secundário</string>
+    <string name="keyboard_style_raised_primary">Elevado · Principal</string>
+    <string name="keyboard_style_raised_secondary">Elevado · Secundário</string>
+    <string name="keyboard_style_outlined_primary">Contornado · Principal</string>
+    <string name="keyboard_style_outlined_secondary">Contornado · Secundário</string>
+    <string name="keyboard_layout_qwerty">QWERTY</string>
+    <string name="keyboard_layout_azerty">AZERTY</string>
+    <string name="keyboard_layout_qwertz">QWERTZ</string>
+    <string name="keyboard_layout_dvorak">Dvorak</string>
+    <string name="keyboard_layout_pinyin">Pinyin</string>
+    <string name="keyboard_layout_cangjie">Cangjie</string>
+    <string name="keyboard_layout_hangul">Hangul</string>
+    <string name="keyboard_layout_abugida">Devanagari</string>
+    <string name="keyboard_key_shift">Maiúsculas</string>
+    <string name="keyboard_key_backspace">Apagar</string>
+    <string name="keyboard_key_space">Espaço</string>
+    <string name="keyboard_key_new_line">Nova linha</string>
+    <string name="keyboard_key_search">Pesquisar</string>
+</resources>

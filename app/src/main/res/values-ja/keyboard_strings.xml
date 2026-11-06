@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="launcher_keyboard">キーボード</string>
+    <string name="launcher_keyboard_summary">配列、色、サイズ、触覚フィードバック、ワイド画面分割</string>
+    <string name="keyboard_split_wide">ワイド画面や大画面でキーボードを分割</string>
+    <string name="keyboard_split_wide_description">左右に分け、中央のキーを繰り返して、どちらの親指からも届きやすくします。</string>
+    <string name="keyboard_haptic_feedback">キーフィードバック</string>
+    <string name="keyboard_haptic_feedback_description">キーを押したときに軽く振動します。</string>
+    <string name="keyboard_layout">キー配列</string>
+    <string name="keyboard_style">キースタイル</string>
+    <string name="keyboard_theme_colors_description">テーマの色は、ランチャー → ホーム → 外観 → 壁紙と背景に従います。</string>
+    <string name="keyboard_height">キーボードの高さ</string>
+    <string name="keyboard_height_value">%1$d dp</string>
+    <string name="keyboard_live_preview">キーボードのライブプレビュー</string>
+    <string name="keyboard_primary_color">メインカラー</string>
+    <string name="keyboard_primary_color_description">キーボードの1つ目のカスタムカラーを選びます。</string>
+    <string name="keyboard_secondary_color">サブカラー</string>
+    <string name="keyboard_secondary_color_description">キーボードの2つ目のカスタムカラーを選びます。</string>
+    <string name="keyboard_key_color">キーの色</string>
+    <string name="keyboard_key_color_description">このスタイルで使うキーの色を選びます。</string>
+    <string name="keyboard_use_palette_key_color">パレットの色を使用</string>
+    <string name="keyboard_colors_theme">テーマカラー</string>
+    <string name="keyboard_colors_custom">カスタムカラー</string>
+    <string name="keyboard_style_flat_primary">フラット · メイン</string>
+    <string name="keyboard_style_flat_secondary">フラット · サブ</string>
+    <string name="keyboard_style_raised_primary">立体 · メイン</string>
+    <string name="keyboard_style_raised_secondary">立体 · サブ</string>
+    <string name="keyboard_style_outlined_primary">アウトライン · メイン</string>
+    <string name="keyboard_style_outlined_secondary">アウトライン · サブ</string>
+    <string name="keyboard_layout_qwerty">QWERTY</string>
+    <string name="keyboard_layout_azerty">AZERTY</string>
+    <string name="keyboard_layout_qwertz">QWERTZ</string>
+    <string name="keyboard_layout_dvorak">Dvorak</string>
+    <string name="keyboard_layout_pinyin">拼音</string>
+    <string name="keyboard_layout_cangjie">倉頡</string>
+    <string name="keyboard_layout_hangul">ハングル</string>
+    <string name="keyboard_layout_abugida">デーヴァナーガリー</string>
+    <string name="keyboard_key_shift">Shift</string>
+    <string name="keyboard_key_backspace">バックスペース</string>
+    <string name="keyboard_key_space">スペース</string>
+    <string name="keyboard_key_new_line">改行</string>
+    <string name="keyboard_key_search">検索</string>
+</resources>

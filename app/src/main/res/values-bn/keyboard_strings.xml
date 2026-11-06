@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="launcher_keyboard">কীবোর্ড</string>
+    <string name="launcher_keyboard_summary">লেআউট, রং, আকার, হ্যাপটিক প্রতিক্রিয়া এবং প্রশস্ত স্ক্রিন বিভাজন</string>
+    <string name="keyboard_split_wide">প্রশস্ত বা বড় ডিসপ্লেতে কীবোর্ড ভাগ করুন</string>
+    <string name="keyboard_split_wide_description">দুই পাশ আলাদা করে এবং মাঝের কীগুলো পুনরাবৃত্তি করে, যাতে দুই বুড়ো আঙুলই সহজে পৌঁছাতে পারে।</string>
+    <string name="keyboard_haptic_feedback">কী প্রতিক্রিয়া</string>
+    <string name="keyboard_haptic_feedback_description">কী চাপলে হালকা কম্পন ব্যবহার করুন।</string>
+    <string name="keyboard_layout">কী লেআউট</string>
+    <string name="keyboard_style">কী স্টাইল</string>
+    <string name="keyboard_theme_colors_description">থিমের রং লঞ্চার → হোম → চেহারা → ওয়ালপেপার ও ব্যাকগ্রাউন্ড অনুসরণ করে।</string>
+    <string name="keyboard_height">কীবোর্ডের উচ্চতা</string>
+    <string name="keyboard_height_value">%1$d dp</string>
+    <string name="keyboard_live_preview">কীবোর্ডের লাইভ প্রিভিউ</string>
+    <string name="keyboard_primary_color">প্রাথমিক রং</string>
+    <string name="keyboard_primary_color_description">কীবোর্ডের প্রথম কাস্টম রং বেছে নিন।</string>
+    <string name="keyboard_secondary_color">দ্বিতীয় রং</string>
+    <string name="keyboard_secondary_color_description">কীবোর্ডের দ্বিতীয় কাস্টম রং বেছে নিন।</string>
+    <string name="keyboard_key_color">কী-এর রং</string>
+    <string name="keyboard_key_color_description">এই স্টাইলে কীগুলোর জন্য রং বেছে নিন।</string>
+    <string name="keyboard_use_palette_key_color">প্যালেটের রং ব্যবহার করুন</string>
+    <string name="keyboard_colors_theme">থিমের রং</string>
+    <string name="keyboard_colors_custom">কাস্টম রং</string>
+    <string name="keyboard_style_flat_primary">ফ্ল্যাট · প্রাথমিক</string>
+    <string name="keyboard_style_flat_secondary">ফ্ল্যাট · দ্বিতীয়</string>
+    <string name="keyboard_style_raised_primary">উঁচু · প্রাথমিক</string>
+    <string name="keyboard_style_raised_secondary">উঁচু · দ্বিতীয়</string>
+    <string name="keyboard_style_outlined_primary">আউটলাইন · প্রাথমিক</string>
+    <string name="keyboard_style_outlined_secondary">আউটলাইন · দ্বিতীয়</string>
+    <string name="keyboard_layout_qwerty">QWERTY</string>
+    <string name="keyboard_layout_azerty">AZERTY</string>
+    <string name="keyboard_layout_qwertz">QWERTZ</string>
+    <string name="keyboard_layout_dvorak">Dvorak</string>
+    <string name="keyboard_layout_pinyin">পিনইন</string>
+    <string name="keyboard_layout_cangjie">চাংচিয়ে</string>
+    <string name="keyboard_layout_hangul">হাঙ্গুল</string>
+    <string name="keyboard_layout_abugida">দেবনাগরী</string>
+    <string name="keyboard_key_shift">Shift</string>
+    <string name="keyboard_key_backspace">ব্যাকস্পেস</string>
+    <string name="keyboard_key_space">স্পেস</string>
+    <string name="keyboard_key_new_line">নতুন লাইন</string>
+    <string name="keyboard_key_search">অনুসন্ধান</string>
+</resources>

@@ -7,6 +7,9 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Palette
 import androidx.compose.material.icons.filled.Translate
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.produceState
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
@@ -15,7 +18,9 @@ import com.katoaapps.openminilaunch.data.LauncherStore
 import com.katoaapps.openminilaunch.features.localization.SupportedAppLanguages
 import com.katoaapps.openminilaunch.model.AppFolderAnimationStyle
 import com.katoaapps.openminilaunch.model.AppFolderIndicatorStyle
+import com.katoaapps.openminilaunch.model.AppGridAssignment
 import com.katoaapps.openminilaunch.model.AppGridSlot
+import com.katoaapps.openminilaunch.model.LauncherTarget
 import com.katoaapps.openminilaunch.platform.DeviceActions
 import com.katoaapps.openminilaunch.ui.appgrid.FolderAnimationInlinePreview
 import com.katoaapps.openminilaunch.ui.appgrid.AppGridOrderEditor
@@ -24,6 +29,8 @@ import com.katoaapps.openminilaunch.ui.components.SettingsDropdownOption
 import com.katoaapps.openminilaunch.ui.components.SettingsDropdownRow
 import com.katoaapps.openminilaunch.ui.components.SettingsRow
 import com.katoaapps.openminilaunch.ui.theme.Dimens
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 @Composable
 internal fun LauncherSettingsPage(
@@ -64,11 +71,38 @@ internal fun AppGridSettingsPage(
     onNavigate: (SettingsDestination) -> Unit,
     goBack: () -> Unit,
 ) {
+    val appsRevision by actions.launcherAppsRevision.collectAsState()
+    val shortcutsRevision by actions.launcherShortcutsRevision.collectAsState()
+    val targetKeys = buildSet {
+        AppGridSlot.entries.forEach { slot ->
+            when (val assignment = store.appGridAssignment(slot)) {
+                is AppGridAssignment.Target -> {
+                    add(assignment.selectionKey)
+                }
+                is AppGridAssignment.Folder -> {
+                    store.appFolder(assignment.folderId)?.orderedTargetKeys?.let(::addAll)
+                }
+                AppGridAssignment.DefaultAction -> Unit
+            }
+        }
+    }
+    val resolvedTargets by produceState<Map<String, LauncherTarget>>(
+        initialValue = emptyMap(),
+        targetKeys,
+        appsRevision,
+        shortcutsRevision,
+    ) {
+        value = withContext(Dispatchers.IO) {
+            targetKeys.associateWith(actions::resolveLauncherSelection)
+        }
+    }
+
     SettingsPage(stringResource(R.string.app_grid), goBack) {
         SectionLabel(stringResource(R.string.home_shortcuts))
         AppGridOrderEditor(
             store = store,
             actions = actions,
+            resolvedTargets = resolvedTargets,
             onSlotClick = { slot ->
                 if (slot == AppGridSlot.DRAWER) {
                     onNavigate(SettingsDestination.QUICK_DRAWER)
@@ -123,7 +157,8 @@ internal fun AppGridSettingsPage(
                 valuePreview = {
                     FolderAnimationInlinePreview(
                         style = store.folderAnimationStyle,
-                        targetKeys = store.appFolders.firstOrNull()?.orderedTargetKeys.orEmpty(),
+                        targets = store.appFolders.firstOrNull()?.orderedTargetKeys.orEmpty()
+                            .mapNotNull(resolvedTargets::get),
                         actions = actions,
                     )
                 },

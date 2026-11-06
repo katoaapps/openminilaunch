@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="launcher_keyboard">कीबोर्ड</string>
+    <string name="launcher_keyboard_summary">लेआउट, रंग, आकार, हैप्टिक फ़ीडबैक और चौड़ी स्क्रीन का विभाजन</string>
+    <string name="keyboard_split_wide">चौड़ी या बड़ी स्क्रीन पर कीबोर्ड विभाजित करें</string>
+    <string name="keyboard_split_wide_description">दोनों हिस्सों को अलग करता है और बीच की कुंजियाँ दोहराता है ताकि दोनों अंगूठे उन तक पहुँच सकें।</string>
+    <string name="keyboard_haptic_feedback">कुंजी फ़ीडबैक</string>
+    <string name="keyboard_haptic_feedback_description">कुंजी दबाने पर हल्का कंपन इस्तेमाल करें।</string>
+    <string name="keyboard_layout">कुंजी लेआउट</string>
+    <string name="keyboard_style">कुंजी शैली</string>
+    <string name="keyboard_theme_colors_description">थीम के रंग लॉन्चर → होम → दिखावट → वॉलपेपर और बैकग्राउंड के अनुसार होते हैं।</string>
+    <string name="keyboard_height">कीबोर्ड की ऊँचाई</string>
+    <string name="keyboard_height_value">%1$d dp</string>
+    <string name="keyboard_live_preview">कीबोर्ड का लाइव पूर्वावलोकन</string>
+    <string name="keyboard_primary_color">प्राथमिक रंग</string>
+    <string name="keyboard_primary_color_description">कीबोर्ड का पहला कस्टम रंग चुनें।</string>
+    <string name="keyboard_secondary_color">द्वितीयक रंग</string>
+    <string name="keyboard_secondary_color_description">कीबोर्ड का दूसरा कस्टम रंग चुनें।</string>
+    <string name="keyboard_key_color">कुंजी का रंग</string>
+    <string name="keyboard_key_color_description">इस शैली में कुंजियों के लिए रंग चुनें।</string>
+    <string name="keyboard_use_palette_key_color">पैलेट का रंग इस्तेमाल करें</string>
+    <string name="keyboard_colors_theme">थीम के रंग</string>
+    <string name="keyboard_colors_custom">कस्टम रंग</string>
+    <string name="keyboard_style_flat_primary">फ़्लैट · प्राथमिक</string>
+    <string name="keyboard_style_flat_secondary">फ़्लैट · द्वितीयक</string>
+    <string name="keyboard_style_raised_primary">उभरा हुआ · प्राथमिक</string>
+    <string name="keyboard_style_raised_secondary">उभरा हुआ · द्वितीयक</string>
+    <string name="keyboard_style_outlined_primary">आउटलाइन · प्राथमिक</string>
+    <string name="keyboard_style_outlined_secondary">आउटलाइन · द्वितीयक</string>
+    <string name="keyboard_layout_qwerty">QWERTY</string>
+    <string name="keyboard_layout_azerty">AZERTY</string>
+    <string name="keyboard_layout_qwertz">QWERTZ</string>
+    <string name="keyboard_layout_dvorak">Dvorak</string>
+    <string name="keyboard_layout_pinyin">पिनयिन</string>
+    <string name="keyboard_layout_cangjie">कांग्जी</string>
+    <string name="keyboard_layout_hangul">हंगुल</string>
+    <string name="keyboard_layout_abugida">देवनागरी</string>
+    <string name="keyboard_key_shift">Shift</string>
+    <string name="keyboard_key_backspace">बैकस्पेस</string>
+    <string name="keyboard_key_space">स्पेस</string>
+    <string name="keyboard_key_new_line">नई पंक्ति</string>
+    <string name="keyboard_key_search">खोजें</string>
+</resources>

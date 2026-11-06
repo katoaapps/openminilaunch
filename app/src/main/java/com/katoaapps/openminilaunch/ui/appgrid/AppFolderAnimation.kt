@@ -12,7 +12,6 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableStateOf
@@ -102,15 +101,11 @@ internal fun AnimatedFolderEntry(
 @Composable
 internal fun FolderAnimationInlinePreview(
     style: AppFolderAnimationStyle,
-    targetKeys: List<String>,
+    targets: List<LauncherTarget>,
     actions: DeviceActions,
 ) {
-    val appsRevision by actions.launcherAppsRevision.collectAsState()
-    val shortcutsRevision by actions.launcherShortcutsRevision.collectAsState()
-    val targets = remember(targetKeys, appsRevision, shortcutsRevision) {
-        targetKeys.map(actions::resolveLauncherSelection)
-            .filter(LauncherTarget::isAvailable)
-            .take(3)
+    val availableTargets = remember(targets) {
+        targets.filter(LauncherTarget::isAvailable).take(3)
     }
 
     Row(
@@ -120,7 +115,7 @@ internal fun FolderAnimationInlinePreview(
         key(style) {
             repeat(3) { index ->
                 AnimatedFolderEntry(style = style, index = index) {
-                    val target = targets.getOrNull(index)
+                    val target = availableTargets.getOrNull(index)
                     if (target != null) {
                         LauncherTargetIcon(
                             target = target,

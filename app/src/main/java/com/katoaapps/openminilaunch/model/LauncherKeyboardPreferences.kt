@@ -37,6 +37,7 @@ internal data class LauncherKeyboardPreferences(
     val colorSource: LauncherKeyboardColorSource = LauncherKeyboardColorSource.THEME,
     val customPrimaryArgb: Int = DEFAULT_KEYBOARD_PRIMARY_ARGB,
     val customSecondaryArgb: Int = DEFAULT_KEYBOARD_SECONDARY_ARGB,
+    val keyColorOverrideArgb: Int? = null,
     val splitOnWideDisplays: Boolean = true,
     val hapticFeedbackEnabled: Boolean = true,
     val heightDp: Float = DEFAULT_KEYBOARD_HEIGHT_DP,

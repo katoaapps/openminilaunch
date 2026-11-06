@@ -226,9 +226,11 @@ internal fun SettingsScreen(
 
     fun navigateFromOverview(next: SettingsDestination) {
         navigatingBack = false
-        settingsStack = settingsStack + settingsPathTo(next).drop(1).map { destination ->
-            SettingsRoute(selectedSection, destination)
-        }
+        settingsStack = openSettingsDestinationFromOverview(
+            stack = settingsStack,
+            section = selectedSection,
+            destination = next,
+        )
     }
 
     fun selectSection(next: SettingsSection) {

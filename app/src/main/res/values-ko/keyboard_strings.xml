@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="launcher_keyboard">키보드</string>
+    <string name="launcher_keyboard_summary">배열, 색상, 크기, 햅틱 피드백 및 넓은 화면 분할</string>
+    <string name="keyboard_split_wide">넓거나 큰 화면에서 키보드 분할</string>
+    <string name="keyboard_split_wide_description">양쪽을 분리하고 가운데 키를 반복해 어느 엄지손가락으로도 쉽게 닿게 합니다.</string>
+    <string name="keyboard_haptic_feedback">키 피드백</string>
+    <string name="keyboard_haptic_feedback_description">키를 누를 때 가볍게 진동합니다.</string>
+    <string name="keyboard_layout">키 배열</string>
+    <string name="keyboard_style">키 스타일</string>
+    <string name="keyboard_theme_colors_description">테마 색상은 런처 → 홈 → 외관 → 배경화면 및 배경 설정을 따릅니다.</string>
+    <string name="keyboard_height">키보드 높이</string>
+    <string name="keyboard_height_value">%1$d dp</string>
+    <string name="keyboard_live_preview">키보드 실시간 미리보기</string>
+    <string name="keyboard_primary_color">기본 색상</string>
+    <string name="keyboard_primary_color_description">키보드의 첫 번째 사용자 지정 색상을 선택합니다.</string>
+    <string name="keyboard_secondary_color">보조 색상</string>
+    <string name="keyboard_secondary_color_description">키보드의 두 번째 사용자 지정 색상을 선택합니다.</string>
+    <string name="keyboard_key_color">키 색상</string>
+    <string name="keyboard_key_color_description">이 스타일에서 사용할 키 색상을 선택합니다.</string>
+    <string name="keyboard_use_palette_key_color">팔레트 색상 사용</string>
+    <string name="keyboard_colors_theme">테마 색상</string>
+    <string name="keyboard_colors_custom">사용자 지정 색상</string>
+    <string name="keyboard_style_flat_primary">플랫 · 기본</string>
+    <string name="keyboard_style_flat_secondary">플랫 · 보조</string>
+    <string name="keyboard_style_raised_primary">입체 · 기본</string>
+    <string name="keyboard_style_raised_secondary">입체 · 보조</string>
+    <string name="keyboard_style_outlined_primary">윤곽선 · 기본</string>
+    <string name="keyboard_style_outlined_secondary">윤곽선 · 보조</string>
+    <string name="keyboard_layout_qwerty">QWERTY</string>
+    <string name="keyboard_layout_azerty">AZERTY</string>
+    <string name="keyboard_layout_qwertz">QWERTZ</string>
+    <string name="keyboard_layout_dvorak">Dvorak</string>
+    <string name="keyboard_layout_pinyin">병음</string>
+    <string name="keyboard_layout_cangjie">창제</string>
+    <string name="keyboard_layout_hangul">한글</string>
+    <string name="keyboard_layout_abugida">데바나가리</string>
+    <string name="keyboard_key_shift">Shift</string>
+    <string name="keyboard_key_backspace">백스페이스</string>
+    <string name="keyboard_key_space">스페이스</string>
+    <string name="keyboard_key_new_line">줄 바꿈</string>
+    <string name="keyboard_key_search">검색</string>
+</resources>

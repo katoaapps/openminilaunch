@@ -33,6 +33,7 @@ import com.katoaapps.openminilaunch.ui.theme.readableContentColor
 @Composable
 internal fun AppFolderIcon(
     targetKeys: List<String>,
+    resolvedTargets: List<LauncherTarget>? = null,
     actions: DeviceActions,
     size: Dp,
     backgroundColor: Color,
@@ -41,8 +42,8 @@ internal fun AppFolderIcon(
 ) {
     val appsRevision by actions.launcherAppsRevision.collectAsState()
     val shortcutsRevision by actions.launcherShortcutsRevision.collectAsState()
-    val targets = remember(targetKeys, appsRevision, shortcutsRevision) {
-        targetKeys.map(actions::resolveLauncherSelection)
+    val targets = remember(targetKeys, resolvedTargets, appsRevision, shortcutsRevision) {
+        (resolvedTargets ?: targetKeys.map(actions::resolveLauncherSelection))
             .filter(LauncherTarget::isAvailable)
             .take(4)
     }

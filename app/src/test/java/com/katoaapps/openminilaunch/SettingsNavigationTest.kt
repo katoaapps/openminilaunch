@@ -4,6 +4,7 @@ import com.katoaapps.openminilaunch.ui.settings.SettingsDestination
 import com.katoaapps.openminilaunch.ui.settings.SettingsSection
 import com.katoaapps.openminilaunch.ui.settings.SettingsRoute
 import com.katoaapps.openminilaunch.ui.settings.popSettingsRoute
+import com.katoaapps.openminilaunch.ui.settings.openSettingsDestinationFromOverview
 import com.katoaapps.openminilaunch.ui.settings.pushSettingsRoute
 import com.katoaapps.openminilaunch.ui.settings.settingsPathTo
 import com.katoaapps.openminilaunch.ui.settings.settingsSectionFor
@@ -14,6 +15,26 @@ import org.junit.Assert.assertEquals
 import org.junit.Test
 
 class SettingsNavigationTest {
+    @Test fun repeatedOverviewTapDoesNotStackDuplicateDestination() {
+        val home = SettingsRoute(SettingsSection.HOME, SettingsDestination.OVERVIEW)
+        val appGrid = SettingsRoute(SettingsSection.HOME, SettingsDestination.APP_GRID)
+        val opened = openSettingsDestinationFromOverview(
+            stack = listOf(home),
+            section = SettingsSection.HOME,
+            destination = SettingsDestination.APP_GRID,
+        )
+
+        assertEquals(listOf(home, appGrid), opened)
+        assertEquals(
+            opened,
+            openSettingsDestinationFromOverview(
+                stack = opened,
+                section = SettingsSection.HOME,
+                destination = SettingsDestination.APP_GRID,
+            ),
+        )
+    }
+
     @Test fun deepLinksToHomeSectionsFromTheirSectionRoot() {
         assertEquals(
             listOf(SettingsDestination.OVERVIEW, SettingsDestination.APP_GRID),

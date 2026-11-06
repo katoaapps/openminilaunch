@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="launcher_keyboard">Papan ketik</string>
+    <string name="launcher_keyboard_summary">Tata letak, warna, ukuran, getaran tombol, dan pemisahan layar lebar</string>
+    <string name="keyboard_split_wide">Pisahkan papan ketik di layar lebar atau besar</string>
+    <string name="keyboard_split_wide_description">Memisahkan kedua sisi dan mengulang tombol tengah agar mudah dijangkau kedua ibu jari.</string>
+    <string name="keyboard_haptic_feedback">Getaran tombol</string>
+    <string name="keyboard_haptic_feedback_description">Gunakan getaran ringan saat tombol ditekan.</string>
+    <string name="keyboard_layout">Tata letak tombol</string>
+    <string name="keyboard_style">Gaya tombol</string>
+    <string name="keyboard_theme_colors_description">Warna tema mengikuti Launcher → Beranda → Tampilan → Wallpaper &amp; latar belakang.</string>
+    <string name="keyboard_height">Tinggi papan ketik</string>
+    <string name="keyboard_height_value">%1$d dp</string>
+    <string name="keyboard_live_preview">Pratinjau papan ketik</string>
+    <string name="keyboard_primary_color">Warna utama</string>
+    <string name="keyboard_primary_color_description">Pilih warna khusus pertama untuk papan ketik.</string>
+    <string name="keyboard_secondary_color">Warna sekunder</string>
+    <string name="keyboard_secondary_color_description">Pilih warna khusus kedua untuk papan ketik.</string>
+    <string name="keyboard_key_color">Warna tombol</string>
+    <string name="keyboard_key_color_description">Pilih warna tombol untuk gaya ini.</string>
+    <string name="keyboard_use_palette_key_color">Gunakan warna palet</string>
+    <string name="keyboard_colors_theme">Warna tema</string>
+    <string name="keyboard_colors_custom">Warna khusus</string>
+    <string name="keyboard_style_flat_primary">Datar · Utama</string>
+    <string name="keyboard_style_flat_secondary">Datar · Sekunder</string>
+    <string name="keyboard_style_raised_primary">Timbul · Utama</string>
+    <string name="keyboard_style_raised_secondary">Timbul · Sekunder</string>
+    <string name="keyboard_style_outlined_primary">Garis luar · Utama</string>
+    <string name="keyboard_style_outlined_secondary">Garis luar · Sekunder</string>
+    <string name="keyboard_layout_qwerty">QWERTY</string>
+    <string name="keyboard_layout_azerty">AZERTY</string>
+    <string name="keyboard_layout_qwertz">QWERTZ</string>
+    <string name="keyboard_layout_dvorak">Dvorak</string>
+    <string name="keyboard_layout_pinyin">Pinyin</string>
+    <string name="keyboard_layout_cangjie">Cangjie</string>
+    <string name="keyboard_layout_hangul">Hangul</string>
+    <string name="keyboard_layout_abugida">Devanagari</string>
+    <string name="keyboard_key_shift">Shift</string>
+    <string name="keyboard_key_backspace">Hapus mundur</string>
+    <string name="keyboard_key_space">Spasi</string>
+    <string name="keyboard_key_new_line">Baris baru</string>
+    <string name="keyboard_key_search">Cari</string>
+</resources>

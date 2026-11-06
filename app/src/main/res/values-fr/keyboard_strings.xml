@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="launcher_keyboard">Clavier</string>
+    <string name="launcher_keyboard_summary">Disposition, couleurs, taille, retour haptique et séparation sur écran large</string>
+    <string name="keyboard_split_wide">Séparer le clavier sur les écrans larges</string>
+    <string name="keyboard_split_wide_description">Sépare les deux moitiés et répète les touches centrales pour les garder à portée des deux pouces.</string>
+    <string name="keyboard_haptic_feedback">Retour des touches</string>
+    <string name="keyboard_haptic_feedback_description">Utiliser une légère vibration lors de l’appui sur une touche.</string>
+    <string name="keyboard_layout">Disposition des touches</string>
+    <string name="keyboard_style">Style des touches</string>
+    <string name="keyboard_theme_colors_description">Les couleurs du thème suivent Lanceur → Accueil → Apparence → Fond d’écran et arrière-plan.</string>
+    <string name="keyboard_height">Hauteur du clavier</string>
+    <string name="keyboard_height_value">%1$d dp</string>
+    <string name="keyboard_live_preview">Aperçu du clavier</string>
+    <string name="keyboard_primary_color">Couleur principale</string>
+    <string name="keyboard_primary_color_description">Choisissez la première couleur personnalisée du clavier.</string>
+    <string name="keyboard_secondary_color">Couleur secondaire</string>
+    <string name="keyboard_secondary_color_description">Choisissez la deuxième couleur personnalisée du clavier.</string>
+    <string name="keyboard_key_color">Couleur des touches</string>
+    <string name="keyboard_key_color_description">Choisissez la couleur des touches pour ce style.</string>
+    <string name="keyboard_use_palette_key_color">Utiliser la couleur de la palette</string>
+    <string name="keyboard_colors_theme">Couleurs du thème</string>
+    <string name="keyboard_colors_custom">Couleurs personnalisées</string>
+    <string name="keyboard_style_flat_primary">Plat · Principal</string>
+    <string name="keyboard_style_flat_secondary">Plat · Secondaire</string>
+    <string name="keyboard_style_raised_primary">Relief · Principal</string>
+    <string name="keyboard_style_raised_secondary">Relief · Secondaire</string>
+    <string name="keyboard_style_outlined_primary">Contour · Principal</string>
+    <string name="keyboard_style_outlined_secondary">Contour · Secondaire</string>
+    <string name="keyboard_layout_qwerty">QWERTY</string>
+    <string name="keyboard_layout_azerty">AZERTY</string>
+    <string name="keyboard_layout_qwertz">QWERTZ</string>
+    <string name="keyboard_layout_dvorak">Dvorak</string>
+    <string name="keyboard_layout_pinyin">Pinyin</string>
+    <string name="keyboard_layout_cangjie">Cangjie</string>
+    <string name="keyboard_layout_hangul">Hangul</string>
+    <string name="keyboard_layout_abugida">Devanagari</string>
+    <string name="keyboard_key_shift">Majuscule</string>
+    <string name="keyboard_key_backspace">Retour arrière</string>
+    <string name="keyboard_key_space">Espace</string>
+    <string name="keyboard_key_new_line">Nouvelle ligne</string>
+    <string name="keyboard_key_search">Rechercher</string>
+</resources>

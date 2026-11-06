@@ -3,6 +3,7 @@ package com.katoaapps.openminilaunch.ui.keyboard
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.LocalIndication
+import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.combinedClickable
 import androidx.compose.foundation.gestures.awaitEachGesture
@@ -15,24 +16,30 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
+import androidx.compose.material3.LocalContentColor
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.RectangleShape
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalHapticFeedback
+import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.onClick
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
@@ -44,6 +51,10 @@ import kotlinx.coroutines.coroutineScope
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
+internal val LauncherKeyboardStyle.isFlatKeyboardStyle: Boolean
+    get() = this == LauncherKeyboardStyle.FLAT_PRIMARY ||
+        this == LauncherKeyboardStyle.FLAT_SECONDARY
+
 @Composable
 internal fun RowScope.KeyboardTextActionKey(
     label: String,
@@ -53,6 +64,7 @@ internal fun RowScope.KeyboardTextActionKey(
     modifier: Modifier = Modifier,
     secondaryLabel: String? = null,
     selected: Boolean = false,
+    solidWhenFlat: Boolean = false,
     weight: Float = 1f,
     onLongClick: (() -> Unit)? = null,
     onClick: () -> Unit,
@@ -61,6 +73,7 @@ internal fun RowScope.KeyboardTextActionKey(
         popupLabel = label,
         secondaryLabel = secondaryLabel,
         selected = selected,
+        solidWhenFlat = solidWhenFlat,
         colors = colors,
         style = style,
         haptic = haptic,
@@ -72,7 +85,11 @@ internal fun RowScope.KeyboardTextActionKey(
         Text(
             text = label,
             fontSize = if (label.length > 2) 11.sp else 15.sp,
-            fontWeight = FontWeight.SemiBold,
+            fontWeight = if (style.isFlatKeyboardStyle && solidWhenFlat) {
+                FontWeight.Bold
+            } else {
+                FontWeight.SemiBold
+            },
             maxLines = 1,
         )
     }
@@ -80,12 +97,13 @@ internal fun RowScope.KeyboardTextActionKey(
 
 @Composable
 internal fun RowScope.KeyboardActionKey(
-    icon: ImageVector,
+    icon: ImageVector?,
     contentDescription: String,
     colors: LauncherKeyboardColors,
     style: LauncherKeyboardStyle,
     haptic: Boolean,
     selected: Boolean = false,
+    solidWhenFlat: Boolean = false,
     weight: Float = 1f,
     repeatOnHold: Boolean = false,
     onClick: () -> Unit,
@@ -93,6 +111,7 @@ internal fun RowScope.KeyboardActionKey(
     KeyboardKeyCap(
         popupLabel = null,
         selected = selected,
+        solidWhenFlat = solidWhenFlat,
         colors = colors,
         style = style,
         haptic = haptic,
@@ -100,11 +119,20 @@ internal fun RowScope.KeyboardActionKey(
         repeatOnHold = repeatOnHold,
         onClick = onClick,
     ) {
-        Icon(
-            imageVector = icon,
-            contentDescription = contentDescription,
-            modifier = Modifier.size(19.dp),
-        )
+        Box(
+            Modifier.fillMaxSize().semantics {
+                this.contentDescription = contentDescription
+            },
+            contentAlignment = Alignment.Center,
+        ) {
+            icon?.let {
+                Icon(
+                    imageVector = it,
+                    contentDescription = null,
+                    modifier = Modifier.size(19.dp),
+                )
+            }
+        }
     }
 }
 
@@ -117,6 +145,7 @@ private fun RowScope.KeyboardKeyCap(
     haptic: Boolean,
     weight: Float,
     selected: Boolean,
+    solidWhenFlat: Boolean,
     modifier: Modifier = Modifier,
     secondaryLabel: String? = null,
     onLongClick: (() -> Unit)? = null,
@@ -141,8 +170,13 @@ private fun RowScope.KeyboardKeyCap(
         style == LauncherKeyboardStyle.RAISED_SECONDARY
     val outlined = style == LauncherKeyboardStyle.OUTLINED_PRIMARY ||
         style == LauncherKeyboardStyle.OUTLINED_SECONDARY
-    val selectedColor = if (selected) colors.content else colors.key
-    val selectedContent = if (selected) colors.key else colors.content
+    val flat = style.isFlatKeyboardStyle
+    val selectedColor = when {
+        flat && solidWhenFlat && selected -> colors.key.copy(alpha = .76f)
+        selected -> colors.content
+        else -> colors.key
+    }
+    val selectedContent = if (selected && !flat) colors.key else colors.content
     val inputModifier = when {
         repeatOnHold -> Modifier
             .pointerInput(interactionSource) {
@@ -197,25 +231,36 @@ private fun RowScope.KeyboardKeyCap(
         modifier = modifier.weight(weight).fillMaxHeight(),
         contentAlignment = Alignment.Center,
     ) {
-        Surface(
-            modifier = Modifier.fillMaxSize().then(inputModifier),
-            shape = RoundedCornerShape(if (raised) 10.dp else 7.dp),
-            color = selectedColor,
-            contentColor = selectedContent,
-            border = if (outlined) BorderStroke(1.25.dp, colors.outline) else null,
-            shadowElevation = if (raised) 4.dp else 0.dp,
-        ) {
-            Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
-                content()
-                secondaryLabel?.let { secondary ->
-                    Text(
-                        text = secondary,
-                        modifier = Modifier.align(Alignment.TopEnd).padding(top = 2.dp, end = 4.dp),
-                        fontSize = 7.sp,
-                        fontWeight = FontWeight.Bold,
-                        color = selectedContent.copy(alpha = .7f),
+        if (flat && !solidWhenFlat) {
+            Box(
+                modifier = Modifier.fillMaxSize().then(inputModifier),
+                contentAlignment = Alignment.Center,
+            ) {
+                KeyboardKeyContent(selectedContent, secondaryLabel, content)
+                if (selected) {
+                    Box(
+                        Modifier
+                            .align(Alignment.BottomCenter)
+                            .width(18.dp)
+                            .height(2.dp)
+                            .background(colors.content),
                     )
                 }
+            }
+        } else {
+            Surface(
+                modifier = Modifier.fillMaxSize().then(inputModifier),
+                shape = if (flat && solidWhenFlat) {
+                    RectangleShape
+                } else {
+                    RoundedCornerShape(if (raised) 10.dp else 7.dp)
+                },
+                color = selectedColor,
+                contentColor = selectedContent,
+                border = if (outlined) BorderStroke(1.25.dp, colors.outline) else null,
+                shadowElevation = if (raised) 4.dp else 0.dp,
+            ) {
+                KeyboardKeyContent(selectedContent, secondaryLabel, content)
             }
         }
         if (pressed && popupLabel != null) {
@@ -232,6 +277,28 @@ private fun RowScope.KeyboardKeyCap(
                     modifier = Modifier.padding(horizontal = 13.dp, vertical = 8.dp),
                     fontSize = 19.sp,
                     fontWeight = FontWeight.Bold,
+                )
+            }
+        }
+    }
+}
+
+@Composable
+private fun KeyboardKeyContent(
+    contentColor: androidx.compose.ui.graphics.Color,
+    secondaryLabel: String?,
+    content: @Composable () -> Unit,
+) {
+    CompositionLocalProvider(LocalContentColor provides contentColor) {
+        Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
+            content()
+            secondaryLabel?.let { secondary ->
+                Text(
+                    text = secondary,
+                    modifier = Modifier.align(Alignment.TopEnd).padding(top = 2.dp, end = 4.dp),
+                    fontSize = 9.sp,
+                    fontWeight = FontWeight.Bold,
+                    color = contentColor.copy(alpha = .7f),
                 )
             }
         }

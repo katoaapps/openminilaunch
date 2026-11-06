@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<!-- First-pass keyboard terminology intentionally falls back to English while the product
-     vocabulary is device-tested. Keep it isolated so translation work is easy to audit. -->
-<resources xmlns:tools="http://schemas.android.com/tools" tools:ignore="MissingTranslation">
+<resources>
     <string name="launcher_keyboard">Keyboard</string>
     <string name="launcher_keyboard_summary">Layout, colors, size, haptics, and wide-screen split</string>
     <string name="keyboard_split_wide">Split keyboard on wide or large displays</string>
@@ -18,6 +16,9 @@
     <string name="keyboard_primary_color_description">Choose the keyboard’s first custom color.</string>
     <string name="keyboard_secondary_color">Secondary color</string>
     <string name="keyboard_secondary_color_description">Choose the keyboard’s second custom color.</string>
+    <string name="keyboard_key_color">Key color</string>
+    <string name="keyboard_key_color_description">Choose the color used for keys in this style.</string>
+    <string name="keyboard_use_palette_key_color">Use palette color</string>
     <string name="keyboard_colors_theme">Theme colors</string>
     <string name="keyboard_colors_custom">Custom colors</string>
     <string name="keyboard_style_flat_primary">Flat · Primary</string>
@@ -34,4 +35,9 @@
     <string name="keyboard_layout_cangjie">Cangjie</string>
     <string name="keyboard_layout_hangul">Hangul</string>
     <string name="keyboard_layout_abugida">Devanagari</string>
+    <string name="keyboard_key_shift">Shift</string>
+    <string name="keyboard_key_backspace">Backspace</string>
+    <string name="keyboard_key_space">Space</string>
+    <string name="keyboard_key_new_line">New line</string>
+    <string name="keyboard_key_search">Search</string>
 </resources>

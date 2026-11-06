@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="launcher_keyboard">کی بورڈ</string>
+    <string name="launcher_keyboard_summary">لے آؤٹ، رنگ، سائز، ہاپٹک فیڈبیک، اور چوڑی اسکرین کی تقسیم</string>
+    <string name="keyboard_split_wide">چوڑی یا بڑی اسکرین پر کی بورڈ تقسیم کریں</string>
+    <string name="keyboard_split_wide_description">دونوں حصوں کو الگ کرتا ہے اور درمیانی بٹن دہراتا ہے تاکہ دونوں انگوٹھے آسانی سے پہنچ سکیں۔</string>
+    <string name="keyboard_haptic_feedback">بٹن فیڈبیک</string>
+    <string name="keyboard_haptic_feedback_description">بٹن دبانے پر ہلکی وائبریشن استعمال کریں۔</string>
+    <string name="keyboard_layout">بٹن لے آؤٹ</string>
+    <string name="keyboard_style">بٹن اسٹائل</string>
+    <string name="keyboard_theme_colors_description">تھیم کے رنگ لانچر، ہوم، ظاہری شکل، اور وال پیپر اور پس منظر کی ترتیبات کے مطابق ہوتے ہیں۔</string>
+    <string name="keyboard_height">کی بورڈ کی اونچائی</string>
+    <string name="keyboard_height_value">%1$d dp</string>
+    <string name="keyboard_live_preview">کی بورڈ کا لائیو پیش منظر</string>
+    <string name="keyboard_primary_color">بنیادی رنگ</string>
+    <string name="keyboard_primary_color_description">کی بورڈ کا پہلا حسب ضرورت رنگ منتخب کریں۔</string>
+    <string name="keyboard_secondary_color">ثانوی رنگ</string>
+    <string name="keyboard_secondary_color_description">کی بورڈ کا دوسرا حسب ضرورت رنگ منتخب کریں۔</string>
+    <string name="keyboard_key_color">بٹن کا رنگ</string>
+    <string name="keyboard_key_color_description">اس اسٹائل میں بٹنوں کے لیے رنگ منتخب کریں۔</string>
+    <string name="keyboard_use_palette_key_color">پیلیٹ کا رنگ استعمال کریں</string>
+    <string name="keyboard_colors_theme">تھیم کے رنگ</string>
+    <string name="keyboard_colors_custom">حسب ضرورت رنگ</string>
+    <string name="keyboard_style_flat_primary">فلیٹ · بنیادی</string>
+    <string name="keyboard_style_flat_secondary">فلیٹ · ثانوی</string>
+    <string name="keyboard_style_raised_primary">ابھرا ہوا · بنیادی</string>
+    <string name="keyboard_style_raised_secondary">ابھرا ہوا · ثانوی</string>
+    <string name="keyboard_style_outlined_primary">آؤٹ لائن · بنیادی</string>
+    <string name="keyboard_style_outlined_secondary">آؤٹ لائن · ثانوی</string>
+    <string name="keyboard_layout_qwerty">QWERTY</string>
+    <string name="keyboard_layout_azerty">AZERTY</string>
+    <string name="keyboard_layout_qwertz">QWERTZ</string>
+    <string name="keyboard_layout_dvorak">Dvorak</string>
+    <string name="keyboard_layout_pinyin">پِن یِن</string>
+    <string name="keyboard_layout_cangjie">چانگ جی</string>
+    <string name="keyboard_layout_hangul">ہانگول</string>
+    <string name="keyboard_layout_abugida">دیوناگری</string>
+    <string name="keyboard_key_shift">Shift</string>
+    <string name="keyboard_key_backspace">بیک اسپیس</string>
+    <string name="keyboard_key_space">اسپیس</string>
+    <string name="keyboard_key_new_line">نئی سطر</string>
+    <string name="keyboard_key_search">تلاش</string>
+</resources>

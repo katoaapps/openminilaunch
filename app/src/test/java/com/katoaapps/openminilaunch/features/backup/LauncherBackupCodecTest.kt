@@ -43,6 +43,7 @@ class LauncherBackupCodecTest {
             colorSource = LauncherKeyboardColorSource.CUSTOM,
             customPrimaryArgb = 0xFF123456.toInt(),
             customSecondaryArgb = 0xFFABCDEF.toInt(),
+            keyColorOverrideArgb = 0xFF2468AC.toInt(),
             splitOnWideDisplays = true,
             hapticFeedbackEnabled = false,
             heightDp = 321f,

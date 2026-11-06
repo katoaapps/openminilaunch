@@ -45,6 +45,34 @@ internal fun pushSettingsRoute(
     route: SettingsRoute,
 ): List<SettingsRoute> = if (stack.lastOrNull() == route) stack else stack + route
 
+/**
+ * Opens a destination from a section overview without stacking duplicate copies of the same page.
+ *
+ * Settings pages can take a moment to compose on older devices. Android may then deliver another
+ * tap before the first destination is drawn. Building from the section root makes that repeated
+ * tap idempotent instead of adding another copy of the page to the back stack.
+ */
+internal fun openSettingsDestinationFromOverview(
+    stack: List<SettingsRoute>,
+    section: SettingsSection,
+    destination: SettingsDestination,
+): List<SettingsRoute> {
+    val destinationRoute = SettingsRoute(section, destination)
+    if (stack.lastOrNull() == destinationRoute) return stack
+
+    val sectionRoot = SettingsRoute(section, SettingsDestination.OVERVIEW)
+    val rootIndex = stack.indexOfLast { it == sectionRoot }
+    val rootedStack = if (rootIndex >= 0) {
+        stack.take(rootIndex + 1)
+    } else {
+        stack + sectionRoot
+    }
+    val destinationPath = settingsPathTo(destination).drop(1).map { pathDestination ->
+        SettingsRoute(section, pathDestination)
+    }
+    return rootedStack + destinationPath
+}
+
 internal fun selectSettingsSection(
     stack: List<SettingsRoute>,
     section: SettingsSection,

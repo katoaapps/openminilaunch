@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="launcher_keyboard">Клавиатура</string>
+    <string name="launcher_keyboard_summary">Раскладка, цвета, размер, тактильный отклик и разделение на широком экране</string>
+    <string name="keyboard_split_wide">Разделять клавиатуру на широких и больших экранах</string>
+    <string name="keyboard_split_wide_description">Разделяет половины и повторяет центральные клавиши, чтобы до них было удобно дотянуться любым большим пальцем.</string>
+    <string name="keyboard_haptic_feedback">Отклик клавиш</string>
+    <string name="keyboard_haptic_feedback_description">Лёгкая вибрация при нажатии клавиши.</string>
+    <string name="keyboard_layout">Раскладка клавиш</string>
+    <string name="keyboard_style">Стиль клавиш</string>
+    <string name="keyboard_theme_colors_description">Цвета темы соответствуют настройкам Лаунчер → Главный экран → Внешний вид → Обои и фон.</string>
+    <string name="keyboard_height">Высота клавиатуры</string>
+    <string name="keyboard_height_value">%1$d dp</string>
+    <string name="keyboard_live_preview">Предпросмотр клавиатуры</string>
+    <string name="keyboard_primary_color">Основной цвет</string>
+    <string name="keyboard_primary_color_description">Выберите первый пользовательский цвет клавиатуры.</string>
+    <string name="keyboard_secondary_color">Дополнительный цвет</string>
+    <string name="keyboard_secondary_color_description">Выберите второй пользовательский цвет клавиатуры.</string>
+    <string name="keyboard_key_color">Цвет клавиш</string>
+    <string name="keyboard_key_color_description">Выберите цвет клавиш для этого стиля.</string>
+    <string name="keyboard_use_palette_key_color">Использовать цвет палитры</string>
+    <string name="keyboard_colors_theme">Цвета темы</string>
+    <string name="keyboard_colors_custom">Свои цвета</string>
+    <string name="keyboard_style_flat_primary">Плоские · Основной</string>
+    <string name="keyboard_style_flat_secondary">Плоские · Дополнительный</string>
+    <string name="keyboard_style_raised_primary">Объёмные · Основной</string>
+    <string name="keyboard_style_raised_secondary">Объёмные · Дополнительный</string>
+    <string name="keyboard_style_outlined_primary">Контурные · Основной</string>
+    <string name="keyboard_style_outlined_secondary">Контурные · Дополнительный</string>
+    <string name="keyboard_layout_qwerty">QWERTY</string>
+    <string name="keyboard_layout_azerty">AZERTY</string>
+    <string name="keyboard_layout_qwertz">QWERTZ</string>
+    <string name="keyboard_layout_dvorak">Dvorak</string>
+    <string name="keyboard_layout_pinyin">Пиньинь</string>
+    <string name="keyboard_layout_cangjie">Цанцзе</string>
+    <string name="keyboard_layout_hangul">Хангыль</string>
+    <string name="keyboard_layout_abugida">Деванагари</string>
+    <string name="keyboard_key_shift">Shift</string>
+    <string name="keyboard_key_backspace">Удалить</string>
+    <string name="keyboard_key_space">Пробел</string>
+    <string name="keyboard_key_new_line">Новая строка</string>
+    <string name="keyboard_key_search">Поиск</string>
+</resources>

@@ -1,0 +1,43 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="launcher_keyboard">لوحة المفاتيح</string>
+    <string name="launcher_keyboard_summary">التخطيط والألوان والحجم والاستجابة اللمسية وتقسيم الشاشة العريضة</string>
+    <string name="keyboard_split_wide">تقسيم لوحة المفاتيح على الشاشات العريضة أو الكبيرة</string>
+    <string name="keyboard_split_wide_description">يفصل النصفين ويكرر المفاتيح الوسطى لتكون في متناول كلا الإبهامين.</string>
+    <string name="keyboard_haptic_feedback">استجابة المفاتيح</string>
+    <string name="keyboard_haptic_feedback_description">استخدام اهتزاز خفيف عند الضغط على مفتاح.</string>
+    <string name="keyboard_layout">تخطيط المفاتيح</string>
+    <string name="keyboard_style">نمط المفاتيح</string>
+    <string name="keyboard_theme_colors_description">تتبع ألوان السمة إعدادات المشغّل، الصفحة الرئيسية، المظهر، والخلفية وصورة الخلفية.</string>
+    <string name="keyboard_height">ارتفاع لوحة المفاتيح</string>
+    <string name="keyboard_height_value">%1$d dp</string>
+    <string name="keyboard_live_preview">معاينة مباشرة للوحة المفاتيح</string>
+    <string name="keyboard_primary_color">اللون الأساسي</string>
+    <string name="keyboard_primary_color_description">اختر أول لون مخصص للوحة المفاتيح.</string>
+    <string name="keyboard_secondary_color">اللون الثانوي</string>
+    <string name="keyboard_secondary_color_description">اختر ثاني لون مخصص للوحة المفاتيح.</string>
+    <string name="keyboard_key_color">لون المفاتيح</string>
+    <string name="keyboard_key_color_description">اختر اللون المستخدم للمفاتيح في هذا النمط.</string>
+    <string name="keyboard_use_palette_key_color">استخدام لون لوحة الألوان</string>
+    <string name="keyboard_colors_theme">ألوان السمة</string>
+    <string name="keyboard_colors_custom">ألوان مخصصة</string>
+    <string name="keyboard_style_flat_primary">مسطح · أساسي</string>
+    <string name="keyboard_style_flat_secondary">مسطح · ثانوي</string>
+    <string name="keyboard_style_raised_primary">بارز · أساسي</string>
+    <string name="keyboard_style_raised_secondary">بارز · ثانوي</string>
+    <string name="keyboard_style_outlined_primary">محدد · أساسي</string>
+    <string name="keyboard_style_outlined_secondary">محدد · ثانوي</string>
+    <string name="keyboard_layout_qwerty">QWERTY</string>
+    <string name="keyboard_layout_azerty">AZERTY</string>
+    <string name="keyboard_layout_qwertz">QWERTZ</string>
+    <string name="keyboard_layout_dvorak">Dvorak</string>
+    <string name="keyboard_layout_pinyin">بينيين</string>
+    <string name="keyboard_layout_cangjie">تسانغ جي</string>
+    <string name="keyboard_layout_hangul">هانغول</string>
+    <string name="keyboard_layout_abugida">ديفاناغاري</string>
+    <string name="keyboard_key_shift">تبديل الأحرف</string>
+    <string name="keyboard_key_backspace">مسح للخلف</string>
+    <string name="keyboard_key_space">مسافة</string>
+    <string name="keyboard_key_new_line">سطر جديد</string>
+    <string name="keyboard_key_search">بحث</string>
+</resources>
