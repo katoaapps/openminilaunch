@@ -1,6 +1,6 @@
 # MinkLauncher Terms of Use
 
-Effective October 1, 2026
+Effective November 6, 2026
 
 These Terms of Use apply to the official MinkLauncher and MinkLauncher OpenSource Android
 applications, the MinkLauncher website, and official project resources published by Katoa Apps. By
@@ -28,10 +28,16 @@ shortcuts, widget placements, notification views, selected-folder references, Me
 media-session displays are conveniences only; they are not copies or backups of the underlying data.
 
 Portable MinkLauncher exports are readable JSON and may contain the contact details and links you put
-in a Virtual Contact Card. Review and protect an export before storing or sharing it. Some device-bound
-items cannot be transferred, including Android permissions and roles, widgets, folder and media URI
-grants, the card photo, active media state, Work or Private Space state, and device-specific private-area
-gateways.
+in a Virtual Contact Card, plus the names, phone numbers, usernames, provider routes, and app shortcut
+identifiers you put in Mink-created integrated Favorites. Review and protect an export before storing
+or sharing it. Android Contacts and contact photos are not copied into the export.
+
+Widget restore recipes may include provider package and component names, labels, layout position, and
+requested size. They can reserve a place and ask Android to bind or configure a replacement widget,
+but they do not contain Android widget IDs, live widget contents, or provider-specific configuration.
+Some other device-bound items cannot be transferred, including Android permissions and roles, folder
+and media URI grants, the card photo, active media state, Work or Private Space state, and
+device-specific private-area gateways.
 
 Android, device manufacturers, organizations managing Work profiles, storage providers, widget or
 media providers, messaging apps, app updates, permission changes, account synchronization, clearing

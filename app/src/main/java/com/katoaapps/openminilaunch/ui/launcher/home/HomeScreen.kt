@@ -14,6 +14,7 @@ import com.katoaapps.openminilaunch.ui.magic.MagicBoxSessionState
 import com.katoaapps.openminilaunch.ui.minkspace.core.rememberMinkSpacePresentationState
 import com.katoaapps.openminilaunch.ui.minkspace.todo.TodoFlightChip
 import com.katoaapps.openminilaunch.ui.minkspace.todo.todoFlightAnimationSpec
+import com.katoaapps.openminilaunch.ui.quickdrawer.QuickAppsEditorDialog
 import com.katoaapps.openminilaunch.ui.settings.LockAccessibilityDisclosureDialog
 import com.katoaapps.openminilaunch.ui.settings.SettingsDestination
 import com.katoaapps.openminilaunch.ui.theme.Dimens
@@ -66,6 +67,7 @@ internal fun HomeScreen(
 ) {
     val context = LocalContext.current
     var drawerOpen by remember { mutableStateOf(false) }
+    var quickAppsEditorOpen by remember { mutableStateOf(false) }
     var todoJumpToken by remember { mutableIntStateOf(0) }
     var flyingTodo by remember { mutableStateOf<String?>(null) }
     var flightActive by remember { mutableStateOf(false) }
@@ -308,9 +310,16 @@ internal fun HomeScreen(
         HomeDrawerSheet(
             store = store,
             actions = actions,
-            appAccessState = appAccessState,
             onDismiss = { drawerOpen = false },
-            openSettings = openSettings,
+            onManageQuickApps = { quickAppsEditorOpen = true },
+        )
+    }
+
+    if (quickAppsEditorOpen) {
+        QuickAppsEditorDialog(
+            store = store,
+            actions = actions,
+            onDismiss = { quickAppsEditorOpen = false },
         )
     }
 

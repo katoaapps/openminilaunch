@@ -54,7 +54,7 @@ import com.katoaapps.openminilaunch.ui.profile.openVirtualContactCard
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collect
 
-private const val FEATURE_UPDATE_ID = "v310_whats_new_v1"
+private const val FEATURE_UPDATE_ID = "v320_whats_new_v1"
 private const val HOME_FEATURE_TOUR_ID = "home_feature_tour_v2"
 private const val PACKAGE_REMOVAL_CONFIRMATION_MS = 750L
 
@@ -254,11 +254,11 @@ internal fun MiniLaunchApp(
 
         if (showUpdateNotice && !showTutorial) {
             FeatureUpdateDialog(
-                onOpenMinkSpaceSettings = {
+                onOpenSettings = {
                     store.markUpdateSeen(FEATURE_UPDATE_ID)
                     showUpdateNotice = false
                     screen = Screen.SETTINGS
-                    settingsDestination = SettingsDestination.MINK_SPACE
+                    settingsDestination = SettingsDestination.OVERVIEW
                 },
                 onReviewTutorial = {
                     store.markUpdateSeen(FEATURE_UPDATE_ID)

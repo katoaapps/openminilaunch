@@ -40,7 +40,6 @@ internal fun SettingsScreen(
     val launcherAppsRevision by actions.launcherAppsRevision.collectAsState()
     val launcherShortcutsRevision by actions.launcherShortcutsRevision.collectAsState()
     val loadLauncherTargets = picker is SettingsPicker.AppGridSlotPicker ||
-        picker == SettingsPicker.DrawerApps ||
         picker == SettingsPicker.PrivateContainerGateway
     val installedApps by produceState(
         LauncherAppListLoadState(),
@@ -313,7 +312,6 @@ internal fun SettingsScreen(
         picker = picker,
         store = store,
         actions = actions,
-        context = context,
         installedApps = installedApps,
         installedShortcuts = installedShortcuts,
         aiProviders = aiProviders,

@@ -138,9 +138,6 @@
     <string name="choose_assistant">揀助理</string>
     <string name="choose_messaging_app">透過 ... 發送</string>
     <string name="your_drawer">QUICK DRAWER</string>
-    <string name="choose_drawer_apps">喺「設定」入面揀最多八個應用程式或者應用程式捷徑。</string>
-    <string name="empty_drawer">你嘅 Quick Drawer 係空嘅</string>
-    <string name="see_all_apps">睇晒</string>
     <string name="all_apps">所有應用程式</string>
     <string name="app_info">應用程式資訊</string>
     <string name="app_info_unavailable">開唔到呢個項目嘅應用程式資料</string>
@@ -228,7 +225,13 @@
     <string name="shortcut_messenger">Messenger</string>
     <string name="shortcut_files">檔案</string>
     <string name="quick_drawer">Quick Drawer</string>
-    <string name="quick_drawer_apps_description">揀選放喺 Quick Drawer 入面、一撳就開到嘅應用程式。</string>
+    <string name="manage_quick_apps">管理快速應用程式</string>
+    <string name="quick_apps">快速應用程式</string>
+    <string name="quick_apps_empty">喺 Quick Drawer 揀快速應用程式。</string>
+    <string name="minkpad_lite">MinkPad Lite</string>
+    <string name="private_space">私人空間</string>
+    <string name="work_space">工作空間</string>
+    <string name="quick_drawer_apps_description">揀選開啟 Mink Assistant 時顯示嘅快速應用程式。</string>
     <string name="quick_drawer_controls">抽屜控制</string>
     <string name="show_minkpad_button">顯示 MinkPad 按鈕</string>
     <string name="show_minkpad_button_description">將藍牙鍵盤、觸控板同遙控器保留喺 Quick Drawer</string>
@@ -331,7 +334,7 @@
     <string name="update_notice_widgets_title">可捲動嘅小工具行為正常</string>
     <string name="update_notice_widgets_description">垂直手勢會到達管理自己捲動嘅小工具。</string>
     <string name="update_notice_keyboard_title">觸控鍵盤係選擇性嘅</string>
-    <string name="update_notice_keyboard_description">純觸控手機預設會喺 Home 上面打開軟件鍵盤，而 Magic Box 設定入面會有閂開關。</string>
+    <string name="update_notice_keyboard_description">純觸控手機預設會喺主畫面開啟軟件鍵盤；可以喺「外觀」→「版面配置與時鐘」關閉。</string>
     <string name="update_notice_github_title">更新等緊你</string>
     <string name="update_notice_github_description">當 GitHub 有較新嘅版本嗰陣，會出現一張清晰嘅更新卡同埋一個小型嘅主頁標題圖示。喺你批准瀏覽器交接之前，冇嘢會下載。</string>
     <string name="update_notice_integrated_apps_title">綜合短訊應用程式</string>
@@ -444,7 +447,7 @@
     <string name="spaces_onboarding_intro">主頁會保持焦點，而可選空間就會喺附近。</string>
     <string name="conversations_onboarding_description">㩒一下「設定」旁邊嘅即時通訊圖示，就可以睇到有效嘅訊息同電郵訊息串。只有當原始應用程式提供 Android 嘅回覆動作嗰陣先會顯示內聯回覆。</string>
     <string name="widget_page">小工具頁面</string>
-    <string name="widget_page_onboarding_description">從主頁向左滑動，最多可添加四個 Android 小工具。向右滑動或者用返去返回主頁。</string>
+    <string name="widget_page_onboarding_description">從主頁向左滑動即可添加 Android 小工具。向右滑動或者用返去返回主頁。</string>
     <string name="mink_day_onboarding_short_description">喺主頁向右滑動，就可以睇到本地每日分析資料同埋可選嘅應用程式暫停控制項。向左滑動或者用返去返回主頁。</string>
     <string name="six_shortcuts_any_apps">六個捷徑，任何六個應用程式</string>
     <string name="six_shortcuts_any_apps_description">每個可配置嘅插槽都會保留內置預設，直至你指派應用程式為止。然後佢嘅應用程式圖示就會接管主頁。</string>

@@ -31,7 +31,7 @@ internal fun QuickDrawerSettingsPage(
     SettingsPage(stringResource(R.string.quick_drawer), goBack) {
         SectionLabel(stringResource(R.string.apps))
         SettingsRow(
-            stringResource(R.string.selected_apps),
+            stringResource(R.string.quick_apps),
             stringResource(R.string.count_of_max, store.drawerTargets.size, MAX_DRAWER_APPS),
             Icons.Default.GridView,
             onClick = onPickDrawer,

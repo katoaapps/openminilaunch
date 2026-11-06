@@ -138,9 +138,6 @@
     <string name="choose_assistant">アシスタントを選択</string>
     <string name="choose_messaging_app">送信方法…</string>
     <string name="your_drawer">QUICK DRAWER</string>
-    <string name="choose_drawer_apps">[設定] で最大 8 つのアプリまたはアプリのショートカットを選択します。</string>
-    <string name="empty_drawer">Quick Drawer は空です</string>
-    <string name="see_all_apps">全て見る</string>
     <string name="all_apps">すべてのアプリ</string>
     <string name="app_info">アプリ情報</string>
     <string name="app_info_unavailable">このアイテムのアプリ情報を開けませんでした</string>
@@ -228,7 +225,13 @@
     <string name="shortcut_messenger">Messenger</string>
     <string name="shortcut_files">ファイル</string>
     <string name="quick_drawer">Quick Drawer</string>
-    <string name="quick_drawer_apps_description">Quick Drawer からワンタップで開くアプリを選択します。</string>
+    <string name="manage_quick_apps">クイックアプリを管理</string>
+    <string name="quick_apps">クイックアプリ</string>
+    <string name="quick_apps_empty">Quick Drawer でクイックアプリを選択してください。</string>
+    <string name="minkpad_lite">MinkPad Lite</string>
+    <string name="private_space">プライベート スペース</string>
+    <string name="work_space">仕事用スペース</string>
+    <string name="quick_drawer_apps_description">Mink Assistant を開いたときに表示するクイックアプリを選択します。</string>
     <string name="quick_drawer_controls">ドロワーの操作</string>
     <string name="show_minkpad_button">MinkPad ボタンを表示</string>
     <string name="show_minkpad_button_description">Bluetooth キーボード、トラックパッド、リモコンを Quick Drawer から開けるようにします</string>
@@ -331,7 +334,7 @@
     <string name="update_notice_widgets_title">スクロール可能なウィジェットは通常どおりに動作します</string>
     <string name="update_notice_widgets_description">垂直ジェスチャは、独自のスクロールを管理するウィジェットに到達します。</string>
     <string name="update_notice_keyboard_title">タッチキーボードはオプションです</string>
-    <string name="update_notice_keyboard_description">タッチ専用電話では、デフォルトでホームでソフトウェア キーボードが開き、Magic Box 設定でオフ スイッチが使用されます。</string>
+    <string name="update_notice_keyboard_description">タッチ操作のみのスマートフォンでは、ホームでソフトウェア キーボードがデフォルトで開きます。外観 → レイアウトと時計でオフにできます。</string>
     <string name="update_notice_github_title">アップデートがあなたを待っています</string>
     <string name="update_notice_github_description">GitHub に新しいリリースがある場合は、透明なアップデート カードと小さなホーム ヘッダー アイコンが表示されます。ブラウザーのハンドオフを承認するまでは何もダウンロードされません。</string>
     <string name="update_notice_integrated_apps_title">統合されたメッセージング アプリ</string>
@@ -444,7 +447,7 @@
     <string name="spaces_onboarding_intro">メイン ページはフォーカスされたままですが、オプションのスペースは近くに残ります。</string>
     <string name="conversations_onboarding_description">[設定] の横にあるチャット アイコンをタップして、アクティブなメッセージと電子メールのスレッドを読みます。インライン返信は、元のアプリが Android の返信アクションを提供する場合にのみ表示されます。</string>
     <string name="widget_page">ウィジェットページ</string>
-    <string name="widget_page_onboarding_description">ホームから左にスワイプして、最大 4 つの Android ウィジェットを追加します。右にスワイプするか、「戻る」を使用してホームに戻ります。</string>
+    <string name="widget_page_onboarding_description">ホームから左にスワイプして Android ウィジェットを追加します。右にスワイプするか、「戻る」を使用してホームに戻ります。</string>
     <string name="mink_day_onboarding_short_description">ホームから右にスワイプすると、ローカルの毎日の分析情報とオプションのアプリ一時停止コントロールが表示されます。左にスワイプするか、「戻る」を使用してホームに戻ります。</string>
     <string name="six_shortcuts_any_apps">6 つのショートカット、6 つのアプリ</string>
     <string name="six_shortcuts_any_apps_description">構成可能な各スロットは、アプリを割り当てるまで、組み込みのデフォルトを維持します。そのアプリのアイコンがホームを引き継ぎます。</string>

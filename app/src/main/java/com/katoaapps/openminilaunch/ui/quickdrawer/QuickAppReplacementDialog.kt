@@ -1,4 +1,4 @@
-package com.katoaapps.openminilaunch.ui.settings
+package com.katoaapps.openminilaunch.ui.quickdrawer
 
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Column
@@ -35,9 +35,9 @@ import com.katoaapps.openminilaunch.ui.components.minkDialogWidth
 import com.katoaapps.openminilaunch.ui.theme.Dimens
 import com.katoaapps.openminilaunch.ui.theme.Muted
 
-/** Chooses the exact Quick Drawer position replaced when the drawer is already full. */
+/** Chooses the exact saved Quick App replaced after the eight-app limit is reached. */
 @Composable
-internal fun DrawerReplacementDialog(
+internal fun QuickAppReplacementDialog(
     replacement: LauncherTarget,
     currentSelectionKeys: List<String>,
     actions: DeviceActions,

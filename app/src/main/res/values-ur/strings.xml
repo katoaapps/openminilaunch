@@ -138,9 +138,6 @@
     <string name="choose_assistant">اسسٹنٹ کا انتخاب کریں۔</string>
     <string name="choose_messaging_app">کے ذریعے بھیجیں…</string>
     <string name="your_drawer">QUICK DRAWER</string>
-    <string name="choose_drawer_apps">سیٹنگز میں آٹھ ایپس یا ایپ شارٹ کٹس تک کا انتخاب کریں۔</string>
-    <string name="empty_drawer">آپ کا Quick Drawer خالی ہے۔</string>
-    <string name="see_all_apps">سب دیکھیں</string>
     <string name="all_apps">تمام ایپس</string>
     <string name="app_info">ایپ کی معلومات</string>
     <string name="app_info_unavailable">اس آئٹم کے لیے ایپ کی معلومات نہیں کھولی جا سکی</string>
@@ -228,7 +225,13 @@
     <string name="shortcut_messenger">Messenger</string>
     <string name="shortcut_files">فائلیں</string>
     <string name="quick_drawer">Quick Drawer</string>
-    <string name="quick_drawer_apps_description">Quick Drawer میں ایک ٹیپ سے کھلنے والی ایپس منتخب کریں۔</string>
+    <string name="manage_quick_apps">فوری ایپس کا نظم کریں</string>
+    <string name="quick_apps">فوری ایپس</string>
+    <string name="quick_apps_empty">Quick Drawer سے فوری ایپس منتخب کریں۔</string>
+    <string name="minkpad_lite">MinkPad Lite</string>
+    <string name="private_space">نجی جگہ</string>
+    <string name="work_space">ورک اسپیس</string>
+    <string name="quick_drawer_apps_description">Mink Assistant کھلنے پر دکھائی جانے والی فوری ایپس منتخب کریں۔</string>
     <string name="quick_drawer_controls">ڈراور کنٹرولز</string>
     <string name="show_minkpad_button">MinkPad بٹن دکھائیں</string>
     <string name="show_minkpad_button_description">Bluetooth کی بورڈ، ٹریک پیڈ اور ریموٹ کنٹرول کو Quick Drawer میں رکھیں</string>
@@ -331,7 +334,7 @@
     <string name="update_notice_widgets_title">سکرول کے قابل ویجٹ عام طور پر برتاؤ کرتے ہیں۔</string>
     <string name="update_notice_widgets_description">عمودی اشارے ویجٹ تک پہنچتے ہیں جو اپنی اسکرولنگ کا انتظام کرتے ہیں۔</string>
     <string name="update_notice_keyboard_title">ٹچ کی بورڈز اختیاری ہیں۔</string>
-    <string name="update_notice_keyboard_description">صرف ٹچ فونز Magic Box سیٹنگز میں آف سوئچ کے ساتھ ہوم پر سافٹ ویئر کی بورڈ کو بطور ڈیفالٹ کھولتے ہیں۔</string>
+    <string name="update_notice_keyboard_description">صرف ٹچ والے فونز میں ہوم پر سافٹ ویئر کی بورڈ بطور ڈیفالٹ کھلتا ہے؛ اسے ظاہری شکل ← لے آؤٹ اور گھڑی میں بند کیا جا سکتا ہے۔</string>
     <string name="update_notice_github_title">اپڈیٹس آپ کے منتظر ہیں۔</string>
     <string name="update_notice_github_description">جب GitHub کی نئی ریلیز ہوتی ہے تو ایک واضح اپ ڈیٹ کارڈ اور ایک چھوٹا ہوم ہیڈر آئیکن ظاہر ہوتا ہے۔ جب تک آپ براؤزر ہینڈ آف کو منظور نہیں کرتے تب تک کچھ بھی ڈاؤن لوڈ نہیں ہوتا ہے۔</string>
     <string name="update_notice_integrated_apps_title">انٹیگریٹڈ میسجنگ ایپس</string>
@@ -444,7 +447,7 @@
     <string name="spaces_onboarding_intro">مرکزی صفحہ مرکوز رہتا ہے جبکہ اختیاری جگہیں قریب رہتی ہیں۔</string>
     <string name="conversations_onboarding_description">فعال پیغام اور ای میل تھریڈز کو پڑھنے کے لیے سیٹنگز کے ساتھ چیٹ آئیکن کو تھپتھپائیں۔ ان لائن جواب صرف اس وقت ظاہر ہوتا ہے جب اصل ایپ Android کی جوابی کارروائی فراہم کرتی ہے۔</string>
     <string name="widget_page">ویجیٹ صفحہ</string>
-    <string name="widget_page_onboarding_description">چار Android وجیٹس تک شامل کرنے کے لیے گھر سے بائیں سوائپ کریں۔ گھر واپس جانے کے لیے دائیں سوائپ کریں یا واپس استعمال کریں۔</string>
+    <string name="widget_page_onboarding_description">Android وجیٹس شامل کرنے کے لیے گھر سے بائیں سوائپ کریں۔ گھر واپس جانے کے لیے دائیں سوائپ کریں یا واپس استعمال کریں۔</string>
     <string name="mink_day_onboarding_short_description">مقامی روزانہ کی بصیرت اور اختیاری ایپ کو روکنے کے کنٹرولز کے لیے گھر سے دائیں سوائپ کریں۔ گھر واپس جانے کے لیے بائیں طرف سوائپ کریں یا واپس استعمال کریں۔</string>
     <string name="six_shortcuts_any_apps">چھ شارٹ کٹس، کوئی بھی چھ ایپس</string>
     <string name="six_shortcuts_any_apps_description">ہر قابل ترتیب سلاٹ اس وقت تک پہلے سے طے شدہ رکھتا ہے جب تک کہ آپ کسی ایپ کو تفویض نہیں کرتے ہیں۔ اس کے ایپ کا آئیکن پھر ہوم پر لے جاتا ہے۔</string>

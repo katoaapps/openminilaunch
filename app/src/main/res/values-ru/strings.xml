@@ -138,9 +138,6 @@
     <string name="choose_assistant">Выбрать помощника</string>
     <string name="choose_messaging_app">Отправить через…</string>
     <string name="your_drawer">QUICK DRAWER</string>
-    <string name="choose_drawer_apps">Выберите до восьми приложений или ярлыков приложений в настройках.</string>
-    <string name="empty_drawer">Ваш Quick Drawer пуст</string>
-    <string name="see_all_apps">Посмотреть все</string>
     <string name="all_apps">Все приложения</string>
     <string name="app_info">Информация о приложении</string>
     <string name="app_info_unavailable">Не удалось открыть информацию о приложении для этого объекта.</string>
@@ -228,7 +225,13 @@
     <string name="shortcut_messenger">Messenger</string>
     <string name="shortcut_files">Файлы</string>
     <string name="quick_drawer">Quick Drawer</string>
-    <string name="quick_drawer_apps_description">Выберите приложения, которые будут доступны одним касанием в Quick Drawer.</string>
+    <string name="manage_quick_apps">Управление быстрыми приложениями</string>
+    <string name="quick_apps">Быстрые приложения</string>
+    <string name="quick_apps_empty">Выберите быстрые приложения в Quick Drawer.</string>
+    <string name="minkpad_lite">MinkPad Lite</string>
+    <string name="private_space">Личное пространство</string>
+    <string name="work_space">Рабочее пространство</string>
+    <string name="quick_drawer_apps_description">Выберите быстрые приложения, которые появятся при запуске Mink Assistant.</string>
     <string name="quick_drawer_controls">Элементы управления</string>
     <string name="show_minkpad_button">Показывать кнопку MinkPad</string>
     <string name="show_minkpad_button_description">Доступ к Bluetooth-клавиатуре, трекпаду и пульту из Quick Drawer</string>
@@ -331,7 +334,7 @@
     <string name="update_notice_widgets_title">Прокручиваемые виджеты ведут себя нормально</string>
     <string name="update_notice_widgets_description">Вертикальные жесты достигают виджетов, которые управляют собственной прокруткой.</string>
     <string name="update_notice_keyboard_title">Сенсорные клавиатуры не являются обязательными</string>
-    <string name="update_notice_keyboard_description">Телефоны только с сенсорным экраном по умолчанию открывают программную клавиатуру на главном экране, а в настройках Magic Box ее можно отключить.</string>
+    <string name="update_notice_keyboard_description">На телефонах только с сенсорным управлением экранная клавиатура по умолчанию открывается на главном экране. Ее можно отключить в разделе «Внешний вид» → «Макет и часы».</string>
     <string name="update_notice_github_title">Обновления ждут вас</string>
     <string name="update_notice_github_description">Когда GitHub выходит более новая версия, появляется четкая карточка обновления и небольшой значок в заголовке «Главная». Ничего не загружается, пока вы не одобрите передачу браузера.</string>
     <string name="update_notice_integrated_apps_title">Интегрированные приложения для обмена сообщениями</string>
@@ -444,7 +447,7 @@
     <string name="spaces_onboarding_intro">Главная страница остается сосредоточенной, а дополнительные места остаются рядом.</string>
     <string name="conversations_onboarding_description">Коснитесь значка чата рядом с «Настройки», чтобы прочитать активные сообщения и ветки электронной почты. Встроенный ответ появляется только в том случае, если исходное приложение предоставляет действие ответа Android.</string>
     <string name="widget_page">Страница виджетов</string>
-    <string name="widget_page_onboarding_description">Проведите пальцем влево от главного экрана, чтобы добавить до четырех виджетов Android. Проведите пальцем вправо или используйте «Назад», чтобы вернуться домой.</string>
+    <string name="widget_page_onboarding_description">Проведите пальцем влево от главного экрана, чтобы добавить виджеты Android. Проведите пальцем вправо или используйте «Назад», чтобы вернуться домой.</string>
     <string name="mink_day_onboarding_short_description">Проведите пальцем вправо от главного экрана, чтобы получить локальную ежедневную информацию и дополнительные элементы управления приостановкой приложения. Проведите пальцем влево или используйте «Назад», чтобы вернуться домой.</string>
     <string name="six_shortcuts_any_apps">Шесть ярлыков, любые шесть приложений</string>
     <string name="six_shortcuts_any_apps_description">Каждый настраиваемый слот сохраняет свои встроенные настройки по умолчанию, пока вы не назначите приложение. Значок его приложения затем занимает место на главном экране.</string>

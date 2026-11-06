@@ -1,25 +1,15 @@
 package com.katoaapps.openminilaunch.ui.settings
 
-import android.content.Context
-import android.widget.Toast
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateListOf
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
-import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import com.katoaapps.openminilaunch.R
 import com.katoaapps.openminilaunch.data.LauncherStore
 import com.katoaapps.openminilaunch.features.messaging.MessagingProviderCatalog
 import com.katoaapps.openminilaunch.features.wellbeing.UsageInsightsRepository
-import com.katoaapps.openminilaunch.model.MAX_DRAWER_APPS
-import com.katoaapps.openminilaunch.model.LauncherTarget
 import com.katoaapps.openminilaunch.model.LaunchableApp
 import com.katoaapps.openminilaunch.platform.DeviceActions
 import com.katoaapps.openminilaunch.ui.appgrid.AppGridSelectionDialog
-import com.katoaapps.openminilaunch.ui.components.moveItem
+import com.katoaapps.openminilaunch.ui.quickdrawer.QuickAppsEditorDialog
 import com.katoaapps.openminilaunch.ui.wellbeing.SocialAppsDialog
 
 @Composable
@@ -27,7 +17,6 @@ internal fun SettingsPickerDialogs(
     picker: SettingsPicker?,
     store: LauncherStore,
     actions: DeviceActions,
-    context: Context,
     installedApps: LauncherAppListLoadState,
     installedShortcuts: LauncherShortcutListLoadState,
     aiProviders: AiProviderLoadState,
@@ -53,12 +42,9 @@ internal fun SettingsPickerDialogs(
             },
             onDismiss = { onPickerChange(null) },
         )
-        SettingsPicker.DrawerApps -> DrawerAppsPicker(
+        SettingsPicker.DrawerApps -> QuickAppsEditorDialog(
             store = store,
             actions = actions,
-            context = context,
-            installedApps = installedApps,
-            installedShortcuts = installedShortcuts,
             onDismiss = { onPickerChange(null) },
         )
         SettingsPicker.PrivateContainerGateway -> LauncherTargetPickerDialog(
@@ -158,82 +144,6 @@ internal fun SettingsPickerDialogs(
             onPickerChange(null)
         }
         null -> Unit
-    }
-}
-
-@Composable
-private fun DrawerAppsPicker(
-    store: LauncherStore,
-    actions: DeviceActions,
-    context: Context,
-    installedApps: LauncherAppListLoadState,
-    installedShortcuts: LauncherShortcutListLoadState,
-    onDismiss: () -> Unit,
-) {
-    val draftSelection = remember {
-        mutableStateListOf<String>().apply { addAll(store.drawerTargets) }
-    }
-    var pendingReplacement by remember { mutableStateOf<LauncherTarget?>(null) }
-    LauncherTargetPickerDialog(
-        title = pluralStringResource(
-            R.plurals.drawer_apps_title,
-            draftSelection.size,
-            draftSelection.size,
-            MAX_DRAWER_APPS,
-        ),
-        apps = installedApps.apps,
-        shortcuts = installedShortcuts.shortcuts,
-        selected = draftSelection.toSet(),
-        selectedOrder = draftSelection.toList(),
-        actions = actions,
-        appsLoading = !installedApps.loaded,
-        shortcutsLoading = !installedShortcuts.loaded,
-        onTarget = { target ->
-            if (target.selectionKey in draftSelection) {
-                draftSelection.remove(target.selectionKey)
-            } else if (draftSelection.size < MAX_DRAWER_APPS) {
-                draftSelection += target.selectionKey
-                if (draftSelection.size == MAX_DRAWER_APPS) {
-                    Toast.makeText(
-                        context,
-                        context.resources.getQuantityString(
-                            R.plurals.apps_selected,
-                            MAX_DRAWER_APPS,
-                            MAX_DRAWER_APPS,
-                        ),
-                        Toast.LENGTH_SHORT,
-                    ).show()
-                }
-            }
-        },
-        onSelectionLimit = { pendingReplacement = it },
-        onMoveSelected = { fromIndex, toIndex ->
-            draftSelection.moveItem(fromIndex, toIndex)
-        },
-        onDone = {
-            if (store.setDrawerTargets(draftSelection)) {
-                actions.syncPinnedSelectionsFrom(store)
-            }
-            onDismiss()
-        },
-        onDismiss = onDismiss,
-        multiSelect = true,
-        selectionLimit = MAX_DRAWER_APPS,
-        showSearch = false,
-    )
-    pendingReplacement?.let { replacement ->
-        DrawerReplacementDialog(
-            replacement = replacement,
-            currentSelectionKeys = draftSelection.toList(),
-            actions = actions,
-            onReplace = { index ->
-                if (index in draftSelection.indices) {
-                    draftSelection[index] = replacement.selectionKey
-                }
-                pendingReplacement = null
-            },
-            onDismiss = { pendingReplacement = null },
-        )
     }
 }
 

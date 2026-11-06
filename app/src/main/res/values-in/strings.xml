@@ -138,9 +138,6 @@
     <string name="choose_assistant">Pilih asisten</string>
     <string name="choose_messaging_app">Kirim melalui…</string>
     <string name="your_drawer">QUICK DRAWER</string>
-    <string name="choose_drawer_apps">Pilih hingga delapan aplikasi atau pintasan aplikasi di Pengaturan.</string>
-    <string name="empty_drawer">Quick Drawer Anda kosong</string>
-    <string name="see_all_apps">Lihat semuanya</string>
     <string name="all_apps">Semua aplikasi</string>
     <string name="app_info">Informasi aplikasi</string>
     <string name="app_info_unavailable">Tidak dapat membuka info Aplikasi untuk item ini</string>
@@ -228,7 +225,13 @@
     <string name="shortcut_messenger">Messenger</string>
     <string name="shortcut_files">File</string>
     <string name="quick_drawer">Quick Drawer</string>
-    <string name="quick_drawer_apps_description">Pilih aplikasi yang selalu mudah dijangkau di Quick Drawer.</string>
+    <string name="manage_quick_apps">Kelola Aplikasi Cepat</string>
+    <string name="quick_apps">Aplikasi Cepat</string>
+    <string name="quick_apps_empty">Pilih Aplikasi Cepat di Quick Drawer.</string>
+    <string name="minkpad_lite">MinkPad Lite</string>
+    <string name="private_space">Ruang Pribadi</string>
+    <string name="work_space">Ruang Kerja</string>
+    <string name="quick_drawer_apps_description">Pilih Aplikasi Cepat yang muncul saat Mink Assistant dibuka.</string>
     <string name="quick_drawer_controls">Kontrol laci</string>
     <string name="show_minkpad_button">Tampilkan tombol MinkPad</string>
     <string name="show_minkpad_button_description">Simpan keyboard Bluetooth, trackpad, dan remote control di Quick Drawer</string>
@@ -331,7 +334,7 @@
     <string name="update_notice_widgets_title">Widget yang dapat digulir berperilaku normal</string>
     <string name="update_notice_widgets_description">Isyarat vertikal menjangkau widget yang mengatur penggulirannya sendiri.</string>
     <string name="update_notice_keyboard_title">Keyboard sentuh bersifat opsional</string>
-    <string name="update_notice_keyboard_description">Ponsel khusus sentuhan membuka keyboard perangkat lunak di Rumah secara default, dengan tombol mati di pengaturan Magic Box.</string>
+    <string name="update_notice_keyboard_description">Ponsel layar sentuh membuka keyboard layar di Beranda secara default; nonaktifkan di Tampilan → Tata letak &amp; jam.</string>
     <string name="update_notice_github_title">Pembaruan menunggu Anda</string>
     <string name="update_notice_github_description">Kartu pembaruan yang jelas dan ikon header Beranda kecil muncul ketika GitHub memiliki rilis yang lebih baru. Tidak ada yang diunduh sampai Anda menyetujui handoff browser.</string>
     <string name="update_notice_integrated_apps_title">Aplikasi perpesanan terintegrasi</string>
@@ -444,7 +447,7 @@
     <string name="spaces_onboarding_intro">Halaman utama tetap fokus sementara ruang opsional tetap dekat.</string>
     <string name="conversations_onboarding_description">Ketuk ikon obrolan di samping Pengaturan untuk membaca pesan aktif dan rangkaian email. Balasan sebaris hanya muncul ketika aplikasi asal menyediakan tindakan balasan Android.</string>
     <string name="widget_page">Halaman widget</string>
-    <string name="widget_page_onboarding_description">Gesek ke kiri dari Beranda untuk menambahkan hingga empat widget Android. Geser ke kanan atau gunakan Kembali untuk kembali ke Beranda.</string>
+    <string name="widget_page_onboarding_description">Gesek ke kiri dari Beranda untuk menambahkan widget Android. Geser ke kanan atau gunakan Kembali untuk kembali ke Beranda.</string>
     <string name="mink_day_onboarding_short_description">Geser ke kanan dari Beranda untuk melihat wawasan harian lokal dan kontrol jeda aplikasi opsional. Gesek ke kiri atau gunakan Kembali untuk kembali ke Beranda.</string>
     <string name="six_shortcuts_any_apps">Enam pintasan, enam aplikasi apa saja</string>
     <string name="six_shortcuts_any_apps_description">Setiap slot yang dapat dikonfigurasi mempertahankan default bawaannya hingga Anda menetapkan aplikasi. Ikon aplikasinya kemudian mengambil alih Beranda.</string>

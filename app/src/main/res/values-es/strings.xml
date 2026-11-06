@@ -138,9 +138,6 @@
     <string name="choose_assistant">Elige asistente</string>
     <string name="choose_messaging_app">Enviar vía…</string>
     <string name="your_drawer">QUICK DRAWER</string>
-    <string name="choose_drawer_apps">Elija hasta ocho aplicaciones o accesos directos a aplicaciones en Configuración.</string>
-    <string name="empty_drawer">Tu Quick Drawer está vacío</string>
-    <string name="see_all_apps">Ver todo</string>
     <string name="all_apps">Todas las aplicaciones</string>
     <string name="app_info">Información de la aplicación</string>
     <string name="app_info_unavailable">No se pudo abrir la información de la aplicación para este artículo</string>
@@ -228,7 +225,13 @@
     <string name="shortcut_messenger">Messenger</string>
     <string name="shortcut_files">Archivos</string>
     <string name="quick_drawer">Quick Drawer</string>
-    <string name="quick_drawer_apps_description">Elige las aplicaciones que quieres tener a un toque en Quick Drawer.</string>
+    <string name="manage_quick_apps">Administrar apps rápidas</string>
+    <string name="quick_apps">Apps rápidas</string>
+    <string name="quick_apps_empty">Elige apps rápidas en Quick Drawer.</string>
+    <string name="minkpad_lite">MinkPad Lite</string>
+    <string name="private_space">Espacio privado</string>
+    <string name="work_space">Espacio de trabajo</string>
+    <string name="quick_drawer_apps_description">Elige las apps rápidas que aparecen al abrir Mink Assistant.</string>
     <string name="quick_drawer_controls">Controles del cajón</string>
     <string name="show_minkpad_button">Mostrar botón de MinkPad</string>
     <string name="show_minkpad_button_description">Mantén el teclado Bluetooth, el panel táctil y el control remoto en Quick Drawer</string>
@@ -331,7 +334,7 @@
     <string name="update_notice_widgets_title">Los widgets desplazables se comportan normalmente</string>
     <string name="update_notice_widgets_description">Los gestos verticales llegan a los widgets que gestionan su propio desplazamiento.</string>
     <string name="update_notice_keyboard_title">Los teclados táctiles son opcionales</string>
-    <string name="update_notice_keyboard_description">Los teléfonos táctiles abren el teclado del software en Inicio de forma predeterminada, con un interruptor de apagado en la configuración Magic Box.</string>
+    <string name="update_notice_keyboard_description">Los teléfonos solo táctiles abren el teclado en pantalla en Inicio de forma predeterminada; puedes desactivarlo en Apariencia → Diseño y reloj.</string>
     <string name="update_notice_github_title">Las actualizaciones te esperan</string>
     <string name="update_notice_github_description">Aparece una tarjeta de actualización clara y un pequeño ícono de encabezado de Inicio cuando GitHub tiene una versión más reciente. No se descarga nada hasta que apruebes la transferencia del navegador.</string>
     <string name="update_notice_integrated_apps_title">Aplicaciones de mensajería integradas</string>
@@ -444,7 +447,7 @@
     <string name="spaces_onboarding_intro">La página principal permanece enfocada mientras los espacios opcionales permanecen cerca.</string>
     <string name="conversations_onboarding_description">Toque el ícono de chat al lado de Configuración para leer mensajes activos e hilos de correo electrónico. La respuesta en línea aparece solo cuando la aplicación de origen proporciona la acción de respuesta de Android.</string>
     <string name="widget_page">Página de widgets</string>
-    <string name="widget_page_onboarding_description">Deslícese hacia la izquierda desde Inicio para agregar hasta cuatro widgets Android. Desliza el dedo hacia la derecha o usa Atrás para regresar a Inicio.</string>
+    <string name="widget_page_onboarding_description">Deslícese hacia la izquierda desde Inicio para agregar widgets Android. Desliza el dedo hacia la derecha o usa Atrás para regresar a Inicio.</string>
     <string name="mink_day_onboarding_short_description">Deslícese hacia la derecha desde Inicio para obtener información local diaria y controles opcionales de pausa de aplicaciones. Desliza hacia la izquierda o usa Atrás para regresar a Inicio.</string>
     <string name="six_shortcuts_any_apps">Seis atajos, seis aplicaciones cualesquiera</string>
     <string name="six_shortcuts_any_apps_description">Cada ranura configurable mantiene su valor predeterminado integrado hasta que asignas una aplicación. El icono de su aplicación se hace cargo de Inicio.</string>

@@ -2,7 +2,7 @@
 
 A focused, keyboard-first Android home-screen launcher and digital assistant built with Kotlin and Jetpack Compose.
 
-Current version: **Open 3.1.1** (`3.1.1`). Feature releases show existing users a one-time in-app update notice covering new behavior, privacy impact, and any optional permissions; the onboarding tutorial is updated alongside each release.
+Current version: **Open 3.2.0** (`3.2.0`). Feature releases show existing users a one-time in-app update notice covering new behavior, privacy impact, and any optional permissions; the onboarding tutorial is updated alongside each release.
 
 ## Download
 
@@ -40,19 +40,19 @@ the existing app first and clears MinkLauncher OpenSource's local data.
 - A responsive raised Home panel with a two-thirds to-do area and a one-third icon-only shortcut grid
 - A responsive, horizontally snapping preview of up to five to-dos with unfinished tasks first
 - **MinkSpace Mini-Apps** inside the Home pill. Swipe vertically between visible mini-apps and horizontally within the active mini-app:
-  - To-dos remain enabled at all times and retain their snapping pages and full manager
+  - To-dos retain their snapping pages and full manager when enabled
   - Calculator supports physical-keyboard number entry, implicit multiplication, and a local, clearable history
   - Media displays user-selected images, animated GIFs, and video thumbnails without copying the source files; tapping an item opens its original URI in an installed app
   - Music reads Android’s active media session with optional Notification access, shows provider artwork and metadata, and sends only playback, seek, skip, or shuffle actions advertised by that provider
   - Widget hosts one widget from an installed app. Tap it to enter interaction mode so lists, buttons, and provider gestures stay inside the widget; press Back or close to return to vertical mini-app navigation
-  - Mini-app order and visibility are managed in Settings and included in portable backups; Android widget bindings, calculator history, selected media references, and active media sessions are deliberately excluded
+  - Mini-app order and visibility are managed in Settings and included in portable backups; Android widget bindings, calculator history, selected media references, and active media sessions remain device-bound
 - Optional two-panel layouts on tablets and unfolded foldables, pairing Mink’s Day with Home or Home with Widgets while preserving the active page and Magic Box draft across display changes. Settings uses the same large-display mode with its section list beside one active detail page.
-- Eight home shortcuts: six generic slots that accept apps or app-published shortcuts, with built-in Note, Calendar, Weather, Call, Messenger, and Files defaults, plus vCard and Top 8
-- An encrypted on-device **Virtual Contact Card** with an optional contact photo, reusable contact/social/payment links, and a standards-based vCard QR. Tap the fixed vCard shortcut to flip between the regular to-do/shortcut face and the contact card; without a selected photo, the Mink icon is used. An optional display setting can include selected link names and values on the Home card. vCard content is never uploaded.
-- Long-press shortcut edit mode with persistent drag reordering and a reset control in Settings
+- An eight-position **App Grid**: seven configurable Home slots can hold one app, an app-published shortcut, or a folder, while the fixed eighth slot opens the **Quick Drawer** navigation surface
+- An encrypted on-device **Virtual Contact Card** mini-app with an optional contact photo, reusable contact/social/payment links, and a standards-based vCard QR. Its compact view keeps the essentials in MinkSpace, while the expanded view reveals the QR code; without a selected photo, the Mink icon is used. An optional display setting can include selected link names and values. vCard content is never uploaded.
+- Folder names, colors, grid or stacked indicators, entrance animations, and persistent drag reordering from Settings
 - A separate **Work Apps** drawer shows accessible work-profile apps with a work badge and Android-owned pause/resume controls. Work apps remain searchable and pinnable when available; Mink’s Day measurements and launcher barriers remain limited to personal-profile apps.
-- A separate **Privacy Space** keeps Android 15 Private Space apps outside Magic Box, shortcuts, Top 8, and regular See All. Android owns lock/unlock authentication. On devices with manufacturer-specific private areas, Mink can store and open an optional OEM gateway without inspecting its contained apps.
-- Android Add to Home screen requests can be placed in a Home slot or Top 8 using a full page or confirmation sheet, with legacy shortcut requests supported for older apps and devices
+- A separate **Privacy Space** keeps Android 15 Private Space apps outside Magic Box, the App Grid, Quick Drawer, and regular See All. Android owns lock/unlock authentication. On devices with manufacturer-specific private areas, Mink can store and open an optional OEM gateway without inspecting its contained apps.
+- Android Add to Home screen requests use a full-page picker to create or extend an App Grid folder or add the item to Quick Drawer, with legacy shortcut requests supported for older apps and devices
 - An active-only **Conversations** space opened from Home:
   - Android-standard message and email notifications are included; other notification categories are ignored
   - Messages and email updates are grouped into conversation timelines and ordered newest first
@@ -62,7 +62,9 @@ the existing app first and clears MinkLauncher OpenSource's local data.
   - Successful reply handoff is acknowledged with `Sent`; MinkLauncher OpenSource does not claim delivery or read status
   - Conversation contents and replies remain transient in memory, are not retained as history, and are never sent to Katoa Apps
   - GitHub APK installs on Android 13 or newer may require **Allow restricted settings** on MinkLauncher OpenSource's Android App info page before Notification access can be enabled; see [How to install the GitHub APK](#how-to-install-the-github-apk)
-- A horizontally adjacent widget page for up to four Android app widgets, including an app-grouped visual picker, system binding/configuration, reordering, and removal
+  - A reorderable Favorites tab combines starred Android Contacts with Mink-created integrated contacts for providers that may not map cleanly to Android Contacts
+  - Each Favorite can inherit the launcher defaults or use a per-person messaging and calling route; unavailable providers can be reinstalled or safely reconnected
+- A horizontally adjacent widget page for up to 64 Android app widgets, including an app-grouped visual picker, system binding/configuration, drag reordering, removal, and portable restore placeholders
 - A dedicated **Mink’s Day** page to the left of Home:
   - Six illustrated Mink states reflect the time of day and, when optional Usage Access is enabled, foreground time and launch counts only for the apps the user chooses to include
   - A compact Mink icon in the Home header opens the page and shows an attention dot only when something is actionable
@@ -78,13 +80,14 @@ the existing app first and clears MinkLauncher OpenSource's local data.
   - Usage insights remain on-device and are never included in the app's GitHub release check
   - Without Usage Access, the page remains available as a time-of-day companion
 - Weather opens a user-selected app, with Weather.com as the browser fallback
-- Six generic app slots that accept any installed app and replace the default Home icon; Android monochrome icons follow the Home panel theme when available
-- One-tap reset restores each slot's original built-in action and icon
-- A compact drawer containing up to eight selected apps or app-published shortcuts, with exact-slot replacement when full and a **See all** handoff to the full installed-app browser
+- Seven configurable App Grid slots accept installed apps, app-published shortcuts, or folders; Android monochrome icons follow the Home panel theme when available
+- Clearing a configurable slot restores its original built-in action and icon
+- A **Quick Drawer** with one **Manage Quick Apps** row and a two-column navigation grid for MinkPad Lite, All Apps, Private Space, and Work Space when available. Its eight saved apps or app-published shortcuts are drag-reorderable and appear in the otherwise-empty Magic Box when Mink Assistant opens.
 - An update check reads GitHub release metadata at most twice a day. When a newer release exists, a focused update card shows the installed and available versions, offers the GitHub and F-Droid release routes, and explains that F-Droid publication can arrive later. A persistent Home header icon lets the user reopen it, while **Remind me later** snoozes the automatic card for 24 hours. GitHub receives ordinary connection metadata but no launcher content. The check can be disabled in **Settings → About**, where either release page can also be opened directly. MinkLauncher OpenSource never downloads or installs an APK itself.
 - The all-apps browser uses a three-app, one-at-a-time carousel and a draggable A–Z arc with M at its center; the focused app supplies the screen's gradient color
-- Swipe up from Home to open See All and swipe down there to close it; keyboard-first `?` search and Top 8 remain available
+- Swipe up from Home to open See All and swipe down there to close it; keyboard-first `?` search and Quick Drawer remain available
 - Real installed-app icons and an alphabetical jump rail in both app pickers
+- A native Home keyboard for touch-only devices, with eight key layouts, six visual styles, adjustable height, optional haptics, and an automatic split layout on wide displays. The system keyboard remains available for language or input needs outside the launcher keyboard.
 - A searchable Magic Box:
   - Physical-keyboard instant typing: press any printable key from the home screen to reveal the already-focused Magic Box with the first character preserved
   - Plain text: search locally accessible file names, then open valid web addresses directly or search other text with Android's system browser or a user-selected browser discovered through Android's standard browser and web-search entry points
@@ -112,7 +115,7 @@ the existing app first and clears MinkLauncher OpenSource's local data.
 - AI setup includes a visible catalog of Mink-reviewed providers: ChatGPT, Claude, Perplexity, Microsoft Copilot, DeepSeek, Meta AI, Google Gemini, and Lumo. Installed providers use their Android label and icon; unavailable providers use bundled identification artwork and link to the provider's own website instead of assuming Google Play is the only installation source. An explicit fallback list also exposes other installed apps accepting shared text.
 - Android exposes the selected system assistant role, but not a universal "AI app" capability. Most AI handoffs therefore use Android's `ACTION_SEND` text-sharing contract. Lumo's Play and no-GMS builds do not expose that contract, so Mink clearly labels them as copy-and-paste providers: tapping AI copies the query to Android's system clipboard and opens Lumo for the user to paste it manually.
 - AI handoff does not call AI APIs, submit prompts silently, or render responses inside MinkLauncher OpenSource
-- A versioned local JSON backup can move portable settings, launcher layout, app choices, icon preferences, MinkSpace order and visibility, Mink’s Day configuration, to-dos, and vCard contact details/links between F-Droid and GitHub installs. Exported backup JSON is readable and can contain those contact details; the encrypted local contact photo is deliberately excluded. Calculator history, selected MinkSpace media and URI grants, active media sessions, Work/Privacy Space state, device-specific private-area gateways, active bubble notifications, Android permissions and roles, accessibility or notification access, widgets, and document-folder grants are also excluded and must be configured again.
+- A versioned local JSON backup can move portable settings, App Grid folders and ordering, app choices, icon and launcher-keyboard preferences, MinkSpace order and visibility, Mink’s Day configuration, to-dos, vCard details/links, and Mink-created integrated Favorites between F-Droid and GitHub installs. The readable export may contain names, phone numbers, usernames, provider routes, and vCard details. Android Contacts and photos are not copied. Widget restore recipes preserve provider identity and layout position without copying Android widget IDs, live contents, or provider-specific configuration; existing widgets on the receiving device are not cleared. Calculator history, selected MinkSpace media and URI grants, active media sessions, Work/Privacy Space state, device-specific private-area gateways, active bubble notifications, Android permissions and roles, accessibility or notification access, and document-folder grants remain device-bound.
 - Full to-do management: add, check, edit, delete, reorder, send to a notes app, or save as PDF through Android’s document picker
 - Delete confirmation to protect against accidental taps and back-swipe gestures
 - Animated Magic Box to-do delivery into the newest widget page

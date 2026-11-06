@@ -1,0 +1,5 @@
+Open 3.2.0 adds reorderable contact Favorites, per-person messaging and calling routes, App Grid folders, Quick Drawer navigation with Assistant Quick Apps, fuzzy app search, and a native launcher keyboard for touch devices.
+
+Widgets now support up to 64 entries, drag reordering, and portable restore recipes that preserve local widget setups during import. Onboarding, settings, themes, and the shared MinkPad foundation are also refined.
+
+No new permissions or data collection. Backup schema 3 remains compatible.

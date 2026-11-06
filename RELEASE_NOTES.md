@@ -1,10 +1,12 @@
-Open 3.1.1 improves visual consistency, language handling, and access to Android settings without changing the OpenSource product identity.
+Open 3.2.0 expands MinkLauncher from a keyboard-first launcher into a more complete home, contacts, widgets, and touch-keyboard experience.
 
-- **Mink and system palettes:** Appearance settings now let you choose the intentional Mink color palette or Android's dynamic system colors on Android 12 and newer. The choice is included in backups, while older backups continue to import with Mink as the safe default.
-- **Geist typography:** Mink's default interface typeface is now Geist, with a matching monospace family and bundled open-source license information.
-- **Consistent app surfaces:** Home, Settings, the app drawer, dialogs, and secondary activities now share the same color and typography foundation.
-- **Reliable language switching:** The launcher entry point is separated from the Home activity so changing the app language no longer crashes the launcher. Indonesian resources now use Android's supported `in` qualifier and load correctly.
-- **System Settings shortcut:** Settings > More now includes a direct link to Android's system settings.
-- **OpenSource identity preserved:** User-facing OpenSource naming remains unchanged while the internal theme architecture is normalized for future development.
+- **Favorites for the people you reach most:** Conversations now includes reorderable Favorites from Android Contacts and Mink-created integrated contacts. Each person can use a preferred messaging or calling route, while unavailable providers offer a clear reinstall or reconnect path.
+- **App Grid folders:** Any configurable Home slot can hold one app or become a folder. Folders support names, colors, stacked or grid indicators, animation choices, drag reordering, and safe handling when an app is uninstalled.
+- **Quick Drawer and Quick Apps:** The fixed eighth Home slot now opens a focused navigation surface for MinkPad Lite, All Apps, Private Space, and Work Space. Its saved Quick Apps are managed from one row and appear in Magic Box when Mink Assistant opens.
+- **A larger, portable widget space:** The Widgets page now supports up to 64 widgets, drag reordering, and portable restore recipes. A backup can reserve each widget's place and guide Android through rebinding it without replacing widgets already configured on the receiving device.
+- **Native launcher keyboard:** Touch-only phones can use MinkLauncher’s own Home keyboard with QWERTY, AZERTY, QWERTZ, Dvorak, Pinyin, Cangjie, Hangul, and Abugida layouts; six visual styles; split layouts on larger displays; hot keys; haptics; and adjustable height.
+- **Faster app finding:** Fuzzy search tolerates partial and imperfect app-name queries in the Magic Box and app pickers.
+- **Refined onboarding, settings, and themes:** Setup focuses on Home, contacts, and messaging; replayable tours explain Home and Conversations; complete themes pair wallpaper, background, and pill colors; and settings navigation has been reorganized.
+- **Shared MinkPad foundation:** Embedded MinkPad now uses the same extracted controller core intended for standalone development while retaining OpenSource behavior and permissions.
 
-No new permissions, network services, or data collection are introduced in this release. Backup schema version 3 remains unchanged and compatible with existing backups.
+No new permissions, analytics, accounts, or network services are introduced. Portable backup schema version 3 remains unchanged and older schema-3 backups continue to import. Android widget IDs, live widget contents, provider-specific widget configuration, Android Contacts, and contact photos remain device-bound and are not copied into backup files.

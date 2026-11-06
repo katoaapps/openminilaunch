@@ -138,9 +138,6 @@
     <string name="choose_assistant">Escolha assistente</string>
     <string name="choose_messaging_app">Enviar por…</string>
     <string name="your_drawer">QUICK DRAWER</string>
-    <string name="choose_drawer_apps">Escolha até oito aplicativos ou atalhos de aplicativos em Configurações.</string>
-    <string name="empty_drawer">Seu Quick Drawer está vazio</string>
-    <string name="see_all_apps">Ver tudo</string>
     <string name="all_apps">Todos os aplicativos</string>
     <string name="app_info">Informações do aplicativo</string>
     <string name="app_info_unavailable">Não foi possível abrir as informações do aplicativo para este item</string>
@@ -228,7 +225,13 @@
     <string name="shortcut_messenger">Messenger</string>
     <string name="shortcut_files">Arquivos</string>
     <string name="quick_drawer">Quick Drawer</string>
-    <string name="quick_drawer_apps_description">Escolha os aplicativos que ficarão a um toque de distância no Quick Drawer.</string>
+    <string name="manage_quick_apps">Gerenciar apps rápidos</string>
+    <string name="quick_apps">Apps rápidos</string>
+    <string name="quick_apps_empty">Escolha apps rápidos no Quick Drawer.</string>
+    <string name="minkpad_lite">MinkPad Lite</string>
+    <string name="private_space">Espaço privado</string>
+    <string name="work_space">Espaço de trabalho</string>
+    <string name="quick_drawer_apps_description">Escolha os apps rápidos exibidos ao abrir o Mink Assistant.</string>
     <string name="quick_drawer_controls">Controles da gaveta</string>
     <string name="show_minkpad_button">Mostrar botão do MinkPad</string>
     <string name="show_minkpad_button_description">Mantenha teclado Bluetooth, trackpad e controle remoto no Quick Drawer</string>
@@ -331,7 +334,7 @@
     <string name="update_notice_widgets_title">Widgets roláveis se comportam normalmente</string>
     <string name="update_notice_widgets_description">Gestos verticais alcançam widgets que gerenciam sua própria rolagem.</string>
     <string name="update_notice_keyboard_title">Teclados sensíveis ao toque são opcionais</string>
-    <string name="update_notice_keyboard_description">Os telefones somente de toque abrem o teclado do software na tela inicial por padrão, com um botão para desligar nas configurações do Magic Box.</string>
+    <string name="update_notice_keyboard_description">Em celulares somente com tela sensível ao toque, o teclado virtual abre por padrão na tela inicial; desative-o em Aparência → Layout e relógio.</string>
     <string name="update_notice_github_title">Atualizações esperam por você</string>
     <string name="update_notice_github_description">Um cartão de atualização claro e um pequeno ícone de cabeçalho inicial aparecem quando GitHub tem uma versão mais recente. Nada é baixado até que você aprove a transferência do navegador.</string>
     <string name="update_notice_integrated_apps_title">Aplicativos de mensagens integrados</string>
@@ -444,7 +447,7 @@
     <string name="spaces_onboarding_intro">A página principal permanece em foco enquanto os espaços opcionais permanecem próximos.</string>
     <string name="conversations_onboarding_description">Toque no ícone de bate-papo ao lado de Configurações para ler mensagens ativas e conversas de e-mail. A resposta embutida aparece apenas quando o aplicativo de origem fornece a ação de resposta do Android.</string>
     <string name="widget_page">Página do widget</string>
-    <string name="widget_page_onboarding_description">Deslize para a esquerda na página inicial para adicionar até quatro widgets Android. Deslize para a direita ou use Voltar para voltar para casa.</string>
+    <string name="widget_page_onboarding_description">Deslize para a esquerda na página inicial para adicionar widgets Android. Deslize para a direita ou use Voltar para voltar para casa.</string>
     <string name="mink_day_onboarding_short_description">Deslize para a direita na página inicial para obter informações diárias locais e controles opcionais de pausa de aplicativos. Deslize para a esquerda ou use Voltar para voltar para casa.</string>
     <string name="six_shortcuts_any_apps">Seis atalhos, seis aplicativos quaisquer</string>
     <string name="six_shortcuts_any_apps_description">Cada slot configurável mantém seu padrão integrado até você atribuir um aplicativo. O ícone do aplicativo assume o controle da página inicial.</string>

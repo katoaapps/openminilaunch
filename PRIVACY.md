@@ -1,6 +1,6 @@
 # Privacy
 
-Effective October 1, 2026
+Effective November 6, 2026
 
 MinkLauncher OpenSource is designed to work locally. It does not operate an application server,
 include analytics or advertising SDKs, create an account, or upload launcher content or personal
@@ -9,11 +9,11 @@ described below.
 
 ## Information stored on this device
 
-The app stores launcher settings, shortcut and Top 8 choices, to-dos, the five most recent
-successful plain-text queries, approved document-folder references, optional cropped Home
-wallpaper, widget configuration, Mink’s Day preferences, app-bubble preferences, MinkSpace
-mini-app preferences, and onboarding state in app-private storage. Android cloud backup is disabled
-for MinkLauncher OpenSource.
+The app stores launcher settings, App Grid folders and choices, Quick Drawer choices, to-dos, the
+five most recent successful plain-text queries, approved document-folder references, optional
+cropped Home wallpaper, widget configuration, Mink’s Day preferences, app-bubble preferences,
+MinkSpace mini-app preferences, launcher-keyboard preferences, and onboarding state in app-private
+storage. Android cloud backup is disabled for MinkLauncher OpenSource.
 
 MinkSpace stores calculator history locally, up to its visible history limit. Media Lab stores the
 content URI, display name, MIME type, order, and Android read grant for media the user explicitly
@@ -37,18 +37,39 @@ vCard QR codes are generated entirely on-device and contain only the identity fi
 user selects. The contact photo and fallback Mink icon are not embedded. The system Photo Picker
 provides an optional photo without granting MinkLauncher broad photo-library access.
 
+## Favorites
+
+Favorites can show Android Contacts that the user has starred and Mink-created integrated contacts.
+Android Contact names, phone numbers, photos, and contact records remain in Android's Contacts
+provider and are not copied into MinkLauncher storage or portable backups. Per-person route choices
+are stored using an Android-generated contact lookup reference rather than copied contact data.
+
+A Mink-created integrated Favorite stores the display name and the messaging or calling endpoints
+the user selects, such as an app shortcut, provider address, username, or phone number. These records
+and their ordering are kept in AES-GCM encrypted app-private storage backed by Android Keystore.
+They are not uploaded or used to create an account.
+
 ## Portable backup
 
 An explicit portable backup is readable JSON. It includes portable launcher layout and settings,
-MinkSpace order and enablement, to-dos, and Virtual Contact Card details and links so a user can move
-between distributions. The export screen warns that readable contact details may be present.
+App Grid folders, Quick Drawer choices, launcher-keyboard preferences, MinkSpace order and
+enablement, to-dos, Virtual Contact Card details and links, Mink-created integrated Favorites and
+their ordering, and widget restore recipes so a user can move between distributions. The export
+screen warns that readable contact details may be present. For Mink-created Favorites, that can
+include display names, phone numbers, usernames, provider routes, and app shortcut identifiers.
+
+Widget restore recipes contain the provider package and component, app and widget labels, saved
+layout position, and requested size. They do not contain Android widget IDs, live widget contents, or
+provider-specific widget configuration. During import, recipes can reserve a place and ask Android to
+bind or configure a replacement; they do not clear widgets already configured on the receiving
+device.
 
 Portable backup excludes Android permissions and roles, accessibility and notification access,
-widgets, document-folder grants, wallpaper images, recent-query history, calculator history,
-selected MinkSpace media and URI grants, active media sessions, Work and Privacy Space state,
-device-specific private-area gateways, active bubble notifications, demo data, the Virtual Contact
-Card photo, and update caches or reminders. Restoring a card therefore returns to the Mink icon until
-another photo is selected.
+Android widget IDs and live widget state, Android Contacts, contact photos, document-folder grants,
+wallpaper images, recent-query history, calculator history, selected MinkSpace media and URI grants,
+active media sessions, Work and Privacy Space state, device-specific private-area gateways, active
+bubble notifications, demo data, the Virtual Contact Card photo, and update caches or reminders.
+Restoring a card therefore returns to the Mink icon until another photo is selected.
 
 ## Permissions and special access
 
@@ -156,7 +177,7 @@ Accessible Work Apps are shown in a separate drawer with Android’s work badge.
 Android to pause or resume the profile, but Android and the managing organization control the profile,
 its policy, and its contents. MinkLauncher does not read work-app account or document contents.
 
-Android Private Space apps are kept outside regular search, shortcuts, Top 8, and See All. On devices
+Android Private Space apps are kept outside regular search, the App Grid, Quick Drawer, and See All. On devices
 using a manufacturer-specific private area, the user may save a device-owned app or shortcut as a
 gateway. MinkLauncher stores and opens only that target; the manufacturer controls authentication and
 the apps inside it.

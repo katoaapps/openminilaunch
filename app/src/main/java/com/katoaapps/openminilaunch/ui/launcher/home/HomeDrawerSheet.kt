@@ -1,50 +1,36 @@
-@file:OptIn(
-    androidx.compose.material3.ExperimentalMaterial3Api::class,
-    androidx.compose.foundation.layout.ExperimentalLayoutApi::class,
-)
+@file:OptIn(androidx.compose.material3.ExperimentalMaterial3Api::class)
 
 package com.katoaapps.openminilaunch.ui.launcher.home
 
 import com.katoaapps.minkpad.core.R as MinkPadR
 
-import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-import androidx.compose.foundation.layout.FlowRow
-import androidx.compose.foundation.layout.PaddingValues
+import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
-import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
-import androidx.compose.foundation.lazy.grid.GridCells
-import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
-import androidx.compose.foundation.lazy.grid.items
-import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowForward
-import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.Apps
 import androidx.compose.material.icons.filled.BusinessCenter
+import androidx.compose.material.icons.filled.GridView
 import androidx.compose.material.icons.filled.Shield
-import androidx.compose.material3.CircularProgressIndicator
-import androidx.compose.material3.FilledTonalButton
-import androidx.compose.material3.FilledTonalIconButton
 import androidx.compose.material3.Icon
-import androidx.compose.material3.ListItem
-import androidx.compose.material3.ListItemDefaults
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.ModalBottomSheet
+import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.remember
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -55,31 +41,37 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import com.katoaapps.openminilaunch.R
 import com.katoaapps.openminilaunch.data.LauncherStore
 import com.katoaapps.openminilaunch.features.minkpad.MinkPadLauncherEntry
-import com.katoaapps.openminilaunch.features.wellbeing.MinkAppAccessState
-import com.katoaapps.openminilaunch.model.LauncherTarget
+import com.katoaapps.openminilaunch.model.MAX_DRAWER_APPS
 import com.katoaapps.openminilaunch.platform.DeviceActions
-import com.katoaapps.openminilaunch.ui.components.CenteredActionPrompt
-import com.katoaapps.openminilaunch.ui.components.LauncherTargetIcon
-import com.katoaapps.openminilaunch.ui.settings.SettingsDestination
+import com.katoaapps.openminilaunch.ui.quickdrawer.QuickDrawerDestination
+import com.katoaapps.openminilaunch.ui.quickdrawer.quickDrawerDestinations
 import com.katoaapps.openminilaunch.ui.theme.Dimens
 import com.katoaapps.openminilaunch.ui.theme.readableContentColor
-import kotlin.math.ceil
 
 @Composable
 internal fun HomeDrawerSheet(
     store: LauncherStore,
     actions: DeviceActions,
-    appAccessState: MinkAppAccessState,
     onDismiss: () -> Unit,
-    openSettings: (SettingsDestination) -> Unit,
+    onManageQuickApps: () -> Unit,
 ) {
     val context = LocalContext.current
     val drawerColor = store.quickDrawerColorArgb?.let(::Color) ?: MaterialTheme.colorScheme.background
     val drawerContentColor = readableContentColor(drawerColor)
+    val destinations = quickDrawerDestinations(
+        showMinkPad = store.showMinkPadInQuickDrawer,
+        showPrivateSpace = store.showPrivateSpaceInQuickDrawer,
+        privateSpaceAvailable = store.demoSearchDataEnabled ||
+            actions.privateContainerEntryPointAvailable(store.privateContainerGatewaySelectionKey),
+        showWorkSpace = store.showWorkProfileInQuickDrawer,
+        workSpaceAvailable = store.demoSearchDataEnabled || actions.workProfileAvailable(),
+    )
+
     ModalBottomSheet(
         onDismissRequest = onDismiss,
         sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true),
@@ -92,99 +84,139 @@ internal fun HomeDrawerSheet(
             fontWeight = FontWeight.Black,
             letterSpacing = Dimens.sp1,
         )
-        when {
-            store.drawerTargets.isEmpty() -> EmptyDrawer(
-                contentColor = drawerContentColor,
-                onChooseApps = {
-                    onDismiss()
-                    openSettings(SettingsDestination.QUICK_DRAWER)
-                },
-            )
-            !appAccessState.isResolved -> Box(
-                Modifier.fillMaxWidth().height(Dimens.dp84),
-                contentAlignment = Alignment.Center,
-            ) { CircularProgressIndicator() }
-            else -> DrawerApps(
-                store = store,
-                actions = actions,
-                appAccessState = appAccessState,
-                contentColor = drawerContentColor,
-                onLaunched = onDismiss,
-            )
-        }
-        Row(
-            Modifier.fillMaxWidth().padding(horizontal = Dimens.dp18, vertical = Dimens.dp4),
-            horizontalArrangement = Arrangement.spacedBy(Dimens.dp8),
-            verticalAlignment = Alignment.Bottom,
-        ) {
-            if (store.showMinkPadInQuickDrawer) {
-                FilledTonalIconButton(
-                    onClick = {
-                        onDismiss()
-                        MinkPadLauncherEntry.open(context)
-                    },
-                ) {
-                    MinkPadDrawerIcon()
+        ManageQuickAppsRow(
+            selectedCount = store.drawerTargets.size,
+            contentColor = drawerContentColor,
+            onClick = {
+                onDismiss()
+                onManageQuickApps()
+            },
+        )
+        QuickDrawerNavigationGrid(
+            destinations = destinations,
+            contentColor = drawerContentColor,
+            onDestination = { destination ->
+                onDismiss()
+                when (destination) {
+                    QuickDrawerDestination.MINKPAD_LITE -> MinkPadLauncherEntry.open(context)
+                    QuickDrawerDestination.ALL_APPS -> actions.openAllApps()
+                    QuickDrawerDestination.PRIVATE_SPACE -> actions.openPrivateApps()
+                    QuickDrawerDestination.WORK_SPACE -> actions.openWorkApps()
                 }
-            }
-            FlowRow(
-                Modifier.weight(1f),
-                horizontalArrangement = Arrangement.spacedBy(Dimens.dp8, Alignment.End),
-                verticalArrangement = Arrangement.spacedBy(Dimens.dp8),
-            ) {
-                if (
-                    store.showPrivateSpaceInQuickDrawer &&
-                    (
-                        store.demoSearchDataEnabled ||
-                            actions.privateContainerEntryPointAvailable(store.privateContainerGatewaySelectionKey)
-                    )
-                ) {
-                    FilledTonalButton(
-                        onClick = {
-                            onDismiss()
-                            actions.openPrivateApps()
-                        },
-                    ) {
-                        Icon(Icons.Default.Shield, null)
-                        Text(
-                            stringResource(R.string.privacy_apps),
-                            modifier = Modifier.padding(start = Dimens.dp6),
-                        )
-                    }
-                }
-                if (
-                    store.showWorkProfileInQuickDrawer &&
-                    (store.demoSearchDataEnabled || actions.workProfileAvailable())
-                ) {
-                    FilledTonalButton(
-                        onClick = {
-                            onDismiss()
-                            actions.openWorkApps()
-                        },
-                    ) {
-                        Icon(Icons.Default.BusinessCenter, null)
-                        Text(
-                            stringResource(R.string.work_apps),
-                            modifier = Modifier.padding(start = Dimens.dp6),
-                        )
-                    }
-                }
-                FilledTonalButton(
-                    onClick = {
-                        onDismiss()
-                        actions.openAllApps()
-                    },
-                ) {
-                    Text(stringResource(R.string.see_all_apps))
-                    Icon(
-                        Icons.AutoMirrored.Filled.ArrowForward,
-                        null,
-                        modifier = Modifier.padding(start = Dimens.dp6),
-                    )
-                }
-            }
-        }
+            },
+        )
         Spacer(Modifier.height(Dimens.dp28))
+    }
+}
+
+@Composable
+private fun ManageQuickAppsRow(
+    selectedCount: Int,
+    contentColor: Color,
+    onClick: () -> Unit,
+) {
+    Surface(
+        onClick = onClick,
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = Dimens.dp18, vertical = Dimens.dp12),
+        shape = RoundedCornerShape(Dimens.dp18),
+        color = contentColor.copy(alpha = .09f),
+        contentColor = contentColor,
+    ) {
+        Row(
+            modifier = Modifier.fillMaxWidth().padding(Dimens.dp16),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(Dimens.dp12),
+        ) {
+            Icon(Icons.Default.GridView, null)
+            Text(
+                stringResource(R.string.manage_quick_apps),
+                modifier = Modifier.weight(1f),
+                fontWeight = FontWeight.Bold,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
+            )
+            Text(
+                stringResource(R.string.count_of_max, selectedCount, MAX_DRAWER_APPS),
+                color = contentColor.copy(alpha = .68f),
+                fontWeight = FontWeight.Bold,
+            )
+            Icon(Icons.AutoMirrored.Filled.ArrowForward, null)
+        }
+    }
+}
+
+@Composable
+private fun QuickDrawerNavigationGrid(
+    destinations: List<QuickDrawerDestination>,
+    contentColor: Color,
+    onDestination: (QuickDrawerDestination) -> Unit,
+) {
+    Column(
+        modifier = Modifier.fillMaxWidth().padding(horizontal = Dimens.dp18),
+        verticalArrangement = Arrangement.spacedBy(Dimens.dp8),
+    ) {
+        destinations.chunked(2).forEach { rowDestinations ->
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(Dimens.dp8),
+            ) {
+                rowDestinations.forEach { destination ->
+                    QuickDrawerNavigationButton(
+                        destination = destination,
+                        contentColor = contentColor,
+                        onClick = { onDestination(destination) },
+                        modifier = Modifier.weight(1f),
+                    )
+                }
+                if (rowDestinations.size == 1) {
+                    Spacer(Modifier.weight(1f))
+                }
+            }
+        }
+    }
+}
+
+@Composable
+private fun QuickDrawerNavigationButton(
+    destination: QuickDrawerDestination,
+    contentColor: Color,
+    onClick: () -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    Surface(
+        onClick = onClick,
+        modifier = modifier.height(Dimens.dp84),
+        shape = RoundedCornerShape(Dimens.dp18),
+        color = contentColor.copy(alpha = .09f),
+        contentColor = contentColor,
+    ) {
+        Column(
+            modifier = Modifier.fillMaxSize().padding(Dimens.dp12),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.Center,
+        ) {
+            when (destination) {
+                QuickDrawerDestination.MINKPAD_LITE -> MinkPadDrawerIcon()
+                QuickDrawerDestination.ALL_APPS -> Icon(Icons.Default.Apps, null)
+                QuickDrawerDestination.PRIVATE_SPACE -> Icon(Icons.Default.Shield, null)
+                QuickDrawerDestination.WORK_SPACE -> Icon(Icons.Default.BusinessCenter, null)
+            }
+            Spacer(Modifier.height(Dimens.dp6))
+            Text(
+                text = when (destination) {
+                    QuickDrawerDestination.MINKPAD_LITE -> stringResource(R.string.minkpad_lite)
+                    QuickDrawerDestination.ALL_APPS -> stringResource(R.string.all_apps)
+                    QuickDrawerDestination.PRIVATE_SPACE -> stringResource(R.string.private_space)
+                    QuickDrawerDestination.WORK_SPACE -> stringResource(R.string.work_space)
+                },
+                fontWeight = FontWeight.Bold,
+                textAlign = TextAlign.Center,
+                maxLines = 2,
+                overflow = TextOverflow.Ellipsis,
+            )
+        }
     }
 }
 
@@ -210,77 +242,6 @@ private fun MinkPadDrawerIcon() {
                 modifier = Modifier
                     .fillMaxSize()
                     .graphicsLayer(scaleX = 1.55f, scaleY = 1.55f),
-            )
-        }
-    }
-}
-
-@Composable
-private fun EmptyDrawer(
-    contentColor: Color,
-    onChooseApps: () -> Unit,
-) {
-    CenteredActionPrompt(
-        icon = Icons.Default.Apps,
-        title = stringResource(R.string.empty_drawer),
-        description = stringResource(R.string.choose_drawer_apps),
-        actionLabel = stringResource(R.string.choose_apps),
-        actionIcon = Icons.Default.Add,
-        onAction = onChooseApps,
-        iconColor = contentColor,
-        mutedContentColor = contentColor.copy(alpha = .68f),
-        modifier = Modifier.fillMaxWidth(),
-    )
-}
-
-@Composable
-private fun DrawerApps(
-    store: LauncherStore,
-    actions: DeviceActions,
-    appAccessState: MinkAppAccessState,
-    contentColor: Color,
-    onLaunched: () -> Unit,
-) {
-    val context = LocalContext.current
-    val savedDrawerTargets = store.drawerTargets.toList()
-    // There are at most eight entries. Resolve them on recomposition so a Settings change is
-    // visible the next time the drawer opens instead of retaining the sheet's previous snapshot.
-    val drawerTargets = savedDrawerTargets.map(actions::resolveLauncherSelection)
-    val visibleDrawerTargets = drawerTargets.filterNot(appAccessState::isPaused)
-    if (visibleDrawerTargets.isEmpty()) {
-        Text(
-            stringResource(R.string.drawer_apps_paused),
-            Modifier.fillMaxWidth().padding(horizontal = Dimens.dp28, vertical = Dimens.dp24),
-            color = contentColor.copy(alpha = .68f),
-        )
-    }
-    val drawerRows = ceil(visibleDrawerTargets.size / 2f).toInt()
-    LazyVerticalGrid(
-        columns = GridCells.Fixed(2),
-        modifier = Modifier.fillMaxWidth().height(Dimens.dp72 * drawerRows),
-        contentPadding = PaddingValues(horizontal = Dimens.dp12, vertical = Dimens.dp8),
-    ) {
-        items(visibleDrawerTargets, key = LauncherTarget::selectionKey) { target ->
-            ListItem(
-                headlineContent = {
-                    Text(target.label, maxLines = 1, overflow = TextOverflow.Ellipsis)
-                },
-                leadingContent = { LauncherTargetIcon(target, actions, Dimens.dp36) },
-                modifier = Modifier.clip(RoundedCornerShape(Dimens.dp16)).clickable {
-                    if (actions.launchLauncherTarget(target)) {
-                        onLaunched()
-                    } else {
-                        Toast.makeText(
-                            context,
-                            context.getString(R.string.launcher_app_unavailable, target.label),
-                            Toast.LENGTH_LONG,
-                        ).show()
-                    }
-                },
-                colors = ListItemDefaults.colors(
-                    containerColor = Color.Transparent,
-                    headlineColor = contentColor,
-                ),
             )
         }
     }

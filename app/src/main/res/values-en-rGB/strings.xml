@@ -138,9 +138,6 @@
     <string name="choose_assistant">Choose assistant</string>
     <string name="choose_messaging_app">Send via…</string>
     <string name="your_drawer">QUICK DRAWER</string>
-    <string name="choose_drawer_apps">Choose up to eight apps or app shortcuts in Settings.</string>
-    <string name="empty_drawer">Your Quick Drawer is empty</string>
-    <string name="see_all_apps">See all</string>
     <string name="all_apps">All apps</string>
     <string name="app_info">App info</string>
     <string name="app_info_unavailable">Couldn’t open App info for this item</string>
@@ -228,7 +225,13 @@
     <string name="shortcut_messenger">Messenger</string>
     <string name="shortcut_files">Files</string>
     <string name="quick_drawer">Quick Drawer</string>
-    <string name="quick_drawer_apps_description">Choose the apps kept one tap away in Quick Drawer.</string>
+    <string name="manage_quick_apps">Manage Quick Apps</string>
+    <string name="quick_apps">Quick Apps</string>
+    <string name="quick_apps_empty">Choose Quick Apps from Quick Drawer.</string>
+    <string name="minkpad_lite">MinkPad Lite</string>
+    <string name="private_space">Private Space</string>
+    <string name="work_space">Work Space</string>
+    <string name="quick_drawer_apps_description">Choose the Quick Apps shown when Mink Assistant opens.</string>
     <string name="quick_drawer_controls">Drawer controls</string>
     <string name="show_minkpad_button">Show MinkPad button</string>
     <string name="show_minkpad_button_description">Keep Bluetooth keyboard, trackpad, and remote controls in Quick Drawer</string>
@@ -444,7 +447,7 @@
     <string name="spaces_onboarding_intro">The main page stays focused while optional spaces remain close by.</string>
     <string name="conversations_onboarding_description">Tap the chat icon beside Settings to read active message and email threads. Inline reply appears only when the originating app supplies Android’s reply action.</string>
     <string name="widget_page">Widget page</string>
-    <string name="widget_page_onboarding_description">Swipe left from Home to add up to four Android widgets. Swipe right or use Back to return Home.</string>
+    <string name="widget_page_onboarding_description">Swipe left from Home to add Android widgets. Swipe right or use Back to return Home.</string>
     <string name="mink_day_onboarding_short_description">Swipe right from Home for local daily insights and optional app-pausing controls. Swipe left or use Back to return Home.</string>
     <string name="six_shortcuts_any_apps">Six shortcuts, any six apps</string>
     <string name="six_shortcuts_any_apps_description">Each configurable slot keeps its built-in default until you assign an app. Its app icon then takes over on Home.</string>

@@ -138,9 +138,6 @@
     <string name="choose_assistant">সহকারী নির্বাচন করুন</string>
     <string name="choose_messaging_app">এর মাধ্যমে পাঠান...</string>
     <string name="your_drawer">QUICK DRAWER</string>
-    <string name="choose_drawer_apps">সেটিংস থেকে আটটি পর্যন্ত অ্যাপ বা অ্যাপ শর্টকাট বেছে নিন।</string>
-    <string name="empty_drawer">আপনার Quick Drawer খালি আছে</string>
-    <string name="see_all_apps">সব দেখুন</string>
     <string name="all_apps">সব অ্যাপ</string>
     <string name="app_info">অ্যাপের তথ্য</string>
     <string name="app_info_unavailable">এই আইটেমের জন্য অ্যাপের তথ্য খোলা যায়নি</string>
@@ -228,7 +225,13 @@
     <string name="shortcut_messenger">Messenger</string>
     <string name="shortcut_files">ফাইল</string>
     <string name="quick_drawer">Quick Drawer</string>
-    <string name="quick_drawer_apps_description">Quick Drawer থেকে এক ট্যাপে খোলার অ্যাপ বেছে নিন।</string>
+    <string name="manage_quick_apps">দ্রুত অ্যাপ পরিচালনা করুন</string>
+    <string name="quick_apps">দ্রুত অ্যাপ</string>
+    <string name="quick_apps_empty">Quick Drawer থেকে দ্রুত অ্যাপ বেছে নিন।</string>
+    <string name="minkpad_lite">MinkPad Lite</string>
+    <string name="private_space">ব্যক্তিগত স্পেস</string>
+    <string name="work_space">কাজের স্পেস</string>
+    <string name="quick_drawer_apps_description">Mink Assistant খুললে দেখানো দ্রুত অ্যাপ বেছে নিন।</string>
     <string name="quick_drawer_controls">ড্রয়ার নিয়ন্ত্রণ</string>
     <string name="show_minkpad_button">MinkPad বোতাম দেখান</string>
     <string name="show_minkpad_button_description">Bluetooth কীবোর্ড, ট্র্যাকপ্যাড ও রিমোট কন্ট্রোল Quick Drawer-এ রাখুন</string>
@@ -331,7 +334,7 @@
     <string name="update_notice_widgets_title">স্ক্রোলযোগ্য উইজেটগুলি স্বাভাবিকভাবে আচরণ করে</string>
     <string name="update_notice_widgets_description">উল্লম্ব অঙ্গভঙ্গি উইজেটগুলিতে পৌঁছায় যা তাদের নিজস্ব স্ক্রোলিং পরিচালনা করে।</string>
     <string name="update_notice_keyboard_title">টাচ কীবোর্ড ঐচ্ছিক</string>
-    <string name="update_notice_keyboard_description">Magic Box সেটিংসে একটি বন্ধ সুইচ সহ, শুধুমাত্র টাচ-ফোনগুলি হোমে ডিফল্টরূপে সফ্টওয়্যার কীবোর্ড খোলে৷</string>
+    <string name="update_notice_keyboard_description">শুধু টাচ-ভিত্তিক ফোনে ডিফল্টভাবে হোমে সফ্টওয়্যার কীবোর্ড খোলে; চেহারা → লেআউট ও ঘড়ি থেকে এটি বন্ধ করা যায়।</string>
     <string name="update_notice_github_title">আপডেট আপনার জন্য অপেক্ষা করছে</string>
     <string name="update_notice_github_description">একটি পরিষ্কার আপডেট কার্ড এবং একটি ছোট হোম হেডার আইকন প্রদর্শিত হয় যখন GitHub একটি নতুন রিলিজ হয়। আপনি ব্রাউজার হ্যান্ডঅফ অনুমোদন না করা পর্যন্ত কিছুই ডাউনলোড হবে না।</string>
     <string name="update_notice_integrated_apps_title">ইন্টিগ্রেটেড মেসেজিং অ্যাপ</string>
@@ -444,7 +447,7 @@
     <string name="spaces_onboarding_intro">ঐচ্ছিক স্পেস কাছাকাছি থাকাকালীন মূল পৃষ্ঠাটি ফোকাস করে থাকে।</string>
     <string name="conversations_onboarding_description">সক্রিয় বার্তা এবং ইমেল থ্রেড পড়তে সেটিংসের পাশে চ্যাট আইকনে আলতো চাপুন। ইনলাইন উত্তর শুধুমাত্র তখনই প্রদর্শিত হয় যখন উদ্ভূত অ্যাপ Android এর উত্তর ক্রিয়া সরবরাহ করে।</string>
     <string name="widget_page">উইজেট পৃষ্ঠা</string>
-    <string name="widget_page_onboarding_description">চারটি পর্যন্ত Android উইজেট যোগ করতে হোম থেকে বাঁদিকে সোয়াইপ করুন। ডানদিকে সোয়াইপ করুন বা বাড়িতে ফিরে যেতে ব্যাক ব্যবহার করুন।</string>
+    <string name="widget_page_onboarding_description">Android উইজেট যোগ করতে হোম থেকে বাঁদিকে সোয়াইপ করুন। ডানদিকে সোয়াইপ করুন বা বাড়িতে ফিরে যেতে ব্যাক ব্যবহার করুন।</string>
     <string name="mink_day_onboarding_short_description">স্থানীয় দৈনিক অন্তর্দৃষ্টি এবং ঐচ্ছিক অ্যাপ-পজিং নিয়ন্ত্রণের জন্য হোম থেকে ডানদিকে সোয়াইপ করুন। বাম দিকে সোয়াইপ করুন বা বাড়িতে ফিরে যেতে ব্যাক ব্যবহার করুন।</string>
     <string name="six_shortcuts_any_apps">ছয়টি শর্টকাট, যেকোনো ছয়টি অ্যাপ</string>
     <string name="six_shortcuts_any_apps_description">আপনি একটি অ্যাপ বরাদ্দ না করা পর্যন্ত প্রতিটি কনফিগারযোগ্য স্লট তার অন্তর্নির্মিত ডিফল্ট রাখে। এর অ্যাপ আইকনটি তখন হোমে গ্রহণ করে।</string>

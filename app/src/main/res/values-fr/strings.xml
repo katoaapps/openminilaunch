@@ -138,9 +138,6 @@
     <string name="choose_assistant">Choisir un assistant</string>
     <string name="choose_messaging_app">Envoyer par…</string>
     <string name="your_drawer">QUICK DRAWER</string>
-    <string name="choose_drawer_apps">Choisissez jusqu\'à huit applications ou raccourcis d\'applications dans Paramètres.</string>
-    <string name="empty_drawer">Votre Quick Drawer est vide</string>
-    <string name="see_all_apps">Voir tout</string>
     <string name="all_apps">Toutes les applications</string>
     <string name="app_info">Informations sur l\'application</string>
     <string name="app_info_unavailable">Impossible d\'ouvrir les informations sur l\'application pour cet élément</string>
@@ -228,7 +225,13 @@
     <string name="shortcut_messenger">Messenger</string>
     <string name="shortcut_files">Fichiers</string>
     <string name="quick_drawer">Quick Drawer</string>
-    <string name="quick_drawer_apps_description">Choisissez les applications à garder à portée de main dans Quick Drawer.</string>
+    <string name="manage_quick_apps">Gérer les apps rapides</string>
+    <string name="quick_apps">Apps rapides</string>
+    <string name="quick_apps_empty">Choisissez vos apps rapides dans Quick Drawer.</string>
+    <string name="minkpad_lite">MinkPad Lite</string>
+    <string name="private_space">Espace privé</string>
+    <string name="work_space">Espace professionnel</string>
+    <string name="quick_drawer_apps_description">Choisissez les apps rapides affichées à l’ouverture de Mink Assistant.</string>
     <string name="quick_drawer_controls">Commandes du tiroir</string>
     <string name="show_minkpad_button">Afficher le bouton MinkPad</string>
     <string name="show_minkpad_button_description">Gardez le clavier Bluetooth, le pavé tactile et la télécommande dans Quick Drawer</string>
@@ -331,7 +334,7 @@
     <string name="update_notice_widgets_title">Les widgets défilants se comportent normalement</string>
     <string name="update_notice_widgets_description">Les gestes verticaux atteignent les widgets qui gèrent leur propre défilement.</string>
     <string name="update_notice_keyboard_title">Les claviers tactiles sont facultatifs</string>
-    <string name="update_notice_keyboard_description">Les téléphones tactiles ouvrent par défaut le clavier logiciel sur Accueil, avec un interrupteur d\'arrêt dans les paramètres Magic Box.</string>
+    <string name="update_notice_keyboard_description">Les téléphones entièrement tactiles ouvrent le clavier à l’écran sur l’accueil par défaut ; vous pouvez le désactiver dans Apparence → Disposition et horloge.</string>
     <string name="update_notice_github_title">Les mises à jour vous attendent</string>
     <string name="update_notice_github_description">Une carte de mise à jour claire et une petite icône d\'en-tête Accueil apparaissent lorsque GitHub dispose d\'une version plus récente. Rien n\'est téléchargé tant que vous n\'avez pas approuvé le transfert du navigateur.</string>
     <string name="update_notice_integrated_apps_title">Applications de messagerie intégrées</string>
@@ -444,7 +447,7 @@
     <string name="spaces_onboarding_intro">La page principale reste concentrée tandis que les espaces facultatifs restent à proximité.</string>
     <string name="conversations_onboarding_description">Appuyez sur l\'icône de discussion à côté de Paramètres pour lire les messages et les fils de discussion actifs. La réponse en ligne apparaît uniquement lorsque l\'application d\'origine fournit l\'action de réponse de Android.</string>
     <string name="widget_page">Page des widgets</string>
-    <string name="widget_page_onboarding_description">Faites glisser votre doigt vers la gauche depuis Accueil pour ajouter jusqu\'à quatre widgets Android. Faites glisser votre doigt vers la droite ou utilisez Retour pour revenir à la page d\'accueil.</string>
+    <string name="widget_page_onboarding_description">Faites glisser votre doigt vers la gauche depuis Accueil pour ajouter des widgets Android. Faites glisser votre doigt vers la droite ou utilisez Retour pour revenir à la page d\'accueil.</string>
     <string name="mink_day_onboarding_short_description">Faites glisser votre doigt depuis Accueil pour obtenir des informations quotidiennes locales et des commandes facultatives de pause des applications. Faites glisser votre doigt vers la gauche ou utilisez Retour pour revenir à la page d\'accueil.</string>
     <string name="six_shortcuts_any_apps">Six raccourcis, six applications au choix</string>
     <string name="six_shortcuts_any_apps_description">Chaque emplacement configurable conserve sa valeur par défaut intégrée jusqu\'à ce que vous attribuiez une application. Son icône d\'application prend alors le relais sur Accueil.</string>

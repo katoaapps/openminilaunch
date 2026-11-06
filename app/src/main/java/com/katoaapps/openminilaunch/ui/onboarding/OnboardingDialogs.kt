@@ -16,8 +16,10 @@ import androidx.compose.material.icons.filled.Apps
 import androidx.compose.material.icons.filled.ContactPage
 import androidx.compose.material.icons.filled.Folder
 import androidx.compose.material.icons.filled.FolderOpen
+import androidx.compose.material.icons.filled.Keyboard
 import androidx.compose.material.icons.filled.Pets
 import androidx.compose.material.icons.filled.Security
+import androidx.compose.material.icons.filled.Widgets
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
@@ -40,7 +42,7 @@ import com.katoaapps.openminilaunch.ui.theme.Rust
 
 @Composable
 internal fun FeatureUpdateDialog(
-    onOpenMinkSpaceSettings: () -> Unit,
+    onOpenSettings: () -> Unit,
     onReviewTutorial: () -> Unit,
     onNotNow: () -> Unit,
 ) {
@@ -55,20 +57,25 @@ internal fun FeatureUpdateDialog(
                 Modifier.heightIn(max = Dimens.dp560).verticalScroll(rememberScrollState()),
                 verticalArrangement = Arrangement.spacedBy(Dimens.dp14),
             ) {
-                Text(
-                    stringResource(R.string.mink_space_mini_apps),
-                    fontSize = Dimens.sp18,
-                    fontWeight = FontWeight.Bold,
-                )
                 UpdatePoint(
                     Icons.Default.Apps,
-                    stringResource(R.string.settings_tab_mini_apps),
-                    stringResource(R.string.mink_space_settings_summary),
+                    stringResource(R.string.app_grid),
+                    stringResource(R.string.update_notice_app_shortcuts_description),
                 )
                 UpdatePoint(
                     Icons.Default.ContactPage,
-                    stringResource(R.string.profile),
-                    stringResource(R.string.profile_onboarding_description_v2),
+                    stringResource(R.string.favorites),
+                    stringResource(R.string.conversation_tour_favorites_description),
+                )
+                UpdatePoint(
+                    Icons.Default.Keyboard,
+                    stringResource(R.string.update_notice_keyboard_title),
+                    stringResource(R.string.update_notice_keyboard_description),
+                )
+                UpdatePoint(
+                    Icons.Default.Widgets,
+                    stringResource(R.string.widgets),
+                    stringResource(R.string.your_widget_page_description),
                 )
                 TextButton(onClick = onReviewTutorial, contentPadding = PaddingValues(Dimens.dp0)) {
                     Text(stringResource(R.string.review_updated_tutorial))
@@ -76,8 +83,8 @@ internal fun FeatureUpdateDialog(
             }
         },
         confirmButton = {
-            Button(onClick = onOpenMinkSpaceSettings) {
-                Text(stringResource(R.string.open_minkspace_settings))
+            Button(onClick = onOpenSettings) {
+                Text(stringResource(R.string.open_settings))
             }
         },
         dismissButton = { TextButton(onClick = onNotNow) { Text(stringResource(R.string.not_now)) } },

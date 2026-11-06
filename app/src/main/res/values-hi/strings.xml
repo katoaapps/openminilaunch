@@ -138,9 +138,6 @@
     <string name="choose_assistant">सहायक चुनें</string>
     <string name="choose_messaging_app">के माध्यम से भेजें…</string>
     <string name="your_drawer">QUICK DRAWER</string>
-    <string name="choose_drawer_apps">सेटिंग्स में अधिकतम आठ ऐप्स या ऐप शॉर्टकट चुनें।</string>
-    <string name="empty_drawer">आपका Quick Drawer खाली है</string>
-    <string name="see_all_apps">सभी देखें</string>
     <string name="all_apps">सभी ऐप्स</string>
     <string name="app_info">ऐप की जानकारी</string>
     <string name="app_info_unavailable">इस आइटम के लिए ऐप जानकारी नहीं खोली जा सकी</string>
@@ -228,7 +225,13 @@
     <string name="shortcut_messenger">Messenger</string>
     <string name="shortcut_files">फ़ाइलें</string>
     <string name="quick_drawer">Quick Drawer</string>
-    <string name="quick_drawer_apps_description">Quick Drawer में एक टैप से खुलने वाले ऐप चुनें।</string>
+    <string name="manage_quick_apps">क्विक ऐप्स प्रबंधित करें</string>
+    <string name="quick_apps">क्विक ऐप्स</string>
+    <string name="quick_apps_empty">Quick Drawer से क्विक ऐप्स चुनें।</string>
+    <string name="minkpad_lite">MinkPad Lite</string>
+    <string name="private_space">प्राइवेट स्पेस</string>
+    <string name="work_space">वर्क स्पेस</string>
+    <string name="quick_drawer_apps_description">Mink Assistant खुलने पर दिखने वाले क्विक ऐप्स चुनें।</string>
     <string name="quick_drawer_controls">ड्रॉअर नियंत्रण</string>
     <string name="show_minkpad_button">MinkPad बटन दिखाएं</string>
     <string name="show_minkpad_button_description">Bluetooth कीबोर्ड, ट्रैकपैड और रिमोट कंट्रोल को Quick Drawer में रखें</string>
@@ -331,7 +334,7 @@
     <string name="update_notice_widgets_title">स्क्रॉल करने योग्य विजेट सामान्य रूप से व्यवहार करते हैं</string>
     <string name="update_notice_widgets_description">वर्टिकल जेस्चर उन विजेट्स तक पहुंचते हैं जो अपनी स्क्रॉलिंग को प्रबंधित करते हैं।</string>
     <string name="update_notice_keyboard_title">टच कीबोर्ड वैकल्पिक हैं</string>
-    <string name="update_notice_keyboard_description">केवल-टच फ़ोन डिफ़ॉल्ट रूप से Magic Box सेटिंग्स में एक ऑफ स्विच के साथ, होम पर सॉफ़्टवेयर कीबोर्ड खोलते हैं।</string>
+    <string name="update_notice_keyboard_description">केवल टच वाले फ़ोन डिफ़ॉल्ट रूप से होम पर सॉफ़्टवेयर कीबोर्ड खोलते हैं; इसे दिखावट → लेआउट और घड़ी में बंद किया जा सकता है।</string>
     <string name="update_notice_github_title">अपडेट आपका इंतजार करते हैं</string>
     <string name="update_notice_github_description">जब GitHub की नई रिलीज़ होती है तो एक स्पष्ट अपडेट कार्ड और एक छोटा होम हेडर आइकन दिखाई देता है। जब तक आप ब्राउज़र हैंडऑफ़ को मंजूरी नहीं देते तब तक कुछ भी डाउनलोड नहीं होता।</string>
     <string name="update_notice_integrated_apps_title">एकीकृत मैसेजिंग ऐप्स</string>
@@ -444,7 +447,7 @@
     <string name="spaces_onboarding_intro">मुख्य पृष्ठ केंद्रित रहता है जबकि वैकल्पिक स्थान पास में ही रहते हैं।</string>
     <string name="conversations_onboarding_description">सक्रिय संदेश और ईमेल थ्रेड पढ़ने के लिए सेटिंग्स के पास चैट आइकन टैप करें। इनलाइन उत्तर केवल तभी दिखाई देता है जब मूल ऐप Android की उत्तर कार्रवाई प्रदान करता है।</string>
     <string name="widget_page">विजेट पृष्ठ</string>
-    <string name="widget_page_onboarding_description">चार Android विजेट जोड़ने के लिए होम से बाईं ओर स्वाइप करें। घर लौटने के लिए दाएँ स्वाइप करें या Back का उपयोग करें।</string>
+    <string name="widget_page_onboarding_description">Android विजेट जोड़ने के लिए होम से बाईं ओर स्वाइप करें। घर लौटने के लिए दाएँ स्वाइप करें या Back का उपयोग करें।</string>
     <string name="mink_day_onboarding_short_description">स्थानीय दैनिक जानकारी और वैकल्पिक ऐप-पॉज़िंग नियंत्रणों के लिए होम से दाईं ओर स्वाइप करें। घर लौटने के लिए बाईं ओर स्वाइप करें या वापस का उपयोग करें।</string>
     <string name="six_shortcuts_any_apps">छह शॉर्टकट, कोई छह ऐप्स</string>
     <string name="six_shortcuts_any_apps_description">जब तक आप कोई ऐप असाइन नहीं करते, प्रत्येक कॉन्फ़िगर करने योग्य स्लॉट अपना अंतर्निहित डिफ़ॉल्ट रखता है। इसके बाद इसका ऐप आइकन होम पर आ जाता है।</string>

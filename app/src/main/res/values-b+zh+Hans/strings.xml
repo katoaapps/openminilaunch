@@ -138,9 +138,6 @@
     <string name="choose_assistant">选择助手</string>
     <string name="choose_messaging_app">通过...发送</string>
     <string name="your_drawer">QUICK DRAWER</string>
-    <string name="choose_drawer_apps">在“设置”中最多选择八个应用程序或应用程序快捷方式。</string>
-    <string name="empty_drawer">您的 Quick Drawer 是空的</string>
-    <string name="see_all_apps">查看全部</string>
     <string name="all_apps">所有应用程序</string>
     <string name="app_info">应用程序信息</string>
     <string name="app_info_unavailable">无法打开该项目的应用程序信息</string>
@@ -228,7 +225,13 @@
     <string name="shortcut_messenger">Messenger</string>
     <string name="shortcut_files">文件</string>
     <string name="quick_drawer">Quick Drawer</string>
-    <string name="quick_drawer_apps_description">选择要在 Quick Drawer 中一键打开的应用。</string>
+    <string name="manage_quick_apps">管理快捷应用</string>
+    <string name="quick_apps">快捷应用</string>
+    <string name="quick_apps_empty">在 Quick Drawer 中选择快捷应用。</string>
+    <string name="minkpad_lite">MinkPad Lite</string>
+    <string name="private_space">私密空间</string>
+    <string name="work_space">工作空间</string>
+    <string name="quick_drawer_apps_description">选择打开 Mink Assistant 时显示的快捷应用。</string>
     <string name="quick_drawer_controls">抽屉控件</string>
     <string name="show_minkpad_button">显示 MinkPad 按钮</string>
     <string name="show_minkpad_button_description">在 Quick Drawer 中保留蓝牙键盘、触控板和遥控器入口</string>
@@ -331,7 +334,7 @@
     <string name="update_notice_widgets_title">可滚动小部件表现正常</string>
     <string name="update_notice_widgets_description">垂直手势可到达管理自身滚动的小部件。</string>
     <string name="update_notice_keyboard_title">触摸键盘是可选的</string>
-    <string name="update_notice_keyboard_description">仅触控手机默认在主页上打开软件键盘，并在 Magic Box 设置中关闭开关。</string>
+    <string name="update_notice_keyboard_description">仅触控手机默认在主屏幕上打开软件键盘；可在“外观”→“布局与时钟”中将其关闭。</string>
     <string name="update_notice_github_title">更新等你来</string>
     <string name="update_notice_github_description">当 GitHub 有更新版本时，会出现清晰的更新卡和小主页标题图标。在您批准浏览器移交之前，不会下载任何内容。</string>
     <string name="update_notice_integrated_apps_title">集成消息应用程序</string>
@@ -444,7 +447,7 @@
     <string name="spaces_onboarding_intro">主页保持焦点，而可选空间则保持在附近。</string>
     <string name="conversations_onboarding_description">点击“设置”旁边的聊天图标即可阅读活动消息和电子邮件线程。仅当原始应用程序提供 Android 的回复操作时，才会出现内联回复。</string>
     <string name="widget_page">小部件页面</string>
-    <string name="widget_page_onboarding_description">从主页向左滑动可添加最多四个 Android 小部件。向右滑动或使用“返回”返回主页。</string>
+    <string name="widget_page_onboarding_description">从主页向左滑动可添加 Android 小部件。向右滑动或使用“返回”返回主页。</string>
     <string name="mink_day_onboarding_short_description">从主页向右滑动即可获取本地每日见解和可选的应用程序暂停控件。向左滑动或使用“返回”返回主页。</string>
     <string name="six_shortcuts_any_apps">六个快捷方式，任意六个应用程序</string>
     <string name="six_shortcuts_any_apps_description">每个可配置插槽都会保留其内置默认值，直到您分配应用程序为止。然后它的应用程序图标接管主页。</string>

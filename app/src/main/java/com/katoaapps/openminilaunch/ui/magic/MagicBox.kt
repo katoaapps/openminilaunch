@@ -917,10 +917,19 @@ internal fun MagicBoxContent(
             }
 
             if (!noteMode && expanded && text.text.isBlank() && lockedPrefix == null) {
-                MagicBoxLegend(prefix, enabled = true) { key ->
-                    clearCommand()
-                    text = TextFieldValue(key.toString(), selection = TextRange(1))
-                    refocus()
+                if (appBubbleHost == MagicAppBubbleHost.ASSISTANT) {
+                    QuickAppsPanel(
+                        store = store,
+                        actions = actions,
+                        appAccessState = effectiveAppAccessState,
+                        onSelect = ::selectApp,
+                    )
+                } else {
+                    MagicBoxLegend(prefix, enabled = true) { key ->
+                        clearCommand()
+                        text = TextFieldValue(key.toString(), selection = TextRange(1))
+                        refocus()
+                    }
                 }
             }
 

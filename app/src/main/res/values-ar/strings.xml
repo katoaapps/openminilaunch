@@ -138,9 +138,6 @@
     <string name="choose_assistant">اختر مساعد</string>
     <string name="choose_messaging_app">أرسل عبر…</string>
     <string name="your_drawer">QUICK DRAWER</string>
-    <string name="choose_drawer_apps">اختر ما يصل إلى ثمانية تطبيقات أو اختصارات للتطبيقات في الإعدادات.</string>
-    <string name="empty_drawer">Quick Drawer لديك فارغ</string>
-    <string name="see_all_apps">شاهد الكل</string>
     <string name="all_apps">جميع التطبيقات</string>
     <string name="app_info">معلومات التطبيق</string>
     <string name="app_info_unavailable">تعذر فتح معلومات التطبيق لهذا العنصر</string>
@@ -228,7 +225,13 @@
     <string name="shortcut_messenger">Messenger</string>
     <string name="shortcut_files">ملفات</string>
     <string name="quick_drawer">Quick Drawer</string>
-    <string name="quick_drawer_apps_description">اختر التطبيقات التي تريد الوصول إليها بنقرة واحدة في Quick Drawer.</string>
+    <string name="manage_quick_apps">إدارة التطبيقات السريعة</string>
+    <string name="quick_apps">التطبيقات السريعة</string>
+    <string name="quick_apps_empty">اختر التطبيقات السريعة من Quick Drawer.</string>
+    <string name="minkpad_lite">MinkPad Lite</string>
+    <string name="private_space">المساحة الخاصة</string>
+    <string name="work_space">مساحة العمل</string>
+    <string name="quick_drawer_apps_description">اختر التطبيقات السريعة التي تظهر عند فتح Mink Assistant.</string>
     <string name="quick_drawer_controls">عناصر تحكم الدرج</string>
     <string name="show_minkpad_button">إظهار زر MinkPad</string>
     <string name="show_minkpad_button_description">احتفظ بلوحة مفاتيح Bluetooth ولوحة التتبع وجهاز التحكم في Quick Drawer</string>
@@ -331,7 +334,7 @@
     <string name="update_notice_widgets_title">تعمل الأدوات القابلة للتمرير بشكل طبيعي</string>
     <string name="update_notice_widgets_description">تصل الإيماءات الرأسية إلى عناصر واجهة المستخدم التي تدير التمرير الخاص بها.</string>
     <string name="update_notice_keyboard_title">لوحات المفاتيح التي تعمل باللمس اختيارية</string>
-    <string name="update_notice_keyboard_description">تفتح الهواتف التي تعمل باللمس فقط لوحة المفاتيح البرمجية على الصفحة الرئيسية بشكل افتراضي، مع وجود مفتاح إيقاف التشغيل في إعدادات Magic Box.</string>
+    <string name="update_notice_keyboard_description">تفتح الهواتف التي تعمل باللمس فقط لوحة المفاتيح البرمجية على الشاشة الرئيسية افتراضيًا، ويمكن إيقافها من المظهر ← التخطيط والساعة.</string>
     <string name="update_notice_github_title">التحديثات في انتظاركم</string>
     <string name="update_notice_github_description">تظهر بطاقة تحديث واضحة وأيقونة صغيرة لرأس الصفحة الرئيسية عندما يكون لدى GitHub إصدار أحدث. لا يتم تنزيل أي شيء حتى توافق على تسليم المتصفح.</string>
     <string name="update_notice_integrated_apps_title">تطبيقات المراسلة المتكاملة</string>
@@ -444,7 +447,7 @@
     <string name="spaces_onboarding_intro">تظل الصفحة الرئيسية مركزة بينما تظل المساحات الاختيارية قريبة.</string>
     <string name="conversations_onboarding_description">اضغط على أيقونة الدردشة بجانب الإعدادات لقراءة الرسائل النشطة وسلاسل البريد الإلكتروني. يظهر الرد المضمن فقط عندما يوفر التطبيق الأصلي إجراء الرد الخاص بـ Android.</string>
     <string name="widget_page">صفحة القطعة</string>
-    <string name="widget_page_onboarding_description">اسحب لليسار من الصفحة الرئيسية لإضافة ما يصل إلى أربع أدوات Android. اسحب لليمين أو استخدم "الرجوع" للعودة إلى الصفحة الرئيسية.</string>
+    <string name="widget_page_onboarding_description">اسحب لليسار من الصفحة الرئيسية لإضافة أدوات Android. اسحب لليمين أو استخدم "الرجوع" للعودة إلى الصفحة الرئيسية.</string>
     <string name="mink_day_onboarding_short_description">اسحب لليمين من الصفحة الرئيسية للحصول على رؤى يومية محلية وعناصر تحكم اختيارية لإيقاف التطبيق مؤقتًا. اسحب لليسار أو استخدم "رجوع" للعودة إلى الصفحة الرئيسية.</string>
     <string name="six_shortcuts_any_apps">ستة اختصارات، أي ستة تطبيقات</string>
     <string name="six_shortcuts_any_apps_description">تحتفظ كل فتحة قابلة للتكوين بوضعها الافتراضي المدمج حتى تقوم بتعيين تطبيق. ثم ينتقل رمز التطبيق الخاص به إلى الصفحة الرئيسية.</string>
