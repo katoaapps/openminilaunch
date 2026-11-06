@@ -12,6 +12,15 @@ internal enum class LauncherKeyboardStyle(@param:StringRes val labelRes: Int) {
     OUTLINED_SECONDARY(R.string.keyboard_style_outlined_secondary),
 }
 
+internal val launcherKeyboardStyleOptions = listOf(
+    LauncherKeyboardStyle.FLAT_PRIMARY,
+    LauncherKeyboardStyle.RAISED_PRIMARY,
+    LauncherKeyboardStyle.OUTLINED_PRIMARY,
+    LauncherKeyboardStyle.FLAT_SECONDARY,
+    LauncherKeyboardStyle.RAISED_SECONDARY,
+    LauncherKeyboardStyle.OUTLINED_SECONDARY,
+)
+
 internal enum class LauncherKeyboardLayout(
     @param:StringRes val labelRes: Int,
     val supportsCase: Boolean,
@@ -32,7 +41,7 @@ internal enum class LauncherKeyboardColorSource(@param:StringRes val labelRes: I
 }
 
 internal data class LauncherKeyboardPreferences(
-    val style: LauncherKeyboardStyle = LauncherKeyboardStyle.RAISED_PRIMARY,
+    val style: LauncherKeyboardStyle = LauncherKeyboardStyle.FLAT_PRIMARY,
     val layout: LauncherKeyboardLayout = LauncherKeyboardLayout.QWERTY,
     val colorSource: LauncherKeyboardColorSource = LauncherKeyboardColorSource.THEME,
     val customPrimaryArgb: Int = DEFAULT_KEYBOARD_PRIMARY_ARGB,

@@ -231,7 +231,7 @@
     <string name="minkpad_lite">MinkPad Lite</string>
     <string name="private_space">प्राइवेट स्पेस</string>
     <string name="work_space">वर्क स्पेस</string>
-    <string name="quick_drawer_apps_description">Mink Assistant खुलने पर दिखने वाले क्विक ऐप्स चुनें।</string>
+    <string name="quick_drawer_apps_description">क्विक ऐप्स Quick Drawer में और Mink Assistant खुलने पर दिखाई देते हैं।</string>
     <string name="quick_drawer_controls">ड्रॉअर नियंत्रण</string>
     <string name="show_minkpad_button">MinkPad बटन दिखाएं</string>
     <string name="show_minkpad_button_description">Bluetooth कीबोर्ड, ट्रैकपैड और रिमोट कंट्रोल को Quick Drawer में रखें</string>

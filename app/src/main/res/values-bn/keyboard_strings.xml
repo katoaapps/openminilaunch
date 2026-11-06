@@ -40,4 +40,7 @@
     <string name="keyboard_key_space">স্পেস</string>
     <string name="keyboard_key_new_line">নতুন লাইন</string>
     <string name="keyboard_key_search">অনুসন্ধান</string>
+    <string name="onboarding_keyboard_title">আপনার কীবোর্ড বেছে নিন</string>
+    <string name="onboarding_keyboard_description">Mink-এর লঞ্চার কীবোর্ড Magic Box-এর মধ্যেই থাকে। শুরু করার জন্য আপনার পছন্দের কী স্টাইল ও থিমের রঙের বিন্যাস বেছে নিন।</string>
+    <string name="onboarding_keyboard_change_later">পরে SYM চেপে ধরে অথবা Magic Box → কীবোর্ডে গিয়ে এটি পরিবর্তন করতে পারবেন।</string>
 </resources>

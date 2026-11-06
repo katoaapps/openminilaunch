@@ -40,4 +40,7 @@
     <string name="keyboard_key_space">Пробел</string>
     <string name="keyboard_key_new_line">Новая строка</string>
     <string name="keyboard_key_search">Поиск</string>
+    <string name="onboarding_keyboard_title">Выберите клавиатуру</string>
+    <string name="onboarding_keyboard_description">Клавиатура лаунчера Mink остаётся внутри Magic Box. Выберите стиль клавиш и сочетание цветов темы для начала работы.</string>
+    <string name="onboarding_keyboard_change_later">Позже это можно изменить, удерживая SYM, или в разделе Magic Box → Клавиатура.</string>
 </resources>

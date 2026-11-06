@@ -3,6 +3,7 @@ package com.katoaapps.openminilaunch.ui.keyboard
 import androidx.compose.foundation.layout.*
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -47,6 +48,10 @@ internal fun LauncherKeyboard(
 ) {
     var symbols by remember { mutableStateOf(false) }
     var shiftOverride by remember { mutableStateOf<Boolean?>(null) }
+    var editValue by remember { mutableStateOf(value) }
+    LaunchedEffect(value) {
+        editValue = value
+    }
     val configuration = LocalConfiguration.current
     val split = preferences.splitOnWideDisplays && (
         configuration.screenWidthDp >= 600 ||
@@ -59,7 +64,7 @@ internal fun LauncherKeyboard(
     )
     val style = preferences.style
     val sentenceCaps = !symbols && preferences.layout.supportsCase &&
-        shouldCapitalizeLauncherKeyboardSentence(value)
+        shouldCapitalizeLauncherKeyboardSentence(editValue)
     val uppercase = !symbols && preferences.layout.supportsCase &&
         launcherKeyboardUsesUppercase(shiftOverride, sentenceCaps)
     @Composable
@@ -79,8 +84,14 @@ internal fun LauncherKeyboard(
         0.dp
     }
 
+    fun updateValue(transform: (TextFieldValue) -> TextFieldValue) {
+        val updated = transform(editValue)
+        editValue = updated
+        onValueChange(updated)
+    }
+
     fun insert(text: String) {
-        onValueChange(insertLauncherKeyboardText(value, text))
+        updateValue { current -> insertLauncherKeyboardText(current, text) }
     }
 
     fun insertKey(key: LauncherKeyboardKey) {
@@ -91,6 +102,11 @@ internal fun LauncherKeyboard(
                 supportsCase = preferences.layout.supportsCase,
             ),
         )
+        shiftOverride = null
+    }
+
+    fun insertAlternateKey(key: LauncherKeyboardKey) {
+        key.secondaryLabel?.let(::insert)
         shiftOverride = null
     }
 
@@ -189,8 +205,11 @@ internal fun LauncherKeyboard(
                                     shiftOverride = !uppercase
                                 }
                             },
-                            onBackspace = { onValueChange(deleteLauncherKeyboardText(value)) },
+                            onBackspace = {
+                                updateValue(::deleteLauncherKeyboardText)
+                            },
                             onKey = ::insertKey,
+                            onAlternateKey = ::insertAlternateKey,
                         )
 
                         split -> {
@@ -211,6 +230,7 @@ internal fun LauncherKeyboard(
                                     style = style,
                                     haptic = preferences.hapticFeedbackEnabled,
                                     onKey = ::insertKey,
+                                    onAlternateKey = ::insertAlternateKey,
                                     weight = splitRow.left.size.toFloat(),
                                 )
                                 InvisibleReachKeyGap(
@@ -227,6 +247,7 @@ internal fun LauncherKeyboard(
                                     style = style,
                                     haptic = preferences.hapticFeedbackEnabled,
                                     onKey = ::insertKey,
+                                    onAlternateKey = ::insertAlternateKey,
                                     weight = splitRow.right.size.toFloat(),
                                 )
                             }
@@ -241,6 +262,7 @@ internal fun LauncherKeyboard(
                                 style = style,
                                 haptic = preferences.hapticFeedbackEnabled,
                                 onKey = ::insertKey,
+                                onAlternateKey = ::insertAlternateKey,
                                 rowWeight = LauncherKeyboardGeometry.letterRowWeight,
                                 centerOnTenKeyGrid = true,
                             )

@@ -40,4 +40,7 @@
     <string name="keyboard_key_space">空格</string>
     <string name="keyboard_key_new_line">换行</string>
     <string name="keyboard_key_search">搜索</string>
+    <string name="onboarding_keyboard_title">选择键盘</string>
+    <string name="onboarding_keyboard_description">Mink 的启动器键盘仅显示在 Magic Box 中。请选择要使用的按键样式和主题配色。</string>
+    <string name="onboarding_keyboard_change_later">稍后可以长按 SYM，或前往 Magic Box → 键盘进行更改。</string>
 </resources>

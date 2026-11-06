@@ -231,7 +231,7 @@
     <string name="minkpad_lite">MinkPad Lite</string>
     <string name="private_space">Ruang Pribadi</string>
     <string name="work_space">Ruang Kerja</string>
-    <string name="quick_drawer_apps_description">Pilih Aplikasi Cepat yang muncul saat Mink Assistant dibuka.</string>
+    <string name="quick_drawer_apps_description">Aplikasi Cepat muncul di Quick Drawer dan saat Mink Assistant dibuka.</string>
     <string name="quick_drawer_controls">Kontrol laci</string>
     <string name="show_minkpad_button">Tampilkan tombol MinkPad</string>
     <string name="show_minkpad_button_description">Simpan keyboard Bluetooth, trackpad, dan remote control di Quick Drawer</string>

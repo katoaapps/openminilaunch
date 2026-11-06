@@ -231,7 +231,7 @@
     <string name="minkpad_lite">MinkPad Lite</string>
     <string name="private_space">نجی جگہ</string>
     <string name="work_space">ورک اسپیس</string>
-    <string name="quick_drawer_apps_description">Mink Assistant کھلنے پر دکھائی جانے والی فوری ایپس منتخب کریں۔</string>
+    <string name="quick_drawer_apps_description">فوری ایپس Quick Drawer میں اور Mink Assistant کھلنے پر دکھائی دیتی ہیں۔</string>
     <string name="quick_drawer_controls">ڈراور کنٹرولز</string>
     <string name="show_minkpad_button">MinkPad بٹن دکھائیں</string>
     <string name="show_minkpad_button_description">Bluetooth کی بورڈ، ٹریک پیڈ اور ریموٹ کنٹرول کو Quick Drawer میں رکھیں</string>

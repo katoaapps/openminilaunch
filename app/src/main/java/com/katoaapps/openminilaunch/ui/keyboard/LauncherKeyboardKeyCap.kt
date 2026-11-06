@@ -85,11 +85,7 @@ internal fun RowScope.KeyboardTextActionKey(
         Text(
             text = label,
             fontSize = if (label.length > 2) 11.sp else 15.sp,
-            fontWeight = if (style.isFlatKeyboardStyle && solidWhenFlat) {
-                FontWeight.Bold
-            } else {
-                FontWeight.SemiBold
-            },
+            fontWeight = if (style.isFlatKeyboardStyle && solidWhenFlat) FontWeight.Black else FontWeight.Bold,
             maxLines = 1,
         )
     }

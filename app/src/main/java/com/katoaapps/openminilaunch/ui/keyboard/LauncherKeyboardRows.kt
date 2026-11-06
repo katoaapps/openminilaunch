@@ -45,6 +45,7 @@ internal fun RowScope.KeyboardSplitGroup(
     style: LauncherKeyboardStyle,
     haptic: Boolean,
     onKey: (LauncherKeyboardKey) -> Unit,
+    onAlternateKey: ((LauncherKeyboardKey) -> Unit)? = null,
     weight: Float,
     keyColors: ((LauncherKeyboardKey) -> LauncherKeyboardColors?)? = null,
     solidKeysWhenFlat: Boolean = false,
@@ -68,6 +69,7 @@ internal fun RowScope.KeyboardSplitGroup(
                 style = style,
                 haptic = haptic,
                 solidWhenFlat = solidKeysWhenFlat,
+                onLongClick = alternateKeyAction(key, onAlternateKey),
             ) { onKey(key) }
         }
     }
@@ -82,6 +84,7 @@ internal fun ColumnScope.SplitKeyboardKeyRow(
     style: LauncherKeyboardStyle,
     haptic: Boolean,
     onKey: (LauncherKeyboardKey) -> Unit,
+    onAlternateKey: ((LauncherKeyboardKey) -> Unit)? = null,
     rowWeight: Float,
     keyColors: ((LauncherKeyboardKey) -> LauncherKeyboardColors?)? = null,
     solidKeysWhenFlat: Boolean = false,
@@ -101,6 +104,7 @@ internal fun ColumnScope.SplitKeyboardKeyRow(
             style = style,
             haptic = haptic,
             onKey = onKey,
+            onAlternateKey = onAlternateKey,
             weight = leftKeys.size.toFloat(),
             keyColors = keyColors,
             solidKeysWhenFlat = solidKeysWhenFlat,
@@ -114,6 +118,7 @@ internal fun ColumnScope.SplitKeyboardKeyRow(
             style = style,
             haptic = haptic,
             onKey = onKey,
+            onAlternateKey = onAlternateKey,
             weight = rightKeys.size.toFloat(),
             keyColors = keyColors,
             solidKeysWhenFlat = solidKeysWhenFlat,
@@ -169,6 +174,7 @@ internal fun ColumnScope.KeyboardKeyRow(
     style: LauncherKeyboardStyle,
     haptic: Boolean,
     onKey: (LauncherKeyboardKey) -> Unit,
+    onAlternateKey: ((LauncherKeyboardKey) -> Unit)? = null,
     modifier: Modifier = Modifier,
     rowWeight: Float = LauncherKeyboardGeometry.letterRowWeight,
     centerOnTenKeyGrid: Boolean = false,
@@ -191,6 +197,7 @@ internal fun ColumnScope.KeyboardKeyRow(
                 style = style,
                 haptic = haptic,
                 solidWhenFlat = solidKeysWhenFlat,
+                onLongClick = alternateKeyAction(key, onAlternateKey),
             ) { onKey(key) }
         }
         if (edgeInsetWeight > 0f) Spacer(Modifier.weight(edgeInsetWeight))
@@ -211,6 +218,7 @@ internal fun ColumnScope.KeyboardBottomLetterRow(
     onShift: () -> Unit,
     onBackspace: () -> Unit,
     onKey: (LauncherKeyboardKey) -> Unit,
+    onAlternateKey: (LauncherKeyboardKey) -> Unit,
 ) {
     val innerInsetWeight = ((7f - keys.size) / 2f).coerceAtLeast(0f)
     Row(
@@ -238,6 +246,7 @@ internal fun ColumnScope.KeyboardBottomLetterRow(
                 style = style,
                 haptic = haptic,
                 onKey = onKey,
+                onAlternateKey = onAlternateKey,
                 weight = splitRow.left.size.toFloat(),
             )
             InvisibleReachKeyGap(splitRow, splitGap, haptic, onKey)
@@ -249,6 +258,7 @@ internal fun ColumnScope.KeyboardBottomLetterRow(
                 style = style,
                 haptic = haptic,
                 onKey = onKey,
+                onAlternateKey = onAlternateKey,
                 weight = splitRow.right.size.toFloat(),
             )
         } else {
@@ -259,6 +269,7 @@ internal fun ColumnScope.KeyboardBottomLetterRow(
                     colors = colors,
                     style = style,
                     haptic = haptic,
+                    onLongClick = alternateKeyAction(key, onAlternateKey),
                     onClick = { onKey(key) },
                 )
             }
@@ -275,6 +286,15 @@ internal fun ColumnScope.KeyboardBottomLetterRow(
             onClick = onBackspace,
         )
     }
+}
+
+private fun alternateKeyAction(
+    key: LauncherKeyboardKey,
+    onAlternateKey: ((LauncherKeyboardKey) -> Unit)?,
+): (() -> Unit)? = if (key.secondaryLabel != null && onAlternateKey != null) {
+    { onAlternateKey(key) }
+} else {
+    null
 }
 
 @Composable

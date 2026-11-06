@@ -231,7 +231,7 @@
     <string name="minkpad_lite">MinkPad Lite</string>
     <string name="private_space">المساحة الخاصة</string>
     <string name="work_space">مساحة العمل</string>
-    <string name="quick_drawer_apps_description">اختر التطبيقات السريعة التي تظهر عند فتح Mink Assistant.</string>
+    <string name="quick_drawer_apps_description">تظهر التطبيقات السريعة في Quick Drawer وعند فتح Mink Assistant.</string>
     <string name="quick_drawer_controls">عناصر تحكم الدرج</string>
     <string name="show_minkpad_button">إظهار زر MinkPad</string>
     <string name="show_minkpad_button_description">احتفظ بلوحة مفاتيح Bluetooth ولوحة التتبع وجهاز التحكم في Quick Drawer</string>

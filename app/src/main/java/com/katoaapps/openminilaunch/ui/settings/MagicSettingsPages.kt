@@ -140,6 +140,7 @@ internal fun MinkAssistantSettingsPage(
 ) {
     SettingsPage(stringResource(R.string.mink_assistant), goBack) {
         Text(stringResource(R.string.assistant_settings_description), color = Muted, fontSize = Dimens.sp13)
+        Text(stringResource(R.string.quick_drawer_apps_description), color = Muted, fontSize = Dimens.sp13)
         SettingsRow(
             title = stringResource(
                 if (assistantRoleHeld) R.string.manage_mink_assistant else R.string.choose_mink_assistant,

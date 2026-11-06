@@ -37,7 +37,7 @@ internal class LauncherKeyboardPreferenceStore(private val prefs: SharedPreferen
     }
 
     private fun load() = LauncherKeyboardPreferences(
-        style = prefs.enumValue(STYLE_KEY, LauncherKeyboardStyle.RAISED_PRIMARY),
+        style = prefs.enumValue(STYLE_KEY, LauncherKeyboardStyle.FLAT_PRIMARY),
         layout = prefs.enumValue(LAYOUT_KEY, LauncherKeyboardLayout.QWERTY),
         colorSource = prefs.enumValue(COLOR_SOURCE_KEY, LauncherKeyboardColorSource.THEME),
         customPrimaryArgb = prefs.getInt(CUSTOM_PRIMARY_KEY, DEFAULT_KEYBOARD_PRIMARY_ARGB),

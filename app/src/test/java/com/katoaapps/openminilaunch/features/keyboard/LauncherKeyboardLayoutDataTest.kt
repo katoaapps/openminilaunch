@@ -53,6 +53,19 @@ class LauncherKeyboardLayoutDataTest {
         assertTrue(LauncherKeyboardPreferences().splitOnWideDisplays)
     }
 
+    @Test fun flatPrimaryKeyboardIsTheDefault() {
+        assertEquals(
+            com.katoaapps.openminilaunch.model.LauncherKeyboardStyle.FLAT_PRIMARY,
+            LauncherKeyboardPreferences().style,
+        )
+    }
+
+    @Test fun letterKeysExposeTheirDisplayedAlternateForLongPress() {
+        val qwertyTop = launcherKeyboardRows(LauncherKeyboardLayout.QWERTY, symbols = false).first()
+        assertEquals("[", qwertyTop.first().secondaryLabel)
+        assertTrue(launcherKeyboardNumberKeys(symbols = false).all { it.secondaryLabel == null })
+    }
+
     @Test fun splitKeepsMiddleReachKeysOutOfTheVisibleHalves() {
         val qwertyTop = launcherKeyboardRows(LauncherKeyboardLayout.QWERTY, symbols = false).first()
         val split = splitLauncherKeyboardRow(qwertyTop)

@@ -40,4 +40,7 @@
     <string name="keyboard_key_space">مسافة</string>
     <string name="keyboard_key_new_line">سطر جديد</string>
     <string name="keyboard_key_search">بحث</string>
+    <string name="onboarding_keyboard_title">اختر لوحة المفاتيح</string>
+    <string name="onboarding_keyboard_description">تبقى لوحة مفاتيح مشغّل Mink داخل Magic Box. اختر نمط المفاتيح وترتيب ألوان السمة الذي تريد البدء به.</string>
+    <string name="onboarding_keyboard_change_later">يمكنك تغيير ذلك لاحقًا بالضغط مطولًا على SYM، أو من Magic Box ← لوحة المفاتيح.</string>
 </resources>

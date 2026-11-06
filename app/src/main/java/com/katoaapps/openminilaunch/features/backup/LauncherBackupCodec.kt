@@ -366,7 +366,7 @@ internal object LauncherBackupCodec {
             openSoftwareKeyboardOnHome = magicBox.optBoolean("openSoftwareKeyboardOnHome", true),
             launcherKeyboardPreferences = launcherKeyboard?.let { keyboard ->
                 LauncherKeyboardPreferences(
-                    style = keyboard.enumValue("style", LauncherKeyboardStyle.RAISED_PRIMARY),
+                    style = keyboard.enumValue("style", LauncherKeyboardStyle.FLAT_PRIMARY),
                     layout = keyboard.enumValue("layout", LauncherKeyboardLayout.QWERTY),
                     colorSource = keyboard.enumValue("colorSource", LauncherKeyboardColorSource.THEME),
                     customPrimaryArgb = keyboard.optInt("customPrimaryArgb", 0xFF4B250F.toInt()),

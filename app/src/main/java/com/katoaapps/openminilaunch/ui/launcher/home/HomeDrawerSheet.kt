@@ -130,13 +130,21 @@ private fun ManageQuickAppsRow(
             horizontalArrangement = Arrangement.spacedBy(Dimens.dp12),
         ) {
             Icon(Icons.Default.GridView, null)
-            Text(
-                stringResource(R.string.manage_quick_apps),
-                modifier = Modifier.weight(1f),
-                fontWeight = FontWeight.Bold,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis,
-            )
+            Column(Modifier.weight(1f)) {
+                Text(
+                    stringResource(R.string.quick_apps),
+                    fontWeight = FontWeight.Bold,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                )
+                Text(
+                    stringResource(R.string.quick_drawer_apps_description),
+                    color = contentColor.copy(alpha = .68f),
+                    fontSize = Dimens.sp12,
+                    maxLines = 2,
+                    overflow = TextOverflow.Ellipsis,
+                )
+            }
             Text(
                 stringResource(R.string.count_of_max, selectedCount, MAX_DRAWER_APPS),
                 color = contentColor.copy(alpha = .68f),

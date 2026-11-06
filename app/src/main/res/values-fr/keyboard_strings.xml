@@ -40,4 +40,7 @@
     <string name="keyboard_key_space">Espace</string>
     <string name="keyboard_key_new_line">Nouvelle ligne</string>
     <string name="keyboard_key_search">Rechercher</string>
+    <string name="onboarding_keyboard_title">Choisissez votre clavier</string>
+    <string name="onboarding_keyboard_description">Le clavier du lanceur Mink reste dans Magic Box. Choisissez le style des touches et la disposition des couleurs du thème pour commencer.</string>
+    <string name="onboarding_keyboard_change_later">Vous pourrez modifier ce choix plus tard en maintenant SYM appuyé ou dans Magic Box → Clavier.</string>
 </resources>

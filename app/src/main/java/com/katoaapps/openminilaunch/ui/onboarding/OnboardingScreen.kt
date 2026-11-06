@@ -28,6 +28,7 @@ import androidx.compose.material.icons.automirrored.filled.ArrowForward
 import androidx.compose.material.icons.automirrored.filled.Chat
 import androidx.compose.material.icons.filled.Contacts
 import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Keyboard
 import androidx.compose.material3.Button
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -53,6 +54,7 @@ import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -64,6 +66,7 @@ import com.katoaapps.openminilaunch.R
 import com.katoaapps.openminilaunch.data.LauncherStore
 import com.katoaapps.openminilaunch.features.messaging.MessagingProviderCatalog
 import com.katoaapps.openminilaunch.features.messaging.MessagingProviderOption
+import com.katoaapps.openminilaunch.features.magic.hasUsableHardwareKeyboard
 import com.katoaapps.openminilaunch.platform.DeviceActions
 import com.katoaapps.openminilaunch.platform.isPermanentlyDenied
 import com.katoaapps.openminilaunch.ui.settings.MessagingProviderPickerDialog
@@ -73,9 +76,17 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
 private data class OnboardingPage(
+    val step: OnboardingStep,
     val title: String,
     val icon: ImageVector,
 )
+
+private enum class OnboardingStep {
+    HOME,
+    KEYBOARD,
+    CONTACTS,
+    MESSAGING,
+}
 
 @Composable
 internal fun OnboardingScreen(
@@ -85,7 +96,16 @@ internal fun OnboardingScreen(
     onFinish: () -> Unit,
 ) {
     val context = LocalContext.current
+    val configuration = LocalConfiguration.current
     val lifecycleOwner = LocalLifecycleOwner.current
+    val showKeyboardSetup by rememberSaveable {
+        mutableStateOf(
+            !hasUsableHardwareKeyboard(
+                configuration.keyboard,
+                configuration.hardKeyboardHidden,
+            ),
+        )
+    }
     var page by rememberSaveable { mutableIntStateOf(0) }
     var homeRoleHeld by remember { mutableStateOf(actions.isHomeRoleHeld()) }
     var contactsGranted by remember {
@@ -133,11 +153,32 @@ internal fun OnboardingScreen(
         }
     }
 
-    val pages = listOf(
-        OnboardingPage(stringResource(R.string.default_home_app), Icons.Default.Home),
-        OnboardingPage(stringResource(R.string.onboarding_contacts_title), Icons.Default.Contacts),
-        OnboardingPage(stringResource(R.string.onboarding_messages_title), Icons.AutoMirrored.Filled.Chat),
-    )
+    val pages = buildList {
+        add(OnboardingPage(OnboardingStep.HOME, stringResource(R.string.default_home_app), Icons.Default.Home))
+        if (showKeyboardSetup) {
+            add(
+                OnboardingPage(
+                    OnboardingStep.KEYBOARD,
+                    stringResource(R.string.onboarding_keyboard_title),
+                    Icons.Default.Keyboard,
+                ),
+            )
+        }
+        add(
+            OnboardingPage(
+                OnboardingStep.CONTACTS,
+                stringResource(R.string.onboarding_contacts_title),
+                Icons.Default.Contacts,
+            ),
+        )
+        add(
+            OnboardingPage(
+                OnboardingStep.MESSAGING,
+                stringResource(R.string.onboarding_messages_title),
+                Icons.AutoMirrored.Filled.Chat,
+            ),
+        )
+    }
 
     BackHandler(enabled = page > 0) { page-- }
     OnboardingFrame(
@@ -148,19 +189,31 @@ internal fun OnboardingScreen(
         onNext = { if (page < pages.lastIndex) page++ else onFinish() },
     ) {
         key(page) {
-            when (page) {
-                0 -> OnboardingHomeSetupPage(
+            when (pages[page].step) {
+                OnboardingStep.HOME -> OnboardingHomeSetupPage(
                     appName = stringResource(R.string.app_name),
                     active = homeRoleHeld,
                     onChooseHome = requestHomeRole,
                     onManageHome = { actions.openHomeSettings() },
                 )
-                1 -> OnboardingContactsSetupPage(
+                OnboardingStep.KEYBOARD -> OnboardingKeyboardSetupPage(
+                    preferences = store.launcherKeyboardPreferences,
+                    themePrimaryArgb = store.effectiveHomePanelColorArgb,
+                    themeSecondaryArgb = store.visibleAppBackgroundColorArgb
+                        ?: store.effectiveAppBackgroundColorArgb
+                        ?: 0xFFFFE9CB.toInt(),
+                    onStyle = { style ->
+                        store.updateLauncherKeyboardPreferences(
+                            store.launcherKeyboardPreferences.copy(style = style),
+                        )
+                    },
+                )
+                OnboardingStep.CONTACTS -> OnboardingContactsSetupPage(
                     granted = contactsGranted,
                     onAllow = { contactsPermission.launch(Manifest.permission.READ_CONTACTS) },
                     onManage = actions::openAppPermissionSettings,
                 )
-                else -> OnboardingMessagingSetupPage(
+                OnboardingStep.MESSAGING -> OnboardingMessagingSetupPage(
                     sendAutomatically = store.sendMessagesAutomatically,
                     onSendAutomaticallyChanged = store::updateSendMessagesAutomatically,
                     selectedProvider = store.preferredMessagingPackage

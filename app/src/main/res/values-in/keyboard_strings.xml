@@ -40,4 +40,7 @@
     <string name="keyboard_key_space">Spasi</string>
     <string name="keyboard_key_new_line">Baris baru</string>
     <string name="keyboard_key_search">Cari</string>
+    <string name="onboarding_keyboard_title">Pilih keyboard Anda</string>
+    <string name="onboarding_keyboard_description">Keyboard peluncur Mink tetap berada di dalam Magic Box. Pilih gaya tombol dan susunan warna tema yang ingin Anda gunakan.</string>
+    <string name="onboarding_keyboard_change_later">Anda dapat mengubahnya nanti dengan menekan dan menahan SYM, atau melalui Magic Box → Keyboard.</string>
 </resources>

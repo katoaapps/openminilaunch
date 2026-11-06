@@ -40,4 +40,7 @@
     <string name="keyboard_key_space">Espacio</string>
     <string name="keyboard_key_new_line">Nueva línea</string>
     <string name="keyboard_key_search">Buscar</string>
+    <string name="onboarding_keyboard_title">Elige tu teclado</string>
+    <string name="onboarding_keyboard_description">El teclado del lanzador de Mink permanece dentro de Magic Box. Elige el estilo de teclas y la combinación de colores del tema con los que quieras empezar.</string>
+    <string name="onboarding_keyboard_change_later">Puedes cambiarlo después manteniendo pulsado SYM o en Magic Box → Teclado.</string>
 </resources>

@@ -231,7 +231,7 @@
     <string name="minkpad_lite">MinkPad Lite</string>
     <string name="private_space">ব্যক্তিগত স্পেস</string>
     <string name="work_space">কাজের স্পেস</string>
-    <string name="quick_drawer_apps_description">Mink Assistant খুললে দেখানো দ্রুত অ্যাপ বেছে নিন।</string>
+    <string name="quick_drawer_apps_description">দ্রুত অ্যাপ Quick Drawer-এ এবং Mink Assistant খুললে দেখা যায়।</string>
     <string name="quick_drawer_controls">ড্রয়ার নিয়ন্ত্রণ</string>
     <string name="show_minkpad_button">MinkPad বোতাম দেখান</string>
     <string name="show_minkpad_button_description">Bluetooth কীবোর্ড, ট্র্যাকপ্যাড ও রিমোট কন্ট্রোল Quick Drawer-এ রাখুন</string>

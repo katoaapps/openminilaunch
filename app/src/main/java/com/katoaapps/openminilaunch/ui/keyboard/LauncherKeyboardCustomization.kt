@@ -1,4 +1,4 @@
-package com.katoaapps.openminilaunch.ui.settings
+package com.katoaapps.openminilaunch.ui.keyboard
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
@@ -34,9 +34,9 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.katoaapps.openminilaunch.model.LauncherKeyboardPreferences
-import com.katoaapps.openminilaunch.ui.keyboard.LauncherKeyboard
 import com.katoaapps.openminilaunch.ui.theme.Dimens
 import kotlin.math.min
 
@@ -108,6 +108,7 @@ internal fun KeyboardDevicePreview(
     preferences: LauncherKeyboardPreferences,
     themePrimaryArgb: Int,
     themeSecondaryArgb: Int,
+    maxPreviewHeight: Dp = 420.dp,
 ) {
     val configuration = LocalConfiguration.current
     val deviceWidth = configuration.screenWidthDp.coerceAtLeast(1).dp
@@ -116,7 +117,7 @@ internal fun KeyboardDevicePreview(
     BoxWithConstraints(Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
         val scale = min(
             1f,
-            min(maxWidth.value / deviceWidth.value, 420f / deviceHeight.value),
+            min(maxWidth.value / deviceWidth.value, maxPreviewHeight.value / deviceHeight.value),
         )
         val previewWidth = deviceWidth * scale
         val previewHeight = deviceHeight * scale

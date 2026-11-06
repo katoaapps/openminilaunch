@@ -40,4 +40,7 @@
     <string name="keyboard_key_space">Espaço</string>
     <string name="keyboard_key_new_line">Nova linha</string>
     <string name="keyboard_key_search">Pesquisar</string>
+    <string name="onboarding_keyboard_title">Escolha seu teclado</string>
+    <string name="onboarding_keyboard_description">O teclado do inicializador Mink permanece dentro da Magic Box. Escolha o estilo das teclas e a combinação de cores do tema para começar.</string>
+    <string name="onboarding_keyboard_change_later">Você pode mudar isso depois mantendo SYM pressionado ou em Magic Box → Teclado.</string>
 </resources>

@@ -40,4 +40,7 @@
     <string name="keyboard_key_space">Space</string>
     <string name="keyboard_key_new_line">New line</string>
     <string name="keyboard_key_search">Search</string>
+    <string name="onboarding_keyboard_title">Choose your keyboard</string>
+    <string name="onboarding_keyboard_description">Mink’s launcher keyboard stays inside Magic Box. Choose the key style and theme-colour arrangement you want to start with.</string>
+    <string name="onboarding_keyboard_change_later">You can change this later by pressing and holding SYM, or in Magic Box → Keyboard.</string>
 </resources>

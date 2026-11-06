@@ -40,4 +40,7 @@
     <string name="keyboard_key_space">スペース</string>
     <string name="keyboard_key_new_line">改行</string>
     <string name="keyboard_key_search">検索</string>
+    <string name="onboarding_keyboard_title">キーボードを選択</string>
+    <string name="onboarding_keyboard_description">Mink のランチャーキーボードは Magic Box 内にのみ表示されます。使用するキーのスタイルとテーマカラーの組み合わせを選んでください。</string>
+    <string name="onboarding_keyboard_change_later">後から SYM を長押しするか、Magic Box → キーボードで変更できます。</string>
 </resources>

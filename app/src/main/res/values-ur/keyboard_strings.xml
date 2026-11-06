@@ -40,4 +40,7 @@
     <string name="keyboard_key_space">اسپیس</string>
     <string name="keyboard_key_new_line">نئی سطر</string>
     <string name="keyboard_key_search">تلاش</string>
+    <string name="onboarding_keyboard_title">اپنا کی بورڈ منتخب کریں</string>
+    <string name="onboarding_keyboard_description">Mink کا لانچر کی بورڈ Magic Box کے اندر ہی رہتا ہے۔ شروع کرنے کے لیے اپنی پسند کا کلید انداز اور تھیم رنگوں کی ترتیب منتخب کریں۔</string>
+    <string name="onboarding_keyboard_change_later">آپ بعد میں SYM کو دبا کر رکھنے یا Magic Box → کی بورڈ میں جا کر اسے تبدیل کر سکتے ہیں۔</string>
 </resources>

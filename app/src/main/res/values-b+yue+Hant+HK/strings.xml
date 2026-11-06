@@ -231,7 +231,7 @@
     <string name="minkpad_lite">MinkPad Lite</string>
     <string name="private_space">私人空間</string>
     <string name="work_space">工作空間</string>
-    <string name="quick_drawer_apps_description">揀選開啟 Mink Assistant 時顯示嘅快速應用程式。</string>
+    <string name="quick_drawer_apps_description">快速應用程式會顯示喺 Quick Drawer，同埋開啟 Mink Assistant 時顯示。</string>
     <string name="quick_drawer_controls">抽屜控制</string>
     <string name="show_minkpad_button">顯示 MinkPad 按鈕</string>
     <string name="show_minkpad_button_description">將藍牙鍵盤、觸控板同遙控器保留喺 Quick Drawer</string>

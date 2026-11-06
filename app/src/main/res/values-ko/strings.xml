@@ -231,7 +231,7 @@
     <string name="minkpad_lite">MinkPad Lite</string>
     <string name="private_space">비공개 공간</string>
     <string name="work_space">업무 공간</string>
-    <string name="quick_drawer_apps_description">Mink Assistant를 열 때 표시할 빠른 앱을 선택하세요.</string>
+    <string name="quick_drawer_apps_description">빠른 앱은 Quick Drawer와 Mink Assistant를 열 때 표시됩니다.</string>
     <string name="quick_drawer_controls">서랍 제어</string>
     <string name="show_minkpad_button">MinkPad 버튼 표시</string>
     <string name="show_minkpad_button_description">Bluetooth 키보드, 트랙패드 및 리모컨을 Quick Drawer에서 엽니다</string>

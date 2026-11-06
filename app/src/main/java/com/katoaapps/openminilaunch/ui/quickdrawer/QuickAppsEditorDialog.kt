@@ -45,7 +45,7 @@ internal fun QuickAppsEditorDialog(
     var pendingReplacement by remember { mutableStateOf<LauncherTarget?>(null) }
 
     LauncherTargetPickerDialog(
-        title = stringResource(R.string.manage_quick_apps),
+        title = stringResource(R.string.quick_apps),
         apps = apps.orEmpty(),
         shortcuts = shortcuts.orEmpty(),
         selected = draftSelection.toSet(),

@@ -29,11 +29,14 @@ import com.katoaapps.openminilaunch.data.LauncherStore
 import com.katoaapps.openminilaunch.model.LauncherKeyboardColorSource
 import com.katoaapps.openminilaunch.model.LauncherKeyboardLayout
 import com.katoaapps.openminilaunch.model.LauncherKeyboardStyle
+import com.katoaapps.openminilaunch.model.launcherKeyboardStyleOptions
 import com.katoaapps.openminilaunch.model.MAX_KEYBOARD_HEIGHT_DP
 import com.katoaapps.openminilaunch.model.MIN_KEYBOARD_HEIGHT_DP
 import com.katoaapps.openminilaunch.ui.components.SectionLabel
 import com.katoaapps.openminilaunch.ui.components.SettingsSwitchRow
 import com.katoaapps.openminilaunch.ui.keyboard.resolveLauncherKeyboardColors
+import com.katoaapps.openminilaunch.ui.keyboard.KeyboardChoiceGrid
+import com.katoaapps.openminilaunch.ui.keyboard.KeyboardDevicePreview
 import com.katoaapps.openminilaunch.ui.theme.Dimens
 import com.katoaapps.openminilaunch.ui.theme.Muted
 import com.katoaapps.openminilaunch.ui.theme.readableContentColor
@@ -99,14 +102,7 @@ internal fun KeyboardSettingsPage(store: LauncherStore, goBack: () -> Unit) {
         SectionLabel(stringResource(R.string.keyboard_style))
         Text(stringResource(R.string.keyboard_theme_colors_description), color = Muted, fontSize = Dimens.sp12)
         KeyboardChoiceGrid(
-            options = listOf(
-                LauncherKeyboardStyle.FLAT_PRIMARY,
-                LauncherKeyboardStyle.RAISED_PRIMARY,
-                LauncherKeyboardStyle.OUTLINED_PRIMARY,
-                LauncherKeyboardStyle.FLAT_SECONDARY,
-                LauncherKeyboardStyle.RAISED_SECONDARY,
-                LauncherKeyboardStyle.OUTLINED_SECONDARY,
-            ),
+            options = launcherKeyboardStyleOptions,
             columns = 3,
             selected = preferences.style,
             label = { style -> stringResource(style.labelRes) },

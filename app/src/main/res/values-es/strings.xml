@@ -231,7 +231,7 @@
     <string name="minkpad_lite">MinkPad Lite</string>
     <string name="private_space">Espacio privado</string>
     <string name="work_space">Espacio de trabajo</string>
-    <string name="quick_drawer_apps_description">Elige las apps rápidas que aparecen al abrir Mink Assistant.</string>
+    <string name="quick_drawer_apps_description">Las apps rápidas aparecen en Quick Drawer y al abrir Mink Assistant.</string>
     <string name="quick_drawer_controls">Controles del cajón</string>
     <string name="show_minkpad_button">Mostrar botón de MinkPad</string>
     <string name="show_minkpad_button_description">Mantén el teclado Bluetooth, el panel táctil y el control remoto en Quick Drawer</string>

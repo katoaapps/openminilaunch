@@ -40,4 +40,7 @@
     <string name="keyboard_key_space">स्पेस</string>
     <string name="keyboard_key_new_line">नई पंक्ति</string>
     <string name="keyboard_key_search">खोजें</string>
+    <string name="onboarding_keyboard_title">अपना कीबोर्ड चुनें</string>
+    <string name="onboarding_keyboard_description">Mink का लॉन्चर कीबोर्ड Magic Box के अंदर ही रहता है। शुरू करने के लिए अपनी पसंद की कुंजी शैली और थीम रंग व्यवस्था चुनें।</string>
+    <string name="onboarding_keyboard_change_later">आप बाद में SYM को दबाकर रखने या Magic Box → कीबोर्ड में जाकर इसे बदल सकते हैं।</string>
 </resources>

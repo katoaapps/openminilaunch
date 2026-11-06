@@ -231,7 +231,7 @@
     <string name="minkpad_lite">MinkPad Lite</string>
     <string name="private_space">プライベート スペース</string>
     <string name="work_space">仕事用スペース</string>
-    <string name="quick_drawer_apps_description">Mink Assistant を開いたときに表示するクイックアプリを選択します。</string>
+    <string name="quick_drawer_apps_description">クイックアプリは Quick Drawer と Mink Assistant を開いたときに表示されます。</string>
     <string name="quick_drawer_controls">ドロワーの操作</string>
     <string name="show_minkpad_button">MinkPad ボタンを表示</string>
     <string name="show_minkpad_button_description">Bluetooth キーボード、トラックパッド、リモコンを Quick Drawer から開けるようにします</string>
