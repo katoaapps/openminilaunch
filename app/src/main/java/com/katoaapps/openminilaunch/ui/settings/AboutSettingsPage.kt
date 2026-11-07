@@ -15,11 +15,6 @@ import com.katoaapps.openminilaunch.ui.updates.GitHubUpdateDialog
 import com.katoaapps.openminilaunch.ui.updates.previewUpdateVersion
 
 import android.widget.Toast
-import android.Manifest
-import android.content.pm.PackageManager
-import android.os.Build
-import androidx.activity.compose.rememberLauncherForActivityResult
-import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
@@ -29,7 +24,6 @@ import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Download
 import androidx.compose.material.icons.filled.Forum
 import androidx.compose.material.icons.filled.Gavel
-import androidx.compose.material.icons.filled.LightMode
 import androidx.compose.material.icons.filled.Palette
 import androidx.compose.material.icons.filled.PrivacyTip
 import androidx.compose.material.icons.filled.School
@@ -47,7 +41,6 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
-import androidx.core.content.ContextCompat
 
 private const val DEMO_MODE_TAP_COUNT = 8
 
@@ -65,16 +58,6 @@ internal fun AboutSettingsPage(
     var versionTapCount by remember { mutableIntStateOf(0) }
     var showDemoProfilePicker by remember { mutableStateOf(false) }
     var showDemoUpdatePreview by remember { mutableStateOf(false) }
-    var showNotificationLightProbe by remember { mutableStateOf(false) }
-    val notificationPermissionLauncher = rememberLauncherForActivityResult(
-        ActivityResultContracts.RequestPermission(),
-    ) { granted ->
-        if (granted) {
-            showNotificationLightProbe = true
-        } else {
-            Toast.makeText(context, R.string.notification_light_probe_permission_required, Toast.LENGTH_SHORT).show()
-        }
-    }
     SettingsPage(stringResource(R.string.about), goBack) {
         SettingsSwitchRow(
             title = stringResource(R.string.github_update_checks),
@@ -137,25 +120,6 @@ internal fun AboutSettingsPage(
             Icons.Default.School,
             onClick = onRepeatTutorial,
         )
-        if (BuildConfig.DEBUG) {
-            HorizontalDivider(color = Sage)
-            SettingsRow(
-                stringResource(R.string.notification_light_probe_title),
-                stringResource(R.string.notification_light_probe_settings_summary),
-                Icons.Default.LightMode,
-                onClick = {
-                    if (
-                        Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU &&
-                        ContextCompat.checkSelfPermission(context, Manifest.permission.POST_NOTIFICATIONS) !=
-                        PackageManager.PERMISSION_GRANTED
-                    ) {
-                        notificationPermissionLauncher.launch(Manifest.permission.POST_NOTIFICATIONS)
-                    } else {
-                        showNotificationLightProbe = true
-                    }
-                },
-            )
-        }
         if (store.demoSearchDataEnabled) {
             SettingsRow(
                 stringResource(R.string.demo_home_profile),
@@ -230,8 +194,5 @@ internal fun AboutSettingsPage(
             },
             onDismiss = { showDemoUpdatePreview = false },
         )
-    }
-    if (showNotificationLightProbe) {
-        NotificationLightProbeDialog(onDismiss = { showNotificationLightProbe = false })
     }
 }
