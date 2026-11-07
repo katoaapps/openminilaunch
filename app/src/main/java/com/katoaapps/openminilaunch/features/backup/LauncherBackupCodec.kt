@@ -1,5 +1,7 @@
 package com.katoaapps.openminilaunch.features.backup
 
+import com.katoaapps.openminilaunch.features.contacts.MAX_FAVORITE_ATTENTION_COLORS
+import com.katoaapps.openminilaunch.features.contacts.isPortableFavoriteAttentionColorKey
 import com.katoaapps.openminilaunch.features.minkspace.MinkSpaceMiniApp
 import com.katoaapps.openminilaunch.features.minkspace.todo.TodoItem
 import com.katoaapps.openminilaunch.model.AppFolderConfig
@@ -68,6 +70,9 @@ internal object LauncherBackupCodec {
         backup.integratedContactOrder?.let { order ->
             put("favoriteContactOrder", FavoriteContactBackupCodec.encodeOrder(order))
         }
+        backup.favoriteAttentionColors?.let { colors ->
+            put("favoriteAttentionColors", encodeFavoriteAttentionColors(colors))
+        }
         backup.profile?.let { put("profile", ProfileBackupCodec.encode(it, backup.profileLinks)) }
         put("notIncluded", PORTABILITY_EXCLUSIONS.stringsJsonArray())
     }.toString(2)
@@ -96,7 +101,29 @@ internal object LauncherBackupCodec {
             integratedContactOrder = if (root.has("favoriteContactOrder")) {
                 FavoriteContactBackupCodec.decodeOrder(root.optJSONArray("favoriteContactOrder"))
             } else null,
+            favoriteAttentionColors = if (root.has("favoriteAttentionColors")) {
+                decodeFavoriteAttentionColors(root.optJSONObject("favoriteAttentionColors"))
+            } else null,
         )
+    }
+
+    private fun encodeFavoriteAttentionColors(colors: Map<String, Int>) = JSONObject().apply {
+        colors.asSequence()
+            .filter { (key, _) -> isPortableFavoriteAttentionColorKey(key) }
+            .take(MAX_FAVORITE_ATTENTION_COLORS)
+            .forEach { (key, color) -> put(key, color or OPAQUE_ALPHA) }
+    }
+
+    private fun decodeFavoriteAttentionColors(json: JSONObject?): Map<String, Int> = buildMap {
+        val source = json ?: return@buildMap
+        val keys = source.keys()
+        while (keys.hasNext() && size < MAX_FAVORITE_ATTENTION_COLORS) {
+            val key = keys.next()
+            val color = source.opt(key) as? Number ?: continue
+            if (isPortableFavoriteAttentionColorKey(key)) {
+                put(key, color.toInt() or OPAQUE_ALPHA)
+            }
+        }
     }
 
     private fun encodeWidgetRecipes(recipes: List<WidgetRestoreRecipe>) = JSONArray().apply {
@@ -560,4 +587,5 @@ internal object LauncherBackupCodec {
     )
 
     private const val MAX_ENUM_VALUES = 100
+    private const val OPAQUE_ALPHA = 0xFF000000.toInt()
 }

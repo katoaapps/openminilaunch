@@ -988,6 +988,7 @@
     <string name="profile_link_cash_app">Cash App</string>
     <string name="profile_link_custom_url">Custom URL</string>
     <string name="profile_backup_privacy_warning">Экспортируемая резервная копия JSON содержит данные vCard, а также имена, номера телефонов, адреса провайдеров и маршруты приложений для избранных контактов, созданных в Mink, в виде читаемого текста. Фотографии контактов никогда не включаются.</string>
+    <string name="favorite_attention_colors_backup_privacy_warning">Цвета уведомлений для избранных контактов и идентификаторы контактов, используемые для их сопоставления, также включаются в экспортируемую резервную копию JSON.</string>
     <string name="profile_backup_export_title">Export readable vCard details?</string>
     <string name="update_notice_profile_heading">Your contact card, one flip away</string>
     <string name="update_notice_profile_title">A local virtual contact card and QR</string>
@@ -1066,4 +1067,5 @@
     <string name="calling_app_unavailable">%1$s недоступно для этого звонка.</string>
     <string name="sensitive_backup_export_title">Экспортировать читаемые данные контактов?</string>
     <string name="favorite_contacts_backup_import_description">Избранные контакты, созданные в Mink и содержащиеся в этой резервной копии, будут добавлены без удаления уже имеющихся на устройстве.</string>
+    <string name="favorite_attention_colors_backup_import_description">Цвета уведомлений для избранных контактов из этой резервной копии будут объединены без удаления цветов, уже сохранённых на устройстве.</string>
 </resources>

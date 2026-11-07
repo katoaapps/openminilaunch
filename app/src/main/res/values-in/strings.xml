@@ -970,6 +970,7 @@
     <string name="profile_link_cash_app">Cash App</string>
     <string name="profile_link_custom_url">Custom URL</string>
     <string name="profile_backup_privacy_warning">Detail vCard serta nama Favorit buatan Mink, nomor telepon, alamat penyedia, dan rute aplikasi disertakan sebagai teks yang dapat dibaca dalam JSON cadangan yang diekspor. Foto kontak tidak pernah disertakan.</string>
+    <string name="favorite_attention_colors_backup_privacy_warning">Warna perhatian Favorit dan pengenal kontak yang digunakan untuk mencocokkannya juga disertakan dalam JSON cadangan yang diekspor.</string>
     <string name="profile_backup_export_title">Export readable vCard details?</string>
     <string name="update_notice_profile_heading">Your contact card, one flip away</string>
     <string name="update_notice_profile_title">A local virtual contact card and QR</string>
@@ -1048,4 +1049,5 @@
     <string name="calling_app_unavailable">%1$s tidak tersedia untuk panggilan ini.</string>
     <string name="sensitive_backup_export_title">Ekspor detail kontak yang dapat dibaca?</string>
     <string name="favorite_contacts_backup_import_description">Favorit buatan Mink dalam cadangan ini akan ditambahkan tanpa menghapus Favorit yang sudah ada di perangkat ini.</string>
+    <string name="favorite_attention_colors_backup_import_description">Warna perhatian Favorit dalam cadangan ini akan digabungkan tanpa menghapus warna yang sudah ada di perangkat ini.</string>
 </resources>

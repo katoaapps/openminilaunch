@@ -4,10 +4,11 @@ import android.text.format.DateFormat
 import android.widget.Toast
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.padding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.FileDownload
 import androidx.compose.material.icons.filled.FileUpload
@@ -61,6 +62,14 @@ internal fun BackupRestoreSettingsPage(
             store.favoriteIntegratedContactStore.contacts().isNotEmpty()
         }
     }
+    val includesFavoriteAttentionColors by produceState(
+        initialValue = false,
+        key1 = store.favoriteAttentionColorStore,
+    ) {
+        value = withContext(Dispatchers.IO) {
+            store.favoriteAttentionColorStore.colorsForBackup().isNotEmpty()
+        }
+    }
     val exportSuccess = stringResource(R.string.backup_exported)
     val exportFailure = stringResource(R.string.backup_export_failed)
     val importFailure = stringResource(R.string.backup_import_failed)
@@ -108,7 +117,8 @@ internal fun BackupRestoreSettingsPage(
             onClick = {
                 if (
                     store.profileRepository.state is ProfileState.Ready ||
-                    includesMinkFavoriteContacts
+                    includesMinkFavoriteContacts ||
+                    includesFavoriteAttentionColors
                 ) {
                     confirmSensitiveExport = true
                 } else {
@@ -146,7 +156,14 @@ internal fun BackupRestoreSettingsPage(
         AlertDialog(
             onDismissRequest = { confirmSensitiveExport = false },
             title = { Text(stringResource(R.string.sensitive_backup_export_title)) },
-            text = { Text(stringResource(R.string.profile_backup_privacy_warning)) },
+            text = {
+                Column(verticalArrangement = Arrangement.spacedBy(Dimens.dp8)) {
+                    Text(stringResource(R.string.profile_backup_privacy_warning))
+                    if (includesFavoriteAttentionColors) {
+                        Text(stringResource(R.string.favorite_attention_colors_backup_privacy_warning))
+                    }
+                }
+            },
             confirmButton = {
                 TextButton(
                     onClick = {
@@ -187,6 +204,14 @@ internal fun BackupRestoreSettingsPage(
                     if (backup.integratedContacts != null) {
                         Text(
                             stringResource(R.string.favorite_contacts_backup_import_description),
+                            color = Muted,
+                            fontSize = Dimens.sp11,
+                            modifier = Modifier.padding(top = Dimens.dp8),
+                        )
+                    }
+                    if (backup.favoriteAttentionColors?.isNotEmpty() == true) {
+                        Text(
+                            stringResource(R.string.favorite_attention_colors_backup_import_description),
                             color = Muted,
                             fontSize = Dimens.sp11,
                             modifier = Modifier.padding(top = Dimens.dp8),

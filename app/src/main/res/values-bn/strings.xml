@@ -970,6 +970,7 @@
     <string name="profile_link_cash_app">Cash App</string>
     <string name="profile_link_custom_url">Custom URL</string>
     <string name="profile_backup_privacy_warning">রপ্তানি করা ব্যাকআপ JSON-এ vCard-এর বিবরণ এবং Mink-এ তৈরি প্রিয় পরিচিতির নাম, ফোন নম্বর, প্রদানকারীর ঠিকানা ও অ্যাপ রুট পাঠযোগ্য টেক্সট হিসেবে অন্তর্ভুক্ত থাকে। পরিচিতির ছবি কখনো অন্তর্ভুক্ত করা হয় না।</string>
+    <string name="favorite_attention_colors_backup_privacy_warning">প্রিয় পরিচিতির মনোযোগের রং এবং সেগুলো মেলাতে ব্যবহৃত পরিচিতি শনাক্তকারীও রপ্তানি করা ব্যাকআপ JSON-এ অন্তর্ভুক্ত থাকে।</string>
     <string name="profile_backup_export_title">Export readable vCard details?</string>
     <string name="update_notice_profile_heading">Your contact card, one flip away</string>
     <string name="update_notice_profile_title">A local virtual contact card and QR</string>
@@ -1048,4 +1049,5 @@
     <string name="calling_app_unavailable">%1$s এই কলের জন্য উপলভ্য নয়।</string>
     <string name="sensitive_backup_export_title">পাঠযোগ্য পরিচিতির বিবরণ রপ্তানি করবেন?</string>
     <string name="favorite_contacts_backup_import_description">এই ব্যাকআপের Mink-এ তৈরি প্রিয় পরিচিতিগুলো যোগ করা হবে, তবে এই ডিভাইসে আগে থেকে থাকা প্রিয় পরিচিতিগুলো সরানো হবে না।</string>
+    <string name="favorite_attention_colors_backup_import_description">এই ব্যাকআপের প্রিয় পরিচিতির মনোযোগের রং এই ডিভাইসে আগে থেকে থাকা রং না মুছে একত্র করা হবে।</string>
 </resources>

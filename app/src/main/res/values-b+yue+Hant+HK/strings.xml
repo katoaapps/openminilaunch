@@ -970,6 +970,7 @@
     <string name="profile_link_cash_app">Cash App</string>
     <string name="profile_link_custom_url">Custom URL</string>
     <string name="profile_backup_privacy_warning">匯出嘅備份 JSON 會以可讀文字包含 vCard 詳細資料，以及 Mink 建立嘅最愛聯絡人名稱、電話號碼、服務供應商地址同應用程式路徑。聯絡人相片絕不會包含在內。</string>
+    <string name="favorite_attention_colors_backup_privacy_warning">最愛聯絡人嘅提示顏色，同埋用嚟配對呢啲顏色嘅聯絡人識別碼，都會包含喺匯出嘅備份 JSON 入面。</string>
     <string name="profile_backup_export_title">Export readable vCard details?</string>
     <string name="update_notice_profile_heading">Your contact card, one flip away</string>
     <string name="update_notice_profile_title">A local virtual contact card and QR</string>
@@ -1048,4 +1049,5 @@
     <string name="calling_app_unavailable">%1$s 無法用於呢次通話。</string>
     <string name="sensitive_backup_export_title">匯出可讀嘅聯絡人資料？</string>
     <string name="favorite_contacts_backup_import_description">呢個備份中由 Mink 建立嘅最愛聯絡人會被加入，而唔會移除呢部裝置上現有嘅最愛聯絡人。</string>
+    <string name="favorite_attention_colors_backup_import_description">呢個備份中嘅最愛聯絡人提示顏色會被合併，而唔會清除呢部裝置上現有嘅顏色。</string>
 </resources>

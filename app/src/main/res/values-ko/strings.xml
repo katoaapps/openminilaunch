@@ -970,6 +970,7 @@
     <string name="profile_link_cash_app">Cash App</string>
     <string name="profile_link_custom_url">Custom URL</string>
     <string name="profile_backup_privacy_warning">내보낸 백업 JSON에는 vCard 세부 정보와 Mink에서 만든 즐겨찾기의 이름, 전화번호, 제공업체 주소 및 앱 경로가 읽을 수 있는 텍스트로 포함됩니다. 연락처 사진은 포함되지 않습니다.</string>
+    <string name="favorite_attention_colors_backup_privacy_warning">즐겨찾기 알림 색상과 이를 연결하는 데 사용되는 연락처 식별자도 내보낸 백업 JSON에 포함됩니다.</string>
     <string name="profile_backup_export_title">Export readable vCard details?</string>
     <string name="update_notice_profile_heading">Your contact card, one flip away</string>
     <string name="update_notice_profile_title">A local virtual contact card and QR</string>
@@ -1048,4 +1049,5 @@
     <string name="calling_app_unavailable">%1$s은(는) 이 통화에 사용할 수 없습니다.</string>
     <string name="sensitive_backup_export_title">읽을 수 있는 연락처 세부정보를 내보낼까요?</string>
     <string name="favorite_contacts_backup_import_description">이 백업의 Mink에서 만든 즐겨찾기는 이 기기에 이미 있는 즐겨찾기를 삭제하지 않고 추가됩니다.</string>
+    <string name="favorite_attention_colors_backup_import_description">이 백업의 즐겨찾기 알림 색상은 이 기기에 이미 있는 색상을 지우지 않고 병합됩니다.</string>
 </resources>

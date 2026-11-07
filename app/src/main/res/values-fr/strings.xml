@@ -970,6 +970,7 @@
     <string name="profile_link_cash_app">Cash App</string>
     <string name="profile_link_custom_url">Custom URL</string>
     <string name="profile_backup_privacy_warning">Les détails de la vCard ainsi que les noms, numéros de téléphone, adresses de fournisseurs et itinéraires d’application des favoris créés dans Mink sont inclus en texte lisible dans le fichier JSON de sauvegarde exporté. Les photos des contacts ne sont jamais incluses.</string>
+    <string name="favorite_attention_colors_backup_privacy_warning">Les couleurs d’attention des favoris et les identifiants de contact utilisés pour les faire correspondre sont également inclus dans le fichier JSON de sauvegarde exporté.</string>
     <string name="profile_backup_export_title">Export readable vCard details?</string>
     <string name="update_notice_profile_heading">Your contact card, one flip away</string>
     <string name="update_notice_profile_title">A local virtual contact card and QR</string>
@@ -1048,4 +1049,5 @@
     <string name="calling_app_unavailable">%1$s n’est pas disponible pour cet appel.</string>
     <string name="sensitive_backup_export_title">Exporter des coordonnées lisibles ?</string>
     <string name="favorite_contacts_backup_import_description">Les favoris créés dans Mink et présents dans cette sauvegarde seront ajoutés sans supprimer ceux qui existent déjà sur cet appareil.</string>
+    <string name="favorite_attention_colors_backup_import_description">Les couleurs d’attention des favoris de cette sauvegarde seront fusionnées sans effacer celles déjà présentes sur cet appareil.</string>
 </resources>

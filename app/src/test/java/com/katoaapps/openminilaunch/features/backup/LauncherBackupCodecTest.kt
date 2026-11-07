@@ -564,6 +564,50 @@ class LauncherBackupCodecTest {
         assertNull(LauncherBackupCodec.decode(json.toString()).integratedContactOrder)
     }
 
+    @Test fun favoriteAttentionColorsSurvivePortableBackupRoundTrip() {
+        val colors = mapOf(
+            "android-contact:amy" to 0xFF005BBB.toInt(),
+            "integrated-contact:favorite-may" to 0xFFCC5500.toInt(),
+        )
+
+        val restored = LauncherBackupCodec.decode(
+            LauncherBackupCodec.encode(
+                sampleBackup(twoPanelMode = true).copy(favoriteAttentionColors = colors),
+            ),
+        )
+
+        assertEquals(colors, restored.favoriteAttentionColors)
+    }
+
+    @Test fun olderBackupWithoutFavoriteAttentionColorsLeavesLocalColorsAlone() {
+        val json = JSONObject(
+            LauncherBackupCodec.encode(
+                sampleBackup(twoPanelMode = true).copy(
+                    favoriteAttentionColors = mapOf("android-contact:amy" to 0xFF005BBB.toInt()),
+                ),
+            ),
+        )
+        json.remove("favoriteAttentionColors")
+
+        assertNull(LauncherBackupCodec.decode(json.toString()).favoriteAttentionColors)
+    }
+
+    @Test fun favoriteAttentionColorBackupRejectsUnknownIdentityKeys() {
+        val json = JSONObject(LauncherBackupCodec.encode(sampleBackup(twoPanelMode = true)))
+        json.put(
+            "favoriteAttentionColors",
+            JSONObject()
+                .put("unknown-contact:amy", 0xFF005BBB.toInt())
+                .put("android-contact:", 0xFF005BBB.toInt())
+                .put("android-contact:amy", 0xFFCC5500.toInt()),
+        )
+
+        assertEquals(
+            mapOf("android-contact:amy" to 0xFFCC5500.toInt()),
+            LauncherBackupCodec.decode(json.toString()).favoriteAttentionColors,
+        )
+    }
+
     @Test fun widgetRestoreRecipesAreCappedAndInvalidRecipesAreIgnored() {
         val recipes = (0 until 70).map { index ->
             WidgetRestoreRecipe(

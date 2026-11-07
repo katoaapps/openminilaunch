@@ -13,7 +13,7 @@ import java.io.File
 import java.io.IOException
 
 /** Encrypted, device-local colors used by the Conversations software attention light. */
-internal class FavoriteAttentionColorStore private constructor(
+internal class FavoriteAttentionColorStore(
     private val persistence: EncryptedFavoriteAttentionColorPersistence,
 ) {
     private var colors by mutableStateOf(persistence.load())
@@ -21,6 +21,30 @@ internal class FavoriteAttentionColorStore private constructor(
     constructor(context: Context) : this(createPersistence(context.applicationContext))
 
     fun color(contactId: FavoriteContactId): Int? = colors[contactId.storageKey]
+
+    /** Snapshot for a user-requested portable backup. */
+    @Synchronized
+    fun colorsForBackup(): Map<String, Int> = colors
+        .filterKeys(::isPortableFavoriteAttentionColorKey)
+        .toMap()
+
+    /** Merge only explicitly supplied colors; older or partial backups never clear local choices. */
+    @Synchronized
+    fun mergeFromBackup(imported: Map<String, Int>): Boolean {
+        val portable = imported.asSequence()
+            .filter { (key, _) -> isPortableFavoriteAttentionColorKey(key) }
+            .take(MAX_FAVORITE_ATTENTION_COLORS)
+            .associate { (key, color) -> key to (color or OPAQUE_ALPHA) }
+        if (portable.isEmpty()) return true
+        val updated = (colors + portable)
+            .entries
+            .take(MAX_FAVORITE_ATTENTION_COLORS)
+            .associate { entry -> entry.toPair() }
+        if (updated == colors) return true
+        return persistence.save(updated).also { saved ->
+            if (saved) colors = updated
+        }
+    }
 
     @Synchronized
     fun update(contactId: FavoriteContactId, argb: Int?) {
@@ -73,7 +97,7 @@ internal class EncryptedFavoriteAttentionColorPersistence(
 internal object FavoriteAttentionColorCodec {
     fun encode(colors: Map<String, Int>): ByteArray {
         val persisted = colors.filterKeys(String::isNotBlank).toSortedMap()
-        require(persisted.size <= MAX_ENTRIES) { "Too many favorite attention colors" }
+        require(persisted.size <= MAX_FAVORITE_ATTENTION_COLORS) { "Too many favorite attention colors" }
         return ByteArrayOutputStream().use { bytes ->
             DataOutputStream(bytes).use { output ->
                 output.writeInt(PAYLOAD_MAGIC)
@@ -102,7 +126,7 @@ internal object FavoriteAttentionColorCodec {
             if (input.readInt() != PAYLOAD_MAGIC) throw IOException("Invalid color payload")
             if (input.readInt() != PAYLOAD_VERSION) throw IOException("Unsupported color payload")
             val count = input.readInt()
-            if (count !in 0..MAX_ENTRIES) throw IOException("Invalid color count")
+            if (count !in 0..MAX_FAVORITE_ATTENTION_COLORS) throw IOException("Invalid color count")
             buildMap(count) {
                 repeat(count) {
                     val size = input.readInt()
@@ -126,6 +150,19 @@ internal object FavoriteAttentionColorCodec {
     private const val OPAQUE_ALPHA = 0xFF000000.toInt()
     private const val PAYLOAD_MAGIC = 0x4D_46_43_50
     private const val PAYLOAD_VERSION = 1
-    private const val MAX_ENTRIES = 2_048
     private const val MAX_KEY_BYTES = 4_096
 }
+
+internal const val MAX_FAVORITE_ATTENTION_COLORS = 2_048
+
+internal fun isPortableFavoriteAttentionColorKey(key: String): Boolean =
+    key.length in 1..MAX_FAVORITE_ATTENTION_COLOR_KEY_LENGTH &&
+        PORTABLE_FAVORITE_ATTENTION_COLOR_PREFIXES.any { prefix ->
+            key.startsWith(prefix) && key.length > prefix.length
+        }
+
+private const val MAX_FAVORITE_ATTENTION_COLOR_KEY_LENGTH = 4_096
+private val PORTABLE_FAVORITE_ATTENTION_COLOR_PREFIXES = listOf(
+    "android-contact:",
+    "integrated-contact:",
+)

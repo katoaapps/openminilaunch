@@ -970,6 +970,7 @@
     <string name="profile_link_cash_app">Cash App</string>
     <string name="profile_link_custom_url">Custom URL</string>
     <string name="profile_backup_privacy_warning">エクスポートされるバックアップ JSON には、vCard の詳細と、Mink で作成したお気に入りの名前、電話番号、プロバイダーのアドレス、アプリの経路が読み取り可能なテキストとして含まれます。連絡先の写真は含まれません。</string>
+    <string name="favorite_attention_colors_backup_privacy_warning">お気に入りの通知色と、その色を照合するための連絡先識別子も、エクスポートされるバックアップ JSON に含まれます。</string>
     <string name="profile_backup_export_title">Export readable vCard details?</string>
     <string name="update_notice_profile_heading">Your contact card, one flip away</string>
     <string name="update_notice_profile_title">A local virtual contact card and QR</string>
@@ -1048,4 +1049,5 @@
     <string name="calling_app_unavailable">%1$s はこの通話に利用できません。</string>
     <string name="sensitive_backup_export_title">読み取り可能な連絡先情報をエクスポートしますか？</string>
     <string name="favorite_contacts_backup_import_description">このバックアップ内の Mink で作成したお気に入りは、このデバイスにある既存のお気に入りを削除せずに追加されます。</string>
+    <string name="favorite_attention_colors_backup_import_description">このバックアップ内のお気に入り通知色は、このデバイスにある既存の色を消去せずに統合されます。</string>
 </resources>

@@ -1006,6 +1006,7 @@
     <string name="profile_link_cash_app">Cash App</string>
     <string name="profile_link_custom_url">Custom URL</string>
     <string name="profile_backup_privacy_warning">تتضمن نسخة JSON الاحتياطية المصدّرة تفاصيل vCard وأسماء المفضلة التي أنشأها Mink وأرقام الهواتف وعناوين موفري الخدمة ومسارات التطبيقات كنص قابل للقراءة. ولا يتم تضمين صور جهات الاتصال مطلقًا.</string>
+    <string name="favorite_attention_colors_backup_privacy_warning">تتضمن نسخة JSON الاحتياطية المصدّرة أيضًا ألوان تنبيه المفضلة ومعرّفات جهات الاتصال المستخدمة لمطابقتها.</string>
     <string name="profile_backup_export_title">Export readable vCard details?</string>
     <string name="update_notice_profile_heading">Your contact card, one flip away</string>
     <string name="update_notice_profile_title">A local virtual contact card and QR</string>
@@ -1084,4 +1085,5 @@
     <string name="calling_app_unavailable">%1$s غير متاح لهذه المكالمة.</string>
     <string name="sensitive_backup_export_title">هل تريد تصدير تفاصيل جهات الاتصال القابلة للقراءة؟</string>
     <string name="favorite_contacts_backup_import_description">ستتم إضافة المفضلة التي أنشأها Mink في هذه النسخة الاحتياطية دون إزالة المفضلة الموجودة بالفعل على هذا الجهاز.</string>
+    <string name="favorite_attention_colors_backup_import_description">سيتم دمج ألوان تنبيه المفضلة في هذه النسخة الاحتياطية دون مسح الألوان الموجودة بالفعل على هذا الجهاز.</string>
 </resources>

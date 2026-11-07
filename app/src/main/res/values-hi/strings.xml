@@ -970,6 +970,7 @@
     <string name="profile_link_cash_app">Cash App</string>
     <string name="profile_link_custom_url">Custom URL</string>
     <string name="profile_backup_privacy_warning">निर्यात की गई बैकअप JSON फ़ाइल में vCard विवरण और Mink में बनाए गए पसंदीदा संपर्कों के नाम, फ़ोन नंबर, प्रदाता पते और ऐप रूट पढ़ने योग्य टेक्स्ट के रूप में शामिल होते हैं। संपर्क फ़ोटो कभी शामिल नहीं की जातीं।</string>
+    <string name="favorite_attention_colors_backup_privacy_warning">पसंदीदा संपर्कों के ध्यान रंग और उनसे मिलान करने के लिए उपयोग किए गए संपर्क पहचानकर्ता भी निर्यात की गई बैकअप JSON फ़ाइल में शामिल होते हैं।</string>
     <string name="profile_backup_export_title">Export readable vCard details?</string>
     <string name="update_notice_profile_heading">Your contact card, one flip away</string>
     <string name="update_notice_profile_title">A local virtual contact card and QR</string>
@@ -1048,4 +1049,5 @@
     <string name="calling_app_unavailable">%1$s इस कॉल के लिए उपलब्ध नहीं है।</string>
     <string name="sensitive_backup_export_title">पढ़ने योग्य संपर्क विवरण निर्यात करें?</string>
     <string name="favorite_contacts_backup_import_description">इस बैकअप में Mink में बनाए गए पसंदीदा संपर्क जोड़ दिए जाएंगे और इस डिवाइस पर पहले से मौजूद पसंदीदा संपर्क नहीं हटाए जाएंगे।</string>
+    <string name="favorite_attention_colors_backup_import_description">इस बैकअप के पसंदीदा संपर्कों के ध्यान रंग इस डिवाइस पर पहले से मौजूद रंग हटाए बिना मर्ज किए जाएंगे।</string>
 </resources>

@@ -40,6 +40,8 @@ internal data class LauncherBackup(
     val integratedContacts: List<FavoriteIntegratedContact>? = null,
     /** Relative order for portable Mink-created Favorites; Android contact IDs stay local. */
     val integratedContactOrder: List<String>? = null,
+    /** Null means this backup predates portable favorite attention colors. */
+    val favoriteAttentionColors: Map<String, Int>? = null,
 )
 
 internal data class LauncherBackupLayout(
