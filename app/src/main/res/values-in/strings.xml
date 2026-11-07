@@ -227,6 +227,7 @@
     <string name="quick_drawer">Quick Drawer</string>
     <string name="manage_quick_apps">Kelola Aplikasi Cepat</string>
     <string name="quick_apps">Aplikasi Cepat</string>
+    <string name="quick_apps_assistant_description">Pilih aplikasi yang ditampilkan saat Mink Assistant dibuka.</string>
     <string name="quick_apps_empty">Pilih Aplikasi Cepat di Quick Drawer.</string>
     <string name="minkpad_lite">MinkPad Lite</string>
     <string name="private_space">Ruang Pribadi</string>

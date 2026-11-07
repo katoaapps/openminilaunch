@@ -6,6 +6,7 @@
 package com.katoaapps.openminilaunch.ui.launcher
 
 import android.app.Activity
+import android.widget.Toast
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
@@ -30,6 +31,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalView
 import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
+import com.katoaapps.openminilaunch.R
 import com.katoaapps.openminilaunch.data.LauncherStore
 import com.katoaapps.openminilaunch.model.ContactAppRoute
 import com.katoaapps.openminilaunch.model.Screen
@@ -42,6 +44,7 @@ import com.katoaapps.openminilaunch.ui.launcher.layout.WIDGET_PAGE
 import com.katoaapps.openminilaunch.ui.magic.rememberMagicBoxSessionState
 import com.katoaapps.openminilaunch.ui.minkspace.todo.TodosScreen
 import com.katoaapps.openminilaunch.ui.onboarding.FeatureUpdateDialog
+import com.katoaapps.openminilaunch.ui.onboarding.GooglePlayBetaDialog
 import com.katoaapps.openminilaunch.ui.onboarding.HomeFeatureTour
 import com.katoaapps.openminilaunch.ui.onboarding.OnboardingScreen
 import com.katoaapps.openminilaunch.ui.settings.SettingsDestination
@@ -56,6 +59,7 @@ import kotlinx.coroutines.flow.collect
 
 private const val FEATURE_UPDATE_ID = "v320_whats_new_v1"
 private const val HOME_FEATURE_TOUR_ID = "home_feature_tour_v2"
+private const val GOOGLE_PLAY_BETA_NOTICE_ID = "google_play_beta_v1"
 private const val PACKAGE_REMOVAL_CONFIRMATION_MS = 750L
 
 @Composable
@@ -74,6 +78,9 @@ internal fun MiniLaunchApp(
     }
     var showHomeFeatureTour by rememberSaveable {
         mutableStateOf(store.onboardingComplete && !store.hasSeenUpdate(HOME_FEATURE_TOUR_ID))
+    }
+    var showGooglePlayBetaNotice by rememberSaveable {
+        mutableStateOf(store.onboardingComplete && !store.hasSeenUpdate(GOOGLE_PLAY_BETA_NOTICE_ID))
     }
     var tutorialRun by rememberSaveable { mutableIntStateOf(0) }
     val homeMagicBoxSessionState = rememberMagicBoxSessionState()
@@ -188,7 +195,8 @@ internal fun MiniLaunchApp(
                                 homePageRequestToken = homePageRequestToken,
                                 keyboardInputEnabled =
                                     (twoPanelActive || launcherPagerState.currentPage == HOME_PAGE) &&
-                                        !showTutorial && !showUpdateNotice && !showHomeFeatureTour,
+                                        !showTutorial && !showUpdateNotice && !showHomeFeatureTour &&
+                                        !showGooglePlayBetaNotice,
                                 homeRequestToken = homeRequestToken,
                                 magicBoxSessionState = homeMagicBoxSessionState,
                                 openSettings = { destination ->
@@ -277,6 +285,25 @@ internal fun MiniLaunchApp(
                 onDismiss = {
                     store.markUpdateSeen(HOME_FEATURE_TOUR_ID)
                     showHomeFeatureTour = false
+                },
+            )
+        }
+        if (
+            showGooglePlayBetaNotice && !showTutorial && !showUpdateNotice &&
+            !showHomeFeatureTour
+        ) {
+            GooglePlayBetaDialog(
+                onOpenBeta = {
+                    if (actions.openGooglePlayBetaPage()) {
+                        store.markUpdateSeen(GOOGLE_PLAY_BETA_NOTICE_ID)
+                        showGooglePlayBetaNotice = false
+                    } else {
+                        Toast.makeText(context, R.string.no_browser_available, Toast.LENGTH_SHORT).show()
+                    }
+                },
+                onDismiss = {
+                    store.markUpdateSeen(GOOGLE_PLAY_BETA_NOTICE_ID)
+                    showGooglePlayBetaNotice = false
                 },
             )
         }

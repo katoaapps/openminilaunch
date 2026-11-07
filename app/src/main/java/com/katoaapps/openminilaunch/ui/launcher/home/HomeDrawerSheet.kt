@@ -4,6 +4,7 @@ package com.katoaapps.openminilaunch.ui.launcher.home
 
 import com.katoaapps.minkpad.core.R as MinkPadR
 
+import android.widget.Toast
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -23,6 +24,7 @@ import androidx.compose.material.icons.automirrored.filled.ArrowForward
 import androidx.compose.material.icons.filled.Apps
 import androidx.compose.material.icons.filled.BusinessCenter
 import androidx.compose.material.icons.filled.GridView
+import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.Shield
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -51,6 +53,7 @@ import com.katoaapps.openminilaunch.platform.DeviceActions
 import com.katoaapps.openminilaunch.ui.quickdrawer.QuickDrawerDestination
 import com.katoaapps.openminilaunch.ui.quickdrawer.quickDrawerDestinations
 import com.katoaapps.openminilaunch.ui.theme.Dimens
+import com.katoaapps.openminilaunch.ui.theme.MinkBrown
 import com.katoaapps.openminilaunch.ui.theme.readableContentColor
 
 @Composable
@@ -84,6 +87,17 @@ internal fun HomeDrawerSheet(
             fontWeight = FontWeight.Black,
             letterSpacing = Dimens.sp1,
         )
+        QuickDrawerAnnouncementRow(
+            title = stringResource(R.string.join_google_play_beta),
+            summary = stringResource(R.string.google_play_beta_summary),
+            onClick = {
+                if (actions.openGooglePlayBetaPage()) {
+                    onDismiss()
+                } else {
+                    Toast.makeText(context, R.string.no_browser_available, Toast.LENGTH_SHORT).show()
+                }
+            },
+        )
         ManageQuickAppsRow(
             selectedCount = store.drawerTargets.size,
             contentColor = drawerContentColor,
@@ -106,6 +120,48 @@ internal fun HomeDrawerSheet(
             },
         )
         Spacer(Modifier.height(Dimens.dp28))
+    }
+}
+
+@Composable
+private fun QuickDrawerAnnouncementRow(
+    title: String,
+    summary: String,
+    onClick: () -> Unit,
+) {
+    val contentColor = readableContentColor(MinkBrown)
+    Surface(
+        onClick = onClick,
+        modifier = Modifier
+            .fillMaxWidth()
+            .padding(horizontal = Dimens.dp18, vertical = Dimens.dp12),
+        shape = RoundedCornerShape(Dimens.dp18),
+        color = MinkBrown,
+        contentColor = contentColor,
+    ) {
+        Row(
+            modifier = Modifier.fillMaxWidth().padding(Dimens.dp16),
+            verticalAlignment = Alignment.CenterVertically,
+            horizontalArrangement = Arrangement.spacedBy(Dimens.dp12),
+        ) {
+            Icon(Icons.Default.PlayArrow, null)
+            Column(Modifier.weight(1f)) {
+                Text(
+                    title,
+                    fontWeight = FontWeight.Bold,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                )
+                Text(
+                    summary,
+                    color = contentColor.copy(alpha = .78f),
+                    fontSize = Dimens.sp12,
+                    maxLines = 2,
+                    overflow = TextOverflow.Ellipsis,
+                )
+            }
+            Icon(Icons.AutoMirrored.Filled.ArrowForward, null)
+        }
     }
 }
 

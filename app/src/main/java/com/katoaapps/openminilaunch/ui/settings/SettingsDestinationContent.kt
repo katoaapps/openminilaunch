@@ -111,6 +111,7 @@ internal fun SettingsDestinationContent(
         SettingsDestination.MINK_ASSISTANT -> MinkAssistantSettingsPage(
             assistantRoleHeld = permissionState.assistantRoleHeld,
             showAssistantDisclosure = permissionActions.showAssistantSetup,
+            onOpenQuickApps = onPickDrawer,
             goBack = onNavigateBack,
         )
         SettingsDestination.MESSAGING -> MessagingSettingsPage(

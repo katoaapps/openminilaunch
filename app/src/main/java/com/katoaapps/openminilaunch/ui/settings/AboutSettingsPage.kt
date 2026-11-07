@@ -25,6 +25,7 @@ import androidx.compose.material.icons.filled.Download
 import androidx.compose.material.icons.filled.Forum
 import androidx.compose.material.icons.filled.Gavel
 import androidx.compose.material.icons.filled.Palette
+import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.PrivacyTip
 import androidx.compose.material.icons.filled.School
 import androidx.compose.material.icons.filled.SystemUpdateAlt
@@ -81,6 +82,16 @@ internal fun AboutSettingsPage(
             Icons.Default.Download,
             onClick = {
                 if (!actions.openFdroidPackagePage()) {
+                    Toast.makeText(context, R.string.no_browser_available, Toast.LENGTH_SHORT).show()
+                }
+            },
+        )
+        SettingsRow(
+            stringResource(R.string.google_play_beta),
+            stringResource(R.string.google_play_beta_summary),
+            Icons.Default.PlayArrow,
+            onClick = {
+                if (!actions.openGooglePlayBetaPage()) {
                     Toast.makeText(context, R.string.no_browser_available, Toast.LENGTH_SHORT).show()
                 }
             },

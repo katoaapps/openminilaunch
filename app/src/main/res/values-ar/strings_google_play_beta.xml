@@ -1,0 +1,9 @@
+<resources>
+    <string name="google_play_beta">إصدار Google Play التجريبي</string>
+    <string name="google_play_beta_summary">انضم إلى اختبار إصدار Google Play</string>
+    <string name="google_play_beta_notice_title">أصبح Mink Launcher متاحًا على Google Play</string>
+    <string name="google_play_beta_notice_description">إصدار Google Play التجريبي جاهز للاختبار. انضم إلى مجموعة Mink Testers واشترك في الاختبار، ثم ثبّت التطبيق من Google Play.</string>
+    <string name="google_play_beta_notice_backup">إذا كانت هذه النسخة من GitHub أو F-Droid، فصدّر نسخة احتياطية قبل الانتقال. لا يستطيع Android تثبيت إصدار Play فوق تطبيق موقّع من موزّع آخر.</string>
+    <string name="view_beta_instructions">عرض تعليمات الإصدار التجريبي</string>
+    <string name="join_google_play_beta">الانضمام إلى إصدار Google Play التجريبي</string>
+</resources>

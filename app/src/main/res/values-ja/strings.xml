@@ -227,6 +227,7 @@
     <string name="quick_drawer">Quick Drawer</string>
     <string name="manage_quick_apps">クイックアプリを管理</string>
     <string name="quick_apps">クイックアプリ</string>
+    <string name="quick_apps_assistant_description">Mink Assistant を開いたときに表示するアプリを選択します。</string>
     <string name="quick_apps_empty">Quick Drawer でクイックアプリを選択してください。</string>
     <string name="minkpad_lite">MinkPad Lite</string>
     <string name="private_space">プライベート スペース</string>

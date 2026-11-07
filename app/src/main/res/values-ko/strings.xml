@@ -227,6 +227,7 @@
     <string name="quick_drawer">Quick Drawer</string>
     <string name="manage_quick_apps">빠른 앱 관리</string>
     <string name="quick_apps">빠른 앱</string>
+    <string name="quick_apps_assistant_description">Mink Assistant가 열릴 때 표시할 앱을 선택하세요.</string>
     <string name="quick_apps_empty">Quick Drawer에서 빠른 앱을 선택하세요.</string>
     <string name="minkpad_lite">MinkPad Lite</string>
     <string name="private_space">비공개 공간</string>

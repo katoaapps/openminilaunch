@@ -27,6 +27,7 @@ import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.CreateNewFolder
 import androidx.compose.material.icons.filled.Folder
 import androidx.compose.material.icons.filled.FolderOpen
+import androidx.compose.material.icons.filled.GridView
 import androidx.compose.material.icons.filled.PhotoLibrary
 import androidx.compose.material.icons.filled.Keyboard
 import androidx.compose.material.icons.filled.Phone
@@ -136,11 +137,11 @@ private fun SearchAppCard(
 internal fun MinkAssistantSettingsPage(
     assistantRoleHeld: Boolean,
     showAssistantDisclosure: () -> Unit,
+    onOpenQuickApps: () -> Unit,
     goBack: () -> Unit,
 ) {
     SettingsPage(stringResource(R.string.mink_assistant), goBack) {
         Text(stringResource(R.string.assistant_settings_description), color = Muted, fontSize = Dimens.sp13)
-        Text(stringResource(R.string.quick_drawer_apps_description), color = Muted, fontSize = Dimens.sp13)
         SettingsRow(
             title = stringResource(
                 if (assistantRoleHeld) R.string.manage_mink_assistant else R.string.choose_mink_assistant,
@@ -150,6 +151,12 @@ internal fun MinkAssistantSettingsPage(
             ),
             icon = Icons.Default.Assistant,
             onClick = showAssistantDisclosure,
+        )
+        SettingsRow(
+            title = stringResource(R.string.quick_apps),
+            subtitle = stringResource(R.string.quick_apps_assistant_description),
+            icon = Icons.Default.GridView,
+            onClick = onOpenQuickApps,
         )
     }
 }

@@ -227,6 +227,7 @@
     <string name="quick_drawer">Quick Drawer</string>
     <string name="manage_quick_apps">क्विक ऐप्स प्रबंधित करें</string>
     <string name="quick_apps">क्विक ऐप्स</string>
+    <string name="quick_apps_assistant_description">Mink Assistant खुलने पर दिखने वाले ऐप चुनें।</string>
     <string name="quick_apps_empty">Quick Drawer से क्विक ऐप्स चुनें।</string>
     <string name="minkpad_lite">MinkPad Lite</string>
     <string name="private_space">प्राइवेट स्पेस</string>

@@ -227,6 +227,7 @@
     <string name="quick_drawer">Quick Drawer</string>
     <string name="manage_quick_apps">管理快速應用程式</string>
     <string name="quick_apps">快速應用程式</string>
+    <string name="quick_apps_assistant_description">選擇 Mink Assistant 開啟時顯示嘅應用程式。</string>
     <string name="quick_apps_empty">喺 Quick Drawer 揀快速應用程式。</string>
     <string name="minkpad_lite">MinkPad Lite</string>
     <string name="private_space">私人空間</string>

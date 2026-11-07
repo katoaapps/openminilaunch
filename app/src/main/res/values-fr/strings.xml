@@ -227,6 +227,7 @@
     <string name="quick_drawer">Quick Drawer</string>
     <string name="manage_quick_apps">Gérer les apps rapides</string>
     <string name="quick_apps">Apps rapides</string>
+    <string name="quick_apps_assistant_description">Choisissez les apps affichées à l’ouverture de Mink Assistant.</string>
     <string name="quick_apps_empty">Choisissez vos apps rapides dans Quick Drawer.</string>
     <string name="minkpad_lite">MinkPad Lite</string>
     <string name="private_space">Espace privé</string>

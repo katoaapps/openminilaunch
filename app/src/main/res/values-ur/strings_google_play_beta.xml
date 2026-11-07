@@ -1,0 +1,9 @@
+<resources>
+    <string name="google_play_beta">Google Play بیٹا</string>
+    <string name="google_play_beta_summary">Google Play ایڈیشن کی جانچ میں شامل ہوں</string>
+    <string name="google_play_beta_notice_title">Mink Launcher اب Google Play پر ہے</string>
+    <string name="google_play_beta_notice_description">Google Play بیٹا جانچ کے لیے تیار ہے۔ Mink Testers گروپ میں شامل ہوں، ٹیسٹ کے لیے آپٹ اِن کریں، پھر Google Play سے انسٹال کریں۔</string>
+    <string name="google_play_beta_notice_backup">اگر یہ کاپی GitHub یا F-Droid سے آئی ہے تو تبدیل کرنے سے پہلے بیک اپ ایکسپورٹ کریں۔ Android کسی دوسرے تقسیم کار کی دستخط شدہ ایپ پر Play ورژن انسٹال نہیں کر سکتا۔</string>
+    <string name="view_beta_instructions">بیٹا ہدایات دیکھیں</string>
+    <string name="join_google_play_beta">Google Play بیٹا میں شامل ہوں</string>
+</resources>

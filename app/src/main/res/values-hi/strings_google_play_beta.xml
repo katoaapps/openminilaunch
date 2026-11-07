@@ -1,0 +1,9 @@
+<resources>
+    <string name="google_play_beta">Google Play बीटा</string>
+    <string name="google_play_beta_summary">Google Play संस्करण की टेस्टिंग में शामिल हों</string>
+    <string name="google_play_beta_notice_title">Mink Launcher अब Google Play पर है</string>
+    <string name="google_play_beta_notice_description">Google Play बीटा टेस्टिंग के लिए तैयार है।Mink Testers समूह में शामिल हों, टेस्टिंग के लिए ऑप्ट इन करें, फिर Google Play से इंस्टॉल करें।</string>
+    <string name="google_play_beta_notice_backup">अगर यह कॉपी GitHub या F-Droid से आई है, तो बदलने से पहले बैकअप एक्सपोर्ट करें।Android किसी दूसरे वितरक द्वारा साइन किए गए ऐप के ऊपर Play बिल्ड इंस्टॉल नहीं कर सकता।</string>
+    <string name="view_beta_instructions">बीटा निर्देश देखें</string>
+    <string name="join_google_play_beta">Google Play बीटा में शामिल हों</string>
+</resources>

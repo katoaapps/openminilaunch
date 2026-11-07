@@ -1,0 +1,9 @@
+<resources>
+    <string name="google_play_beta">Beta Google Play</string>
+    <string name="google_play_beta_summary">Ikuti pengujian edisi Google Play</string>
+    <string name="google_play_beta_notice_title">Mink Launcher kini ada di Google Play</string>
+    <string name="google_play_beta_notice_description">Beta Google Play siap diuji. Bergabunglah dengan grup Mink Testers, ikut serta dalam pengujian, lalu instal dari Google Play.</string>
+    <string name="google_play_beta_notice_backup">Jika salinan ini berasal dari GitHub atau F-Droid, ekspor cadangan sebelum beralih. Android tidak dapat menginstal versi Play di atas aplikasi yang ditandatangani oleh distributor lain.</string>
+    <string name="view_beta_instructions">Lihat petunjuk beta</string>
+    <string name="join_google_play_beta">Gabung dengan beta Google Play</string>
+</resources>

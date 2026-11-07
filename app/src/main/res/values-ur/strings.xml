@@ -227,6 +227,7 @@
     <string name="quick_drawer">Quick Drawer</string>
     <string name="manage_quick_apps">فوری ایپس کا نظم کریں</string>
     <string name="quick_apps">فوری ایپس</string>
+    <string name="quick_apps_assistant_description">Mink Assistant کھلنے پر دکھائی جانے والی ایپس منتخب کریں۔</string>
     <string name="quick_apps_empty">Quick Drawer سے فوری ایپس منتخب کریں۔</string>
     <string name="minkpad_lite">MinkPad Lite</string>
     <string name="private_space">نجی جگہ</string>
