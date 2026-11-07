@@ -25,6 +25,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -42,6 +43,7 @@ import com.katoaapps.openminilaunch.R
 import com.katoaapps.openminilaunch.data.LauncherStore
 import com.katoaapps.openminilaunch.features.conversations.ConversationNotificationStore
 import com.katoaapps.openminilaunch.features.conversations.NotificationConversation
+import com.katoaapps.openminilaunch.features.conversations.conversationActivityAt
 import com.katoaapps.openminilaunch.model.CommunicationRecipient
 import com.katoaapps.openminilaunch.model.ContactAppRoute
 import com.katoaapps.openminilaunch.model.LauncherShortcutTarget
@@ -80,12 +82,28 @@ internal fun ConversationCenterScreen(
         useDemoData = demoModeEnabled,
     )
     val selectedConversation = conversations.firstOrNull { it.id == selectedConversationId }
+    val selectedActivityAt = selectedConversation?.let(::conversationActivityAt)
+
+    LaunchedEffect(context, accessGranted, demoModeEnabled) {
+        if (accessGranted && !demoModeEnabled) {
+            ConversationNotificationStore.refreshActiveNotifications(context)
+        }
+    }
+
+    LaunchedEffect(selectedConversation?.id, selectedActivityAt, demoModeEnabled) {
+        if (!demoModeEnabled && selectedConversation != null) {
+            store.acknowledgeConversationActivity(
+                conversationId = selectedConversation.id,
+                activityAt = selectedActivityAt,
+            )
+        }
+    }
 
     DisposableEffect(activity, context) {
         val observer = LifecycleEventObserver { _, event ->
             if (event == Lifecycle.Event.ON_RESUME) {
                 accessGranted = ConversationNotificationStore.hasNotificationAccess(context)
-                if (accessGranted) ConversationNotificationStore.requestListenerReconnect(context)
+                if (accessGranted) ConversationNotificationStore.refreshActiveNotifications(context)
             }
         }
         activity.lifecycle.addObserver(observer)

@@ -27,7 +27,10 @@
     <string name="open_contacts">Ouvrir Contacts</string>
     <string name="loading_favorite_contacts">Chargement des contacts favoris…</string>
     <string name="contact_action_apps">Paramètres rapides</string>
-    <string name="contact_action_apps_description">Utilisez le réglage général du lanceur ou choisissez des applications uniquement pour cette personne.</string>
+    <string name="contact_action_apps_description">Choisissez les applis et la couleur d’alerte pour cette personne.</string>
+    <string name="favorite_attention_color">Couleur d’alerte</string>
+    <string name="favorite_attention_color_description">L’icône Conversations utilise cette couleur quand ce favori a une nouvelle activité.</string>
+    <string name="use_default_attention_color">Utiliser la couleur d’alerte par défaut</string>
     <string name="message_with">Envoyer un message avec</string>
     <string name="call_with">Appeler avec</string>
     <string name="use_messaging_setting">Utiliser le réglage de messagerie</string>

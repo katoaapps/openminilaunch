@@ -5,11 +5,9 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.RowScope
 import androidx.compose.foundation.layout.fillMaxWidth
-import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.material3.FilterChip
 import androidx.compose.material3.Slider
-import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -39,7 +37,6 @@ import com.katoaapps.openminilaunch.ui.keyboard.KeyboardChoiceGrid
 import com.katoaapps.openminilaunch.ui.keyboard.KeyboardDevicePreview
 import com.katoaapps.openminilaunch.ui.theme.Dimens
 import com.katoaapps.openminilaunch.ui.theme.Muted
-import com.katoaapps.openminilaunch.ui.theme.readableContentColor
 import kotlin.math.roundToInt
 
 @Composable
@@ -121,17 +118,17 @@ internal fun KeyboardSettingsPage(store: LauncherStore, goBack: () -> Unit) {
         }
         if (preferences.colorSource == LauncherKeyboardColorSource.CUSTOM) {
             Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(Dimens.dp8)) {
-                KeyboardColorButton(
-                    stringResource(R.string.keyboard_primary_color),
-                    Color(preferences.customPrimaryArgb),
-                    { primaryPicker = true },
-                    Modifier.weight(1f),
+                SettingsColorPickerButton(
+                    label = stringResource(R.string.keyboard_primary_color),
+                    color = Color(preferences.customPrimaryArgb),
+                    onClick = { primaryPicker = true },
+                    modifier = Modifier.weight(1f),
                 )
-                KeyboardColorButton(
-                    stringResource(R.string.keyboard_secondary_color),
-                    Color(preferences.customSecondaryArgb),
-                    { secondaryPicker = true },
-                    Modifier.weight(1f),
+                SettingsColorPickerButton(
+                    label = stringResource(R.string.keyboard_secondary_color),
+                    color = Color(preferences.customSecondaryArgb),
+                    onClick = { secondaryPicker = true },
+                    modifier = Modifier.weight(1f),
                 )
             }
         }
@@ -139,11 +136,11 @@ internal fun KeyboardSettingsPage(store: LauncherStore, goBack: () -> Unit) {
             modifier = Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.spacedBy(Dimens.dp8),
         ) {
-            KeyboardColorButton(
-                stringResource(R.string.keyboard_key_color),
-                resolvedColors.key,
-                { keyColorPicker = true },
-                Modifier.weight(1f),
+            SettingsColorPickerButton(
+                label = stringResource(R.string.keyboard_key_color),
+                color = resolvedColors.key,
+                onClick = { keyColorPicker = true },
+                modifier = Modifier.weight(1f),
             )
             if (preferences.keyColorOverrideArgb != null) {
                 TextButton(
@@ -222,22 +219,4 @@ private fun ChoiceStrip(content: @Composable RowScope.() -> Unit) {
         horizontalArrangement = Arrangement.spacedBy(Dimens.dp8),
         content = content,
     )
-}
-
-@Composable
-private fun KeyboardColorButton(
-    label: String,
-    color: Color,
-    onClick: () -> Unit,
-    modifier: Modifier = Modifier,
-) {
-    Surface(
-        onClick = onClick,
-        modifier = modifier,
-        color = color,
-        contentColor = readableContentColor(color),
-        shape = androidx.compose.foundation.shape.RoundedCornerShape(Dimens.dp14),
-    ) {
-        Text(label, Modifier.padding(Dimens.dp14), fontWeight = FontWeight.Bold)
-    }
 }

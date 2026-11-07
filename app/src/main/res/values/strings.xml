@@ -1084,7 +1084,10 @@
     <string name="open_contact">Open in Contacts</string>
     <string name="change_favorite_in_contacts">Star or unstar this person in Android Contacts. Mink does not keep a separate favorites list.</string>
     <string name="contact_action_apps">Quick Settings</string>
-    <string name="contact_action_apps_description">Use the launcher-wide setting, or choose apps for this person only.</string>
+    <string name="contact_action_apps_description">Choose apps and the software attention-light color for this person.</string>
+    <string name="favorite_attention_color">Attention color</string>
+    <string name="favorite_attention_color_description">Used by the Conversations icon when this favorite has new activity.</string>
+    <string name="use_default_attention_color">Use default attention color</string>
     <string name="message_with">Message with</string>
     <string name="call_with">Call with</string>
     <string name="use_messaging_setting">Use messaging setting</string>

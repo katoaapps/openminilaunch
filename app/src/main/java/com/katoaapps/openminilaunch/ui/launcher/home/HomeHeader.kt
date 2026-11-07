@@ -14,11 +14,8 @@ import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Forum
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.material.icons.filled.SystemUpdateAlt
-import androidx.compose.material3.Badge
-import androidx.compose.material3.BadgedBox
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LocalMinimumInteractiveComponentSize
@@ -28,6 +25,8 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -38,6 +37,7 @@ import com.katoaapps.openminilaunch.features.conversations.ConversationNotificat
 import com.katoaapps.openminilaunch.platform.DeviceActions
 import com.katoaapps.openminilaunch.ui.settings.SettingsDestination
 import com.katoaapps.openminilaunch.ui.theme.Dimens
+import com.katoaapps.openminilaunch.ui.theme.Rust
 import com.katoaapps.openminilaunch.ui.wellbeing.MinkHomeIcon
 
 @Composable
@@ -132,31 +132,20 @@ internal fun HomeHeader(
                     )
                 }
             }
-            IconButton(onClick = onConversations, modifier = Modifier.size(actionSize)) {
-                BadgedBox(
-                    badge = {
-                        val count = ConversationNotificationStore.currentConversations().size
-                        if (count > 0) {
-                            Badge {
-                                Text(
-                                    if (count > 99) {
-                                        stringResource(R.string.notification_count_overflow)
-                                    } else {
-                                        count.toString()
-                                    },
-                                )
-                            }
-                        }
-                    },
-                ) {
-                    Icon(
-                        Icons.Default.Forum,
-                        stringResource(R.string.conversations),
-                        Modifier.size(iconSize),
-                        tint = headerContentColor,
-                    )
-                }
-            }
+            val conversations = ConversationNotificationStore.currentConversations()
+            val favoriteAttention = rememberPendingFavoriteAttention(
+                store = store,
+                conversations = conversations,
+                defaultColorArgb = Rust.toArgb(),
+            )
+            ConversationAttentionButton(
+                conversationCount = conversations.size,
+                attentionColors = favoriteAttention.map { Color(it.colorArgb) },
+                actionSize = actionSize,
+                iconSize = iconSize,
+                restingColor = headerContentColor,
+                onClick = onConversations,
+            )
             IconButton(
                 onClick = { openSettings(SettingsDestination.OVERVIEW) },
                 modifier = Modifier.size(actionSize),

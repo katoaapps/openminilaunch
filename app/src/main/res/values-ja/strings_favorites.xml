@@ -27,7 +27,10 @@
     <string name="open_contacts">連絡先を開く</string>
     <string name="loading_favorite_contacts">お気に入りの連絡先を読み込み中…</string>
     <string name="contact_action_apps">クイック設定</string>
-    <string name="contact_action_apps_description">ランチャー全体の設定を使用するか、この人だけに使うアプリを選択します。</string>
+    <string name="contact_action_apps_description">この人に使うアプリとソフトウェア通知ライトの色を選択します。</string>
+    <string name="favorite_attention_color">通知の色</string>
+    <string name="favorite_attention_color_description">このお気に入りに新しい動きがあると、会話アイコンがこの色を使います。</string>
+    <string name="use_default_attention_color">既定の通知色を使用</string>
     <string name="message_with">メッセージに使用</string>
     <string name="call_with">通話に使用</string>
     <string name="use_messaging_setting">メッセージ設定を使用</string>

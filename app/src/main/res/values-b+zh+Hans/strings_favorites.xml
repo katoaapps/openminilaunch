@@ -27,7 +27,10 @@
     <string name="open_contacts">打开通讯录</string>
     <string name="loading_favorite_contacts">正在加载收藏的联系人…</string>
     <string name="contact_action_apps">快速设置</string>
-    <string name="contact_action_apps_description">使用启动器的通用设置，或仅为此联系人选择应用。</string>
+    <string name="contact_action_apps_description">选择此联系人使用的应用和软件提示灯颜色。</string>
+    <string name="favorite_attention_color">提醒颜色</string>
+    <string name="favorite_attention_color_description">当此收藏联系人有新动态时，“对话”图标会使用此颜色。</string>
+    <string name="use_default_attention_color">使用默认提醒颜色</string>
     <string name="message_with">消息应用</string>
     <string name="call_with">通话应用</string>
     <string name="use_messaging_setting">使用消息设置</string>

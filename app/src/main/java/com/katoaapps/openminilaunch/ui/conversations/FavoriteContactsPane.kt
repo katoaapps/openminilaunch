@@ -126,6 +126,7 @@ private fun FavoriteContactsContent(
     }
     val routeStore = remember(context) { FavoriteContactRouteStore(context.applicationContext) }
     val orderStore = store.favoriteContactOrderStore
+    val attentionColorStore = store.favoriteAttentionColorStore
     val integratedStore = store.favoriteIntegratedContactStore
     val scope = rememberCoroutineScope()
     val revision = repository?.revision?.collectAsState()?.value ?: 0L
@@ -416,6 +417,7 @@ private fun FavoriteContactsContent(
             messagingOptions = actionAppOptions.messaging,
             callingOptions = actionAppOptions.calling,
             preferredPhone = preferredPhone,
+            attentionColorArgb = attentionColorStore.color(contact.id),
             onAction = { requestAction(contact, it) },
             onPreferredPhone = { phone ->
                 routeStore.updatePreferredPhone(
@@ -432,6 +434,7 @@ private fun FavoriteContactsContent(
                 routeStore.updateCall(contact.id, route)
                 routeRevision++
             },
+            onAttentionColor = { color -> attentionColorStore.update(contact.id, color) },
             onOpenContact = {
                 if (!actions.openContact(contact.contactUri)) {
                     Toast.makeText(
@@ -462,6 +465,7 @@ private fun FavoriteContactsContent(
             contact = contact,
             availability = availability,
             callAvailability = integratedCallAvailability[contact.id],
+            attentionColorArgb = attentionColorStore.color(contact.id),
             onMessage = {
                 selectedIntegratedContact = null
                 composeIntegratedMessage(contact)
@@ -490,10 +494,12 @@ private fun FavoriteContactsContent(
                 selectedIntegratedContact = null
                 scope.launch {
                     if (withContext(Dispatchers.IO) { integratedStore.remove(contact.id) }) {
+                        attentionColorStore.update(contact.id, null)
                         integratedRevision++
                     }
                 }
             },
+            onAttentionColor = { color -> attentionColorStore.update(contact.id, color) },
             onDismiss = { selectedIntegratedContact = null },
         )
     }

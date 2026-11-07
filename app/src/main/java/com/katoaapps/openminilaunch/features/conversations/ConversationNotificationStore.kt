@@ -45,6 +45,7 @@ data class ConversationNotification(
     internal val contentIntent: PendingIntent?,
     internal val replyAction: Notification.Action?,
     val actions: List<ConversationNotificationAction> = emptyList(),
+    val identityHints: Set<String> = emptySet(),
     val isDemo: Boolean = false,
 ) {
     val canReply: Boolean get() = isDemo || replyAction != null
@@ -68,6 +69,8 @@ data class NotificationConversation(
         .sortedByDescending(ConversationNotification::postedAt)
         .map(ConversationNotification::packageName)
         .distinct()
+    val identityHints: Set<String> get() = notifications
+        .flatMapTo(linkedSetOf(), ConversationNotification::identityHints)
     val actions: List<ConversationNotificationAction> get() = notifications
         .sortedByDescending(ConversationNotification::postedAt)
         .flatMap(ConversationNotification::actions)
@@ -76,6 +79,21 @@ data class NotificationConversation(
         }
     val canDismiss: Boolean get() = notifications.any(ConversationNotification::isDismissible)
 }
+
+internal fun latestConversationActivityAt(
+    conversations: List<NotificationConversation>,
+): Long? = conversations.maxOfOrNull(::conversationActivityAt)
+
+internal fun conversationActivityAt(conversation: NotificationConversation): Long =
+    maxOf(
+        conversation.latestNotification.postedAt,
+        conversation.latestMessage?.timestamp ?: 0L,
+    )
+
+internal fun shouldShowConversationAttention(
+    latestActivityAt: Long?,
+    acknowledgedThrough: Long,
+): Boolean = latestActivityAt != null && latestActivityAt > acknowledgedThrough
 
 object ConversationNotificationStore {
     val activeNotifications = mutableStateListOf<ConversationNotification>()
@@ -247,5 +265,11 @@ object ConversationNotificationStore {
                 ComponentName(context, MinkNotificationListenerService::class.java),
             )
         }
+    }
+
+    fun refreshActiveNotifications(context: Context) {
+        val refreshed = MinkNotificationListenerService.connectedService
+            ?.refreshActiveNotifications() == true
+        if (!refreshed) requestListenerReconnect(context)
     }
 }

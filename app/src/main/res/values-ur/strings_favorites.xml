@@ -27,7 +27,10 @@
     <string name="open_contacts">رابطے کھولیں</string>
     <string name="loading_favorite_contacts">پسندیدہ رابطے لوڈ ہو رہے ہیں…</string>
     <string name="contact_action_apps">فوری ترتیبات</string>
-    <string name="contact_action_apps_description">لانچر کی عمومی ترتیب استعمال کریں یا صرف اس شخص کے لیے ایپس منتخب کریں۔</string>
+    <string name="contact_action_apps_description">اس شخص کے لیے ایپس اور سافٹ ویئر توجہ لائٹ کا رنگ منتخب کریں۔</string>
+    <string name="favorite_attention_color">توجہ کا رنگ</string>
+    <string name="favorite_attention_color_description">اس پسندیدہ رابطے کی نئی سرگرمی پر گفتگو کا آئیکن یہ رنگ استعمال کرتا ہے۔</string>
+    <string name="use_default_attention_color">پہلے سے طے شدہ توجہ کا رنگ استعمال کریں</string>
     <string name="message_with">پیغام بھیجنے کی ایپ</string>
     <string name="call_with">کال کرنے کی ایپ</string>
     <string name="use_messaging_setting">پیغام رسانی کی ترتیب استعمال کریں</string>

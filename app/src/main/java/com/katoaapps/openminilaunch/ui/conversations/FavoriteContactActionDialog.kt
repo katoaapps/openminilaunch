@@ -2,7 +2,6 @@
 
 package com.katoaapps.openminilaunch.ui.conversations
 
-import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
@@ -17,8 +16,6 @@ import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material.icons.automirrored.filled.Message
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Contacts
-import androidx.compose.material.icons.filled.ExpandLess
-import androidx.compose.material.icons.filled.ExpandMore
 import androidx.compose.material.icons.filled.Phone
 import androidx.compose.material3.Button
 import androidx.compose.material3.DropdownMenuItem
@@ -36,7 +33,6 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -69,10 +65,12 @@ internal fun FavoriteAndroidContactActionDialog(
     messagingOptions: List<MessagingProviderOption>,
     callingOptions: List<CallingAppOption>,
     preferredPhone: AndroidContactPhone?,
+    attentionColorArgb: Int?,
     onAction: (FavoriteContactAction) -> Unit,
     onPreferredPhone: (AndroidContactPhone?) -> Unit,
     onMessageRoute: (ContactAppRoute) -> Unit,
     onCallRoute: (ContactAppRoute) -> Unit,
+    onAttentionColor: (Int?) -> Unit,
     onOpenContact: () -> Unit,
     onDismiss: () -> Unit,
 ) {
@@ -109,16 +107,17 @@ internal fun FavoriteAndroidContactActionDialog(
                     onClick = onOpenContact,
                     modifier = Modifier.padding(top = Dimens.dp18),
                 )
-                if (availablePhones.isNotEmpty()) {
-                    ContactActionAppsSection(
-                        routes = routes,
-                        messagingOptions = messagingOptions,
-                        callingOptions = callingOptions,
-                        onMessageRoute = onMessageRoute,
-                        onCallRoute = onCallRoute,
-                        modifier = Modifier.padding(top = Dimens.dp10),
-                    )
-                }
+                ContactActionAppsSection(
+                    routes = routes,
+                    messagingOptions = messagingOptions,
+                    callingOptions = callingOptions,
+                    attentionColorArgb = attentionColorArgb,
+                    showActionRoutes = availablePhones.isNotEmpty(),
+                    onMessageRoute = onMessageRoute,
+                    onCallRoute = onCallRoute,
+                    onAttentionColor = onAttentionColor,
+                    modifier = Modifier.padding(top = Dimens.dp10),
+                )
                 FavoriteContactPrimaryActions(
                     enabled = availablePhones.isNotEmpty(),
                     onCall = { onAction(FavoriteContactAction.CALL) },
@@ -250,41 +249,16 @@ private fun ContactActionAppsSection(
     routes: FavoriteContactActionRoutes,
     messagingOptions: List<MessagingProviderOption>,
     callingOptions: List<CallingAppOption>,
+    attentionColorArgb: Int?,
+    showActionRoutes: Boolean,
     onMessageRoute: (ContactAppRoute) -> Unit,
     onCallRoute: (ContactAppRoute) -> Unit,
+    onAttentionColor: (Int?) -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    var expanded by rememberSaveable { mutableStateOf(false) }
-
-    Column(modifier) {
-        Surface(
-            modifier = Modifier.fillMaxWidth().clickable { expanded = !expanded },
-            shape = RoundedCornerShape(Dimens.dp16),
-            color = MaterialTheme.colorScheme.surfaceContainerLow,
-        ) {
-            Row(
-                Modifier.fillMaxWidth().padding(horizontal = Dimens.dp14, vertical = Dimens.dp12),
-                verticalAlignment = Alignment.CenterVertically,
-            ) {
-                Column(Modifier.weight(1f)) {
-                    Text(
-                        stringResource(R.string.contact_action_apps),
-                        fontWeight = FontWeight.SemiBold,
-                    )
-                    Text(
-                        stringResource(R.string.contact_action_apps_description),
-                        color = Muted,
-                        fontSize = Dimens.sp11,
-                    )
-                }
-                Icon(
-                    if (expanded) Icons.Default.ExpandLess else Icons.Default.ExpandMore,
-                    contentDescription = null,
-                )
-            }
-        }
-        AnimatedVisibility(expanded) {
-            Column(Modifier.padding(top = Dimens.dp10)) {
+    FavoriteContactQuickSettings(modifier) {
+        if (showActionRoutes) {
+            Column {
                 MessageRoutePicker(
                     route = routes.message,
                     options = messagingOptions,
@@ -298,6 +272,11 @@ private fun ContactActionAppsSection(
                 )
             }
         }
+        FavoriteAttentionColorSetting(
+            colorArgb = attentionColorArgb,
+            onColorChange = onAttentionColor,
+            modifier = Modifier.padding(top = if (showActionRoutes) Dimens.dp10 else Dimens.dp0),
+        )
     }
 }
 

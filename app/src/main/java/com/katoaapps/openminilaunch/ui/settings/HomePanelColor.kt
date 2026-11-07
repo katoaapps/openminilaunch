@@ -213,16 +213,15 @@ internal fun AppearanceColorSetting(
                 }
                 presetTrailingContent()
             }
-            OutlinedButton(onClick = { showCustomPicker = true }, modifier = Modifier.fillMaxWidth()) {
-                Icon(Icons.Default.Palette, null, Modifier.size(Dimens.dp18))
-                Text(
-                    stringResource(
-                        if (selectedArgb != null && selectedPreset == null) R.string.edit_custom_color
-                        else R.string.choose_custom_color,
-                    ),
-                    Modifier.padding(start = Dimens.dp8),
-                )
-            }
+            SettingsColorPickerButton(
+                label = stringResource(
+                    if (selectedArgb != null && selectedPreset == null) R.string.edit_custom_color
+                    else R.string.choose_custom_color,
+                ),
+                color = Color(selectedArgb ?: pickerArgb),
+                onClick = { showCustomPicker = true },
+                modifier = Modifier.fillMaxWidth(),
+            )
             extraContent()
             onUseThemeDefault?.let { useThemeDefault ->
                 TextButton(

@@ -35,11 +35,13 @@ internal fun FavoriteIntegratedContactActionDialog(
     contact: FavoriteIntegratedContact,
     availability: FavoriteIntegratedContactAvailability,
     callAvailability: FavoriteIntegratedCallAvailability?,
+    attentionColorArgb: Int?,
     onMessage: () -> Unit,
     onCall: () -> Unit,
     onInstallProvider: () -> Unit,
     onReconnect: () -> Unit,
     onRemove: () -> Unit,
+    onAttentionColor: (Int?) -> Unit,
     onDismiss: () -> Unit,
 ) {
     Dialog(onDismissRequest = onDismiss) {
@@ -69,6 +71,12 @@ internal fun FavoriteIntegratedContactActionDialog(
                     color = Muted,
                     modifier = Modifier.padding(top = Dimens.dp4),
                 )
+                FavoriteContactQuickSettings(Modifier.padding(top = Dimens.dp14)) {
+                    FavoriteAttentionColorSetting(
+                        colorArgb = attentionColorArgb,
+                        onColorChange = onAttentionColor,
+                    )
+                }
                 if (hasMessage) {
                     UnavailableReason(availability)
                     AvailabilityAction(

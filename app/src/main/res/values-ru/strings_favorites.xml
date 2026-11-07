@@ -27,7 +27,10 @@
     <string name="open_contacts">Открыть Контакты</string>
     <string name="loading_favorite_contacts">Загрузка избранных контактов…</string>
     <string name="contact_action_apps">Быстрые настройки</string>
-    <string name="contact_action_apps_description">Используйте общие настройки лаунчера или выберите приложения только для этого человека.</string>
+    <string name="contact_action_apps_description">Выберите приложения и цвет программного индикатора для этого человека.</string>
+    <string name="favorite_attention_color">Цвет индикатора</string>
+    <string name="favorite_attention_color_description">Значок разговоров использует этот цвет, когда у избранного контакта появляется новая активность.</string>
+    <string name="use_default_attention_color">Использовать цвет индикатора по умолчанию</string>
     <string name="message_with">Сообщения через</string>
     <string name="call_with">Звонки через</string>
     <string name="use_messaging_setting">Использовать настройки сообщений</string>

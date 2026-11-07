@@ -27,7 +27,10 @@
     <string name="open_contacts">開啟通訊錄</string>
     <string name="loading_favorite_contacts">正在載入最愛聯絡人…</string>
     <string name="contact_action_apps">快速設定</string>
-    <string name="contact_action_apps_description">使用啟動器設定，或者只為呢位聯絡人揀應用程式。</string>
+    <string name="contact_action_apps_description">揀選呢個人用嘅應用程式同軟件提示燈顏色。</string>
+    <string name="favorite_attention_color">提示顏色</string>
+    <string name="favorite_attention_color_description">當呢個最愛有新動態時，「對話」圖示會使用呢種顏色。</string>
+    <string name="use_default_attention_color">使用預設提示顏色</string>
     <string name="message_with">傳訊息用</string>
     <string name="call_with">致電用</string>
     <string name="use_messaging_setting">使用訊息設定</string>

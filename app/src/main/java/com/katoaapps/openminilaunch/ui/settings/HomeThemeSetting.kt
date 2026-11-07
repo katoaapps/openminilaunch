@@ -20,7 +20,6 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Check
-import androidx.compose.material.icons.filled.Edit
 import androidx.compose.material.icons.filled.Palette
 import androidx.compose.material.icons.filled.PhotoLibrary
 import androidx.compose.material3.CircularProgressIndicator
@@ -341,42 +340,19 @@ private fun CustomThemeEditor(
             )
         }
         Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(Dimens.dp8)) {
-            CustomThemeColorButton(
+            SettingsColorPickerButton(
                 label = stringResource(R.string.app_background_color),
-                argb = customBackgroundArgb,
+                color = Color(customBackgroundArgb),
                 onClick = onEditBackground,
                 modifier = Modifier.weight(1f),
             )
-            CustomThemeColorButton(
+            SettingsColorPickerButton(
                 label = stringResource(R.string.home_panel_color),
-                argb = customPanelArgb,
+                color = Color(customPanelArgb),
                 onClick = onEditPanel,
                 modifier = Modifier.weight(1f),
             )
         }
-    }
-}
-
-@Composable
-private fun CustomThemeColorButton(
-    label: String,
-    argb: Int,
-    onClick: () -> Unit,
-    modifier: Modifier = Modifier,
-) {
-    OutlinedButton(onClick = onClick, modifier = modifier) {
-        Surface(
-            modifier = Modifier.size(Dimens.dp18),
-            shape = CircleShape,
-            color = Color(argb),
-        ) {}
-        Text(
-            label,
-            maxLines = 1,
-            overflow = TextOverflow.Ellipsis,
-            modifier = Modifier.padding(horizontal = Dimens.dp6).weight(1f),
-        )
-        Icon(Icons.Default.Edit, null, Modifier.size(Dimens.dp16))
     }
 }
 

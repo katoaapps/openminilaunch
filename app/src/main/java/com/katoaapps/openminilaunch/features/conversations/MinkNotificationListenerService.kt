@@ -11,15 +11,14 @@ import android.provider.ContactsContract
 import android.service.notification.NotificationListenerService
 import android.service.notification.StatusBarNotification
 import androidx.core.content.ContextCompat
+import com.katoaapps.openminilaunch.model.ProviderAddressType
 
 /** Converts supported notification payloads into the local conversation model. */
 class MinkNotificationListenerService : NotificationListenerService() {
     override fun onListenerConnected() {
         super.onListenerConnected()
         connectedService = this
-        ConversationNotificationStore.replaceNotifications(
-            activeNotifications.orEmpty().mapNotNull(::toConversationNotification),
-        )
+        refreshActiveNotifications()
     }
 
     override fun onListenerDisconnected() {
@@ -35,6 +34,13 @@ class MinkNotificationListenerService : NotificationListenerService() {
     override fun onNotificationRemoved(sbn: StatusBarNotification) {
         ConversationNotificationStore.removeNotification(sbn.key)
     }
+
+    /** Reconciles Mink's in-memory view with Android's authoritative active notification set. */
+    internal fun refreshActiveNotifications(): Boolean = runCatching {
+        ConversationNotificationStore.replaceNotifications(
+            activeNotifications.orEmpty().mapNotNull(::toConversationNotification),
+        )
+    }.isSuccess
 
     @Suppress("DEPRECATION")
     private fun toConversationNotification(sbn: StatusBarNotification): ConversationNotification? {
@@ -80,6 +86,15 @@ class MinkNotificationListenerService : NotificationListenerService() {
         }
         if (!isConversationNotification(notification.category, styleMessages.isNotEmpty())) return null
         val latestIncoming = styleMessages.lastOrNull { !it.isOutgoing }
+        val identityHints = buildSet {
+            styleMessages.asSequence()
+                .filterNot(ExtractedMessage::isOutgoing)
+                .mapNotNull(ExtractedMessage::personUri)
+                .flatMap { providerIdentityHints(it).asSequence() }
+                .forEach(::add)
+            conversationShortcutIdentityHint(sbn.packageName, notification.shortcutId)
+                ?.let(::add)
+        }
         val senderName = latestIncoming?.senderName
         val isGroup = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
             style?.isGroupConversation == true
@@ -152,7 +167,22 @@ class MinkNotificationListenerService : NotificationListenerService() {
             contentIntent = notification.contentIntent,
             replyAction = replyAction,
             actions = conversationActions,
+            identityHints = identityHints,
         )
+    }
+
+    private fun providerIdentityHints(personUri: String?): Set<String> {
+        val uri = personUri?.let { runCatching { Uri.parse(it) }.getOrNull() } ?: return emptySet()
+        val value = uri.schemeSpecificPart.orEmpty()
+            .substringBefore('?')
+            .substringBefore(';')
+        val type = when {
+            uri.scheme.equals("tel", ignoreCase = true) -> ProviderAddressType.PHONE
+            uri.scheme.equals("mailto", ignoreCase = true) ||
+                uri.scheme.equals("sip", ignoreCase = true) -> ProviderAddressType.USERNAME
+            else -> return emptySet()
+        }
+        return setOfNotNull(providerAddressIdentityHint(type, value))
     }
 
     private fun extractConversationActions(

@@ -27,7 +27,10 @@
     <string name="open_contacts">संपर्क खोलें</string>
     <string name="loading_favorite_contacts">पसंदीदा संपर्क लोड हो रहे हैं…</string>
     <string name="contact_action_apps">त्वरित सेटिंग्स</string>
-    <string name="contact_action_apps_description">लॉन्चर की सामान्य सेटिंग इस्तेमाल करें या सिर्फ़ इस व्यक्ति के लिए ऐप चुनें।</string>
+    <string name="contact_action_apps_description">इस व्यक्ति के लिए ऐप और सॉफ़्टवेयर सूचना-लाइट का रंग चुनें।</string>
+    <string name="favorite_attention_color">सूचना का रंग</string>
+    <string name="favorite_attention_color_description">इस पसंदीदा के लिए नई गतिविधि आने पर बातचीत आइकन इस रंग का उपयोग करता है।</string>
+    <string name="use_default_attention_color">डिफ़ॉल्ट सूचना रंग इस्तेमाल करें</string>
     <string name="message_with">इससे संदेश भेजें</string>
     <string name="call_with">इससे कॉल करें</string>
     <string name="use_messaging_setting">संदेश सेटिंग इस्तेमाल करें</string>

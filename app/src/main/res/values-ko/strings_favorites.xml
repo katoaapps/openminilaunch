@@ -27,7 +27,10 @@
     <string name="open_contacts">연락처 열기</string>
     <string name="loading_favorite_contacts">즐겨찾는 연락처 불러오는 중…</string>
     <string name="contact_action_apps">빠른 설정</string>
-    <string name="contact_action_apps_description">런처 전체 설정을 사용하거나 이 사람에게만 사용할 앱을 선택하세요.</string>
+    <string name="contact_action_apps_description">이 사람에게 사용할 앱과 소프트웨어 알림등 색상을 선택하세요.</string>
+    <string name="favorite_attention_color">알림 색상</string>
+    <string name="favorite_attention_color_description">이 즐겨찾기에 새 활동이 있으면 대화 아이콘이 이 색상을 사용합니다.</string>
+    <string name="use_default_attention_color">기본 알림 색상 사용</string>
     <string name="message_with">메시지 앱</string>
     <string name="call_with">통화 앱</string>
     <string name="use_messaging_setting">메시지 설정 사용</string>

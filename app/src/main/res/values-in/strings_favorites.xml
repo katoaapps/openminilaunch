@@ -27,7 +27,10 @@
     <string name="open_contacts">Buka Kontak</string>
     <string name="loading_favorite_contacts">Memuat kontak favorit…</string>
     <string name="contact_action_apps">Setelan cepat</string>
-    <string name="contact_action_apps_description">Gunakan setelan launcher atau pilih aplikasi khusus untuk orang ini.</string>
+    <string name="contact_action_apps_description">Pilih aplikasi dan warna lampu perhatian perangkat lunak untuk orang ini.</string>
+    <string name="favorite_attention_color">Warna perhatian</string>
+    <string name="favorite_attention_color_description">Ikon Percakapan memakai warna ini saat favorit ini memiliki aktivitas baru.</string>
+    <string name="use_default_attention_color">Gunakan warna perhatian default</string>
     <string name="message_with">Kirim pesan dengan</string>
     <string name="call_with">Telepon dengan</string>
     <string name="use_messaging_setting">Gunakan setelan pesan</string>

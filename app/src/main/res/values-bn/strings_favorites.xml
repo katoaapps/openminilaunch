@@ -27,7 +27,10 @@
     <string name="open_contacts">পরিচিতি খুলুন</string>
     <string name="loading_favorite_contacts">পছন্দের পরিচিতি লোড হচ্ছে…</string>
     <string name="contact_action_apps">দ্রুত সেটিংস</string>
-    <string name="contact_action_apps_description">লঞ্চারের সাধারণ সেটিং ব্যবহার করুন অথবা শুধু এই ব্যক্তির জন্য অ্যাপ বেছে নিন।</string>
+    <string name="contact_action_apps_description">এই ব্যক্তির জন্য অ্যাপ এবং সফটওয়্যার সতর্কতার আলোর রং বেছে নিন।</string>
+    <string name="favorite_attention_color">সতর্কতার রং</string>
+    <string name="favorite_attention_color_description">এই পছন্দের পরিচিতির নতুন কার্যকলাপ হলে কথোপকথন আইকনে এই রং ব্যবহার হবে।</string>
+    <string name="use_default_attention_color">ডিফল্ট সতর্কতার রং ব্যবহার করুন</string>
     <string name="message_with">বার্তা পাঠানোর অ্যাপ</string>
     <string name="call_with">কল করার অ্যাপ</string>
     <string name="use_messaging_setting">বার্তা সেটিং ব্যবহার করুন</string>

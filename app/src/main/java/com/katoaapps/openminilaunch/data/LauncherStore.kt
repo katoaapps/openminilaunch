@@ -12,8 +12,9 @@ import com.katoaapps.openminilaunch.features.appearance.CustomFontRepository
 import com.katoaapps.openminilaunch.features.appearance.HomeWallpaperRepository
 import com.katoaapps.openminilaunch.features.appearance.WATERMELON_PILL_COLOR_ARGB
 import com.katoaapps.openminilaunch.features.demo.DemoHomeProfile
-import com.katoaapps.openminilaunch.features.contacts.FavoriteIntegratedContactStore
+import com.katoaapps.openminilaunch.features.contacts.FavoriteAttentionColorStore
 import com.katoaapps.openminilaunch.features.contacts.FavoriteContactOrderStore
+import com.katoaapps.openminilaunch.features.contacts.FavoriteIntegratedContactStore
 import com.katoaapps.openminilaunch.features.minkspace.MinkSpaceMiniApp
 import com.katoaapps.openminilaunch.features.minkspace.todo.TodoItem
 import com.katoaapps.openminilaunch.features.minkspace.todo.TodoStore
@@ -39,6 +40,7 @@ class LauncherStore private constructor(context: Context) {
     private val fontAppearancePreferences = FontAppearancePreferenceStore(prefs)
     private val messagingPreferences = MessagingPreferenceStore(prefs)
     private val callingPreferences = CallingPreferenceStore(prefs)
+    private val conversationAttentionPreferences = ConversationAttentionPreferenceStore(prefs)
     private val minkDayPreferences = MinkDayPreferenceStore(prefs)
     private val updatePreferences = UpdatePreferenceStore(prefs)
     private val appDiscoveryPreferences = AppDiscoveryPreferenceStore(prefs)
@@ -55,6 +57,7 @@ class LauncherStore private constructor(context: Context) {
     internal val profileRepository = ProfileRepository(appContext)
     internal val favoriteIntegratedContactStore = FavoriteIntegratedContactStore(appContext)
     internal val favoriteContactOrderStore = FavoriteContactOrderStore(appContext)
+    internal val favoriteAttentionColorStore = FavoriteAttentionColorStore(appContext)
     internal val minkPadPreferences = com.katoaapps.openminilaunch.features.minkpad.minkPadRepository(appContext).preferences
     private val demoPreferences: DemoPreferenceStore = DemoPreferenceStore(appContext, prefs, todoStore)
     internal val demoHomeProfile get() = demoPreferences.profile
@@ -615,6 +618,13 @@ class LauncherStore private constructor(context: Context) {
 
     fun resetPreferredCallingApp() {
         callingPreferences.setPreferredCallingApp(null)
+    }
+
+    fun acknowledgedConversationActivityAt(conversationId: String): Long =
+        conversationAttentionPreferences.acknowledgedThrough(conversationId)
+
+    fun acknowledgeConversationActivity(conversationId: String, activityAt: Long?) {
+        conversationAttentionPreferences.acknowledge(conversationId, activityAt)
     }
 
     fun setPreferredAiApp(packageName: String) {

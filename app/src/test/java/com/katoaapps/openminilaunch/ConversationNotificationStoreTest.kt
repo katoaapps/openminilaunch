@@ -5,6 +5,8 @@ import com.katoaapps.openminilaunch.features.conversations.ConversationNotificat
 import com.katoaapps.openminilaunch.features.conversations.DemoConversationData
 import com.katoaapps.openminilaunch.features.conversations.isConversationNotification
 import com.katoaapps.openminilaunch.features.conversations.isDismissibleNotification
+import com.katoaapps.openminilaunch.features.conversations.latestConversationActivityAt
+import com.katoaapps.openminilaunch.features.conversations.shouldShowConversationAttention
 import com.katoaapps.openminilaunch.features.conversations.shouldExposeConversationAction
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
@@ -90,5 +92,19 @@ class ConversationNotificationStoreTest {
         assertEquals("You can't have Minks as pets in LA", may.messages.single().text)
         assertEquals(1, maya.messages.size)
         assertTrue(maya.replyTarget?.isDemo == true)
+    }
+
+    @Test
+    fun conversationAttentionTracksNewerActivityWithoutPersistingMessageData() {
+        val conversations = ConversationNotificationStore.groupConversations(
+            sourceNotifications = DemoConversationData.notifications(now = 1_000_000L),
+            replies = emptyList(),
+        )
+        val latest = latestConversationActivityAt(conversations)
+
+        assertNotNull(latest)
+        assertTrue(shouldShowConversationAttention(latest, acknowledgedThrough = 0L))
+        assertFalse(shouldShowConversationAttention(latest, acknowledgedThrough = latest!!))
+        assertFalse(shouldShowConversationAttention(null, acknowledgedThrough = 0L))
     }
 }
