@@ -27,12 +27,14 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
@@ -44,6 +46,9 @@ import com.katoaapps.openminilaunch.data.LauncherStore
 import com.katoaapps.openminilaunch.features.conversations.ConversationNotificationStore
 import com.katoaapps.openminilaunch.features.conversations.NotificationConversation
 import com.katoaapps.openminilaunch.features.conversations.conversationActivityAt
+import com.katoaapps.openminilaunch.features.conversations.matchFavoriteConversations
+import com.katoaapps.openminilaunch.features.conversations.prioritizeFavoriteConversations
+import com.katoaapps.openminilaunch.features.conversations.shouldShowConversationAttention
 import com.katoaapps.openminilaunch.model.CommunicationRecipient
 import com.katoaapps.openminilaunch.model.ContactAppRoute
 import com.katoaapps.openminilaunch.model.LauncherShortcutTarget
@@ -77,10 +82,37 @@ internal fun ConversationCenterScreen(
     }
     var selectedConversationId by rememberSaveable { mutableStateOf<String?>(null) }
     var selectedSection by rememberSaveable { mutableStateOf(ConversationSection.MESSAGES) }
+    var acknowledgementRevision by remember { mutableIntStateOf(0) }
     val demoModeEnabled = store.demoSearchDataEnabled
     val conversations = ConversationNotificationStore.currentConversations(
         useDemoData = demoModeEnabled,
     )
+    val favoriteContacts = rememberOrderedConversationFavorites(store, refreshKey = selectedSection)
+    val orderedConversations = remember(conversations, favoriteContacts) {
+        prioritizeFavoriteConversations(conversations, favoriteContacts)
+    }
+    val favoriteMatches = remember(conversations, favoriteContacts) {
+        matchFavoriteConversations(conversations, favoriteContacts)
+    }
+    val conversationsById = remember(conversations) {
+        conversations.associateBy(NotificationConversation::id)
+    }
+    val acknowledgedActivityByConversationId = remember(conversations, acknowledgementRevision) {
+        conversations.associate { conversation ->
+            conversation.id to store.acknowledgedConversationActivityAt(conversation.id)
+        }
+    }
+    val favoriteRowStyles = favoriteMatches.mapValues { (conversationId, match) ->
+        ConversationFavoriteRowStyle(
+            color = store.favoriteAttentionColorStore.color(match.favoriteId)?.let(::Color)
+                ?: Rust,
+            isUnread = shouldShowConversationAttention(
+                latestActivityAt = conversationsById[conversationId]
+                    ?.let(::conversationActivityAt),
+                acknowledgedThrough = acknowledgedActivityByConversationId[conversationId] ?: 0L,
+            ),
+        )
+    }
     val selectedConversation = conversations.firstOrNull { it.id == selectedConversationId }
     val selectedActivityAt = selectedConversation?.let(::conversationActivityAt)
 
@@ -96,6 +128,7 @@ internal fun ConversationCenterScreen(
                 conversationId = selectedConversation.id,
                 activityAt = selectedActivityAt,
             )
+            acknowledgementRevision++
         }
     }
 
@@ -137,7 +170,8 @@ internal fun ConversationCenterScreen(
                             }
                             conversations.isEmpty() -> NoConversationsEmptyState()
                             else -> ConversationList(
-                                conversations = conversations,
+                                conversations = orderedConversations,
+                                favoriteRowStyles = favoriteRowStyles,
                                 actions = actions,
                                 onConversation = { selectedConversationId = it.id },
                             )
@@ -171,6 +205,7 @@ internal fun ConversationCenterScreen(
 @Composable
 private fun ConversationList(
     conversations: List<NotificationConversation>,
+    favoriteRowStyles: Map<String, ConversationFavoriteRowStyle>,
     actions: DeviceActions,
     onConversation: (NotificationConversation) -> Unit,
 ) {
@@ -188,7 +223,12 @@ private fun ConversationList(
             )
         }
         items(conversations, key = NotificationConversation::id) { conversation ->
-            ConversationCard(conversation, actions) { onConversation(conversation) }
+            ConversationCard(
+                conversation = conversation,
+                actions = actions,
+                favoriteStyle = favoriteRowStyles[conversation.id],
+                onOpen = { onConversation(conversation) },
+            )
         }
         item { Spacer(Modifier.height(Dimens.dp28)) }
     }

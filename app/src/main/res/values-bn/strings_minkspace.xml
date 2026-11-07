@@ -9,6 +9,7 @@
     <string name="calculator">ক্যালকুলেটর</string>
     <string name="recorder">রেকর্ডার</string>
     <string name="music_player">মিউজিক প্লেয়ার</string>
+    <string name="quick_widget">দ্রুত উইজেট</string>
     <string name="swipe_vertically_to_switch">সুইচ করতে উল্লম্বভাবে সোয়াইপ করুন</string>
     <string name="calculator_history">ইতিহাস</string>
     <string name="clear_history">ইতিহাস পরিষ্কার করুন</string>
@@ -16,7 +17,7 @@
     <string name="delete_last_character">শেষ অক্ষর মুছুন</string>
     <string name="calculator_history_empty">সম্পূর্ণ গণনা এখানে প্রদর্শিত হবে.</string>
     <string name="coming_later">পরে আসছে</string>
-    <string name="media_lab">Media Lab</string>
+    <string name="media_lab">স্মৃতি</string>
     <string name="add_media">মিডিয়া যোগ করুন</string>
     <string name="media_empty">এখানে পূর্বরূপ দেখতে ছবি, GIF বা ভিডিও যোগ করুন।</string>
     <string name="media_preview_unavailable">পূর্বরূপ অনুপলব্ধ</string>
@@ -41,7 +42,7 @@
     <string name="music_expand_player">মিডিয়া নিয়ন্ত্রণ প্রসারিত করুন</string>
     <string name="music_back_control_description">10 সেকেন্ড পিছনে; একাধিক ট্যাপ রিস্টার্ট এবং পূর্ববর্তী মিডিয়া অফার করে</string>
     <string name="music_forward_control_description">10 সেকেন্ড ফরোয়ার্ড করুন; একাধিক ট্যাপ পরবর্তী মিডিয়া এবং শাফেল অফার করে</string>
-    <string name="mink_space_widget_description">ইনস্টল করা অ্যাপ থেকে একটি উইজেট MinkSpace-এ যোগ করুন।</string>
+    <string name="mink_space_widget_description">MinkSpace-এ একটি পছন্দের উইজেট হাতের কাছে রাখুন।</string>
     <string name="mink_space_widget_picker_description">ইনস্টল করা অ্যাপগুলি উইজেট সরবরাহ করে। Mink সম্ভাব্য মানানসই অবস্থা দেখায়, তবে চূড়ান্ত লেআউট ও উপলভ্য কাজগুলি প্রদানকারী নিয়ন্ত্রণ করে।</string>
     <string name="replace_widget">উইজেট বদলান</string>
     <string name="expand_view">ভিউ প্রসারিত করুন</string>

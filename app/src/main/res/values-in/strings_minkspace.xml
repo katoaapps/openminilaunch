@@ -9,6 +9,7 @@
     <string name="calculator">Kalkulator</string>
     <string name="recorder">Perekam</string>
     <string name="music_player">Pemutar musik</string>
+    <string name="quick_widget">Widget Cepat</string>
     <string name="swipe_vertically_to_switch">Gesek secara vertikal untuk beralih</string>
     <string name="calculator_history">Sejarah</string>
     <string name="clear_history">Hapus riwayat</string>
@@ -16,7 +17,7 @@
     <string name="delete_last_character">Hapus karakter terakhir</string>
     <string name="calculator_history_empty">Perhitungan yang sudah selesai akan muncul di sini.</string>
     <string name="coming_later">Akan datang nanti</string>
-    <string name="media_lab">Media Lab</string>
+    <string name="media_lab">Kenangan</string>
     <string name="add_media">Tambahkan media</string>
     <string name="media_empty">Tambahkan gambar, GIF, atau video untuk dipratinjau di sini.</string>
     <string name="media_preview_unavailable">Pratinjau tidak tersedia</string>
@@ -41,7 +42,7 @@
     <string name="music_expand_player">Perluas kontrol media</string>
     <string name="music_back_control_description">Mundur 10 detik; beberapa ketukan menawarkan restart dan media sebelumnya</string>
     <string name="music_forward_control_description">Maju 10 detik; beberapa ketukan menawarkan media berikutnya dan acak</string>
-    <string name="mink_space_widget_description">Tambahkan satu widget dari aplikasi terinstal ke MinkSpace.</string>
+    <string name="mink_space_widget_description">Simpan satu widget favorit agar selalu dekat di MinkSpace.</string>
     <string name="mink_space_widget_picker_description">Widget disediakan oleh aplikasi terinstal. Mink menampilkan perkiraan kecocokannya, tetapi penyedia mengontrol tata letak akhir dan tindakan yang tersedia.</string>
     <string name="replace_widget">Ganti widget</string>
     <string name="expand_view">Perluas tampilan</string>

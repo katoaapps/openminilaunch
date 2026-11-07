@@ -1,5 +1,6 @@
 package com.katoaapps.openminilaunch.ui.conversations
 
+import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Box
@@ -37,20 +38,38 @@ import com.katoaapps.openminilaunch.ui.theme.Dimens
 import com.katoaapps.openminilaunch.ui.theme.MinkWhite
 import com.katoaapps.openminilaunch.ui.theme.Muted
 import com.katoaapps.openminilaunch.ui.theme.Rust
+import com.katoaapps.openminilaunch.ui.theme.readableContentColor
 import java.text.DateFormat
 import java.util.Date
+
+internal data class ConversationFavoriteRowStyle(
+    val color: Color,
+    val isUnread: Boolean,
+)
 
 @Composable
 internal fun ConversationCard(
     conversation: NotificationConversation,
     actions: DeviceActions,
+    favoriteStyle: ConversationFavoriteRowStyle?,
     onOpen: () -> Unit,
 ) {
     val latest = conversation.latestMessage
+    val unreadFavoriteColor = favoriteStyle?.color?.takeIf { favoriteStyle.isUnread }
+    val containerColor = unreadFavoriteColor ?: MaterialTheme.colorScheme.surfaceContainerLow
+    val contentColor = unreadFavoriteColor?.let { readableContentColor(it) }
+        ?: MaterialTheme.colorScheme.onSurface
+    val secondaryContentColor = contentColor.copy(alpha = .72f)
     Card(
         Modifier.fillMaxWidth().clickable(onClick = onOpen),
         shape = RoundedCornerShape(Dimens.dp18),
-        colors = CardDefaults.cardColors(containerColor = MaterialTheme.colorScheme.surfaceContainerLow),
+        colors = CardDefaults.cardColors(
+            containerColor = containerColor,
+            contentColor = contentColor,
+        ),
+        border = favoriteStyle
+            ?.takeUnless(ConversationFavoriteRowStyle::isUnread)
+            ?.let { BorderStroke(Dimens.dp2, it.color) },
     ) {
         Row(Modifier.fillMaxWidth().padding(Dimens.dp14), verticalAlignment = Alignment.CenterVertically) {
             ConversationSourceIcons(conversation.sourcePackages, actions)
@@ -61,13 +80,13 @@ internal fun ConversationCard(
                         DateFormat.getTimeInstance(DateFormat.SHORT).format(
                             Date(latest?.timestamp ?: conversation.latestNotification.postedAt),
                         ),
-                        color = Muted,
+                        color = if (favoriteStyle?.isUnread == true) secondaryContentColor else Muted,
                         fontSize = Dimens.sp11,
                     )
                 }
                 Text(
                     latest?.text.orEmpty(),
-                    color = MaterialTheme.colorScheme.onSurface.copy(alpha = .72f),
+                    color = secondaryContentColor,
                     maxLines = 2,
                     modifier = Modifier.padding(top = Dimens.dp4),
                 )
@@ -78,7 +97,11 @@ internal fun ConversationCard(
                             conversation.messages.size,
                             conversation.messages.size,
                         ),
-                        color = Rust,
+                        color = if (favoriteStyle?.isUnread == true) {
+                            contentColor.copy(alpha = .88f)
+                        } else {
+                            Rust
+                        },
                         fontSize = Dimens.sp11,
                         modifier = Modifier.padding(top = Dimens.dp4),
                     )

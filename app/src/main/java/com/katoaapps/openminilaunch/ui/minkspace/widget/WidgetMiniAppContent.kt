@@ -89,7 +89,7 @@ internal fun WidgetMiniAppContent(
             verticalAlignment = Alignment.CenterVertically,
         ) {
             MinkSpaceTitle(
-                title = stringResource(R.string.widgets),
+                title = stringResource(R.string.quick_widget),
                 icon = Icons.Default.Widgets,
                 contentColor = contentColor,
             )

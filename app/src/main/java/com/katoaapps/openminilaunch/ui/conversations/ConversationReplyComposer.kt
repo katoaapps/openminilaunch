@@ -16,11 +16,23 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
+import androidx.compose.runtime.withFrameNanos
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
+import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.platform.LocalConfiguration
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.input.ImeAction
 import com.katoaapps.openminilaunch.R
+import com.katoaapps.openminilaunch.features.magic.hasUsableHardwareKeyboard
 import com.katoaapps.openminilaunch.ui.theme.Dimens
 import com.katoaapps.openminilaunch.ui.theme.Muted
 import com.katoaapps.openminilaunch.ui.theme.Rust
@@ -28,12 +40,35 @@ import com.katoaapps.openminilaunch.ui.theme.Sage
 
 @Composable
 internal fun ConversationReplyBox(
+    focusSessionKey: String,
     replyText: String,
     replyStatus: Int?,
     replyAvailable: Boolean,
     onReplyTextChange: (String) -> Unit,
     onSendReply: () -> Unit,
 ) {
+    val configuration = LocalConfiguration.current
+    val keyboard = LocalSoftwareKeyboardController.current
+    val focusRequester = remember(focusSessionKey) { FocusRequester() }
+    var replyFieldPlaced by remember(focusSessionKey) { mutableStateOf(false) }
+    val hasHardwareKeyboard = hasUsableHardwareKeyboard(
+        configuration.keyboard,
+        configuration.hardKeyboardHidden,
+    )
+
+    LaunchedEffect(focusSessionKey, replyAvailable, replyFieldPlaced, hasHardwareKeyboard) {
+        if (!replyAvailable || !replyFieldPlaced) return@LaunchedEffect
+
+        withFrameNanos { }
+        focusRequester.requestFocus()
+
+        // Replies use the platform IME on slabs. Mink's launcher keyboard remains Magic Box-only.
+        if (!hasHardwareKeyboard) {
+            withFrameNanos { }
+            keyboard?.show()
+        }
+    }
+
     Column(Modifier.fillMaxWidth().padding(horizontal = Dimens.dp18, vertical = Dimens.dp10)) {
         replyStatus?.let { status ->
             Row(
@@ -56,7 +91,10 @@ internal fun ConversationReplyBox(
             OutlinedTextField(
                 value = replyText,
                 onValueChange = onReplyTextChange,
-                modifier = Modifier.fillMaxWidth(),
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .focusRequester(focusRequester)
+                    .onGloballyPositioned { replyFieldPlaced = true },
                 placeholder = { Text(stringResource(R.string.reply)) },
                 minLines = 1,
                 maxLines = 4,

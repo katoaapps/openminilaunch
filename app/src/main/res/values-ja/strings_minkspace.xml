@@ -9,6 +9,7 @@
     <string name="calculator">電卓</string>
     <string name="recorder">レコーダー</string>
     <string name="music_player">音楽プレーヤー</string>
+    <string name="quick_widget">クイックウィジェット</string>
     <string name="swipe_vertically_to_switch">垂直にスワイプして切り替えます</string>
     <string name="calculator_history">歴史</string>
     <string name="clear_history">履歴をクリアする</string>
@@ -16,7 +17,7 @@
     <string name="delete_last_character">最後の文字を削除</string>
     <string name="calculator_history_empty">完了した計算がここに表示されます。</string>
     <string name="coming_later">後で来ます</string>
-    <string name="media_lab">Media Lab</string>
+    <string name="media_lab">思い出</string>
     <string name="add_media">メディアを追加する</string>
     <string name="media_empty">画像、GIF、またはビデオをここに追加してプレビューします。</string>
     <string name="media_preview_unavailable">プレビューは利用できません</string>
@@ -41,7 +42,7 @@
     <string name="music_expand_player">メディアコントロールを拡張する</string>
     <string name="music_back_control_description">10秒前に戻ります。複数回タップすると再起動と前のメディアが表示されます</string>
     <string name="music_forward_control_description">10 秒送ります。複数回タップすると次のメディアが提供され、シャッフルされます</string>
-    <string name="mink_space_widget_description">インストール済みアプリのウィジェットを 1 つ MinkSpace に追加します。</string>
+    <string name="mink_space_widget_description">お気に入りのウィジェットを 1 つ MinkSpace ですぐ使えるようにします。</string>
     <string name="mink_space_widget_picker_description">ウィジェットはインストール済みアプリから提供されます。Mink は適合の目安を表示しますが、最終的なレイアウトと操作は提供元が制御します。</string>
     <string name="replace_widget">ウィジェットを置き換える</string>
     <string name="expand_view">表示を拡大</string>

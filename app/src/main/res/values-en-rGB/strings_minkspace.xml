@@ -9,6 +9,7 @@
     <string name="calculator">Calculator</string>
     <string name="recorder">Recorder</string>
     <string name="music_player">Music player</string>
+    <string name="quick_widget">Quick Widget</string>
     <string name="swipe_vertically_to_switch">Swipe vertically to switch</string>
     <string name="calculator_history">History</string>
     <string name="clear_history">Clear history</string>
@@ -16,7 +17,7 @@
     <string name="delete_last_character">Delete last character</string>
     <string name="calculator_history_empty">Completed calculations will appear here.</string>
     <string name="coming_later">Coming later</string>
-    <string name="media_lab">Media Lab</string>
+    <string name="media_lab">Memories</string>
     <string name="add_media">Add media</string>
     <string name="media_empty">Add images, GIFs, or videos to preview them here.</string>
     <string name="media_preview_unavailable">Preview unavailable</string>
@@ -41,7 +42,7 @@
     <string name="music_expand_player">Expand media controls</string>
     <string name="music_back_control_description">Back 10 seconds; multiple taps offer restart and previous media</string>
     <string name="music_forward_control_description">Forward 10 seconds; multiple taps offer next media and shuffle</string>
-    <string name="mink_space_widget_description">Add one widget from an installed app to MinkSpace.</string>
+    <string name="mink_space_widget_description">Keep one favourite widget close in MinkSpace.</string>
     <string name="mink_space_widget_picker_description">Widgets are supplied by installed apps. Mink shows their likely fit, but the provider controls the final layout and available actions.</string>
     <string name="replace_widget">Replace widget</string>
     <string name="expand_view">Expand view</string>

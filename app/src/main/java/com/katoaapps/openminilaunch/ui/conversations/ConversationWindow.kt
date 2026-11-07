@@ -114,6 +114,7 @@ internal fun ConversationWindow(
             },
         )
         ConversationReplyBox(
+            focusSessionKey = conversation.id,
             replyText = replyText,
             replyStatus = replyStatus,
             replyAvailable = replyTarget != null,

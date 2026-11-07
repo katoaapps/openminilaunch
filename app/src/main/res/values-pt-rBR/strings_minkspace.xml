@@ -9,6 +9,7 @@
     <string name="calculator">Calculadora</string>
     <string name="recorder">Gravador</string>
     <string name="music_player">Leitor de música</string>
+    <string name="quick_widget">Widget rápido</string>
     <string name="swipe_vertically_to_switch">Deslize verticalmente para alternar</string>
     <string name="calculator_history">História</string>
     <string name="clear_history">Limpar histórico</string>
@@ -16,7 +17,7 @@
     <string name="delete_last_character">Excluir último caractere</string>
     <string name="calculator_history_empty">Os cálculos concluídos aparecerão aqui.</string>
     <string name="coming_later">Vindo mais tarde</string>
-    <string name="media_lab">Media Lab</string>
+    <string name="media_lab">Memórias</string>
     <string name="add_media">Adicionar mídia</string>
     <string name="media_empty">Adicione imagens, GIFs ou vídeos para visualizá-los aqui.</string>
     <string name="media_preview_unavailable">Visualização indisponível</string>
@@ -41,7 +42,7 @@
     <string name="music_expand_player">Expanda os controles de mídia</string>
     <string name="music_back_control_description">Voltar 10 segundos; vários toques oferecem reinicialização e mídia anterior</string>
     <string name="music_forward_control_description">Avançar 10 segundos; vários toques oferecem a próxima mídia e reprodução aleatória</string>
-    <string name="mink_space_widget_description">Adicione um widget de um aplicativo instalado ao MinkSpace.</string>
+    <string name="mink_space_widget_description">Mantenha um widget favorito por perto no MinkSpace.</string>
     <string name="mink_space_widget_picker_description">Os widgets são fornecidos por aplicativos instalados. O Mink mostra o ajuste provável, mas o provedor controla o layout final e as ações disponíveis.</string>
     <string name="replace_widget">Substituir widget</string>
     <string name="expand_view">Expandir visualização</string>

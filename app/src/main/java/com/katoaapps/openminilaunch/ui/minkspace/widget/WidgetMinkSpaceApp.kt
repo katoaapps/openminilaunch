@@ -54,7 +54,7 @@ internal class WidgetMinkSpaceApp(
             when {
                 appWidgetId == null -> CenteredActionPrompt(
                     icon = Icons.Default.Widgets,
-                    title = stringResource(R.string.widgets),
+                    title = stringResource(R.string.quick_widget),
                     description = stringResource(R.string.mink_space_widget_description),
                     actionLabel = stringResource(R.string.add_widget),
                     actionIcon = Icons.Default.Add,
@@ -138,7 +138,7 @@ internal class WidgetMinkSpaceApp(
     companion object {
         val Manifest = MinkSpaceMiniAppManifest(
             miniApp = MinkSpaceMiniApp.WIDGET,
-            labelRes = R.string.widgets,
+            labelRes = R.string.quick_widget,
             icon = Icons.Default.Widgets,
             supportsExpansion = true,
             showExpansionButton = true,

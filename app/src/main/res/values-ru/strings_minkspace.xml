@@ -9,6 +9,7 @@
     <string name="calculator">Калькулятор</string>
     <string name="recorder">Регистратор</string>
     <string name="music_player">Музыкальный плеер</string>
+    <string name="quick_widget">Быстрый виджет</string>
     <string name="swipe_vertically_to_switch">Проведите вертикально, чтобы переключиться</string>
     <string name="calculator_history">История</string>
     <string name="clear_history">Очистить историю</string>
@@ -16,7 +17,7 @@
     <string name="delete_last_character">Удалить последний символ</string>
     <string name="calculator_history_empty">Здесь появятся завершенные расчеты.</string>
     <string name="coming_later">Скоро</string>
-    <string name="media_lab">Media Lab</string>
+    <string name="media_lab">Воспоминания</string>
     <string name="add_media">Добавить медиа</string>
     <string name="media_empty">Добавьте изображения, GIF-файлы или видео, чтобы просмотреть их здесь.</string>
     <string name="media_preview_unavailable">Предварительный просмотр недоступен</string>
@@ -41,7 +42,7 @@
     <string name="music_expand_player">Расширьте возможности управления мультимедиа</string>
     <string name="music_back_control_description">Назад на 10 секунд; несколько нажатий предлагают перезапуск и предыдущий носитель</string>
     <string name="music_forward_control_description">Вперед 10 секунд; несколько нажатий предлагают следующий медиафайл и перемешивают</string>
-    <string name="mink_space_widget_description">Добавьте один виджет установленного приложения в MinkSpace.</string>
+    <string name="mink_space_widget_description">Держите один избранный виджет под рукой в MinkSpace.</string>
     <string name="mink_space_widget_picker_description">Виджеты предоставляются установленными приложениями. Mink показывает вероятную совместимость, но итоговым макетом и доступными действиями управляет поставщик.</string>
     <string name="replace_widget">Заменить виджет</string>
     <string name="expand_view">Развернуть</string>

@@ -116,7 +116,7 @@ internal fun MediaMiniApp(
                 .padding(Dimens.dp12),
         ) {
             MinkSpaceTitle(
-                title = stringResource(R.string.media),
+                title = stringResource(R.string.media_lab),
                 icon = Icons.Default.PhotoLibrary,
                 contentColor = contentColor,
             )

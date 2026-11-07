@@ -49,7 +49,7 @@ internal class MediaMinkSpaceApp(
     companion object {
         val Manifest = MinkSpaceMiniAppManifest(
             miniApp = MinkSpaceMiniApp.MEDIA,
-            labelRes = R.string.media,
+            labelRes = R.string.media_lab,
             icon = Icons.Default.PhotoLibrary,
             supportsExpansion = true,
             showExpansionButton = true,
