@@ -334,7 +334,7 @@
     <string name="update_notice_widgets_title">تعمل الأدوات القابلة للتمرير بشكل طبيعي</string>
     <string name="update_notice_widgets_description">تصل الإيماءات الرأسية إلى عناصر واجهة المستخدم التي تدير التمرير الخاص بها.</string>
     <string name="update_notice_keyboard_title">لوحات المفاتيح التي تعمل باللمس اختيارية</string>
-    <string name="update_notice_keyboard_description">تفتح الهواتف التي تعمل باللمس فقط لوحة المفاتيح البرمجية على الشاشة الرئيسية افتراضيًا، ويمكن إيقافها من المظهر ← التخطيط والساعة.</string>
+    <string name="update_notice_keyboard_description">تفتح الهواتف التي تعمل باللمس فقط لوحة المفاتيح البرمجية على الشاشة الرئيسية افتراضيًا، ويمكن إيقافها من Magic Box ← لوحة المفاتيح.</string>
     <string name="update_notice_github_title">التحديثات في انتظاركم</string>
     <string name="update_notice_github_description">تظهر بطاقة تحديث واضحة وأيقونة صغيرة لرأس الصفحة الرئيسية عندما يكون لدى GitHub إصدار أحدث. لا يتم تنزيل أي شيء حتى توافق على تسليم المتصفح.</string>
     <string name="update_notice_integrated_apps_title">تطبيقات المراسلة المتكاملة</string>

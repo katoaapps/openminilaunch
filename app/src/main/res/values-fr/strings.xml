@@ -334,7 +334,7 @@
     <string name="update_notice_widgets_title">Les widgets défilants se comportent normalement</string>
     <string name="update_notice_widgets_description">Les gestes verticaux atteignent les widgets qui gèrent leur propre défilement.</string>
     <string name="update_notice_keyboard_title">Les claviers tactiles sont facultatifs</string>
-    <string name="update_notice_keyboard_description">Les téléphones entièrement tactiles ouvrent le clavier à l’écran sur l’accueil par défaut ; vous pouvez le désactiver dans Apparence → Disposition et horloge.</string>
+    <string name="update_notice_keyboard_description">Les téléphones entièrement tactiles ouvrent le clavier à l’écran sur l’accueil par défaut ; vous pouvez le désactiver dans Magic Box → Clavier.</string>
     <string name="update_notice_github_title">Les mises à jour vous attendent</string>
     <string name="update_notice_github_description">Une carte de mise à jour claire et une petite icône d\'en-tête Accueil apparaissent lorsque GitHub dispose d\'une version plus récente. Rien n\'est téléchargé tant que vous n\'avez pas approuvé le transfert du navigateur.</string>
     <string name="update_notice_integrated_apps_title">Applications de messagerie intégrées</string>

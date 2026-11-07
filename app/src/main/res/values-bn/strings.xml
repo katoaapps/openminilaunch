@@ -334,7 +334,7 @@
     <string name="update_notice_widgets_title">স্ক্রোলযোগ্য উইজেটগুলি স্বাভাবিকভাবে আচরণ করে</string>
     <string name="update_notice_widgets_description">উল্লম্ব অঙ্গভঙ্গি উইজেটগুলিতে পৌঁছায় যা তাদের নিজস্ব স্ক্রোলিং পরিচালনা করে।</string>
     <string name="update_notice_keyboard_title">টাচ কীবোর্ড ঐচ্ছিক</string>
-    <string name="update_notice_keyboard_description">শুধু টাচ-ভিত্তিক ফোনে ডিফল্টভাবে হোমে সফ্টওয়্যার কীবোর্ড খোলে; চেহারা → লেআউট ও ঘড়ি থেকে এটি বন্ধ করা যায়।</string>
+    <string name="update_notice_keyboard_description">শুধু টাচ-ভিত্তিক ফোনে ডিফল্টভাবে হোমে সফ্টওয়্যার কীবোর্ড খোলে; Magic Box → কীবোর্ড থেকে এটি বন্ধ করা যায়।</string>
     <string name="update_notice_github_title">আপডেট আপনার জন্য অপেক্ষা করছে</string>
     <string name="update_notice_github_description">একটি পরিষ্কার আপডেট কার্ড এবং একটি ছোট হোম হেডার আইকন প্রদর্শিত হয় যখন GitHub একটি নতুন রিলিজ হয়। আপনি ব্রাউজার হ্যান্ডঅফ অনুমোদন না করা পর্যন্ত কিছুই ডাউনলোড হবে না।</string>
     <string name="update_notice_integrated_apps_title">ইন্টিগ্রেটেড মেসেজিং অ্যাপ</string>

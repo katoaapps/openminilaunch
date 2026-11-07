@@ -334,7 +334,7 @@
     <string name="update_notice_widgets_title">スクロール可能なウィジェットは通常どおりに動作します</string>
     <string name="update_notice_widgets_description">垂直ジェスチャは、独自のスクロールを管理するウィジェットに到達します。</string>
     <string name="update_notice_keyboard_title">タッチキーボードはオプションです</string>
-    <string name="update_notice_keyboard_description">タッチ操作のみのスマートフォンでは、ホームでソフトウェア キーボードがデフォルトで開きます。外観 → レイアウトと時計でオフにできます。</string>
+    <string name="update_notice_keyboard_description">タッチ操作のみのスマートフォンでは、ホームでソフトウェア キーボードがデフォルトで開きます。Magic Box → キーボードでオフにできます。</string>
     <string name="update_notice_github_title">アップデートがあなたを待っています</string>
     <string name="update_notice_github_description">GitHub に新しいリリースがある場合は、透明なアップデート カードと小さなホーム ヘッダー アイコンが表示されます。ブラウザーのハンドオフを承認するまでは何もダウンロードされません。</string>
     <string name="update_notice_integrated_apps_title">統合されたメッセージング アプリ</string>

@@ -42,9 +42,9 @@ the existing app first and clears MinkLauncher OpenSource's local data.
 - **MinkSpace Mini-Apps** inside the Home pill. Swipe vertically between visible mini-apps and horizontally within the active mini-app:
   - To-dos retain their snapping pages and full manager when enabled
   - Calculator supports physical-keyboard number entry, implicit multiplication, and a local, clearable history
-  - Media displays user-selected images, animated GIFs, and video thumbnails without copying the source files; tapping an item opens its original URI in an installed app
+  - Memories displays user-selected images, animated GIFs, and video thumbnails without copying the source files; tapping an item opens its original URI in an installed app
   - Music reads Android’s active media session with optional Notification access, shows provider artwork and metadata, and sends only playback, seek, skip, or shuffle actions advertised by that provider
-  - Widget hosts one widget from an installed app. Tap it to enter interaction mode so lists, buttons, and provider gestures stay inside the widget; press Back or close to return to vertical mini-app navigation
+  - Quick Widget hosts one widget from an installed app. Tap it to enter interaction mode so lists, buttons, and provider gestures stay inside the widget; press Back or close to return to vertical mini-app navigation
   - Mini-app order and visibility are managed in Settings and included in portable backups; Android widget bindings, calculator history, selected media references, and active media sessions remain device-bound
 - Optional two-panel layouts on tablets and unfolded foldables, pairing Mink’s Day with Home or Home with Widgets while preserving the active page and Magic Box draft across display changes. Settings uses the same large-display mode with its section list beside one active detail page.
 - An eight-position **App Grid**: seven configurable Home slots can hold one app, an app-published shortcut, or a folder, while the fixed eighth slot opens the **Quick Drawer** navigation surface

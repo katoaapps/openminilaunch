@@ -334,7 +334,7 @@
     <string name="update_notice_widgets_title">可捲動嘅小工具行為正常</string>
     <string name="update_notice_widgets_description">垂直手勢會到達管理自己捲動嘅小工具。</string>
     <string name="update_notice_keyboard_title">觸控鍵盤係選擇性嘅</string>
-    <string name="update_notice_keyboard_description">純觸控手機預設會喺主畫面開啟軟件鍵盤；可以喺「外觀」→「版面配置與時鐘」關閉。</string>
+    <string name="update_notice_keyboard_description">純觸控手機預設會喺主畫面開啟軟件鍵盤；可以喺「Magic Box」→「鍵盤」關閉。</string>
     <string name="update_notice_github_title">更新等緊你</string>
     <string name="update_notice_github_description">當 GitHub 有較新嘅版本嗰陣，會出現一張清晰嘅更新卡同埋一個小型嘅主頁標題圖示。喺你批准瀏覽器交接之前，冇嘢會下載。</string>
     <string name="update_notice_integrated_apps_title">綜合短訊應用程式</string>

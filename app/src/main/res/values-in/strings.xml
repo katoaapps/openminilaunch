@@ -334,7 +334,7 @@
     <string name="update_notice_widgets_title">Widget yang dapat digulir berperilaku normal</string>
     <string name="update_notice_widgets_description">Isyarat vertikal menjangkau widget yang mengatur penggulirannya sendiri.</string>
     <string name="update_notice_keyboard_title">Keyboard sentuh bersifat opsional</string>
-    <string name="update_notice_keyboard_description">Ponsel layar sentuh membuka keyboard layar di Beranda secara default; nonaktifkan di Tampilan → Tata letak &amp; jam.</string>
+    <string name="update_notice_keyboard_description">Ponsel layar sentuh membuka keyboard layar di Beranda secara default; nonaktifkan di Magic Box → Keyboard.</string>
     <string name="update_notice_github_title">Pembaruan menunggu Anda</string>
     <string name="update_notice_github_description">Kartu pembaruan yang jelas dan ikon header Beranda kecil muncul ketika GitHub memiliki rilis yang lebih baru. Tidak ada yang diunduh sampai Anda menyetujui handoff browser.</string>
     <string name="update_notice_integrated_apps_title">Aplikasi perpesanan terintegrasi</string>

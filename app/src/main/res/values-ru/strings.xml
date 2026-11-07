@@ -334,7 +334,7 @@
     <string name="update_notice_widgets_title">Прокручиваемые виджеты ведут себя нормально</string>
     <string name="update_notice_widgets_description">Вертикальные жесты достигают виджетов, которые управляют собственной прокруткой.</string>
     <string name="update_notice_keyboard_title">Сенсорные клавиатуры не являются обязательными</string>
-    <string name="update_notice_keyboard_description">На телефонах только с сенсорным управлением экранная клавиатура по умолчанию открывается на главном экране. Ее можно отключить в разделе «Внешний вид» → «Макет и часы».</string>
+    <string name="update_notice_keyboard_description">На телефонах только с сенсорным управлением экранная клавиатура по умолчанию открывается на главном экране. Ее можно отключить в разделе «Magic Box» → «Клавиатура».</string>
     <string name="update_notice_github_title">Обновления ждут вас</string>
     <string name="update_notice_github_description">Когда GitHub выходит более новая версия, появляется четкая карточка обновления и небольшой значок в заголовке «Главная». Ничего не загружается, пока вы не одобрите передачу браузера.</string>
     <string name="update_notice_integrated_apps_title">Интегрированные приложения для обмена сообщениями</string>

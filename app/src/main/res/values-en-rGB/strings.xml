@@ -334,7 +334,7 @@
     <string name="update_notice_widgets_title">Scrollable widgets behave normally</string>
     <string name="update_notice_widgets_description">Vertical gestures reach widgets that manage their own scrolling.</string>
     <string name="update_notice_keyboard_title">Touch keyboards are optional</string>
-    <string name="update_notice_keyboard_description">Touch-only phones open the software keyboard on Home by default, with an off switch in Appearance → Layout &amp; clock.</string>
+    <string name="update_notice_keyboard_description">Touch-only phones open the software keyboard on Home by default, with an off switch in Magic Box → Keyboard.</string>
     <string name="update_notice_github_title">Updates wait for you</string>
     <string name="update_notice_github_description">A clear update card and a small Home header icon appear when GitHub has a newer release. Nothing downloads until you approve the browser handoff.</string>
     <string name="update_notice_integrated_apps_title">Integrated messaging apps</string>

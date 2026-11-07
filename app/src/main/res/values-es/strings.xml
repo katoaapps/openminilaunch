@@ -334,7 +334,7 @@
     <string name="update_notice_widgets_title">Los widgets desplazables se comportan normalmente</string>
     <string name="update_notice_widgets_description">Los gestos verticales llegan a los widgets que gestionan su propio desplazamiento.</string>
     <string name="update_notice_keyboard_title">Los teclados táctiles son opcionales</string>
-    <string name="update_notice_keyboard_description">Los teléfonos solo táctiles abren el teclado en pantalla en Inicio de forma predeterminada; puedes desactivarlo en Apariencia → Diseño y reloj.</string>
+    <string name="update_notice_keyboard_description">Los teléfonos solo táctiles abren el teclado en pantalla en Inicio de forma predeterminada; puedes desactivarlo en Magic Box → Teclado.</string>
     <string name="update_notice_github_title">Las actualizaciones te esperan</string>
     <string name="update_notice_github_description">Aparece una tarjeta de actualización clara y un pequeño ícono de encabezado de Inicio cuando GitHub tiene una versión más reciente. No se descarga nada hasta que apruebes la transferencia del navegador.</string>
     <string name="update_notice_integrated_apps_title">Aplicaciones de mensajería integradas</string>

@@ -15,10 +15,10 @@ cropped Home wallpaper, widget configuration, Mink’s Day preferences, app-bubb
 MinkSpace mini-app preferences, launcher-keyboard preferences, and onboarding state in app-private
 storage. Android cloud backup is disabled for MinkLauncher OpenSource.
 
-MinkSpace stores calculator history locally, up to its visible history limit. Media Lab stores the
+MinkSpace stores calculator history locally, up to its visible history limit. Memories stores the
 content URI, display name, MIME type, order, and Android read grant for media the user explicitly
 selects. It does not copy the underlying image, GIF, or video into MinkLauncher storage. Removing a
-Media Lab item removes MinkLauncher’s saved reference and releases its grant when Android permits;
+Memories item removes MinkLauncher’s saved reference and releases its grant when Android permits;
 it does not delete the original file.
 
 The Music mini-app reads Android’s currently active media-session metadata, artwork, playback state,
@@ -125,7 +125,7 @@ Optional permissions and special access are used as follows:
   handoffs pass user-entered text, and a recipient when supported, to the selected provider; that
   provider controls the final send under its own terms.
 - **Photos, videos, audio, and older shared-storage access:** Searches MediaStore filenames and
-  displays locally provided thumbnails when file search is enabled. Media Lab instead uses Android’s
+  displays locally provided thumbnails when file search is enabled. Memories instead uses Android’s
   picker for specific user-selected images, GIFs, and videos.
 - **Selected folders:** Searches filenames only inside folders the user approves through Android’s
   Storage Access Framework. MinkLauncher OpenSource does not request broad All files access.
@@ -136,7 +136,11 @@ Optional permissions and special access are used as follows:
   panel.
 - **Notification access — Conversations:** Reads active Android-standard message and email
   notifications in memory so they can be grouped and replied to through the originating app when it
-  supplies a compatible reply action. Conversation history is not stored by MinkLauncher.
+  supplies a compatible reply action. Message contents and raw conversation identities are not
+  stored as history. To keep an acknowledged favorite conversation from relighting the Home
+  attention indicator, MinkLauncher stores only its one-way SHA-256 identity hash and last
+  acknowledged timestamp in app-private preferences, capped at 512 conversations. This metadata is
+  excluded from portable backups and removed when app data is cleared.
 - **Notification access — Music:** Authorizes MinkLauncher to query Android’s active media sessions.
   The Music mini-app reads only the active session information Android exposes and sends only
   provider-advertised media commands. It does not inspect unrelated notification contents for music
@@ -196,7 +200,7 @@ provider’s response.
 
 ## Deletion
 
-Users can delete to-dos, query history, calculator history, Media Lab selections, Virtual Contact
+Users can delete to-dos, query history, calculator history, Memories selections, Virtual Contact
 Card fields and links, app-bubble choices, approved folders, widgets, and other supported items from
 their relevant screens. Permissions and special access can be revoked in Android Settings. Clearing
 MinkLauncher storage or uninstalling it removes its local app data, subject to files or exports the

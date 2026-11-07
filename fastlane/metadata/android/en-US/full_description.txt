@@ -4,7 +4,7 @@ HOME THAT FITS YOUR PHONE
 
 MinkSpace Mini-Apps and the eight-position App Grid share one responsive Home panel. Seven slots can hold an app, app shortcut, or folder. The eighth opens Quick Drawer for MinkPad Lite, All Apps, Private Space, and Work Space. Its saved Quick Apps appear when Mink Assistant opens.
 
-Swipe through enabled To-dos, Calculator, Media, Music, Widgets, and your Virtual Contact Card. The Widgets page supports up to 64 Android widgets with responsive sizing, drag reordering, and portable restore placeholders.
+Swipe through enabled To-dos, Calculator, Memories, Music, Quick Widget, and your Virtual Contact Card. The Widgets page supports up to 64 Android widgets with responsive sizing, drag reordering, and portable restore placeholders.
 
 TYPE TO ACT
 
@@ -32,7 +32,7 @@ MORE BUILT IN
 • To-dos support editing, confirmation before deletion, and drag reordering.
 • File search groups photos, videos, documents, and audio from folders you explicitly select through Android’s system picker.
 • Mink’s Day measures foreground time for selected apps and can add a launcher-level pause after a collective daily limit.
-• Media Lab displays files selected through Android’s picker without copying or uploading them.
+• Memories displays files selected through Android’s picker without copying or uploading them.
 • Music reads Android’s active media session through optional Notification access and sends only the controls supplied by the provider.
 • Work Apps use a separate badged drawer. Android 15 Private Space apps remain in Android’s locked container.
 • Add to Home requests use a full-page picker that can create or extend an App Grid folder or add the item to Quick Drawer.

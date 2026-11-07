@@ -334,7 +334,7 @@
     <string name="update_notice_widgets_title">سکرول کے قابل ویجٹ عام طور پر برتاؤ کرتے ہیں۔</string>
     <string name="update_notice_widgets_description">عمودی اشارے ویجٹ تک پہنچتے ہیں جو اپنی اسکرولنگ کا انتظام کرتے ہیں۔</string>
     <string name="update_notice_keyboard_title">ٹچ کی بورڈز اختیاری ہیں۔</string>
-    <string name="update_notice_keyboard_description">صرف ٹچ والے فونز میں ہوم پر سافٹ ویئر کی بورڈ بطور ڈیفالٹ کھلتا ہے؛ اسے ظاہری شکل ← لے آؤٹ اور گھڑی میں بند کیا جا سکتا ہے۔</string>
+    <string name="update_notice_keyboard_description">صرف ٹچ والے فونز میں ہوم پر سافٹ ویئر کی بورڈ بطور ڈیفالٹ کھلتا ہے؛ اسے Magic Box ← کی بورڈ میں بند کیا جا سکتا ہے۔</string>
     <string name="update_notice_github_title">اپڈیٹس آپ کے منتظر ہیں۔</string>
     <string name="update_notice_github_description">جب GitHub کی نئی ریلیز ہوتی ہے تو ایک واضح اپ ڈیٹ کارڈ اور ایک چھوٹا ہوم ہیڈر آئیکن ظاہر ہوتا ہے۔ جب تک آپ براؤزر ہینڈ آف کو منظور نہیں کرتے تب تک کچھ بھی ڈاؤن لوڈ نہیں ہوتا ہے۔</string>
     <string name="update_notice_integrated_apps_title">انٹیگریٹڈ میسجنگ ایپس</string>

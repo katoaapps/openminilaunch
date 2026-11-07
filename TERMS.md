@@ -24,7 +24,7 @@ data-recovery tool.
 
 You are responsible for maintaining current backups of files, contacts, messages, calendars, to-dos,
 launcher settings, widget data, and other information that matters to you. Search indexes, thumbnails,
-shortcuts, widget placements, notification views, selected-folder references, Media Lab entries, and
+shortcuts, widget placements, notification views, selected-folder references, Memories entries, and
 media-session displays are conveniences only; they are not copies or backups of the underlying data.
 
 Portable MinkLauncher exports are readable JSON and may contain the contact details and links you put
@@ -77,7 +77,7 @@ the phone manufacturer, Bluetooth hardware, and the receiving host. Connections 
 end, and commands may be ignored or interpreted differently. MinkPad does not guarantee that
 every key, gesture, release report, device, or host application will behave as expected.
 
-Media Lab references files selected through Android rather than copying them. Moving or deleting an
+Memories references files selected through Android rather than copying them. Moving or deleting an
 original file, revoking its grant, changing its provider, or uninstalling its source may make it
 unavailable. Opening media hands it to another installed app under that app’s terms.
 

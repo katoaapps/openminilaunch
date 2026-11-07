@@ -334,7 +334,7 @@
     <string name="update_notice_widgets_title">स्क्रॉल करने योग्य विजेट सामान्य रूप से व्यवहार करते हैं</string>
     <string name="update_notice_widgets_description">वर्टिकल जेस्चर उन विजेट्स तक पहुंचते हैं जो अपनी स्क्रॉलिंग को प्रबंधित करते हैं।</string>
     <string name="update_notice_keyboard_title">टच कीबोर्ड वैकल्पिक हैं</string>
-    <string name="update_notice_keyboard_description">केवल टच वाले फ़ोन डिफ़ॉल्ट रूप से होम पर सॉफ़्टवेयर कीबोर्ड खोलते हैं; इसे दिखावट → लेआउट और घड़ी में बंद किया जा सकता है।</string>
+    <string name="update_notice_keyboard_description">केवल टच वाले फ़ोन डिफ़ॉल्ट रूप से होम पर सॉफ़्टवेयर कीबोर्ड खोलते हैं; इसे Magic Box → कीबोर्ड में बंद किया जा सकता है।</string>
     <string name="update_notice_github_title">अपडेट आपका इंतजार करते हैं</string>
     <string name="update_notice_github_description">जब GitHub की नई रिलीज़ होती है तो एक स्पष्ट अपडेट कार्ड और एक छोटा होम हेडर आइकन दिखाई देता है। जब तक आप ब्राउज़र हैंडऑफ़ को मंजूरी नहीं देते तब तक कुछ भी डाउनलोड नहीं होता।</string>
     <string name="update_notice_integrated_apps_title">एकीकृत मैसेजिंग ऐप्स</string>

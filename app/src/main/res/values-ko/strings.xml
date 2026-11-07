@@ -334,7 +334,7 @@
     <string name="update_notice_widgets_title">스크롤 가능한 위젯이 정상적으로 작동함</string>
     <string name="update_notice_widgets_description">수직 동작은 자체 스크롤을 관리하는 위젯에 도달합니다.</string>
     <string name="update_notice_keyboard_title">터치 키보드는 선택 사항입니다.</string>
-    <string name="update_notice_keyboard_description">터치 전용 휴대전화는 기본적으로 홈에서 소프트웨어 키보드를 엽니다. 외관 → 레이아웃 및 시계에서 끌 수 있습니다.</string>
+    <string name="update_notice_keyboard_description">터치 전용 휴대전화는 기본적으로 홈에서 소프트웨어 키보드를 엽니다. Magic Box → 키보드에서 끌 수 있습니다.</string>
     <string name="update_notice_github_title">업데이트가 당신을 기다립니다</string>
     <string name="update_notice_github_description">GitHub에 최신 릴리스가 있으면 명확한 업데이트 카드와 작은 홈 헤더 아이콘이 나타납니다. 브라우저 핸드오프를 승인할 때까지 아무 것도 다운로드되지 않습니다.</string>
     <string name="update_notice_integrated_apps_title">통합 메시징 앱</string>

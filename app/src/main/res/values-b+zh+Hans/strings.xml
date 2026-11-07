@@ -334,7 +334,7 @@
     <string name="update_notice_widgets_title">可滚动小部件表现正常</string>
     <string name="update_notice_widgets_description">垂直手势可到达管理自身滚动的小部件。</string>
     <string name="update_notice_keyboard_title">触摸键盘是可选的</string>
-    <string name="update_notice_keyboard_description">仅触控手机默认在主屏幕上打开软件键盘；可在“外观”→“布局与时钟”中将其关闭。</string>
+    <string name="update_notice_keyboard_description">仅触控手机默认在主屏幕上打开软件键盘；可在“Magic Box”→“键盘”中将其关闭。</string>
     <string name="update_notice_github_title">更新等你来</string>
     <string name="update_notice_github_description">当 GitHub 有更新版本时，会出现清晰的更新卡和小主页标题图标。在您批准浏览器移交之前，不会下载任何内容。</string>
     <string name="update_notice_integrated_apps_title">集成消息应用程序</string>

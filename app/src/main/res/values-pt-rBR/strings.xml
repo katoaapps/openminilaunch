@@ -334,7 +334,7 @@
     <string name="update_notice_widgets_title">Widgets roláveis se comportam normalmente</string>
     <string name="update_notice_widgets_description">Gestos verticais alcançam widgets que gerenciam sua própria rolagem.</string>
     <string name="update_notice_keyboard_title">Teclados sensíveis ao toque são opcionais</string>
-    <string name="update_notice_keyboard_description">Em celulares somente com tela sensível ao toque, o teclado virtual abre por padrão na tela inicial; desative-o em Aparência → Layout e relógio.</string>
+    <string name="update_notice_keyboard_description">Em celulares somente com tela sensível ao toque, o teclado virtual abre por padrão na tela inicial; desative-o em Magic Box → Teclado.</string>
     <string name="update_notice_github_title">Atualizações esperam por você</string>
     <string name="update_notice_github_description">Um cartão de atualização claro e um pequeno ícone de cabeçalho inicial aparecem quando GitHub tem uma versão mais recente. Nada é baixado até que você aprove a transferência do navegador.</string>
     <string name="update_notice_integrated_apps_title">Aplicativos de mensagens integrados</string>

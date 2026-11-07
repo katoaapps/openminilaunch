@@ -38,7 +38,6 @@ PROTECTED_TERMS = (
     "Mink",
     "Magic Box",
     "MinkSpace",
-    "Media Lab",
     "Katoa Apps",
 )
 COMMAND_SYMBOLS = ("@", "#", "+")
