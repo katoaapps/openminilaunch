@@ -1045,6 +1045,16 @@
     <string name="onboarding_home_setup_inactive">Выберите Mink Launcher, когда Android покажет список приложений главного экрана.</string>
     <string name="onboarding_contacts_title">Будьте ближе к своим</string>
     <string name="onboarding_messages_title">Общайтесь по-своему</string>
+    <string name="onboarding_send_automatically_title">Отправлять автоматически через Mink Assistant</string>
+    <string name="onboarding_send_automatically_description">Включите расширенный режим сообщений, чтобы пропустить черновик и отправлять напрямую через системные Сообщения. Другие приложения для сообщений по-прежнему открывают черновик.</string>
+    <string name="onboarding_assistant_title">Magic Box всегда под рукой</string>
+    <string name="onboarding_assistant_setup_description">Выберите Mink Assistant, чтобы открывать Magic Box жестом ассистента Android и включить прямую отправку SMS оператора.</string>
+    <string name="onboarding_assistant_active_description">Mink Assistant активен. Прямая отправка SMS доступна, когда Android предоставил разрешение на отправку SMS.</string>
+    <string name="onboarding_assistant_inactive_description">Необязательно. Без него системные Сообщения откроют подготовленный черновик вместо фоновой отправки.</string>
+    <string name="onboarding_assistant_sms_title">Отправляйте, не открывая другое приложение</string>
+    <string name="onboarding_assistant_sms_description">Когда включена автоматическая отправка через Mink Assistant, Mink может отправить одно SMS оператора после того, как вы выберете человека, напишете сообщение и нажмёте действие. Другие приложения для сообщений по-прежнему открывают подготовленные черновики.</string>
+    <string name="onboarding_assistant_quick_apps_title">Оставьте личного ассистента рядом</string>
+    <string name="onboarding_assistant_quick_apps_description">Добавьте Gemini, ChatGPT, Bixby или другое приложение либо ярлык ассистента в Быстрые приложения. Оно останется доступным одним касанием при каждом открытии Mink Assistant.</string>
     <string name="onboarding_contacts_setup_description">Связывайтесь с друзьями, близкими и коллегами, не разыскивая нужное приложение. Введите @, чтобы подготовить сообщение, или #, чтобы начать вызов.</string>
     <string name="onboarding_messages_setup_description">Введите @ и выберите привычное приложение. Mink подготовит сообщение, а для каждого контакта в Избранном позже можно выбрать другое приложение.</string>
     <string name="onboarding_messages_draft_note">Автоматические сообщения включены сразу. Системные сообщения отправляют SMS напрямую, когда Android предоставит доступ; интегрированные приложения открывают готовый черновик.</string>

@@ -1027,6 +1027,16 @@
     <string name="onboarding_home_setup_inactive">Android হোম অ্যাপের তালিকা দেখালে Mink Launcher বেছে নিন।</string>
     <string name="onboarding_contacts_title">আপনজনদের কাছে রাখুন</string>
     <string name="onboarding_messages_title">নিজের মতো বার্তা পাঠান</string>
+    <string name="onboarding_send_automatically_title">Mink Assistant দিয়ে স্বয়ংক্রিয়ভাবে পাঠান</string>
+    <string name="onboarding_send_automatically_description">খসড়া বাদ দিয়ে সিস্টেম মেসেজ থেকে সরাসরি পাঠানোর উন্নত অভিজ্ঞতা চালু করুন। অন্য মেসেজিং অ্যাপ এখনও খসড়া খোলে।</string>
+    <string name="onboarding_assistant_title">আপনার Magic Box, সব জায়গায়</string>
+    <string name="onboarding_assistant_setup_description">Android-এর অ্যাসিস্ট্যান্ট জেসচার দিয়ে Magic Box খুলতে এবং সরাসরি ক্যারিয়ার SMS চালু করতে Mink Assistant বেছে নিন।</string>
+    <string name="onboarding_assistant_active_description">Mink Assistant সক্রিয়। Android SMS পাঠানোর অনুমতি দিলে সরাসরি SMS পাওয়া যাবে।</string>
+    <string name="onboarding_assistant_inactive_description">ঐচ্ছিক। এটি ছাড়া সিস্টেম মেসেজ ব্যাকগ্রাউন্ডে পাঠানোর বদলে প্রস্তুত খসড়া খুলবে।</string>
+    <string name="onboarding_assistant_sms_title">অন্য অ্যাপ না খুলেই পাঠান</string>
+    <string name="onboarding_assistant_sms_description">Mink Assistant দিয়ে স্বয়ংক্রিয়ভাবে পাঠান চালু থাকলে, ব্যক্তি বেছে, বার্তা লিখে এবং অ্যাকশন চাপার পর Mink একবারের ক্যারিয়ার SMS পাঠাতে পারে। অন্য মেসেজিং অ্যাপ প্রস্তুত খসড়া খুলবে।</string>
+    <string name="onboarding_assistant_quick_apps_title">আপনার ব্যক্তিগত অ্যাসিস্ট্যান্টকে কাছে রাখুন</string>
+    <string name="onboarding_assistant_quick_apps_description">Gemini, ChatGPT, Bixby বা অন্য কোনো অ্যাসিস্ট্যান্ট অ্যাপ বা শর্টকাট Quick Apps-এ যোগ করুন। Mink Assistant খুললেই এটি এক ট্যাপ দূরে থাকবে।</string>
     <string name="onboarding_contacts_setup_description">অ্যাপ খুঁজে না বেড়িয়ে বন্ধু, পরিবার ও সহকর্মীদের কাছে পৌঁছান। বার্তা প্রস্তুত করতে @ বা কল শুরু করতে # টাইপ করুন।</string>
     <string name="onboarding_messages_setup_description">@ টাইপ করে আপনার পরিচিত অ্যাপটি বেছে নিন। Mink বার্তা প্রস্তুত করবে এবং পরে প্রতিটি ফেভারিটের জন্য আলাদা অ্যাপ বেছে নেওয়া যাবে।</string>
     <string name="onboarding_messages_draft_note">অটোমেটিক মেসেজিং শুরু থেকেই চালু থাকে। Android অ্যাক্সেস প্রস্তুত হলে সিস্টেম মেসেজ সরাসরি SMS পাঠায়; ইন্টিগ্রেটেড অ্যাপ প্রস্তুত খসড়া খোলে।</string>

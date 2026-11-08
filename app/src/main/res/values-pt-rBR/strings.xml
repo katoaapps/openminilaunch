@@ -1027,6 +1027,16 @@
     <string name="onboarding_home_setup_inactive">Escolha o Mink Launcher quando o Android mostrar a lista de apps de tela inicial.</string>
     <string name="onboarding_contacts_title">Mantenha suas pessoas por perto</string>
     <string name="onboarding_messages_title">Mensagens do seu jeito</string>
+    <string name="onboarding_send_automatically_title">Enviar automaticamente com o Mink Assistant</string>
+    <string name="onboarding_send_automatically_description">Ative esta experiência aprimorada de mensagens para pular o rascunho e enviar diretamente com o Mensagens do sistema. Outros apps de mensagens continuam abrindo um rascunho.</string>
+    <string name="onboarding_assistant_title">Sua Magic Box, em qualquer lugar</string>
+    <string name="onboarding_assistant_setup_description">Escolha o Mink Assistant para abrir a Magic Box com o gesto de assistente do Android e ativar o envio direto de SMS da operadora.</string>
+    <string name="onboarding_assistant_active_description">O Mink Assistant está ativo. O SMS direto fica disponível quando o Android concede o acesso para Enviar SMS.</string>
+    <string name="onboarding_assistant_inactive_description">Opcional. Sem ele, o Mensagens do sistema abre um rascunho preparado em vez de enviar em segundo plano.</string>
+    <string name="onboarding_assistant_sms_title">Envie sem abrir outro app</string>
+    <string name="onboarding_assistant_sms_description">Quando Enviar automaticamente com o Mink Assistant está ativo, o Mink pode enviar um SMS único da operadora depois que você escolher a pessoa, escrever a mensagem e tocar na ação. Outros apps de mensagens continuam abrindo rascunhos preparados.</string>
+    <string name="onboarding_assistant_quick_apps_title">Mantenha seu assistente pessoal por perto</string>
+    <string name="onboarding_assistant_quick_apps_description">Adicione o Gemini, ChatGPT, Bixby ou outro app ou atalho de assistente aos Apps rápidos. Ele fica a um toque de distância sempre que o Mink Assistant é aberto.</string>
     <string name="onboarding_contacts_setup_description">Fale com amigos, família e colegas sem procurar entre apps. Digite @ para preparar uma mensagem ou # para iniciar uma chamada.</string>
     <string name="onboarding_messages_setup_description">Digite @ e escolha o app que você já usa. O Mink prepara a mensagem, e cada Favorito poderá usar outro app depois.</string>
     <string name="onboarding_messages_draft_note">As mensagens automáticas começam ativadas. Mensagens do sistema usa SMS direto quando o acesso do Android estiver pronto; apps integrados abrem um rascunho preparado.</string>

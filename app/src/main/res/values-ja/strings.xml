@@ -1027,6 +1027,16 @@
     <string name="onboarding_home_setup_inactive">Android がホームアプリの一覧を表示したら Mink Launcher を選んでください。</string>
     <string name="onboarding_contacts_title">大切な人をすぐそばに</string>
     <string name="onboarding_messages_title">自分らしくメッセージ</string>
+    <string name="onboarding_send_automatically_title">Mink Assistant で自動送信</string>
+    <string name="onboarding_send_automatically_description">この強化されたメッセージ体験をオンにすると、下書きを省略してシステムメッセージから直接送信できます。ほかのメッセージアプリでは引き続き下書きが開きます。</string>
+    <string name="onboarding_assistant_title">どこからでも Magic Box</string>
+    <string name="onboarding_assistant_setup_description">Mink Assistant を選ぶと、Android のアシスタントジェスチャーで Magic Box を開き、通信事業者の SMS を直接送信できます。</string>
+    <string name="onboarding_assistant_active_description">Mink Assistant は有効です。Android が SMS の送信アクセスを許可すると、SMS を直接送信できます。</string>
+    <string name="onboarding_assistant_inactive_description">任意です。有効にしない場合、システムメッセージはバックグラウンド送信の代わりに準備済みの下書きを開きます。</string>
+    <string name="onboarding_assistant_sms_title">別のアプリを開かずに送信</string>
+    <string name="onboarding_assistant_sms_description">「Mink Assistant で自動送信」をオンにすると、相手を選び、メッセージを書いてアクションを押した後に、Mink が通信事業者の SMS を一度だけ送信できます。ほかのメッセージアプリでは、引き続き準備済みの下書きが開きます。</string>
+    <string name="onboarding_assistant_quick_apps_title">個人アシスタントをすぐそばに</string>
+    <string name="onboarding_assistant_quick_apps_description">Gemini、ChatGPT、Bixby、または別のアシスタントアプリやショートカットをクイックアプリに追加できます。Mink Assistant を開くたびに、ワンタップで呼び出せます。</string>
     <string name="onboarding_contacts_setup_description">アプリを探し回らずに、友人、家族、同僚へ連絡できます。@ でメッセージを準備し、# で通話を始めます。</string>
     <string name="onboarding_messages_setup_description">@ を入力して、いつも使うアプリを選びます。Mink がメッセージを準備し、お気に入りごとに後から別のアプリを指定できます。</string>
     <string name="onboarding_messages_draft_note">自動メッセージは最初からオンです。Android のアクセス準備が整うとシステムメッセージは SMS を直接送信し、連携アプリは作成済みの下書きを開きます。</string>

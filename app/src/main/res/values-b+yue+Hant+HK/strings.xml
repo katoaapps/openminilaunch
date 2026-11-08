@@ -1027,6 +1027,16 @@
     <string name="onboarding_home_setup_inactive">Android 顯示主畫面應用程式清單時，請揀 Mink Launcher。</string>
     <string name="onboarding_contacts_title">重要嘅人，隨時搵到</string>
     <string name="onboarding_messages_title">用你嘅方式傳訊息</string>
+    <string name="onboarding_send_automatically_title">用 Mink Assistant 自動傳送</string>
+    <string name="onboarding_send_automatically_description">啟用呢個加強版訊息體驗，即可略過草稿，並用系統短訊直接傳送。其他訊息應用程式仍然會開啟草稿。</string>
+    <string name="onboarding_assistant_title">隨時隨地打開你嘅 Magic Box</string>
+    <string name="onboarding_assistant_setup_description">揀 Mink Assistant，就可以用 Android 助理手勢打開 Magic Box，並啟用電訊商短訊直接傳送。</string>
+    <string name="onboarding_assistant_active_description">Mink Assistant 已啟用。Android 授予「傳送短訊」權限後，就可以直接傳送短訊。</string>
+    <string name="onboarding_assistant_inactive_description">可選。唔啟用嘅話，系統短訊會打開準備好嘅草稿，而唔會喺背景傳送。</string>
+    <string name="onboarding_assistant_sms_title">唔使打開其他應用程式都可以傳送</string>
+    <string name="onboarding_assistant_sms_description">啟用「用 Mink Assistant 自動傳送」後，Mink 就可以喺你揀聯絡人、寫好訊息再按動作鍵之後，傳送一則電訊商短訊。其他訊息應用程式仍然會打開準備好嘅草稿。</string>
+    <string name="onboarding_assistant_quick_apps_title">將你嘅個人助理放喺手邊</string>
+    <string name="onboarding_assistant_quick_apps_description">將 Gemini、ChatGPT、Bixby 或其他助理應用程式或捷徑加入「快速應用程式」。每次 Mink Assistant 打開時，一按就用到。</string>
     <string name="onboarding_contacts_setup_description">唔使逐個應用程式搵，就可以聯絡朋友、家人同同事。輸入 @ 準備訊息，或者輸入 # 開始通話。</string>
     <string name="onboarding_messages_setup_description">輸入 @，再揀你慣用嘅應用程式。Mink 會準備訊息，之後亦可以為每個收藏聯絡人揀唔同應用程式。</string>
     <string name="onboarding_messages_draft_note">自動訊息預設已開啟。Android 存取權準備好之後，系統訊息會直接傳送電訊商 SMS；整合應用程式會開啟準備好嘅草稿。</string>

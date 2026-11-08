@@ -1027,6 +1027,16 @@
     <string name="onboarding_home_setup_inactive">جب Android ہوم ایپس کی فہرست دکھائے تو Mink Launcher منتخب کریں۔</string>
     <string name="onboarding_contacts_title">اپنے لوگوں کو قریب رکھیں</string>
     <string name="onboarding_messages_title">اپنے انداز میں پیغام بھیجیں</string>
+    <string name="onboarding_send_automatically_title">Mink Assistant کے ساتھ خودکار بھیجیں</string>
+    <string name="onboarding_send_automatically_description">ڈرافٹ چھوڑ کر سسٹم میسجز سے براہ راست بھیجنے کے بہتر تجربے کو فعال کریں۔ دوسری میسجنگ ایپس اب بھی ڈرافٹ کھولتی ہیں۔</string>
+    <string name="onboarding_assistant_title">آپ کا Magic Box، ہر جگہ</string>
+    <string name="onboarding_assistant_setup_description">Android کے اسسٹنٹ اشارے سے Magic Box کھولنے اور براہِ راست کیریئر SMS فعال کرنے کے لیے Mink Assistant منتخب کریں۔</string>
+    <string name="onboarding_assistant_active_description">Mink Assistant فعال ہے۔ Android کی جانب سے SMS بھیجنے کی اجازت ملنے پر براہِ راست SMS دستیاب ہوگا۔</string>
+    <string name="onboarding_assistant_inactive_description">اختیاری۔ اس کے بغیر، سسٹم میسجز پس منظر میں بھیجنے کے بجائے تیار شدہ ڈرافٹ کھولتا ہے۔</string>
+    <string name="onboarding_assistant_sms_title">دوسری ایپ کھولے بغیر بھیجیں</string>
+    <string name="onboarding_assistant_sms_description">Mink Assistant کے ساتھ خودکار بھیجیں فعال ہونے پر، شخص منتخب کرنے، پیغام لکھنے اور ایکشن دبانے کے بعد Mink ایک کیریئر SMS بھیج سکتا ہے۔ دوسری میسجنگ ایپس تیار شدہ ڈرافٹس کھولتی رہیں گی۔</string>
+    <string name="onboarding_assistant_quick_apps_title">اپنے ذاتی اسسٹنٹ کو قریب رکھیں</string>
+    <string name="onboarding_assistant_quick_apps_description">Gemini، ChatGPT، Bixby یا کسی دوسرے اسسٹنٹ ایپ یا شارٹ کٹ کو Quick Apps میں شامل کریں۔ Mink Assistant کھلنے پر یہ ہمیشہ ایک ٹیپ کی دوری پر رہے گا۔</string>
     <string name="onboarding_contacts_setup_description">ایپس تلاش کیے بغیر دوستوں، خاندان اور ساتھیوں تک پہنچیں۔ پیغام تیار کرنے کے لیے @ یا کال شروع کرنے کے لیے # ٹائپ کریں۔</string>
     <string name="onboarding_messages_setup_description">@ ٹائپ کریں اور اپنی استعمال کی ایپ منتخب کریں۔ Mink پیغام تیار کرتا ہے اور بعد میں ہر پسندیدہ فرد کے لیے الگ ایپ منتخب کی جا سکتی ہے۔</string>
     <string name="onboarding_messages_draft_note">خودکار پیغام رسانی شروع سے فعال ہوتی ہے۔ Android رسائی تیار ہونے پر سسٹم میسیجز براہ راست SMS بھیجتا ہے، جبکہ مربوط ایپس تیار مسودہ کھولتی ہیں۔</string>

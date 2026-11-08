@@ -1027,6 +1027,16 @@
     <string name="onboarding_home_setup_inactive">Choose Mink Launcher when Android shows the Home app list.</string>
     <string name="onboarding_contacts_title">Keep your people close</string>
     <string name="onboarding_messages_title">Message your way</string>
+    <string name="onboarding_send_automatically_title">Send Automatically with Mink Assistant</string>
+    <string name="onboarding_send_automatically_description">Enable this enhanced messaging experience to skip the draft and send System Messages directly. Other messaging apps still open a draft.</string>
+    <string name="onboarding_assistant_title">Your Magic Box, everywhere</string>
+    <string name="onboarding_assistant_setup_description">Choose Mink Assistant to open the Magic Box from Android’s assistant gesture and unlock direct carrier SMS.</string>
+    <string name="onboarding_assistant_active_description">Mink Assistant is active. Direct SMS is available when Android has granted Send SMS access.</string>
+    <string name="onboarding_assistant_inactive_description">Optional. Without it, System Messages opens a prepared draft instead of sending in the background.</string>
+    <string name="onboarding_assistant_sms_title">Send without opening another app</string>
+    <string name="onboarding_assistant_sms_description">When Send Automatically with Mink Assistant is enabled, Mink can send a one-time carrier SMS after you choose the person, write the message, and press the action. Other messaging apps continue opening prepared drafts.</string>
+    <string name="onboarding_assistant_quick_apps_title">Keep your personal assistant close</string>
+    <string name="onboarding_assistant_quick_apps_description">Add Gemini, ChatGPT, Bixby, or another assistant app or shortcut to Quick Apps. It remains one tap away whenever Mink Assistant opens.</string>
     <string name="onboarding_contacts_setup_description">Reach friends, family, and colleagues without hunting through apps. Type @ to prepare a message or # to start a call.</string>
     <string name="onboarding_messages_setup_description">Type @ and choose the app you already use. Mink prepares the message, and individual Favourites can use a different app later.</string>
     <string name="onboarding_messages_draft_note">Automatic messaging starts on. System Messages uses direct carrier SMS once Android access is ready; integrated apps open a prepared draft.</string>

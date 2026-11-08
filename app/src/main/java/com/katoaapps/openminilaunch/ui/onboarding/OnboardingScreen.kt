@@ -26,6 +26,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.ArrowForward
 import androidx.compose.material.icons.automirrored.filled.Chat
+import androidx.compose.material.icons.filled.Assistant
 import androidx.compose.material.icons.filled.Contacts
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Keyboard
@@ -86,6 +87,7 @@ private enum class OnboardingStep {
     KEYBOARD,
     CONTACTS,
     MESSAGING,
+    ASSISTANT,
 }
 
 @Composable
@@ -114,6 +116,7 @@ internal fun OnboardingScreen(
                 PackageManager.PERMISSION_GRANTED,
         )
     }
+    var assistantRoleHeld by remember { mutableStateOf(actions.isAssistantRoleHeld()) }
     var pickingMessaging by remember { mutableStateOf(false) }
     var messagingOptions by remember { mutableStateOf<List<MessagingProviderOption>>(emptyList()) }
     var messagingOptionsLoaded by remember { mutableStateOf(false) }
@@ -127,6 +130,11 @@ internal fun OnboardingScreen(
             actions.openAppPermissionSettings()
         }
     }
+    val assistantRoleSettings = rememberLauncherForActivityResult(
+        ActivityResultContracts.StartActivityForResult(),
+    ) {
+        assistantRoleHeld = actions.isAssistantRoleHeld()
+    }
 
     DisposableEffect(lifecycleOwner, actions) {
         val observer = LifecycleEventObserver { _, event ->
@@ -136,6 +144,7 @@ internal fun OnboardingScreen(
                     context,
                     Manifest.permission.READ_CONTACTS,
                 ) == PackageManager.PERMISSION_GRANTED
+                assistantRoleHeld = actions.isAssistantRoleHeld()
                 if (pickingMessaging) {
                     messagingOptionsLoaded = false
                     messagingOptionsRefresh++
@@ -176,6 +185,13 @@ internal fun OnboardingScreen(
                 OnboardingStep.MESSAGING,
                 stringResource(R.string.onboarding_messages_title),
                 Icons.AutoMirrored.Filled.Chat,
+            ),
+        )
+        add(
+            OnboardingPage(
+                OnboardingStep.ASSISTANT,
+                stringResource(R.string.onboarding_assistant_title),
+                Icons.Default.Assistant,
             ),
         )
     }
@@ -220,6 +236,12 @@ internal fun OnboardingScreen(
                         ?.let(actions::appLabel)
                         ?: stringResource(R.string.system_messages),
                     onChooseProvider = { pickingMessaging = true },
+                )
+                OnboardingStep.ASSISTANT -> OnboardingAssistantSetupPage(
+                    active = assistantRoleHeld,
+                    onChooseAssistant = {
+                        assistantRoleSettings.launch(actions.assistantRoleSelectionIntent())
+                    },
                 )
             }
         }

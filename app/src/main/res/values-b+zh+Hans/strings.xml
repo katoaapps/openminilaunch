@@ -1027,6 +1027,16 @@
     <string name="onboarding_home_setup_inactive">当 Android 显示主屏幕应用列表时，请选择 Mink Launcher。</string>
     <string name="onboarding_contacts_title">让重要的人触手可及</string>
     <string name="onboarding_messages_title">按你的方式发消息</string>
+    <string name="onboarding_send_automatically_title">通过 Mink Assistant 自动发送</string>
+    <string name="onboarding_send_automatically_description">启用这一增强消息体验，即可跳过草稿并通过系统短信直接发送。其他消息应用仍会打开草稿。</string>
+    <string name="onboarding_assistant_title">随处打开你的 Magic Box</string>
+    <string name="onboarding_assistant_setup_description">选择 Mink Assistant，即可通过 Android 助理手势打开 Magic Box，并启用运营商短信直接发送。</string>
+    <string name="onboarding_assistant_active_description">Mink Assistant 已启用。Android 授予“发送短信”权限后，即可直接发送短信。</string>
+    <string name="onboarding_assistant_inactive_description">可选。若不启用，系统短信会打开准备好的草稿，而不会在后台发送。</string>
+    <string name="onboarding_assistant_sms_title">无需打开其他应用即可发送</string>
+    <string name="onboarding_assistant_sms_description">启用“通过 Mink Assistant 自动发送”后，Mink 即可在你选择联系人、编写消息并按下操作键后发送一条运营商短信。其他消息应用仍会打开准备好的草稿。</string>
+    <string name="onboarding_assistant_quick_apps_title">让你的个人助理保持在身边</string>
+    <string name="onboarding_assistant_quick_apps_description">将 Gemini、ChatGPT、Bixby 或其他助理应用或快捷方式添加到“快速应用”。每当 Mink Assistant 打开时，只需点按一次即可使用。</string>
     <string name="onboarding_contacts_setup_description">无需在应用之间寻找，即可联系朋友、家人和同事。输入 @ 准备消息，或输入 # 发起通话。</string>
     <string name="onboarding_messages_setup_description">输入 @ 并选择你常用的应用。Mink 会准备消息，稍后也可为每位收藏联系人选择不同的应用。</string>
     <string name="onboarding_messages_draft_note">自动消息默认开启。Android 访问权限就绪后，系统消息会直接发送运营商短信；集成应用会打开准备好的草稿。</string>

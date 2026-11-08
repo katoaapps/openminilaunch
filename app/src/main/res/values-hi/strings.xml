@@ -1027,6 +1027,16 @@
     <string name="onboarding_home_setup_inactive">Android जब होम ऐप की सूची दिखाए, तब Mink Launcher चुनें।</string>
     <string name="onboarding_contacts_title">अपनों को पास रखें</string>
     <string name="onboarding_messages_title">अपने तरीके से संदेश भेजें</string>
+    <string name="onboarding_send_automatically_title">Mink Assistant से अपने-आप भेजें</string>
+    <string name="onboarding_send_automatically_description">ड्राफ़्ट छोड़कर सिस्टम संदेश से सीधे भेजने के बेहतर अनुभव को चालू करें। दूसरे मैसेजिंग ऐप अभी भी ड्राफ़्ट खोलते हैं।</string>
+    <string name="onboarding_assistant_title">आपका Magic Box, हर जगह</string>
+    <string name="onboarding_assistant_setup_description">Android के असिस्टेंट जेस्चर से Magic Box खोलने और कैरियर SMS सीधे भेजने के लिए Mink Assistant चुनें।</string>
+    <string name="onboarding_assistant_active_description">Mink Assistant सक्रिय है। Android के SMS भेजने की अनुमति देने पर सीधे SMS उपलब्ध होगा।</string>
+    <string name="onboarding_assistant_inactive_description">वैकल्पिक। इसके बिना, सिस्टम संदेश बैकग्राउंड में भेजने के बजाय तैयार ड्राफ़्ट खोलता है।</string>
+    <string name="onboarding_assistant_sms_title">दूसरा ऐप खोले बिना भेजें</string>
+    <string name="onboarding_assistant_sms_description">Mink Assistant से अपने-आप भेजें चालू होने पर, व्यक्ति चुनने, संदेश लिखने और कार्रवाई दबाने के बाद Mink एक बार का कैरियर SMS भेज सकता है। दूसरे मैसेजिंग ऐप तैयार ड्राफ़्ट खोलते रहेंगे।</string>
+    <string name="onboarding_assistant_quick_apps_title">अपने निजी असिस्टेंट को पास रखें</string>
+    <string name="onboarding_assistant_quick_apps_description">Gemini, ChatGPT, Bixby या किसी अन्य असिस्टेंट ऐप या शॉर्टकट को क्विक ऐप्स में जोड़ें। Mink Assistant खुलने पर वह हमेशा एक टैप की दूरी पर रहेगा।</string>
     <string name="onboarding_contacts_setup_description">ऐप ढूँढे बिना दोस्तों, परिवार और सहकर्मियों तक पहुँचें। संदेश तैयार करने के लिए @ या कॉल शुरू करने के लिए # टाइप करें।</string>
     <string name="onboarding_messages_setup_description">@ टाइप करें और वह ऐप चुनें जिसका आप पहले से उपयोग करते हैं। Mink संदेश तैयार करता है और बाद में हर पसंदीदा व्यक्ति के लिए अलग ऐप चुना जा सकता है।</string>
     <string name="onboarding_messages_draft_note">ऑटोमैटिक मैसेजिंग शुरू से चालू रहती है। Android एक्सेस तैयार होने पर सिस्टम संदेश सीधे SMS भेजता है; इंटीग्रेटेड ऐप तैयार ड्राफ़्ट खोलते हैं।</string>

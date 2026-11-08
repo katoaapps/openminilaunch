@@ -1027,6 +1027,16 @@
     <string name="onboarding_home_setup_inactive">Pilih Mink Launcher saat Android menampilkan daftar aplikasi Utama.</string>
     <string name="onboarding_contacts_title">Dekatkan orang-orang penting</string>
     <string name="onboarding_messages_title">Berkirim pesan dengan caramu</string>
+    <string name="onboarding_send_automatically_title">Kirim otomatis dengan Mink Assistant</string>
+    <string name="onboarding_send_automatically_description">Aktifkan pengalaman perpesanan yang ditingkatkan ini untuk melewati draf dan mengirim langsung dengan Pesan Sistem. Aplikasi perpesanan lain tetap membuka draf.</string>
+    <string name="onboarding_assistant_title">Magic Box Anda, di mana saja</string>
+    <string name="onboarding_assistant_setup_description">Pilih Mink Assistant untuk membuka Magic Box dengan gestur asisten Android dan mengaktifkan SMS operator langsung.</string>
+    <string name="onboarding_assistant_active_description">Mink Assistant aktif. SMS langsung tersedia setelah Android memberikan akses Kirim SMS.</string>
+    <string name="onboarding_assistant_inactive_description">Opsional. Tanpanya, Pesan Sistem membuka draf yang sudah disiapkan, bukan mengirim di latar belakang.</string>
+    <string name="onboarding_assistant_sms_title">Kirim tanpa membuka aplikasi lain</string>
+    <string name="onboarding_assistant_sms_description">Saat Kirim otomatis dengan Mink Assistant aktif, Mink dapat mengirim satu SMS operator setelah Anda memilih orang, menulis pesan, dan menekan tindakan. Aplikasi perpesanan lain tetap membuka draf yang telah disiapkan.</string>
+    <string name="onboarding_assistant_quick_apps_title">Tetap dekat dengan asisten pribadi Anda</string>
+    <string name="onboarding_assistant_quick_apps_description">Tambahkan Gemini, ChatGPT, Bixby, atau aplikasi maupun pintasan asisten lain ke Aplikasi Cepat. Asisten tersebut tetap dapat dibuka dengan sekali ketuk setiap kali Mink Assistant muncul.</string>
     <string name="onboarding_contacts_setup_description">Hubungi teman, keluarga, dan kolega tanpa mencari-cari di berbagai aplikasi. Ketik @ untuk menyiapkan pesan atau # untuk memulai panggilan.</string>
     <string name="onboarding_messages_setup_description">Ketik @ dan pilih aplikasi yang sudah Anda gunakan. Mink menyiapkan pesan, dan setiap Favorit dapat memakai aplikasi lain nanti.</string>
     <string name="onboarding_messages_draft_note">Pesan otomatis aktif sejak awal. Pesan Sistem memakai SMS langsung setelah akses Android siap; aplikasi terintegrasi membuka draf yang telah disiapkan.</string>

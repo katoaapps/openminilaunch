@@ -1063,6 +1063,16 @@
     <string name="onboarding_home_setup_inactive">اختر Mink Launcher عندما يعرض Android قائمة تطبيقات الشاشة الرئيسية.</string>
     <string name="onboarding_contacts_title">أبقِ من يهمك قريبًا</string>
     <string name="onboarding_messages_title">راسل بطريقتك</string>
+    <string name="onboarding_send_automatically_title">الإرسال تلقائيًا باستخدام Mink Assistant</string>
+    <string name="onboarding_send_automatically_description">فعّل تجربة المراسلة المحسّنة هذه لتخطي المسودة والإرسال مباشرةً باستخدام رسائل النظام. وتستمر تطبيقات المراسلة الأخرى في فتح مسودة.</string>
+    <string name="onboarding_assistant_title">Magic Box الخاص بك في كل مكان</string>
+    <string name="onboarding_assistant_setup_description">اختر Mink Assistant لفتح Magic Box بإيماءة مساعد Android وتمكين إرسال رسائل SMS عبر شركة الاتصالات مباشرةً.</string>
+    <string name="onboarding_assistant_active_description">Mink Assistant نشط. يتوفر إرسال SMS المباشر عندما يمنح Android إذن إرسال رسائل SMS.</string>
+    <string name="onboarding_assistant_inactive_description">اختياري. من دونه، تفتح رسائل النظام مسودةً جاهزة بدل الإرسال في الخلفية.</string>
+    <string name="onboarding_assistant_sms_title">أرسل من دون فتح تطبيق آخر</string>
+    <string name="onboarding_assistant_sms_description">عند تفعيل الإرسال تلقائيًا باستخدام Mink Assistant، يستطيع Mink إرسال رسالة SMS واحدة عبر شركة الاتصالات بعد اختيار الشخص وكتابة الرسالة والضغط على الإجراء. وتستمر تطبيقات المراسلة الأخرى في فتح مسودات جاهزة.</string>
+    <string name="onboarding_assistant_quick_apps_title">أبقِ مساعدك الشخصي قريبًا</string>
+    <string name="onboarding_assistant_quick_apps_description">أضف Gemini أو ChatGPT أو Bixby أو تطبيق مساعد آخر أو اختصاره إلى التطبيقات السريعة. وسيبقى على بُعد نقرة واحدة كلما فُتح Mink Assistant.</string>
     <string name="onboarding_contacts_setup_description">تواصل مع الأصدقاء والعائلة والزملاء دون البحث بين التطبيقات. اكتب @ لإعداد رسالة أو # لبدء مكالمة.</string>
     <string name="onboarding_messages_setup_description">اكتب @ واختر التطبيق الذي تستخدمه بالفعل. يجهز Mink الرسالة، ويمكن لكل شخص في المفضلة استخدام تطبيق مختلف لاحقًا.</string>
     <string name="onboarding_messages_draft_note">تبدأ المراسلة التلقائية مفعّلة. تستخدم رسائل النظام SMS المباشر بعد أن يصبح وصول Android جاهزًا، بينما تفتح التطبيقات المتكاملة مسودة مجهزة.</string>

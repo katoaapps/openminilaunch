@@ -10,9 +10,12 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Chat
+import androidx.compose.material.icons.filled.Assistant
 import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.Contacts
+import androidx.compose.material.icons.filled.GridView
 import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.Sms
 import androidx.compose.material3.Button
 import androidx.compose.material3.FilledTonalButton
 import androidx.compose.material3.Icon
@@ -106,11 +109,73 @@ internal fun OnboardingMessagingSetupPage(
             }
         }
         SettingsSwitchRow(
-            title = stringResource(R.string.send_messages_automatically),
-            subtitle = stringResource(R.string.send_messages_automatically_onboarding_description),
+            title = stringResource(R.string.onboarding_send_automatically_title),
+            subtitle = stringResource(R.string.onboarding_send_automatically_description),
             checked = sendAutomatically,
             onCheckedChange = onSendAutomaticallyChanged,
         )
+    }
+}
+
+@Composable
+internal fun OnboardingAssistantSetupPage(
+    active: Boolean,
+    onChooseAssistant: () -> Unit,
+) {
+    Column(verticalArrangement = Arrangement.spacedBy(Dimens.dp18)) {
+        Text(stringResource(R.string.onboarding_assistant_setup_description), fontSize = Dimens.sp18)
+        SetupStatusCard(
+            icon = { Icon(Icons.Default.Assistant, null, tint = Rust) },
+            title = stringResource(R.string.mink_assistant),
+            description = stringResource(
+                if (active) {
+                    R.string.onboarding_assistant_active_description
+                } else {
+                    R.string.onboarding_assistant_inactive_description
+                },
+            ),
+            active = active,
+        )
+        OnboardingAssistantBenefit(
+            icon = Icons.Default.Sms,
+            title = stringResource(R.string.onboarding_assistant_sms_title),
+            description = stringResource(R.string.onboarding_assistant_sms_description),
+        )
+        OnboardingAssistantBenefit(
+            icon = Icons.Default.GridView,
+            title = stringResource(R.string.onboarding_assistant_quick_apps_title),
+            description = stringResource(R.string.onboarding_assistant_quick_apps_description),
+        )
+        Text(
+            stringResource(R.string.deliberate_choice_description),
+            color = Muted,
+            fontSize = Dimens.sp12,
+        )
+        if (active) {
+            OutlinedButton(onClick = onChooseAssistant, modifier = Modifier.fillMaxWidth()) {
+                Text(stringResource(R.string.manage_mink_assistant))
+            }
+        } else {
+            Button(onClick = onChooseAssistant, modifier = Modifier.fillMaxWidth()) {
+                Icon(Icons.Default.Assistant, null)
+                Text(stringResource(R.string.choose_mink_assistant), Modifier.padding(start = Dimens.dp8))
+            }
+        }
+    }
+}
+
+@Composable
+private fun OnboardingAssistantBenefit(
+    icon: androidx.compose.ui.graphics.vector.ImageVector,
+    title: String,
+    description: String,
+) {
+    Row(verticalAlignment = Alignment.Top) {
+        Icon(icon, null, Modifier.size(Dimens.dp24), tint = Rust)
+        Column(Modifier.padding(start = Dimens.dp12).weight(1f)) {
+            Text(title, fontWeight = FontWeight.Bold)
+            Text(description, color = Muted, fontSize = Dimens.sp13)
+        }
     }
 }
 
