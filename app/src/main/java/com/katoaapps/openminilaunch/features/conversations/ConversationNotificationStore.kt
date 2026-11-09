@@ -85,10 +85,10 @@ internal fun latestConversationActivityAt(
 ): Long? = conversations.maxOfOrNull(::conversationActivityAt)
 
 internal fun conversationActivityAt(conversation: NotificationConversation): Long =
-    maxOf(
-        conversation.latestNotification.postedAt,
-        conversation.latestMessage?.timestamp ?: 0L,
-    )
+    conversation.messages.asSequence()
+        .filterNot(ConversationMessage::isOutgoing)
+        .maxOfOrNull(ConversationMessage::timestamp)
+        ?: 0L
 
 internal fun shouldShowConversationAttention(
     latestActivityAt: Long?,
@@ -99,6 +99,7 @@ object ConversationNotificationStore {
     val activeNotifications = mutableStateListOf<ConversationNotification>()
     private val sentReplies = mutableStateListOf<ConversationMessage>()
     private val demoReplies = mutableStateListOf<ConversationMessage>()
+    private val notificationReconciler = ConversationNotificationReconciler()
 
     fun hasNotificationAccess(context: Context): Boolean =
         context.packageName in NotificationManagerCompat.getEnabledListenerPackages(context)
@@ -143,13 +144,19 @@ object ConversationNotificationStore {
         .sortedByDescending { it.latestMessage?.timestamp ?: it.latestNotification.postedAt }
 
     internal fun replaceNotifications(items: List<ConversationNotification>) {
+        val reconciledItems = notificationReconciler.reconcile(items)
         activeNotifications.clear()
-        activeNotifications.addAll(items.sortedByDescending(ConversationNotification::postedAt))
-        val activeConversationIds = items.map(ConversationNotification::conversationId).toSet()
+        activeNotifications.addAll(
+            reconciledItems.sortedByDescending(ConversationNotification::postedAt),
+        )
+        val activeConversationIds = reconciledItems
+            .map(ConversationNotification::conversationId)
+            .toSet()
         sentReplies.removeAll { it.conversationId !in activeConversationIds }
     }
 
     internal fun upsertNotification(item: ConversationNotification) {
+        if (!notificationReconciler.shouldDisplay(item)) return
         activeNotifications.removeAll { it.key == item.key }
         activeNotifications += item
         activeNotifications.sortByDescending(ConversationNotification::postedAt)
@@ -226,6 +233,11 @@ object ConversationNotificationStore {
     }
 
     fun performAction(context: Context, action: ConversationNotificationAction): Boolean = runCatching {
+        val resolvedNotification = if (action.resolvesNotification) {
+            activeNotifications.firstOrNull { it.key == action.notificationKey }
+        } else {
+            null
+        }
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
             val options = ActivityOptions.makeBasic()
                 .setPendingIntentBackgroundActivityStartMode(ActivityOptions.MODE_BACKGROUND_ACTIVITY_START_ALLOWED)
@@ -233,6 +245,10 @@ object ConversationNotificationStore {
             action.actionIntent.send(context, 0, null, null, null, null, options)
         } else {
             action.actionIntent.send(context, 0, null)
+        }
+        resolvedNotification?.let { notification ->
+            notificationReconciler.suppress(notification)
+            removeNotification(notification.key)
         }
         true
     }.getOrDefault(false)
@@ -248,6 +264,7 @@ object ConversationNotificationStore {
                     true
                 }.getOrDefault(false)
                 if (requested) {
+                    notificationReconciler.suppress(notification)
                     removeNotification(notification.key)
                     dismissedAny = true
                 }

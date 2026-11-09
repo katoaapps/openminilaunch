@@ -1,11 +1,17 @@
 package com.katoaapps.openminilaunch
 
 import android.app.Notification
+import com.katoaapps.openminilaunch.features.conversations.ConversationMessage
+import com.katoaapps.openminilaunch.features.conversations.ConversationNotification
+import com.katoaapps.openminilaunch.features.conversations.ConversationNotificationReconciler
 import com.katoaapps.openminilaunch.features.conversations.ConversationNotificationStore
 import com.katoaapps.openminilaunch.features.conversations.DemoConversationData
+import com.katoaapps.openminilaunch.features.conversations.NotificationConversation
+import com.katoaapps.openminilaunch.features.conversations.conversationActivityAt
 import com.katoaapps.openminilaunch.features.conversations.isConversationNotification
 import com.katoaapps.openminilaunch.features.conversations.isDismissibleNotification
 import com.katoaapps.openminilaunch.features.conversations.latestConversationActivityAt
+import com.katoaapps.openminilaunch.features.conversations.resolvesConversationNotification
 import com.katoaapps.openminilaunch.features.conversations.shouldShowConversationAttention
 import com.katoaapps.openminilaunch.features.conversations.shouldExposeConversationAction
 import org.junit.Assert.assertEquals
@@ -107,4 +113,137 @@ class ConversationNotificationStoreTest {
         assertFalse(shouldShowConversationAttention(latest, acknowledgedThrough = latest!!))
         assertFalse(shouldShowConversationAttention(null, acknowledgedThrough = 0L))
     }
+
+    @Test
+    fun conversationAttentionUsesIncomingMessageTimeInsteadOfRepostTime() {
+        val conversation = conversation(
+            notification = notification(
+                postedAt = 9_000L,
+                messages = listOf(message(id = "incoming", timestamp = 200L)),
+            ),
+        )
+
+        assertEquals(200L, conversationActivityAt(conversation))
+        assertFalse(shouldShowConversationAttention(conversationActivityAt(conversation), 200L))
+    }
+
+    @Test
+    fun outgoingRepliesDoNotCreateConversationAttention() {
+        val conversation = conversation(
+            notification = notification(
+                postedAt = 9_000L,
+                messages = listOf(
+                    message(id = "incoming", timestamp = 200L),
+                    message(id = "outgoing", timestamp = 8_000L, isOutgoing = true),
+                ),
+            ),
+        )
+
+        assertEquals(200L, conversationActivityAt(conversation))
+    }
+
+    @Test
+    fun reconcilerRejectsOlderPayloadForReusedNotificationKey() {
+        val reconciler = ConversationNotificationReconciler()
+        val current = notification(
+            postedAt = 500L,
+            messages = listOf(message(id = "newer", timestamp = 400L)),
+        )
+        val staleRepost = notification(
+            postedAt = 900L,
+            messages = listOf(message(id = "older", timestamp = 200L)),
+        )
+
+        assertTrue(reconciler.shouldDisplay(current))
+        assertFalse(reconciler.shouldDisplay(staleRepost))
+    }
+
+    @Test
+    fun reconcilerKeepsSuppressedContentHiddenButAcceptsANewMessage() {
+        val reconciler = ConversationNotificationReconciler()
+        val dismissed = notification(
+            postedAt = 500L,
+            messages = listOf(message(id = "first", timestamp = 400L)),
+        )
+        val staleRepost = dismissed.copy(
+            postedAt = 900L,
+            messages = listOf(message(id = "older-history", timestamp = 200L)) + dismissed.messages,
+        )
+        val genuinelyNew = notification(
+            postedAt = 1_000L,
+            messages = dismissed.messages + message(id = "second", timestamp = 950L),
+        )
+
+        reconciler.suppress(dismissed)
+
+        assertFalse(reconciler.shouldDisplay(staleRepost))
+        assertTrue(reconciler.shouldDisplay(genuinelyNew))
+    }
+
+    @Test
+    fun reconcilerAcceptsDifferentContentWhenProviderTimestampsMatch() {
+        val reconciler = ConversationNotificationReconciler()
+        val first = notification(
+            postedAt = 500L,
+            messages = listOf(message(id = "first", timestamp = 400L)),
+        )
+        val second = notification(
+            postedAt = 600L,
+            messages = listOf(message(id = "second", timestamp = 400L)),
+        )
+
+        reconciler.suppress(first)
+
+        assertTrue(reconciler.shouldDisplay(second))
+    }
+
+    @Test
+    fun onlyReadDeleteAndArchiveActionsResolveNotifications() {
+        assertTrue(
+            resolvesConversationNotification(Notification.Action.SEMANTIC_ACTION_MARK_AS_READ),
+        )
+        assertTrue(resolvesConversationNotification(Notification.Action.SEMANTIC_ACTION_DELETE))
+        assertTrue(resolvesConversationNotification(Notification.Action.SEMANTIC_ACTION_ARCHIVE))
+        assertFalse(resolvesConversationNotification(Notification.Action.SEMANTIC_ACTION_MUTE))
+        assertFalse(resolvesConversationNotification(Notification.Action.SEMANTIC_ACTION_REPLY))
+    }
+
+    private fun conversation(notification: ConversationNotification) = NotificationConversation(
+        id = notification.conversationId,
+        name = notification.conversationName,
+        notifications = listOf(notification),
+        messages = notification.messages,
+    )
+
+    private fun notification(
+        postedAt: Long,
+        messages: List<ConversationMessage>,
+    ) = ConversationNotification(
+        key = "notification-key",
+        conversationId = "conversation-id",
+        conversationName = "Conversation",
+        packageName = "message.app",
+        appName = "Messages",
+        postedAt = postedAt,
+        isDismissible = true,
+        messages = messages,
+        contentIntent = null,
+        replyAction = null,
+    )
+
+    private fun message(
+        id: String,
+        timestamp: Long,
+        isOutgoing: Boolean = false,
+    ) = ConversationMessage(
+        id = id,
+        conversationId = "conversation-id",
+        notificationKey = "notification-key",
+        packageName = "message.app",
+        appName = "Messages",
+        text = id,
+        timestamp = timestamp,
+        senderName = if (isOutgoing) null else "Sender",
+        isOutgoing = isOutgoing,
+    )
 }

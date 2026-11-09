@@ -120,8 +120,8 @@ class MinkNotificationListenerService : NotificationListenerService() {
             contactIdentity != null -> "contact:$contactIdentity"
             else -> "${sbn.packageName}:direct:$providerIdentity"
         }
-        val messages = styleMessages.mapIndexedNotNull { index, message ->
-            val body = message.text.takeIf(String::isNotBlank) ?: return@mapIndexedNotNull null
+        val messages = styleMessages.mapNotNull { message ->
+            val body = message.text.takeIf(String::isNotBlank) ?: return@mapNotNull null
             val sender = message.senderName
             val timestamp = message.timestamp.takeIf { it > 0 } ?: sbn.postTime
             ConversationMessage(
@@ -131,7 +131,7 @@ class MinkNotificationListenerService : NotificationListenerService() {
                 packageName = sbn.packageName,
                 appName = appName,
                 text = body,
-                timestamp = timestamp + index,
+                timestamp = timestamp,
                 senderName = sender,
                 isOutgoing = message.isOutgoing,
             )
@@ -201,6 +201,14 @@ class MinkNotificationListenerService : NotificationListenerService() {
                 title = title,
                 packageName = sbn.packageName,
                 appName = appName,
+                notificationKey = sbn.key,
+                resolvesNotification = resolvesConversationNotification(
+                    if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.P) {
+                        action.semanticAction
+                    } else {
+                        Notification.Action.SEMANTIC_ACTION_NONE
+                    },
+                ),
                 actionIntent = action.actionIntent,
             )
         }
