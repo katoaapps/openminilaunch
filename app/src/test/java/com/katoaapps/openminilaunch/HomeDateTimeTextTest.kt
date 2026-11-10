@@ -1,6 +1,7 @@
 package com.katoaapps.openminilaunch
 
-import com.katoaapps.openminilaunch.ui.launcher.home.formatHomeDateTime
+import com.katoaapps.openminilaunch.ui.launcher.home.HomeDateTimeParts
+import com.katoaapps.openminilaunch.ui.launcher.home.formatHomeDateTimeParts
 import org.junit.Assert.assertEquals
 import org.junit.Test
 import java.time.LocalDateTime
@@ -11,36 +12,36 @@ class HomeDateTimeTextTest {
 
     @Test fun dateRemainsUnchangedWhenClockIsHidden() {
         assertEquals(
-            "TUE, SEP 8",
-            formatHomeDateTime(dateTime, "EEE, MMM d", true, false, false, Locale.US),
+            HomeDateTimeParts(date = "TUE, SEP 8", time = ""),
+            formatHomeDateTimeParts(dateTime, "EEE, MMM d", true, false, false, Locale.US),
         )
     }
 
     @Test fun twelveHourClockIsAddedToDate() {
         assertEquals(
-            "TUE, SEP 8 · 6:30 PM",
-            formatHomeDateTime(dateTime, "EEE, MMM d", true, true, false, Locale.US),
+            HomeDateTimeParts(date = "TUE, SEP 8", time = "6:30 PM"),
+            formatHomeDateTimeParts(dateTime, "EEE, MMM d", true, true, false, Locale.US),
         )
     }
 
     @Test fun twentyFourHourClockIsAddedToDate() {
         assertEquals(
-            "TUE, SEP 8 · 18:30",
-            formatHomeDateTime(dateTime, "EEE, MMM d", true, true, true, Locale.US),
+            HomeDateTimeParts(date = "TUE, SEP 8", time = "18:30"),
+            formatHomeDateTimeParts(dateTime, "EEE, MMM d", true, true, true, Locale.US),
         )
     }
 
     @Test fun clockCanBeShownWithoutDate() {
         assertEquals(
-            "6:30 PM",
-            formatHomeDateTime(dateTime, "EEE, MMM d", false, true, false, Locale.US),
+            HomeDateTimeParts(date = "", time = "6:30 PM"),
+            formatHomeDateTimeParts(dateTime, "EEE, MMM d", false, true, false, Locale.US),
         )
     }
 
     @Test fun headerTextCanBeHidden() {
         assertEquals(
-            "",
-            formatHomeDateTime(dateTime, "EEE, MMM d", false, false, false, Locale.US),
+            HomeDateTimeParts(date = "", time = ""),
+            formatHomeDateTimeParts(dateTime, "EEE, MMM d", false, false, false, Locale.US),
         )
     }
 }

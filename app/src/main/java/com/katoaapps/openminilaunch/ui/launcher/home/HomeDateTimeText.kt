@@ -11,13 +11,18 @@ import java.time.LocalDateTime
 import java.time.format.DateTimeFormatter
 import java.util.Locale
 
+internal data class HomeDateTimeParts(
+    val date: String,
+    val time: String,
+)
+
 @Composable
-internal fun rememberHomeDateTimeText(
+internal fun rememberHomeDateTimeParts(
     datePattern: String,
     showDate: Boolean,
     showClock: Boolean,
     use24HourClock: Boolean,
-): String {
+): HomeDateTimeParts {
     var currentDateTime by remember { mutableStateOf(LocalDateTime.now()) }
     LaunchedEffect(Unit) {
         while (true) {
@@ -25,7 +30,7 @@ internal fun rememberHomeDateTimeText(
             currentDateTime = LocalDateTime.now()
         }
     }
-    return formatHomeDateTime(
+    return formatHomeDateTimeParts(
         dateTime = currentDateTime,
         datePattern = datePattern,
         showDate = showDate,
@@ -34,23 +39,26 @@ internal fun rememberHomeDateTimeText(
     )
 }
 
-internal fun formatHomeDateTime(
+internal fun formatHomeDateTimeParts(
     dateTime: LocalDateTime,
     datePattern: String,
     showDate: Boolean,
     showClock: Boolean,
     use24HourClock: Boolean,
     locale: Locale = Locale.getDefault(),
-): String {
+): HomeDateTimeParts {
     val date = if (showDate) {
         dateTime.format(DateTimeFormatter.ofPattern(datePattern, locale)).uppercase(locale)
     } else {
-        null
+        ""
     }
-    if (!showClock) return date.orEmpty()
-    val timePattern = if (use24HourClock) "HH:mm" else "h:mm a"
-    val time = dateTime.format(DateTimeFormatter.ofPattern(timePattern, locale))
-    return date?.let { "$it · $time" } ?: time
+    val time = if (showClock) {
+        val timePattern = if (use24HourClock) "HH:mm" else "h:mm a"
+        dateTime.format(DateTimeFormatter.ofPattern(timePattern, locale))
+    } else {
+        ""
+    }
+    return HomeDateTimeParts(date = date, time = time)
 }
 
 private fun millisUntilNextMinute(nowMillis: Long = System.currentTimeMillis()): Long {

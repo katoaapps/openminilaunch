@@ -10,8 +10,8 @@ import androidx.compose.foundation.layout.WindowInsetsSides
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.only
 import androidx.compose.foundation.layout.padding
-import androidx.compose.foundation.layout.safeDrawing
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Settings
@@ -28,8 +28,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
 import com.katoaapps.openminilaunch.R
 import com.katoaapps.openminilaunch.data.LauncherStore
@@ -57,106 +59,147 @@ internal fun HomeHeader(
 ) {
     val context = LocalContext.current
     val headerContentColor = launcherBackgroundContentColor(store, header = true)
+    val density = LocalDensity.current
+    val verticalPadding = if (qwertyHome) Dimens.dp0 else Dimens.dp8
+    val groupGap = Dimens.dp6
     CompositionLocalProvider(LocalMinimumInteractiveComponentSize provides actionSize) {
-        Row(
-            Modifier.fillMaxWidth()
-                .windowInsetsPadding(
-                    WindowInsets.safeDrawing.only(
-                        WindowInsetsSides.Top + WindowInsetsSides.Horizontal,
-                    ),
-                )
-                .padding(horizontal = horizontalPadding)
-                .padding(vertical = if (qwertyHome) Dimens.dp0 else Dimens.dp8),
-            verticalAlignment = Alignment.CenterVertically,
-        ) {
-            MinkHomeIcon(
-                store = store,
-                isActive = minkStatusActive,
-                onClick = onMinkDay,
-                modifier = Modifier.size(actionSize),
-            )
-            if (store.showBatteryPercentage) {
-                rememberBatteryPercentageText()?.let { batteryPercentage ->
-                    Text(
-                        batteryPercentage,
-                        modifier = Modifier.padding(end = Dimens.dp8),
-                        color = headerContentColor,
-                        fontSize = Dimens.sp13,
-                        fontWeight = FontWeight.Bold,
-                        maxLines = 1,
-                    )
-                }
+        val conversations = ConversationNotificationStore.currentConversations()
+        val favoriteAttention = rememberPendingFavoriteAttention(
+            store = store,
+            conversations = conversations,
+            defaultColorArgb = MinkFeatureColors.ConversationAttention.toArgb(),
+        )
+        val dateTime = rememberHomeDateTimeParts(
+            datePattern = stringResource(R.string.home_date_pattern),
+            showDate = store.showDate,
+            showClock = store.showClock,
+            use24HourClock = store.use24HourClock,
+        )
+        val clockHint = if (!store.hasOpenedClockFromDate) {
+            stringResource(R.string.tap_for_clock)
+        } else {
+            null
+        }
+        val openClock = {
+            if (actions.openClock()) {
+                store.markClockOpenedFromDate()
+            } else {
+                Toast.makeText(context, R.string.no_clock_app_found, Toast.LENGTH_SHORT).show()
             }
-            if (store.showDate || store.showClock) {
-                Column(
-                    modifier = Modifier.weight(1f).clickable {
-                        if (actions.openClock()) {
-                            store.markClockOpenedFromDate()
-                        } else {
-                            Toast.makeText(context, R.string.no_clock_app_found, Toast.LENGTH_SHORT).show()
-                        }
-                    },
-                ) {
-                    Text(
-                        rememberHomeDateTimeText(
-                            datePattern = stringResource(R.string.home_date_pattern),
-                            showDate = store.showDate,
-                            showClock = store.showClock,
-                            use24HourClock = store.use24HourClock,
-                        ),
-                        color = headerContentColor,
-                        letterSpacing = Dimens.sp1_5,
-                        fontSize = Dimens.sp13,
-                        fontWeight = FontWeight.Bold,
-                        maxLines = 1,
+        }
+        CutoutAwareHomeHeaderLayout(
+            modifier = Modifier.fillMaxWidth().windowInsetsPadding(
+                WindowInsets.statusBars.only(WindowInsetsSides.Top),
+            ),
+            horizontalPaddingPx = with(density) { horizontalPadding.roundToPx() },
+            verticalPaddingPx = with(density) { verticalPadding.roundToPx() },
+            rowHeightPx = with(density) { actionSize.roundToPx() },
+            minimumFlexibleWidthPx = with(density) { Dimens.dp64.roundToPx() },
+            groupGapPx = with(density) { groupGap.roundToPx() },
+            leadingContent = {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    MinkHomeIcon(
+                        store = store,
+                        isActive = minkStatusActive,
+                        onClick = onMinkDay,
+                        modifier = Modifier.size(actionSize),
                     )
-                    if (!store.hasOpenedClockFromDate) {
-                        Text(
-                            stringResource(R.string.tap_for_clock),
-                            color = headerContentColor.copy(alpha = .64f),
-                            fontSize = Dimens.sp9,
-                            maxLines = 1,
+                    if (store.showBatteryPercentage) {
+                        rememberBatteryPercentageText()?.let { batteryPercentage ->
+                            Text(
+                                batteryPercentage,
+                                modifier = Modifier.padding(end = Dimens.dp8),
+                                color = headerContentColor,
+                                fontSize = Dimens.sp13,
+                                fontWeight = FontWeight.Bold,
+                                maxLines = 1,
+                            )
+                        }
+                    }
+                }
+            },
+            dateContent = {
+                HomeHeaderDateTimeItem(
+                    text = dateTime.date,
+                    hint = clockHint,
+                    contentColor = headerContentColor,
+                    onClick = openClock,
+                )
+            },
+            timeContent = {
+                HomeHeaderDateTimeItem(
+                    text = dateTime.time,
+                    hint = clockHint.takeIf { dateTime.date.isEmpty() },
+                    contentColor = headerContentColor,
+                    onClick = openClock,
+                )
+            },
+            trailingContent = {
+                Row(verticalAlignment = Alignment.CenterVertically) {
+                    if (updateAvailable) {
+                        IconButton(onClick = onUpdate, modifier = Modifier.size(actionSize)) {
+                            Icon(
+                                Icons.Default.SystemUpdateAlt,
+                                stringResource(R.string.update_available),
+                                Modifier.size(iconSize),
+                                tint = MaterialTheme.colorScheme.primary,
+                            )
+                        }
+                    }
+                    ConversationAttentionButton(
+                        conversationCount = conversations.size,
+                        attentionColors = favoriteAttention.map { Color(it.colorArgb) },
+                        actionSize = actionSize,
+                        iconSize = iconSize,
+                        restingColor = headerContentColor,
+                        onClick = onConversations,
+                    )
+                    IconButton(
+                        onClick = { openSettings(SettingsDestination.OVERVIEW) },
+                        modifier = Modifier.size(actionSize),
+                    ) {
+                        Icon(
+                            Icons.Default.Settings,
+                            stringResource(R.string.settings),
+                            Modifier.size(iconSize),
+                            tint = headerContentColor,
                         )
                     }
                 }
-            } else {
-                Spacer(Modifier.weight(1f))
-            }
-            if (updateAvailable) {
-                IconButton(onClick = onUpdate, modifier = Modifier.size(actionSize)) {
-                    Icon(
-                        Icons.Default.SystemUpdateAlt,
-                        stringResource(R.string.update_available),
-                        Modifier.size(iconSize),
-                        tint = MaterialTheme.colorScheme.primary,
-                    )
-                }
-            }
-            val conversations = ConversationNotificationStore.currentConversations()
-            val favoriteAttention = rememberPendingFavoriteAttention(
-                store = store,
-                conversations = conversations,
-                defaultColorArgb = MinkFeatureColors.ConversationAttention.toArgb(),
+            },
+        )
+    }
+}
+
+@Composable
+private fun HomeHeaderDateTimeItem(
+    text: String,
+    hint: String?,
+    contentColor: Color,
+    onClick: () -> Unit,
+) {
+    if (text.isEmpty()) {
+        Spacer(Modifier)
+        return
+    }
+    Column(modifier = Modifier.clickable(onClick = onClick)) {
+        Text(
+            text,
+            color = contentColor,
+            letterSpacing = Dimens.sp1_5,
+            fontSize = Dimens.sp13,
+            fontWeight = FontWeight.Bold,
+            maxLines = 1,
+            overflow = TextOverflow.Ellipsis,
+        )
+        hint?.let {
+            Text(
+                it,
+                color = contentColor.copy(alpha = .64f),
+                fontSize = Dimens.sp9,
+                maxLines = 1,
+                overflow = TextOverflow.Ellipsis,
             )
-            ConversationAttentionButton(
-                conversationCount = conversations.size,
-                attentionColors = favoriteAttention.map { Color(it.colorArgb) },
-                actionSize = actionSize,
-                iconSize = iconSize,
-                restingColor = headerContentColor,
-                onClick = onConversations,
-            )
-            IconButton(
-                onClick = { openSettings(SettingsDestination.OVERVIEW) },
-                modifier = Modifier.size(actionSize),
-            ) {
-                Icon(
-                    Icons.Default.Settings,
-                    stringResource(R.string.settings),
-                    Modifier.size(iconSize),
-                    tint = headerContentColor,
-                )
-            }
         }
     }
 }

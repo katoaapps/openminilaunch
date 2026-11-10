@@ -10,6 +10,7 @@ import android.os.Build
 import android.os.Bundle
 import android.provider.Settings
 import android.view.KeyEvent
+import android.view.WindowManager
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
@@ -66,6 +67,7 @@ class MainActivity : ComponentActivity(), MagicHardwareHotkeyHost {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         WindowCompat.setDecorFitsSystemWindows(window, false)
+        allowContentBesideDisplayCutouts()
         val store = LauncherStore.get(this)
         store.maybeEnableTwoPanelForDisplay(this)
         applyLargeDisplayOrientation(this, store.twoPanelModeForLargeDisplays)
@@ -92,6 +94,19 @@ class MainActivity : ComponentActivity(), MagicHardwareHotkeyHost {
                 homeRequestToken = homeRequestToken,
                 setSettingsVisibleInRecents = ::setSettingsVisibleInRecents,
             )
+        }
+    }
+
+    @Suppress("DEPRECATION")
+    private fun allowContentBesideDisplayCutouts() {
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.P) return
+        window.attributes = window.attributes.apply {
+            // Home handles the cutout's real bounds; do not letterbox its entire top edge.
+            layoutInDisplayCutoutMode = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.R) {
+                WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_ALWAYS
+            } else {
+                WindowManager.LayoutParams.LAYOUT_IN_DISPLAY_CUTOUT_MODE_SHORT_EDGES
+            }
         }
     }
 
