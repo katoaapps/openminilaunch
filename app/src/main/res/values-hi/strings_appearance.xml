@@ -6,17 +6,19 @@
     <string name="appearance_layout_clock_summary">तारीख, स्टेटस बार, पैनल की स्थिति और बड़ी स्क्रीन</string>
     <string name="appearance_layout_section">लेआउट और डिस्प्ले</string>
     <string name="your_photo">आपकी फ़ोटो</string>
-    <string name="wallpaper_library">वॉलपेपर लाइब्रेरी</string>
-    <string name="wallpaper_library_description">एक Mink वॉलपेपर चुनें। आपकी फ़ोटो सहेजी रहेगी।</string>
-    <string name="wallpaper_number">वॉलपेपर %1$d</string>
-    <string name="mink_wallpaper">Mink वॉलपेपर</string>
+    <string name="device_wallpaper">डिवाइस वॉलपेपर</string>
     <string name="color_palette">Color palette</string>
     <string name="palette_mink">Mink</string>
     <string name="palette_system">System</string>
     <string name="palette_system_unavailable">System colors require Android 12 or newer.</string>
     <string name="home_themes">होम थीम</string>
-    <string name="home_themes_description">वॉलपेपर, बैकग्राउंड और पैनल एक साथ बदलते हैं।</string>
+    <string name="home_themes_description">एक पूरा थीम चुनें या ऊपर उसका वॉलपेपर स्रोत बदलें।</string>
+    <string name="mink_theme">Mink थीम</string>
     <string name="theme_number">थीम %1$d</string>
     <string name="custom_theme">कस्टम थीम</string>
-    <string name="custom_theme_description">अपना वॉलपेपर, बैकग्राउंड और पैनल का रंग चुनें।</string>
+    <string name="custom_theme_description">वॉलपेपर बदले बिना बैकग्राउंड और पैनल के रंग ठीक करें।</string>
+    <string name="theme_wallpaper_choice_title">थीम के साथ वॉलपेपर बदलें?</string>
+    <string name="theme_wallpaper_choice_description">पूरा थीम लागू करके अपना कस्टम वॉलपेपर बदलें, या अपना वॉलपेपर रखते हुए केवल थीम के रंग इस्तेमाल करें।</string>
+    <string name="use_theme_wallpaper">थीम वॉलपेपर इस्तेमाल करें</string>
+    <string name="keep_my_wallpaper">मेरा वॉलपेपर रखें</string>
 </resources>

@@ -744,7 +744,7 @@
     <string name="custom_panel_color_description">ক্ষেত্র এবং হিউ স্ট্রিপ সোয়াইপ করুন, অথবা একটি হেক্স রঙ লিখুন।</string>
     <string name="app_background_color">পটভূমি</string>
     <string name="app_background_color_description">একটি রঙ বা একটি ডিভাইস-আকারের হোম ওয়ালপেপার চয়ন করুন৷</string>
-    <string name="theme_background">থিম</string>
+    <string name="theme_background">থিম ওয়ালপেপার</string>
     <string name="use_theme_background">থিম ব্যাকগ্রাউন্ড ব্যবহার করুন</string>
     <string name="custom_background_color">কাস্টম পটভূমির রঙ</string>
     <string name="custom_background_color_description">ক্ষেত্র এবং হিউ স্ট্রিপ সোয়াইপ করুন, অথবা একটি হেক্স রঙ লিখুন।</string>

@@ -2,6 +2,7 @@ package com.katoaapps.openminilaunch.features.backup
 
 import com.katoaapps.openminilaunch.data.LauncherStore
 import com.katoaapps.openminilaunch.data.WidgetRecipeImportResult
+import com.katoaapps.openminilaunch.features.appearance.BundledHomeThemeCatalog
 import com.katoaapps.openminilaunch.features.profile.ProfileState
 import com.katoaapps.openminilaunch.model.FontSource
 import com.katoaapps.openminilaunch.model.IconSource
@@ -100,12 +101,18 @@ internal fun LauncherStore.restorePortableBackup(
     updateShowDate(settings.showDate)
     updateShowBatteryPercentage(settings.showBatteryPercentage)
     updateUse24HourClock(settings.use24HourClock)
-    setHomePanelColor(settings.homePanelColorArgb)
+    // Backups written before themes and wallpapers were independently selectable derived their
+    // colors from the wallpaper id instead of storing the effective background color.
+    val legacyCombinedTheme = settings.appBackgroundPresetId
+        ?.takeIf { settings.appBackgroundColorArgb == null }
+        ?.let(BundledHomeThemeCatalog::find)
+    setHomePanelColor(legacyCombinedTheme?.panelColorArgb ?: settings.homePanelColorArgb)
     if (settings.watermelonModeEnabled) activateWatermelonMode()
     setHomePanelTransparency(settings.homePanelTransparency)
-    if (settings.appBackgroundPresetId?.let(::restoreAppBackgroundPreset) != true) {
-        setAppBackgroundColor(settings.appBackgroundColorArgb)
-    }
+    setAppBackgroundColor(
+        legacyCombinedTheme?.backgroundColorArgb ?: settings.appBackgroundColorArgb,
+    )
+    settings.appBackgroundPresetId?.let(::restoreAppBackgroundPreset)
     when (settings.iconAppearance.source) {
         IconSource.MINK -> useMinkIcons()
         IconSource.SYSTEM -> useSystemIcons()

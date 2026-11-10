@@ -744,7 +744,7 @@
     <string name="custom_panel_color_description">Desliza el campo y la franja de tono, o ingresa un color hexadecimal.</string>
     <string name="app_background_color">Antecedentes</string>
     <string name="app_background_color_description">Elija un color o un fondo de pantalla de inicio del tamaño de un dispositivo.</string>
-    <string name="theme_background">Tema</string>
+    <string name="theme_background">Fondo del tema</string>
     <string name="use_theme_background">Usar fondo del tema</string>
     <string name="custom_background_color">Color de fondo personalizado</string>
     <string name="custom_background_color_description">Desliza el campo y la franja de tono, o ingresa un color hexadecimal.</string>

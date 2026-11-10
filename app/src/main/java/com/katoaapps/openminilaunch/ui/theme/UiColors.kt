@@ -7,7 +7,11 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.compositionLocalOf
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.luminance
 import androidx.compose.ui.res.colorResource
+
+private val ReadableDarkValue = Color(0xFF172019)
+private val MinkWhiteValue = Color(0xFFFAF9F6)
 
 internal val LightInk: Color @Composable get() = colorResource(R.color.light_ink)
 internal val LightPaper: Color @Composable get() = colorResource(R.color.light_paper)
@@ -26,22 +30,46 @@ internal val DarkSurface: Color @Composable get() = colorResource(R.color.dark_s
 internal val DarkSurfaceContainerLow: Color @Composable get() = colorResource(R.color.dark_surface_container_low)
 internal val DarkOnSurface: Color @Composable get() = colorResource(R.color.dark_on_surface)
 internal val ReadableDark: Color @Composable get() = colorResource(R.color.readable_dark)
-internal val MagicTextColor: Color @Composable get() = colorResource(R.color.magic_text)
-internal val MagicCallColor: Color @Composable get() = colorResource(R.color.magic_call)
-internal val MagicTodoColor: Color @Composable get() = colorResource(R.color.magic_todo)
-internal val MagicNoteColor: Color @Composable get() = colorResource(R.color.magic_note)
-internal val MagicEventColor: Color @Composable get() = colorResource(R.color.magic_event)
-internal val MagicAppColor: Color @Composable get() = colorResource(R.color.magic_app)
-internal val AppBlockedRed: Color @Composable get() = colorResource(R.color.app_blocked_red)
+internal val MagicTextColor = MinkFeatureColors.MagicText
+internal val MagicCallColor = MinkFeatureColors.MagicCall
+internal val MagicTodoColor = MinkFeatureColors.MagicTodo
+internal val MagicNoteColor = MinkFeatureColors.MagicNote
+internal val MagicEventColor = MinkFeatureColors.MagicEvent
+internal val MagicAppColor = MinkFeatureColors.MagicApp
+internal val AppBlockedRed = MinkFeatureColors.AppBlocked
 internal val MinkWhite: Color @Composable get() = colorResource(R.color.mink_white)
 internal val MinkBlack: Color @Composable get() = colorResource(R.color.mink_black)
 internal val MinkTransparent: Color @Composable get() = colorResource(R.color.transparent)
 
-@Composable
-internal fun readableContentColor(background: Color): Color {
-    val luminance = .2126f * background.red + .7152f * background.green + .0722f * background.blue
-    return if (luminance > .55f) ReadableDark else MinkWhite
+internal fun contrastRatio(first: Color, second: Color): Float {
+    val lighter = maxOf(first.luminance(), second.luminance())
+    val darker = minOf(first.luminance(), second.luminance())
+    return (lighter + .05f) / (darker + .05f)
 }
+
+/** True when dark foreground content is more legible than light content on [background]. */
+internal fun shouldUseDarkForeground(background: Color): Boolean =
+    contrastRatio(background, ReadableDarkValue) >= contrastRatio(background, MinkWhiteValue)
+
+/** Picks the higher-contrast member of Mink's standard light/dark content pair. */
+internal fun readableContentColor(background: Color): Color =
+    if (shouldUseDarkForeground(background)) ReadableDarkValue else MinkWhiteValue
+
+/** Keeps an intentional palette color when legible and falls back only when contrast is unsafe. */
+internal fun ensureReadableContentColor(
+    background: Color,
+    preferred: Color,
+    minimumContrast: Float = 4.5f,
+): Color = if (contrastRatio(background, preferred) >= minimumContrast) {
+    preferred
+} else {
+    readableContentColor(background)
+}
+
+/** Uses a preferred user color when legible and otherwise follows the visible background. */
+internal fun resolveContentColor(background: Color, preferred: Color?): Color =
+    preferred?.let { ensureReadableContentColor(background, it) }
+        ?: readableContentColor(background)
 
 /** Returns the color perceived when [foreground] is drawn over [background]. */
 internal fun compositeColor(foreground: Color, background: Color): Color {
@@ -67,15 +95,28 @@ private fun blendColor(start: Color, end: Color, fraction: Float): Color = Color
     alpha = 1f,
 )
 
-@Composable
 internal fun ColorScheme.withAppBackground(customArgb: Int?): ColorScheme {
     val background = customArgb?.let(::Color) ?: return this
     val content = readableContentColor(background)
-    val darkBackground = content == MinkWhite
-    val surfaceTarget = if (darkBackground) MinkWhite else MinkBlack
+    val darkBackground = !shouldUseDarkForeground(background)
+    val surfaceTarget = if (darkBackground) MinkWhiteValue else Color.Black
     fun surfaceTone(fraction: Float) = blendColor(background, surfaceTarget, fraction)
+    fun visibleAccent(preferred: Color) = ensureReadableContentColor(
+        background = background,
+        preferred = preferred,
+        minimumContrast = 3f,
+    )
+    val visiblePrimary = visibleAccent(primary)
+    val visibleSecondary = visibleAccent(secondary)
+    val visibleTertiary = visibleAccent(tertiary)
 
     return copy(
+        primary = visiblePrimary,
+        onPrimary = readableContentColor(visiblePrimary),
+        secondary = visibleSecondary,
+        onSecondary = readableContentColor(visibleSecondary),
+        tertiary = visibleTertiary,
+        onTertiary = readableContentColor(visibleTertiary),
         background = background,
         onBackground = content,
         surface = surfaceTone(if (darkBackground) .035f else .015f),
@@ -91,5 +132,6 @@ internal fun ColorScheme.withAppBackground(customArgb: Int?): ColorScheme {
         surfaceContainerHighest = surfaceTone(.16f),
         outline = content.copy(alpha = .48f),
         outlineVariant = content.copy(alpha = .24f),
+        surfaceTint = visiblePrimary,
     )
 }

@@ -744,7 +744,7 @@
     <string name="custom_panel_color_description">필드 및 색조 스트립을 스와이프하거나 16진수 색상을 입력합니다.</string>
     <string name="app_background_color">배경</string>
     <string name="app_background_color_description">색상이나 기기 크기의 홈 배경화면을 선택하세요.</string>
-    <string name="theme_background">테마</string>
+    <string name="theme_background">테마 배경화면</string>
     <string name="use_theme_background">테마 배경 사용</string>
     <string name="custom_background_color">사용자 정의 배경 색상</string>
     <string name="custom_background_color_description">필드 및 색조 스트립을 스와이프하거나 16진수 색상을 입력합니다.</string>

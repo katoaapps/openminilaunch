@@ -6,17 +6,19 @@
     <string name="appearance_layout_clock_summary">تاریخ، اسٹیٹس بار، پینل کی جگہ اور بڑی اسکرینیں</string>
     <string name="appearance_layout_section">لے آؤٹ اور ڈسپلے</string>
     <string name="your_photo">آپ کی تصویر</string>
-    <string name="wallpaper_library">وال پیپر لائبریری</string>
-    <string name="wallpaper_library_description">Mink وال پیپر منتخب کریں۔ آپ کی تصویر محفوظ رہے گی۔</string>
-    <string name="wallpaper_number">وال پیپر %1$d</string>
-    <string name="mink_wallpaper">Mink وال پیپر</string>
+    <string name="device_wallpaper">ڈیوائس وال پیپر</string>
     <string name="color_palette">Color palette</string>
     <string name="palette_mink">Mink</string>
     <string name="palette_system">System</string>
     <string name="palette_system_unavailable">System colors require Android 12 or newer.</string>
     <string name="home_themes">ہوم تھیمز</string>
-    <string name="home_themes_description">وال پیپر، پس منظر اور پینل ایک ساتھ بدلتے ہیں۔</string>
+    <string name="home_themes_description">مکمل تھیم منتخب کریں یا اوپر وال پیپر کا ماخذ تبدیل کریں۔</string>
+    <string name="mink_theme">Mink تھیم</string>
     <string name="theme_number">تھیم %1$d</string>
     <string name="custom_theme">حسب ضرورت تھیم</string>
-    <string name="custom_theme_description">اپنا وال پیپر، پس منظر اور پینل کا رنگ منتخب کریں۔</string>
+    <string name="custom_theme_description">وال پیپر بدلے بغیر پس منظر اور پینل کے رنگ ایڈجسٹ کریں۔</string>
+    <string name="theme_wallpaper_choice_title">تھیم کے ساتھ وال پیپر تبدیل کریں؟</string>
+    <string name="theme_wallpaper_choice_description">مکمل تھیم لاگو کر کے اپنا حسب ضرورت وال پیپر بدلیں، یا اپنا وال پیپر برقرار رکھ کر صرف تھیم کے رنگ استعمال کریں۔</string>
+    <string name="use_theme_wallpaper">تھیم وال پیپر استعمال کریں</string>
+    <string name="keep_my_wallpaper">میرا وال پیپر برقرار رکھیں</string>
 </resources>

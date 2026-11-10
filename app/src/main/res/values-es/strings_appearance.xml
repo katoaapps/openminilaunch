@@ -6,17 +6,19 @@
     <string name="appearance_layout_clock_summary">Fecha, barra de estado, posición del panel y pantallas grandes</string>
     <string name="appearance_layout_section">DISEÑO Y PANTALLA</string>
     <string name="your_photo">Tu foto</string>
-    <string name="wallpaper_library">Biblioteca de fondos</string>
-    <string name="wallpaper_library_description">Elige un fondo de Mink. Tu foto seguirá guardada.</string>
-    <string name="wallpaper_number">Fondo %1$d</string>
-    <string name="mink_wallpaper">Fondo de Mink</string>
+    <string name="device_wallpaper">Fondo del dispositivo</string>
     <string name="color_palette">Color palette</string>
     <string name="palette_mink">Mink</string>
     <string name="palette_system">System</string>
     <string name="palette_system_unavailable">System colors require Android 12 or newer.</string>
     <string name="home_themes">Temas de inicio</string>
-    <string name="home_themes_description">El fondo de pantalla, el fondo y el panel cambian juntos.</string>
+    <string name="home_themes_description">Elige un tema completo o cambia arriba el origen del fondo.</string>
+    <string name="mink_theme">Tema Mink</string>
     <string name="theme_number">Tema %1$d</string>
     <string name="custom_theme">Tema personalizado</string>
-    <string name="custom_theme_description">Elige el fondo de pantalla, el fondo y el color del panel.</string>
+    <string name="custom_theme_description">Ajusta los colores del fondo y del panel sin cambiar el fondo de pantalla.</string>
+    <string name="theme_wallpaper_choice_title">¿Cambiar el fondo con el tema?</string>
+    <string name="theme_wallpaper_choice_description">Aplica el tema completo y reemplaza tu fondo personalizado, o conserva tu fondo y usa solo los colores del tema.</string>
+    <string name="use_theme_wallpaper">Usar fondo del tema</string>
+    <string name="keep_my_wallpaper">Conservar mi fondo</string>
 </resources>

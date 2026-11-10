@@ -6,17 +6,19 @@
     <string name="appearance_layout_clock_summary">Tanggal, bilah status, posisi panel, dan layar besar</string>
     <string name="appearance_layout_section">TATA LETAK DAN TAMPILAN</string>
     <string name="your_photo">Foto Anda</string>
-    <string name="wallpaper_library">Galeri wallpaper</string>
-    <string name="wallpaper_library_description">Pilih wallpaper Mink. Foto Anda tetap tersimpan.</string>
-    <string name="wallpaper_number">Wallpaper %1$d</string>
-    <string name="mink_wallpaper">Wallpaper Mink</string>
+    <string name="device_wallpaper">Wallpaper perangkat</string>
     <string name="color_palette">Color palette</string>
     <string name="palette_mink">Mink</string>
     <string name="palette_system">System</string>
     <string name="palette_system_unavailable">System colors require Android 12 or newer.</string>
     <string name="home_themes">Tema Beranda</string>
-    <string name="home_themes_description">Wallpaper, latar belakang, dan panel berubah bersama.</string>
+    <string name="home_themes_description">Pilih tema lengkap atau ubah sumber wallpaper di atas.</string>
+    <string name="mink_theme">Tema Mink</string>
     <string name="theme_number">Tema %1$d</string>
     <string name="custom_theme">Tema kustom</string>
-    <string name="custom_theme_description">Pilih wallpaper, latar belakang, dan warna panel Anda.</string>
+    <string name="custom_theme_description">Sesuaikan warna latar belakang dan panel tanpa mengubah wallpaper.</string>
+    <string name="theme_wallpaper_choice_title">Ubah wallpaper bersama tema?</string>
+    <string name="theme_wallpaper_choice_description">Terapkan tema lengkap dan ganti wallpaper kustom Anda, atau pertahankan wallpaper dan gunakan hanya warna tema.</string>
+    <string name="use_theme_wallpaper">Gunakan wallpaper tema</string>
+    <string name="keep_my_wallpaper">Pertahankan wallpaper saya</string>
 </resources>

@@ -57,6 +57,7 @@ import com.katoaapps.openminilaunch.ui.components.PageHeader
 import com.katoaapps.openminilaunch.ui.settings.NotificationAccessDisclosureDialog
 import com.katoaapps.openminilaunch.ui.theme.Dimens
 import com.katoaapps.openminilaunch.ui.theme.Muted
+import com.katoaapps.openminilaunch.ui.theme.MinkFeatureColors
 import com.katoaapps.openminilaunch.ui.theme.Rust
 import com.katoaapps.openminilaunch.ui.theme.Sage
 
@@ -105,7 +106,7 @@ internal fun ConversationCenterScreen(
     val favoriteRowStyles = favoriteMatches.mapValues { (conversationId, match) ->
         ConversationFavoriteRowStyle(
             color = store.favoriteAttentionColorStore.color(match.favoriteId)?.let(::Color)
-                ?: Rust,
+                ?: MinkFeatureColors.ConversationAttention,
             isUnread = shouldShowConversationAttention(
                 latestActivityAt = conversationsById[conversationId]
                     ?.let(::conversationActivityAt),

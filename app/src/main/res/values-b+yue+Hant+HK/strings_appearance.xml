@@ -6,17 +6,19 @@
     <string name="appearance_layout_clock_summary">日期、狀態列、面板位置與大型顯示器</string>
     <string name="appearance_layout_section">版面與顯示</string>
     <string name="your_photo">你嘅相片</string>
-    <string name="wallpaper_library">牆紙庫</string>
-    <string name="wallpaper_library_description">揀一張 Mink 牆紙。你嘅相片會繼續保留。</string>
-    <string name="wallpaper_number">牆紙 %1$d</string>
-    <string name="mink_wallpaper">Mink 牆紙</string>
+    <string name="device_wallpaper">裝置牆紙</string>
     <string name="color_palette">Color palette</string>
     <string name="palette_mink">Mink</string>
     <string name="palette_system">System</string>
     <string name="palette_system_unavailable">System colors require Android 12 or newer.</string>
     <string name="home_themes">主畫面主題</string>
-    <string name="home_themes_description">壁紙、背景同面板會一齊改變。</string>
+    <string name="home_themes_description">揀一個完整主題，或者喺上面更改牆紙來源。</string>
+    <string name="mink_theme">Mink 主題</string>
     <string name="theme_number">主題 %1$d</string>
     <string name="custom_theme">自訂主題</string>
-    <string name="custom_theme_description">揀你嘅壁紙、背景同面板顏色。</string>
+    <string name="custom_theme_description">微調背景同面板顏色，而唔改變牆紙。</string>
+    <string name="theme_wallpaper_choice_title">要跟主題更改牆紙嗎？</string>
+    <string name="theme_wallpaper_choice_description">套用完整主題並取代你嘅自訂牆紙，或者保留現有牆紙，只使用主題顏色。</string>
+    <string name="use_theme_wallpaper">使用主題牆紙</string>
+    <string name="keep_my_wallpaper">保留我嘅牆紙</string>
 </resources>

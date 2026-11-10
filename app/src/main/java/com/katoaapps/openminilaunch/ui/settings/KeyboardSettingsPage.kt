@@ -47,9 +47,7 @@ internal fun KeyboardSettingsPage(store: LauncherStore, goBack: () -> Unit) {
     var secondaryPicker by remember { mutableStateOf(false) }
     var keyColorPicker by remember { mutableStateOf(false) }
     var previewHeight by remember(preferences.heightDp) { mutableFloatStateOf(preferences.heightDp) }
-    val themeSecondary = store.visibleAppBackgroundColorArgb
-        ?: store.effectiveAppBackgroundColorArgb
-        ?: 0xFFFFE9CB.toInt()
+    val themeSecondary = store.effectiveThemeSecondaryColorArgb
     val resolvedColors = resolveLauncherKeyboardColors(
         preferences = preferences,
         themePrimaryArgb = store.effectiveHomePanelColorArgb,

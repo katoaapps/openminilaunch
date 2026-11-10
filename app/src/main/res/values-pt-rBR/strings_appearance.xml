@@ -6,17 +6,19 @@
     <string name="appearance_layout_clock_summary">Data, barra de status, posição do painel e telas grandes</string>
     <string name="appearance_layout_section">LAYOUT E TELA</string>
     <string name="your_photo">Sua foto</string>
-    <string name="wallpaper_library">Biblioteca de papéis de parede</string>
-    <string name="wallpaper_library_description">Escolha um papel de parede Mink. Sua foto continuará salva.</string>
-    <string name="wallpaper_number">Papel de parede %1$d</string>
-    <string name="mink_wallpaper">Papel de parede Mink</string>
+    <string name="device_wallpaper">Papel de parede do dispositivo</string>
     <string name="color_palette">Color palette</string>
     <string name="palette_mink">Mink</string>
     <string name="palette_system">System</string>
     <string name="palette_system_unavailable">System colors require Android 12 or newer.</string>
     <string name="home_themes">Temas da tela inicial</string>
-    <string name="home_themes_description">Papel de parede, plano de fundo e painel mudam juntos.</string>
+    <string name="home_themes_description">Escolha um tema completo ou altere acima a origem do papel de parede.</string>
+    <string name="mink_theme">Tema Mink</string>
     <string name="theme_number">Tema %1$d</string>
     <string name="custom_theme">Tema personalizado</string>
-    <string name="custom_theme_description">Escolha o papel de parede, o plano de fundo e a cor do painel.</string>
+    <string name="custom_theme_description">Ajuste as cores do plano de fundo e do painel sem mudar o papel de parede.</string>
+    <string name="theme_wallpaper_choice_title">Alterar o papel de parede com o tema?</string>
+    <string name="theme_wallpaper_choice_description">Aplique o tema completo e substitua seu papel de parede personalizado, ou mantenha seu papel de parede e use apenas as cores do tema.</string>
+    <string name="use_theme_wallpaper">Usar papel de parede do tema</string>
+    <string name="keep_my_wallpaper">Manter meu papel de parede</string>
 </resources>

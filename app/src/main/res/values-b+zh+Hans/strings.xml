@@ -744,7 +744,7 @@
     <string name="custom_panel_color_description">滑动字段和色调条，或输入十六进制颜色。</string>
     <string name="app_background_color">背景</string>
     <string name="app_background_color_description">选择颜色或设备大小的主页壁纸。</string>
-    <string name="theme_background">主题</string>
+    <string name="theme_background">主题壁纸</string>
     <string name="use_theme_background">使用主题背景</string>
     <string name="custom_background_color">自定义背景颜色</string>
     <string name="custom_background_color_description">滑动字段和色调条，或输入十六进制颜色。</string>

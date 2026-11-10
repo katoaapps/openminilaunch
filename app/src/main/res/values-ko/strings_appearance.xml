@@ -6,17 +6,19 @@
     <string name="appearance_layout_clock_summary">날짜, 상태 표시줄, 패널 위치 및 대형 화면</string>
     <string name="appearance_layout_section">레이아웃 및 화면</string>
     <string name="your_photo">내 사진</string>
-    <string name="wallpaper_library">배경화면 라이브러리</string>
-    <string name="wallpaper_library_description">Mink 배경화면을 선택하세요. 내 사진은 계속 저장됩니다.</string>
-    <string name="wallpaper_number">배경화면 %1$d</string>
-    <string name="mink_wallpaper">Mink 배경화면</string>
+    <string name="device_wallpaper">기기 배경화면</string>
     <string name="color_palette">Color palette</string>
     <string name="palette_mink">Mink</string>
     <string name="palette_system">System</string>
     <string name="palette_system_unavailable">System colors require Android 12 or newer.</string>
     <string name="home_themes">홈 테마</string>
-    <string name="home_themes_description">배경화면, 배경, 패널이 함께 바뀝니다.</string>
+    <string name="home_themes_description">전체 테마를 선택하거나 위에서 배경화면 소스를 변경하세요.</string>
+    <string name="mink_theme">Mink 테마</string>
     <string name="theme_number">테마 %1$d</string>
     <string name="custom_theme">사용자 지정 테마</string>
-    <string name="custom_theme_description">배경화면, 배경 및 패널 색상을 선택하세요.</string>
+    <string name="custom_theme_description">배경화면을 바꾸지 않고 배경과 패널 색상을 조정하세요.</string>
+    <string name="theme_wallpaper_choice_title">테마와 함께 배경화면을 변경할까요?</string>
+    <string name="theme_wallpaper_choice_description">전체 테마를 적용해 사용자 배경화면을 바꾸거나, 현재 배경화면을 유지하고 테마 색상만 사용하세요.</string>
+    <string name="use_theme_wallpaper">테마 배경화면 사용</string>
+    <string name="keep_my_wallpaper">내 배경화면 유지</string>
 </resources>

@@ -1005,9 +1005,7 @@ internal fun MagicBoxContent(
                     onValueChange = onLauncherKeyboardValueChange,
                     preferences = launcherKeyboardPreferences,
                     themePrimaryArgb = store.effectiveHomePanelColorArgb,
-                    themeSecondaryArgb = store.visibleAppBackgroundColorArgb
-                        ?: store.effectiveAppBackgroundColorArgb
-                        ?: 0xFFFFE9CB.toInt(),
+                    themeSecondaryArgb = store.effectiveThemeSecondaryColorArgb,
                     onSubmit = ::submit,
                     multiline = noteMode,
                     modifier = Modifier.align(Alignment.BottomCenter).fillMaxWidth(),
@@ -1067,9 +1065,7 @@ internal fun MagicBoxContent(
                         },
                         preferences = launcherKeyboardPreferences,
                         themePrimaryArgb = store.effectiveHomePanelColorArgb,
-                        themeSecondaryArgb = store.visibleAppBackgroundColorArgb
-                            ?: store.effectiveAppBackgroundColorArgb
-                            ?: 0xFFFFE9CB.toInt(),
+                        themeSecondaryArgb = store.effectiveThemeSecondaryColorArgb,
                         onSubmit = ::submit,
                         multiline = false,
                         modifier = Modifier.fillMaxWidth(),

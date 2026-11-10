@@ -744,7 +744,7 @@
     <string name="custom_panel_color_description">Faites glisser le champ et la bande de teinte, ou entrez une couleur hexadécimale.</string>
     <string name="app_background_color">Contexte</string>
     <string name="app_background_color_description">Choisissez une couleur ou un fond d\'écran d\'accueil de la taille de l\'appareil.</string>
-    <string name="theme_background">Thème</string>
+    <string name="theme_background">Fond d’écran du thème</string>
     <string name="use_theme_background">Utiliser l\'arrière-plan du thème</string>
     <string name="custom_background_color">Couleur d\'arrière-plan personnalisée</string>
     <string name="custom_background_color_description">Faites glisser le champ et la bande de teinte, ou entrez une couleur hexadécimale.</string>

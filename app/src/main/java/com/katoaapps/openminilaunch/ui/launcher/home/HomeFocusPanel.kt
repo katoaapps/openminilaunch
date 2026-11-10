@@ -2,7 +2,6 @@ package com.katoaapps.openminilaunch.ui.launcher.home
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
-import androidx.compose.foundation.isSystemInDarkTheme
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
@@ -37,7 +36,8 @@ import com.katoaapps.openminilaunch.ui.minkspace.core.animateMinkSpaceExpansionL
 import com.katoaapps.openminilaunch.ui.theme.Dimens
 import com.katoaapps.openminilaunch.ui.theme.cathedralGlassBrush
 import com.katoaapps.openminilaunch.ui.theme.cathedralGlassCompositeColor
-import com.katoaapps.openminilaunch.ui.theme.readableContentColor
+import com.katoaapps.openminilaunch.ui.theme.resolveContentColor
+import com.katoaapps.openminilaunch.ui.theme.shouldUseDarkForeground
 
 @Composable
 internal fun BoxScope.HomeFocusPanel(
@@ -69,8 +69,10 @@ internal fun BoxScope.HomeFocusPanel(
         transparency = panelTransparency,
         backdropColor = launcherBackgroundColor(store),
     )
-    val contentColor = store.fontAppearance.colorArgb?.let(::Color)
-        ?: readableContentColor(visiblePanelColor)
+    val contentColor = resolveContentColor(
+        background = visiblePanelColor,
+        preferred = store.fontAppearance.colorArgb?.let(::Color),
+    )
     val mutedColor = contentColor.copy(alpha = .68f)
     val insetColor = if (contentColor == com.katoaapps.openminilaunch.ui.theme.MinkWhite) {
         com.katoaapps.openminilaunch.ui.theme.MinkBlack.copy(alpha = .16f)
@@ -108,10 +110,10 @@ internal fun BoxScope.HomeFocusPanel(
         },
         shadowElevation = if (panelTransparency > 0f) {
             Dimens.dp0
-        } else if (isSystemInDarkTheme()) {
-            Dimens.dp2
-        } else {
+        } else if (shouldUseDarkForeground(visiblePanelColor)) {
             Dimens.dp8
+        } else {
+            Dimens.dp2
         },
         tonalElevation = Dimens.dp1 * panelOpacity,
     ) {

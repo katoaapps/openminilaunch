@@ -6,17 +6,19 @@
     <string name="appearance_layout_clock_summary">Дата, строка состояния, положение панели и большие экраны</string>
     <string name="appearance_layout_section">МАКЕТ И ЭКРАН</string>
     <string name="your_photo">Ваше фото</string>
-    <string name="wallpaper_library">Библиотека обоев</string>
-    <string name="wallpaper_library_description">Выберите обои Mink. Ваше фото останется сохранено.</string>
-    <string name="wallpaper_number">Обои %1$d</string>
-    <string name="mink_wallpaper">Обои Mink</string>
+    <string name="device_wallpaper">Обои устройства</string>
     <string name="color_palette">Color palette</string>
     <string name="palette_mink">Mink</string>
     <string name="palette_system">System</string>
     <string name="palette_system_unavailable">System colors require Android 12 or newer.</string>
     <string name="home_themes">Темы главного экрана</string>
-    <string name="home_themes_description">Обои, фон и панель меняются вместе.</string>
+    <string name="home_themes_description">Выберите полную тему или измените источник обоев выше.</string>
+    <string name="mink_theme">Тема Mink</string>
     <string name="theme_number">Тема %1$d</string>
     <string name="custom_theme">Пользовательская тема</string>
-    <string name="custom_theme_description">Выберите обои, фон и цвет панели.</string>
+    <string name="custom_theme_description">Настройте цвета фона и панели, не меняя обои.</string>
+    <string name="theme_wallpaper_choice_title">Изменить обои вместе с темой?</string>
+    <string name="theme_wallpaper_choice_description">Примените полную тему и замените свои обои либо сохраните их и используйте только цвета темы.</string>
+    <string name="use_theme_wallpaper">Использовать обои темы</string>
+    <string name="keep_my_wallpaper">Сохранить мои обои</string>
 </resources>

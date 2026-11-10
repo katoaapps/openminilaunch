@@ -25,7 +25,6 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.vector.ImageVector
-import androidx.compose.ui.res.colorResource
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.Dp
@@ -37,7 +36,7 @@ import com.katoaapps.openminilaunch.ui.components.AppIcon
 import com.katoaapps.openminilaunch.ui.theme.Dimens
 import com.katoaapps.openminilaunch.ui.theme.MinkWhite
 import com.katoaapps.openminilaunch.ui.theme.Muted
-import com.katoaapps.openminilaunch.ui.theme.Rust
+import com.katoaapps.openminilaunch.ui.theme.MinkFeatureColors
 import com.katoaapps.openminilaunch.ui.theme.readableContentColor
 import java.text.DateFormat
 import java.util.Date
@@ -100,7 +99,7 @@ internal fun ConversationCard(
                         color = if (favoriteStyle?.isUnread == true) {
                             contentColor.copy(alpha = .88f)
                         } else {
-                            Rust
+                            MinkFeatureColors.ConversationAttention
                         },
                         fontSize = Dimens.sp11,
                         modifier = Modifier.padding(top = Dimens.dp4),
@@ -140,17 +139,17 @@ internal fun ConversationSourceIcon(packageName: String, actions: DeviceActions,
     when (packageName) {
         DemoConversationData.SLACK_PACKAGE -> DemoSourceIcon(
             Icons.Default.Forum,
-            colorResource(R.color.demo_slack),
+            MinkFeatureColors.Slack,
             size,
         )
         DemoConversationData.GMAIL_PACKAGE -> DemoSourceIcon(
             Icons.Default.Email,
-            colorResource(R.color.demo_gmail),
+            MinkFeatureColors.Gmail,
             size,
         )
         DemoConversationData.GOOGLE_MESSAGES_PACKAGE -> DemoSourceIcon(
             Icons.Default.Forum,
-            colorResource(R.color.demo_google_messages),
+            MinkFeatureColors.GoogleMessages,
             size,
         )
         else -> AppIcon(packageName, actions, size)

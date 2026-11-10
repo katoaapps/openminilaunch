@@ -744,7 +744,7 @@
     <string name="custom_panel_color_description">フィールドと色相ストリップをスワイプするか、16 進数の色を入力します。</string>
     <string name="app_background_color">背景</string>
     <string name="app_background_color_description">色またはデバイスサイズのホーム壁紙を選択します。</string>
-    <string name="theme_background">テーマ</string>
+    <string name="theme_background">テーマの壁紙</string>
     <string name="use_theme_background">テーマの背景を使用する</string>
     <string name="custom_background_color">カスタム背景色</string>
     <string name="custom_background_color_description">フィールドと色相ストリップをスワイプするか、16 進数の色を入力します。</string>

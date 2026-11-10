@@ -183,6 +183,21 @@ internal class AppearancePreferenceStore(
             .apply()
     }
 
+    /** Applies theme colors without changing whichever wallpaper source is currently visible. */
+    fun applyHomeTheme(backgroundColorArgb: Int, panelColorArgb: Int) {
+        updateAppBackgroundColor(backgroundColorArgb)
+        setHomePanelColor(panelColorArgb)
+    }
+
+    /** Materializes colors that older builds derived implicitly from a wallpaper preset. */
+    fun migrateLegacyCombinedTheme(backgroundColorArgb: Int?, panelColorArgb: Int?) {
+        if (prefs.getBoolean(THEME_WALLPAPER_DECOUPLED_KEY, false)) return
+        if (backgroundColorArgb != null && panelColorArgb != null) {
+            applyHomeTheme(backgroundColorArgb, panelColorArgb)
+        }
+        prefs.edit().putBoolean(THEME_WALLPAPER_DECOUPLED_KEY, true).apply()
+    }
+
     fun updateHomePanelTransparency(transparency: Float) {
         homePanelTransparency = normalizeHomePanelTransparency(transparency)
         prefs.edit().putFloat(HOME_PANEL_TRANSPARENCY_KEY, homePanelTransparency).apply()
@@ -203,6 +218,36 @@ internal class AppearancePreferenceStore(
         }.apply()
     }
 
+    /** Returns Home to the device wallpaper without deleting the user's saved custom photo. */
+    fun useSystemHomeWallpaper() {
+        appBackgroundImageEnabled = false
+        appBackgroundPresetId = null
+        appBackgroundPresetAppearance = null
+        useSystemHomeWallpaper = true
+        prefs.edit()
+            .putBoolean(APP_BACKGROUND_IMAGE_ENABLED_KEY, false)
+            .remove(APP_BACKGROUND_PRESET_ID_KEY)
+            .remove(APP_BACKGROUND_PRESET_AVERAGE_COLOR_KEY)
+            .remove(APP_BACKGROUND_PRESET_HEADER_COLOR_KEY)
+            .putBoolean(USE_SYSTEM_HOME_WALLPAPER_KEY, true)
+            .apply()
+    }
+
+    /** Shows the selected theme's solid background while preserving saved wallpaper files. */
+    fun useThemeHomeBackground() {
+        appBackgroundImageEnabled = false
+        appBackgroundPresetId = null
+        appBackgroundPresetAppearance = null
+        useSystemHomeWallpaper = false
+        prefs.edit()
+            .putBoolean(APP_BACKGROUND_IMAGE_ENABLED_KEY, false)
+            .remove(APP_BACKGROUND_PRESET_ID_KEY)
+            .remove(APP_BACKGROUND_PRESET_AVERAGE_COLOR_KEY)
+            .remove(APP_BACKGROUND_PRESET_HEADER_COLOR_KEY)
+            .putBoolean(USE_SYSTEM_HOME_WALLPAPER_KEY, false)
+            .apply()
+    }
+
     /** Updates the custom-theme base color without replacing its saved wallpaper. */
     fun updateAppBackgroundColor(argb: Int?) {
         appBackgroundColorArgb = argb?.or(0xFF000000.toInt())
@@ -212,25 +257,17 @@ internal class AppearancePreferenceStore(
         }.apply()
     }
 
-    fun useAppBackgroundImage(appearance: HomeWallpaperAppearance) {
+    /** Retains the latest gallery crop without changing which Home wallpaper source is active. */
+    fun rememberAppBackgroundImage(appearance: HomeWallpaperAppearance) {
         val savedAppearance = appearance.copy(
             averageColorArgb = appearance.averageColorArgb or 0xFF000000.toInt(),
             headerColorArgb = appearance.headerColorArgb or 0xFF000000.toInt(),
         )
-        appBackgroundImageEnabled = true
-        appBackgroundPresetId = null
-        appBackgroundPresetAppearance = null
-        useSystemHomeWallpaper = false
         appBackgroundImageRevision++
         appBackgroundImageAppearance = savedAppearance
         prefs.edit()
-            .putBoolean(APP_BACKGROUND_IMAGE_ENABLED_KEY, true)
-            .remove(APP_BACKGROUND_PRESET_ID_KEY)
-            .remove(APP_BACKGROUND_PRESET_AVERAGE_COLOR_KEY)
-            .remove(APP_BACKGROUND_PRESET_HEADER_COLOR_KEY)
             .putInt(APP_BACKGROUND_IMAGE_AVERAGE_COLOR_KEY, savedAppearance.averageColorArgb)
             .putInt(APP_BACKGROUND_IMAGE_HEADER_COLOR_KEY, savedAppearance.headerColorArgb)
-            .putBoolean(USE_SYSTEM_HOME_WALLPAPER_KEY, false)
             .apply()
     }
 
@@ -269,6 +306,7 @@ internal class AppearancePreferenceStore(
         const val SHOW_DATE_KEY = "show_date"
         const val SHOW_BATTERY_PERCENTAGE_KEY = "show_battery_percentage"
         const val THEME_PREFERENCE_KEY = "theme_preference"
+        const val THEME_WALLPAPER_DECOUPLED_KEY = "theme_wallpaper_decoupled"
         const val TWO_PANEL_AUTO_PENDING_KEY = "two_panel_auto_pending"
         const val TWO_PANEL_MODE_FOR_LARGE_DISPLAYS_KEY = "two_panel_mode_for_large_displays"
         const val USE_SYSTEM_HOME_WALLPAPER_KEY = "use_system_home_wallpaper"

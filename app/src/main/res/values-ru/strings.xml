@@ -752,7 +752,7 @@
     <string name="custom_panel_color_description">Проведите пальцем по полю и полосе оттенка или введите шестнадцатеричный цвет.</string>
     <string name="app_background_color">Фон</string>
     <string name="app_background_color_description">Выберите цвет или обои «Домой» размера устройства.</string>
-    <string name="theme_background">Тема</string>
+    <string name="theme_background">Обои темы</string>
     <string name="use_theme_background">Использовать фон темы</string>
     <string name="custom_background_color">Пользовательский цвет фона</string>
     <string name="custom_background_color_description">Проведите пальцем по полю и полосе оттенка или введите шестнадцатеричный цвет.</string>

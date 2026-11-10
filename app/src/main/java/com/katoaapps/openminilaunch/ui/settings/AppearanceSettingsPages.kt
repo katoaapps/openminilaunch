@@ -8,6 +8,9 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AccessTime
 import androidx.compose.material.icons.filled.Apps
 import androidx.compose.material.icons.filled.Wallpaper
+import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.Text
+import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -21,12 +24,14 @@ import com.katoaapps.openminilaunch.R
 import com.katoaapps.openminilaunch.data.LauncherStore
 import com.katoaapps.openminilaunch.features.appearance.HomeWallpaperRepository
 import com.katoaapps.openminilaunch.features.appearance.WATERMELON_HOTPHRASE
+import com.katoaapps.openminilaunch.features.appearance.BundledHomeTheme
+import com.katoaapps.openminilaunch.features.appearance.applyBundledHomeTheme
+import com.katoaapps.openminilaunch.features.appearance.applyHomeThemeWallpaper
+import com.katoaapps.openminilaunch.features.appearance.restoreDeviceWallpaper
 import com.katoaapps.openminilaunch.ui.components.SectionLabel
 import com.katoaapps.openminilaunch.ui.components.SettingsRow
 import com.katoaapps.openminilaunch.ui.components.SettingsSwitchRow
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 @Composable
 internal fun AppearanceSettingsPage(
@@ -64,7 +69,8 @@ internal fun WallpaperAndBackgroundSettingsPage(
     val wallpaperRepository = remember(context) { HomeWallpaperRepository(context) }
     val wallpaperApplyFailedMessage = stringResource(R.string.wallpaper_apply_failed)
     var wallpaperToCrop by remember { mutableStateOf<Uri?>(null) }
-    var applyingWallpaperId by remember { mutableStateOf<String?>(null) }
+    var applyingSelectionId by remember { mutableStateOf<String?>(null) }
+    var themeAwaitingWallpaperChoice by remember { mutableStateOf<BundledHomeTheme?>(null) }
     val imagePicker = rememberLauncherForActivityResult(ActivityResultContracts.OpenDocument()) { uri ->
         wallpaperToCrop = uri
     }
@@ -73,35 +79,49 @@ internal fun WallpaperAndBackgroundSettingsPage(
         val customBackgroundArgb = store.appBackgroundColorArgb
             ?: ContextCompat.getColor(context, R.color.mink_forest)
         HomeThemeSetting(
-            selectedThemeId = store.bundledHomeTheme?.id,
-            customThemeSelected = store.bundledHomeTheme == null,
-            savedPhotoAvailable = store.hasSavedAppBackgroundImage,
-            imageRevision = store.appBackgroundImageRevision,
-            applyingSelectionId = applyingWallpaperId,
+            selectedThemeId = store.selectedHomeTheme?.id,
+            applyingThemeId = applyingSelectionId,
+            themeBackgroundSelected = !store.appBackgroundImageEnabled &&
+                !store.useSystemHomeWallpaper,
+            deviceWallpaperSelected = store.useSystemHomeWallpaper ||
+                store.appBackgroundImageEnabled,
+            savedDeviceWallpaperAvailable = store.hasSavedAppBackgroundImage,
+            savedDeviceWallpaperRevision = store.appBackgroundImageRevision,
+            applyingWallpaperSourceId = applyingSelectionId?.takeIf {
+                it == DEVICE_WALLPAPER_SELECTION_ID ||
+                    it == THEME_BACKGROUND_SELECTION_ID
+            },
             customBackgroundArgb = customBackgroundArgb,
             customPanelArgb = store.homePanelColorArgb,
             panelTransparency = store.homePanelTransparency,
-            onChoosePhoto = { imagePicker.launch(arrayOf("image/*")) },
-            onUseSavedPhoto = {
-                applyingWallpaperId = CUSTOM_THEME_SELECTION_ID
-                scope.launch {
-                    val appearanceResult = withContext(Dispatchers.IO) {
-                        runCatching {
-                            checkNotNull(wallpaperRepository.readStoredAppearance()) {
-                                "Saved wallpaper is unavailable"
-                            }
+            onUseThemeBackground = {
+                val selectedTheme = store.selectedHomeTheme
+                if (selectedTheme == null) {
+                    store.useThemeHomeBackground()
+                } else {
+                    applyingSelectionId = THEME_BACKGROUND_SELECTION_ID
+                    scope.launch {
+                        val result = applyHomeThemeWallpaper(
+                            store,
+                            wallpaperRepository,
+                            selectedTheme,
+                        )
+                        applyingSelectionId = null
+                        result.onFailure {
+                            Toast.makeText(
+                                context,
+                                wallpaperApplyFailedMessage,
+                                Toast.LENGTH_LONG,
+                            ).show()
                         }
                     }
-                    val result = appearanceResult.fold(
-                        onSuccess = { appearance ->
-                            // Match the crop flow: save the source before WallpaperManager can
-                            // recreate the Activity after a dynamic color update.
-                            store.useAppBackgroundImage(appearance)
-                            withContext(Dispatchers.IO) { wallpaperRepository.applyToSystem() }
-                        },
-                        onFailure = { Result.failure(it) },
-                    )
-                    applyingWallpaperId = null
+                }
+            },
+            onUseDeviceWallpaper = {
+                applyingSelectionId = DEVICE_WALLPAPER_SELECTION_ID
+                scope.launch {
+                    val result = restoreDeviceWallpaper(store, wallpaperRepository)
+                    applyingSelectionId = null
                     result.onFailure {
                         Toast.makeText(
                             context,
@@ -111,30 +131,27 @@ internal fun WallpaperAndBackgroundSettingsPage(
                     }
                 }
             },
+            onChoosePhoto = { imagePicker.launch(arrayOf("image/*")) },
             onSelectTheme = { theme ->
-                applyingWallpaperId = theme.id
-                scope.launch {
-                    val appearanceResult = withContext(Dispatchers.IO) {
-                        wallpaperRepository.readBundledAppearance(theme.wallpaper.drawableRes)
-                    }
-                    val result = appearanceResult.fold(
-                        onSuccess = { appearance ->
-                            // Save the source before WallpaperManager can trigger an Activity
-                            // recreation through dynamic color updates on some devices.
-                            store.useAppBackgroundPreset(theme.id, appearance)
-                            withContext(Dispatchers.IO) {
-                                wallpaperRepository.applyBundledToSystem(theme.wallpaper.drawableRes)
-                            }
-                        },
-                        onFailure = { Result.failure(it) },
+                if (
+                    shouldConfirmThemeWallpaperReplacement(
+                        appPhotoSelected = store.appBackgroundImageEnabled,
+                        deviceWallpaperSelected = store.useSystemHomeWallpaper,
                     )
-                    applyingWallpaperId = null
-                    result.onFailure {
-                        Toast.makeText(
-                            context,
-                            wallpaperApplyFailedMessage,
-                            Toast.LENGTH_LONG,
-                        ).show()
+                ) {
+                    themeAwaitingWallpaperChoice = theme
+                } else {
+                    applyingSelectionId = theme.id
+                    scope.launch {
+                        val result = applyBundledHomeTheme(store, wallpaperRepository, theme)
+                        applyingSelectionId = null
+                        result.onFailure {
+                            Toast.makeText(
+                                context,
+                                wallpaperApplyFailedMessage,
+                                Toast.LENGTH_LONG,
+                            ).show()
+                        }
                     }
                 }
             },
@@ -157,7 +174,7 @@ internal fun WallpaperAndBackgroundSettingsPage(
             imageUri = uri,
             saveWallpaper = wallpaperRepository::save,
             applySystemWallpaper = wallpaperRepository::applyToSystem,
-            onWallpaperSaved = store::useAppBackgroundImage,
+            onWallpaperSaved = store::retainAndUseSystemHomeWallpaper,
             onApplied = {
                 wallpaperToCrop = null
                 onIconStyleApplied()
@@ -165,7 +182,47 @@ internal fun WallpaperAndBackgroundSettingsPage(
             onDismiss = { wallpaperToCrop = null },
         )
     }
+
+    themeAwaitingWallpaperChoice?.let { theme ->
+        AlertDialog(
+            onDismissRequest = { themeAwaitingWallpaperChoice = null },
+            title = { Text(stringResource(R.string.theme_wallpaper_choice_title)) },
+            text = { Text(stringResource(R.string.theme_wallpaper_choice_description)) },
+            confirmButton = {
+                TextButton(
+                    onClick = {
+                        themeAwaitingWallpaperChoice = null
+                        applyingSelectionId = theme.id
+                        scope.launch {
+                            val result = applyBundledHomeTheme(store, wallpaperRepository, theme)
+                            applyingSelectionId = null
+                            result.onFailure {
+                                Toast.makeText(
+                                    context,
+                                    wallpaperApplyFailedMessage,
+                                    Toast.LENGTH_LONG,
+                                ).show()
+                            }
+                        }
+                    },
+                ) { Text(stringResource(R.string.use_theme_wallpaper)) }
+            },
+            dismissButton = {
+                TextButton(
+                    onClick = {
+                        store.applyHomeTheme(theme)
+                        themeAwaitingWallpaperChoice = null
+                    },
+                ) { Text(stringResource(R.string.keep_my_wallpaper)) }
+            },
+        )
+    }
 }
+
+internal fun shouldConfirmThemeWallpaperReplacement(
+    appPhotoSelected: Boolean,
+    deviceWallpaperSelected: Boolean,
+): Boolean = appPhotoSelected || deviceWallpaperSelected
 
 @Composable
 internal fun IconsAndFontsSettingsPage(

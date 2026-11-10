@@ -801,7 +801,7 @@
     <string name="custom_panel_color_description">Swipe the field and hue strip, or enter a hex color.</string>
     <string name="app_background_color">Background</string>
     <string name="app_background_color_description">Choose a color or a device-sized Home wallpaper.</string>
-    <string name="theme_background">Theme</string>
+    <string name="theme_background">Theme wallpaper</string>
     <string name="use_theme_background">Use theme background</string>
     <string name="custom_background_color">Custom background color</string>
     <string name="custom_background_color_description">Swipe the field and hue strip, or enter a hex color.</string>

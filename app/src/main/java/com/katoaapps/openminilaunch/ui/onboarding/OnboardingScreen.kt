@@ -2,6 +2,7 @@ package com.katoaapps.openminilaunch.ui.onboarding
 
 import android.Manifest
 import android.content.pm.PackageManager
+import android.widget.Toast
 import androidx.activity.compose.BackHandler
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -30,6 +31,7 @@ import androidx.compose.material.icons.filled.Assistant
 import androidx.compose.material.icons.filled.Contacts
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Keyboard
+import androidx.compose.material.icons.filled.Palette
 import androidx.compose.material3.Button
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -46,6 +48,7 @@ import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -68,12 +71,16 @@ import com.katoaapps.openminilaunch.data.LauncherStore
 import com.katoaapps.openminilaunch.features.messaging.MessagingProviderCatalog
 import com.katoaapps.openminilaunch.features.messaging.MessagingProviderOption
 import com.katoaapps.openminilaunch.features.magic.hasUsableHardwareKeyboard
+import com.katoaapps.openminilaunch.features.appearance.HomeWallpaperRepository
+import com.katoaapps.openminilaunch.features.appearance.applyBundledHomeTheme
+import com.katoaapps.openminilaunch.model.PalettePreference
 import com.katoaapps.openminilaunch.platform.DeviceActions
 import com.katoaapps.openminilaunch.platform.isPermanentlyDenied
 import com.katoaapps.openminilaunch.ui.settings.MessagingProviderPickerDialog
 import com.katoaapps.openminilaunch.ui.theme.Dimens
 import com.katoaapps.openminilaunch.ui.theme.Rust
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 private data class OnboardingPage(
@@ -82,12 +89,22 @@ private data class OnboardingPage(
     val icon: ImageVector,
 )
 
-private enum class OnboardingStep {
+internal enum class OnboardingStep {
     HOME,
+    THEME,
     KEYBOARD,
     CONTACTS,
     MESSAGING,
     ASSISTANT,
+}
+
+internal fun onboardingStepOrder(showKeyboardSetup: Boolean): List<OnboardingStep> = buildList {
+    add(OnboardingStep.HOME)
+    add(OnboardingStep.THEME)
+    if (showKeyboardSetup) add(OnboardingStep.KEYBOARD)
+    add(OnboardingStep.CONTACTS)
+    add(OnboardingStep.MESSAGING)
+    add(OnboardingStep.ASSISTANT)
 }
 
 @Composable
@@ -100,6 +117,9 @@ internal fun OnboardingScreen(
     val context = LocalContext.current
     val configuration = LocalConfiguration.current
     val lifecycleOwner = LocalLifecycleOwner.current
+    val scope = rememberCoroutineScope()
+    val wallpaperRepository = remember(context) { HomeWallpaperRepository(context) }
+    val wallpaperApplyFailedMessage = stringResource(R.string.wallpaper_apply_failed)
     val showKeyboardSetup by rememberSaveable {
         mutableStateOf(
             !hasUsableHardwareKeyboard(
@@ -121,6 +141,7 @@ internal fun OnboardingScreen(
     var messagingOptions by remember { mutableStateOf<List<MessagingProviderOption>>(emptyList()) }
     var messagingOptionsLoaded by remember { mutableStateOf(false) }
     var messagingOptionsRefresh by remember { mutableIntStateOf(0) }
+    var applyingThemeId by remember { mutableStateOf<String?>(null) }
 
     val contactsPermission = rememberLauncherForActivityResult(
         ActivityResultContracts.RequestPermission(),
@@ -162,45 +183,50 @@ internal fun OnboardingScreen(
         }
     }
 
-    val pages = buildList {
-        add(OnboardingPage(OnboardingStep.HOME, stringResource(R.string.default_home_app), Icons.Default.Home))
-        if (showKeyboardSetup) {
-            add(
-                OnboardingPage(
-                    OnboardingStep.KEYBOARD,
-                    stringResource(R.string.onboarding_keyboard_title),
-                    Icons.Default.Keyboard,
-                ),
+    val pages = onboardingStepOrder(showKeyboardSetup).map { step ->
+        when (step) {
+            OnboardingStep.HOME -> OnboardingPage(
+                step,
+                stringResource(R.string.default_home_app),
+                Icons.Default.Home,
             )
-        }
-        add(
-            OnboardingPage(
-                OnboardingStep.CONTACTS,
+            OnboardingStep.THEME -> OnboardingPage(
+                step,
+                stringResource(R.string.home_themes),
+                Icons.Default.Palette,
+            )
+            OnboardingStep.KEYBOARD -> OnboardingPage(
+                step,
+                stringResource(R.string.onboarding_keyboard_title),
+                Icons.Default.Keyboard,
+            )
+            OnboardingStep.CONTACTS -> OnboardingPage(
+                step,
                 stringResource(R.string.onboarding_contacts_title),
                 Icons.Default.Contacts,
-            ),
-        )
-        add(
-            OnboardingPage(
-                OnboardingStep.MESSAGING,
+            )
+            OnboardingStep.MESSAGING -> OnboardingPage(
+                step,
                 stringResource(R.string.onboarding_messages_title),
                 Icons.AutoMirrored.Filled.Chat,
-            ),
-        )
-        add(
-            OnboardingPage(
-                OnboardingStep.ASSISTANT,
+            )
+            OnboardingStep.ASSISTANT -> OnboardingPage(
+                step,
                 stringResource(R.string.onboarding_assistant_title),
                 Icons.Default.Assistant,
-            ),
-        )
+            )
+        }
     }
 
     BackHandler(enabled = page > 0) { page-- }
     OnboardingFrame(
         pages = pages,
         page = page,
-        nextEnabled = page > 0 || homeRoleHeld,
+        nextEnabled = when (pages[page].step) {
+            OnboardingStep.HOME -> homeRoleHeld
+            OnboardingStep.THEME -> applyingThemeId == null
+            else -> true
+        },
         onBack = { page-- },
         onNext = { if (page < pages.lastIndex) page++ else onFinish() },
     ) {
@@ -212,12 +238,33 @@ internal fun OnboardingScreen(
                     onChooseHome = requestHomeRole,
                     onManageHome = { actions.openHomeSettings() },
                 )
+                OnboardingStep.THEME -> OnboardingThemeSetupPage(
+                    store = store,
+                    applyingThemeId = applyingThemeId,
+                    onSelectTheme = { theme ->
+                        applyingThemeId = theme.id
+                        scope.launch {
+                            store.setPalette(PalettePreference.MINK)
+                            val result = applyBundledHomeTheme(
+                                store,
+                                wallpaperRepository,
+                                theme,
+                            )
+                            applyingThemeId = null
+                            result.onFailure {
+                                Toast.makeText(
+                                    context,
+                                    wallpaperApplyFailedMessage,
+                                    Toast.LENGTH_LONG,
+                                ).show()
+                            }
+                        }
+                    },
+                )
                 OnboardingStep.KEYBOARD -> OnboardingKeyboardSetupPage(
                     preferences = store.launcherKeyboardPreferences,
                     themePrimaryArgb = store.effectiveHomePanelColorArgb,
-                    themeSecondaryArgb = store.visibleAppBackgroundColorArgb
-                        ?: store.effectiveAppBackgroundColorArgb
-                        ?: 0xFFFFE9CB.toInt(),
+                    themeSecondaryArgb = store.effectiveThemeSecondaryColorArgb,
                     onStyle = { style ->
                         store.updateLauncherKeyboardPreferences(
                             store.launcherKeyboardPreferences.copy(style = style),

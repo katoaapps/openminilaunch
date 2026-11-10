@@ -6,17 +6,19 @@
     <string name="appearance_layout_clock_summary">日付、ステータスバー、パネル位置、大画面</string>
     <string name="appearance_layout_section">レイアウトとディスプレイ</string>
     <string name="your_photo">あなたの写真</string>
-    <string name="wallpaper_library">壁紙ライブラリ</string>
-    <string name="wallpaper_library_description">Mink の壁紙を選択します。あなたの写真は保存されたままです。</string>
-    <string name="wallpaper_number">壁紙 %1$d</string>
-    <string name="mink_wallpaper">Mink の壁紙</string>
+    <string name="device_wallpaper">デバイスの壁紙</string>
     <string name="color_palette">Color palette</string>
     <string name="palette_mink">Mink</string>
     <string name="palette_system">System</string>
     <string name="palette_system_unavailable">System colors require Android 12 or newer.</string>
     <string name="home_themes">ホームテーマ</string>
-    <string name="home_themes_description">壁紙、背景、パネルが一緒に変わります。</string>
+    <string name="home_themes_description">完全なテーマを選択するか、上で壁紙の提供元を変更します。</string>
+    <string name="mink_theme">Mink テーマ</string>
     <string name="theme_number">テーマ %1$d</string>
     <string name="custom_theme">カスタムテーマ</string>
-    <string name="custom_theme_description">壁紙、背景、パネルの色を選びます。</string>
+    <string name="custom_theme_description">壁紙を変えずに背景とパネルの色を調整します。</string>
+    <string name="theme_wallpaper_choice_title">テーマと一緒に壁紙を変更しますか？</string>
+    <string name="theme_wallpaper_choice_description">完全なテーマを適用してカスタム壁紙を置き換えるか、現在の壁紙を残してテーマの色だけを使用します。</string>
+    <string name="use_theme_wallpaper">テーマの壁紙を使用</string>
+    <string name="keep_my_wallpaper">現在の壁紙を残す</string>
 </resources>

@@ -744,7 +744,7 @@
     <string name="custom_panel_color_description">滑動欄位同色調條，或者輸入十六進制顏色。</string>
     <string name="app_background_color">背景</string>
     <string name="app_background_color_description">揀顏色或者裝置大小嘅主頁壁紙。</string>
-    <string name="theme_background">主題</string>
+    <string name="theme_background">主題牆紙</string>
     <string name="use_theme_background">用主題背景</string>
     <string name="custom_background_color">自訂背景顏色</string>
     <string name="custom_background_color_description">滑動欄位同色調條，或者輸入十六進制顏色。</string>

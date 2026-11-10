@@ -744,7 +744,7 @@
     <string name="custom_panel_color_description">Passe o dedo no campo e na faixa de matiz ou insira uma cor hexadecimal.</string>
     <string name="app_background_color">Plano de fundo</string>
     <string name="app_background_color_description">Escolha uma cor ou um papel de parede inicial do tamanho do dispositivo.</string>
-    <string name="theme_background">Tema</string>
+    <string name="theme_background">Papel de parede do tema</string>
     <string name="use_theme_background">Use o plano de fundo do tema</string>
     <string name="custom_background_color">Cor de fundo personalizada</string>
     <string name="custom_background_color_description">Passe o dedo no campo e na faixa de matiz ou insira uma cor hexadecimal.</string>

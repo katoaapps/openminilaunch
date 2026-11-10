@@ -1,19 +1,25 @@
 package com.katoaapps.openminilaunch.features.appearance
 
-/**
- * A complete bundled Home look. The wallpaper id remains the persisted identity so existing
- * backups continue to restore without adding another appearance field or schema version.
- */
+/** A curated complete Home look. Wallpaper can be overridden later without losing its colors. */
 internal data class BundledHomeTheme(
-    val wallpaper: BundledWallpaper,
+    val id: String,
+    val wallpaper: BundledWallpaper?,
     val backgroundColorArgb: Int,
     val panelColorArgb: Int,
-) {
-    val id: String get() = wallpaper.id
-}
+)
 
 internal object BundledHomeThemeCatalog {
+    const val MINK_THEME_ID = "mink-theme"
+
+    val minkTheme = BundledHomeTheme(
+        id = MINK_THEME_ID,
+        wallpaper = null,
+        backgroundColorArgb = 0xFF173529.toInt(),
+        panelColorArgb = 0xFF602C00.toInt(),
+    )
+
     val themes = listOf(
+        minkTheme,
         theme("mink-01", background = 0xFFF4EFE3, panel = 0xFFB7D530),
         theme("mink-02", background = 0xFF111A20, panel = 0xFF9B6B35),
         theme("mink-03", background = 0xFFE9E5DE, panel = 0xFF7A5137),
@@ -34,8 +40,15 @@ internal object BundledHomeThemeCatalog {
 
     fun find(id: String?): BundledHomeTheme? = themes.firstOrNull { it.id == id }
 
+    fun findByColors(backgroundColorArgb: Int, panelColorArgb: Int): BundledHomeTheme? =
+        themes.firstOrNull { theme ->
+            theme.backgroundColorArgb == backgroundColorArgb &&
+                theme.panelColorArgb == panelColorArgb
+        }
+
     private fun theme(id: String, background: Long, panel: Long): BundledHomeTheme =
         BundledHomeTheme(
+            id = id,
             wallpaper = checkNotNull(BundledWallpaperCatalog.find(id)),
             backgroundColorArgb = background.toInt(),
             panelColorArgb = panel.toInt(),

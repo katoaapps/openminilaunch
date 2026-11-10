@@ -6,17 +6,19 @@
     <string name="appearance_layout_clock_summary">التاريخ وشريط الحالة وموضع اللوحة والشاشات الكبيرة</string>
     <string name="appearance_layout_section">التخطيط والعرض</string>
     <string name="your_photo">صورتك</string>
-    <string name="wallpaper_library">مكتبة الخلفيات</string>
-    <string name="wallpaper_library_description">اختر خلفية Mink. ستبقى صورتك محفوظة.</string>
-    <string name="wallpaper_number">الخلفية %1$d</string>
-    <string name="mink_wallpaper">خلفية Mink</string>
+    <string name="device_wallpaper">خلفية الجهاز</string>
     <string name="color_palette">Color palette</string>
     <string name="palette_mink">Mink</string>
     <string name="palette_system">System</string>
     <string name="palette_system_unavailable">System colors require Android 12 or newer.</string>
     <string name="home_themes">سمات الشاشة الرئيسية</string>
-    <string name="home_themes_description">تتغير صورة الخلفية ولون الخلفية ولون اللوحة معًا.</string>
+    <string name="home_themes_description">اختر سمة كاملة، أو غيّر مصدر خلفيتها أعلاه.</string>
+    <string name="mink_theme">سمة Mink</string>
     <string name="theme_number">السمة %1$d</string>
     <string name="custom_theme">سمة مخصصة</string>
-    <string name="custom_theme_description">اختر صورة الخلفية ولون الخلفية ولون اللوحة.</string>
+    <string name="custom_theme_description">اضبط ألوان الخلفية واللوحة من دون تغيير خلفية الشاشة.</string>
+    <string name="theme_wallpaper_choice_title">هل تريد تغيير الخلفية مع السمة؟</string>
+    <string name="theme_wallpaper_choice_description">طبّق السمة الكاملة واستبدل خلفيتك المخصصة، أو احتفظ بخلفيتك واستخدم ألوان السمة فقط.</string>
+    <string name="use_theme_wallpaper">استخدم خلفية السمة</string>
+    <string name="keep_my_wallpaper">احتفظ بخلفيتي</string>
 </resources>

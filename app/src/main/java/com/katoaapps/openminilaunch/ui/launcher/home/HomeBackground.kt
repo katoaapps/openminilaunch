@@ -8,7 +8,6 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.produceState
 import androidx.compose.runtime.remember
@@ -18,7 +17,7 @@ import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import com.katoaapps.openminilaunch.data.LauncherStore
-import com.katoaapps.openminilaunch.ui.theme.readableContentColor
+import com.katoaapps.openminilaunch.ui.theme.resolveContentColor
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
@@ -48,11 +47,6 @@ internal fun HomeBackground(store: LauncherStore, modifier: Modifier = Modifier)
             }
         }
     }
-    DisposableEffect(wallpaperBitmap) {
-        val bitmap = wallpaperBitmap
-        onDispose { bitmap?.takeUnless(Bitmap::isRecycled)?.recycle() }
-    }
-
     if (wallpaperBitmap != null) {
         val wallpaper = remember(wallpaperBitmap) { checkNotNull(wallpaperBitmap).asImageBitmap() }
         Image(
@@ -76,5 +70,7 @@ internal fun launcherBackgroundColor(store: LauncherStore, header: Boolean = fal
 
 @Composable
 internal fun launcherBackgroundContentColor(store: LauncherStore, header: Boolean = false): Color =
-    store.fontAppearance.colorArgb?.let(::Color)
-        ?: readableContentColor(launcherBackgroundColor(store, header))
+    resolveContentColor(
+        background = launcherBackgroundColor(store, header),
+        preferred = store.fontAppearance.colorArgb?.let(::Color),
+    )

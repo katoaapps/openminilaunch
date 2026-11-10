@@ -6,6 +6,7 @@ import com.katoaapps.openminilaunch.model.LauncherKeyboardColorSource
 import com.katoaapps.openminilaunch.model.LauncherKeyboardPreferences
 import com.katoaapps.openminilaunch.model.LauncherKeyboardStyle
 import com.katoaapps.openminilaunch.ui.theme.MinkWhite
+import com.katoaapps.openminilaunch.ui.theme.ensureReadableContentColor
 import com.katoaapps.openminilaunch.ui.theme.readableContentColor
 
 internal data class LauncherKeyboardColors(
@@ -47,8 +48,8 @@ internal fun resolveLauncherKeyboardColors(
     return LauncherKeyboardColors(
         board = if (outlined || preferences.style.isFlatKeyboardStyle) dominant else contrast,
         key = dominant,
-        content = contrast,
-        outline = contrast,
+        content = ensureReadableContentColor(dominant, contrast),
+        outline = ensureReadableContentColor(dominant, contrast, minimumContrast = 3f),
     )
 }
 

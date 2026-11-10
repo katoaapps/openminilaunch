@@ -760,7 +760,7 @@
     <string name="custom_panel_color_description">اسحب الحقل وشريط الصبغة، أو أدخل لونًا سداسيًا عشريًا.</string>
     <string name="app_background_color">الخلفية</string>
     <string name="app_background_color_description">اختر لونًا أو خلفية شاشة رئيسية بحجم الجهاز.</string>
-    <string name="theme_background">الموضوع</string>
+    <string name="theme_background">خلفية السمة</string>
     <string name="use_theme_background">استخدام خلفية الموضوع</string>
     <string name="custom_background_color">لون الخلفية مخصص</string>
     <string name="custom_background_color_description">اسحب الحقل وشريط الصبغة، أو أدخل لونًا سداسيًا عشريًا.</string>

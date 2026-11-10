@@ -37,7 +37,7 @@ import com.katoaapps.openminilaunch.features.conversations.ConversationNotificat
 import com.katoaapps.openminilaunch.platform.DeviceActions
 import com.katoaapps.openminilaunch.ui.settings.SettingsDestination
 import com.katoaapps.openminilaunch.ui.theme.Dimens
-import com.katoaapps.openminilaunch.ui.theme.Rust
+import com.katoaapps.openminilaunch.ui.theme.MinkFeatureColors
 import com.katoaapps.openminilaunch.ui.wellbeing.MinkHomeIcon
 
 @Composable
@@ -136,7 +136,7 @@ internal fun HomeHeader(
             val favoriteAttention = rememberPendingFavoriteAttention(
                 store = store,
                 conversations = conversations,
-                defaultColorArgb = Rust.toArgb(),
+                defaultColorArgb = MinkFeatureColors.ConversationAttention.toArgb(),
             )
             ConversationAttentionButton(
                 conversationCount = conversations.size,

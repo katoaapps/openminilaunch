@@ -36,7 +36,14 @@ internal fun FontAppearanceTheme(
     val scaledDensity = remember(currentDensity.density, currentDensity.fontScale, appearance.sizeScale) {
         Density(currentDensity.density, currentDensity.fontScale * appearance.sizeScale)
     }
-    val chosenColor = if (applyFontColor) appearance.colorArgb?.let(::Color) else null
+    val chosenColor = if (applyFontColor) {
+        resolveContentColor(
+            background = currentColors.background,
+            preferred = appearance.colorArgb?.let(::Color),
+        )
+    } else {
+        null
+    }
     val colors = remember(currentColors, chosenColor) {
         chosenColor?.let { color ->
             currentColors.copy(

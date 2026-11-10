@@ -744,7 +744,7 @@
     <string name="custom_panel_color_description">फ़ील्ड और रंग पट्टी को स्वाइप करें, या हेक्स रंग दर्ज करें।</string>
     <string name="app_background_color">पृष्ठभूमि</string>
     <string name="app_background_color_description">एक रंग या डिवाइस के आकार का होम वॉलपेपर चुनें।</string>
-    <string name="theme_background">थीम</string>
+    <string name="theme_background">थीम वॉलपेपर</string>
     <string name="use_theme_background">थीम पृष्ठभूमि का उपयोग करें</string>
     <string name="custom_background_color">कस्टम पृष्ठभूमि रंग</string>
     <string name="custom_background_color_description">फ़ील्ड और रंग पट्टी को स्वाइप करें, या हेक्स रंग दर्ज करें।</string>

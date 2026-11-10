@@ -17,7 +17,6 @@ import androidx.compose.material3.Badge
 import androidx.compose.material3.BadgedBox
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -32,6 +31,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.Dp
 import com.katoaapps.openminilaunch.R
+import com.katoaapps.openminilaunch.ui.theme.MinkFeatureColors
 import com.katoaapps.openminilaunch.ui.theme.readableContentColor
 import kotlinx.coroutines.delay
 
@@ -82,11 +82,8 @@ internal fun ConversationAttentionButton(
                 badge = {
                     if (conversationCount > 0) {
                         Badge(
-                            containerColor = if (needsAttention) {
-                                alertColor
-                            } else {
-                                MaterialTheme.colorScheme.error
-                            },
+                            containerColor = MinkFeatureColors.ConversationCount,
+                            contentColor = readableContentColor(MinkFeatureColors.ConversationCount),
                         ) {
                             Text(
                                 if (conversationCount > 99) {

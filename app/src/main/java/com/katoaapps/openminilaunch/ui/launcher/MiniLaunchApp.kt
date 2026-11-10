@@ -38,6 +38,7 @@ import com.katoaapps.openminilaunch.model.Screen
 import com.katoaapps.openminilaunch.platform.DeviceActions
 import com.katoaapps.openminilaunch.ui.conversations.ConversationCenterScreen
 import com.katoaapps.openminilaunch.ui.launcher.home.HomeEntranceTransition
+import com.katoaapps.openminilaunch.ui.launcher.home.launcherBackgroundColor
 import com.katoaapps.openminilaunch.ui.launcher.layout.HOME_PAGE
 import com.katoaapps.openminilaunch.ui.launcher.layout.LauncherHomePager
 import com.katoaapps.openminilaunch.ui.launcher.layout.WIDGET_PAGE
@@ -52,7 +53,7 @@ import com.katoaapps.openminilaunch.ui.settings.SettingsScreen
 import com.katoaapps.openminilaunch.ui.theme.FontAppearanceTheme
 import com.katoaapps.openminilaunch.ui.theme.MinkLauncherTheme
 import com.katoaapps.openminilaunch.ui.theme.MinkTransparent
-import com.katoaapps.openminilaunch.ui.theme.minkDarkTheme
+import com.katoaapps.openminilaunch.ui.theme.shouldUseDarkForeground
 import com.katoaapps.openminilaunch.ui.profile.openVirtualContactCard
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collect
@@ -119,25 +120,35 @@ internal fun MiniLaunchApp(
         }
     }
     val context = LocalContext.current
-    val darkTheme = minkDarkTheme(store)
     val view = LocalView.current
 
     val transparent = MinkTransparent
     val hideHomeStatusBar = store.hideStatusBar && screen == Screen.HOME && !showTutorial
-    SideEffect {
-        val window = (context as Activity).window
-        window.statusBarColor = transparent.toArgb()
-        window.navigationBarColor = transparent.toArgb()
-        WindowInsetsControllerCompat(window, view).apply {
-            isAppearanceLightStatusBars = !darkTheme
-            isAppearanceLightNavigationBars = !darkTheme
-            systemBarsBehavior = WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
-            if (hideHomeStatusBar) hide(WindowInsetsCompat.Type.statusBars())
-            else show(WindowInsetsCompat.Type.statusBars())
-        }
-    }
 
     MinkLauncherTheme(store) {
+        val homeVisible = screen == Screen.HOME && !showTutorial
+        val statusBarBackground = if (homeVisible) {
+            launcherBackgroundColor(store, header = true)
+        } else {
+            MaterialTheme.colorScheme.background
+        }
+        val navigationBarBackground = if (homeVisible) {
+            launcherBackgroundColor(store)
+        } else {
+            MaterialTheme.colorScheme.background
+        }
+        SideEffect {
+            val window = (context as Activity).window
+            window.statusBarColor = transparent.toArgb()
+            window.navigationBarColor = transparent.toArgb()
+            WindowInsetsControllerCompat(window, view).apply {
+                isAppearanceLightStatusBars = shouldUseDarkForeground(statusBarBackground)
+                isAppearanceLightNavigationBars = shouldUseDarkForeground(navigationBarBackground)
+                systemBarsBehavior = WindowInsetsControllerCompat.BEHAVIOR_SHOW_TRANSIENT_BARS_BY_SWIPE
+                if (hideHomeStatusBar) hide(WindowInsetsCompat.Type.statusBars())
+                else show(WindowInsetsCompat.Type.statusBars())
+            }
+        }
         BackHandler(enabled = !showTutorial && screen != Screen.HOME) { screen = Screen.HOME }
         BackHandler(
             enabled = !showTutorial && screen == Screen.HOME &&

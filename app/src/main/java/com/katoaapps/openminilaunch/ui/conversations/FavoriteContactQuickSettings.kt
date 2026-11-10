@@ -30,7 +30,7 @@ import com.katoaapps.openminilaunch.ui.settings.AppearanceColorDialog
 import com.katoaapps.openminilaunch.ui.settings.SettingsColorPickerButton
 import com.katoaapps.openminilaunch.ui.theme.Dimens
 import com.katoaapps.openminilaunch.ui.theme.Muted
-import com.katoaapps.openminilaunch.ui.theme.Rust
+import com.katoaapps.openminilaunch.ui.theme.MinkFeatureColors
 
 @Composable
 internal fun FavoriteContactQuickSettings(
@@ -78,7 +78,7 @@ internal fun FavoriteAttentionColorSetting(
     modifier: Modifier = Modifier,
 ) {
     var showPicker by rememberSaveable { mutableStateOf(false) }
-    val previewColor = colorArgb?.let(::Color) ?: Rust
+    val previewColor = colorArgb?.let(::Color) ?: MinkFeatureColors.ConversationAttention
     SettingsColorPickerButton(
         label = stringResource(R.string.favorite_attention_color),
         color = previewColor,

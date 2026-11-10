@@ -744,7 +744,7 @@
     <string name="custom_panel_color_description">Gesek bidang dan strip rona, atau masukkan warna hex.</string>
     <string name="app_background_color">Latar Belakang</string>
     <string name="app_background_color_description">Pilih warna atau wallpaper Rumah seukuran perangkat.</string>
-    <string name="theme_background">Tema</string>
+    <string name="theme_background">Wallpaper tema</string>
     <string name="use_theme_background">Gunakan latar belakang tema</string>
     <string name="custom_background_color">Warna latar belakang khusus</string>
     <string name="custom_background_color_description">Gesek bidang dan strip rona, atau masukkan warna hex.</string>

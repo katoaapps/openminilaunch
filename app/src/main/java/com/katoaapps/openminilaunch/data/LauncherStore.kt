@@ -6,6 +6,7 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.setValue
 import androidx.core.content.ContextCompat
 import com.katoaapps.openminilaunch.R
+import com.katoaapps.openminilaunch.features.appearance.BundledHomeTheme
 import com.katoaapps.openminilaunch.features.appearance.BundledHomeThemeCatalog
 import com.katoaapps.openminilaunch.features.appearance.BundledWallpaperCatalog
 import com.katoaapps.openminilaunch.features.appearance.CustomFontRepository
@@ -107,10 +108,19 @@ class LauncherStore private constructor(context: Context) {
             homeWallpaperRepository.hasWallpaper()
     val hasSavedAppBackgroundImage: Boolean
         get() = !demoPreferences.enabled && homeWallpaperRepository.hasWallpaper()
-    internal val bundledHomeTheme
+    internal val selectedHomeTheme
+        get() = if (demoPreferences.enabled) {
+            null
+        } else {
+            BundledHomeThemeCatalog.findByColors(
+                backgroundColorArgb = appBackgroundColorArgb
+                    ?: ContextCompat.getColor(appContext, R.color.mink_forest),
+                panelColorArgb = homePanelColorArgb,
+            )
+        }
+    internal val appBackgroundPreset
         get() = if (demoPreferences.enabled) null
-        else BundledHomeThemeCatalog.find(appearancePreferences.appBackgroundPresetId)
-    internal val appBackgroundPreset get() = bundledHomeTheme?.wallpaper
+        else BundledWallpaperCatalog.find(appearancePreferences.appBackgroundPresetId)
     val appBackgroundImageRevision get() = appearancePreferences.appBackgroundImageRevision
     val useSystemHomeWallpaper: Boolean
         get() = !demoPreferences.enabled && appearancePreferences.useSystemHomeWallpaper
@@ -153,21 +163,25 @@ class LauncherStore private constructor(context: Context) {
     internal val minkSpaceWidgetId get() = minkSpaceWidgetStore.appWidgetId
     val effectiveHomePanelColorArgb: Int
         get() = demoPreferences.effectivePanelColor(
-            bundledHomeTheme?.panelColorArgb ?: homePanelColorArgb,
+            homePanelColorArgb,
         )
     val watermelonModeEnabled: Boolean
         get() = appearancePreferences.watermelonModeEnabled
     val effectiveAppBackgroundColorArgb: Int?
         get() = demoPreferences.effectiveBackgroundColor(
-            bundledHomeTheme?.backgroundColorArgb ?: appBackgroundColorArgb,
+            appBackgroundColorArgb,
         )
+    /** Theme color for controls such as Mink's keyboard; never inherits arbitrary wallpaper pixels. */
+    val effectiveThemeSecondaryColorArgb: Int
+        get() = effectiveAppBackgroundColorArgb
+            ?: ContextCompat.getColor(appContext, R.color.mink_forest)
     val visibleAppBackgroundColorArgb: Int?
         get() = if (appBackgroundImageEnabled) {
             appearancePreferences.appBackgroundImageAppearance?.averageColorArgb
         } else if (appBackgroundPreset != null) {
             appearancePreferences.appBackgroundPresetAppearance?.averageColorArgb
         } else if (useSystemHomeWallpaper) {
-            homeWallpaperRepository.systemWallpaperAppearance?.averageColorArgb
+            visibleDeviceWallpaperAppearance()?.averageColorArgb
         } else {
             effectiveAppBackgroundColorArgb
         }
@@ -177,23 +191,46 @@ class LauncherStore private constructor(context: Context) {
         } else if (appBackgroundPreset != null) {
             appearancePreferences.appBackgroundPresetAppearance?.headerColorArgb
         } else if (useSystemHomeWallpaper) {
-            homeWallpaperRepository.systemWallpaperAppearance?.headerColorArgb
+            visibleDeviceWallpaperAppearance()?.headerColorArgb
         } else {
             effectiveAppBackgroundColorArgb
         }
+
+    /**
+     * A gallery photo chosen through Mink is retained privately before it becomes Android's
+     * system wallpaper. Its pixel sample describes the visible image more reliably than
+     * WallpaperColors' single palette swatch, especially for mostly dark or mostly light photos
+     * with one high-contrast accent. Wallpapers selected outside Mink still use Android's
+     * permission-free palette as the best available fallback.
+     */
+    private fun visibleDeviceWallpaperAppearance(): HomeWallpaperAppearance? =
+        selectVisibleDeviceWallpaperAppearance(
+            retainedAppearance = appearancePreferences.appBackgroundImageAppearance,
+            retainedWallpaperAvailable = homeWallpaperRepository.hasWallpaper(),
+            systemAppearance = homeWallpaperRepository.systemWallpaperAppearance,
+        )
     val effectiveAppGridOrder: List<AppGridSlot>
         get() = demoPreferences.effectiveAppGridOrder(appGridOrder)
 
     init {
+        val legacyCombinedTheme = BundledHomeThemeCatalog.find(
+            appearancePreferences.appBackgroundPresetId,
+        )
+        appearancePreferences.migrateLegacyCombinedTheme(
+            backgroundColorArgb = legacyCombinedTheme?.backgroundColorArgb,
+            panelColorArgb = legacyCombinedTheme?.panelColorArgb,
+        )
         if (fontAppearance.source == FontSource.CUSTOM && !hasCustomFont) {
             fontAppearancePreferences.useSource(FontSource.DEFAULT)
         }
         if (
-            appearancePreferences.appBackgroundImageEnabled &&
+            homeWallpaperRepository.hasWallpaper() &&
             appearancePreferences.appBackgroundImageAppearance == null
         ) {
+            // Older installs already have the private photo file. Recover its contrast sample
+            // once without changing the user's active wallpaper source.
             homeWallpaperRepository.readStoredAppearance()
-                ?.let(appearancePreferences::useAppBackgroundImage)
+                ?.let(appearancePreferences::rememberAppBackgroundImage)
         }
         val savedPreset = BundledWallpaperCatalog.find(appearancePreferences.appBackgroundPresetId)
         if (savedPreset != null && appearancePreferences.appBackgroundPresetAppearance == null) {
@@ -497,6 +534,13 @@ class LauncherStore private constructor(context: Context) {
         appearancePreferences.setHomePanelColor(opaqueArgb)
     }
 
+    internal fun applyHomeTheme(theme: BundledHomeTheme) {
+        appearancePreferences.applyHomeTheme(
+            backgroundColorArgb = theme.backgroundColorArgb,
+            panelColorArgb = theme.panelColorArgb,
+        )
+    }
+
     fun activateWatermelonMode() {
         appearancePreferences.setHomePanelColor(WATERMELON_PILL_COLOR_ARGB, watermelonMode = true)
     }
@@ -515,15 +559,19 @@ class LauncherStore private constructor(context: Context) {
         appearancePreferences.updateAppBackgroundColor(argb or 0xFF000000.toInt())
     }
 
-    internal fun useAppBackgroundImage(appearance: HomeWallpaperAppearance) {
+    fun useSystemHomeWallpaper() {
+        appearancePreferences.useSystemHomeWallpaper()
+    }
+
+    internal fun retainAndUseSystemHomeWallpaper(appearance: HomeWallpaperAppearance) {
         if (homeWallpaperRepository.hasWallpaper()) {
-            if (appearancePreferences.appBackgroundColorArgb == null) {
-                appearancePreferences.updateAppBackgroundColor(
-                    ContextCompat.getColor(appContext, R.color.mink_forest),
-                )
-            }
-            appearancePreferences.useAppBackgroundImage(appearance)
+            appearancePreferences.rememberAppBackgroundImage(appearance)
         }
+        appearancePreferences.useSystemHomeWallpaper()
+    }
+
+    fun useThemeHomeBackground() {
+        appearancePreferences.useThemeHomeBackground()
     }
 
     internal fun useAppBackgroundPreset(id: String, appearance: HomeWallpaperAppearance) {
@@ -721,3 +769,11 @@ class LauncherStore private constructor(context: Context) {
         }
     }
 }
+
+internal fun selectVisibleDeviceWallpaperAppearance(
+    retainedAppearance: HomeWallpaperAppearance?,
+    retainedWallpaperAvailable: Boolean,
+    systemAppearance: HomeWallpaperAppearance?,
+): HomeWallpaperAppearance? = retainedAppearance
+    ?.takeIf { retainedWallpaperAvailable }
+    ?: systemAppearance

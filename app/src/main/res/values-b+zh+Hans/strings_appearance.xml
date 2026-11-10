@@ -6,17 +6,19 @@
     <string name="appearance_layout_clock_summary">日期、状态栏、面板位置与大屏幕</string>
     <string name="appearance_layout_section">布局与显示</string>
     <string name="your_photo">你的照片</string>
-    <string name="wallpaper_library">壁纸库</string>
-    <string name="wallpaper_library_description">选择一张 Mink 壁纸。你的照片会继续保留。</string>
-    <string name="wallpaper_number">壁纸 %1$d</string>
-    <string name="mink_wallpaper">Mink 壁纸</string>
+    <string name="device_wallpaper">设备壁纸</string>
     <string name="color_palette">Color palette</string>
     <string name="palette_mink">Mink</string>
     <string name="palette_system">System</string>
     <string name="palette_system_unavailable">System colors require Android 12 or newer.</string>
     <string name="home_themes">主屏幕主题</string>
-    <string name="home_themes_description">壁纸、背景和面板会一起更改。</string>
+    <string name="home_themes_description">选择完整主题，或在上方更改壁纸来源。</string>
+    <string name="mink_theme">Mink 主题</string>
     <string name="theme_number">主题 %1$d</string>
     <string name="custom_theme">自定义主题</string>
-    <string name="custom_theme_description">选择壁纸、背景和面板颜色。</string>
+    <string name="custom_theme_description">微调背景和面板颜色，而不改变壁纸。</string>
+    <string name="theme_wallpaper_choice_title">要随主题更改壁纸吗？</string>
+    <string name="theme_wallpaper_choice_description">应用完整主题并替换你的自定义壁纸，或保留现有壁纸，仅使用主题颜色。</string>
+    <string name="use_theme_wallpaper">使用主题壁纸</string>
+    <string name="keep_my_wallpaper">保留我的壁纸</string>
 </resources>

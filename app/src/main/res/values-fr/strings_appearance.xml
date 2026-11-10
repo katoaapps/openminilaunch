@@ -6,17 +6,19 @@
     <string name="appearance_layout_clock_summary">Date, barre d\'état, position du panneau et grands écrans</string>
     <string name="appearance_layout_section">MISE EN PAGE ET AFFICHAGE</string>
     <string name="your_photo">Votre photo</string>
-    <string name="wallpaper_library">Bibliothèque de fonds d\'écran</string>
-    <string name="wallpaper_library_description">Choisissez un fond d\'écran Mink. Votre photo reste enregistrée.</string>
-    <string name="wallpaper_number">Fond d\'écran %1$d</string>
-    <string name="mink_wallpaper">Fond d\'écran Mink</string>
+    <string name="device_wallpaper">Fond d’écran de l’appareil</string>
     <string name="color_palette">Color palette</string>
     <string name="palette_mink">Mink</string>
     <string name="palette_system">System</string>
     <string name="palette_system_unavailable">System colors require Android 12 or newer.</string>
     <string name="home_themes">Thèmes d’accueil</string>
-    <string name="home_themes_description">Le fond d’écran, l’arrière-plan et le panneau changent ensemble.</string>
+    <string name="home_themes_description">Choisissez un thème complet ou changez la source du fond d’écran ci-dessus.</string>
+    <string name="mink_theme">Thème Mink</string>
     <string name="theme_number">Thème %1$d</string>
     <string name="custom_theme">Thème personnalisé</string>
-    <string name="custom_theme_description">Choisissez votre fond d’écran, votre arrière-plan et la couleur du panneau.</string>
+    <string name="custom_theme_description">Ajustez les couleurs de l’arrière-plan et du panneau sans changer le fond d’écran.</string>
+    <string name="theme_wallpaper_choice_title">Changer le fond d’écran avec le thème ?</string>
+    <string name="theme_wallpaper_choice_description">Appliquez le thème complet et remplacez votre fond d’écran personnalisé, ou conservez votre fond d’écran et utilisez uniquement les couleurs du thème.</string>
+    <string name="use_theme_wallpaper">Utiliser le fond d’écran du thème</string>
+    <string name="keep_my_wallpaper">Conserver mon fond d’écran</string>
 </resources>
