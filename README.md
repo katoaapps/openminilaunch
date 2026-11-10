@@ -2,7 +2,7 @@
 
 A focused, keyboard-first Android home-screen launcher and digital assistant built with Kotlin and Jetpack Compose.
 
-Current version: **Open 3.2.0** (`3.2.0`). Feature releases show existing users a one-time in-app update notice covering new behavior, privacy impact, and any optional permissions; the onboarding tutorial is updated alongside each release.
+Current version: **Open 3.2.1** (`3.2.1`). Feature releases show existing users a one-time in-app update notice covering new behavior, privacy impact, and any optional permissions; the onboarding tutorial is updated alongside each release.
 
 ## Download
 
@@ -34,7 +34,7 @@ the existing app first and clears MinkLauncher OpenSource's local data.
 
 ## Included
 
-- Tappable date header that opens the system clock, plus settings access
+- A cutout-aware Home header that keeps its date, time, battery, Conversations, and Settings controls on the same top row whenever the display has usable space around a centered or side camera cutout; the date remains tappable and opens the system clock
 - First-run onboarding for the launcher, Magic Box, to-dos, search, and permissions, followed by a dedicated shortcut-app setup step
 - Replayable onboarding from Settings, including permission setup
 - A responsive raised Home panel with a two-thirds to-do area and a one-third icon-only shortcut grid
@@ -43,6 +43,7 @@ the existing app first and clears MinkLauncher OpenSource's local data.
   - To-dos retain their snapping pages and full manager when enabled
   - Calculator supports physical-keyboard number entry, implicit multiplication, and a local, clearable history
   - Memories displays user-selected images, animated GIFs, and video thumbnails without copying the source files; tapping an item opens its original URI in an installed app
+  - Adrift turns Memories photos and animated GIFs into an immersive, orientation-aware ambient collage with an OLED-black background, centered clock, independently fading frames, and a Favorite-conversation attention control; selected videos are intentionally excluded
   - Music reads Android’s active media session with optional Notification access, shows provider artwork and metadata, and sends only playback, seek, skip, or shuffle actions advertised by that provider
   - Quick Widget hosts one widget from an installed app. Tap it to enter interaction mode so lists, buttons, and provider gestures stay inside the widget; press Back or close to return to vertical mini-app navigation
   - Mini-app order and visibility are managed in Settings and included in portable backups; Android widget bindings, calculator history, selected media references, and active media sessions remain device-bound
@@ -61,9 +62,10 @@ the existing app first and clears MinkLauncher OpenSource's local data.
   - Inline reply appears only when a provider supplies a compatible Android `RemoteInput` action
   - Successful reply handoff is acknowledged with `Sent`; MinkLauncher OpenSource does not claim delivery or read status
   - Conversation contents and replies remain transient in memory, are not retained as history, and are never sent to Katoa Apps
+  - Conversation reconciliation compares the active Android notification set with locally acknowledged items so dismissed, read, or superseded messages do not return as false Favorite alerts
   - GitHub APK installs on Android 13 or newer may require **Allow restricted settings** on MinkLauncher OpenSource's Android App info page before Notification access can be enabled; see [How to install the GitHub APK](#how-to-install-the-github-apk)
   - A reorderable Favorites tab combines starred Android Contacts with Mink-created integrated contacts for providers that may not map cleanly to Android Contacts
-  - Each Favorite can inherit the launcher defaults or use a per-person messaging and calling route; unavailable providers can be reinstalled or safely reconnected
+  - Each Favorite can inherit the launcher defaults or use a per-person messaging and calling route; unavailable providers can be reinstalled or safely reconnected. Portable Android Favorite attention colors use export-scoped opaque matching tokens rather than copying names, numbers, email addresses, or contact IDs.
 - A horizontally adjacent widget page for up to 64 Android app widgets, including an app-grouped visual picker, system binding/configuration, drag reordering, removal, and portable restore placeholders
 - A dedicated **Mink’s Day** page to the left of Home:
   - Six illustrated Mink states reflect the time of day and, when optional Usage Access is enabled, foreground time and launch counts only for the apps the user chooses to include
@@ -121,7 +123,7 @@ the existing app first and clears MinkLauncher OpenSource's local data.
 - Animated Magic Box to-do delivery into the newest widget page
 - System, light, and dark appearance modes
 - Independent date, clock, 12/24-hour time, and live battery-percentage controls for the Home header
-- Home backgrounds can use the built-in color presets, a custom color, or a user-selected image cropped to the current display. The finished crop is stored privately on-device and applied to Android’s Home wallpaper only so system surfaces use the same image; the lock screen is not changed. Wallpaper image files are not included in portable JSON backups.
+- Home themes pair a bundled wallpaper with coordinated background and pill colors, while Device wallpaper preserves the user's last chosen photo for restoration after trying a theme. The default Mink Theme uses Mink's brown-and-green palette. Foreground, system-bar, launcher-keyboard, and secondary-caption colors are derived from the active visible background for legibility, while semantic action and attention colors retain their intended meaning. Wallpaper image files are not included in portable JSON backups.
 - Mink-themed icons, original system icons, or an installed Nova/ADW-compatible icon pack selected from a visual preview in Appearance settings. Icon-pack mappings are read locally; unsupported apps fall back to their original icon.
 - A default-on **Hide Status Bar** option for Home; swipe down to reveal Android's notification shade
 - An optional **Align Pill to Bottom** setting keeps the Home panel within easier reach on tall slab phones, directly above the Magic Box

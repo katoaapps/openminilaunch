@@ -1,0 +1,3 @@
+Open 3.2.1 adds Adrift, an immersive ambient collage for Memories photos and GIFs; a true brown-and-green Mink Theme; readable colors derived from the visible Home background; cutout-aware header placement; and stronger notification reconciliation to prevent old Favorite alerts from returning.
+
+Favorite attention colors can now restore through opaque, export-scoped matching tokens without copying contact details. No new permissions or data collection. Backup schema 3 remains compatible.
