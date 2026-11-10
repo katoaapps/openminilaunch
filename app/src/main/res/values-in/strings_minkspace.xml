@@ -4,6 +4,13 @@
     <string name="mink_space_settings_summary">Pilih dan atur apa yang ada di dalam panel Beranda</string>
     <string name="mink_space_settings_description">Gesek ke atas atau ke bawah di MinkSpace untuk mengganti aplikasi mini yang ditampilkan. Gesek ke kiri atau kanan untuk berpindah antar halaman di dalam aplikasi mini saat ini.</string>
     <string name="show_in_mink_space">Tampilkan di MinkSpace</string>
+    <string name="full_screen_shortcut">Pintasan layar penuh</string>
+    <string name="press_and_hold_action">Tindakan tekan lama</string>
+    <string name="off">Nonaktif</string>
+    <string name="full_screen_shortcut_description">Pilih yang terbuka saat Anda menekan dan menahan tombol keyboard di Beranda.</string>
+    <string name="adrift">Adrift</string>
+    <string name="adrift_add_memories">Tambahkan foto atau GIF di Kenangan agar melayang di sekitar jam.</string>
+    <string name="open_memories">Buka Kenangan</string>
     <string name="todo_added">Agenda ditambahkan</string>
     <string name="open_todos">Buka Agenda</string>
     <string name="calculator">Kalkulator</string>

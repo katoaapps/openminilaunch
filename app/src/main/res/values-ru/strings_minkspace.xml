@@ -4,6 +4,13 @@
     <string name="mink_space_settings_summary">Выбирайте и организуйте то, что находится внутри главной панели.</string>
     <string name="mink_space_settings_description">Проведите пальцем вверх или вниз по MinkSpace, чтобы переключить отображаемые мини-приложения. Проведите пальцем влево или вправо для перемещения между страницами текущего мини-приложения.</string>
     <string name="show_in_mink_space">Показывать в MinkSpace</string>
+    <string name="full_screen_shortcut">Полноэкранный ярлык</string>
+    <string name="press_and_hold_action">Действие при удержании</string>
+    <string name="off">Выкл.</string>
+    <string name="full_screen_shortcut_description">Выберите, что открывать при удержании кнопки клавиатуры на главном экране.</string>
+    <string name="adrift">Adrift</string>
+    <string name="adrift_add_memories">Добавьте фото или GIF в «Воспоминания», чтобы они плавали вокруг часов.</string>
+    <string name="open_memories">Открыть «Воспоминания»</string>
     <string name="todo_added">Дело добавлено</string>
     <string name="open_todos">Открыть дела</string>
     <string name="calculator">Калькулятор</string>

@@ -4,6 +4,13 @@
     <string name="mink_space_settings_summary">홈 패널 내부에 있는 항목을 선택하고 정렬합니다.</string>
     <string name="mink_space_settings_description">표시되는 미니 앱을 전환하려면 MinkSpace에서 위나 아래로 스와이프하세요. 현재 미니 앱 내 페이지 사이를 이동하려면 왼쪽이나 오른쪽으로 스와이프하세요.</string>
     <string name="show_in_mink_space">MinkSpace에 표시</string>
+    <string name="full_screen_shortcut">전체 화면 바로가기</string>
+    <string name="press_and_hold_action">길게 누르기 동작</string>
+    <string name="off">끄기</string>
+    <string name="full_screen_shortcut_description">홈에서 키보드 버튼을 길게 누를 때 열 항목을 선택하세요.</string>
+    <string name="adrift">Adrift</string>
+    <string name="adrift_add_memories">추억에 사진이나 GIF를 추가하여 시계 주위에 떠다니게 하세요.</string>
+    <string name="open_memories">추억 열기</string>
     <string name="todo_added">할 일이 추가되었습니다</string>
     <string name="open_todos">할 일 열기</string>
     <string name="calculator">계산기</string>

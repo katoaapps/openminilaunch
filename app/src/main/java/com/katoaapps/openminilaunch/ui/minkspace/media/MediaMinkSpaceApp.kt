@@ -16,11 +16,13 @@ import com.katoaapps.openminilaunch.ui.minkspace.core.MinkSpaceApp
 import com.katoaapps.openminilaunch.ui.minkspace.core.MinkSpaceMiniAppManifest
 import com.katoaapps.openminilaunch.ui.minkspace.core.MinkSpaceMiniAppSettingsTarget
 import com.katoaapps.openminilaunch.ui.minkspace.core.MinkSpaceScope
+import com.katoaapps.openminilaunch.ui.minkspace.core.MinkSpaceTotalScreenApp
+import com.katoaapps.openminilaunch.ui.minkspace.core.MinkSpaceTotalScreenScope
 
 /** Media implementation registered with the MinkSpace platform. */
 internal class MediaMinkSpaceApp(
     private val onManageMedia: () -> Unit,
-) : MinkSpaceApp {
+) : MinkSpaceApp, MinkSpaceTotalScreenApp {
     override val manifest: MinkSpaceMiniAppManifest = Manifest
 
     @Composable
@@ -46,6 +48,18 @@ internal class MediaMinkSpaceApp(
         }
     }
 
+    @Composable
+    override fun TotalScreenContent(scope: MinkSpaceTotalScreenScope, modifier: Modifier) {
+        val context = LocalContext.current
+        val repository = remember(context) { MediaRepository.get(context) }
+        AdriftScreen(
+            items = repository.items,
+            use24HourClock = scope.use24HourClock,
+            onManageMedia = onManageMedia,
+            modifier = modifier,
+        )
+    }
+
     companion object {
         val Manifest = MinkSpaceMiniAppManifest(
             miniApp = MinkSpaceMiniApp.MEDIA,
@@ -53,6 +67,8 @@ internal class MediaMinkSpaceApp(
             icon = Icons.Default.PhotoLibrary,
             supportsExpansion = true,
             showExpansionButton = true,
+            supportsTotalScreen = true,
+            totalScreenLabelRes = R.string.adrift,
             settingsTarget = MinkSpaceMiniAppSettingsTarget.MEDIA,
         )
     }

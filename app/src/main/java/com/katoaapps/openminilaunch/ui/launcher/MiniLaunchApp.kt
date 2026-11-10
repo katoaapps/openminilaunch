@@ -43,6 +43,7 @@ import com.katoaapps.openminilaunch.ui.launcher.layout.HOME_PAGE
 import com.katoaapps.openminilaunch.ui.launcher.layout.LauncherHomePager
 import com.katoaapps.openminilaunch.ui.launcher.layout.WIDGET_PAGE
 import com.katoaapps.openminilaunch.ui.magic.rememberMagicBoxSessionState
+import com.katoaapps.openminilaunch.ui.minkspace.core.rememberMinkSpacePresentationState
 import com.katoaapps.openminilaunch.ui.minkspace.todo.TodosScreen
 import com.katoaapps.openminilaunch.ui.onboarding.FeatureUpdateDialog
 import com.katoaapps.openminilaunch.ui.onboarding.GooglePlayBetaDialog
@@ -85,6 +86,7 @@ internal fun MiniLaunchApp(
     }
     var tutorialRun by rememberSaveable { mutableIntStateOf(0) }
     val homeMagicBoxSessionState = rememberMagicBoxSessionState()
+    val minkSpacePresentation = rememberMinkSpacePresentationState()
     var animateHomeEntrance by remember { mutableStateOf(false) }
     var focusedLauncherPage by rememberSaveable { mutableIntStateOf(HOME_PAGE) }
     var twoPanelActive by remember { mutableStateOf(false) }
@@ -210,6 +212,7 @@ internal fun MiniLaunchApp(
                                         !showGooglePlayBetaNotice,
                                 homeRequestToken = homeRequestToken,
                                 magicBoxSessionState = homeMagicBoxSessionState,
+                                minkSpacePresentation = minkSpacePresentation,
                                 openSettings = { destination ->
                                     settingsDestination = destination
                                     screen = Screen.SETTINGS
@@ -248,6 +251,7 @@ internal fun MiniLaunchApp(
                             store = store,
                             actions = actions,
                             onComposeMessage = { recipient, route ->
+                                minkSpacePresentation.collapse()
                                 val providerPackage = (route as? ContactAppRoute.Package)?.packageName
                                 homeMagicBoxSessionState.prepareMessage(
                                     recipient = recipient,
@@ -259,6 +263,7 @@ internal fun MiniLaunchApp(
                                 screen = Screen.HOME
                             },
                             onComposeConversationMessage = { conversation ->
+                                minkSpacePresentation.collapse()
                                 homeMagicBoxSessionState.prepareConversationMessage(conversation)
                                 focusedLauncherPage = HOME_PAGE
                                 homePageRequestToken++

@@ -4,6 +4,13 @@
     <string name="mink_space_settings_summary">Choose and arrange what lives inside the Home panel</string>
     <string name="mink_space_settings_description">Swipe up or down in MinkSpace to switch mini-apps that are shown. Swipe left or right to move between pages inside the current mini-app.</string>
     <string name="show_in_mink_space">Show in MinkSpace</string>
+    <string name="full_screen_shortcut">Full-screen shortcut</string>
+    <string name="press_and_hold_action">Press-and-hold action</string>
+    <string name="off">Off</string>
+    <string name="full_screen_shortcut_description">Choose what opens when you press and hold the keyboard button on Home.</string>
+    <string name="adrift">Adrift</string>
+    <string name="adrift_add_memories">Add photos or GIFs in Memories to let them drift around the clock.</string>
+    <string name="open_memories">Open Memories</string>
     <string name="todo_added">To-do added</string>
     <string name="open_todos">Open To-dos</string>
     <string name="calculator">Calculator</string>

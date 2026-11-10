@@ -28,6 +28,7 @@ internal fun HomeMagicBox(
     onTodoAdded: (String) -> Unit,
     onOpenTodos: () -> Unit,
     onOpenKeyboardSettings: () -> Unit,
+    onOpenTotalScreen: (() -> Unit)?,
     appAccessState: MinkAppAccessState,
     modifier: Modifier = Modifier,
     collapsedModifier: Modifier = Modifier,
@@ -48,6 +49,7 @@ internal fun HomeMagicBox(
         },
         onOpenTodos = onOpenTodos,
         onOpenKeyboardSettings = onOpenKeyboardSettings,
+        onOpenTotalScreen = onOpenTotalScreen,
         appAccessState = appAccessState,
     )
 }

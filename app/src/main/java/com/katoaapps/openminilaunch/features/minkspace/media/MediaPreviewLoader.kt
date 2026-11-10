@@ -1,6 +1,7 @@
 package com.katoaapps.openminilaunch.features.minkspace.media
 
 import android.content.Context
+import android.graphics.BitmapFactory
 import android.graphics.ImageDecoder
 import android.graphics.drawable.BitmapDrawable
 import android.graphics.drawable.Drawable
@@ -17,6 +18,22 @@ internal object MediaPreviewLoader {
                 loadImage(context, item, targetPixels)
             }
         }.getOrNull()
+
+    /** Reads image bounds without allocating the full bitmap used by the preview. */
+    fun imageAspectRatio(context: Context, item: MediaItem): Float? {
+        if (!item.isImage) return null
+        return runCatching {
+            val options = BitmapFactory.Options().apply { inJustDecodeBounds = true }
+            context.contentResolver.openInputStream(item.uri)?.use { stream ->
+                BitmapFactory.decodeStream(stream, null, options)
+            }
+            if (options.outWidth > 0 && options.outHeight > 0) {
+                options.outWidth.toFloat() / options.outHeight.toFloat()
+            } else {
+                null
+            }
+        }.getOrNull()
+    }
 
     private fun loadVideoFrame(
         context: Context,

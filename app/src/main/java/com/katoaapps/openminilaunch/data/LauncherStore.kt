@@ -165,6 +165,7 @@ class LauncherStore private constructor(context: Context) {
         )
     internal val minkSpaceMiniAppOrder get() = minkSpacePreferences.order
     internal val enabledMinkSpaceMiniApps get() = minkSpacePreferences.enabledMiniApps
+    internal val minkSpaceTotalScreenShortcut get() = minkSpacePreferences.totalScreenShortcut
     internal val minkSpaceWidgetId get() = minkSpaceWidgetStore.appWidgetId
     val effectiveHomePanelColorArgb: Int
         get() = demoPreferences.effectivePanelColor(
@@ -516,6 +517,10 @@ class LauncherStore private constructor(context: Context) {
 
     internal fun setMinkSpaceMiniAppOrder(order: List<MinkSpaceMiniApp>) {
         minkSpacePreferences.updateOrder(order)
+    }
+
+    internal fun setMinkSpaceTotalScreenShortcut(miniApp: MinkSpaceMiniApp?) {
+        minkSpacePreferences.updateTotalScreenShortcut(miniApp)
     }
 
     internal fun replaceMinkSpacePreferencesFromBackup(

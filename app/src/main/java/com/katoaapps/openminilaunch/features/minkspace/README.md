@@ -62,6 +62,14 @@ MinkSpace to draw its standard collapsed-state action using "Expand view" or the
 label override. A mini-app may hide that standard action and call the controller from feature UI.
 MinkSpace always draws the expanded-state close button; mini-apps cannot suppress it.
 
+Mini-apps that can fill the display also implement `MinkSpaceTotalScreenApp` and declare
+`supportsTotalScreen = true`. Their `TotalScreenContent` is drawn inside MinkSpace's protected
+full-window shell rather than in a feature-owned Activity or dialog. The shell owns Back, the close
+button, title, system-bar handling, keep-awake lifecycle, auto-hiding chrome, and the persistent
+Conversations action. The mini-app owns only the content inside that shell. Catalog validation
+rejects a manifest/runtime mismatch, and total-screen presentation is intentionally not restored
+after process recreation.
+
 ## Registration
 
 Adding a mini-app requires three deliberate changes:
@@ -114,6 +122,8 @@ do not.
 - MinkSpace owns expansion state, the standard expand action, the permanent expanded-state close
   button, layout animation, pager locking, Back handling, saved state, and cleanup when the visible
   mini-app changes.
+- MinkSpace also owns every total-screen exit and overlay. A total-screen mini-app cannot hide the
+  close action or replace the Conversations action, and should not add a second competing toolbar.
 - A mini-app may hide the standard expand action and provide its own trigger. Use
   `minkSpaceExpansionBackgroundTap` only when empty-space taps fit the feature.
 - Nested actionable content must win its gesture before an empty-space expansion gesture.

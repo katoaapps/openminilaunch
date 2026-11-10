@@ -117,7 +117,14 @@ class LauncherBackupCodecTest {
     }
 
     @Test fun minkSpacePreferencesSurvivePortableBackupRoundTrip() {
-        val original = sampleBackup(twoPanelMode = true)
+        val sample = sampleBackup(twoPanelMode = true)
+        val original = sample.copy(
+            settings = sample.settings.copy(
+                minkSpaceTotalScreenShortcut = MinkSpaceTotalScreenShortcutBackup(
+                    MinkSpaceMiniApp.MEDIA,
+                ),
+            ),
+        )
         val encoded = LauncherBackupCodec.encode(original)
         val restored = LauncherBackupCodec.decode(encoded)
 
@@ -135,6 +142,26 @@ class LauncherBackupCodecTest {
             setOf(MinkSpaceMiniApp.TODO, MinkSpaceMiniApp.MUSIC),
             restored.settings.enabledMinkSpaceMiniApps,
         )
+        assertEquals(
+            MinkSpaceTotalScreenShortcutBackup(MinkSpaceMiniApp.MEDIA),
+            restored.settings.minkSpaceTotalScreenShortcut,
+        )
+    }
+
+    @Test fun disabledTotalScreenShortcutSurvivesPortableBackupRoundTrip() {
+        val sample = sampleBackup(twoPanelMode = true)
+        val original = sample.copy(
+            settings = sample.settings.copy(
+                minkSpaceTotalScreenShortcut = MinkSpaceTotalScreenShortcutBackup(null),
+            ),
+        )
+
+        val restored = LauncherBackupCodec.decode(LauncherBackupCodec.encode(original))
+
+        assertEquals(
+            MinkSpaceTotalScreenShortcutBackup(null),
+            restored.settings.minkSpaceTotalScreenShortcut,
+        )
     }
 
     @Test fun backupWithoutMinkSpaceLeavesCurrentPreferencesAlone() {
@@ -145,6 +172,7 @@ class LauncherBackupCodecTest {
 
         assertNull(restored.settings.minkSpaceMiniAppOrder)
         assertNull(restored.settings.enabledMinkSpaceMiniApps)
+        assertNull(restored.settings.minkSpaceTotalScreenShortcut)
     }
 
     @Test fun bundledWallpaperSelectionSurvivesPortableBackupRoundTrip() {

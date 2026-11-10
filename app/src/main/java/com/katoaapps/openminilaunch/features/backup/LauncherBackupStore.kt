@@ -42,6 +42,9 @@ internal fun LauncherStore.createPortableBackup(appVersion: String): LauncherBac
             automaticAppBubbleTargets = automaticAppBubbleTargets.toList(),
             minkSpaceMiniAppOrder = minkSpaceMiniAppOrder.filter { it.readyForHome },
             enabledMinkSpaceMiniApps = enabledMinkSpaceMiniApps.filterTo(mutableSetOf()) { it.readyForHome },
+            minkSpaceTotalScreenShortcut = MinkSpaceTotalScreenShortcutBackup(
+                minkSpaceTotalScreenShortcut,
+            ),
             sendMessagesAutomatically = sendMessagesAutomatically,
             preferredMessagingPackage = preferredMessagingPackage,
             callAutomatically = callAutomatically,
@@ -138,6 +141,9 @@ internal fun LauncherStore.restorePortableBackup(
             order = settings.minkSpaceMiniAppOrder,
             enabledMiniApps = settings.enabledMinkSpaceMiniApps,
         )
+    }
+    settings.minkSpaceTotalScreenShortcut?.let { shortcut ->
+        setMinkSpaceTotalScreenShortcut(shortcut.miniApp)
     }
     updateSendMessagesAutomatically(settings.sendMessagesAutomatically)
     settings.preferredMessagingPackage?.let(::setPreferredMessagingApp)

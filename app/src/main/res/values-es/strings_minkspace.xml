@@ -4,6 +4,13 @@
     <string name="mink_space_settings_summary">Elija y organice lo que se encuentra dentro del panel de Inicio</string>
     <string name="mink_space_settings_description">Desliza hacia arriba o hacia abajo en MinkSpace para cambiar entre las miniaplicaciones visibles. Desliza hacia la izquierda o hacia la derecha para moverte entre las páginas de la miniaplicación actual.</string>
     <string name="show_in_mink_space">Mostrar en MinkSpace</string>
+    <string name="full_screen_shortcut">Acceso directo de pantalla completa</string>
+    <string name="press_and_hold_action">Acción de mantener pulsado</string>
+    <string name="off">Desactivado</string>
+    <string name="full_screen_shortcut_description">Elige qué se abre al mantener pulsado el botón del teclado en Inicio.</string>
+    <string name="adrift">Adrift</string>
+    <string name="adrift_add_memories">Añade fotos o GIF en Recuerdos para que floten alrededor del reloj.</string>
+    <string name="open_memories">Abrir Recuerdos</string>
     <string name="todo_added">Tarea pendiente añadida</string>
     <string name="open_todos">Abrir tareas pendientes</string>
     <string name="calculator">Calculadora</string>

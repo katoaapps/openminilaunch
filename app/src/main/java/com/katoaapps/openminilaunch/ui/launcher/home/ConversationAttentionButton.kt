@@ -44,6 +44,7 @@ internal fun ConversationAttentionButton(
     iconSize: Dp,
     restingColor: Color,
     onClick: () -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     val palette = remember(attentionColors) { attentionColors.distinct() }
     var colorIndex by remember(palette) { mutableIntStateOf(0) }
@@ -63,7 +64,7 @@ internal fun ConversationAttentionButton(
     val alertContentColor = readableContentColor(alertColor)
     val pulse = if (needsAttention) conversationAttentionPulse() else 0f
 
-    Box(Modifier.size(actionSize), contentAlignment = Alignment.Center) {
+    Box(modifier.size(actionSize), contentAlignment = Alignment.Center) {
         if (needsAttention) {
             Canvas(Modifier.fillMaxSize()) {
                 val half = size.minDimension / 2f

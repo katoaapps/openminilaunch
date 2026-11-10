@@ -50,6 +50,7 @@ internal object LauncherBackupCodec {
     private const val MAX_TODOS = 5_000
     private const val MAX_TARGET_LENGTH = 2_048
     private const val MAX_TODO_TEXT_LENGTH = 20_000
+    private const val TOTAL_SCREEN_SHORTCUT_OFF = "off"
 
     fun encode(backup: LauncherBackup): String = JSONObject().apply {
         put("format", LAUNCHER_BACKUP_FORMAT)
@@ -364,6 +365,12 @@ internal object LauncherBackupCodec {
                         .map(MinkSpaceMiniApp::stableId)
                         .stringsJsonArray(),
                 )
+                settings.minkSpaceTotalScreenShortcut?.let { shortcut ->
+                    put(
+                        "totalScreenShortcut",
+                        shortcut.miniApp?.stableId ?: TOTAL_SCREEN_SHORTCUT_OFF,
+                    )
+                }
             })
         }
         put("messaging", JSONObject().apply {
@@ -423,6 +430,16 @@ internal object LauncherBackupCodec {
                     enabled
                 }
             }
+        val minkSpaceTotalScreenShortcut = minkSpace
+            ?.takeIf { it.has("totalScreenShortcut") }
+            ?.optString("totalScreenShortcut")
+            ?.let { stableId ->
+                when (stableId) {
+                    TOTAL_SCREEN_SHORTCUT_OFF -> MinkSpaceTotalScreenShortcutBackup(null)
+                    else -> MinkSpaceMiniApp.fromStableId(stableId)
+                        ?.let(::MinkSpaceTotalScreenShortcutBackup)
+                }
+            }
 
         return LauncherBackupSettings(
             themePreference = appearance.enumValue("theme", ThemePreference.SYSTEM),
@@ -477,6 +494,7 @@ internal object LauncherBackupCodec {
             automaticAppBubbleTargets = magicBox.optJSONArray("automaticAppBubbleTargets").safeTargets(),
             minkSpaceMiniAppOrder = minkSpaceOrder,
             enabledMinkSpaceMiniApps = enabledMinkSpaceMiniApps,
+            minkSpaceTotalScreenShortcut = minkSpaceTotalScreenShortcut,
             // Automatic messaging is the product default. Backups created before this
             // preference existed must inherit that default instead of silently opting out.
             sendMessagesAutomatically = messaging.optBoolean("sendMessagesAutomatically", true),

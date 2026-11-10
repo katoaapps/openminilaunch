@@ -4,6 +4,13 @@
     <string name="mink_space_settings_summary">揀同安排主頁面板入面嘅嘢</string>
     <string name="mink_space_settings_description">喺 MinkSpace 入面向上或者向下滑動嚟切換顯示嘅迷你應用程式。向左或者向右滑動就可以喺當前迷你應用程式入面嘅頁面之間移動。</string>
     <string name="show_in_mink_space">喺 MinkSpace 顯示</string>
+    <string name="full_screen_shortcut">全螢幕捷徑</string>
+    <string name="press_and_hold_action">長按動作</string>
+    <string name="off">關閉</string>
+    <string name="full_screen_shortcut_description">選擇喺主畫面長按鍵盤按鈕時開啟嘅內容。</string>
+    <string name="adrift">Adrift</string>
+    <string name="adrift_add_memories">喺「回憶」加入相片或 GIF，等佢哋喺時鐘周圍飄動。</string>
+    <string name="open_memories">開啟「回憶」</string>
     <string name="todo_added">已加入待辦事項</string>
     <string name="open_todos">開啟待辦事項</string>
     <string name="calculator">計算機</string>

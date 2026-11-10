@@ -4,6 +4,13 @@
     <string name="mink_space_settings_summary">ホームパネル内にあるものを選択して配置します</string>
     <string name="mink_space_settings_description">MinkSpace で上下にスワイプして、表示中のミニアプリを切り替えます。左または右にスワイプして、現在のミニアプリ内のページ間を移動します。</string>
     <string name="show_in_mink_space">MinkSpace に表示</string>
+    <string name="full_screen_shortcut">全画面ショートカット</string>
+    <string name="press_and_hold_action">長押しアクション</string>
+    <string name="off">オフ</string>
+    <string name="full_screen_shortcut_description">ホームでキーボードボタンを長押ししたときに開くものを選択します。</string>
+    <string name="adrift">Adrift</string>
+    <string name="adrift_add_memories">「思い出」に写真やGIFを追加すると、時計の周りに浮かびます。</string>
+    <string name="open_memories">「思い出」を開く</string>
     <string name="todo_added">To-Do を追加しました</string>
     <string name="open_todos">To-Do を開く</string>
     <string name="calculator">電卓</string>

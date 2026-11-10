@@ -4,6 +4,13 @@
     <string name="mink_space_settings_summary">ہوم پینل کے اندر موجود چیزوں کو منتخب کریں اور ترتیب دیں۔</string>
     <string name="mink_space_settings_description">دکھائی جانے والی منی ایپس کو سوئچ کرنے کے لیے MinkSpace میں اوپر یا نیچے سوائپ کریں۔ موجودہ منی ایپ کے اندر صفحات کے درمیان جانے کے لیے بائیں یا دائیں سوائپ کریں۔</string>
     <string name="show_in_mink_space">MinkSpace میں دکھائیں</string>
+    <string name="full_screen_shortcut">فل اسکرین شارٹ کٹ</string>
+    <string name="press_and_hold_action">دبا کر رکھنے کی کارروائی</string>
+    <string name="off">بند</string>
+    <string name="full_screen_shortcut_description">منتخب کریں کہ ہوم پر کی بورڈ بٹن کو دبا کر رکھنے سے کیا کھلے۔</string>
+    <string name="adrift">Adrift</string>
+    <string name="adrift_add_memories">یادوں میں تصاویر یا GIF شامل کریں تاکہ وہ گھڑی کے گرد تیرتی رہیں۔</string>
+    <string name="open_memories">یادیں کھولیں</string>
     <string name="todo_added">کرنے کا کام شامل ہو گیا</string>
     <string name="open_todos">کرنے کے کام کھولیں</string>
     <string name="calculator">کیلکولیٹر</string>

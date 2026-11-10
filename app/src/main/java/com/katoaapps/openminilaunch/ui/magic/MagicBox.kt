@@ -84,6 +84,7 @@ internal fun MagicBoxContent(
     },
     onOpenTodos: (() -> Unit)? = null,
     onOpenKeyboardSettings: () -> Unit = {},
+    onOpenTotalScreen: (() -> Unit)? = null,
     onSessionComplete: () -> Unit = {},
     onBubblePublished: () -> Unit = {},
     appBubbleHost: MagicAppBubbleHost = MagicAppBubbleHost.HOME,
@@ -1046,6 +1047,7 @@ internal fun MagicBoxContent(
                     expanded = true
                     refocus(showSoftwareKeyboard = !useNativeLauncherKeyboard)
                 },
+                onOpenTotalScreen = onOpenTotalScreen,
             )
 
             if (showDockedLauncherKeyboard) {

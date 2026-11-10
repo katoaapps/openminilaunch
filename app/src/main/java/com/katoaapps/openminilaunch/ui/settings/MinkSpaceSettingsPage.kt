@@ -7,6 +7,7 @@ import androidx.compose.animation.core.infiniteRepeatable
 import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.interaction.MutableInteractionSource
+import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.WindowInsets
@@ -47,6 +48,8 @@ import com.katoaapps.openminilaunch.data.LauncherStore
 import com.katoaapps.openminilaunch.features.minkspace.MinkSpaceMiniApp
 import com.katoaapps.openminilaunch.platform.DeviceActions
 import com.katoaapps.openminilaunch.ui.components.SectionLabel
+import com.katoaapps.openminilaunch.ui.components.SettingsDropdownOption
+import com.katoaapps.openminilaunch.ui.components.SettingsDropdownRow
 import com.katoaapps.openminilaunch.ui.components.moveItem
 import com.katoaapps.openminilaunch.ui.minkspace.core.MinkSpaceMiniAppCatalog
 import com.katoaapps.openminilaunch.ui.minkspace.core.MinkSpaceMiniAppManifest
@@ -104,6 +107,37 @@ internal fun MinkSpaceSettingsPage(
                 text = stringResource(R.string.mink_space_settings_description),
                 color = Muted,
             )
+        }
+        item(key = "mink-space-total-screen-shortcut") {
+            Column(verticalArrangement = Arrangement.spacedBy(Dimens.dp8)) {
+                SectionLabel(stringResource(R.string.full_screen_shortcut))
+                val totalScreenApps = MinkSpaceMiniAppCatalog.totalScreenMiniApps
+                SettingsDropdownRow(
+                    title = stringResource(R.string.press_and_hold_action),
+                    selectedValue = store.minkSpaceTotalScreenShortcut
+                        ?.takeIf(totalScreenApps::contains),
+                    options = buildList {
+                        add(SettingsDropdownOption(null, stringResource(R.string.off)))
+                        totalScreenApps.forEach { miniApp ->
+                            val manifest = MinkSpaceMiniAppCatalog.get(miniApp)
+                            add(
+                                SettingsDropdownOption(
+                                    miniApp,
+                                    stringResource(
+                                        manifest.totalScreenLabelRes ?: manifest.labelRes,
+                                    ),
+                                ),
+                            )
+                        }
+                    },
+                    onValueSelected = store::setMinkSpaceTotalScreenShortcut,
+                )
+                Text(
+                    text = stringResource(R.string.full_screen_shortcut_description),
+                    color = Muted,
+                    style = MaterialTheme.typography.bodySmall,
+                )
+            }
         }
         item(key = "mink-space-section-label") {
             SectionLabel(stringResource(R.string.show_in_mink_space))

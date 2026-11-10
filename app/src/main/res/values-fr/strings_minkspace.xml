@@ -4,6 +4,13 @@
     <string name="mink_space_settings_summary">Choisissez et organisez ce qui se trouve à l\'intérieur du panneau Accueil</string>
     <string name="mink_space_settings_description">Faites glisser votre doigt vers le haut ou le bas dans MinkSpace pour changer les mini-applications affichées. Faites glisser votre doigt vers la gauche ou la droite pour vous déplacer entre les pages de la mini-application actuelle.</string>
     <string name="show_in_mink_space">Afficher dans MinkSpace</string>
+    <string name="full_screen_shortcut">Raccourci plein écran</string>
+    <string name="press_and_hold_action">Action d’appui prolongé</string>
+    <string name="off">Désactivé</string>
+    <string name="full_screen_shortcut_description">Choisissez ce qui s’ouvre lorsque vous maintenez le bouton du clavier sur l’accueil.</string>
+    <string name="adrift">Adrift</string>
+    <string name="adrift_add_memories">Ajoutez des photos ou des GIF dans Souvenirs pour les faire flotter autour de l’horloge.</string>
+    <string name="open_memories">Ouvrir Souvenirs</string>
     <string name="todo_added">Tâche ajoutée</string>
     <string name="open_todos">Ouvrir les tâches</string>
     <string name="calculator">Calculatrice</string>

@@ -4,6 +4,13 @@
     <string name="mink_space_settings_summary">होम पैनल के अंदर क्या रहता है उसे चुनें और व्यवस्थित करें</string>
     <string name="mink_space_settings_description">दिखाए गए मिनी-ऐप्स स्विच करने के लिए MinkSpace में ऊपर या नीचे स्वाइप करें। वर्तमान मिनी-ऐप के अंदर पृष्ठों के बीच जाने के लिए बाएं या दाएं स्वाइप करें।</string>
     <string name="show_in_mink_space">MinkSpace में दिखाएं</string>
+    <string name="full_screen_shortcut">फ़ुल-स्क्रीन शॉर्टकट</string>
+    <string name="press_and_hold_action">दबाकर रखने की क्रिया</string>
+    <string name="off">बंद</string>
+    <string name="full_screen_shortcut_description">चुनें कि होम पर कीबोर्ड बटन को दबाकर रखने पर क्या खुले।</string>
+    <string name="adrift">Adrift</string>
+    <string name="adrift_add_memories">यादों में फ़ोटो या GIF जोड़ें ताकि वे घड़ी के चारों ओर तैरें।</string>
+    <string name="open_memories">यादें खोलें</string>
     <string name="todo_added">कार्य जोड़ दिया गया</string>
     <string name="open_todos">कार्य खोलें</string>
     <string name="calculator">कैलकुलेटर</string>

@@ -4,6 +4,13 @@
     <string name="mink_space_settings_summary">اختر ورتب ما يوجد داخل اللوحة الرئيسية</string>
     <string name="mink_space_settings_description">اسحب لأعلى أو لأسفل في MinkSpace للتبديل بين التطبيقات المصغرة الظاهرة. اسحب لليسار أو لليمين للتنقل بين الصفحات داخل التطبيق المصغر الحالي.</string>
     <string name="show_in_mink_space">العرض في MinkSpace</string>
+    <string name="full_screen_shortcut">اختصار ملء الشاشة</string>
+    <string name="press_and_hold_action">إجراء الضغط المطول</string>
+    <string name="off">إيقاف</string>
+    <string name="full_screen_shortcut_description">اختر ما يتم فتحه عند الضغط مطولاً على زر لوحة المفاتيح في الشاشة الرئيسية.</string>
+    <string name="adrift">Adrift</string>
+    <string name="adrift_add_memories">أضف صورًا أو ملفات GIF إلى الذكريات لتطفو حول الساعة.</string>
+    <string name="open_memories">فتح الذكريات</string>
     <string name="todo_added">تمت إضافة المهمة</string>
     <string name="open_todos">فتح المهام</string>
     <string name="calculator">آلة حاسبة</string>

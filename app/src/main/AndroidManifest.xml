@@ -240,6 +240,7 @@
         <activity
             android:name=".ui.launcher.MainActivity"
             android:clearTaskOnLaunch="true"
+            android:configChanges="orientation|screenLayout|screenSize|smallestScreenSize"
             android:excludeFromRecents="true"
             android:exported="true"
             android:launchMode="singleTask"

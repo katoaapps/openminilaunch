@@ -8,6 +8,9 @@ private const val LARGE_DISPLAY_MIN_SMALLEST_WIDTH_DP = 600
 
 /** Lets opted-in large screens follow the user's rotation setting; keeps phone Home portrait. */
 internal fun applyLargeDisplayOrientation(activity: Activity, enabled: Boolean) {
+    // Total-screen MinkSpace surfaces temporarily opt into FULL_USER orientation. A
+    // configuration change must not immediately restore Home's normal phone portrait rule.
+    if (activity.requestedOrientation == ActivityInfo.SCREEN_ORIENTATION_FULL_USER) return
     val orientation = preferredActivityOrientation(activity.resources.configuration, enabled)
     if (activity.requestedOrientation != orientation) activity.requestedOrientation = orientation
 }

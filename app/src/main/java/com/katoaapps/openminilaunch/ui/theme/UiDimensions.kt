@@ -49,7 +49,9 @@ internal object Dimens {
     val dp44: Dp @Composable get() = dimensionResource(R.dimen.dp_44)
     val dp46: Dp @Composable get() = dimensionResource(R.dimen.dp_46)
     val dp48: Dp @Composable get() = dimensionResource(R.dimen.dp_48)
+    val dp52: Dp @Composable get() = dimensionResource(R.dimen.dp_52)
     val dp54: Dp @Composable get() = dimensionResource(R.dimen.dp_54)
+    val dp56: Dp @Composable get() = dimensionResource(R.dimen.dp_56)
     val dp58: Dp @Composable get() = dimensionResource(R.dimen.dp_58)
     val dp64: Dp @Composable get() = dimensionResource(R.dimen.dp_64)
     val dp70: Dp @Composable get() = dimensionResource(R.dimen.dp_70)
@@ -100,4 +102,6 @@ internal object Dimens {
     val sp26: TextUnit @Composable get() = dimensionResource(R.dimen.sp_26).value.sp
     val sp28: TextUnit @Composable get() = dimensionResource(R.dimen.sp_28).value.sp
     val sp32: TextUnit @Composable get() = dimensionResource(R.dimen.sp_32).value.sp
+    val sp56: TextUnit @Composable get() = dimensionResource(R.dimen.sp_56).value.sp
+    val sp64: TextUnit @Composable get() = dimensionResource(R.dimen.sp_64).value.sp
 }

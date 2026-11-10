@@ -11,10 +11,16 @@ internal class MinkSpaceExpansionController internal constructor(
 ) {
     val miniApp: MinkSpaceMiniApp get() = manifest.miniApp
     val enabled: Boolean get() = manifest.supportsExpansion
+    val totalScreenEnabled: Boolean get() = manifest.supportsTotalScreen
     val expanded: Boolean get() = enabled && presentationState.expandedMiniApp == miniApp
+    val totalScreen: Boolean get() = totalScreenEnabled && presentationState.totalScreenMiniApp == miniApp
 
     fun expand() {
         if (enabled) presentationState.expand(manifest)
+    }
+
+    fun showTotalScreen() {
+        if (totalScreenEnabled) presentationState.showTotalScreen(manifest)
     }
 
     fun collapse() = presentationState.collapse(miniApp)

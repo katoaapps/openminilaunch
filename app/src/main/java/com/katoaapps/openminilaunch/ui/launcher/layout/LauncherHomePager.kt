@@ -26,6 +26,10 @@ import com.katoaapps.openminilaunch.platform.DeviceActions
 import com.katoaapps.openminilaunch.ui.launcher.home.HomeScreen
 import com.katoaapps.openminilaunch.ui.launcher.home.HomeBackground
 import com.katoaapps.openminilaunch.ui.magic.MagicBoxSessionState
+import com.katoaapps.openminilaunch.ui.minkspace.core.MinkSpaceMiniAppCatalog
+import com.katoaapps.openminilaunch.ui.minkspace.core.MinkSpacePresentationState
+import com.katoaapps.openminilaunch.ui.minkspace.core.MinkSpaceTotalScreenDependencies
+import com.katoaapps.openminilaunch.ui.minkspace.core.MinkSpaceTotalScreenHost
 import com.katoaapps.openminilaunch.ui.settings.SettingsDestination
 import com.katoaapps.openminilaunch.ui.theme.Dimens
 import com.katoaapps.openminilaunch.ui.wellbeing.MinkDayScreen
@@ -50,6 +54,7 @@ internal fun LauncherHomePager(
     keyboardInputEnabled: Boolean,
     homeRequestToken: Int,
     magicBoxSessionState: MagicBoxSessionState,
+    minkSpacePresentation: MinkSpacePresentationState,
     openSettings: (SettingsDestination) -> Unit,
     openTodos: () -> Unit,
     openVCardSettings: () -> Unit,
@@ -179,6 +184,7 @@ internal fun LauncherHomePager(
                 minkSpaceExpanded = minkSpaceExpanded,
                 homeRequestToken = homeRequestToken,
                 magicBoxSessionState = magicBoxSessionState,
+                minkSpacePresentation = minkSpacePresentation,
                 onFocusPage = onFocusedPageChange,
                 onMinkDay = goToMinkDay,
                 onGoHome = goHome,
@@ -221,12 +227,33 @@ internal fun LauncherHomePager(
                                     keyboardInputEnabled = keyboardInputEnabled,
                                     homeRequestToken = homeRequestToken,
                                     magicBoxSessionState = magicBoxSessionState,
+                                    minkSpacePresentation = minkSpacePresentation,
                                 )
                             }
                             else -> WidgetPage(store = store, actions = actions, goHome = goHome)
                         }
                     }
                 }
+            }
+        }
+
+        minkSpacePresentation.totalScreenMiniApp?.let { miniApp ->
+            val dependencies = remember(actions) {
+                MinkSpaceTotalScreenDependencies(openMediaLab = actions::openMediaLab)
+            }
+            val totalScreenApp = remember(miniApp, dependencies) {
+                MinkSpaceMiniAppCatalog.createTotalScreenApp(miniApp, dependencies)
+            }
+            if (totalScreenApp == null) {
+                LaunchedEffect(miniApp) { minkSpacePresentation.collapse(miniApp) }
+            } else {
+                MinkSpaceTotalScreenHost(
+                    store = store,
+                    app = totalScreenApp,
+                    onDismiss = { minkSpacePresentation.collapse(miniApp) },
+                    onOpenConversations = openConversations,
+                    modifier = Modifier.fillMaxSize(),
+                )
             }
         }
     }

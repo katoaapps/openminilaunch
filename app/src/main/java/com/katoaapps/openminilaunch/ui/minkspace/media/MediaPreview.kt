@@ -34,7 +34,7 @@ import kotlinx.coroutines.withContext
 internal fun MediaPreview(
     item: MediaItem,
     fitCenter: Boolean = false,
-    onClick: () -> Unit,
+    onClick: (() -> Unit)?,
     modifier: Modifier = Modifier,
 ) {
     val context = LocalContext.current
@@ -53,7 +53,8 @@ internal fun MediaPreview(
         onDispose { (drawable as? Animatable)?.stop() }
     }
 
-    Box(modifier.clickable(onClick = onClick), contentAlignment = Alignment.Center) {
+    val interactionModifier = if (onClick == null) modifier else modifier.clickable(onClick = onClick)
+    Box(interactionModifier, contentAlignment = Alignment.Center) {
         AndroidView(
             factory = { imageContext ->
                 ImageView(imageContext)

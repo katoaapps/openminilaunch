@@ -4,6 +4,13 @@
     <string name="mink_space_settings_summary">হোম প্যানেলের ভিতরে যা থাকে তা বেছে নিন এবং সাজান</string>
     <string name="mink_space_settings_description">দেখানো মিনি-অ্যাপগুলি স্যুইচ করতে MinkSpace-এ উপরে বা নীচে সোয়াইপ করুন৷ বর্তমান মিনি-অ্যাপের ভিতরে পৃষ্ঠাগুলির মধ্যে সরাতে বাম বা ডানদিকে সোয়াইপ করুন।</string>
     <string name="show_in_mink_space">MinkSpace-এ দেখান</string>
+    <string name="full_screen_shortcut">ফুল-স্ক্রিন শর্টকাট</string>
+    <string name="press_and_hold_action">চেপে ধরে রাখার অ্যাকশন</string>
+    <string name="off">বন্ধ</string>
+    <string name="full_screen_shortcut_description">হোমে কীবোর্ড বোতাম চেপে ধরে রাখলে কী খুলবে তা বেছে নিন।</string>
+    <string name="adrift">Adrift</string>
+    <string name="adrift_add_memories">স্মৃতিতে ছবি বা GIF যোগ করুন যাতে সেগুলো ঘড়ির চারপাশে ভাসে।</string>
+    <string name="open_memories">স্মৃতি খুলুন</string>
     <string name="todo_added">করণীয় যোগ করা হয়েছে</string>
     <string name="open_todos">করণীয় খুলুন</string>
     <string name="calculator">ক্যালকুলেটর</string>

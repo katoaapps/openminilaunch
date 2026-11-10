@@ -27,6 +27,7 @@ import com.katoaapps.openminilaunch.data.LauncherStore
 import com.katoaapps.openminilaunch.platform.DeviceActions
 import com.katoaapps.openminilaunch.ui.launcher.home.HomeScreen
 import com.katoaapps.openminilaunch.ui.magic.MagicBoxSessionState
+import com.katoaapps.openminilaunch.ui.minkspace.core.MinkSpacePresentationState
 import com.katoaapps.openminilaunch.ui.settings.SettingsDestination
 import com.katoaapps.openminilaunch.ui.theme.Dimens
 import com.katoaapps.openminilaunch.ui.wellbeing.MinkDayScreen
@@ -47,6 +48,7 @@ internal fun LauncherTwoPanel(
     minkSpaceExpanded: Boolean,
     homeRequestToken: Int,
     magicBoxSessionState: MagicBoxSessionState,
+    minkSpacePresentation: MinkSpacePresentationState,
     onFocusPage: (Int) -> Unit,
     onMinkDay: () -> Unit,
     onGoHome: () -> Unit,
@@ -121,6 +123,7 @@ internal fun LauncherTwoPanel(
                 keyboardInputEnabled = true,
                 homeRequestToken = homeRequestToken,
                 magicBoxSessionState = magicBoxSessionState,
+                minkSpacePresentation = minkSpacePresentation,
                 paneModifier = Modifier.offset { IntOffset(homeLeftPx, 0) }
                     .width(paneWidth).fillMaxHeight(),
                 collapsedBarMaxWidth = minOf(paneWidth, Dimens.dp620),

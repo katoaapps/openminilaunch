@@ -8,6 +8,8 @@ import androidx.compose.animation.scaleIn
 import androidx.compose.animation.scaleOut
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
+import androidx.compose.foundation.combinedClickable
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.focusable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
@@ -21,6 +23,7 @@ import androidx.compose.foundation.layout.heightIn
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.DeleteOutline
@@ -44,6 +47,8 @@ import androidx.compose.ui.input.key.KeyEventType
 import androidx.compose.ui.input.key.onPreviewKeyEvent
 import androidx.compose.ui.input.key.type
 import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
+import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.TextFieldValue
@@ -161,6 +166,7 @@ internal fun MagicEditorSurface(
     }
 }
 
+@OptIn(ExperimentalFoundationApi::class)
 @Composable
 internal fun CollapsedMagicBar(
     modifier: Modifier,
@@ -169,7 +175,9 @@ internal fun CollapsedMagicBar(
     onArmedPlaced: () -> Unit,
     onPrintableKeyDown: (String, Int) -> Unit,
     onOpen: () -> Unit,
+    onOpenTotalScreen: (() -> Unit)?,
 ) {
+    val hapticFeedback = LocalHapticFeedback.current
     Row(
         modifier
             .focusRequester(armedFocusRequester)
@@ -199,13 +207,30 @@ internal fun CollapsedMagicBar(
             color = Muted,
             fontSize = Dimens.sp14,
         )
-        FilledIconButton(
-            onClick = onOpen,
-            colors = IconButtonDefaults.filledIconButtonColors(
-                containerColor = MaterialTheme.colorScheme.primary,
-            ),
+        Surface(
+            shape = CircleShape,
+            color = MaterialTheme.colorScheme.primary,
         ) {
-            Icon(Icons.Default.Keyboard, stringResource(R.string.open_magic_box))
+            Box(
+                Modifier
+                    .size(Dimens.dp40)
+                    .combinedClickable(
+                        onClick = onOpen,
+                        onLongClick = onOpenTotalScreen?.let { openTotalScreen ->
+                            {
+                                hapticFeedback.performHapticFeedback(HapticFeedbackType.LongPress)
+                                openTotalScreen()
+                            }
+                        },
+                    ),
+                contentAlignment = Alignment.Center,
+            ) {
+                Icon(
+                    Icons.Default.Keyboard,
+                    stringResource(R.string.open_magic_box),
+                    tint = MaterialTheme.colorScheme.onPrimary,
+                )
+            }
         }
     }
 }

@@ -15,6 +15,9 @@ internal class MinkSpacePreferenceStore(private val prefs: SharedPreferences) {
     var enabledMiniApps by mutableStateOf(loadEnabledMiniApps())
         private set
 
+    var totalScreenShortcut by mutableStateOf(loadTotalScreenShortcut())
+        private set
+
     fun setEnabled(miniApp: MinkSpaceMiniApp, enabled: Boolean) {
         enabledMiniApps = if (enabled) {
             enabledMiniApps + miniApp
@@ -30,6 +33,11 @@ internal class MinkSpacePreferenceStore(private val prefs: SharedPreferences) {
 
         order = updatedOrder
         saveOrder()
+    }
+
+    fun updateTotalScreenShortcut(miniApp: MinkSpaceMiniApp?) {
+        totalScreenShortcut = miniApp
+        prefs.edit { putString(KEY_TOTAL_SCREEN_SHORTCUT, miniApp?.stableId ?: TOTAL_SCREEN_OFF) }
     }
 
     fun replaceFromBackup(
@@ -78,6 +86,13 @@ internal class MinkSpacePreferenceStore(private val prefs: SharedPreferences) {
         return enabled
     }
 
+    private fun loadTotalScreenShortcut(): MinkSpaceMiniApp? {
+        if (!prefs.contains(KEY_TOTAL_SCREEN_SHORTCUT)) return MinkSpaceMiniApp.MEDIA
+        return prefs.getString(KEY_TOTAL_SCREEN_SHORTCUT, null)
+            ?.takeUnless { it == TOTAL_SCREEN_OFF }
+            ?.let(MinkSpaceMiniApp::fromStableId)
+    }
+
     private fun saveEnabledMiniApps() {
         prefs.edit {
             putStringSet(KEY_ENABLED, enabledMiniApps.mapTo(mutableSetOf()) { it.stableId })
@@ -92,6 +107,8 @@ internal class MinkSpacePreferenceStore(private val prefs: SharedPreferences) {
         const val KEY_ORDER = "mink_space_mini_app_order"
         const val KEY_ENABLED = "mink_space_enabled_mini_apps"
         const val KEY_VCARD_MINI_APP_MIGRATED = "mink_space_vcard_migration_complete"
+        const val KEY_TOTAL_SCREEN_SHORTCUT = "mink_space_total_screen_shortcut"
+        const val TOTAL_SCREEN_OFF = "off"
     }
 }
 

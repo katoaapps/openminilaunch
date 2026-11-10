@@ -4,6 +4,13 @@
     <string name="mink_space_settings_summary">Escolha e organize o que fica dentro do painel inicial</string>
     <string name="mink_space_settings_description">Deslize para cima ou para baixo em MinkSpace para alternar os miniaplicativos exibidos. Deslize para a esquerda ou para a direita para navegar entre as páginas do miniaplicativo atual.</string>
     <string name="show_in_mink_space">Mostrar no MinkSpace</string>
+    <string name="full_screen_shortcut">Atalho de tela cheia</string>
+    <string name="press_and_hold_action">Ação ao manter pressionado</string>
+    <string name="off">Desativado</string>
+    <string name="full_screen_shortcut_description">Escolha o que abre ao manter pressionado o botão do teclado na tela inicial.</string>
+    <string name="adrift">Adrift</string>
+    <string name="adrift_add_memories">Adicione fotos ou GIFs às Memórias para que flutuem ao redor do relógio.</string>
+    <string name="open_memories">Abrir Memórias</string>
     <string name="todo_added">Tarefa adicionada</string>
     <string name="open_todos">Abrir Tarefas</string>
     <string name="calculator">Calculadora</string>

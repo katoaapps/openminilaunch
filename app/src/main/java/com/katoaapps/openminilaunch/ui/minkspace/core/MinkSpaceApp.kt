@@ -16,6 +16,20 @@ internal interface MinkSpaceApp {
     )
 }
 
+/** Optional runtime contract for content hosted by MinkSpace's protected full-window shell. */
+internal interface MinkSpaceTotalScreenApp : MinkSpaceApp {
+    @Composable
+    fun TotalScreenContent(
+        scope: MinkSpaceTotalScreenScope,
+        modifier: Modifier = Modifier,
+    )
+}
+
+@Stable
+internal class MinkSpaceTotalScreenScope internal constructor(
+    val use24HourClock: Boolean,
+)
+
 /** Platform state and UI primitives supplied to one mini-app by MinkSpace. */
 @Stable
 internal class MinkSpaceScope internal constructor(

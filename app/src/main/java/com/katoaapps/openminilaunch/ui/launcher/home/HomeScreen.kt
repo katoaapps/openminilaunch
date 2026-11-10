@@ -11,7 +11,8 @@ import com.katoaapps.openminilaunch.features.updates.isNewerRelease
 import com.katoaapps.openminilaunch.platform.DeviceActions
 import com.katoaapps.openminilaunch.ui.magic.HomeMagicBox
 import com.katoaapps.openminilaunch.ui.magic.MagicBoxSessionState
-import com.katoaapps.openminilaunch.ui.minkspace.core.rememberMinkSpacePresentationState
+import com.katoaapps.openminilaunch.ui.minkspace.core.MinkSpaceMiniAppCatalog
+import com.katoaapps.openminilaunch.ui.minkspace.core.MinkSpacePresentationState
 import com.katoaapps.openminilaunch.ui.minkspace.todo.TodoFlightChip
 import com.katoaapps.openminilaunch.ui.minkspace.todo.todoFlightAnimationSpec
 import com.katoaapps.openminilaunch.ui.quickdrawer.QuickAppsEditorDialog
@@ -57,6 +58,7 @@ internal fun HomeScreen(
     keyboardInputEnabled: Boolean,
     homeRequestToken: Int,
     magicBoxSessionState: MagicBoxSessionState,
+    minkSpacePresentation: MinkSpacePresentationState,
     paneModifier: Modifier = Modifier.fillMaxSize(),
     collapsedBarMaxWidth: androidx.compose.ui.unit.Dp = Dimens.dp620,
     collapsedBarOffsetX: androidx.compose.ui.unit.Dp = Dimens.dp0,
@@ -73,7 +75,6 @@ internal fun HomeScreen(
     var flightActive by remember { mutableStateOf(false) }
     var widgetCenter by remember { mutableStateOf(Offset.Zero) }
     var magicCenter by remember { mutableStateOf(Offset.Zero) }
-    val minkSpacePresentation = rememberMinkSpacePresentationState()
     val magicExpanded = magicBoxSessionState.expanded
     var showLockDisclosure by remember { mutableStateOf(false) }
     var showUpdateConfirmation by remember { mutableStateOf(false) }
@@ -254,6 +255,14 @@ internal fun HomeScreen(
                 }
             },
             onOpenKeyboardSettings = { openSettings(SettingsDestination.KEYBOARD) },
+            onOpenTotalScreen = store.minkSpaceTotalScreenShortcut
+                ?.takeIf { MinkSpaceMiniAppCatalog.get(it).supportsTotalScreen }
+                ?.let { miniApp ->
+                    {
+                        MinkSpaceMiniAppCatalog.get(miniApp)
+                            .let(minkSpacePresentation::showTotalScreen)
+                    }
+                },
             onOpenTodos = openTodos,
             appAccessState = appAccessState,
         )

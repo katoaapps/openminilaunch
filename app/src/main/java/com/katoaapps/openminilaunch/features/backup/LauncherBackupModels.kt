@@ -82,6 +82,8 @@ internal data class LauncherBackupSettings(
     val minkSpaceMiniAppOrder: List<MinkSpaceMiniApp>?,
     /** Null means this backup predates portable MinkSpace preferences. */
     val enabledMinkSpaceMiniApps: Set<MinkSpaceMiniApp>?,
+    /** Null wrapper means this backup predates the shortcut; a null mini-app means explicit Off. */
+    val minkSpaceTotalScreenShortcut: MinkSpaceTotalScreenShortcutBackup? = null,
     val sendMessagesAutomatically: Boolean,
     val preferredMessagingPackage: String?,
     val callAutomatically: Boolean = false,
@@ -101,4 +103,8 @@ internal data class LauncherBackupSettings(
     val folderIndicatorStyle: AppFolderIndicatorStyle? = null,
     /** Null means this backup predates the folder-animation preference. */
     val folderAnimationStyle: AppFolderAnimationStyle? = null,
+)
+
+internal data class MinkSpaceTotalScreenShortcutBackup(
+    val miniApp: MinkSpaceMiniApp?,
 )

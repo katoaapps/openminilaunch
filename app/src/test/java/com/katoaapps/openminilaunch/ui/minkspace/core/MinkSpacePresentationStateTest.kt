@@ -31,6 +31,12 @@ class MinkSpacePresentationStateTest {
         assertFalse(MinkSpaceMiniAppCatalog.get(MinkSpaceMiniApp.VCARD).showExpansionButton)
     }
 
+    @Test fun catalogDeclaresOnlyMemoriesAsTotalScreenCapable() {
+        assertEquals(listOf(MinkSpaceMiniApp.MEDIA), MinkSpaceMiniAppCatalog.totalScreenMiniApps)
+        assertTrue(MinkSpaceMiniAppCatalog.get(MinkSpaceMiniApp.MEDIA).supportsTotalScreen)
+        assertFalse(MinkSpaceMiniAppCatalog.get(MinkSpaceMiniApp.MUSIC).supportsTotalScreen)
+    }
+
     @Test fun expandedPresentationLastsThroughTheCollapseAnimation() {
         assertTrue(shouldPresentExpandedContent(expanded = true, appGridAlpha = 1f))
         assertTrue(shouldPresentExpandedContent(expanded = false, appGridAlpha = 0f))
@@ -107,5 +113,39 @@ class MinkSpacePresentationStateTest {
         state.retainOnly(MinkSpaceMiniApp.MUSIC)
 
         assertNull(state.expandedMiniApp)
+    }
+
+    @Test fun totalScreenRequestTransfersShellOwnership() {
+        val state = MinkSpacePresentationState()
+        val music = state.expansionController(MinkSpaceMiniAppCatalog.get(MinkSpaceMiniApp.MUSIC))
+        val media = state.expansionController(MinkSpaceMiniAppCatalog.get(MinkSpaceMiniApp.MEDIA))
+
+        music.expand()
+        media.showTotalScreen()
+
+        assertFalse(music.expanded)
+        assertTrue(media.totalScreen)
+        assertEquals(MinkSpaceMiniApp.MEDIA, state.totalScreenMiniApp)
+        assertNull(state.expandedMiniApp)
+    }
+
+    @Test fun unsupportedMiniAppCannotTakeTotalScreenOwnership() {
+        val state = MinkSpacePresentationState()
+        val music = state.expansionController(MinkSpaceMiniAppCatalog.get(MinkSpaceMiniApp.MUSIC))
+
+        music.showTotalScreen()
+
+        assertFalse(music.totalScreenEnabled)
+        assertFalse(state.isTotalScreen)
+    }
+
+    @Test fun pagerChangesDoNotDismissTotalScreenPresentation() {
+        val state = MinkSpacePresentationState()
+        val media = state.expansionController(MinkSpaceMiniAppCatalog.get(MinkSpaceMiniApp.MEDIA))
+
+        media.showTotalScreen()
+        state.retainOnly(MinkSpaceMiniApp.TODO)
+
+        assertEquals(MinkSpaceMiniApp.MEDIA, state.totalScreenMiniApp)
     }
 }

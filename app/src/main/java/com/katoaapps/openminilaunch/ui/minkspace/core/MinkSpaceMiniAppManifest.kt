@@ -17,6 +17,10 @@ internal data class MinkSpaceMiniAppManifest(
     val showExpansionButton: Boolean = false,
     /** Overrides the standard "Expand view" label when [showExpansionButton] is true. */
     @param:StringRes val expansionButtonLabelRes: Int? = null,
+    /** Lets this mini-app provide content inside MinkSpace's protected full-window shell. */
+    val supportsTotalScreen: Boolean = false,
+    /** User-facing title for total-screen presentation. Defaults to [labelRes]. */
+    @param:StringRes val totalScreenLabelRes: Int? = null,
     val settingsTarget: MinkSpaceMiniAppSettingsTarget? = null,
 ) {
     init {
@@ -25,6 +29,9 @@ internal data class MinkSpaceMiniAppManifest(
         }
         require(showExpansionButton || expansionButtonLabelRes == null) {
             "A MinkSpace expansion label requires an expansion button"
+        }
+        require(supportsTotalScreen || totalScreenLabelRes == null) {
+            "A MinkSpace total-screen label requires total-screen support"
         }
     }
 }
