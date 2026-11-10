@@ -35,12 +35,14 @@ class FavoriteAttentionColorStoreTest {
         assertEquals(0xFF005BBB.toInt(), store.color(amy))
         assertEquals(0xFFCC5500.toInt(), store.color(may))
         assertEquals(
-            mapOf(
-                amy.storageKey to 0xFF005BBB.toInt(),
-                may.storageKey to 0xFFCC5500.toInt(),
-            ),
+            mapOf(may.storageKey to 0xFFCC5500.toInt()),
             store.colorsForBackup(),
         )
+        assertEquals(
+            mapOf("amy" to 0xFF005BBB.toInt()),
+            store.androidColorsForReconciliation(),
+        )
+        assertTrue(store.hasColorsForBackup())
     }
 }
 

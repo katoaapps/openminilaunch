@@ -1,5 +1,10 @@
 package com.katoaapps.openminilaunch.features.backup
 
+import com.katoaapps.openminilaunch.features.contacts.AndroidFavoriteAttentionTransfer
+import com.katoaapps.openminilaunch.features.contacts.AndroidFavoriteAttentionTransferEntry
+import com.katoaapps.openminilaunch.features.contacts.AndroidFavoriteAttentionTransfers
+import com.katoaapps.openminilaunch.features.contacts.AndroidFavoriteIdentityCandidate
+import com.katoaapps.openminilaunch.features.contacts.AndroidFavoriteIdentityKind
 import com.katoaapps.openminilaunch.features.minkspace.MinkSpaceMiniApp
 import com.katoaapps.openminilaunch.features.profile.ProfileCard
 import com.katoaapps.openminilaunch.features.profile.ProfileLink
@@ -564,7 +569,7 @@ class LauncherBackupCodecTest {
         assertNull(LauncherBackupCodec.decode(json.toString()).integratedContactOrder)
     }
 
-    @Test fun favoriteAttentionColorsSurvivePortableBackupRoundTrip() {
+    @Test fun exactFavoriteAttentionColorsSurvivePortableBackupRoundTrip() {
         val colors = mapOf(
             "android-contact:amy" to 0xFF005BBB.toInt(),
             "integrated-contact:favorite-may" to 0xFFCC5500.toInt(),
@@ -576,7 +581,78 @@ class LauncherBackupCodecTest {
             ),
         )
 
-        assertEquals(colors, restored.favoriteAttentionColors)
+        assertEquals(
+            mapOf("integrated-contact:favorite-may" to 0xFFCC5500.toInt()),
+            restored.favoriteAttentionColors,
+        )
+    }
+
+    @Test fun androidFavoriteAttentionTokensSurvivePortableBackupRoundTrip() {
+        val transfer = AndroidFavoriteAttentionTransfer(
+            scopeKey = "AAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA",
+            entries = listOf(
+                AndroidFavoriteAttentionTransferEntry(
+                    tokens = listOf("BBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBBB"),
+                    colorArgb = 0xFF005BBB.toInt(),
+                ),
+            ),
+        )
+
+        val restored = LauncherBackupCodec.decode(
+            LauncherBackupCodec.encode(
+                sampleBackup(twoPanelMode = true).copy(androidFavoriteAttention = transfer),
+            ),
+        )
+
+        assertEquals(transfer, restored.androidFavoriteAttention)
+    }
+
+    @Test fun androidFavoriteAttentionBackupDoesNotExposeProviderIdentifiersOrLookupKeys() {
+        val transfer = checkNotNull(
+            AndroidFavoriteAttentionTransfers.create(
+                colorsByLookupKey = mapOf("local-lookup-key" to 0xFF005BBB.toInt()),
+                candidatesByLookupKey = mapOf(
+                    "local-lookup-key" to listOf(
+                        AndroidFavoriteIdentityCandidate(
+                            kind = AndroidFavoriteIdentityKind.SOURCE_ID,
+                            accountType = "com.example.contacts",
+                            dataSet = null,
+                            value = "opaque-source-01",
+                        ),
+                    ),
+                ),
+                scopeKeyBytes = ByteArray(32) { 7 },
+            ),
+        )
+
+        val encoded = LauncherBackupCodec.encode(
+            sampleBackup(twoPanelMode = true).copy(androidFavoriteAttention = transfer),
+        )
+
+        assertFalse(encoded.contains("local-lookup-key"))
+        assertFalse(encoded.contains("opaque-source-01"))
+        assertFalse(encoded.contains("com.example.contacts"))
+    }
+
+    @Test fun malformedAndroidFavoriteAttentionIsIgnoredAsAWhole() {
+        val json = JSONObject(LauncherBackupCodec.encode(sampleBackup(twoPanelMode = true)))
+        json.put(
+            "androidFavoriteAttention",
+            JSONObject()
+                .put("scopeKey", "A".repeat(43))
+                .put(
+                    "entries",
+                    org.json.JSONArray()
+                        .put(
+                            JSONObject()
+                                .put("color", 0xFF005BBB.toInt())
+                                .put("tokens", org.json.JSONArray().put("B".repeat(43))),
+                        )
+                        .put(JSONObject().put("color", 0xFFCC5500.toInt())),
+                ),
+        )
+
+        assertNull(LauncherBackupCodec.decode(json.toString()).androidFavoriteAttention)
     }
 
     @Test fun olderBackupWithoutFavoriteAttentionColorsLeavesLocalColorsAlone() {
@@ -604,6 +680,19 @@ class LauncherBackupCodecTest {
 
         assertEquals(
             mapOf("android-contact:amy" to 0xFFCC5500.toInt()),
+            LauncherBackupCodec.decode(json.toString()).favoriteAttentionColors,
+        )
+    }
+
+    @Test fun legacyAndroidFavoriteAttentionColorsRemainReadable() {
+        val json = JSONObject(LauncherBackupCodec.encode(sampleBackup(twoPanelMode = true)))
+        json.put(
+            "favoriteAttentionColors",
+            JSONObject().put("android-contact:legacy-lookup", 0xFF005BBB.toInt()),
+        )
+
+        assertEquals(
+            mapOf("android-contact:legacy-lookup" to 0xFF005BBB.toInt()),
             LauncherBackupCodec.decode(json.toString()).favoriteAttentionColors,
         )
     }

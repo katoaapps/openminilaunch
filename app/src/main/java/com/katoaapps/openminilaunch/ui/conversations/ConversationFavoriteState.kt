@@ -42,7 +42,13 @@ internal fun rememberOrderedConversationFavorites(
     val locale = context.resources.configuration.locales[0] ?: Locale.getDefault()
     LaunchedEffect(refreshKey, resumeRevision, locale) {
         favorites = withContext(Dispatchers.IO) {
-            val androidContacts = FavoriteAndroidContactsRepository(context).use { it.favorites() }
+            val androidContacts = FavoriteAndroidContactsRepository(context).use { repository ->
+                repository.favorites().also {
+                    store.favoriteAndroidAttentionReconciler.reconcilePending(
+                        repository::portableIdentityCandidates,
+                    )
+                }
+            }
             val integratedContacts = store.favoriteIntegratedContactStore.contacts()
             store.favoriteContactOrderStore.applyTo(
                 FavoriteContactCatalog.combine(androidContacts, integratedContacts, locale),

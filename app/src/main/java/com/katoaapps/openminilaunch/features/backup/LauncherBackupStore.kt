@@ -69,6 +69,7 @@ internal fun LauncherStore.createPortableBackup(appVersion: String): LauncherBac
             .toSet()
             .let(favoriteContactOrderStore::portableIntegratedOrder),
         favoriteAttentionColors = favoriteAttentionColorStore.colorsForBackup(),
+        androidFavoriteAttention = favoriteAndroidAttentionReconciler.createTransfer(),
     )
 }
 
@@ -172,6 +173,7 @@ internal fun LauncherStore.restorePortableBackup(
         }
     }
     backup.favoriteAttentionColors?.let(favoriteAttentionColorStore::mergeFromBackup)
+    favoriteAndroidAttentionReconciler.restore(backup.androidFavoriteAttention)
 
     return if (restoreWidgetPlaceholders) {
         importWidgetRestoreRecipes(backup.widgetRecipes)

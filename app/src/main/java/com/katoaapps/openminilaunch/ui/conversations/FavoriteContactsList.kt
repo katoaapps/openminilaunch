@@ -1,6 +1,7 @@
 package com.katoaapps.openminilaunch.ui.conversations
 
 import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.foundation.border
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.foundation.layout.Arrangement
@@ -42,6 +43,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.platform.LocalHapticFeedback
@@ -58,6 +60,7 @@ import com.katoaapps.openminilaunch.model.FavoriteContactId
 import com.katoaapps.openminilaunch.model.FavoriteIntegratedContact
 import com.katoaapps.openminilaunch.ui.components.moveItem
 import com.katoaapps.openminilaunch.ui.theme.Dimens
+import com.katoaapps.openminilaunch.ui.theme.MinkFeatureColors
 import com.katoaapps.openminilaunch.ui.theme.Muted
 import com.katoaapps.openminilaunch.ui.theme.Rust
 import sh.calvin.reorderable.ReorderableItem
@@ -66,6 +69,7 @@ import sh.calvin.reorderable.rememberReorderableLazyGridState
 @Composable
 internal fun FavoriteContactsList(
     contacts: List<FavoriteContact>,
+    attentionColorFor: (FavoriteContactId) -> Int?,
     integratedAvailability: Map<FavoriteContactId.Integrated, FavoriteIntegratedContactAvailability>,
     integratedCallAvailability: Map<FavoriteContactId.Integrated, FavoriteIntegratedCallAvailability?>,
     onOpen: (FavoriteContact) -> Unit,
@@ -163,12 +167,14 @@ internal fun FavoriteContactsList(
                     when (contact) {
                         is FavoriteAndroidContact -> FavoriteAndroidContactCard(
                             contact = contact,
+                            attentionColorArgb = attentionColorFor(contact.id),
                             modifier = cardModifier,
                             dragHandle = dragHandle,
                             onOpen = onOpen,
                         )
                         is FavoriteIntegratedContact -> FavoriteIntegratedContactCard(
                             contact = contact,
+                            attentionColorArgb = attentionColorFor(contact.id),
                             availability = integratedAvailability[contact.id],
                             callAvailability = integratedCallAvailability[contact.id],
                             modifier = cardModifier,
@@ -185,12 +191,14 @@ internal fun FavoriteContactsList(
 @Composable
 private fun FavoriteAndroidContactCard(
     contact: FavoriteAndroidContact,
+    attentionColorArgb: Int?,
     modifier: Modifier,
     dragHandle: @Composable () -> Unit,
     onOpen: (FavoriteContact) -> Unit,
 ) {
     FavoriteContactGridCard(
         contact = contact,
+        attentionColorArgb = attentionColorArgb,
         modifier = modifier,
         dragHandle = dragHandle,
         photoUri = contact.photoUri,
@@ -205,6 +213,7 @@ private fun FavoriteAndroidContactCard(
 @Composable
 private fun FavoriteIntegratedContactCard(
     contact: FavoriteIntegratedContact,
+    attentionColorArgb: Int?,
     availability: FavoriteIntegratedContactAvailability?,
     callAvailability: FavoriteIntegratedCallAvailability?,
     modifier: Modifier,
@@ -242,6 +251,7 @@ private fun FavoriteIntegratedContactCard(
 
     FavoriteContactGridCard(
         contact = contact,
+        attentionColorArgb = attentionColorArgb,
         modifier = modifier,
         dragHandle = dragHandle,
         photoUri = null,
@@ -254,6 +264,7 @@ private fun FavoriteIntegratedContactCard(
 @Composable
 private fun FavoriteContactGridCard(
     contact: FavoriteContact,
+    attentionColorArgb: Int?,
     modifier: Modifier,
     dragHandle: @Composable () -> Unit,
     photoUri: String?,
@@ -261,9 +272,21 @@ private fun FavoriteContactGridCard(
     error: Boolean,
     onOpen: (FavoriteContact) -> Unit,
 ) {
+    val shape = RoundedCornerShape(Dimens.dp18)
+    val customAttentionColor = attentionColorArgb
+        ?.let(::Color)
+        ?.takeUnless { it == MinkFeatureColors.ConversationAttention }
     Card(
-        modifier = modifier.clickable { onOpen(contact) },
-        shape = RoundedCornerShape(Dimens.dp18),
+        modifier = modifier
+            .then(
+                if (customAttentionColor == null) {
+                    Modifier
+                } else {
+                    Modifier.border(Dimens.dp2, customAttentionColor, shape)
+                },
+            )
+            .clickable { onOpen(contact) },
+        shape = shape,
         colors = CardDefaults.cardColors(
             containerColor = MaterialTheme.colorScheme.surfaceContainerLow,
         ),

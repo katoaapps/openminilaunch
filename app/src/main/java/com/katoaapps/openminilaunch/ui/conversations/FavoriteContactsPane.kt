@@ -233,7 +233,13 @@ private fun FavoriteContactsContent(
         } else {
             withContext(Dispatchers.IO) {
                 if (repository == null) return@withContext emptyList()
-                runCatching(repository::favorites).getOrDefault(emptyList())
+                runCatching {
+                    repository.favorites().also {
+                        store.favoriteAndroidAttentionReconciler.reconcilePending(
+                            repository::portableIdentityCandidates,
+                        )
+                    }
+                }.getOrDefault(emptyList())
             }
         }
     }
@@ -381,6 +387,7 @@ private fun FavoriteContactsContent(
         )
         else -> FavoriteContactsList(
             contacts = favoriteContacts,
+            attentionColorFor = attentionColorStore::color,
             integratedAvailability = integratedAvailability,
             integratedCallAvailability = integratedCallAvailability,
             onOpen = { contact ->

@@ -14,6 +14,7 @@ import com.katoaapps.openminilaunch.features.appearance.HomeWallpaperRepository
 import com.katoaapps.openminilaunch.features.appearance.WATERMELON_PILL_COLOR_ARGB
 import com.katoaapps.openminilaunch.features.demo.DemoHomeProfile
 import com.katoaapps.openminilaunch.features.contacts.FavoriteAttentionColorStore
+import com.katoaapps.openminilaunch.features.contacts.AndroidFavoriteAttentionReconciler
 import com.katoaapps.openminilaunch.features.contacts.FavoriteContactOrderStore
 import com.katoaapps.openminilaunch.features.contacts.FavoriteIntegratedContactStore
 import com.katoaapps.openminilaunch.features.minkspace.MinkSpaceMiniApp
@@ -59,6 +60,10 @@ class LauncherStore private constructor(context: Context) {
     internal val favoriteIntegratedContactStore = FavoriteIntegratedContactStore(appContext)
     internal val favoriteContactOrderStore = FavoriteContactOrderStore(appContext)
     internal val favoriteAttentionColorStore = FavoriteAttentionColorStore(appContext)
+    internal val favoriteAndroidAttentionReconciler = AndroidFavoriteAttentionReconciler(
+        appContext,
+        favoriteAttentionColorStore,
+    )
     internal val minkPadPreferences = com.katoaapps.openminilaunch.features.minkpad.minkPadRepository(appContext).preferences
     private val demoPreferences: DemoPreferenceStore = DemoPreferenceStore(appContext, prefs, todoStore)
     internal val demoHomeProfile get() = demoPreferences.profile

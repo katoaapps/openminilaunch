@@ -67,6 +67,28 @@ internal class FavoriteAndroidContactsRepository(context: Context) : Closeable {
         }
     }
 
+    /**
+     * Returns provider-owned identities for starred contacts without reading account names.
+     * Values stay in memory long enough to create or resolve backup-scoped match tokens.
+     */
+    fun portableIdentityCandidates(): Map<String, List<AndroidFavoriteIdentityCandidate>> {
+        if (!hasContactsPermission()) return emptyMap()
+        return try {
+            val records = queryFavoriteIdentityRecords()
+            if (records.isEmpty()) return emptyMap()
+            val candidates = queryPortableIdentityCandidates(
+                records.map(FavoriteIdentityRecord::contactId).toSet(),
+            )
+            records.mapNotNull { record ->
+                candidates[record.contactId]
+                    ?.takeIf { it.isNotEmpty() }
+                    ?.let { record.lookupKey to it }
+            }.toMap()
+        } catch (_: RuntimeException) {
+            emptyMap()
+        }
+    }
+
     override fun close() {
         if (observerRegistered) {
             runCatching { resolver.unregisterContentObserver(observer) }
@@ -121,6 +143,37 @@ internal class FavoriteAndroidContactsRepository(context: Context) : Closeable {
                             photoUri = cursor.getString(photoIndex)?.takeIf(String::isNotBlank),
                         ),
                     )
+                }
+            }
+        }
+    }
+
+    /** Minimal identity-only query for backup reconciliation; no names, photos, or endpoints. */
+    private fun queryFavoriteIdentityRecords(): List<FavoriteIdentityRecord> {
+        val projection = arrayOf(
+            ContactsContract.Contacts._ID,
+            ContactsContract.Contacts.LOOKUP_KEY,
+        )
+        return buildList {
+            resolver.query(
+                ContactsContract.Contacts.CONTENT_URI,
+                projection,
+                "${ContactsContract.Contacts.STARRED} = 1",
+                null,
+                null,
+            )?.use { cursor ->
+                val idIndex = cursor.getColumnIndexOrThrow(projection[0])
+                val lookupIndex = cursor.getColumnIndexOrThrow(projection[1])
+                while (cursor.moveToNext()) {
+                    val lookupKey = cursor.getString(lookupIndex).orEmpty()
+                    if (lookupKey.isNotBlank()) {
+                        add(
+                            FavoriteIdentityRecord(
+                                contactId = cursor.getLong(idIndex),
+                                lookupKey = lookupKey,
+                            ),
+                        )
+                    }
                 }
             }
         }
@@ -235,6 +288,67 @@ internal class FavoriteAndroidContactsRepository(context: Context) : Closeable {
         return collected.mapValues { (_, organization) -> organization.company }
     }
 
+    private fun queryPortableIdentityCandidates(
+        contactIds: Set<Long>,
+    ): Map<Long, List<AndroidFavoriteIdentityCandidate>> {
+        if (contactIds.isEmpty()) return emptyMap()
+        val collected = mutableMapOf<Long, MutableList<AndroidFavoriteIdentityCandidate>>()
+        contactIds.chunked(MAX_IDS_PER_QUERY).forEach { ids ->
+            val placeholders = ids.joinToString(",") { "?" }
+            val projection = arrayOf(
+                ContactsContract.RawContacts.CONTACT_ID,
+                ContactsContract.RawContacts.ACCOUNT_TYPE,
+                ContactsContract.RawContacts.DATA_SET,
+                ContactsContract.RawContacts.BACKUP_ID,
+                ContactsContract.RawContacts.SOURCE_ID,
+            )
+            resolver.query(
+                ContactsContract.RawContacts.CONTENT_URI,
+                projection,
+                "${ContactsContract.RawContacts.CONTACT_ID} IN ($placeholders) AND " +
+                    "${ContactsContract.RawContacts.DELETED} = 0",
+                ids.map(Long::toString).toTypedArray(),
+                null,
+            )?.use { cursor ->
+                val contactIdIndex = cursor.getColumnIndexOrThrow(projection[0])
+                val accountTypeIndex = cursor.getColumnIndexOrThrow(projection[1])
+                val dataSetIndex = cursor.getColumnIndexOrThrow(projection[2])
+                val backupIdIndex = cursor.getColumnIndexOrThrow(projection[3])
+                val sourceIdIndex = cursor.getColumnIndexOrThrow(projection[4])
+                while (cursor.moveToNext()) {
+                    val accountType = cursor.getString(accountTypeIndex)
+                        ?.trim()
+                        ?.takeIf(String::isNotBlank)
+                        ?.takeIf { it.length <= MAX_PORTABLE_METADATA_LENGTH }
+                        ?: continue
+                    val dataSet = cursor.getString(dataSetIndex)
+                        ?.trim()
+                        ?.takeIf(String::isNotBlank)
+                        ?.takeIf { it.length <= MAX_PORTABLE_METADATA_LENGTH }
+                    val contactId = cursor.getLong(contactIdIndex)
+                    fun collect(kind: AndroidFavoriteIdentityKind, index: Int) {
+                        val value = cursor.getString(index)
+                            ?.trim()
+                            ?.takeIf(::isSafePortableContactIdentifier)
+                            ?: return
+                        val candidate = AndroidFavoriteIdentityCandidate(
+                            kind = kind,
+                            accountType = accountType,
+                            dataSet = dataSet,
+                            value = value,
+                        )
+                        if (isSafePortableContactCandidate(candidate)) {
+                            collected.getOrPut(contactId, ::mutableListOf).add(candidate)
+                        }
+                    }
+                    collect(AndroidFavoriteIdentityKind.BACKUP_ID, backupIdIndex)
+                    collect(AndroidFavoriteIdentityKind.SOURCE_ID, sourceIdIndex)
+                }
+            }
+        }
+        return collected.mapValues { (_, candidates) -> candidates.distinct() }
+    }
+
     private data class FavoriteRecord(
         val contactId: Long,
         val lookupKey: String,
@@ -242,9 +356,15 @@ internal class FavoriteAndroidContactsRepository(context: Context) : Closeable {
         val photoUri: String?,
     )
 
+    private data class FavoriteIdentityRecord(
+        val contactId: Long,
+        val lookupKey: String,
+    )
+
     private data class RankedOrganization(val company: String, val rank: Int)
 
     private companion object {
         const val MAX_IDS_PER_QUERY = 400
+        const val MAX_PORTABLE_METADATA_LENGTH = 512
     }
 }

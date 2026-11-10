@@ -1,6 +1,10 @@
 package com.katoaapps.openminilaunch.features.backup
 
 import com.katoaapps.openminilaunch.features.contacts.MAX_FAVORITE_ATTENTION_COLORS
+import com.katoaapps.openminilaunch.features.contacts.AndroidFavoriteAttentionTransfer
+import com.katoaapps.openminilaunch.features.contacts.AndroidFavoriteAttentionTransferEntry
+import com.katoaapps.openminilaunch.features.contacts.AndroidFavoriteAttentionTransfers
+import com.katoaapps.openminilaunch.features.contacts.isExactPortableFavoriteAttentionColorKey
 import com.katoaapps.openminilaunch.features.contacts.isPortableFavoriteAttentionColorKey
 import com.katoaapps.openminilaunch.features.minkspace.MinkSpaceMiniApp
 import com.katoaapps.openminilaunch.features.minkspace.todo.TodoItem
@@ -73,6 +77,11 @@ internal object LauncherBackupCodec {
         backup.favoriteAttentionColors?.let { colors ->
             put("favoriteAttentionColors", encodeFavoriteAttentionColors(colors))
         }
+        backup.androidFavoriteAttention
+            ?.takeIf(AndroidFavoriteAttentionTransfers::valid)
+            ?.let { transfer ->
+                put("androidFavoriteAttention", encodeAndroidFavoriteAttention(transfer))
+            }
         backup.profile?.let { put("profile", ProfileBackupCodec.encode(it, backup.profileLinks)) }
         put("notIncluded", PORTABILITY_EXCLUSIONS.stringsJsonArray())
     }.toString(2)
@@ -104,14 +113,72 @@ internal object LauncherBackupCodec {
             favoriteAttentionColors = if (root.has("favoriteAttentionColors")) {
                 decodeFavoriteAttentionColors(root.optJSONObject("favoriteAttentionColors"))
             } else null,
+            androidFavoriteAttention = decodeAndroidFavoriteAttention(
+                root.optJSONObject("androidFavoriteAttention"),
+            ),
         )
     }
 
     private fun encodeFavoriteAttentionColors(colors: Map<String, Int>) = JSONObject().apply {
         colors.asSequence()
-            .filter { (key, _) -> isPortableFavoriteAttentionColorKey(key) }
+            .filter { (key, _) -> isExactPortableFavoriteAttentionColorKey(key) }
             .take(MAX_FAVORITE_ATTENTION_COLORS)
             .forEach { (key, color) -> put(key, color or OPAQUE_ALPHA) }
+    }
+
+    private fun encodeAndroidFavoriteAttention(
+        transfer: AndroidFavoriteAttentionTransfer,
+    ) = JSONObject().apply {
+        put("scopeKey", transfer.scopeKey)
+        put("entries", JSONArray().apply {
+            transfer.entries.take(AndroidFavoriteAttentionTransfers.MAX_TRANSFER_ENTRIES)
+                .forEach { entry ->
+                    put(JSONObject().apply {
+                        put("color", entry.colorArgb or OPAQUE_ALPHA)
+                        put("tokens", JSONArray().apply {
+                            entry.tokens.take(AndroidFavoriteAttentionTransfers.MAX_TOKENS_PER_ENTRY)
+                                .forEach(::put)
+                        })
+                    })
+                }
+        })
+    }
+
+    private fun decodeAndroidFavoriteAttention(
+        json: JSONObject?,
+    ): AndroidFavoriteAttentionTransfer? {
+        val source = json ?: return null
+        val entriesJson = source.optJSONArray("entries") ?: return null
+        if (entriesJson.length() !in 1..AndroidFavoriteAttentionTransfers.MAX_TRANSFER_ENTRIES) {
+            return null
+        }
+        val entries = buildList {
+            repeat(entriesJson.length()) { index ->
+                val entry = entriesJson.optJSONObject(index) ?: return null
+                val tokensJson = entry.optJSONArray("tokens") ?: return null
+                if (
+                    tokensJson.length() !in
+                    1..AndroidFavoriteAttentionTransfers.MAX_TOKENS_PER_ENTRY
+                ) {
+                    return null
+                }
+                val tokens = List(tokensJson.length()) { tokenIndex ->
+                    tokensJson.optString(tokenIndex).takeIf(String::isNotBlank) ?: return null
+                }
+                val color = entry.opt("color") as? Number ?: return null
+                add(
+                    AndroidFavoriteAttentionTransferEntry(
+                        tokens = tokens,
+                        colorArgb = color.toInt() or OPAQUE_ALPHA,
+                    ),
+                )
+            }
+        }
+        val transfer = AndroidFavoriteAttentionTransfer(
+            scopeKey = source.optString("scopeKey"),
+            entries = entries,
+        )
+        return transfer.takeIf(AndroidFavoriteAttentionTransfers::valid)
     }
 
     private fun decodeFavoriteAttentionColors(json: JSONObject?): Map<String, Int> = buildMap {

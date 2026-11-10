@@ -22,11 +22,29 @@ internal class FavoriteAttentionColorStore(
 
     fun color(contactId: FavoriteContactId): Int? = colors[contactId.storageKey]
 
-    /** Snapshot for a user-requested portable backup. */
+    /** Exact portable snapshot. Android lookup keys are installation-local and excluded. */
     @Synchronized
     fun colorsForBackup(): Map<String, Int> = colors
-        .filterKeys(::isPortableFavoriteAttentionColorKey)
+        .filterKeys(::isExactPortableFavoriteAttentionColorKey)
         .toMap()
+
+    /** Android colors are exported through opaque reconciliation tokens, never lookup keys. */
+    @Synchronized
+    fun androidColorsForReconciliation(): Map<String, Int> = buildMap {
+        colors.forEach { (key, color) ->
+            if (key.startsWith(ANDROID_CONTACT_PREFIX)) {
+                key.removePrefix(ANDROID_CONTACT_PREFIX)
+                    .takeIf(String::isNotBlank)
+                    ?.let { put(it, color) }
+            }
+        }
+    }
+
+    @Synchronized
+    fun hasColorsForBackup(): Boolean = colors.keys.any { key ->
+        isExactPortableFavoriteAttentionColorKey(key) ||
+            (key.startsWith(ANDROID_CONTACT_PREFIX) && key.length > ANDROID_CONTACT_PREFIX.length)
+    }
 
     /** Merge only explicitly supplied colors; older or partial backups never clear local choices. */
     @Synchronized
@@ -47,14 +65,16 @@ internal class FavoriteAttentionColorStore(
     }
 
     @Synchronized
-    fun update(contactId: FavoriteContactId, argb: Int?) {
+    fun update(contactId: FavoriteContactId, argb: Int?): Boolean {
         val key = contactId.storageKey
-        if (key.isBlank()) return
+        if (key.isBlank()) return false
         val updated = colors.toMutableMap().apply {
             if (argb == null) remove(key) else put(key, argb or OPAQUE_ALPHA)
         }
-        if (updated == colors) return
-        if (persistence.save(updated)) colors = updated
+        if (updated == colors) return true
+        return persistence.save(updated).also { saved ->
+            if (saved) colors = updated
+        }
     }
 
     private companion object {
@@ -161,8 +181,14 @@ internal fun isPortableFavoriteAttentionColorKey(key: String): Boolean =
             key.startsWith(prefix) && key.length > prefix.length
         }
 
+internal fun isExactPortableFavoriteAttentionColorKey(key: String): Boolean =
+    key.length in 1..MAX_FAVORITE_ATTENTION_COLOR_KEY_LENGTH &&
+        key.startsWith(INTEGRATED_CONTACT_PREFIX) && key.length > INTEGRATED_CONTACT_PREFIX.length
+
 private const val MAX_FAVORITE_ATTENTION_COLOR_KEY_LENGTH = 4_096
+private const val ANDROID_CONTACT_PREFIX = "android-contact:"
+private const val INTEGRATED_CONTACT_PREFIX = "integrated-contact:"
 private val PORTABLE_FAVORITE_ATTENTION_COLOR_PREFIXES = listOf(
-    "android-contact:",
-    "integrated-contact:",
+    ANDROID_CONTACT_PREFIX,
+    INTEGRATED_CONTACT_PREFIX,
 )

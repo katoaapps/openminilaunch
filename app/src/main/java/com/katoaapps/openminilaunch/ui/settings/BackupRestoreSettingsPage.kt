@@ -67,7 +67,7 @@ internal fun BackupRestoreSettingsPage(
         key1 = store.favoriteAttentionColorStore,
     ) {
         value = withContext(Dispatchers.IO) {
-            store.favoriteAttentionColorStore.colorsForBackup().isNotEmpty()
+            store.favoriteAttentionColorStore.hasColorsForBackup()
         }
     }
     val exportSuccess = stringResource(R.string.backup_exported)
@@ -79,9 +79,9 @@ internal fun BackupRestoreSettingsPage(
         ActivityResultContracts.CreateDocument("application/json"),
     ) { uri ->
         if (uri != null) {
-            val backup = store.createPortableBackup(BuildConfig.VERSION_NAME)
             scope.launch {
                 val succeeded = withContext(Dispatchers.IO) {
+                    val backup = store.createPortableBackup(BuildConfig.VERSION_NAME)
                     LauncherBackupFile.write(context, uri, backup).isSuccess
                 }
                 val message = if (succeeded) exportSuccess else exportFailure
@@ -209,7 +209,10 @@ internal fun BackupRestoreSettingsPage(
                             modifier = Modifier.padding(top = Dimens.dp8),
                         )
                     }
-                    if (backup.favoriteAttentionColors?.isNotEmpty() == true) {
+                    if (
+                        backup.favoriteAttentionColors?.isNotEmpty() == true ||
+                        backup.androidFavoriteAttention != null
+                    ) {
                         Text(
                             stringResource(R.string.favorite_attention_colors_backup_import_description),
                             color = Muted,

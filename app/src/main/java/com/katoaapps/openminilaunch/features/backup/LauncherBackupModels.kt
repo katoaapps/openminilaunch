@@ -1,6 +1,7 @@
 package com.katoaapps.openminilaunch.features.backup
 
 import com.katoaapps.openminilaunch.features.minkspace.MinkSpaceMiniApp
+import com.katoaapps.openminilaunch.features.contacts.AndroidFavoriteAttentionTransfer
 import com.katoaapps.openminilaunch.features.minkspace.todo.TodoItem
 import com.katoaapps.openminilaunch.features.profile.ProfileCard
 import com.katoaapps.openminilaunch.features.profile.ProfileLink
@@ -42,6 +43,8 @@ internal data class LauncherBackup(
     val integratedContactOrder: List<String>? = null,
     /** Null means this backup predates portable favorite attention colors. */
     val favoriteAttentionColors: Map<String, Int>? = null,
+    /** Opaque, export-scoped tokens for best-effort Android favorite color reconciliation. */
+    val androidFavoriteAttention: AndroidFavoriteAttentionTransfer? = null,
 )
 
 internal data class LauncherBackupLayout(
