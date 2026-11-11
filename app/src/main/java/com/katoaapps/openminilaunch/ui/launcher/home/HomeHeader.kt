@@ -51,6 +51,7 @@ internal fun HomeHeader(
     horizontalPadding: Dp,
     actionSize: Dp,
     iconSize: Dp,
+    followHorizontalWindowOffset: Boolean,
     updateAvailable: Boolean,
     onMinkDay: () -> Unit,
     onUpdate: () -> Unit,
@@ -101,6 +102,7 @@ internal fun HomeHeader(
             rowHeightPx = with(density) { actionSize.roundToPx() },
             minimumFlexibleWidthPx = with(density) { Dimens.dp64.roundToPx() },
             groupGapPx = with(density) { groupGap.roundToPx() },
+            followHorizontalWindowOffset = followHorizontalWindowOffset,
             leadingContent = {
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     MinkHomeIcon(

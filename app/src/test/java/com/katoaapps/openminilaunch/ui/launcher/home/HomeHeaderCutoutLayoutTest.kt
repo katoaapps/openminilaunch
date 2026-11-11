@@ -1,11 +1,57 @@
 package com.katoaapps.openminilaunch.ui.launcher.home
 
+import androidx.compose.ui.geometry.Offset
+import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.IntRect
+import androidx.compose.ui.unit.LayoutDirection
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Test
 
 class HomeHeaderCutoutLayoutTest {
+    @Test
+    fun fullWidthPagerKeepsCutoutStableWhileHomeSlides() {
+        val windowCutout = listOf(IntRect(500, 0, 580, 92))
+
+        val atRest = localizeHomeHeaderCutouts(
+            windowCutouts = windowCutout,
+            headerOriginInWindow = resolveHomeHeaderOriginInWindow(
+                positionInWindow = Offset.Zero,
+                followHorizontalWindowOffset = false,
+            ),
+            containerWidthPx = 1080,
+            layoutDirection = LayoutDirection.Ltr,
+        )
+        val midwayThroughSwipe = localizeHomeHeaderCutouts(
+            windowCutouts = windowCutout,
+            headerOriginInWindow = resolveHomeHeaderOriginInWindow(
+                positionInWindow = Offset(-420f, 0f),
+                followHorizontalWindowOffset = false,
+            ),
+            containerWidthPx = 1080,
+            layoutDirection = LayoutDirection.Ltr,
+        )
+
+        assertEquals(atRest, midwayThroughSwipe)
+    }
+
+    @Test
+    fun twoPanelHeaderTracksItsRealWindowPosition() {
+        val origin = resolveHomeHeaderOriginInWindow(
+            positionInWindow = Offset(320f, 0f),
+            followHorizontalWindowOffset = true,
+        )
+        val localized = localizeHomeHeaderCutouts(
+            windowCutouts = listOf(IntRect(500, 0, 580, 92)),
+            headerOriginInWindow = origin,
+            containerWidthPx = 540,
+            layoutDirection = LayoutDirection.Ltr,
+        )
+
+        assertEquals(IntOffset(320, 0), origin)
+        assertEquals(listOf(IntRect(180, 0, 260, 92)), localized)
+    }
+
     @Test
     fun centeredCutoutPlacesDateAndTimeOnOppositeSides() {
         val plan = planHomeHeaderAroundCutout(

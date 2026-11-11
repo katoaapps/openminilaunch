@@ -177,6 +177,7 @@ internal fun HomeScreen(
                         horizontalPadding = homeHorizontalPadding,
                         actionSize = headerActionSize,
                         iconSize = headerIconSize,
+                        followHorizontalWindowOffset = twoPanelLayout,
                         updateAvailable = updateAvailable,
                         onMinkDay = openMinkDay,
                         onUpdate = { showUpdateConfirmation = true },

@@ -29,7 +29,6 @@ import com.katoaapps.openminilaunch.platform.mediaReadPermissions
 import com.katoaapps.openminilaunch.platform.supportsDirectCalls
 import com.katoaapps.openminilaunch.platform.supportsDirectSms
 import com.katoaapps.openminilaunch.ui.wellbeing.rememberMinkAppAccessState
-import com.katoaapps.openminilaunch.ui.keyboard.LauncherKeyboard
 
 import android.Manifest
 import android.content.Intent
@@ -732,8 +731,13 @@ internal fun MagicBoxContent(
             if (expanded) showKeyboardWhileCollapsed = false
             if (expanded && focusRequestSerial == 0) {
                 if (useNativeLauncherKeyboard) {
+                    // Mink's keyboard writes directly to this editor, so the field still needs
+                    // focus for an immediate cursor and selection even though Android's IME is
+                    // intentionally blocked by MagicInputField.
+                    while (!textFieldPlaced) withFrameNanos { }
+                    withFrameNanos { }
+                    focusRequester.requestFocus()
                     keyboard?.hide()
-                    focusManager.clearFocus(force = true)
                 } else {
                     while (!textFieldPlaced) withFrameNanos { }
                     withFrameNanos { }
@@ -771,8 +775,10 @@ internal fun MagicBoxContent(
     LaunchedEffect(focusRequestSerial) {
         if (focusRequestSerial > 0) {
             if (useNativeLauncherKeyboard) {
+                while (!textFieldPlaced) withFrameNanos { }
+                withFrameNanos { }
+                focusRequester.requestFocus()
                 keyboard?.hide()
-                focusManager.clearFocus(force = true)
             } else {
                 // TextField focus can request bring-into-view. Wait until its newly docked parent
                 // has completed placement before requesting focus or showing the IME.
@@ -796,8 +802,13 @@ internal fun MagicBoxContent(
         onCommand = ::beginCollapsedHardwareInput,
     )
 
+    val resolvedLauncherKeyboardHeight = resolveLauncherKeyboardHeightDp(
+        preferences = store.launcherKeyboardPreferences,
+        screenWidthDp = configuration.screenWidthDp,
+        screenHeightDp = configuration.screenHeightDp,
+    )
     val launcherKeyboardPreferences = store.launcherKeyboardPreferences.copy(
-        heightDp = store.launcherKeyboardPreferences.heightDp.coerceAtMost(
+        heightDp = resolvedLauncherKeyboardHeight.coerceAtMost(
             (configuration.screenHeightDp - 168).coerceAtLeast(168).toFloat(),
         ),
     )
@@ -1041,20 +1052,6 @@ internal fun MagicBoxContent(
                 }
             }
 
-            if (expanded && useNativeLauncherKeyboard) {
-                LauncherKeyboard(
-                    value = text,
-                    onValueChange = onLauncherKeyboardValueChange,
-                    preferences = launcherKeyboardPreferences,
-                    themePrimaryArgb = store.effectiveHomePanelColorArgb,
-                    themeSecondaryArgb = store.effectiveThemeSecondaryColorArgb,
-                    onSubmit = ::submit,
-                    multiline = noteMode,
-                    modifier = Modifier.align(Alignment.BottomCenter).fillMaxWidth(),
-                    onOpenSettings = onOpenKeyboardSettings,
-                    extendBehindNavigationBar = true,
-                )
-            }
         }
 
         if (!expanded && !smsFlow.sentConfirmationVisible && !todoCompletionPending) {
@@ -1091,33 +1088,27 @@ internal fun MagicBoxContent(
                 onOpenTotalScreen = onOpenTotalScreen,
             )
 
-            if (showDockedLauncherKeyboard) {
-                Box(
-                    modifier = Modifier
-                        .align(Alignment.BottomCenter)
-                        .fillMaxWidth(),
-                ) {
-                    LauncherKeyboard(
-                        value = text,
-                        onValueChange = { value ->
-                            val changed = value.text != text.text
-                            onLauncherKeyboardValueChange(value)
-                            if (changed) {
-                                expanded = true
-                            }
-                        },
-                        preferences = launcherKeyboardPreferences,
-                        themePrimaryArgb = store.effectiveHomePanelColorArgb,
-                        themeSecondaryArgb = store.effectiveThemeSecondaryColorArgb,
-                        onSubmit = ::submit,
-                        multiline = false,
-                        modifier = Modifier.fillMaxWidth(),
-                        onOpenSettings = onOpenKeyboardSettings,
-                        extendBehindNavigationBar = true,
-                    )
-                }
-            }
         }
+
+        MagicLauncherKeyboardHost(
+            visible = useNativeLauncherKeyboard && (expanded || showDockedLauncherKeyboard),
+            value = text,
+            onValueChange = { value ->
+                val changed = value.text != text.text
+                onLauncherKeyboardValueChange(value)
+                if (!expanded && changed) {
+                    expanded = true
+                    refocus(showSoftwareKeyboard = false)
+                }
+            },
+            preferences = launcherKeyboardPreferences,
+            themePrimaryArgb = store.effectiveHomePanelColorArgb,
+            themeSecondaryArgb = store.effectiveThemeSecondaryColorArgb,
+            onSubmit = ::submit,
+            multiline = expanded && noteMode,
+            onOpenSettings = onOpenKeyboardSettings,
+            modifier = Modifier.align(Alignment.BottomCenter),
+        )
 
         SmsSentConfirmation(
             visible = smsFlow.sentConfirmationVisible,

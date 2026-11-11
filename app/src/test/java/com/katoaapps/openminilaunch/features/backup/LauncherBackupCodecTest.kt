@@ -26,6 +26,7 @@ import com.katoaapps.openminilaunch.model.IntegratedContactEndpoint
 import com.katoaapps.openminilaunch.model.ProviderAddressType
 import com.katoaapps.openminilaunch.model.MinkAppPauseMode
 import com.katoaapps.openminilaunch.model.LauncherKeyboardColorSource
+import com.katoaapps.openminilaunch.model.LauncherKeyboardHeightPreset
 import com.katoaapps.openminilaunch.model.LauncherKeyboardLayout
 import com.katoaapps.openminilaunch.model.LauncherKeyboardPreferences
 import com.katoaapps.openminilaunch.model.LauncherKeyboardStyle
@@ -53,6 +54,7 @@ class LauncherBackupCodecTest {
             splitOnWideDisplays = true,
             hapticFeedbackEnabled = false,
             heightDp = 321f,
+            portraitHeightPreset = LauncherKeyboardHeightPreset.TALL,
         )
         val sample = sampleBackup(twoPanelMode = true)
         val restored = LauncherBackupCodec.decode(
