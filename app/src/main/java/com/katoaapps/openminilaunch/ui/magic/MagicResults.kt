@@ -37,7 +37,7 @@ import com.katoaapps.openminilaunch.R
 import com.katoaapps.openminilaunch.data.LauncherStore
 import com.katoaapps.openminilaunch.features.files.FileSearchRepository
 import com.katoaapps.openminilaunch.features.apps.launcherDiscoveryLabel
-import com.katoaapps.openminilaunch.features.magic.MAGIC_COMMAND_PREFIXES
+import com.katoaapps.openminilaunch.features.magic.MagicBoxRoute
 import com.katoaapps.openminilaunch.model.ContactResult
 import com.katoaapps.openminilaunch.model.FileSearchResult
 import com.katoaapps.openminilaunch.model.LauncherTarget
@@ -54,8 +54,7 @@ internal fun MagicResultsPanel(
     store: LauncherStore,
     actions: DeviceActions,
     rawText: String,
-    lockedPrefix: Char?,
-    prefix: Char?,
+    route: MagicBoxRoute,
     launcherAppsRevision: Long,
     launcherShortcutsRevision: Long,
     plainQuery: String,
@@ -97,8 +96,7 @@ internal fun MagicResultsPanel(
                 store = store,
                 actions = actions,
                 rawText = rawText,
-                lockedPrefix = lockedPrefix,
-                prefix = prefix,
+                route = route,
                 launcherAppsRevision = launcherAppsRevision,
                 launcherShortcutsRevision = launcherShortcutsRevision,
                 plainQuery = plainQuery,
@@ -149,8 +147,7 @@ internal fun MagicResultsContent(
     store: LauncherStore,
     actions: DeviceActions,
     rawText: String,
-    lockedPrefix: Char?,
-    prefix: Char?,
+    route: MagicBoxRoute,
     launcherAppsRevision: Long,
     launcherShortcutsRevision: Long,
     plainQuery: String,
@@ -179,14 +176,14 @@ internal fun MagicResultsContent(
     onIncludeAppShortcutsChange: (Boolean) -> Unit,
     onRequestContacts: () -> Unit,
 ) {
-    if (onOpenTodos != null && prefix == '-' && rawText.drop(1).isBlank() && lockedPrefix == null) {
+    if (onOpenTodos != null && route == MagicBoxRoute.TODO && rawText.isBlank()) {
         SuggestionRow(
             text = stringResource(R.string.open_todos),
             icon = Icons.Default.Checklist,
             onClick = onOpenTodos,
         )
     }
-    if (rawText.isBlank() && lockedPrefix == null && store.searchHistory.isNotEmpty()) {
+    if (rawText.isBlank() && route == MagicBoxRoute.SEARCH && store.searchHistory.isNotEmpty()) {
         SearchHistoryList(
             queries = store.searchHistory,
             onSelect = onSelectHistory,
@@ -232,7 +229,7 @@ internal fun MagicResultsContent(
             }
         }
     }
-    if (prefix !in MAGIC_COMMAND_PREFIXES && rawText.isNotBlank()) {
+    if (route == MagicBoxRoute.SEARCH && rawText.isNotBlank()) {
         Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(Dimens.dp8)) {
             SearchDestinationButton(
                 label = stringResource(R.string.web),
@@ -250,7 +247,7 @@ internal fun MagicResultsContent(
             )
         }
     }
-    if (prefix == '@' && contactResults.isNotEmpty()) {
+    if (route == MagicBoxRoute.MESSAGE && contactResults.isNotEmpty()) {
         MagicResultSectionTitle(stringResource(R.string.contacts))
     }
     contactResults.forEach { contact ->
@@ -267,7 +264,7 @@ internal fun MagicResultsContent(
         onOpen = onSelectRecentConversation,
     )
     forcedRecipient?.let { identifier ->
-        val isMessage = prefix == '@'
+        val isMessage = route == MagicBoxRoute.MESSAGE
         SuggestionRow(
             text = stringResource(
                 if (isMessage) R.string.try_message_recipient else R.string.try_call_recipient,
@@ -283,7 +280,7 @@ internal fun MagicResultsContent(
             icon = Icons.Default.Person,
         ) { onSelectForcedRecipient(identifier) }
     }
-    if (prefix == '?') {
+    if (route == MagicBoxRoute.APP) {
         Row(
             Modifier.fillMaxWidth(),
             horizontalArrangement = Arrangement.End,
@@ -310,7 +307,10 @@ internal fun MagicResultsContent(
             },
         ) { onSelectApp(app) }
     }
-    if (prefix in listOf('@', '#') && !canSearchContacts) {
+    if (
+        (route == MagicBoxRoute.MESSAGE || route == MagicBoxRoute.CALL) &&
+        !canSearchContacts
+    ) {
         FilledTonalButton(onClick = onRequestContacts) {
             Text(stringResource(R.string.allow_contacts_to_search_people))
         }

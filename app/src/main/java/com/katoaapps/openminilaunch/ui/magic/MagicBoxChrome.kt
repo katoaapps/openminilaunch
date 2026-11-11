@@ -1,6 +1,7 @@
 package com.katoaapps.openminilaunch.ui.magic
 
 import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.animateColorAsState
 import androidx.compose.animation.core.tween
 import androidx.compose.animation.fadeIn
 import androidx.compose.animation.fadeOut
@@ -36,6 +37,7 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -54,7 +56,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.zIndex
 import com.katoaapps.openminilaunch.R
-import com.katoaapps.openminilaunch.features.magic.MAGIC_AI_PREFIX
+import com.katoaapps.openminilaunch.features.magic.MagicBoxRoute
 import com.katoaapps.openminilaunch.features.magic.printableHardwareText
 import com.katoaapps.openminilaunch.ui.theme.Dimens
 import com.katoaapps.openminilaunch.ui.theme.Muted
@@ -66,7 +68,7 @@ internal fun MagicEditorSurface(
     selectedRecipientLabel: String?,
     selectedRecipientDetail: String? = null,
     selectedRecipientLeadingIcon: (@Composable () -> Unit)? = null,
-    prefix: Char?,
+    route: MagicBoxRoute,
     acceptPlatformTextInput: Boolean,
     actionVisuals: MagicActionVisuals,
     actionContentColor: Color,
@@ -82,12 +84,23 @@ internal fun MagicEditorSurface(
     visible: Boolean,
     modifier: Modifier = Modifier,
 ) {
+    val editorColor by animateColorAsState(
+        targetValue = actionVisuals.color,
+        animationSpec = tween(180),
+        label = "magic-editor-color",
+    )
+    val editorContentColor by animateColorAsState(
+        targetValue = actionContentColor,
+        animationSpec = tween(180),
+        label = "magic-editor-content-color",
+    )
     Surface(
         modifier = modifier
             .clickable(interactionSource = interactionSource, indication = null, onClick = onRefocus)
             .graphicsLayer { alpha = if (visible) 1f else 0f },
         shape = RoundedCornerShape(Dimens.dp24),
-        color = MaterialTheme.colorScheme.surface,
+        color = editorColor,
+        contentColor = editorContentColor,
         shadowElevation = Dimens.dp12,
     ) {
         Box(if (noteMode) Modifier.fillMaxSize() else Modifier.fillMaxWidth()) {
@@ -107,8 +120,8 @@ internal fun MagicEditorSurface(
                                 recipientLabel,
                                 selectedRecipientDetail.orEmpty(),
                             ),
-                            actionVisuals.color,
-                            actionContentColor,
+                            editorContentColor.copy(alpha = .14f),
+                            editorContentColor,
                             leadingContent = selectedRecipientLeadingIcon,
                             onClear = onClearMessage,
                         )
@@ -117,7 +130,8 @@ internal fun MagicEditorSurface(
                 MagicInputField(
                     value = text,
                     onValueChange = onTextChange,
-                    prefix = prefix,
+                    route = route,
+                    contentColor = editorContentColor,
                     acceptPlatformTextInput = acceptPlatformTextInput,
                     focusRequester = focusRequester,
                     onPlaced = onPlaced,
@@ -130,14 +144,16 @@ internal fun MagicEditorSurface(
                             Modifier
                         },
                     ),
-                    maxLines = if (noteMode || prefix == MAGIC_AI_PREFIX) Int.MAX_VALUE else 5,
+                    maxLines = if (
+                        noteMode || route == MagicBoxRoute.ASSISTANT
+                    ) Int.MAX_VALUE else 5,
                 )
                 if (!noteMode) {
                     FilledIconButton(
                         onClick = onSubmit,
                         colors = IconButtonDefaults.filledIconButtonColors(
-                            containerColor = actionVisuals.color,
-                            contentColor = actionContentColor,
+                            containerColor = editorContentColor.copy(alpha = .14f),
+                            contentColor = editorContentColor,
                         ),
                     ) { Icon(actionVisuals.icon, stringResource(R.string.run_command)) }
                 }
@@ -150,15 +166,15 @@ internal fun MagicEditorSurface(
                     Icon(
                         Icons.Default.DeleteOutline,
                         stringResource(R.string.delete_note_draft),
-                        tint = MaterialTheme.colorScheme.error,
+                        tint = editorContentColor,
                     )
                 }
                 FilledIconButton(
                     onClick = onSubmit,
                     modifier = Modifier.align(Alignment.BottomEnd).padding(Dimens.dp10),
                     colors = IconButtonDefaults.filledIconButtonColors(
-                        containerColor = actionVisuals.color,
-                        contentColor = actionContentColor,
+                        containerColor = editorContentColor.copy(alpha = .14f),
+                        contentColor = editorContentColor,
                     ),
                 ) { Icon(actionVisuals.icon, stringResource(R.string.run_command)) }
             }
