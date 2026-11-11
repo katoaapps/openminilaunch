@@ -1082,4 +1082,5 @@
     <string name="demo_reset_scene">Réinitialiser la scène actuelle</string>
     <string name="demo_reset_scene_description">Restaurez les tâches, les fichiers générés et les réponses d’origine de ce scénario.</string>
     <string name="demo_scene_reset">Scène de démonstration réinitialisée</string>
+    <string name="could_not_rename_favorite">Impossible de renommer ce favori.</string>
 </resources>

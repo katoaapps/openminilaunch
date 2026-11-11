@@ -1082,4 +1082,5 @@
     <string name="demo_reset_scene">Restablecer escena actual</string>
     <string name="demo_reset_scene_description">Restaura las tareas, los archivos generados y las respuestas originales de este escenario.</string>
     <string name="demo_scene_reset">Escena de demostración restablecida</string>
+    <string name="could_not_rename_favorite">No se pudo cambiar el nombre de este favorito.</string>
 </resources>

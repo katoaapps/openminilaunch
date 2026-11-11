@@ -1082,4 +1082,5 @@
     <string name="demo_reset_scene">Atur ulang adegan saat ini</string>
     <string name="demo_reset_scene_description">Pulihkan tugas, file yang dibuat, dan balasan percakapan asli untuk skenario ini.</string>
     <string name="demo_scene_reset">Adegan demo diatur ulang</string>
+    <string name="could_not_rename_favorite">Favorit ini tidak dapat diganti namanya.</string>
 </resources>

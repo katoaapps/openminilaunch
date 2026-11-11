@@ -17,6 +17,8 @@ import com.katoaapps.openminilaunch.features.contacts.FavoriteAndroidContactsRep
 import com.katoaapps.openminilaunch.features.contacts.FavoriteContactCatalog
 import com.katoaapps.openminilaunch.features.demo.DemoFavoriteData
 import com.katoaapps.openminilaunch.model.FavoriteContact
+import com.katoaapps.openminilaunch.model.FavoriteIntegratedContact
+import com.katoaapps.openminilaunch.platform.DeviceActions
 import java.util.Locale
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
@@ -26,6 +28,7 @@ import kotlinx.coroutines.withContext
 internal fun rememberOrderedConversationFavorites(
     store: LauncherStore,
     refreshKey: Any?,
+    actions: DeviceActions? = null,
 ): List<FavoriteContact> {
     if (store.demoModeEnabled) {
         return remember(store.demoScenario) { DemoFavoriteData.contacts(store.demoScenario) }
@@ -45,7 +48,7 @@ internal fun rememberOrderedConversationFavorites(
 
     val locale = context.resources.configuration.locales[0] ?: Locale.getDefault()
     LaunchedEffect(refreshKey, resumeRevision, locale) {
-        favorites = withContext(Dispatchers.IO) {
+        val loadedFavorites = withContext(Dispatchers.IO) {
             val androidContacts = FavoriteAndroidContactsRepository(context).use { repository ->
                 repository.favorites().also {
                     store.favoriteAndroidAttentionReconciler.reconcilePending(
@@ -57,6 +60,17 @@ internal fun rememberOrderedConversationFavorites(
             store.favoriteContactOrderStore.applyTo(
                 FavoriteContactCatalog.combine(androidContacts, integratedContacts, locale),
             )
+        }
+        favorites = if (actions == null) {
+            loadedFavorites
+        } else {
+            loadedFavorites.map { contact ->
+                if (contact is FavoriteIntegratedContact) {
+                    actions.presentedIntegratedContact(contact)
+                } else {
+                    contact
+                }
+            }
         }
     }
 

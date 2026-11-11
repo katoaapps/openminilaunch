@@ -1118,4 +1118,5 @@
     <string name="demo_reset_scene">إعادة ضبط المشهد الحالي</string>
     <string name="demo_reset_scene_description">استعد المهام الأصلية والملفات التي تم إنشاؤها وردود المحادثة لهذا السيناريو.</string>
     <string name="demo_scene_reset">تمت إعادة ضبط مشهد العرض</string>
+    <string name="could_not_rename_favorite">تعذّر إعادة تسمية هذه المفضلة.</string>
 </resources>

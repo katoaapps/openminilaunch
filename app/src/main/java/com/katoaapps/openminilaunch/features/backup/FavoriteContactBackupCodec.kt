@@ -1,8 +1,10 @@
 package com.katoaapps.openminilaunch.features.backup
 
 import com.katoaapps.openminilaunch.features.contacts.isValid
+import com.katoaapps.openminilaunch.features.contacts.inferredIntegratedContactNameSource
 import com.katoaapps.openminilaunch.model.FavoriteContactId
 import com.katoaapps.openminilaunch.model.FavoriteIntegratedContact
+import com.katoaapps.openminilaunch.model.FavoriteIntegratedContactNameSource
 import com.katoaapps.openminilaunch.model.IntegratedContactCallEndpoint
 import com.katoaapps.openminilaunch.model.IntegratedContactEndpoint
 import com.katoaapps.openminilaunch.model.ProviderAddressType
@@ -34,6 +36,7 @@ internal object FavoriteContactBackupCodec {
                 put(JSONObject().apply {
                     put("id", contact.id.localId)
                     put("displayName", contact.displayName)
+                    put("nameSource", contact.nameSource.name)
                     put("messageEndpoints", JSONArray().apply {
                         contact.endpoints.take(MAX_ENDPOINTS_PER_CONTACT).forEach { endpoint ->
                             put(endpoint.toJson())
@@ -65,6 +68,10 @@ internal object FavoriteContactBackupCodec {
                     displayName = displayName,
                     endpoints = messageEndpoints,
                     callEndpoint = callEndpoint,
+                    nameSource = saved.optString("nameSource")
+                        .takeIf(String::isNotBlank)
+                        ?.let { saved.enumValue("nameSource", FavoriteIntegratedContactNameSource.USER) }
+                        ?: inferredIntegratedContactNameSource(displayName, messageEndpoints),
                 ),
             )
         }

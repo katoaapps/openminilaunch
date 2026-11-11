@@ -35,7 +35,14 @@ internal data class FavoriteIntegratedContact(
     override val displayName: String,
     val endpoints: List<IntegratedContactEndpoint>,
     val callEndpoint: IntegratedContactCallEndpoint? = null,
+    val nameSource: FavoriteIntegratedContactNameSource = FavoriteIntegratedContactNameSource.USER,
 ) : FavoriteContact
+
+/** Whether the provider may refresh the favorite's visible name or the user owns the alias. */
+internal enum class FavoriteIntegratedContactNameSource {
+    PROVIDER,
+    USER,
+}
 
 /** The app-owned destination behind an integrated favorite. */
 internal sealed interface IntegratedContactEndpoint {

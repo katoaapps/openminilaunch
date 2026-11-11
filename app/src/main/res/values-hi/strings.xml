@@ -1082,4 +1082,5 @@
     <string name="demo_reset_scene">मौजूदा दृश्य रीसेट करें</string>
     <string name="demo_reset_scene_description">इस परिदृश्य के मूल कार्य, बनाई गई फ़ाइलें और बातचीत के जवाब पुनर्स्थापित करें।</string>
     <string name="demo_scene_reset">डेमो दृश्य रीसेट किया गया</string>
+    <string name="could_not_rename_favorite">इस पसंदीदा का नाम नहीं बदला जा सका।</string>
 </resources>

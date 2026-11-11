@@ -1082,4 +1082,5 @@
     <string name="demo_reset_scene">現在のシーンをリセット</string>
     <string name="demo_reset_scene_description">このシナリオの元のタスク、生成ファイル、会話の返信を復元します。</string>
     <string name="demo_scene_reset">デモシーンをリセットしました</string>
+    <string name="could_not_rename_favorite">このお気に入りの名前を変更できませんでした。</string>
 </resources>

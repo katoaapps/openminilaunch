@@ -1100,4 +1100,5 @@
     <string name="demo_reset_scene">Сбросить текущую сцену</string>
     <string name="demo_reset_scene_description">Восстановите исходные задачи, созданные файлы и ответы в разговорах этого сценария.</string>
     <string name="demo_scene_reset">Демо-сцена сброшена</string>
+    <string name="could_not_rename_favorite">Не удалось переименовать избранное.</string>
 </resources>

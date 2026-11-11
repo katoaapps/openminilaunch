@@ -36,6 +36,7 @@ import com.katoaapps.openminilaunch.model.ContactAppRoute
 import com.katoaapps.openminilaunch.model.FavoriteAndroidContact
 import com.katoaapps.openminilaunch.model.FavoriteContactActionRoutes
 import com.katoaapps.openminilaunch.model.FavoriteIntegratedContact
+import com.katoaapps.openminilaunch.model.FavoriteIntegratedContactNameSource
 import com.katoaapps.openminilaunch.model.IntegratedContactCallEndpoint
 import com.katoaapps.openminilaunch.model.IntegratedContactEndpoint
 import com.katoaapps.openminilaunch.model.LauncherShortcutTarget
@@ -65,6 +66,7 @@ internal fun FavoriteContactsPane(
         }
         FavoriteContactsList(
             contacts = DemoFavoriteData.contacts(store.demoScenario),
+            actions = actions,
             attentionColorFor = store::demoFavoriteAttentionColor,
             integratedAvailability = emptyMap(),
             integratedCallAvailability = emptyMap(),
@@ -226,12 +228,19 @@ private fun FavoriteContactsContent(
             openCall(phone, packageName, store.callAutomatically)
         }
     }
-    val integratedContacts by produceState<List<FavoriteIntegratedContact>?>(
+    val storedIntegratedContacts by produceState<List<FavoriteIntegratedContact>?>(
         initialValue = null,
         key1 = integratedStore,
         key2 = integratedRevision,
     ) {
         value = withContext(Dispatchers.IO) { integratedStore.contacts() }
+    }
+    val integratedContacts = remember(
+        storedIntegratedContacts,
+        shortcutsRevision,
+        resumeRevision,
+    ) {
+        storedIntegratedContacts?.map(actions::presentedIntegratedContact)
     }
     val actionAppOptions by produceState(
         initialValue = FavoriteActionAppOptions(),
@@ -433,6 +442,7 @@ private fun FavoriteContactsContent(
         )
         else -> FavoriteContactsList(
             contacts = favoriteContacts,
+            actions = actions,
             attentionColorFor = attentionColorStore::color,
             integratedAvailability = integratedAvailability,
             integratedCallAvailability = integratedCallAvailability,
@@ -516,6 +526,7 @@ private fun FavoriteContactsContent(
             ?: actions.integratedContactAvailability(contact)
         FavoriteIntegratedContactActionDialog(
             contact = contact,
+            actions = actions,
             availability = availability,
             callAvailability = integratedCallAvailability[contact.id],
             attentionColorArgb = attentionColorStore.color(contact.id),
@@ -549,6 +560,25 @@ private fun FavoriteContactsContent(
                     if (withContext(Dispatchers.IO) { integratedStore.remove(contact.id) }) {
                         attentionColorStore.update(contact.id, null)
                         integratedRevision++
+                    }
+                }
+            },
+            onRename = { displayName ->
+                scope.launch {
+                    if (withContext(Dispatchers.IO) {
+                        integratedStore.rename(contact.id, displayName)
+                    }) {
+                        selectedIntegratedContact = contact.copy(
+                            displayName = displayName,
+                            nameSource = FavoriteIntegratedContactNameSource.USER,
+                        )
+                        integratedRevision++
+                    } else {
+                        Toast.makeText(
+                            context,
+                            context.getString(R.string.could_not_rename_favorite),
+                            Toast.LENGTH_SHORT,
+                        ).show()
                     }
                 }
             },

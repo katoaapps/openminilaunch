@@ -31,6 +31,9 @@ import androidx.compose.ui.unit.Dp
 import com.katoaapps.openminilaunch.R
 import com.katoaapps.openminilaunch.features.conversations.DemoConversationData
 import com.katoaapps.openminilaunch.features.conversations.NotificationConversation
+import com.katoaapps.openminilaunch.model.FavoriteAndroidContact
+import com.katoaapps.openminilaunch.model.FavoriteContact
+import com.katoaapps.openminilaunch.model.FavoriteIntegratedContact
 import com.katoaapps.openminilaunch.platform.DeviceActions
 import com.katoaapps.openminilaunch.ui.components.AppIcon
 import com.katoaapps.openminilaunch.ui.theme.Dimens
@@ -49,6 +52,7 @@ internal data class ConversationFavoriteRowStyle(
 @Composable
 internal fun ConversationCard(
     conversation: NotificationConversation,
+    favoriteContact: FavoriteContact?,
     actions: DeviceActions,
     favoriteStyle: ConversationFavoriteRowStyle?,
     onOpen: () -> Unit,
@@ -71,10 +75,19 @@ internal fun ConversationCard(
             ?.let { BorderStroke(Dimens.dp2, it.color) },
     ) {
         Row(Modifier.fillMaxWidth().padding(Dimens.dp14), verticalAlignment = Alignment.CenterVertically) {
-            ConversationSourceIcons(conversation.sourcePackages, actions)
+            ConversationParticipantIcon(
+                packages = conversation.sourcePackages,
+                favoriteContact = favoriteContact,
+                actions = actions,
+            )
             Column(Modifier.weight(1f).padding(horizontal = Dimens.dp12)) {
                 Row(verticalAlignment = Alignment.CenterVertically) {
-                    Text(conversation.name, Modifier.weight(1f), fontWeight = FontWeight.Bold, maxLines = 1)
+                    Text(
+                        favoriteContact?.displayName ?: conversation.name,
+                        Modifier.weight(1f),
+                        fontWeight = FontWeight.Bold,
+                        maxLines = 1,
+                    )
                     Text(
                         DateFormat.getTimeInstance(DateFormat.SHORT).format(
                             Date(latest?.timestamp ?: conversation.latestNotification.postedAt),
@@ -106,6 +119,40 @@ internal fun ConversationCard(
                     )
                 }
             }
+        }
+    }
+}
+
+/**
+ * A matched one-to-one favorite represents a person, so it uses that person's artwork. Mixed
+ * provider rows keep their source stack because no single provider image represents the thread.
+ */
+@Composable
+internal fun ConversationParticipantIcon(
+    packages: List<String>,
+    favoriteContact: FavoriteContact?,
+    actions: DeviceActions,
+) {
+    if (favoriteContact == null || packages.size != 1) {
+        ConversationSourceIcons(packages, actions)
+        return
+    }
+    when (favoriteContact) {
+        is FavoriteAndroidContact -> FavoriteContactAvatar(
+            displayName = favoriteContact.displayName,
+            photoUri = favoriteContact.photoUri,
+            size = Dimens.dp38,
+        )
+        is FavoriteIntegratedContact -> {
+            val availability = remember(favoriteContact, actions) {
+                actions.integratedContactAvailability(favoriteContact)
+            }
+            FavoriteIntegratedContactAvatar(
+                contact = favoriteContact,
+                availability = availability,
+                actions = actions,
+                size = Dimens.dp38,
+            )
         }
     }
 }

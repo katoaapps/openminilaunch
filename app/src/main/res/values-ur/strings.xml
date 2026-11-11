@@ -1082,4 +1082,5 @@
     <string name="demo_reset_scene">موجودہ منظر ری سیٹ کریں</string>
     <string name="demo_reset_scene_description">اس منظرنامے کے اصل کام، بنائی گئی فائلیں اور گفتگو کے جوابات بحال کریں۔</string>
     <string name="demo_scene_reset">ڈیمو منظر ری سیٹ ہو گیا</string>
+    <string name="could_not_rename_favorite">اس پسندیدہ کا نام تبدیل نہیں کیا جا سکا۔</string>
 </resources>

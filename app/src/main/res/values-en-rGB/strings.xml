@@ -1082,4 +1082,5 @@
     <string name="demo_reset_scene">Reset current scene</string>
     <string name="demo_reset_scene_description">Restore this scenario’s original tasks, generated files, and conversation replies.</string>
     <string name="demo_scene_reset">Demo scene reset</string>
+    <string name="could_not_rename_favorite">Couldn’t rename this favourite.</string>
 </resources>

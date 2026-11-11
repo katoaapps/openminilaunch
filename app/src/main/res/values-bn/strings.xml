@@ -1082,4 +1082,5 @@
     <string name="demo_reset_scene">বর্তমান দৃশ্য রিসেট করুন</string>
     <string name="demo_reset_scene_description">এই দৃশ্যপটের মূল কাজ, তৈরি করা ফাইল এবং কথোপকথনের উত্তর পুনরুদ্ধার করুন।</string>
     <string name="demo_scene_reset">ডেমো দৃশ্য রিসেট হয়েছে</string>
+    <string name="could_not_rename_favorite">এই পছন্দের নাম পরিবর্তন করা যায়নি।</string>
 </resources>

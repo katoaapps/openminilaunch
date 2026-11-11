@@ -1082,4 +1082,5 @@
     <string name="demo_reset_scene">重設目前場景</string>
     <string name="demo_reset_scene_description">還原呢個場景原本嘅工作、產生檔案同對話回覆。</string>
     <string name="demo_scene_reset">示範場景已重設</string>
+    <string name="could_not_rename_favorite">無法重新命名呢個最愛聯絡人。</string>
 </resources>

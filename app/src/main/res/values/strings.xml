@@ -1155,6 +1155,7 @@
     <string name="could_not_reconnect_conversation">Couldn’t reconnect this conversation.</string>
     <string name="favorite_already_added">This person is already in Favorites.</string>
     <string name="could_not_add_favorite">Couldn’t add this favorite.</string>
+    <string name="could_not_rename_favorite">Couldn’t rename this favorite.</string>
     <string name="open_conversation">Open conversation</string>
     <string name="remove_from_favorites">Remove from favorites</string>
     <string name="loading_favorite_contacts">Loading favorite contacts…</string>

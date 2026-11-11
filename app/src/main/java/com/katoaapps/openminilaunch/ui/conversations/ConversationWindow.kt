@@ -39,6 +39,7 @@ import com.katoaapps.openminilaunch.features.conversations.ConversationMessage
 import com.katoaapps.openminilaunch.features.conversations.ConversationNotification
 import com.katoaapps.openminilaunch.features.conversations.ConversationNotificationStore
 import com.katoaapps.openminilaunch.features.conversations.NotificationConversation
+import com.katoaapps.openminilaunch.model.FavoriteContact
 import com.katoaapps.openminilaunch.platform.DeviceActions
 import com.katoaapps.openminilaunch.ui.components.PageHeader
 import com.katoaapps.openminilaunch.ui.theme.Dimens
@@ -49,6 +50,8 @@ import kotlinx.coroutines.launch
 @Composable
 internal fun ConversationWindow(
     conversation: NotificationConversation,
+    displayName: String,
+    favoriteContact: FavoriteContact?,
     actions: DeviceActions,
     goBack: () -> Unit,
 ) {
@@ -77,8 +80,8 @@ internal fun ConversationWindow(
     }
 
     Column(Modifier.fillMaxSize().statusBarsPadding().navigationBarsPadding().imePadding()) {
-        PageHeader(conversation.name, goBack)
-        ConversationWindowHeader(conversation, actions, activity)
+        PageHeader(displayName, goBack)
+        ConversationWindowHeader(conversation, favoriteContact, actions, activity)
         LazyColumn(
             Modifier.weight(1f).fillMaxWidth().padding(horizontal = Dimens.dp18),
             state = messageListState,
@@ -126,6 +129,7 @@ internal fun ConversationWindow(
 @Composable
 private fun ConversationWindowHeader(
     conversation: NotificationConversation,
+    favoriteContact: FavoriteContact?,
     actions: DeviceActions,
     activity: ComponentActivity,
 ) {
@@ -135,7 +139,11 @@ private fun ConversationWindowHeader(
         Modifier.fillMaxWidth().padding(horizontal = Dimens.dp20, vertical = Dimens.dp6),
         verticalAlignment = Alignment.CenterVertically,
     ) {
-        ConversationSourceIcons(conversation.sourcePackages, actions)
+        ConversationParticipantIcon(
+            packages = conversation.sourcePackages,
+            favoriteContact = favoriteContact,
+            actions = actions,
+        )
         Text(
             conversation.notifications.map(ConversationNotification::appName).distinct()
                 .joinToString(stringResource(R.string.middle_dot_separator)),

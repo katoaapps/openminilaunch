@@ -1082,4 +1082,5 @@
     <string name="demo_reset_scene">重置当前场景</string>
     <string name="demo_reset_scene_description">恢复此场景原始的任务、生成文件和对话回复。</string>
     <string name="demo_scene_reset">演示场景已重置</string>
+    <string name="could_not_rename_favorite">无法重命名此收藏联系人。</string>
 </resources>

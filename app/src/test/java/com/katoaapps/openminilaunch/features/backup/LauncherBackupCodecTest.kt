@@ -19,6 +19,7 @@ import com.katoaapps.openminilaunch.model.FontAppearance
 import com.katoaapps.openminilaunch.model.FontSource
 import com.katoaapps.openminilaunch.model.FavoriteContactId
 import com.katoaapps.openminilaunch.model.FavoriteIntegratedContact
+import com.katoaapps.openminilaunch.model.FavoriteIntegratedContactNameSource
 import com.katoaapps.openminilaunch.model.IconAppearance
 import com.katoaapps.openminilaunch.model.IntegratedContactCallEndpoint
 import com.katoaapps.openminilaunch.model.IntegratedContactEndpoint
@@ -562,6 +563,30 @@ class LauncherBackupCodecTest {
         )
         assertFalse(encoded.contains("contactUri"))
         assertFalse(encoded.contains("photoUri"))
+    }
+
+    @Test fun providerManagedFavoriteNameSurvivesPortableBackupRoundTrip() {
+        val favorite = FavoriteIntegratedContact(
+            id = FavoriteContactId.Integrated("favorite-may-shortcut"),
+            displayName = "May Wong",
+            endpoints = listOf(
+                IntegratedContactEndpoint.ConversationShortcut(
+                    packageName = "com.example.chat",
+                    shortcutId = "may-conversation",
+                    userSerial = 0L,
+                    label = "May Wong",
+                ),
+            ),
+            nameSource = FavoriteIntegratedContactNameSource.PROVIDER,
+        )
+        val encoded = LauncherBackupCodec.encode(
+            sampleBackup(twoPanelMode = true).copy(integratedContacts = listOf(favorite)),
+        )
+
+        assertEquals(
+            listOf(favorite),
+            LauncherBackupCodec.decode(encoded).integratedContacts,
+        )
     }
 
     @Test fun olderBackupWithoutMinkCreatedFavoritesLeavesExistingFavoritesAlone() {

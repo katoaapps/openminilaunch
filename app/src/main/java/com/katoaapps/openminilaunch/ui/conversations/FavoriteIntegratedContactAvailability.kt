@@ -1,6 +1,8 @@
 package com.katoaapps.openminilaunch.ui.conversations
 
+import com.katoaapps.openminilaunch.features.contacts.FAVORITE_INTEGRATED_CONTACT_NAME_MAX_CHARS
 import com.katoaapps.openminilaunch.model.FavoriteIntegratedContact
+import com.katoaapps.openminilaunch.model.FavoriteIntegratedContactNameSource
 import com.katoaapps.openminilaunch.model.IntegratedContactCallEndpoint
 import com.katoaapps.openminilaunch.model.IntegratedContactEndpoint
 import com.katoaapps.openminilaunch.model.LauncherShortcutTarget
@@ -13,6 +15,7 @@ internal sealed interface FavoriteIntegratedContactAvailability {
 
     data class Available(
         override val providerLabel: String,
+        val shortcut: LauncherShortcutTarget? = null,
     ) : FavoriteIntegratedContactAvailability
 
     data class AppNotInstalled(
@@ -41,6 +44,22 @@ internal fun DeviceActions.resolveIntegratedContact(
         ),
     ) as? LauncherShortcutTarget)?.takeIf(LauncherShortcutTarget::isAvailable)
 
+/** Applies live provider labels only while the user has not deliberately chosen an alias. */
+internal fun DeviceActions.presentedIntegratedContact(
+    contact: FavoriteIntegratedContact,
+): FavoriteIntegratedContact {
+    if (contact.nameSource == FavoriteIntegratedContactNameSource.USER) return contact
+    val shortcut = contact.endpoints
+        .filterIsInstance<IntegratedContactEndpoint.ConversationShortcut>()
+        .firstNotNullOfOrNull(::resolveIntegratedContact)
+    val providerName = shortcut?.label
+        ?.trim()
+        ?.take(FAVORITE_INTEGRATED_CONTACT_NAME_MAX_CHARS)
+        ?.takeIf(String::isNotBlank)
+        ?: return contact
+    return if (providerName == contact.displayName) contact else contact.copy(displayName = providerName)
+}
+
 internal fun DeviceActions.integratedContactAvailability(
     contact: FavoriteIntegratedContact,
 ): FavoriteIntegratedContactAvailability {
@@ -50,14 +69,18 @@ internal fun DeviceActions.integratedContactAvailability(
         )
     val provider = messagingProviderAvailability(endpoint.packageName)
     return when (endpoint) {
-        is IntegratedContactEndpoint.ConversationShortcut -> when {
-            resolveIntegratedContact(endpoint) != null ->
-                FavoriteIntegratedContactAvailability.Available(provider.label)
-            !provider.installed -> FavoriteIntegratedContactAvailability.AppNotInstalled(
-                providerLabel = provider.label,
-                installAvailable = provider.installUrl != null,
-            )
-            else -> FavoriteIntegratedContactAvailability.ConversationUnavailable(provider.label)
+        is IntegratedContactEndpoint.ConversationShortcut -> when (
+            val shortcut = resolveIntegratedContact(endpoint)
+        ) {
+            null -> if (!provider.installed) {
+                FavoriteIntegratedContactAvailability.AppNotInstalled(
+                    providerLabel = provider.label,
+                    installAvailable = provider.installUrl != null,
+                )
+            } else {
+                FavoriteIntegratedContactAvailability.ConversationUnavailable(provider.label)
+            }
+            else -> FavoriteIntegratedContactAvailability.Available(provider.label, shortcut)
         }
         is IntegratedContactEndpoint.ProviderAddress -> if (provider.installed) {
             FavoriteIntegratedContactAvailability.Available(provider.label)

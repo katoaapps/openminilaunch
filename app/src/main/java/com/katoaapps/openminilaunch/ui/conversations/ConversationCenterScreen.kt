@@ -24,6 +24,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -51,6 +52,7 @@ import com.katoaapps.openminilaunch.features.conversations.prioritizeFavoriteCon
 import com.katoaapps.openminilaunch.features.conversations.shouldShowConversationAttention
 import com.katoaapps.openminilaunch.model.CommunicationRecipient
 import com.katoaapps.openminilaunch.model.ContactAppRoute
+import com.katoaapps.openminilaunch.model.FavoriteContact
 import com.katoaapps.openminilaunch.model.LauncherShortcutTarget
 import com.katoaapps.openminilaunch.platform.DeviceActions
 import com.katoaapps.openminilaunch.ui.components.PageHeader
@@ -74,6 +76,7 @@ internal fun ConversationCenterScreen(
 ) {
     val context = LocalContext.current
     val activity = context as ComponentActivity
+    val shortcutsRevision by actions.launcherShortcutsRevision.collectAsState()
     val demoModeEnabled = store.demoModeEnabled
     var accessGranted by remember {
         mutableStateOf(ConversationNotificationStore.hasNotificationAccess(context))
@@ -91,12 +94,22 @@ internal fun ConversationCenterScreen(
         demoConversationState = store.demoConversationState,
         demoSessionStartedAt = store.demoSessionStartedAt,
     )
-    val favoriteContacts = rememberOrderedConversationFavorites(store, refreshKey = selectedSection)
+    val favoriteContacts = rememberOrderedConversationFavorites(
+        store = store,
+        refreshKey = selectedSection to shortcutsRevision,
+        actions = actions,
+    )
     val orderedConversations = remember(conversations, favoriteContacts) {
         prioritizeFavoriteConversations(conversations, favoriteContacts)
     }
     val favoriteMatches = remember(conversations, favoriteContacts) {
         matchFavoriteConversations(conversations, favoriteContacts)
+    }
+    val favoriteContactsByConversation = remember(favoriteMatches, favoriteContacts) {
+        val favoriteContactsById = favoriteContacts.associateBy(FavoriteContact::id)
+        favoriteMatches.mapNotNull { (conversationId, match) ->
+            favoriteContactsById[match.favoriteId]?.let { conversationId to it }
+        }.toMap()
     }
     val conversationsById = remember(conversations) {
         conversations.associateBy(NotificationConversation::id)
@@ -164,6 +177,10 @@ internal fun ConversationCenterScreen(
             if (selectedConversation != null) {
                 ConversationWindow(
                     conversation = selectedConversation,
+                    displayName = favoriteContactsByConversation[selectedConversation.id]
+                        ?.displayName
+                        ?: selectedConversation.name,
+                    favoriteContact = favoriteContactsByConversation[selectedConversation.id],
                     actions = actions,
                     goBack = { selectedConversationId = null },
                 )
@@ -186,6 +203,7 @@ internal fun ConversationCenterScreen(
                             else -> ConversationList(
                                 conversations = orderedConversations,
                                 favoriteRowStyles = favoriteRowStyles,
+                                favoriteContacts = favoriteContactsByConversation,
                                 actions = actions,
                                 onConversation = { selectedConversationId = it.id },
                             )
@@ -220,6 +238,7 @@ internal fun ConversationCenterScreen(
 private fun ConversationList(
     conversations: List<NotificationConversation>,
     favoriteRowStyles: Map<String, ConversationFavoriteRowStyle>,
+    favoriteContacts: Map<String, FavoriteContact>,
     actions: DeviceActions,
     onConversation: (NotificationConversation) -> Unit,
 ) {
@@ -239,6 +258,7 @@ private fun ConversationList(
         items(conversations, key = NotificationConversation::id) { conversation ->
             ConversationCard(
                 conversation = conversation,
+                favoriteContact = favoriteContacts[conversation.id],
                 actions = actions,
                 favoriteStyle = favoriteRowStyles[conversation.id],
                 onOpen = { onConversation(conversation) },

@@ -3,19 +3,20 @@ package com.katoaapps.openminilaunch.features.contacts
 import com.katoaapps.openminilaunch.model.FavoriteContactId
 import com.katoaapps.openminilaunch.model.FavoriteAndroidContact
 import com.katoaapps.openminilaunch.model.FavoriteIntegratedContact
+import com.katoaapps.openminilaunch.model.FavoriteIntegratedContactNameSource
 import com.katoaapps.openminilaunch.model.IntegratedContactCallEndpoint
 import com.katoaapps.openminilaunch.model.IntegratedContactEndpoint
 import com.katoaapps.openminilaunch.model.LauncherShortcutTarget
 import com.katoaapps.openminilaunch.model.ProviderAddressType
 import java.io.ByteArrayOutputStream
 import java.io.DataOutputStream
+import java.util.Locale
 import javax.crypto.KeyGenerator
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertThrows
 import org.junit.Assert.assertTrue
 import org.junit.Test
-import java.util.Locale
 
 class FavoriteIntegratedContactStoreTest {
     private val may = FavoriteIntegratedContact(
@@ -35,6 +36,20 @@ class FavoriteIntegratedContactStoreTest {
         assertEquals(listOf(may), FavoriteIntegratedContactCodec.decode(
             FavoriteIntegratedContactCodec.encode(listOf(may)),
         ))
+    }
+
+    @Test fun codecRoundTripPreservesProviderManagedName() {
+        val providerManaged = may.copy(
+            displayName = "May",
+            nameSource = FavoriteIntegratedContactNameSource.PROVIDER,
+        )
+
+        assertEquals(
+            listOf(providerManaged),
+            FavoriteIntegratedContactCodec.decode(
+                FavoriteIntegratedContactCodec.encode(listOf(providerManaged)),
+            ),
+        )
     }
 
     @Test fun codecRoundTripPreservesProviderAddress() {
@@ -95,6 +110,82 @@ class FavoriteIntegratedContactStoreTest {
         )
     }
 
+    @Test fun untouchedShortcutNameRemainsProviderManaged() {
+        val store = FavoriteIntegratedContactStore(
+            EncryptedFavoriteIntegratedContactPersistence(
+                MemoryContactDataStorage(),
+                testCipher(),
+            ),
+        )
+
+        assertEquals(
+            FavoriteIntegratedContactAddResult.ADDED,
+            store.add(shortcut("may", "May")),
+        )
+
+        val saved = store.contacts().single()
+        assertEquals("May", saved.displayName)
+        assertEquals(FavoriteIntegratedContactNameSource.PROVIDER, saved.nameSource)
+    }
+
+    @Test fun editedShortcutNameBecomesUserManaged() {
+        val store = FavoriteIntegratedContactStore(
+            EncryptedFavoriteIntegratedContactPersistence(
+                MemoryContactDataStorage(),
+                testCipher(),
+            ),
+        )
+
+        assertEquals(
+            FavoriteIntegratedContactAddResult.ADDED,
+            store.add(shortcut("may", "May"), displayName = "May from Signal"),
+        )
+
+        assertEquals(
+            FavoriteIntegratedContactNameSource.USER,
+            store.contacts().single().nameSource,
+        )
+    }
+
+    @Test fun deliberateRenamePinsProviderManagedName() {
+        val store = FavoriteIntegratedContactStore(
+            EncryptedFavoriteIntegratedContactPersistence(
+                MemoryContactDataStorage(),
+                testCipher(),
+            ),
+        )
+        assertEquals(
+            FavoriteIntegratedContactAddResult.ADDED,
+            store.add(shortcut("may", "May")),
+        )
+        val id = store.contacts().single().id
+
+        assertTrue(store.rename(id, "My May"))
+
+        val renamed = store.contacts().single()
+        assertEquals("My May", renamed.displayName)
+        assertEquals(FavoriteIntegratedContactNameSource.USER, renamed.nameSource)
+    }
+
+    @Test fun reconnectRefreshesProviderManagedName() {
+        val persistence = EncryptedFavoriteIntegratedContactPersistence(
+            MemoryContactDataStorage(),
+            testCipher(),
+        )
+        val providerManaged = may.copy(
+            displayName = "May",
+            nameSource = FavoriteIntegratedContactNameSource.PROVIDER,
+        )
+        assertTrue(persistence.save(listOf(providerManaged)))
+        val store = FavoriteIntegratedContactStore(persistence)
+
+        assertTrue(store.replaceEndpoint(may.id, shortcut("new-conversation", "May W.")))
+
+        val reconnected = store.contacts().single()
+        assertEquals("May W.", reconnected.displayName)
+        assertEquals(FavoriteIntegratedContactNameSource.PROVIDER, reconnected.nameSource)
+    }
+
     @Test fun backupMergeAddsNewFavoritesWithoutReplacingExistingOnes() {
         val persistence = EncryptedFavoriteIntegratedContactPersistence(
             MemoryContactDataStorage(),
@@ -120,6 +211,15 @@ class FavoriteIntegratedContactStoreTest {
 
     @Test fun versionOneShortcutPayloadStillImports() {
         assertEquals(listOf(may), FavoriteIntegratedContactCodec.decode(versionOnePayload(may)))
+    }
+
+    @Test fun legacyUntouchedShortcutNameBecomesProviderManaged() {
+        val untouched = may.copy(displayName = "May")
+
+        assertEquals(
+            FavoriteIntegratedContactNameSource.PROVIDER,
+            FavoriteIntegratedContactCodec.decode(versionOnePayload(untouched)).single().nameSource,
+        )
     }
 
     @Test fun encryptedStoreDoesNotExposeNamesOrProviderIdentity() {
@@ -190,6 +290,7 @@ class FavoriteIntegratedContactStoreTest {
         val reconnected = FavoriteIntegratedContactStore(persistence).contacts().single()
         assertEquals(may.id, reconnected.id)
         assertEquals(may.displayName, reconnected.displayName)
+        assertEquals(FavoriteIntegratedContactNameSource.USER, reconnected.nameSource)
         val endpoint = reconnected.endpoints.single() as IntegratedContactEndpoint.ConversationShortcut
         assertEquals("new-conversation", endpoint.shortcutId)
         assertEquals("May W.", endpoint.label)
