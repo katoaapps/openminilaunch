@@ -333,7 +333,11 @@ internal fun LauncherTargetPickerDialog(
         }
     }
     AppPickerDialogContent(
-        title = title,
+        title = if (multiSelect && selectionLimit != Int.MAX_VALUE) {
+            "$title (${selected.size}/$selectionLimit)"
+        } else {
+            title
+        },
         apps = visibleTargets,
         selected = selected,
         appKey = LauncherTarget::selectionKey,

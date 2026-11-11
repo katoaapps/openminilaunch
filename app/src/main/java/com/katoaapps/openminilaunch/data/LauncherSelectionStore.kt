@@ -7,6 +7,7 @@ import com.katoaapps.openminilaunch.model.AppFolderColorMode
 import com.katoaapps.openminilaunch.model.AppGridAssignment
 import com.katoaapps.openminilaunch.model.AppGridSlot
 import com.katoaapps.openminilaunch.model.MAX_APP_FOLDER_NAME_LENGTH
+import com.katoaapps.openminilaunch.model.MAX_APP_FOLDER_TARGETS
 import com.katoaapps.openminilaunch.model.MAX_DRAWER_APPS
 import com.katoaapps.openminilaunch.model.configurableAppGridSlots
 import com.katoaapps.openminilaunch.model.normalizedAppFolders
@@ -81,7 +82,11 @@ internal class LauncherSelectionStore(private val persistence: LauncherStorePers
         selectedTargetKeys: List<String>,
     ) {
         if (slot !in configurableAppGridSlots) return
-        val targets = selectedTargetKeys.map(String::trim).filter(String::isNotEmpty).distinct()
+        val targets = selectedTargetKeys
+            .map(String::trim)
+            .filter(String::isNotEmpty)
+            .distinct()
+            .take(MAX_APP_FOLDER_TARGETS)
         val assignment = when (targets.size) {
             0 -> null
             1 -> AppGridAssignment.Target(targets.single())

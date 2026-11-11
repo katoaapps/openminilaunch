@@ -69,6 +69,22 @@ class AppGridTargetPlacementTest {
         assertEquals(listOf(TARGET_ONE, TARGET_TWO), result.updatedFolder?.orderedTargetKeys)
     }
 
+    @Test fun pinnedTargetDoesNotOverflowFullFolder() {
+        val folder = AppFolderConfig(
+            id = FOLDER_ID,
+            orderedTargetKeys = (1..MAX_APP_FOLDER_TARGETS).map { "target-$it" },
+        )
+
+        val result = AppGridAssignment.Folder(FOLDER_ID).placePinnedTarget(
+            "target-overflow",
+            folder,
+            newFolderId = { "unused" },
+        )
+
+        assertEquals(AppGridAssignment.Folder(FOLDER_ID), result.assignment)
+        assertNull(result.updatedFolder)
+    }
+
     @Test fun missingFolderFallsBackToDirectTarget() {
         val result = AppGridAssignment.Folder(FOLDER_ID).placePinnedTarget(
             TARGET_TWO,

@@ -319,8 +319,10 @@ internal fun HomeScreen(
         HomeDrawerSheet(
             store = store,
             actions = actions,
+            appAccessState = appAccessState,
             onDismiss = { drawerOpen = false },
             onManageQuickApps = { quickAppsEditorOpen = true },
+            onPausedApp = { pausedAppPackage = it },
         )
     }
 
