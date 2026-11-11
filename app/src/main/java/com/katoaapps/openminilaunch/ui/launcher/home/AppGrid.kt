@@ -54,6 +54,8 @@ import com.katoaapps.openminilaunch.ui.appgrid.defaultIcon
 import com.katoaapps.openminilaunch.ui.appgrid.displayLabel
 import com.katoaapps.openminilaunch.ui.components.LauncherTargetIcon
 import com.katoaapps.openminilaunch.ui.components.minkBuiltInIconTint
+import com.katoaapps.openminilaunch.ui.onboarding.HomeTourTarget
+import com.katoaapps.openminilaunch.ui.onboarding.homeTourTarget
 import com.katoaapps.openminilaunch.ui.theme.Dimens
 import com.katoaapps.openminilaunch.ui.theme.MinkTransparent
 import com.katoaapps.openminilaunch.ui.wellbeing.MinkPausedBadge
@@ -82,6 +84,7 @@ internal fun AppGrid(
 
     Column(modifier, verticalArrangement = Arrangement.spacedBy(Dimens.dp4)) {
         val visibleOrder = store.effectiveAppGridOrder
+        val tourTargetSlot = visibleOrder.firstOrNull { it != AppGridSlot.DRAWER }
         BoxWithConstraints(Modifier.fillMaxWidth().weight(1f)) {
             val slotSize = appGridSlotCellSizeDp(maxWidth.value, maxHeight.value).dp
             LazyVerticalGrid(
@@ -149,6 +152,13 @@ internal fun AppGrid(
                             Modifier
                                 .size(slotSize)
                                 .animateItem()
+                                .then(
+                                    if (slot == tourTargetSlot) {
+                                        Modifier.homeTourTarget(HomeTourTarget.APP_GRID)
+                                    } else {
+                                        Modifier
+                                    },
+                                )
                                 .clip(RoundedCornerShape(if (compact) Dimens.dp14 else Dimens.dp18))
                                 .background(if (folder != null) Color.Transparent else itemContainerColor)
                                 .then(interactionModifier)

@@ -1,0 +1,17 @@
+<resources>
+    <string name="home_spotlight_folders_title">একটি ফোল্ডার তৈরি করুন</string>
+    <string name="home_spotlight_folders_description">যেকোনো অ্যাপ চেপে ধরে আরেকটি অ্যাপ যোগ করলে টাইলটি ফোল্ডারে পরিণত হবে।</string>
+    <string name="home_spotlight_minkspace_title">মিনি অ্যাপ এখানে থাকে</string>
+    <string name="home_spotlight_minkspace_description">মিনি অ্যাপ বদলাতে MinkSpace-এর ভেতরে উপরে বা নিচে সোয়াইপ করুন। সমর্থিত অ্যাপ বড় করতে ট্যাপ করুন।</string>
+    <string name="home_spotlight_magic_title">টাইপ করা শুরু করুন</string>
+    <string name="home_spotlight_magic_description">সাধারণ লেখা বা Magic Box হটকি দিয়ে খুঁজুন, বার্তা পাঠান, কল করুন, নোট লিখুন এবং কাজ চালু করুন।</string>
+    <string name="home_spotlight_keyboard_title">শুধু কীবোর্ড নয়</string>
+    <string name="home_spotlight_keyboard_description">কীবোর্ড খুলতে ট্যাপ করুন। Adrift চালু করতে চেপে ধরুন।</string>
+    <string name="home_spotlight_header_title">এক নজরে হোম</string>
+    <string name="home_spotlight_header_description">বার্তা খুলুন, তারিখ ও ব্যাটারি দেখুন অথবা সেটিংসে যান।</string>
+    <string name="home_spotlight_gestures_title">হোমে চলাফেরা করুন</string>
+    <string name="home_spotlight_gestures_description">চারপাশের জায়গায় যেতে হোম থেকে সোয়াইপ করুন।</string>
+    <string name="notifications">বিজ্ঞপ্তি</string>
+    <string name="replay_home_tour">হোম ট্যুর আবার দেখুন</string>
+    <string name="replay_home_tour_summary">হোমের নিয়ন্ত্রণ, শর্টকাট ও অঙ্গভঙ্গি আবার দেখুন</string>
+</resources>

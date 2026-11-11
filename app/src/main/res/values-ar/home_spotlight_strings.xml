@@ -1,0 +1,17 @@
+<resources>
+    <string name="home_spotlight_folders_title">إنشاء مجلد</string>
+    <string name="home_spotlight_folders_description">اضغط مطولاً على أي تطبيق، ثم أضف تطبيقاً آخر لتحويل المربع إلى مجلد.</string>
+    <string name="home_spotlight_minkspace_title">التطبيقات المصغّرة هنا</string>
+    <string name="home_spotlight_minkspace_description">اسحب لأعلى أو لأسفل داخل MinkSpace للتنقل بين التطبيقات المصغّرة. اضغط على التطبيقات المدعومة لتوسيعها.</string>
+    <string name="home_spotlight_magic_title">ابدأ الكتابة</string>
+    <string name="home_spotlight_magic_description">ابحث وأرسل الرسائل واتصل وأنشئ الملاحظات وشغّل الإجراءات بالنص العادي أو مفاتيح Magic Box السريعة.</string>
+    <string name="home_spotlight_keyboard_title">أكثر من لوحة مفاتيح</string>
+    <string name="home_spotlight_keyboard_description">اضغط لفتح لوحة المفاتيح. اضغط مطولاً لتشغيل Adrift.</string>
+    <string name="home_spotlight_header_title">الرئيسية بنظرة واحدة</string>
+    <string name="home_spotlight_header_description">افتح الرسائل وتحقق من التاريخ والبطارية أو انتقل إلى الإعدادات.</string>
+    <string name="home_spotlight_gestures_title">التنقل في الرئيسية</string>
+    <string name="home_spotlight_gestures_description">اسحب من الرئيسية للوصول إلى المساحات المحيطة بها.</string>
+    <string name="notifications">الإشعارات</string>
+    <string name="replay_home_tour">إعادة جولة الرئيسية</string>
+    <string name="replay_home_tour_summary">مراجعة عناصر التحكم والاختصارات والإيماءات في الرئيسية</string>
+</resources>

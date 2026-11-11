@@ -1,0 +1,17 @@
+<resources>
+    <string name="home_spotlight_folders_title">Créer un dossier</string>
+    <string name="home_spotlight_folders_description">Appuyez longuement sur une app, puis ajoutez-en une autre pour transformer la tuile en dossier.</string>
+    <string name="home_spotlight_minkspace_title">Les mini-apps sont ici</string>
+    <string name="home_spotlight_minkspace_description">Balayez vers le haut ou le bas dans MinkSpace pour parcourir les mini-apps. Touchez les apps compatibles pour les agrandir.</string>
+    <string name="home_spotlight_magic_title">Commencez à saisir</string>
+    <string name="home_spotlight_magic_description">Recherchez, envoyez des messages, appelez, créez des notes et lancez des actions avec du texte ou les raccourcis Magic Box.</string>
+    <string name="home_spotlight_keyboard_title">Plus qu’un clavier</string>
+    <string name="home_spotlight_keyboard_description">Touchez pour ouvrir le clavier. Appuyez longuement pour lancer Adrift.</string>
+    <string name="home_spotlight_header_title">Accueil en un coup d’œil</string>
+    <string name="home_spotlight_header_description">Ouvrez Messages, consultez la date et la batterie, ou accédez aux Paramètres.</string>
+    <string name="home_spotlight_gestures_title">Parcourir l’Accueil</string>
+    <string name="home_spotlight_gestures_description">Balayez depuis l’Accueil pour atteindre les espaces voisins.</string>
+    <string name="notifications">Notifications</string>
+    <string name="replay_home_tour">Revoir la visite de l’Accueil</string>
+    <string name="replay_home_tour_summary">Revoir les commandes, raccourcis et gestes de l’Accueil</string>
+</resources>

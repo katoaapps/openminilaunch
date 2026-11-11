@@ -55,6 +55,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.input.TextFieldValue
 import androidx.compose.ui.zIndex
+import com.katoaapps.openminilaunch.ui.onboarding.HomeTourTarget
+import com.katoaapps.openminilaunch.ui.onboarding.homeTourTarget
 import com.katoaapps.openminilaunch.R
 import com.katoaapps.openminilaunch.features.magic.MagicBoxRoute
 import com.katoaapps.openminilaunch.features.magic.printableHardwareText
@@ -196,6 +198,7 @@ internal fun CollapsedMagicBar(
     val hapticFeedback = LocalHapticFeedback.current
     Row(
         modifier
+            .homeTourTarget(HomeTourTarget.MAGIC_BOX)
             .focusRequester(armedFocusRequester)
             .onGloballyPositioned { onArmedPlaced() }
             .onPreviewKeyEvent { event ->
@@ -230,6 +233,7 @@ internal fun CollapsedMagicBar(
             Box(
                 Modifier
                     .size(Dimens.dp40)
+                    .homeTourTarget(HomeTourTarget.KEYBOARD_ACTION)
                     .combinedClickable(
                         onClick = onOpen,
                         onLongClick = onOpenTotalScreen?.let { openTotalScreen ->

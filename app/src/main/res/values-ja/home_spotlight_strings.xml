@@ -1,0 +1,17 @@
+<resources>
+    <string name="home_spotlight_folders_title">フォルダーを作成</string>
+    <string name="home_spotlight_folders_description">アプリを長押しして別のアプリを追加すると、タイルがフォルダーになります。</string>
+    <string name="home_spotlight_minkspace_title">ミニアプリはこちら</string>
+    <string name="home_spotlight_minkspace_description">MinkSpace 内を上下にスワイプしてミニアプリを切り替えます。対応アプリをタップすると拡大します。</string>
+    <string name="home_spotlight_magic_title">入力を始める</string>
+    <string name="home_spotlight_magic_description">通常のテキストや Magic Box のホットキーで、検索、メッセージ、通話、メモ、アクションを実行できます。</string>
+    <string name="home_spotlight_keyboard_title">キーボード以上の機能</string>
+    <string name="home_spotlight_keyboard_description">タップでキーボードを開きます。長押しで Adrift を起動します。</string>
+    <string name="home_spotlight_header_title">ホームをひと目で確認</string>
+    <string name="home_spotlight_header_description">メッセージを開き、日付やバッテリーを確認し、設定へ移動できます。</string>
+    <string name="home_spotlight_gestures_title">ホームを移動</string>
+    <string name="home_spotlight_gestures_description">ホームからスワイプして周囲のスペースへ移動します。</string>
+    <string name="notifications">通知</string>
+    <string name="replay_home_tour">ホームツアーを再生</string>
+    <string name="replay_home_tour_summary">ホームの操作、ショートカット、ジェスチャーを確認</string>
+</resources>

@@ -20,6 +20,7 @@ import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Download
 import androidx.compose.material.icons.filled.Forum
 import androidx.compose.material.icons.filled.Gavel
+import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Palette
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.PrivacyTip
@@ -44,6 +45,7 @@ internal fun AboutSettingsPage(
     store: LauncherStore,
     actions: DeviceActions,
     onRepeatTutorial: () -> Unit,
+    onReplayHomeTour: () -> Unit,
     onOpenDemoStudio: () -> Unit,
     goBack: () -> Unit,
 ) {
@@ -123,6 +125,12 @@ internal fun AboutSettingsPage(
             stringResource(R.string.repeat_tutorial_summary),
             Icons.Default.School,
             onClick = onRepeatTutorial,
+        )
+        SettingsRow(
+            stringResource(R.string.replay_home_tour),
+            stringResource(R.string.replay_home_tour_summary),
+            Icons.Default.Home,
+            onClick = onReplayHomeTour,
         )
         if (store.demoModeEnabled) {
             SettingsRow(

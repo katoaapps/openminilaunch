@@ -18,6 +18,7 @@ internal fun SettingsDestinationContent(
     permissionActions: SettingsPermissionActions,
     requestHomeRole: () -> Unit,
     onRepeatTutorial: () -> Unit,
+    onReplayHomeTour: () -> Unit,
     onNavigate: (SettingsDestination) -> Unit,
     onOverviewNavigate: (SettingsDestination) -> Unit,
     onNavigateBack: () -> Unit,
@@ -157,6 +158,7 @@ internal fun SettingsDestinationContent(
             store,
             actions,
             onRepeatTutorial,
+            onReplayHomeTour,
             { onNavigate(SettingsDestination.DEMO_STUDIO) },
             onNavigateBack,
         )
