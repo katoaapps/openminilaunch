@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="mink_keyboard">Mink कीबोर्ड</string>
+    <string name="mink_keyboard_description">Magic Box में सिस्टम कीबोर्ड की जगह Mink का बिल्ट-इन कीबोर्ड इस्तेमाल करें।</string>
+</resources>

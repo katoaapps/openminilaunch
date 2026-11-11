@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="mink_keyboard">Teclado de Mink</string>
+    <string name="mink_keyboard_description">Usa el teclado integrado de Mink en Magic Box en lugar del teclado del sistema.</string>
+</resources>

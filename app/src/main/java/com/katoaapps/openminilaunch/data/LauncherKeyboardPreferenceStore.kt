@@ -23,6 +23,7 @@ internal class LauncherKeyboardPreferenceStore(private val prefs: SharedPreferen
         val normalized = updated.copy(heightDp = normalizeLauncherKeyboardHeight(updated.heightDp))
         preferences = normalized
         prefs.edit {
+            putBoolean(USE_MINK_KEYBOARD_KEY, normalized.useMinkKeyboard)
             putString(STYLE_KEY, normalized.style.name)
             putString(LAYOUT_KEY, normalized.layout.name)
             putString(COLOR_SOURCE_KEY, normalized.colorSource.name)
@@ -43,6 +44,7 @@ internal class LauncherKeyboardPreferenceStore(private val prefs: SharedPreferen
             prefs.getFloat(HEIGHT_KEY, DEFAULT_KEYBOARD_HEIGHT_DP),
         )
         return LauncherKeyboardPreferences(
+            useMinkKeyboard = prefs.getBoolean(USE_MINK_KEYBOARD_KEY, true),
             style = prefs.enumValue(STYLE_KEY, LauncherKeyboardStyle.FLAT_PRIMARY),
             layout = prefs.enumValue(LAYOUT_KEY, LauncherKeyboardLayout.QWERTY),
             colorSource = prefs.enumValue(COLOR_SOURCE_KEY, LauncherKeyboardColorSource.THEME),
@@ -73,6 +75,7 @@ internal class LauncherKeyboardPreferenceStore(private val prefs: SharedPreferen
         ?: fallback
 
     private companion object {
+        const val USE_MINK_KEYBOARD_KEY = "launcher_keyboard_enabled"
         const val STYLE_KEY = "launcher_keyboard_style"
         const val LAYOUT_KEY = "launcher_keyboard_layout"
         const val COLOR_SOURCE_KEY = "launcher_keyboard_color_source"

@@ -71,120 +71,129 @@ internal fun KeyboardSettingsPage(store: LauncherStore, goBack: () -> Unit) {
 
     SettingsPage(stringResource(R.string.launcher_keyboard), goBack) {
         SettingsSwitchRow(
+            title = stringResource(R.string.mink_keyboard),
+            subtitle = stringResource(R.string.mink_keyboard_description),
+            checked = preferences.useMinkKeyboard,
+            onCheckedChange = {
+                store.updateLauncherKeyboardPreferences(preferences.copy(useMinkKeyboard = it))
+            },
+        )
+        SettingsSwitchRow(
             title = stringResource(R.string.open_keyboard_on_home),
             subtitle = stringResource(R.string.open_keyboard_on_home_description),
             checked = store.openSoftwareKeyboardOnHome,
             onCheckedChange = store::updateOpenSoftwareKeyboardOnHome,
         )
-        SettingsSwitchRow(
-            title = stringResource(R.string.keyboard_split_wide),
-            subtitle = stringResource(R.string.keyboard_split_wide_description),
-            checked = preferences.splitOnWideDisplays,
-            onCheckedChange = { store.updateLauncherKeyboardPreferences(preferences.copy(splitOnWideDisplays = it)) },
-        )
-        SettingsSwitchRow(
-            title = stringResource(R.string.keyboard_haptic_feedback),
-            subtitle = stringResource(R.string.keyboard_haptic_feedback_description),
-            checked = preferences.hapticFeedbackEnabled,
-            onCheckedChange = { store.updateLauncherKeyboardPreferences(preferences.copy(hapticFeedbackEnabled = it)) },
-        )
-
-        SectionLabel(stringResource(R.string.keyboard_live_preview))
-        KeyboardDevicePreview(
-            value = previewValue,
-            onValueChange = { previewValue = it },
-            preferences = previewPreferences,
-            themePrimaryArgb = store.effectiveHomePanelColorArgb,
-            themeSecondaryArgb = themeSecondary,
-        )
-
-        SectionLabel(stringResource(R.string.keyboard_layout))
-        KeyboardChoiceGrid(
-            options = LauncherKeyboardLayout.entries,
-            columns = 4,
-            selected = preferences.layout,
-            label = { layout -> stringResource(layout.labelRes) },
-            onSelect = { layout ->
-                store.updateLauncherKeyboardPreferences(preferences.copy(layout = layout))
-            },
-        )
-
-        SectionLabel(stringResource(R.string.keyboard_style))
-        Text(stringResource(R.string.keyboard_theme_colors_description), color = Muted, fontSize = Dimens.sp12)
-        KeyboardChoiceGrid(
-            options = launcherKeyboardStyleOptions,
-            columns = 3,
-            selected = preferences.style,
-            label = { style -> stringResource(style.labelRes) },
-            onSelect = { style ->
-                store.updateLauncherKeyboardPreferences(preferences.copy(style = style))
-            },
-        )
-        ChoiceStrip {
-            LauncherKeyboardColorSource.entries.forEach { source ->
-                FilterChip(
-                    selected = preferences.colorSource == source,
-                    onClick = { store.updateLauncherKeyboardPreferences(preferences.copy(colorSource = source)) },
-                    label = { Text(stringResource(source.labelRes)) },
-                )
-            }
-        }
-        if (preferences.colorSource == LauncherKeyboardColorSource.CUSTOM) {
-            Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(Dimens.dp8)) {
-                SettingsColorPickerButton(
-                    label = stringResource(R.string.keyboard_primary_color),
-                    color = Color(preferences.customPrimaryArgb),
-                    onClick = { primaryPicker = true },
-                    modifier = Modifier.weight(1f),
-                )
-                SettingsColorPickerButton(
-                    label = stringResource(R.string.keyboard_secondary_color),
-                    color = Color(preferences.customSecondaryArgb),
-                    onClick = { secondaryPicker = true },
-                    modifier = Modifier.weight(1f),
-                )
-            }
-        }
-        Row(
-            modifier = Modifier.fillMaxWidth(),
-            horizontalArrangement = Arrangement.spacedBy(Dimens.dp8),
-        ) {
-            SettingsColorPickerButton(
-                label = stringResource(R.string.keyboard_key_color),
-                color = resolvedColors.key,
-                onClick = { keyColorPicker = true },
-                modifier = Modifier.weight(1f),
+        if (preferences.useMinkKeyboard) {
+            SettingsSwitchRow(
+                title = stringResource(R.string.keyboard_split_wide),
+                subtitle = stringResource(R.string.keyboard_split_wide_description),
+                checked = preferences.splitOnWideDisplays,
+                onCheckedChange = { store.updateLauncherKeyboardPreferences(preferences.copy(splitOnWideDisplays = it)) },
             )
-            if (preferences.keyColorOverrideArgb != null) {
-                TextButton(
-                    onClick = {
-                        store.updateLauncherKeyboardPreferences(
-                            preferences.copy(keyColorOverrideArgb = null),
-                        )
-                    },
-                    modifier = Modifier.weight(1f),
-                ) {
-                    Text(stringResource(R.string.keyboard_use_palette_key_color))
+            SettingsSwitchRow(
+                title = stringResource(R.string.keyboard_haptic_feedback),
+                subtitle = stringResource(R.string.keyboard_haptic_feedback_description),
+                checked = preferences.hapticFeedbackEnabled,
+                onCheckedChange = { store.updateLauncherKeyboardPreferences(preferences.copy(hapticFeedbackEnabled = it)) },
+            )
+
+            SectionLabel(stringResource(R.string.keyboard_live_preview))
+            KeyboardDevicePreview(
+                value = previewValue,
+                onValueChange = { previewValue = it },
+                preferences = previewPreferences,
+                themePrimaryArgb = store.effectiveHomePanelColorArgb,
+                themeSecondaryArgb = themeSecondary,
+            )
+
+            SectionLabel(stringResource(R.string.keyboard_layout))
+            KeyboardChoiceGrid(
+                options = LauncherKeyboardLayout.entries,
+                columns = 4,
+                selected = preferences.layout,
+                label = { layout -> stringResource(layout.labelRes) },
+                onSelect = { layout ->
+                    store.updateLauncherKeyboardPreferences(preferences.copy(layout = layout))
+                },
+            )
+
+            SectionLabel(stringResource(R.string.keyboard_style))
+            Text(stringResource(R.string.keyboard_theme_colors_description), color = Muted, fontSize = Dimens.sp12)
+            KeyboardChoiceGrid(
+                options = launcherKeyboardStyleOptions,
+                columns = 3,
+                selected = preferences.style,
+                label = { style -> stringResource(style.labelRes) },
+                onSelect = { style ->
+                    store.updateLauncherKeyboardPreferences(preferences.copy(style = style))
+                },
+            )
+            ChoiceStrip {
+                LauncherKeyboardColorSource.entries.forEach { source ->
+                    FilterChip(
+                        selected = preferences.colorSource == source,
+                        onClick = { store.updateLauncherKeyboardPreferences(preferences.copy(colorSource = source)) },
+                        label = { Text(stringResource(source.labelRes)) },
+                    )
                 }
             }
-        }
-
-        SectionLabel(stringResource(R.string.keyboard_height))
-        Text(
-            "${(previewHeightPreset.portraitFraction * 100).roundToInt()}% · " +
-                stringResource(R.string.keyboard_height_value, previewHeight.roundToInt()),
-            fontWeight = FontWeight.Bold,
-        )
-        KeyboardHeightSlider(
-            selectedPreset = previewHeightPreset,
-            onPresetChange = { previewHeightPreset = it },
-            onValueChangeFinished = {
-                store.updateLauncherKeyboardPreferences(
-                    preferences.copy(portraitHeightPreset = previewHeightPreset),
+            if (preferences.colorSource == LauncherKeyboardColorSource.CUSTOM) {
+                Row(Modifier.fillMaxWidth(), horizontalArrangement = Arrangement.spacedBy(Dimens.dp8)) {
+                    SettingsColorPickerButton(
+                        label = stringResource(R.string.keyboard_primary_color),
+                        color = Color(preferences.customPrimaryArgb),
+                        onClick = { primaryPicker = true },
+                        modifier = Modifier.weight(1f),
+                    )
+                    SettingsColorPickerButton(
+                        label = stringResource(R.string.keyboard_secondary_color),
+                        color = Color(preferences.customSecondaryArgb),
+                        onClick = { secondaryPicker = true },
+                        modifier = Modifier.weight(1f),
+                    )
+                }
+            }
+            Row(
+                modifier = Modifier.fillMaxWidth(),
+                horizontalArrangement = Arrangement.spacedBy(Dimens.dp8),
+            ) {
+                SettingsColorPickerButton(
+                    label = stringResource(R.string.keyboard_key_color),
+                    color = resolvedColors.key,
+                    onClick = { keyColorPicker = true },
+                    modifier = Modifier.weight(1f),
                 )
-            },
-        )
+                if (preferences.keyColorOverrideArgb != null) {
+                    TextButton(
+                        onClick = {
+                            store.updateLauncherKeyboardPreferences(
+                                preferences.copy(keyColorOverrideArgb = null),
+                            )
+                        },
+                        modifier = Modifier.weight(1f),
+                    ) {
+                        Text(stringResource(R.string.keyboard_use_palette_key_color))
+                    }
+                }
+            }
 
+            SectionLabel(stringResource(R.string.keyboard_height))
+            Text(
+                "${(previewHeightPreset.portraitFraction * 100).roundToInt()}% · " +
+                    stringResource(R.string.keyboard_height_value, previewHeight.roundToInt()),
+                fontWeight = FontWeight.Bold,
+            )
+            KeyboardHeightSlider(
+                selectedPreset = previewHeightPreset,
+                onPresetChange = { previewHeightPreset = it },
+                onValueChangeFinished = {
+                    store.updateLauncherKeyboardPreferences(
+                        preferences.copy(portraitHeightPreset = previewHeightPreset),
+                    )
+                },
+            )
+        }
     }
 
     if (primaryPicker) {

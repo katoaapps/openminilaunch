@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="mink_keyboard">Mink 键盘</string>
+    <string name="mink_keyboard_description">在 Magic Box 中使用 Mink 内置键盘，而不是系统键盘。</string>
+</resources>

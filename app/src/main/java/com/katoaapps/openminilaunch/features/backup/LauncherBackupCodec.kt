@@ -345,6 +345,7 @@ internal object LauncherBackupCodec {
             putNullable("preferredWebPackage", settings.preferredWebPackage)
             settings.launcherKeyboardPreferences?.let { keyboard ->
                 put("launcherKeyboard", JSONObject().apply {
+                    put("useMinkKeyboard", keyboard.useMinkKeyboard)
                     put("style", keyboard.style.name)
                     put("layout", keyboard.layout.name)
                     put("colorSource", keyboard.colorSource.name)
@@ -483,6 +484,7 @@ internal object LauncherBackupCodec {
                     keyboard.optDouble("heightDp", DEFAULT_KEYBOARD_HEIGHT_DP.toDouble()).toFloat(),
                 )
                 LauncherKeyboardPreferences(
+                    useMinkKeyboard = keyboard.optBoolean("useMinkKeyboard", true),
                     style = keyboard.enumValue("style", LauncherKeyboardStyle.FLAT_PRIMARY),
                     layout = keyboard.enumValue("layout", LauncherKeyboardLayout.QWERTY),
                     colorSource = keyboard.enumValue("colorSource", LauncherKeyboardColorSource.THEME),

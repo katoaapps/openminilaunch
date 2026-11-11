@@ -54,6 +54,7 @@ internal enum class LauncherKeyboardHeightPreset(val portraitFraction: Float) {
 }
 
 internal data class LauncherKeyboardPreferences(
+    val useMinkKeyboard: Boolean = true,
     val style: LauncherKeyboardStyle = LauncherKeyboardStyle.FLAT_PRIMARY,
     val layout: LauncherKeyboardLayout = LauncherKeyboardLayout.QWERTY,
     val colorSource: LauncherKeyboardColorSource = LauncherKeyboardColorSource.THEME,

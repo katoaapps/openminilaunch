@@ -45,6 +45,7 @@ import org.junit.Test
 class LauncherBackupCodecTest {
     @Test fun launcherKeyboardPreferencesSurvivePortableBackupRoundTrip() {
         val keyboard = LauncherKeyboardPreferences(
+            useMinkKeyboard = false,
             style = LauncherKeyboardStyle.OUTLINED_SECONDARY,
             layout = LauncherKeyboardLayout.DVORAK,
             colorSource = LauncherKeyboardColorSource.CUSTOM,
@@ -76,6 +77,30 @@ class LauncherBackupCodecTest {
         )
         json.getJSONObject("settings").getJSONObject("magicBox").remove("launcherKeyboard")
         assertNull(LauncherBackupCodec.decode(json.toString()).settings.launcherKeyboardPreferences)
+    }
+
+    @Test fun olderLauncherKeyboardBackupDefaultsToMinkKeyboard() {
+        val sample = sampleBackup(twoPanelMode = true)
+        val json = JSONObject(
+            LauncherBackupCodec.encode(
+                sample.copy(
+                    settings = sample.settings.copy(
+                        launcherKeyboardPreferences = LauncherKeyboardPreferences(useMinkKeyboard = false),
+                    ),
+                ),
+            ),
+        )
+        json.getJSONObject("settings")
+            .getJSONObject("magicBox")
+            .getJSONObject("launcherKeyboard")
+            .remove("useMinkKeyboard")
+
+        assertEquals(
+            true,
+            LauncherBackupCodec.decode(json.toString())
+                .settings.launcherKeyboardPreferences
+                ?.useMinkKeyboard,
+        )
     }
 
     @Test fun palettePreferenceSurvivesPortableBackupRoundTrip() {
