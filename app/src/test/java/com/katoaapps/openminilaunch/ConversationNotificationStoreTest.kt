@@ -6,6 +6,8 @@ import com.katoaapps.openminilaunch.features.conversations.ConversationNotificat
 import com.katoaapps.openminilaunch.features.conversations.ConversationNotificationReconciler
 import com.katoaapps.openminilaunch.features.conversations.ConversationNotificationStore
 import com.katoaapps.openminilaunch.features.conversations.DemoConversationData
+import com.katoaapps.openminilaunch.features.demo.DemoConversationState
+import com.katoaapps.openminilaunch.features.demo.DemoScenario
 import com.katoaapps.openminilaunch.features.conversations.NotificationConversation
 import com.katoaapps.openminilaunch.features.conversations.conversationActivityAt
 import com.katoaapps.openminilaunch.features.conversations.isConversationNotification
@@ -21,6 +23,28 @@ import org.junit.Assert.assertTrue
 import org.junit.Test
 
 class ConversationNotificationStoreTest {
+    @Test
+    fun demoConversationFixturesFollowScenarioAndInboxState() {
+        assertTrue(
+            DemoConversationData.notifications(
+                now = 1_000_000L,
+                state = DemoConversationState.QUIET,
+            ).isEmpty(),
+        )
+        val petMinkFavorite = DemoConversationData.notifications(
+            now = 1_000_000L,
+            scenario = DemoScenario.PET_MINK,
+            state = DemoConversationState.ONE_FAVORITE,
+        )
+        assertEquals(listOf("May Wong"), petMinkFavorite.map { it.conversationName })
+        val workday = DemoConversationData.notifications(
+            now = 1_000_000L,
+            scenario = DemoScenario.WORKDAY,
+        )
+        assertTrue(workday.isNotEmpty())
+        assertTrue(workday.none { it.conversationName == "May Wong" })
+    }
+
     @Test
     fun acceptsStructuredMessagesAndConversationCategories() {
         assertTrue(isConversationNotification(category = null, hasStructuredMessages = true))

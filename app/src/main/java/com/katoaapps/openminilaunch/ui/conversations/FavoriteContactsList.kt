@@ -75,6 +75,7 @@ internal fun FavoriteContactsList(
     onOpen: (FavoriteContact) -> Unit,
     onAddPerson: () -> Unit,
     onReorder: (List<FavoriteContactId>) -> Unit,
+    editable: Boolean = true,
 ) {
     val visibleContacts = remember { mutableStateListOf<FavoriteContact>() }
     var draggedContact by remember { mutableStateOf<FavoriteContactId?>(null) }
@@ -105,8 +106,10 @@ internal fun FavoriteContactsList(
                 fontWeight = FontWeight.Black,
                 fontSize = Dimens.sp12,
             )
-            IconButton(onClick = onAddPerson) {
-                Icon(Icons.Default.Add, stringResource(R.string.add_person))
+            if (editable) {
+                IconButton(onClick = onAddPerson) {
+                    Icon(Icons.Default.Add, stringResource(R.string.add_person))
+                }
             }
         }
         LazyVerticalGrid(
@@ -133,27 +136,29 @@ internal fun FavoriteContactsList(
                         label = "favorite contact drag elevation",
                     )
                     val dragHandle: @Composable () -> Unit = {
-                        Icon(
-                            Icons.Default.DragHandle,
-                            stringResource(R.string.drag_to_reorder),
-                            Modifier
-                                .size(Dimens.dp28)
-                                .draggableHandle(
-                                    interactionSource = interactionSource,
-                                    onDragStarted = {
-                                        draggedContact = contact.id
-                                        hapticFeedback.performHapticFeedback(
-                                            HapticFeedbackType.LongPress,
-                                        )
-                                    },
-                                    onDragStopped = {
-                                        onReorder(visibleContacts.map(FavoriteContact::id))
-                                        draggedContact = null
-                                    },
-                                )
-                                .padding(Dimens.dp4),
-                            tint = if (isDragging) MaterialTheme.colorScheme.primary else Muted,
-                        )
+                        if (editable) {
+                            Icon(
+                                Icons.Default.DragHandle,
+                                stringResource(R.string.drag_to_reorder),
+                                Modifier
+                                    .size(Dimens.dp28)
+                                    .draggableHandle(
+                                        interactionSource = interactionSource,
+                                        onDragStarted = {
+                                            draggedContact = contact.id
+                                            hapticFeedback.performHapticFeedback(
+                                                HapticFeedbackType.LongPress,
+                                            )
+                                        },
+                                        onDragStopped = {
+                                            onReorder(visibleContacts.map(FavoriteContact::id))
+                                            draggedContact = null
+                                        },
+                                    )
+                                    .padding(Dimens.dp4),
+                                tint = if (isDragging) MaterialTheme.colorScheme.primary else Muted,
+                            )
+                        }
                     }
                     val cardModifier = Modifier
                         .fillMaxWidth()

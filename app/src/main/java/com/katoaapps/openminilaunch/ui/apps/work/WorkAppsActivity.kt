@@ -20,7 +20,7 @@ class WorkAppsActivity : ComponentActivity() {
             MinkLauncherTheme(store) {
                 WorkAppsScreen(
                     actions = actions,
-                    demoMode = store.demoSearchDataEnabled,
+                    demoMode = store.demoModeEnabled,
                     onClose = ::finish,
                 )
             }

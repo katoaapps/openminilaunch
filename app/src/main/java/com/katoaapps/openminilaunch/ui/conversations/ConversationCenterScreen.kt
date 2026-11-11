@@ -74,19 +74,22 @@ internal fun ConversationCenterScreen(
 ) {
     val context = LocalContext.current
     val activity = context as ComponentActivity
+    val demoModeEnabled = store.demoModeEnabled
     var accessGranted by remember {
         mutableStateOf(ConversationNotificationStore.hasNotificationAccess(context))
     }
     var showAccessDisclosure by remember { mutableStateOf(false) }
-    var showFeatureTour by rememberSaveable {
-        mutableStateOf(!store.hasSeenUpdate(CONVERSATION_FEATURE_TOUR_ID))
+    var showFeatureTour by rememberSaveable(demoModeEnabled) {
+        mutableStateOf(!demoModeEnabled && !store.hasSeenUpdate(CONVERSATION_FEATURE_TOUR_ID))
     }
     var selectedConversationId by rememberSaveable { mutableStateOf<String?>(null) }
     var selectedSection by rememberSaveable { mutableStateOf(ConversationSection.MESSAGES) }
     var acknowledgementRevision by remember { mutableIntStateOf(0) }
-    val demoModeEnabled = store.demoSearchDataEnabled
     val conversations = ConversationNotificationStore.currentConversations(
         useDemoData = demoModeEnabled,
+        demoScenario = store.demoScenario,
+        demoConversationState = store.demoConversationState,
+        demoSessionStartedAt = store.demoSessionStartedAt,
     )
     val favoriteContacts = rememberOrderedConversationFavorites(store, refreshKey = selectedSection)
     val orderedConversations = remember(conversations, favoriteContacts) {
@@ -100,12 +103,20 @@ internal fun ConversationCenterScreen(
     }
     val acknowledgedActivityByConversationId = remember(conversations, acknowledgementRevision) {
         conversations.associate { conversation ->
-            conversation.id to store.acknowledgedConversationActivityAt(conversation.id)
+            conversation.id to if (demoModeEnabled) {
+                0L
+            } else {
+                store.acknowledgedConversationActivityAt(conversation.id)
+            }
         }
     }
     val favoriteRowStyles = favoriteMatches.mapValues { (conversationId, match) ->
         ConversationFavoriteRowStyle(
-            color = store.favoriteAttentionColorStore.color(match.favoriteId)?.let(::Color)
+            color = (if (demoModeEnabled) {
+                store.demoFavoriteAttentionColor(match.favoriteId)
+            } else {
+                store.favoriteAttentionColorStore.color(match.favoriteId)
+            })?.let(::Color)
                 ?: MinkFeatureColors.ConversationAttention,
             isUnread = shouldShowConversationAttention(
                 latestActivityAt = conversationsById[conversationId]
@@ -133,11 +144,13 @@ internal fun ConversationCenterScreen(
         }
     }
 
-    DisposableEffect(activity, context) {
+    DisposableEffect(activity, context, demoModeEnabled) {
         val observer = LifecycleEventObserver { _, event ->
             if (event == Lifecycle.Event.ON_RESUME) {
                 accessGranted = ConversationNotificationStore.hasNotificationAccess(context)
-                if (accessGranted) ConversationNotificationStore.refreshActiveNotifications(context)
+                if (accessGranted && !demoModeEnabled) {
+                    ConversationNotificationStore.refreshActiveNotifications(context)
+                }
             }
         }
         activity.lifecycle.addObserver(observer)

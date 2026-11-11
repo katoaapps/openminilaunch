@@ -13,6 +13,10 @@ import com.katoaapps.openminilaunch.features.appearance.CustomFontRepository
 import com.katoaapps.openminilaunch.features.appearance.HomeWallpaperRepository
 import com.katoaapps.openminilaunch.features.appearance.WATERMELON_PILL_COLOR_ARGB
 import com.katoaapps.openminilaunch.features.demo.DemoHomeProfile
+import com.katoaapps.openminilaunch.features.demo.DemoConversationState
+import com.katoaapps.openminilaunch.features.demo.DemoScenario
+import com.katoaapps.openminilaunch.features.demo.DemoSearchData
+import com.katoaapps.openminilaunch.features.conversations.ConversationNotificationStore
 import com.katoaapps.openminilaunch.features.contacts.FavoriteAttentionColorStore
 import com.katoaapps.openminilaunch.features.contacts.AndroidFavoriteAttentionReconciler
 import com.katoaapps.openminilaunch.features.contacts.FavoriteContactOrderStore
@@ -27,7 +31,7 @@ class LauncherStore private constructor(context: Context) {
     private val appContext = context.applicationContext
     private val prefs = appContext.getSharedPreferences("mini_launch", Context.MODE_PRIVATE)
     private val persistence = LauncherStorePersistence(prefs)
-    private val todoStore: TodoStore = TodoStore(persistence) { demoSearchDataEnabled }
+    private val todoStore: TodoStore = TodoStore(persistence) { demoModeEnabled }
     private val launcherSelections = LauncherSelectionStore(persistence)
     private val searchStore = SearchStore(persistence, MAX_SEARCH_HISTORY)
     private val widgetStore = WidgetStore(persistence, MAX_WIDGET_ENTRIES)
@@ -65,8 +69,11 @@ class LauncherStore private constructor(context: Context) {
         favoriteAttentionColorStore,
     )
     internal val minkPadPreferences = com.katoaapps.openminilaunch.features.minkpad.minkPadRepository(appContext).preferences
-    private val demoPreferences: DemoPreferenceStore = DemoPreferenceStore(appContext, prefs, todoStore)
-    internal val demoHomeProfile get() = demoPreferences.profile
+    private val demoModeStore: DemoModeStore = DemoModeStore(appContext, prefs, todoStore)
+    internal val demoHomeProfile get() = demoModeStore.profile
+    internal val demoScenario get() = demoModeStore.scenario
+    internal val demoConversationState get() = demoModeStore.conversationState
+    internal val demoSessionStartedAt get() = demoModeStore.sessionStartedAt
     val todos get() = todoStore.items
     internal val savedTodosForBackup get() = persistence.loadTodos()
     /** Typed App Grid contents. Legacy package-only target values migrate after discovery. */
@@ -108,13 +115,13 @@ class LauncherStore private constructor(context: Context) {
     val homePanelTransparency get() = appearancePreferences.homePanelTransparency
     val appBackgroundColorArgb get() = appearancePreferences.appBackgroundColorArgb
     val appBackgroundImageEnabled: Boolean
-        get() = !demoPreferences.enabled &&
+        get() = !demoModeStore.enabled &&
             appearancePreferences.appBackgroundImageEnabled &&
             homeWallpaperRepository.hasWallpaper()
     val hasSavedAppBackgroundImage: Boolean
-        get() = !demoPreferences.enabled && homeWallpaperRepository.hasWallpaper()
+        get() = !demoModeStore.enabled && homeWallpaperRepository.hasWallpaper()
     internal val selectedHomeTheme
-        get() = if (demoPreferences.enabled) {
+        get() = if (demoModeStore.enabled) {
             null
         } else {
             BundledHomeThemeCatalog.findByColors(
@@ -124,11 +131,11 @@ class LauncherStore private constructor(context: Context) {
             )
         }
     internal val appBackgroundPreset
-        get() = if (demoPreferences.enabled) null
+        get() = if (demoModeStore.enabled) null
         else BundledWallpaperCatalog.find(appearancePreferences.appBackgroundPresetId)
     val appBackgroundImageRevision get() = appearancePreferences.appBackgroundImageRevision
     val useSystemHomeWallpaper: Boolean
-        get() = !demoPreferences.enabled && appearancePreferences.useSystemHomeWallpaper
+        get() = !demoModeStore.enabled && appearancePreferences.useSystemHomeWallpaper
     internal val appBackgroundImageFile get() = homeWallpaperRepository.wallpaperFile
     val iconAppearance get() = iconAppearancePreferences.appearance
     val fontAppearance get() = fontAppearancePreferences.appearance
@@ -143,7 +150,7 @@ class LauncherStore private constructor(context: Context) {
     val socialGoalMinutes get() = minkDayPreferences.socialGoalMinutes
     val socialGoalHours get() = minkDayPreferences.socialGoalHours
     val minkAppPauseMode get() = minkDayPreferences.pauseMode
-    val demoSearchDataEnabled get() = demoPreferences.enabled
+    val demoModeEnabled get() = demoModeStore.enabled
     val githubUpdateChecksEnabled get() = updatePreferences.checksEnabled
     val latestGitHubReleaseTag get() = updatePreferences.latestReleaseTag
     val includeAppShortcutsInDiscovery get() = appDiscoveryPreferences.includeAppShortcuts
@@ -168,13 +175,13 @@ class LauncherStore private constructor(context: Context) {
     internal val minkSpaceTotalScreenShortcut get() = minkSpacePreferences.totalScreenShortcut
     internal val minkSpaceWidgetId get() = minkSpaceWidgetStore.appWidgetId
     val effectiveHomePanelColorArgb: Int
-        get() = demoPreferences.effectivePanelColor(
+        get() = demoModeStore.effectivePanelColor(
             homePanelColorArgb,
         )
     val watermelonModeEnabled: Boolean
         get() = appearancePreferences.watermelonModeEnabled
     val effectiveAppBackgroundColorArgb: Int?
-        get() = demoPreferences.effectiveBackgroundColor(
+        get() = demoModeStore.effectiveBackgroundColor(
             appBackgroundColorArgb,
         )
     /** Theme color for controls such as Mink's keyboard; never inherits arbitrary wallpaper pixels. */
@@ -216,7 +223,7 @@ class LauncherStore private constructor(context: Context) {
             systemAppearance = homeWallpaperRepository.systemWallpaperAppearance,
         )
     val effectiveAppGridOrder: List<AppGridSlot>
-        get() = demoPreferences.effectiveAppGridOrder(appGridOrder)
+        get() = demoModeStore.effectiveAppGridOrder(appGridOrder)
 
     init {
         val legacyCombinedTheme = BundledHomeThemeCatalog.find(
@@ -264,7 +271,7 @@ class LauncherStore private constructor(context: Context) {
         searchStore.restore(saved)
         widgetStore.restore(saved)
         minkDayPreferences.restore(saved.socialPackages)
-        demoPreferences.applyIfEnabled()
+        demoModeStore.applyIfEnabled()
     }
 
     fun addTodo(text: String) = todoStore.add(text)
@@ -453,12 +460,46 @@ class LauncherStore private constructor(context: Context) {
         updatePreferences.snoozeReminder(releaseTag, nowMillis)
     }
 
-    fun toggleDemoSearchData(): Boolean {
-        return demoPreferences.toggle()
+    fun toggleDemoMode(): Boolean {
+        val enabled = demoModeStore.toggle()
+        if (!enabled) clearDemoSessionData()
+        return enabled
+    }
+
+    internal fun disableDemoMode() {
+        demoModeStore.disable()
+        clearDemoSessionData()
     }
 
     internal fun selectDemoHomeProfile(profile: DemoHomeProfile) {
-        demoPreferences.selectProfile(profile)
+        demoModeStore.selectProfile(profile)
+    }
+
+    internal fun selectDemoScenario(scenario: DemoScenario) {
+        demoModeStore.selectScenario(scenario)
+        clearDemoSessionData()
+    }
+
+    internal fun selectDemoConversationState(state: DemoConversationState) {
+        demoModeStore.selectConversationState(state)
+        ConversationNotificationStore.clearDemoReplyHistory()
+    }
+
+    internal fun resetDemoScene() {
+        demoModeStore.resetScene()
+        clearDemoSessionData()
+    }
+
+    internal fun demoFavoriteAttentionColor(id: FavoriteContactId): Int? =
+        demoModeStore.favoriteAttentionColor(id)
+
+    internal fun updateDemoFavoriteAttentionColor(id: FavoriteContactId, colorArgb: Int?) {
+        demoModeStore.updateFavoriteAttentionColor(id, colorArgb)
+    }
+
+    private fun clearDemoSessionData() {
+        DemoSearchData.clearFiles(appContext)
+        ConversationNotificationStore.clearDemoReplyHistory()
     }
 
     fun hasSeenUpdate(updateId: String): Boolean = generalPreferences.hasSeenUpdate(updateId)
@@ -540,7 +581,7 @@ class LauncherStore private constructor(context: Context) {
 
     fun setHomePanelColor(argb: Int) {
         val opaqueArgb = argb or 0xFF000000.toInt()
-        if (demoPreferences.setPanelColor(opaqueArgb)) return
+        if (demoModeStore.setPanelColor(opaqueArgb)) return
         appearancePreferences.setHomePanelColor(opaqueArgb)
     }
 
@@ -561,7 +602,7 @@ class LauncherStore private constructor(context: Context) {
 
     fun setAppBackgroundColor(argb: Int?) {
         val opaqueArgb = argb?.or(0xFF000000.toInt())
-        if (demoPreferences.setBackgroundColor(opaqueArgb)) return
+        if (demoModeStore.setBackgroundColor(opaqueArgb)) return
         appearancePreferences.setAppBackgroundColor(opaqueArgb)
     }
 

@@ -639,7 +639,6 @@
     <string name="demo_search_data_enabled">デモホーム、連絡先、ファイル、会話が有効化</string>
     <string name="demo_search_data_disabled">デモのホーム、連絡先、ファイル、会話が無効になっています</string>
     <string name="demo_home_profile">デモホームのプロフィール</string>
-    <string name="demo_home_profile_picker_description">スクリーンショットと録画用に繰り返し可能なホーム シーンを選択します。</string>
     <string name="preview_update_alert">プレビュー更新アラート</string>
     <string name="preview_update_alert_description">アップデートやリマインダーのデータを変更せずに、実稼働アップデート カードを開きます。</string>
     <string name="demo_mode_disable">デモモードをオフにする</string>
@@ -1060,4 +1059,27 @@
     <string name="sensitive_backup_export_title">読み取り可能な連絡先情報をエクスポートしますか？</string>
     <string name="favorite_contacts_backup_import_description">このバックアップ内の Mink で作成したお気に入りは、このデバイスにある既存のお気に入りを削除せずに追加されます。</string>
     <string name="favorite_attention_colors_backup_import_description">このバックアップ内のお気に入り通知色は、このデバイスにある既存の色を消去せずに統合されます。</string>
+    <string name="demo_studio">デモスタジオ</string>
+    <string name="demo_studio_description">スクリーンショットや録画用に、繰り返し使える架空のシーンを作成します。</string>
+    <string name="demo_scenario">シナリオ</string>
+    <string name="demo_scenario_product_tour">製品ツアー</string>
+    <string name="demo_scenario_product_tour_description">ホーム、検索、ファイル、会話を幅広く紹介</string>
+    <string name="demo_scenario_pet_mink">ペットのミンク物語</string>
+    <string name="demo_scenario_pet_mink_description">May、Gary とカリフォルニアでペットのミンクを探す物語</string>
+    <string name="demo_scenario_workday">仕事の日</string>
+    <string name="demo_scenario_workday_description">プロジェクトのタスク、同僚、仕事のファイル</string>
+    <string name="demo_visual_profile">ビジュアルプロフィール</string>
+    <string name="demo_conversation_state">会話の状態</string>
+    <string name="demo_conversation_state_quiet">静か</string>
+    <string name="demo_conversation_state_one_favorite">お気に入り 1 件</string>
+    <string name="demo_conversation_state_active_inbox">アクティブな受信トレイ</string>
+    <string name="demo_capture_moment">キャプチャ場面</string>
+    <string name="demo_capture_moment_home">ホーム</string>
+    <string name="demo_capture_moment_quick_apps">クイックアプリ</string>
+    <string name="demo_capture_moment_conversations">会話</string>
+    <string name="demo_capture_moment_magic_box">Magic Box 検索</string>
+    <string name="demo_preview_action">デモプレビューのみ</string>
+    <string name="demo_reset_scene">現在のシーンをリセット</string>
+    <string name="demo_reset_scene_description">このシナリオの元のタスク、生成ファイル、会話の返信を復元します。</string>
+    <string name="demo_scene_reset">デモシーンをリセットしました</string>
 </resources>

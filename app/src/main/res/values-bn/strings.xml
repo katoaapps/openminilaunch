@@ -639,7 +639,6 @@
     <string name="demo_search_data_enabled">ডেমো হোম, পরিচিতি, ফাইল এবং কথোপকথন সক্রিয় করা হয়েছে</string>
     <string name="demo_search_data_disabled">ডেমো হোম, পরিচিতি, ফাইল এবং কথোপকথন অক্ষম করা হয়েছে৷</string>
     <string name="demo_home_profile">ডেমো হোম প্রোফাইল</string>
-    <string name="demo_home_profile_picker_description">স্ক্রিনশট এবং রেকর্ডিংয়ের জন্য একটি পুনরাবৃত্তিযোগ্য হোম দৃশ্য চয়ন করুন।</string>
     <string name="preview_update_alert">পূর্বরূপ আপডেট সতর্কতা</string>
     <string name="preview_update_alert_description">আপডেট বা অনুস্মারক ডেটা পরিবর্তন না করে উত্পাদন আপডেট কার্ড খুলুন।</string>
     <string name="demo_mode_disable">ডেমো মোড বন্ধ করুন</string>
@@ -1060,4 +1059,27 @@
     <string name="sensitive_backup_export_title">পাঠযোগ্য পরিচিতির বিবরণ রপ্তানি করবেন?</string>
     <string name="favorite_contacts_backup_import_description">এই ব্যাকআপের Mink-এ তৈরি প্রিয় পরিচিতিগুলো যোগ করা হবে, তবে এই ডিভাইসে আগে থেকে থাকা প্রিয় পরিচিতিগুলো সরানো হবে না।</string>
     <string name="favorite_attention_colors_backup_import_description">এই ব্যাকআপের প্রিয় পরিচিতির মনোযোগের রং এই ডিভাইসে আগে থেকে থাকা রং না মুছে একত্র করা হবে।</string>
+    <string name="demo_studio">ডেমো স্টুডিও</string>
+    <string name="demo_studio_description">স্ক্রিনশট ও রেকর্ডিংয়ের জন্য পুনরাবৃত্তিযোগ্য কাল্পনিক দৃশ্য তৈরি করুন।</string>
+    <string name="demo_scenario">দৃশ্যপট</string>
+    <string name="demo_scenario_product_tour">পণ্য পরিচিতি</string>
+    <string name="demo_scenario_product_tour_description">হোম, অনুসন্ধান, ফাইল এবং কথোপকথনের বিস্তৃত পরিচিতি</string>
+    <string name="demo_scenario_pet_mink">পোষা মিঙ্কের গল্প</string>
+    <string name="demo_scenario_pet_mink_description">May, Gary এবং ক্যালিফোর্নিয়ায় পোষা মিঙ্ক খোঁজার গল্প</string>
+    <string name="demo_scenario_workday">কর্মদিবস</string>
+    <string name="demo_scenario_workday_description">প্রকল্পের কাজ, সহকর্মী এবং কাজের ফাইল</string>
+    <string name="demo_visual_profile">ভিজ্যুয়াল প্রোফাইল</string>
+    <string name="demo_conversation_state">কথোপকথনের অবস্থা</string>
+    <string name="demo_conversation_state_quiet">নীরব</string>
+    <string name="demo_conversation_state_one_favorite">একজন প্রিয়</string>
+    <string name="demo_conversation_state_active_inbox">সক্রিয় ইনবক্স</string>
+    <string name="demo_capture_moment">ক্যাপচার দৃশ্য</string>
+    <string name="demo_capture_moment_home">হোম</string>
+    <string name="demo_capture_moment_quick_apps">কুইক অ্যাপস</string>
+    <string name="demo_capture_moment_conversations">কথোপকথন</string>
+    <string name="demo_capture_moment_magic_box">Magic Box অনুসন্ধান</string>
+    <string name="demo_preview_action">শুধু ডেমো প্রিভিউ</string>
+    <string name="demo_reset_scene">বর্তমান দৃশ্য রিসেট করুন</string>
+    <string name="demo_reset_scene_description">এই দৃশ্যপটের মূল কাজ, তৈরি করা ফাইল এবং কথোপকথনের উত্তর পুনরুদ্ধার করুন।</string>
+    <string name="demo_scene_reset">ডেমো দৃশ্য রিসেট হয়েছে</string>
 </resources>

@@ -63,7 +63,12 @@ internal fun HomeHeader(
     val verticalPadding = if (qwertyHome) Dimens.dp0 else Dimens.dp8
     val groupGap = Dimens.dp6
     CompositionLocalProvider(LocalMinimumInteractiveComponentSize provides actionSize) {
-        val conversations = ConversationNotificationStore.currentConversations()
+        val conversations = ConversationNotificationStore.currentConversations(
+            useDemoData = store.demoModeEnabled,
+            demoScenario = store.demoScenario,
+            demoConversationState = store.demoConversationState,
+            demoSessionStartedAt = store.demoSessionStartedAt,
+        )
         val favoriteAttention = rememberPendingFavoriteAttention(
             store = store,
             conversations = conversations,

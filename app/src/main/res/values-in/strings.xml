@@ -639,7 +639,6 @@
     <string name="demo_search_data_enabled">Beranda demo, kontak, file, dan percakapan diaktifkan</string>
     <string name="demo_search_data_disabled">Beranda demo, kontak, file, dan percakapan dinonaktifkan</string>
     <string name="demo_home_profile">Profil Beranda Demo</string>
-    <string name="demo_home_profile_picker_description">Pilih adegan Beranda yang dapat diulang untuk tangkapan layar dan rekaman.</string>
     <string name="preview_update_alert">Pratinjau peringatan pembaruan</string>
     <string name="preview_update_alert_description">Buka kartu pembaruan produksi tanpa mengubah data pembaruan atau pengingat.</string>
     <string name="demo_mode_disable">Matikan mode demo</string>
@@ -1060,4 +1059,27 @@
     <string name="sensitive_backup_export_title">Ekspor detail kontak yang dapat dibaca?</string>
     <string name="favorite_contacts_backup_import_description">Favorit buatan Mink dalam cadangan ini akan ditambahkan tanpa menghapus Favorit yang sudah ada di perangkat ini.</string>
     <string name="favorite_attention_colors_backup_import_description">Warna perhatian Favorit dalam cadangan ini akan digabungkan tanpa menghapus warna yang sudah ada di perangkat ini.</string>
+    <string name="demo_studio">Studio Demo</string>
+    <string name="demo_studio_description">Buat adegan fiktif yang dapat diulang untuk tangkapan layar dan rekaman.</string>
+    <string name="demo_scenario">Skenario</string>
+    <string name="demo_scenario_product_tour">Tur produk</string>
+    <string name="demo_scenario_product_tour_description">Tampilan luas Beranda, pencarian, file, dan percakapan</string>
+    <string name="demo_scenario_pet_mink">Cerita mink peliharaan</string>
+    <string name="demo_scenario_pet_mink_description">May, Gary, dan pencarian mink peliharaan di California</string>
+    <string name="demo_scenario_workday">Hari kerja</string>
+    <string name="demo_scenario_workday_description">Tugas proyek, rekan kerja, dan file bisnis</string>
+    <string name="demo_visual_profile">Profil visual</string>
+    <string name="demo_conversation_state">Status percakapan</string>
+    <string name="demo_conversation_state_quiet">Sepi</string>
+    <string name="demo_conversation_state_one_favorite">Satu favorit</string>
+    <string name="demo_conversation_state_active_inbox">Kotak masuk aktif</string>
+    <string name="demo_capture_moment">Momen pengambilan</string>
+    <string name="demo_capture_moment_home">Beranda</string>
+    <string name="demo_capture_moment_quick_apps">Aplikasi Cepat</string>
+    <string name="demo_capture_moment_conversations">Percakapan</string>
+    <string name="demo_capture_moment_magic_box">Pencarian Magic Box</string>
+    <string name="demo_preview_action">Hanya pratinjau demo</string>
+    <string name="demo_reset_scene">Atur ulang adegan saat ini</string>
+    <string name="demo_reset_scene_description">Pulihkan tugas, file yang dibuat, dan balasan percakapan asli untuk skenario ini.</string>
+    <string name="demo_scene_reset">Adegan demo diatur ulang</string>
 </resources>

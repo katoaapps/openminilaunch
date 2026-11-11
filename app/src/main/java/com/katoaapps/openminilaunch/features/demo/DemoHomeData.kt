@@ -52,8 +52,25 @@ internal enum class DemoHomeProfile(
 
 /** Repeatable, non-persistent Home scenes used only while hidden demo mode is enabled. */
 internal object DemoHomeData {
-    fun todos(profile: DemoHomeProfile = DemoHomeProfile.CLASSIC): List<TodoItem> =
-        when (profile) {
+    fun todos(
+        profile: DemoHomeProfile = DemoHomeProfile.CLASSIC,
+        scenario: DemoScenario = DemoScenario.PRODUCT_TOUR,
+    ): List<TodoItem> = when (scenario) {
+        DemoScenario.PET_MINK -> listOf(
+            todo(scenario, 1, "Remember to text May for different pet mink names"),
+            todo(scenario, 2, "Go to the pet store next Thursday at 3 PM"),
+            todo(scenario, 3, "Text May that we're meeting Thursday at 3 PM"),
+            todo(scenario, 4, "Call Gary", completed = true),
+            todo(scenario, 5, "Search Maps for a wildlife place"),
+        )
+        DemoScenario.WORKDAY -> listOf(
+            todo(scenario, 1, "Review the Q3 budget before stand-up"),
+            todo(scenario, 2, "Send the revised invoice to Noah"),
+            todo(scenario, 3, "Confirm Thursday's project review"),
+            todo(scenario, 4, "Add launch notes to the shared doc", completed = true),
+            todo(scenario, 5, "Book a focus room for 2:30"),
+        )
+        DemoScenario.PRODUCT_TOUR -> when (profile) {
             DemoHomeProfile.CLASSIC -> listOf(
                 todo(profile, 1, "Send revised deck to Maya"),
                 todo(profile, 2, "Book train tickets for Friday"),
@@ -90,6 +107,7 @@ internal object DemoHomeData {
                 todo(profile, 5, "Test the download link on mobile"),
             )
         }
+    }
 
     fun appGridOrder(profile: DemoHomeProfile): List<AppGridSlot> = when (profile) {
         DemoHomeProfile.CLASSIC -> AppGridSlot.entries
@@ -117,4 +135,11 @@ internal object DemoHomeData {
         text: String,
         completed: Boolean = false,
     ) = TodoItem("demo-${profile.name.lowercase(java.util.Locale.ROOT)}-$index", text, completed)
+
+    private fun todo(
+        scenario: DemoScenario,
+        index: Int,
+        text: String,
+        completed: Boolean = false,
+    ) = TodoItem("demo-${scenario.name.lowercase(java.util.Locale.ROOT)}-$index", text, completed)
 }

@@ -20,7 +20,15 @@ internal fun rememberPendingFavoriteAttention(
         conversations = conversations,
         orderedFavorites = favorites,
         defaultColorArgb = defaultColorArgb,
-        acknowledgedThrough = store::acknowledgedConversationActivityAt,
-        colorFor = store.favoriteAttentionColorStore::color,
+        acknowledgedThrough = if (store.demoModeEnabled) {
+            { 0L }
+        } else {
+            store::acknowledgedConversationActivityAt
+        },
+        colorFor = if (store.demoModeEnabled) {
+            store::demoFavoriteAttentionColor
+        } else {
+            store.favoriteAttentionColorStore::color
+        },
     )
 }

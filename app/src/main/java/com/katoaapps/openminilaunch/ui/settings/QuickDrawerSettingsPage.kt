@@ -24,9 +24,9 @@ internal fun QuickDrawerSettingsPage(
     onNavigate: (SettingsDestination) -> Unit,
     goBack: () -> Unit,
 ) {
-    val privateSpaceAvailable = store.demoSearchDataEnabled ||
+    val privateSpaceAvailable = store.demoModeEnabled ||
         actions.privateContainerEntryPointAvailable(store.privateContainerGatewaySelectionKey)
-    val workProfileAvailable = store.demoSearchDataEnabled || actions.workProfileAvailable()
+    val workProfileAvailable = store.demoModeEnabled || actions.workProfileAvailable()
 
     SettingsPage(stringResource(R.string.quick_drawer), goBack) {
         SectionLabel(stringResource(R.string.apps))
