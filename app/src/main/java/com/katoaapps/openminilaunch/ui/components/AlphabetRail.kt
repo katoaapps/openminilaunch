@@ -96,7 +96,7 @@ internal fun AlphabetRail(
                     )
                     Text(
                         displayedLetterIndex?.let { letters[it].toString() } ?: "·",
-                        fontSize = Dimens.sp9,
+                        fontSize = Dimens.sp12,
                         fontWeight = FontWeight.Bold,
                         color = if (active) MaterialTheme.colorScheme.onSurface else Rust.copy(alpha = .72f),
                         modifier = Modifier

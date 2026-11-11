@@ -1,6 +1,7 @@
 package com.katoaapps.openminilaunch.model
 
 internal const val MAX_APP_FOLDER_NAME_LENGTH = 80
+internal const val MAX_APP_FOLDER_TARGETS = 12
 
 enum class AppFolderColorMode {
     DEFAULT,
@@ -26,7 +27,11 @@ internal fun AppFolderConfig.normalized(): AppFolderConfig {
     return copy(
         id = id.trim(),
         customName = customName?.trim()?.take(MAX_APP_FOLDER_NAME_LENGTH)?.takeIf(String::isNotEmpty),
-        orderedTargetKeys = orderedTargetKeys.map(String::trim).filter(String::isNotEmpty).distinct(),
+        orderedTargetKeys = orderedTargetKeys
+            .map(String::trim)
+            .filter(String::isNotEmpty)
+            .distinct()
+            .take(MAX_APP_FOLDER_TARGETS),
         colorMode = normalizedMode,
         colorArgb = colorArgb.takeIf { normalizedMode == AppFolderColorMode.CUSTOM },
     )

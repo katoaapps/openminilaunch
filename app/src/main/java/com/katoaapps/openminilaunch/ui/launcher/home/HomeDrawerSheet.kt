@@ -33,6 +33,10 @@ import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.material3.rememberModalBottomSheetState
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
@@ -48,8 +52,10 @@ import androidx.compose.ui.text.style.TextOverflow
 import com.katoaapps.openminilaunch.R
 import com.katoaapps.openminilaunch.data.LauncherStore
 import com.katoaapps.openminilaunch.features.minkpad.MinkPadLauncherEntry
+import com.katoaapps.openminilaunch.features.wellbeing.MinkAppAccessState
 import com.katoaapps.openminilaunch.model.MAX_DRAWER_APPS
 import com.katoaapps.openminilaunch.platform.DeviceActions
+import com.katoaapps.openminilaunch.ui.quickdrawer.QuickAppsFolderDialog
 import com.katoaapps.openminilaunch.ui.quickdrawer.QuickDrawerDestination
 import com.katoaapps.openminilaunch.ui.quickdrawer.quickDrawerDestinations
 import com.katoaapps.openminilaunch.ui.theme.Dimens
@@ -60,10 +66,13 @@ import com.katoaapps.openminilaunch.ui.theme.readableContentColor
 internal fun HomeDrawerSheet(
     store: LauncherStore,
     actions: DeviceActions,
+    appAccessState: MinkAppAccessState,
     onDismiss: () -> Unit,
     onManageQuickApps: () -> Unit,
+    onPausedApp: (String) -> Unit,
 ) {
     val context = LocalContext.current
+    var quickAppsOpen by remember { mutableStateOf(false) }
     val demoModeEnabled = store.demoModeEnabled
     val showDemoPreview = {
         Toast.makeText(context, R.string.demo_preview_action, Toast.LENGTH_SHORT).show()
@@ -107,14 +116,7 @@ internal fun HomeDrawerSheet(
         ManageQuickAppsRow(
             selectedCount = if (demoModeEnabled) 4 else store.drawerTargets.size,
             contentColor = drawerContentColor,
-            onClick = {
-                if (!demoModeEnabled) {
-                    onDismiss()
-                    onManageQuickApps()
-                } else {
-                    showDemoPreview()
-                }
-            },
+            onClick = { quickAppsOpen = true },
         )
         QuickDrawerNavigationGrid(
             destinations = destinations,
@@ -134,6 +136,29 @@ internal fun HomeDrawerSheet(
             },
         )
         Spacer(Modifier.height(Dimens.dp28))
+    }
+
+    if (quickAppsOpen) {
+        QuickAppsFolderDialog(
+            store = store,
+            actions = actions,
+            appAccessState = appAccessState,
+            onEdit = {
+                quickAppsOpen = false
+                onDismiss()
+                onManageQuickApps()
+            },
+            onLaunch = {
+                quickAppsOpen = false
+                onDismiss()
+            },
+            onPausedApp = { packageName ->
+                quickAppsOpen = false
+                onDismiss()
+                onPausedApp(packageName)
+            },
+            onDismiss = { quickAppsOpen = false },
+        )
     }
 }
 
