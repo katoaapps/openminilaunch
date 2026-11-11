@@ -1,0 +1,3 @@
+Open 3.2.2 adds a guided Home spotlight tour, direct Quick Apps folder access, provider-aware Favorite names and artwork, shuffled Adrift sessions, and smoother Home and launcher-keyboard transitions.
+
+Magic Box can now use either Mink Keyboard or the Android system keyboard while preserving Mink hot keys. Backup schema 3 remains compatible, and no new permissions or data collection are introduced.

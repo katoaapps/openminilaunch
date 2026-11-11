@@ -33,8 +33,8 @@ android {
         applicationId = "com.katoaapps.openminilaunch"
         minSdk = 26
         targetSdk = 35
-        versionCode = 34
-        versionName = "3.2.1"
+        versionCode = 35
+        versionName = "3.2.2"
     }
 
     androidResources {
