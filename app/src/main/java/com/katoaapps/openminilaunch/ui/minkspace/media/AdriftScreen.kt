@@ -27,6 +27,7 @@ import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.produceState
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.runtime.toMutableStateList
 import androidx.compose.ui.Alignment
@@ -76,6 +77,9 @@ internal fun AdriftScreen(
     // recreating the total-screen host. Video is intentionally excluded from ambient playback.
     val ambientItems = items.filter(MediaItem::isImage).distinctBy { it.uri }
     val libraryKey = ambientItems.joinToString("|") { it.uri.toString() }.hashCode()
+    // The library key keeps a deck stable while Adrift is open. A per-session seed prevents the
+    // same library from producing the same opening sequence every time the user returns.
+    val sessionSeed = rememberSaveable { Random.nextInt() }
     val context = LocalContext.current
     val aspectRatios by produceState<Map<String, Float>?>(
         initialValue = null,
@@ -102,15 +106,15 @@ internal fun AdriftScreen(
         val sceneHeight = maxHeight
         val screenAspectRatio = (sceneWidth.value / sceneHeight.value).coerceAtLeast(.1f)
         val landscape = screenAspectRatio >= 1f
-        val sceneKey = libraryKey xor (screenAspectRatio * 10_000f).roundToInt()
+        val sceneKey = libraryKey xor sessionSeed xor (screenAspectRatio * 10_000f).roundToInt()
         val resolvedAspectRatios = aspectRatios
 
         if (ambientItems.isNotEmpty() && resolvedAspectRatios != null) {
-            val deck = remember(libraryKey) {
+            val deck = remember(libraryKey, sessionSeed) {
                 AdriftMemoryDeck(
                     sourceItems = ambientItems,
                     slotCount = ADRIFT_FRAME_COUNT,
-                    seed = libraryKey xor 0x41D21F,
+                    seed = libraryKey xor sessionSeed,
                 )
             }
             val frames = remember(deck, sceneKey, resolvedAspectRatios) {

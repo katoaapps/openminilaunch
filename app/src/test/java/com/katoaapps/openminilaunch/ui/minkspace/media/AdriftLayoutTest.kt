@@ -1,6 +1,7 @@
 package com.katoaapps.openminilaunch.ui.minkspace.media
 
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertNotEquals
 import org.junit.Assert.assertTrue
 import org.junit.Test
 
@@ -24,6 +25,16 @@ class AdriftLayoutTest {
             deck.advance(replacement % 4)
             assertEquals(4, deck.currentItems().distinct().size)
         }
+    }
+
+    @Test fun sessionSeedChangesTheOpeningSequence() {
+        val items = (1..25).toList()
+        val firstSession = AdriftMemoryDeck(items, slotCount = 4, seed = 7).currentItems()
+        val repeatedSeed = AdriftMemoryDeck(items, slotCount = 4, seed = 7).currentItems()
+        val nextSession = AdriftMemoryDeck(items, slotCount = 4, seed = 97).currentItems()
+
+        assertEquals(firstSession, repeatedSeed)
+        assertNotEquals(firstSession, nextSession)
     }
 
     @Test fun smallLibraryClonesMemoriesAcrossFourSlots() {
