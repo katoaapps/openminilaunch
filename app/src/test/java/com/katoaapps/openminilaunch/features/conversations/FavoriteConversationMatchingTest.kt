@@ -4,10 +4,34 @@ import com.katoaapps.openminilaunch.model.FavoriteAndroidContact
 import com.katoaapps.openminilaunch.model.FavoriteContactId
 import com.katoaapps.openminilaunch.model.FavoriteIntegratedContact
 import com.katoaapps.openminilaunch.model.IntegratedContactEndpoint
+import com.katoaapps.openminilaunch.features.demo.DemoConversationState
+import com.katoaapps.openminilaunch.features.demo.DemoFavoriteData
+import com.katoaapps.openminilaunch.features.demo.DemoScenario
 import org.junit.Assert.assertEquals
 import org.junit.Test
 
 class FavoriteConversationMatchingTest {
+    @Test
+    fun demoFavoritesMatchDemoConversationsWithoutDeviceContacts() {
+        val notifications = DemoConversationData.notifications(
+            now = 1_000_000L,
+            scenario = DemoScenario.PET_MINK,
+            state = DemoConversationState.ONE_FAVORITE,
+        )
+        val conversations = ConversationNotificationStore.groupConversations(
+            sourceNotifications = notifications,
+            replies = emptyList(),
+        )
+
+        val matches = matchFavoriteConversations(
+            conversations = conversations,
+            orderedFavorites = DemoFavoriteData.contacts(DemoScenario.PET_MINK),
+        )
+
+        assertEquals(1, matches.size)
+        assertEquals("May Wong", conversations.single().name)
+    }
+
     @Test
     fun favoriteOrderOverridesConversationRecency() {
         val conversations = listOf(

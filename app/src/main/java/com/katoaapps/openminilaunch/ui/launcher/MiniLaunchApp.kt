@@ -6,6 +6,7 @@
 package com.katoaapps.openminilaunch.ui.launcher
 
 import android.app.Activity
+import android.content.Intent
 import android.widget.Toast
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.WindowInsets
@@ -33,6 +34,7 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import com.katoaapps.openminilaunch.R
 import com.katoaapps.openminilaunch.data.LauncherStore
+import com.katoaapps.openminilaunch.features.demo.DemoCaptureMoment
 import com.katoaapps.openminilaunch.model.ContactAppRoute
 import com.katoaapps.openminilaunch.model.Screen
 import com.katoaapps.openminilaunch.platform.DeviceActions
@@ -43,6 +45,7 @@ import com.katoaapps.openminilaunch.ui.launcher.layout.HOME_PAGE
 import com.katoaapps.openminilaunch.ui.launcher.layout.LauncherHomePager
 import com.katoaapps.openminilaunch.ui.launcher.layout.WIDGET_PAGE
 import com.katoaapps.openminilaunch.ui.magic.rememberMagicBoxSessionState
+import com.katoaapps.openminilaunch.ui.magic.AssistantActivity
 import com.katoaapps.openminilaunch.ui.minkspace.core.rememberMinkSpacePresentationState
 import com.katoaapps.openminilaunch.ui.minkspace.todo.TodosScreen
 import com.katoaapps.openminilaunch.ui.onboarding.FeatureUpdateDialog
@@ -239,6 +242,29 @@ internal fun MiniLaunchApp(
                                 screen = Screen.HOME
                             },
                             openTodos = { screen = Screen.TODOS },
+                            onDemoCaptureMoment = { moment ->
+                                settingsDestination = SettingsDestination.OVERVIEW
+                                when (moment) {
+                                    DemoCaptureMoment.HOME -> {
+                                        homeMagicBoxSessionState.resetForDemoHome()
+                                        focusedLauncherPage = HOME_PAGE
+                                        homePageRequestToken++
+                                        screen = Screen.HOME
+                                    }
+                                    DemoCaptureMoment.QUICK_APPS -> {
+                                        context.startActivity(Intent(context, AssistantActivity::class.java))
+                                    }
+                                    DemoCaptureMoment.CONVERSATIONS -> {
+                                        screen = Screen.CONVERSATIONS
+                                    }
+                                    DemoCaptureMoment.MAGIC_BOX_SEARCH -> {
+                                        homeMagicBoxSessionState.prepareDemoSearch("invoice")
+                                        focusedLauncherPage = HOME_PAGE
+                                        homePageRequestToken++
+                                        screen = Screen.HOME
+                                    }
+                                }
+                            },
                             goBack = {
                                 settingsDestination = SettingsDestination.OVERVIEW
                                 screen = Screen.HOME

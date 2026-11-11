@@ -48,7 +48,7 @@ internal fun rememberMagicFileSearchState(
     val state = remember { MagicFileSearchState() }
     val folders = store.searchFolders.toList()
     val folderUris = folders.map { it.uri }
-    val demoModeEnabled = store.demoSearchDataEnabled
+    val demoModeEnabled = store.demoModeEnabled
 
     LaunchedEffect(query, folderUris, hasMediaAccess, demoModeEnabled) {
         val request = state.requests.begin(query)

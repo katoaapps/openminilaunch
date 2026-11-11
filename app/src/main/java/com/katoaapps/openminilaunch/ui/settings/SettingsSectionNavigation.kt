@@ -58,7 +58,8 @@ internal fun settingsSectionFor(destination: SettingsDestination): SettingsSecti
 
     SettingsDestination.BACKUP_RESTORE,
     SettingsDestination.PERMISSIONS,
-    SettingsDestination.ABOUT -> SettingsSection.MORE
+    SettingsDestination.ABOUT,
+    SettingsDestination.DEMO_STUDIO -> SettingsSection.MORE
 
     else -> SettingsSection.HOME
 }

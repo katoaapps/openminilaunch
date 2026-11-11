@@ -25,6 +25,7 @@ internal enum class SettingsDestination {
     BACKUP_RESTORE,
     PERMISSIONS,
     ABOUT,
+    DEMO_STUDIO,
 }
 
 internal data class SettingsRoute(
@@ -134,6 +135,11 @@ internal fun settingsPathTo(destination: SettingsDestination): List<SettingsDest
     SettingsDestination.BACKUP_RESTORE,
     SettingsDestination.PERMISSIONS,
     SettingsDestination.ABOUT -> listOf(SettingsDestination.OVERVIEW, destination)
+    SettingsDestination.DEMO_STUDIO -> listOf(
+        SettingsDestination.OVERVIEW,
+        SettingsDestination.ABOUT,
+        destination,
+    )
 }
 
 internal data class SettingsPermissionState(

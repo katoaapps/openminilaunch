@@ -207,13 +207,13 @@ internal fun MagicResultsContent(
     if (fileResults.isNotEmpty()) {
         FileResultsGrid(fileResults, fileSearchRepository, onOpenFile)
     }
-    if (plainQuery.length >= 2 && !hasMediaAccess && !store.demoSearchDataEnabled) {
+    if (plainQuery.length >= 2 && !hasMediaAccess && !store.demoModeEnabled) {
         FilledTonalButton(onClick = onRequestMedia) {
             Icon(Icons.Default.PhotoLibrary, null, Modifier.size(Dimens.dp18))
             Text(stringResource(R.string.search_media_filenames), Modifier.padding(start = Dimens.dp8))
         }
     }
-    if (plainQuery.isNotBlank() && store.searchFolders.isEmpty() && !store.demoSearchDataEnabled) {
+    if (plainQuery.isNotBlank() && store.searchFolders.isEmpty() && !store.demoModeEnabled) {
         Surface(
             onClick = onRequestFolder,
             shape = RoundedCornerShape(Dimens.dp14),

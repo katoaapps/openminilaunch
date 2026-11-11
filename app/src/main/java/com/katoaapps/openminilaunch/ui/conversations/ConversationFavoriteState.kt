@@ -15,6 +15,7 @@ import androidx.lifecycle.compose.LocalLifecycleOwner
 import com.katoaapps.openminilaunch.data.LauncherStore
 import com.katoaapps.openminilaunch.features.contacts.FavoriteAndroidContactsRepository
 import com.katoaapps.openminilaunch.features.contacts.FavoriteContactCatalog
+import com.katoaapps.openminilaunch.features.demo.DemoFavoriteData
 import com.katoaapps.openminilaunch.model.FavoriteContact
 import java.util.Locale
 import kotlinx.coroutines.Dispatchers
@@ -26,6 +27,9 @@ internal fun rememberOrderedConversationFavorites(
     store: LauncherStore,
     refreshKey: Any?,
 ): List<FavoriteContact> {
+    if (store.demoModeEnabled) {
+        return remember(store.demoScenario) { DemoFavoriteData.contacts(store.demoScenario) }
+    }
     val context = LocalContext.current
     val lifecycleOwner = LocalLifecycleOwner.current
     var resumeRevision by remember { mutableIntStateOf(0) }

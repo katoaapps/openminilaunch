@@ -64,15 +64,19 @@ internal fun HomeDrawerSheet(
     onManageQuickApps: () -> Unit,
 ) {
     val context = LocalContext.current
+    val demoModeEnabled = store.demoModeEnabled
+    val showDemoPreview = {
+        Toast.makeText(context, R.string.demo_preview_action, Toast.LENGTH_SHORT).show()
+    }
     val drawerColor = store.quickDrawerColorArgb?.let(::Color) ?: MaterialTheme.colorScheme.background
     val drawerContentColor = readableContentColor(drawerColor)
     val destinations = quickDrawerDestinations(
         showMinkPad = store.showMinkPadInQuickDrawer,
         showPrivateSpace = store.showPrivateSpaceInQuickDrawer,
-        privateSpaceAvailable = store.demoSearchDataEnabled ||
+        privateSpaceAvailable = store.demoModeEnabled ||
             actions.privateContainerEntryPointAvailable(store.privateContainerGatewaySelectionKey),
         showWorkSpace = store.showWorkProfileInQuickDrawer,
-        workSpaceAvailable = store.demoSearchDataEnabled || actions.workProfileAvailable(),
+        workSpaceAvailable = store.demoModeEnabled || actions.workProfileAvailable(),
     )
 
     ModalBottomSheet(
@@ -91,7 +95,9 @@ internal fun HomeDrawerSheet(
             title = stringResource(R.string.join_google_play_beta),
             summary = stringResource(R.string.google_play_beta_summary),
             onClick = {
-                if (actions.openGooglePlayBetaPage()) {
+                if (demoModeEnabled) {
+                    showDemoPreview()
+                } else if (actions.openGooglePlayBetaPage()) {
                     onDismiss()
                 } else {
                     Toast.makeText(context, R.string.no_browser_available, Toast.LENGTH_SHORT).show()
@@ -99,23 +105,31 @@ internal fun HomeDrawerSheet(
             },
         )
         ManageQuickAppsRow(
-            selectedCount = store.drawerTargets.size,
+            selectedCount = if (demoModeEnabled) 4 else store.drawerTargets.size,
             contentColor = drawerContentColor,
             onClick = {
-                onDismiss()
-                onManageQuickApps()
+                if (!demoModeEnabled) {
+                    onDismiss()
+                    onManageQuickApps()
+                } else {
+                    showDemoPreview()
+                }
             },
         )
         QuickDrawerNavigationGrid(
             destinations = destinations,
             contentColor = drawerContentColor,
             onDestination = { destination ->
-                onDismiss()
-                when (destination) {
-                    QuickDrawerDestination.MINKPAD_LITE -> MinkPadLauncherEntry.open(context)
-                    QuickDrawerDestination.ALL_APPS -> actions.openAllApps()
-                    QuickDrawerDestination.PRIVATE_SPACE -> actions.openPrivateApps()
-                    QuickDrawerDestination.WORK_SPACE -> actions.openWorkApps()
+                if (!demoModeEnabled) {
+                    onDismiss()
+                    when (destination) {
+                        QuickDrawerDestination.MINKPAD_LITE -> MinkPadLauncherEntry.open(context)
+                        QuickDrawerDestination.ALL_APPS -> actions.openAllApps()
+                        QuickDrawerDestination.PRIVATE_SPACE -> actions.openPrivateApps()
+                        QuickDrawerDestination.WORK_SPACE -> actions.openWorkApps()
+                    }
+                } else {
+                    showDemoPreview()
                 }
             },
         )

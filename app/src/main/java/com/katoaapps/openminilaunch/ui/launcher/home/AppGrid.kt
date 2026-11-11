@@ -22,6 +22,7 @@ import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
 import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material.icons.filled.GridView
 import androidx.compose.material.icons.Icons
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
@@ -35,6 +36,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.katoaapps.openminilaunch.data.LauncherStore
 import com.katoaapps.openminilaunch.features.wellbeing.MinkAppAccessState
@@ -76,6 +78,7 @@ internal fun AppGrid(
     var editingSelectionSlot by remember { mutableStateOf<AppGridSlot?>(null) }
     var pendingUnavailableTarget by remember { mutableStateOf<LauncherTarget?>(null) }
     val gridState = rememberLazyGridState()
+    val demoModeEnabled = store.demoModeEnabled
 
     Column(modifier, verticalArrangement = Arrangement.spacedBy(Dimens.dp4)) {
         val visibleOrder = store.effectiveAppGridOrder
@@ -91,11 +94,17 @@ internal fun AppGrid(
                 userScrollEnabled = false,
             ) {
                 items(visibleOrder, key = AppGridSlot::name) { slot ->
-                    val assignment = store.appGridAssignment(slot)
+                    // Demo Mode is a visual overlay. Never read the user's real slot assignments
+                    // into a capture scene or let the scene mutate them.
+                    val assignment = if (demoModeEnabled) {
+                        AppGridAssignment.DefaultAction
+                    } else {
+                        store.appGridAssignment(slot)
+                    }
                     val folder = (assignment as? AppGridAssignment.Folder)?.let {
                         store.appFolder(it.folderId)
                     }
-                    val assignedTargetKey = store.appGridTargetKey(slot)
+                    val assignedTargetKey = if (demoModeEnabled) null else store.appGridTargetKey(slot)
                     val assignedTarget = remember(
                         assignedTargetKey,
                         launcherAppsRevision,
@@ -104,7 +113,8 @@ internal fun AppGrid(
                         assignedTargetKey?.let(actions::resolveLauncherSelection)
                     }
                     val hasAssignedTarget = slot in configurableAppGridSlots && assignedTargetKey != null
-                    val hasFolder = folder != null
+                    val isDemoFolder = demoModeEnabled && slot == AppGridSlot.EXTRA
+                    val hasFolder = folder != null || isDemoFolder
                     val defaultTargetPackage = actions.appGridSlotTargetPackage(slot, null)
                     val pausedTargetPackage = assignedTarget?.packageName ?: defaultTargetPackage
                     val appUnavailable = assignedTarget?.isAvailable == false
@@ -114,7 +124,9 @@ internal fun AppGrid(
                         )
                     val interactionModifier = Modifier.combinedClickable(
                         onClick = {
-                            if (folder != null) {
+                            if (demoModeEnabled) {
+                                if (slot == AppGridSlot.DRAWER) openDrawer()
+                            } else if (folder != null) {
                                 openFolderSlot = slot
                             } else if (appUnavailable) {
                                 pendingUnavailableTarget = assignedTarget
@@ -127,7 +139,7 @@ internal fun AppGrid(
                             }
                         },
                         onLongClick = {
-                            if (!store.demoSearchDataEnabled && slot != AppGridSlot.DRAWER) {
+                            if (!demoModeEnabled && slot != AppGridSlot.DRAWER) {
                                 editingSelectionSlot = slot
                             }
                         },
@@ -143,7 +155,12 @@ internal fun AppGrid(
                                 .padding(if (hasAssignedTarget || hasFolder) Dimens.dp0 else Dimens.dp6),
                             contentAlignment = Alignment.Center,
                         ) {
-                            if (folder != null) {
+                            if (isDemoFolder) {
+                                DemoAppFolderIcon(
+                                    size = slotSize,
+                                    contentColor = contentColor,
+                                )
+                            } else if (folder != null) {
                                 AppFolderIcon(
                                     targetKeys = folder.orderedTargetKeys,
                                     actions = actions,
@@ -249,5 +266,40 @@ internal fun AppGrid(
             },
             onDismiss = { pendingUnavailableTarget = null },
         )
+    }
+}
+
+@Composable
+private fun DemoAppFolderIcon(
+    size: Dp,
+    contentColor: Color,
+) {
+    Box(
+        modifier = Modifier.size(size),
+        contentAlignment = Alignment.Center,
+    ) {
+        val layerSize = size * .58f
+        Box(
+            Modifier
+                .size(layerSize)
+                .padding(start = Dimens.dp7, top = Dimens.dp7)
+                .clip(RoundedCornerShape(Dimens.dp12))
+                .background(MaterialTheme.colorScheme.tertiaryContainer),
+        )
+        Box(
+            Modifier
+                .size(layerSize)
+                .padding(end = Dimens.dp7, bottom = Dimens.dp7)
+                .clip(RoundedCornerShape(Dimens.dp12))
+                .background(MaterialTheme.colorScheme.secondaryContainer),
+            contentAlignment = Alignment.Center,
+        ) {
+            Icon(
+                imageVector = Icons.Default.GridView,
+                contentDescription = null,
+                modifier = Modifier.size(size * .27f),
+                tint = contentColor,
+            )
+        }
     }
 }

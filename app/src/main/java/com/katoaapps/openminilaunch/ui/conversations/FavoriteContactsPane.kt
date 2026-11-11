@@ -28,11 +28,13 @@ import com.katoaapps.openminilaunch.features.contacts.FavoriteAndroidContactsRep
 import com.katoaapps.openminilaunch.features.contacts.FavoriteContactCatalog
 import com.katoaapps.openminilaunch.features.contacts.FavoriteContactRouteStore
 import com.katoaapps.openminilaunch.features.contacts.FavoriteIntegratedContactAddResult
+import com.katoaapps.openminilaunch.features.demo.DemoFavoriteData
 import com.katoaapps.openminilaunch.model.CommunicationRecipient
 import com.katoaapps.openminilaunch.model.AndroidContactPhone
 import com.katoaapps.openminilaunch.model.AndroidPhoneSelection
 import com.katoaapps.openminilaunch.model.ContactAppRoute
 import com.katoaapps.openminilaunch.model.FavoriteAndroidContact
+import com.katoaapps.openminilaunch.model.FavoriteContactActionRoutes
 import com.katoaapps.openminilaunch.model.FavoriteIntegratedContact
 import com.katoaapps.openminilaunch.model.IntegratedContactCallEndpoint
 import com.katoaapps.openminilaunch.model.IntegratedContactEndpoint
@@ -56,6 +58,50 @@ internal fun FavoriteContactsPane(
     onComposeMessage: (CommunicationRecipient, ContactAppRoute) -> Unit,
     onComposeConversationMessage: (LauncherShortcutTarget) -> Unit,
 ) {
+    if (store.demoModeEnabled) {
+        val context = LocalContext.current
+        var selectedContact by remember(store.demoScenario) {
+            mutableStateOf<FavoriteAndroidContact?>(null)
+        }
+        FavoriteContactsList(
+            contacts = DemoFavoriteData.contacts(store.demoScenario),
+            attentionColorFor = store::demoFavoriteAttentionColor,
+            integratedAvailability = emptyMap(),
+            integratedCallAvailability = emptyMap(),
+            onOpen = { contact -> selectedContact = contact as? FavoriteAndroidContact },
+            onAddPerson = {},
+            onReorder = {},
+            editable = false,
+        )
+        selectedContact?.let { contact ->
+            FavoriteAndroidContactActionDialog(
+                contact = contact,
+                routes = FavoriteContactActionRoutes(),
+                messagingOptions = emptyList(),
+                callingOptions = emptyList(),
+                preferredPhone = contact.phones.firstOrNull(),
+                attentionColorArgb = store.demoFavoriteAttentionColor(contact.id),
+                onAction = {
+                    Toast.makeText(
+                        context,
+                        context.getString(R.string.demo_preview_action),
+                        Toast.LENGTH_SHORT,
+                    ).show()
+                },
+                onPreferredPhone = {},
+                onMessageRoute = {},
+                onCallRoute = {},
+                onAttentionColor = { color ->
+                    store.updateDemoFavoriteAttentionColor(contact.id, color)
+                },
+                onOpenContact = {},
+                onDismiss = { selectedContact = null },
+                showContactManagement = false,
+                showActionRoutes = false,
+            )
+        }
+        return
+    }
     val context = LocalContext.current
     val activity = context as ComponentActivity
     var permissionGranted by remember {

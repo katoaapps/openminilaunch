@@ -3,6 +3,8 @@ package com.katoaapps.openminilaunch
 import com.katoaapps.openminilaunch.features.demo.DemoSearchData
 import com.katoaapps.openminilaunch.features.demo.DemoHomeData
 import com.katoaapps.openminilaunch.features.demo.DemoHomeProfile
+import com.katoaapps.openminilaunch.features.demo.DemoFavoriteData
+import com.katoaapps.openminilaunch.features.demo.DemoScenario
 import com.katoaapps.openminilaunch.model.AppGridSlot
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
@@ -33,6 +35,38 @@ class DemoSearchDataTest {
             assertEquals(AppGridSlot.entries.toSet(), appGridSlots.toSet())
             assertEquals(AppGridSlot.entries.size, appGridSlots.size)
         }
+    }
+
+    @Test
+    fun scenariosProvideDistinctStableTodoFixtures() {
+        DemoScenario.entries.forEach { scenario ->
+            val first = DemoHomeData.todos(scenario = scenario)
+            val repeated = DemoHomeData.todos(scenario = scenario)
+
+            assertEquals(5, first.size)
+            assertEquals(first, repeated)
+            assertEquals(first.size, first.map { it.id }.distinct().size)
+            assertEquals(1, first.count { it.completed })
+        }
+        assertTrue(
+            DemoHomeData.todos(scenario = DemoScenario.PET_MINK)
+                .any { "May" in it.text },
+        )
+    }
+
+    @Test
+    fun demoFavoritesAreFictionalAndScenarioSpecific() {
+        DemoScenario.entries.forEach { scenario ->
+            val contacts = DemoFavoriteData.contacts(scenario)
+
+            assertEquals(3, contacts.size)
+            assertTrue(contacts.all { it.id.storageKey.contains("demo-") })
+            assertEquals(contacts.size, contacts.map { it.id }.distinct().size)
+        }
+        assertTrue(
+            DemoFavoriteData.contacts(DemoScenario.PET_MINK)
+                .any { it.displayName == "May Wong" },
+        )
     }
 
     @Test

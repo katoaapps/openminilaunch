@@ -639,7 +639,6 @@
     <string name="demo_search_data_enabled">डेमो होम, संपर्क, फ़ाइलें और वार्तालाप सक्षम</string>
     <string name="demo_search_data_disabled">डेमो होम, संपर्क, फ़ाइलें और वार्तालाप अक्षम</string>
     <string name="demo_home_profile">डेमो होम प्रोफ़ाइल</string>
-    <string name="demo_home_profile_picker_description">स्क्रीनशॉट और रिकॉर्डिंग के लिए दोहराने योग्य होम दृश्य चुनें।</string>
     <string name="preview_update_alert">अद्यतन चेतावनी का पूर्वावलोकन करें</string>
     <string name="preview_update_alert_description">अद्यतन या अनुस्मारक डेटा बदले बिना उत्पादन अद्यतन कार्ड खोलें।</string>
     <string name="demo_mode_disable">डेमो मोड बंद करें</string>
@@ -1060,4 +1059,27 @@
     <string name="sensitive_backup_export_title">पढ़ने योग्य संपर्क विवरण निर्यात करें?</string>
     <string name="favorite_contacts_backup_import_description">इस बैकअप में Mink में बनाए गए पसंदीदा संपर्क जोड़ दिए जाएंगे और इस डिवाइस पर पहले से मौजूद पसंदीदा संपर्क नहीं हटाए जाएंगे।</string>
     <string name="favorite_attention_colors_backup_import_description">इस बैकअप के पसंदीदा संपर्कों के ध्यान रंग इस डिवाइस पर पहले से मौजूद रंग हटाए बिना मर्ज किए जाएंगे।</string>
+    <string name="demo_studio">डेमो स्टूडियो</string>
+    <string name="demo_studio_description">स्क्रीनशॉट और रिकॉर्डिंग के लिए दोहराया जा सकने वाला काल्पनिक दृश्य बनाएँ।</string>
+    <string name="demo_scenario">परिदृश्य</string>
+    <string name="demo_scenario_product_tour">उत्पाद परिचय</string>
+    <string name="demo_scenario_product_tour_description">होम, खोज, फ़ाइलों और बातचीत का व्यापक परिचय</string>
+    <string name="demo_scenario_pet_mink">पालतू मिंक की कहानी</string>
+    <string name="demo_scenario_pet_mink_description">May, Gary और कैलिफ़ोर्निया में पालतू मिंक की खोज</string>
+    <string name="demo_scenario_workday">कार्यदिवस</string>
+    <string name="demo_scenario_workday_description">प्रोजेक्ट कार्य, सहकर्मी और काम की फ़ाइलें</string>
+    <string name="demo_visual_profile">विज़ुअल प्रोफ़ाइल</string>
+    <string name="demo_conversation_state">बातचीत की स्थिति</string>
+    <string name="demo_conversation_state_quiet">शांत</string>
+    <string name="demo_conversation_state_one_favorite">एक पसंदीदा</string>
+    <string name="demo_conversation_state_active_inbox">सक्रिय इनबॉक्स</string>
+    <string name="demo_capture_moment">कैप्चर दृश्य</string>
+    <string name="demo_capture_moment_home">होम</string>
+    <string name="demo_capture_moment_quick_apps">क्विक ऐप्स</string>
+    <string name="demo_capture_moment_conversations">बातचीत</string>
+    <string name="demo_capture_moment_magic_box">Magic Box खोज</string>
+    <string name="demo_preview_action">केवल डेमो पूर्वावलोकन</string>
+    <string name="demo_reset_scene">मौजूदा दृश्य रीसेट करें</string>
+    <string name="demo_reset_scene_description">इस परिदृश्य के मूल कार्य, बनाई गई फ़ाइलें और बातचीत के जवाब पुनर्स्थापित करें।</string>
+    <string name="demo_scene_reset">डेमो दृश्य रीसेट किया गया</string>
 </resources>

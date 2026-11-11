@@ -278,14 +278,14 @@ internal fun MagicBoxContent(
             )
         }
     }
-    val canSearchContacts = hasContacts || store.demoSearchDataEnabled
-    val contactResults = remember(prefix, searchTerm, canSearchContacts, store.demoSearchDataEnabled) {
+    val canSearchContacts = hasContacts || store.demoModeEnabled
+    val contactResults = remember(prefix, searchTerm, canSearchContacts, store.demoModeEnabled) {
         if (
             prefix in listOf('@', '#') &&
             canSearchContacts &&
             selectedRecipient == null
         ) {
-            actions.searchContacts(searchTerm, useDemoData = store.demoSearchDataEnabled).take(5)
+            actions.searchContacts(searchTerm, useDemoData = store.demoModeEnabled).take(5)
         } else emptyList()
     }
     val recentConversations = rememberRecentConversationResults(
@@ -295,7 +295,7 @@ internal fun MagicBoxContent(
         launcherShortcutsRevision = launcherShortcutsRevision,
         sendAutomatically = store.sendMessagesAutomatically,
         preferredMessagingPackage = store.preferredMessagingPackage,
-        demoModeEnabled = store.demoSearchDataEnabled,
+        demoModeEnabled = store.demoModeEnabled,
         actions = actions,
     )
     val visibleRecentConversations = remember(recentConversations, effectiveAppAccessState) {
@@ -310,13 +310,16 @@ internal fun MagicBoxContent(
     val appResults = remember(
         prefix,
         searchTerm,
+        store.demoModeEnabled,
         launcherAppsRevision,
         launcherShortcutsRevision,
         alwaysVisibleTargetKeys,
         store.includeAppShortcutsInDiscovery,
         appSearchMatcher,
     ) {
-        if (prefix == '?' && searchTerm.isNotBlank()) {
+        if (store.demoModeEnabled) {
+            emptyList()
+        } else if (prefix == '?' && searchTerm.isNotBlank()) {
             val targets = launcherLibraryTargets(
                 apps = actions.installedApps(),
                 alwaysVisibleTargetKeys = alwaysVisibleTargetKeys,
@@ -529,7 +532,9 @@ internal fun MagicBoxContent(
     }
 
     fun selectContact(contact: ContactResult) {
-        if (prefix == '#') {
+        if (store.demoModeEnabled && prefix == '#') {
+            Toast.makeText(context, R.string.demo_preview_action, Toast.LENGTH_SHORT).show()
+        } else if (prefix == '#') {
             callFlow.requestConfirmation(contact.toCommunicationRecipient())
             collapseForDialog()
         } else {
@@ -568,7 +573,9 @@ internal fun MagicBoxContent(
     }
 
     fun selectApp(app: LauncherTarget) {
-        if (app is LauncherAppTarget && appBubbleFlow.opensAutomatically(app)) {
+        if (store.demoModeEnabled) {
+            Toast.makeText(context, R.string.demo_preview_action, Toast.LENGTH_SHORT).show()
+        } else if (app is LauncherAppTarget && appBubbleFlow.opensAutomatically(app)) {
             appBubbleFlow.launchInBubble(app)
         } else if (actions.launchLauncherTarget(app)) {
             store.addSearchQuery("?${app.label}")
@@ -584,6 +591,10 @@ internal fun MagicBoxContent(
     }
 
     fun showAppActions(target: LauncherAppTarget) {
+        if (store.demoModeEnabled) {
+            Toast.makeText(context, R.string.demo_preview_action, Toast.LENGTH_SHORT).show()
+            return
+        }
         keyboard?.hide()
         appBubbleFlow.showActions(target)
     }
@@ -613,6 +624,10 @@ internal fun MagicBoxContent(
     fun submit() {
         if (onOpenTodos != null && isOpenTodosCommand(text.text, lockedPrefix)) {
             openTodos()
+            return
+        }
+        if (store.demoModeEnabled && prefix != '-') {
+            Toast.makeText(context, R.string.demo_preview_action, Toast.LENGTH_SHORT).show()
             return
         }
         if (selectFirstCommandResult()) return
@@ -873,18 +888,44 @@ internal fun MagicBoxContent(
                             refocus()
                         },
                         onOpenFile = { file ->
-                            store.addSearchQuery(plainQuery)
-                            actions.openFile(file)
-                            dismiss()
+                            if (store.demoModeEnabled) {
+                                Toast.makeText(
+                                    context,
+                                    R.string.demo_preview_action,
+                                    Toast.LENGTH_SHORT,
+                                ).show()
+                            } else {
+                                store.addSearchQuery(plainQuery)
+                                actions.openFile(file)
+                                dismiss()
+                            }
                         },
                         onRequestMedia = { mediaPermissionLauncher.launch(mediaReadPermissions()) },
                         onRequestFolder = { showFileScopeChoice = true },
                         onSubmitWeb = ::submit,
-                        onSubmitAi = ::submitAi,
+                        onSubmitAi = {
+                            if (store.demoModeEnabled) {
+                                Toast.makeText(
+                                    context,
+                                    R.string.demo_preview_action,
+                                    Toast.LENGTH_SHORT,
+                                ).show()
+                            } else {
+                                submitAi()
+                            }
+                        },
                         onOpenTodos = onOpenTodos?.let { { openTodos() } },
                         onSelectContact = ::selectContact,
                         onSelectRecentConversation = ::selectRecentConversation,
                         onSelectForcedRecipient = { identifier ->
+                            if (store.demoModeEnabled && prefix == '#') {
+                                Toast.makeText(
+                                    context,
+                                    R.string.demo_preview_action,
+                                    Toast.LENGTH_SHORT,
+                                ).show()
+                                return@MagicResultsPanel
+                            }
                             val recipient = userEnteredRecipient(identifier)
                             if (prefix == '#') {
                                 callFlow.requestConfirmation(recipient)

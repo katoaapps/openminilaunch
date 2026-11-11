@@ -1,12 +1,30 @@
 package com.katoaapps.openminilaunch
 
 import com.katoaapps.openminilaunch.features.magic.*
+import com.katoaapps.openminilaunch.ui.magic.MagicBoxSessionState
 
 import android.content.res.Configuration
 import org.junit.Assert.assertEquals
 import org.junit.Test
 
 class MagicBoxInputTest {
+    @Test
+    fun demoCaptureSearchCanReturnToACleanHomeFrame() {
+        val session = MagicBoxSessionState.empty()
+
+        session.prepareDemoSearch("invoice")
+
+        assertEquals("invoice", session.textState.value.text)
+        assertEquals(true, session.expanded)
+
+        session.resetForDemoHome()
+
+        assertEquals("", session.textState.value.text)
+        assertEquals(null, session.selectedRecipientState.value)
+        assertEquals(null, session.lockedPrefixState.value)
+        assertEquals(false, session.expanded)
+    }
+
     @Test
     fun printableHardwareInputKeepsShiftedHotkeysAndUnicode() {
         assertEquals("@", printableHardwareText('@'.code))

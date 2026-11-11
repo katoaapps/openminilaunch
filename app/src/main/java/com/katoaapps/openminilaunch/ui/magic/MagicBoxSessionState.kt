@@ -57,6 +57,22 @@ internal class MagicBoxSessionState private constructor(
         expandedState.value = true
     }
 
+    /** Prepares a fictional search without passing content to another app. */
+    fun prepareDemoSearch(query: String) {
+        textState.value = TextFieldValue(query, selection = TextRange(query.length))
+        selectedRecipientState.value = null
+        lockedPrefixState.value = null
+        expandedState.value = true
+    }
+
+    /** Returns the persistent Home editor to its clean opening frame. */
+    fun resetForDemoHome() {
+        textState.value = TextFieldValue()
+        selectedRecipientState.value = null
+        lockedPrefixState.value = null
+        expandedState.value = false
+    }
+
     companion object {
         private const val TEXT_KEY = "text"
         private const val SELECTION_START_KEY = "selection_start"

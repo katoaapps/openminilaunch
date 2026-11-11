@@ -2,6 +2,7 @@ package com.katoaapps.openminilaunch.ui.settings
 
 import androidx.compose.runtime.Composable
 import com.katoaapps.openminilaunch.data.LauncherStore
+import com.katoaapps.openminilaunch.features.demo.DemoCaptureMoment
 import com.katoaapps.openminilaunch.model.SearchFolder
 import com.katoaapps.openminilaunch.model.AppGridSlot
 import com.katoaapps.openminilaunch.platform.DeviceActions
@@ -22,6 +23,7 @@ internal fun SettingsDestinationContent(
     onNavigateBack: () -> Unit,
     onExitSettings: () -> Unit,
     onOpenTodos: () -> Unit,
+    onDemoCaptureMoment: (DemoCaptureMoment) -> Unit,
     onIconStyleApplied: () -> Unit,
     onPickAppGridSlot: (AppGridSlot) -> Unit,
     onPickDrawer: () -> Unit,
@@ -155,7 +157,13 @@ internal fun SettingsDestinationContent(
             store,
             actions,
             onRepeatTutorial,
+            { onNavigate(SettingsDestination.DEMO_STUDIO) },
             onNavigateBack,
+        )
+        SettingsDestination.DEMO_STUDIO -> DemoStudioSettingsPage(
+            store = store,
+            onCaptureMoment = onDemoCaptureMoment,
+            goBack = onNavigateBack,
         )
     }
 }
