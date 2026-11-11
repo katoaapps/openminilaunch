@@ -12,6 +12,7 @@ import com.katoaapps.openminilaunch.model.LauncherKeyboardColorSource
 import com.katoaapps.openminilaunch.model.LauncherKeyboardLayout
 import com.katoaapps.openminilaunch.model.LauncherKeyboardPreferences
 import com.katoaapps.openminilaunch.model.LauncherKeyboardStyle
+import com.katoaapps.openminilaunch.model.LauncherKeyboardHeightPreset
 import com.katoaapps.openminilaunch.model.normalizeLauncherKeyboardHeight
 
 internal class LauncherKeyboardPreferenceStore(private val prefs: SharedPreferences) {
@@ -22,6 +23,7 @@ internal class LauncherKeyboardPreferenceStore(private val prefs: SharedPreferen
         val normalized = updated.copy(heightDp = normalizeLauncherKeyboardHeight(updated.heightDp))
         preferences = normalized
         prefs.edit {
+            putBoolean(USE_MINK_KEYBOARD_KEY, normalized.useMinkKeyboard)
             putString(STYLE_KEY, normalized.style.name)
             putString(LAYOUT_KEY, normalized.layout.name)
             putString(COLOR_SOURCE_KEY, normalized.colorSource.name)
@@ -30,29 +32,40 @@ internal class LauncherKeyboardPreferenceStore(private val prefs: SharedPreferen
             putBoolean(SPLIT_WIDE_KEY, normalized.splitOnWideDisplays)
             putBoolean(HAPTIC_KEY, normalized.hapticFeedbackEnabled)
             putFloat(HEIGHT_KEY, normalized.heightDp)
+            putString(PORTRAIT_HEIGHT_PRESET_KEY, normalized.portraitHeightPreset.name)
             normalized.keyColorOverrideArgb?.let { color ->
                 putInt(KEY_COLOR_OVERRIDE_KEY, color)
             } ?: remove(KEY_COLOR_OVERRIDE_KEY)
         }
     }
 
-    private fun load() = LauncherKeyboardPreferences(
-        style = prefs.enumValue(STYLE_KEY, LauncherKeyboardStyle.FLAT_PRIMARY),
-        layout = prefs.enumValue(LAYOUT_KEY, LauncherKeyboardLayout.QWERTY),
-        colorSource = prefs.enumValue(COLOR_SOURCE_KEY, LauncherKeyboardColorSource.THEME),
-        customPrimaryArgb = prefs.getInt(CUSTOM_PRIMARY_KEY, DEFAULT_KEYBOARD_PRIMARY_ARGB),
-        customSecondaryArgb = prefs.getInt(CUSTOM_SECONDARY_KEY, DEFAULT_KEYBOARD_SECONDARY_ARGB),
-        keyColorOverrideArgb = if (prefs.contains(KEY_COLOR_OVERRIDE_KEY)) {
-            prefs.getInt(KEY_COLOR_OVERRIDE_KEY, DEFAULT_KEYBOARD_PRIMARY_ARGB)
-        } else {
-            null
-        },
-        splitOnWideDisplays = prefs.getBoolean(SPLIT_WIDE_KEY, true),
-        hapticFeedbackEnabled = prefs.getBoolean(HAPTIC_KEY, true),
-        heightDp = normalizeLauncherKeyboardHeight(
+    private fun load(): LauncherKeyboardPreferences {
+        val savedHeight = normalizeLauncherKeyboardHeight(
             prefs.getFloat(HEIGHT_KEY, DEFAULT_KEYBOARD_HEIGHT_DP),
-        ),
-    )
+        )
+        return LauncherKeyboardPreferences(
+            useMinkKeyboard = prefs.getBoolean(USE_MINK_KEYBOARD_KEY, true),
+            style = prefs.enumValue(STYLE_KEY, LauncherKeyboardStyle.FLAT_PRIMARY),
+            layout = prefs.enumValue(LAYOUT_KEY, LauncherKeyboardLayout.QWERTY),
+            colorSource = prefs.enumValue(COLOR_SOURCE_KEY, LauncherKeyboardColorSource.THEME),
+            customPrimaryArgb = prefs.getInt(CUSTOM_PRIMARY_KEY, DEFAULT_KEYBOARD_PRIMARY_ARGB),
+            customSecondaryArgb = prefs.getInt(CUSTOM_SECONDARY_KEY, DEFAULT_KEYBOARD_SECONDARY_ARGB),
+            keyColorOverrideArgb = if (prefs.contains(KEY_COLOR_OVERRIDE_KEY)) {
+                prefs.getInt(KEY_COLOR_OVERRIDE_KEY, DEFAULT_KEYBOARD_PRIMARY_ARGB)
+            } else {
+                null
+            },
+            splitOnWideDisplays = prefs.getBoolean(SPLIT_WIDE_KEY, true),
+            hapticFeedbackEnabled = prefs.getBoolean(HAPTIC_KEY, true),
+            heightDp = savedHeight,
+            // This preset intentionally starts at 40% for every existing installation. The key
+            // only exists after the user chooses one of the new snapped sizes.
+            portraitHeightPreset = prefs.enumValue(
+                PORTRAIT_HEIGHT_PRESET_KEY,
+                LauncherKeyboardHeightPreset.BALANCED,
+            ),
+        )
+    }
 
     private inline fun <reified T : Enum<T>> SharedPreferences.enumValue(
         key: String,
@@ -62,6 +75,7 @@ internal class LauncherKeyboardPreferenceStore(private val prefs: SharedPreferen
         ?: fallback
 
     private companion object {
+        const val USE_MINK_KEYBOARD_KEY = "launcher_keyboard_enabled"
         const val STYLE_KEY = "launcher_keyboard_style"
         const val LAYOUT_KEY = "launcher_keyboard_layout"
         const val COLOR_SOURCE_KEY = "launcher_keyboard_color_source"
@@ -71,5 +85,6 @@ internal class LauncherKeyboardPreferenceStore(private val prefs: SharedPreferen
         const val SPLIT_WIDE_KEY = "launcher_keyboard_split_wide"
         const val HAPTIC_KEY = "launcher_keyboard_haptic"
         const val HEIGHT_KEY = "launcher_keyboard_height_dp"
+        const val PORTRAIT_HEIGHT_PRESET_KEY = "launcher_keyboard_portrait_height_preset"
     }
 }

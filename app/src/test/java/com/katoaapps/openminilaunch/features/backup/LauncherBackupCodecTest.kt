@@ -19,12 +19,14 @@ import com.katoaapps.openminilaunch.model.FontAppearance
 import com.katoaapps.openminilaunch.model.FontSource
 import com.katoaapps.openminilaunch.model.FavoriteContactId
 import com.katoaapps.openminilaunch.model.FavoriteIntegratedContact
+import com.katoaapps.openminilaunch.model.FavoriteIntegratedContactNameSource
 import com.katoaapps.openminilaunch.model.IconAppearance
 import com.katoaapps.openminilaunch.model.IntegratedContactCallEndpoint
 import com.katoaapps.openminilaunch.model.IntegratedContactEndpoint
 import com.katoaapps.openminilaunch.model.ProviderAddressType
 import com.katoaapps.openminilaunch.model.MinkAppPauseMode
 import com.katoaapps.openminilaunch.model.LauncherKeyboardColorSource
+import com.katoaapps.openminilaunch.model.LauncherKeyboardHeightPreset
 import com.katoaapps.openminilaunch.model.LauncherKeyboardLayout
 import com.katoaapps.openminilaunch.model.LauncherKeyboardPreferences
 import com.katoaapps.openminilaunch.model.LauncherKeyboardStyle
@@ -43,6 +45,7 @@ import org.junit.Test
 class LauncherBackupCodecTest {
     @Test fun launcherKeyboardPreferencesSurvivePortableBackupRoundTrip() {
         val keyboard = LauncherKeyboardPreferences(
+            useMinkKeyboard = false,
             style = LauncherKeyboardStyle.OUTLINED_SECONDARY,
             layout = LauncherKeyboardLayout.DVORAK,
             colorSource = LauncherKeyboardColorSource.CUSTOM,
@@ -52,6 +55,7 @@ class LauncherBackupCodecTest {
             splitOnWideDisplays = true,
             hapticFeedbackEnabled = false,
             heightDp = 321f,
+            portraitHeightPreset = LauncherKeyboardHeightPreset.TALL,
         )
         val sample = sampleBackup(twoPanelMode = true)
         val restored = LauncherBackupCodec.decode(
@@ -73,6 +77,30 @@ class LauncherBackupCodecTest {
         )
         json.getJSONObject("settings").getJSONObject("magicBox").remove("launcherKeyboard")
         assertNull(LauncherBackupCodec.decode(json.toString()).settings.launcherKeyboardPreferences)
+    }
+
+    @Test fun olderLauncherKeyboardBackupDefaultsToMinkKeyboard() {
+        val sample = sampleBackup(twoPanelMode = true)
+        val json = JSONObject(
+            LauncherBackupCodec.encode(
+                sample.copy(
+                    settings = sample.settings.copy(
+                        launcherKeyboardPreferences = LauncherKeyboardPreferences(useMinkKeyboard = false),
+                    ),
+                ),
+            ),
+        )
+        json.getJSONObject("settings")
+            .getJSONObject("magicBox")
+            .getJSONObject("launcherKeyboard")
+            .remove("useMinkKeyboard")
+
+        assertEquals(
+            true,
+            LauncherBackupCodec.decode(json.toString())
+                .settings.launcherKeyboardPreferences
+                ?.useMinkKeyboard,
+        )
     }
 
     @Test fun palettePreferenceSurvivesPortableBackupRoundTrip() {
@@ -562,6 +590,30 @@ class LauncherBackupCodecTest {
         )
         assertFalse(encoded.contains("contactUri"))
         assertFalse(encoded.contains("photoUri"))
+    }
+
+    @Test fun providerManagedFavoriteNameSurvivesPortableBackupRoundTrip() {
+        val favorite = FavoriteIntegratedContact(
+            id = FavoriteContactId.Integrated("favorite-may-shortcut"),
+            displayName = "May Wong",
+            endpoints = listOf(
+                IntegratedContactEndpoint.ConversationShortcut(
+                    packageName = "com.example.chat",
+                    shortcutId = "may-conversation",
+                    userSerial = 0L,
+                    label = "May Wong",
+                ),
+            ),
+            nameSource = FavoriteIntegratedContactNameSource.PROVIDER,
+        )
+        val encoded = LauncherBackupCodec.encode(
+            sampleBackup(twoPanelMode = true).copy(integratedContacts = listOf(favorite)),
+        )
+
+        assertEquals(
+            listOf(favorite),
+            LauncherBackupCodec.decode(encoded).integratedContacts,
+        )
     }
 
     @Test fun olderBackupWithoutMinkCreatedFavoritesLeavesExistingFavoritesAlone() {

@@ -33,6 +33,8 @@ import com.katoaapps.openminilaunch.platform.DeviceActions
 import com.katoaapps.openminilaunch.ui.minkspace.core.MinkSpaceHost
 import com.katoaapps.openminilaunch.ui.minkspace.core.MinkSpacePresentationState
 import com.katoaapps.openminilaunch.ui.minkspace.core.animateMinkSpaceExpansionLayout
+import com.katoaapps.openminilaunch.ui.onboarding.HomeTourTarget
+import com.katoaapps.openminilaunch.ui.onboarding.homeTourTarget
 import com.katoaapps.openminilaunch.ui.theme.Dimens
 import com.katoaapps.openminilaunch.ui.theme.cathedralGlassBrush
 import com.katoaapps.openminilaunch.ui.theme.cathedralGlassCompositeColor
@@ -152,12 +154,19 @@ internal fun BoxScope.HomeFocusPanel(
                     openMinkSpaceSettings = openMinkSpaceSettings,
                     presentationState = minkSpacePresentation,
                     expandedPresentation = expansionLayout.expandedPresentation,
-                    modifier = Modifier.weight(1f).fillMaxHeight().onGloballyPositioned { coordinates ->
-                        val origin = coordinates.positionInRoot()
-                        onTodoCenterChanged(
-                            origin + Offset(coordinates.size.width / 2f, coordinates.size.height / 2f),
-                        )
-                    },
+                    modifier = Modifier
+                        .weight(1f)
+                        .fillMaxHeight()
+                        .homeTourTarget(HomeTourTarget.MINK_SPACE)
+                        .onGloballyPositioned { coordinates ->
+                            val origin = coordinates.positionInRoot()
+                            onTodoCenterChanged(
+                                origin + Offset(
+                                    coordinates.size.width / 2f,
+                                    coordinates.size.height / 2f,
+                                ),
+                            )
+                        },
                 )
                 if (expansionLayout.appGridWidth > Dimens.dp1) {
                     Box(

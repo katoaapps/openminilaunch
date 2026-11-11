@@ -69,8 +69,11 @@ internal fun AppFolderContentsDialog(
     onAppearanceChange: (customName: String?, colorMode: AppFolderColorMode, colorArgb: Int?) -> Unit,
     onEdit: () -> Unit,
     onDismiss: () -> Unit,
+    titleOverride: String? = null,
+    targetsOverride: List<LauncherTarget>? = null,
+    appearanceEditable: Boolean = true,
 ) {
-    val targets = folder.orderedTargetKeys.map(actions::resolveLauncherSelection)
+    val targets = targetsOverride ?: folder.orderedTargetKeys.map(actions::resolveLauncherSelection)
     var draftName by remember(folder.id) { mutableStateOf(folder.customName.orEmpty()) }
     var draftColorMode by remember(folder.id) { mutableStateOf(folder.colorMode) }
     var draftColorArgb by remember(folder.id) { mutableStateOf(folder.colorArgb) }
@@ -86,7 +89,9 @@ internal fun AppFolderContentsDialog(
     val folderContentColor = readableContentColor(folderColor)
 
     fun commitAppearance() {
-        onAppearanceChange(draftName, draftColorMode, draftColorArgb)
+        if (appearanceEditable) {
+            onAppearanceChange(draftName, draftColorMode, draftColorArgb)
+        }
     }
 
     fun commitAndDismiss() {
@@ -104,38 +109,51 @@ internal fun AppFolderContentsDialog(
             Box(Modifier.fillMaxSize()) {
                 Column(Modifier.fillMaxSize().padding(Dimens.dp14)) {
                     Row(verticalAlignment = Alignment.CenterVertically) {
-                        BasicTextField(
-                            value = draftName,
-                            onValueChange = { draftName = it.take(MAX_APP_FOLDER_NAME_LENGTH) },
-                            modifier = Modifier.weight(1f)
-                                .padding(horizontal = Dimens.dp4, vertical = Dimens.dp8),
-                            singleLine = true,
-                            textStyle = MaterialTheme.typography.titleMedium.copy(
+                        if (appearanceEditable) {
+                            BasicTextField(
+                                value = draftName,
+                                onValueChange = { draftName = it.take(MAX_APP_FOLDER_NAME_LENGTH) },
+                                modifier = Modifier.weight(1f)
+                                    .padding(horizontal = Dimens.dp4, vertical = Dimens.dp8),
+                                singleLine = true,
+                                textStyle = MaterialTheme.typography.titleMedium.copy(
+                                    color = folderContentColor,
+                                    fontWeight = FontWeight.Black,
+                                ),
+                                cursorBrush = SolidColor(folderContentColor),
+                                keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
+                                keyboardActions = KeyboardActions(onDone = {
+                                    focusManager.clearFocus()
+                                    commitAppearance()
+                                }),
+                                decorationBox = { field ->
+                                    Box {
+                                        if (draftName.isBlank()) {
+                                            Text(
+                                                stringResource(R.string.apps),
+                                                color = folderContentColor.copy(alpha = .62f),
+                                                fontWeight = FontWeight.Black,
+                                                fontSize = Dimens.sp18,
+                                            )
+                                        }
+                                        field()
+                                    }
+                                },
+                            )
+                            IconButton(onClick = { showColorPicker = true }) {
+                                Icon(Icons.Default.Palette, stringResource(R.string.folder_color))
+                            }
+                        } else {
+                            Text(
+                                text = titleOverride ?: folder.customName ?: stringResource(R.string.apps),
+                                modifier = Modifier.weight(1f)
+                                    .padding(horizontal = Dimens.dp4, vertical = Dimens.dp8),
                                 color = folderContentColor,
                                 fontWeight = FontWeight.Black,
-                            ),
-                            cursorBrush = SolidColor(folderContentColor),
-                            keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
-                            keyboardActions = KeyboardActions(onDone = {
-                                focusManager.clearFocus()
-                                commitAppearance()
-                            }),
-                            decorationBox = { field ->
-                                Box {
-                                    if (draftName.isBlank()) {
-                                        Text(
-                                            stringResource(R.string.apps),
-                                            color = folderContentColor.copy(alpha = .62f),
-                                            fontWeight = FontWeight.Black,
-                                            fontSize = Dimens.sp18,
-                                        )
-                                    }
-                                    field()
-                                }
-                            },
-                        )
-                        IconButton(onClick = { showColorPicker = true }) {
-                            Icon(Icons.Default.Palette, stringResource(R.string.folder_color))
+                                fontSize = Dimens.sp18,
+                                maxLines = 1,
+                                overflow = TextOverflow.Ellipsis,
+                            )
                         }
                         IconButton(onClick = {
                             commitAppearance()
@@ -198,7 +216,7 @@ internal fun AppFolderContentsDialog(
         }
     }
 
-    if (showColorPicker) {
+    if (appearanceEditable && showColorPicker) {
         AppearanceColorDialog(
             initialArgb = draftColorArgb ?: MaterialTheme.colorScheme.primaryContainer.toArgb(),
             titleRes = R.string.folder_color,

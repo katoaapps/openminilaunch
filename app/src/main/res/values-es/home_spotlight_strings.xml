@@ -1,0 +1,17 @@
+<resources>
+    <string name="home_spotlight_folders_title">Crea una carpeta</string>
+    <string name="home_spotlight_folders_description">Mantén pulsada una app y añade otra para convertir el mosaico en una carpeta.</string>
+    <string name="home_spotlight_minkspace_title">Las miniapps viven aquí</string>
+    <string name="home_spotlight_minkspace_description">Desliza hacia arriba o abajo en MinkSpace para cambiar de miniapp. Toca las compatibles para ampliarlas.</string>
+    <string name="home_spotlight_magic_title">Empieza a escribir</string>
+    <string name="home_spotlight_magic_description">Busca, envía mensajes, llama, crea notas e inicia acciones con texto normal o las teclas rápidas de Magic Box.</string>
+    <string name="home_spotlight_keyboard_title">Más que un teclado</string>
+    <string name="home_spotlight_keyboard_description">Toca para abrir el teclado. Mantén pulsado para iniciar Adrift.</string>
+    <string name="home_spotlight_header_title">Tu inicio de un vistazo</string>
+    <string name="home_spotlight_header_description">Abre Mensajes, consulta la fecha y la batería o entra en Ajustes.</string>
+    <string name="home_spotlight_gestures_title">Muévete por Inicio</string>
+    <string name="home_spotlight_gestures_description">Desliza desde Inicio para llegar a los espacios que lo rodean.</string>
+    <string name="notifications">Notificaciones</string>
+    <string name="replay_home_tour">Repetir recorrido de Inicio</string>
+    <string name="replay_home_tour_summary">Repasa los controles, accesos directos y gestos de Inicio</string>
+</resources>

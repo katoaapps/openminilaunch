@@ -78,6 +78,21 @@ class SettingsNavigationTest {
         )
     }
 
+    @Test fun demoStudioNestsUnderAbout() {
+        assertEquals(
+            listOf(
+                SettingsDestination.OVERVIEW,
+                SettingsDestination.ABOUT,
+                SettingsDestination.DEMO_STUDIO,
+            ),
+            settingsPathTo(SettingsDestination.DEMO_STUDIO),
+        )
+        assertEquals(
+            SettingsSection.MORE,
+            settingsSectionFor(SettingsDestination.DEMO_STUDIO),
+        )
+    }
+
     @Test fun magicBoxDetailsReturnDirectlyToTheirSectionRoot() {
         assertEquals(
             listOf(SettingsDestination.OVERVIEW, SettingsDestination.FILE_SEARCH),

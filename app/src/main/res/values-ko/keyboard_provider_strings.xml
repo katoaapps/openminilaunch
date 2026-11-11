@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="mink_keyboard">Mink 키보드</string>
+    <string name="mink_keyboard_description">Magic Box에서 시스템 키보드 대신 Mink 내장 키보드를 사용합니다.</string>
+</resources>

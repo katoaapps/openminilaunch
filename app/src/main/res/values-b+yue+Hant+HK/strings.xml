@@ -639,7 +639,6 @@
     <string name="demo_search_data_enabled">啟用咗示範主頁、聯絡人、檔案同對話</string>
     <string name="demo_search_data_disabled">停用咗示範主頁、聯絡人、檔案同對話</string>
     <string name="demo_home_profile">示範主頁個人檔案</string>
-    <string name="demo_home_profile_picker_description">揀一個可以重複嘅主頁場景嚟截圖同錄音。</string>
     <string name="preview_update_alert">預覽更新警示</string>
     <string name="preview_update_alert_description">打開生產更新卡，唔使更改更新或者提醒資料。</string>
     <string name="demo_mode_disable">閂示範模式</string>
@@ -1060,4 +1059,28 @@
     <string name="sensitive_backup_export_title">匯出可讀嘅聯絡人資料？</string>
     <string name="favorite_contacts_backup_import_description">呢個備份中由 Mink 建立嘅最愛聯絡人會被加入，而唔會移除呢部裝置上現有嘅最愛聯絡人。</string>
     <string name="favorite_attention_colors_backup_import_description">呢個備份中嘅最愛聯絡人提示顏色會被合併，而唔會清除呢部裝置上現有嘅顏色。</string>
+    <string name="demo_studio">示範工作室</string>
+    <string name="demo_studio_description">建立一個可以重複使用嘅虛構場景，方便截圖同錄影。</string>
+    <string name="demo_scenario">場景</string>
+    <string name="demo_scenario_product_tour">產品導覽</string>
+    <string name="demo_scenario_product_tour_description">全面展示主頁、搜尋、檔案同對話</string>
+    <string name="demo_scenario_pet_mink">寵物水貂故事</string>
+    <string name="demo_scenario_pet_mink_description">May、Gary 同喺加州搵寵物水貂嘅故事</string>
+    <string name="demo_scenario_workday">工作日</string>
+    <string name="demo_scenario_workday_description">項目工作、同事同工作檔案</string>
+    <string name="demo_visual_profile">視覺設定</string>
+    <string name="demo_conversation_state">對話狀態</string>
+    <string name="demo_conversation_state_quiet">安靜</string>
+    <string name="demo_conversation_state_one_favorite">一個最愛聯絡人</string>
+    <string name="demo_conversation_state_active_inbox">活躍收件箱</string>
+    <string name="demo_capture_moment">擷取畫面</string>
+    <string name="demo_capture_moment_home">主頁</string>
+    <string name="demo_capture_moment_quick_apps">快速應用程式</string>
+    <string name="demo_capture_moment_conversations">對話</string>
+    <string name="demo_capture_moment_magic_box">Magic Box 搜尋</string>
+    <string name="demo_preview_action">只限示範預覽</string>
+    <string name="demo_reset_scene">重設目前場景</string>
+    <string name="demo_reset_scene_description">還原呢個場景原本嘅工作、產生檔案同對話回覆。</string>
+    <string name="demo_scene_reset">示範場景已重設</string>
+    <string name="could_not_rename_favorite">無法重新命名呢個最愛聯絡人。</string>
 </resources>

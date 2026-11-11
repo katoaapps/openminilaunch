@@ -8,6 +8,7 @@ import androidx.compose.runtime.saveable.mapSaver
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.text.TextRange
 import androidx.compose.ui.text.input.TextFieldValue
+import com.katoaapps.openminilaunch.features.magic.MagicBoxRoute
 import com.katoaapps.openminilaunch.model.CommunicationRecipient
 import com.katoaapps.openminilaunch.model.LauncherShortcutTarget
 
@@ -21,19 +22,19 @@ import com.katoaapps.openminilaunch.model.LauncherShortcutTarget
 internal class MagicBoxSessionState private constructor(
     text: TextFieldValue,
     selectedRecipient: SelectedMessageRecipient?,
-    lockedPrefix: Char?,
+    route: MagicBoxRoute,
     expanded: Boolean,
 ) {
     val textState: MutableState<TextFieldValue> = mutableStateOf(text)
     val selectedRecipientState: MutableState<SelectedMessageRecipient?> =
         mutableStateOf(selectedRecipient)
-    val lockedPrefixState: MutableState<Char?> = mutableStateOf(lockedPrefix)
+    val routeState: MutableState<MagicBoxRoute> = mutableStateOf(route)
     val expandedState: MutableState<Boolean> = mutableStateOf(expanded)
 
     val expanded: Boolean
         get() = expandedState.value
 
-    /** Starts an @ draft with the person already selected by another Mink surface. */
+    /** Starts a message draft with the person already selected by another Mink surface. */
     fun prepareMessage(
         recipient: CommunicationRecipient,
         providerPackage: String?,
@@ -45,16 +46,32 @@ internal class MagicBoxSessionState private constructor(
             providerPackage = providerPackage,
             providerRouteOverridden = providerRouteOverridden,
         )
-        lockedPrefixState.value = '@'
+        routeState.value = MagicBoxRoute.MESSAGE
         expandedState.value = true
     }
 
-    /** Starts an @ draft for an exact app-published conversation shortcut. */
+    /** Starts a message draft for an exact app-published conversation shortcut. */
     fun prepareConversationMessage(conversation: LauncherShortcutTarget) {
         textState.value = TextFieldValue()
         selectedRecipientState.value = SelectedMessageRecipient.ConversationRecipient(conversation)
-        lockedPrefixState.value = '@'
+        routeState.value = MagicBoxRoute.MESSAGE
         expandedState.value = true
+    }
+
+    /** Prepares a fictional search without passing content to another app. */
+    fun prepareDemoSearch(query: String) {
+        textState.value = TextFieldValue(query, selection = TextRange(query.length))
+        selectedRecipientState.value = null
+        routeState.value = MagicBoxRoute.SEARCH
+        expandedState.value = true
+    }
+
+    /** Returns the persistent Home editor to its clean opening frame. */
+    fun resetForDemoHome() {
+        textState.value = TextFieldValue()
+        selectedRecipientState.value = null
+        routeState.value = MagicBoxRoute.SEARCH
+        expandedState.value = false
     }
 
     companion object {
@@ -62,13 +79,14 @@ internal class MagicBoxSessionState private constructor(
         private const val SELECTION_START_KEY = "selection_start"
         private const val SELECTION_END_KEY = "selection_end"
         private const val RECIPIENT_KEY = "recipient"
-        private const val PREFIX_KEY = "prefix"
+        private const val ROUTE_KEY = "route"
+        private const val LEGACY_PREFIX_KEY = "prefix"
         private const val EXPANDED_KEY = "expanded"
 
         fun empty(initiallyExpanded: Boolean = false): MagicBoxSessionState = MagicBoxSessionState(
             text = TextFieldValue(),
             selectedRecipient = null,
-            lockedPrefix = null,
+            route = MagicBoxRoute.SEARCH,
             expanded = initiallyExpanded,
         )
 
@@ -79,7 +97,7 @@ internal class MagicBoxSessionState private constructor(
                     SELECTION_START_KEY to state.textState.value.selection.start,
                     SELECTION_END_KEY to state.textState.value.selection.end,
                     RECIPIENT_KEY to state.selectedRecipientState.value?.snapshot().orEmpty(),
-                    PREFIX_KEY to (state.lockedPrefixState.value?.code ?: -1),
+                    ROUTE_KEY to state.routeState.value.name,
                     EXPANDED_KEY to state.expandedState.value,
                 )
             },
@@ -90,7 +108,15 @@ internal class MagicBoxSessionState private constructor(
                 val selectionEnd = (saved.getValue(SELECTION_END_KEY) as Int)
                     .coerceIn(0, text.length)
                 val recipientSnapshot = saved.getValue(RECIPIENT_KEY) as String
-                val prefixCode = saved.getValue(PREFIX_KEY) as Int
+                val restoredRoute = (saved[ROUTE_KEY] as? String)
+                    ?.let { savedRoute ->
+                        MagicBoxRoute.entries.firstOrNull { it.name == savedRoute }
+                    }
+                    ?: (saved[LEGACY_PREFIX_KEY] as? Int)
+                        ?.takeIf { it >= 0 }
+                        ?.toChar()
+                        ?.let(MagicBoxRoute::fromTrigger)
+                    ?: MagicBoxRoute.SEARCH
                 MagicBoxSessionState(
                     text = TextFieldValue(
                         text = text,
@@ -99,7 +125,7 @@ internal class MagicBoxSessionState private constructor(
                     selectedRecipient = recipientSnapshot
                         .takeIf(String::isNotBlank)
                         ?.let(::recipientFromSnapshot),
-                    lockedPrefix = prefixCode.takeIf { it >= 0 }?.toChar(),
+                    route = restoredRoute,
                     expanded = saved.getValue(EXPANDED_KEY) as Boolean,
                 )
             },

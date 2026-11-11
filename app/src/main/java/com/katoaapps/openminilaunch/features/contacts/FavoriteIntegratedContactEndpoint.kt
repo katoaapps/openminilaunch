@@ -1,7 +1,8 @@
 package com.katoaapps.openminilaunch.features.contacts
 
-import com.katoaapps.openminilaunch.model.IntegratedContactEndpoint
+import com.katoaapps.openminilaunch.model.FavoriteIntegratedContactNameSource
 import com.katoaapps.openminilaunch.model.IntegratedContactCallEndpoint
+import com.katoaapps.openminilaunch.model.IntegratedContactEndpoint
 import com.katoaapps.openminilaunch.model.LauncherShortcutTarget
 import com.katoaapps.openminilaunch.model.ProviderAddressType
 import com.katoaapps.openminilaunch.model.looksLikePhoneRecipient
@@ -22,6 +23,19 @@ internal fun IntegratedContactEndpoint.isValid(): Boolean = when (this) {
     is IntegratedContactEndpoint.ProviderAddress ->
         providerId.isNotBlank() && packageName.isNotBlank() &&
             address.cleanProviderAddress(addressType) == address
+}
+
+/** Infers pre-provenance records without overwriting names the user had customized. */
+internal fun inferredIntegratedContactNameSource(
+    displayName: String,
+    endpoints: List<IntegratedContactEndpoint>,
+): FavoriteIntegratedContactNameSource {
+    val shortcut = endpoints.singleOrNull() as? IntegratedContactEndpoint.ConversationShortcut
+    return if (shortcut?.label?.trim() == displayName.trim()) {
+        FavoriteIntegratedContactNameSource.PROVIDER
+    } else {
+        FavoriteIntegratedContactNameSource.USER
+    }
 }
 
 internal val IntegratedContactCallEndpoint.identity: String

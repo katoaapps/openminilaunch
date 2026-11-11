@@ -15,6 +15,7 @@ import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import com.katoaapps.openminilaunch.R
 import com.katoaapps.openminilaunch.features.apps.launcherDiscoveryLabel
+import com.katoaapps.openminilaunch.features.magic.MagicBoxRoute
 import com.katoaapps.openminilaunch.features.messaging.filteredRecentConversations
 import com.katoaapps.openminilaunch.model.LauncherShortcutTarget
 import com.katoaapps.openminilaunch.platform.DeviceActions
@@ -24,7 +25,7 @@ import com.katoaapps.openminilaunch.ui.theme.Muted
 
 @Composable
 internal fun rememberRecentConversationResults(
-    prefix: Char?,
+    route: MagicBoxRoute,
     query: String,
     hasSelectedRecipient: Boolean,
     launcherShortcutsRevision: Long,
@@ -35,7 +36,7 @@ internal fun rememberRecentConversationResults(
 ): List<LauncherShortcutTarget> {
     val defaultMessagingPackage = actions.defaultMessagingPackage()
     return remember(
-        prefix,
+        route,
         query,
         hasSelectedRecipient,
         launcherShortcutsRevision,
@@ -44,7 +45,7 @@ internal fun rememberRecentConversationResults(
         defaultMessagingPackage,
         demoModeEnabled,
     ) {
-        if (prefix != '@' || hasSelectedRecipient || demoModeEnabled) {
+        if (route != MagicBoxRoute.MESSAGE || hasSelectedRecipient || demoModeEnabled) {
             return@remember emptyList()
         }
         filteredRecentConversations(

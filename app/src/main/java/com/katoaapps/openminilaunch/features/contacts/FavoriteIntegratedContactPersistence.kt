@@ -2,6 +2,7 @@ package com.katoaapps.openminilaunch.features.contacts
 
 import com.katoaapps.openminilaunch.model.FavoriteContactId
 import com.katoaapps.openminilaunch.model.FavoriteIntegratedContact
+import com.katoaapps.openminilaunch.model.FavoriteIntegratedContactNameSource
 import com.katoaapps.openminilaunch.model.IntegratedContactCallEndpoint
 import com.katoaapps.openminilaunch.model.IntegratedContactEndpoint
 import com.katoaapps.openminilaunch.model.ProviderAddressType
@@ -58,6 +59,7 @@ internal object FavoriteIntegratedContactCodec {
                     }
                     output.writeBoundedString(contact.id.localId, MAX_LOCAL_ID_BYTES)
                     output.writeBoundedString(contact.displayName, MAX_DISPLAY_NAME_BYTES)
+                    output.writeInt(contact.nameSource.ordinal)
                     output.writeInt(contact.endpoints.size)
                     contact.endpoints.forEach { endpoint ->
                         when (endpoint) {
@@ -108,6 +110,12 @@ internal object FavoriteIntegratedContactCodec {
                 repeat(count) {
                     val localId = input.readBoundedString(MAX_LOCAL_ID_BYTES)
                     val displayName = input.readBoundedString(MAX_DISPLAY_NAME_BYTES)
+                    val savedNameSource = if (version >= 4) {
+                        FavoriteIntegratedContactNameSource.entries.getOrNull(input.readInt())
+                            ?: throw IOException("Invalid integrated contact name source")
+                    } else {
+                        null
+                    }
                     if (localId.isBlank() || displayName.isBlank() || !seenIds.add(localId)) {
                         throw IOException("Invalid integrated contact identity")
                     }
@@ -156,6 +164,8 @@ internal object FavoriteIntegratedContactCodec {
                             displayName = displayName,
                             endpoints = endpoints,
                             callEndpoint = callEndpoint,
+                            nameSource = savedNameSource
+                                ?: inferredIntegratedContactNameSource(displayName, endpoints),
                         ),
                     )
                 }
@@ -217,7 +227,7 @@ internal object FavoriteIntegratedContactCodec {
 
     private const val PAYLOAD_MAGIC = 0x4D_49_43_50 // MICP
     private const val MIN_SUPPORTED_PAYLOAD_VERSION = 1
-    private const val PAYLOAD_VERSION = 3
+    private const val PAYLOAD_VERSION = 4
     private const val ENDPOINT_SHORTCUT = 1
     private const val ENDPOINT_PROVIDER_ADDRESS = 2
     private const val CALL_ENDPOINT_PHONE = 1

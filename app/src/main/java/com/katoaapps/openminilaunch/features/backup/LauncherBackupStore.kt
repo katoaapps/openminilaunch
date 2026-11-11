@@ -83,7 +83,7 @@ internal fun LauncherStore.restorePortableBackup(
     // Android widget IDs, provider-owned configuration, and the MinkSpace widget binding
     // remain installation-local. Portable provider recipes append setup placeholders without
     // replacing widgets that are already configured on this installation.
-    if (demoSearchDataEnabled) toggleDemoSearchData()
+    if (demoModeEnabled) disableDemoMode()
     val settings = backup.settings
     replaceLauncherSelectionsFromBackup(
         appGridAssignments = backup.launcher.appGridAssignments,

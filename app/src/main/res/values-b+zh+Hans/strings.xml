@@ -639,7 +639,6 @@
     <string name="demo_search_data_enabled">演示主页、联系人、文件和对话已启用</string>
     <string name="demo_search_data_disabled">演示主页、联系人、文件和对话已禁用</string>
     <string name="demo_home_profile">演示主页简介</string>
-    <string name="demo_home_profile_picker_description">为屏幕截图和录音选择可重复的主场景。</string>
     <string name="preview_update_alert">预览更新提醒</string>
     <string name="preview_update_alert_description">打开生产更新卡而不更改更新或提醒数据。</string>
     <string name="demo_mode_disable">关闭演示模式</string>
@@ -1060,4 +1059,28 @@
     <string name="sensitive_backup_export_title">导出可读的联系人详情？</string>
     <string name="favorite_contacts_backup_import_description">此备份中由 Mink 创建的收藏联系人将被添加，且不会移除此设备上已有的收藏联系人。</string>
     <string name="favorite_attention_colors_backup_import_description">此备份中的收藏联系人提醒颜色将被合并，不会清除本设备上已有的颜色。</string>
+    <string name="demo_studio">演示工作室</string>
+    <string name="demo_studio_description">为截图和录屏创建可重复的虚构场景。</string>
+    <string name="demo_scenario">场景</string>
+    <string name="demo_scenario_product_tour">产品导览</string>
+    <string name="demo_scenario_product_tour_description">全面展示主屏幕、搜索、文件和对话</string>
+    <string name="demo_scenario_pet_mink">宠物水貂故事</string>
+    <string name="demo_scenario_pet_mink_description">May、Gary 与在加州寻找宠物水貂的故事</string>
+    <string name="demo_scenario_workday">工作日</string>
+    <string name="demo_scenario_workday_description">项目任务、同事和工作文件</string>
+    <string name="demo_visual_profile">视觉方案</string>
+    <string name="demo_conversation_state">对话状态</string>
+    <string name="demo_conversation_state_quiet">安静</string>
+    <string name="demo_conversation_state_one_favorite">一个收藏联系人</string>
+    <string name="demo_conversation_state_active_inbox">活跃收件箱</string>
+    <string name="demo_capture_moment">截图场景</string>
+    <string name="demo_capture_moment_home">主页</string>
+    <string name="demo_capture_moment_quick_apps">快捷应用</string>
+    <string name="demo_capture_moment_conversations">对话</string>
+    <string name="demo_capture_moment_magic_box">Magic Box 搜索</string>
+    <string name="demo_preview_action">仅演示预览</string>
+    <string name="demo_reset_scene">重置当前场景</string>
+    <string name="demo_reset_scene_description">恢复此场景原始的任务、生成文件和对话回复。</string>
+    <string name="demo_scene_reset">演示场景已重置</string>
+    <string name="could_not_rename_favorite">无法重命名此收藏联系人。</string>
 </resources>

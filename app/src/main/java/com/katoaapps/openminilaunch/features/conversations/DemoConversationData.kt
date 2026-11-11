@@ -1,22 +1,27 @@
 package com.katoaapps.openminilaunch.features.conversations
 
+import com.katoaapps.openminilaunch.features.demo.DemoConversationState
+import com.katoaapps.openminilaunch.features.demo.DemoScenario
+
 /** Fictional conversation data shown only while the hidden demo mode is enabled. */
 internal object DemoConversationData {
     const val SLACK_PACKAGE = "com.Slack"
     const val GMAIL_PACKAGE = "com.google.android.gm"
     const val GOOGLE_MESSAGES_PACKAGE = "com.google.android.apps.messaging"
 
-    private val sessionStartedAt = System.currentTimeMillis()
+    fun notifications(
+        now: Long = System.currentTimeMillis(),
+        scenario: DemoScenario = DemoScenario.PRODUCT_TOUR,
+        state: DemoConversationState = DemoConversationState.ACTIVE_INBOX,
+    ): List<ConversationNotification> {
+        val mayaConversation = "contact:demo-maya-diaz"
+        val averyConversation = "contact:demo-avery-brooks"
+        val karaConversation = "contact:demo-kara-ellis"
+        val priyaConversation = "contact:demo-priya-shah"
+        val noahConversation = "contact:demo-noah-williams"
+        val mayConversation = "contact:demo-may-wong"
 
-    fun notifications(now: Long = sessionStartedAt): List<ConversationNotification> {
-        val mayaConversation = "demo:contact:maya-diaz"
-        val averyConversation = "demo:contact:avery-brooks"
-        val karaConversation = "demo:contact:kara-ellis"
-        val priyaConversation = "demo:contact:priya-shah"
-        val noahConversation = "demo:contact:noah-williams"
-        val mayConversation = "demo:contact:may-wong"
-
-        return listOf(
+        val allNotifications = listOf(
             notification(
                 key = "demo-messages-may",
                 conversationId = mayConversation,
@@ -138,6 +143,34 @@ internal object DemoConversationData {
                 ),
             ),
         )
+        val scenarioNotifications = when (scenario) {
+            DemoScenario.PRODUCT_TOUR -> allNotifications
+            DemoScenario.PET_MINK -> allNotifications.filter { notification ->
+                notification.conversationName in setOf("May Wong", "Noah Williams", "Kara Ellis")
+            }
+            DemoScenario.WORKDAY -> allNotifications.filter { notification ->
+                notification.conversationName in setOf(
+                    "Maya Diaz",
+                    "Avery Brooks",
+                    "Kara Ellis",
+                    "Priya Shah",
+                )
+            }
+        }
+        return when (state) {
+            DemoConversationState.QUIET -> emptyList()
+            DemoConversationState.ONE_FAVORITE -> listOfNotNull(
+                scenarioNotifications.firstOrNull { notification ->
+                    notification.conversationName == when (scenario) {
+                        DemoScenario.PET_MINK -> "May Wong"
+                        DemoScenario.PRODUCT_TOUR,
+                        DemoScenario.WORKDAY,
+                        -> "Maya Diaz"
+                    }
+                },
+            )
+            DemoConversationState.ACTIVE_INBOX -> scenarioNotifications
+        }
     }
 
     fun isDemoPackage(packageName: String): Boolean =

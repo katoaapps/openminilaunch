@@ -40,7 +40,21 @@ internal enum class LauncherKeyboardColorSource(@param:StringRes val labelRes: I
     CUSTOM(R.string.keyboard_colors_custom),
 }
 
+internal enum class LauncherKeyboardHeightPreset(val portraitFraction: Float) {
+    COMPACT(.3f),
+    BALANCED(.4f),
+    TALL(.5f),
+    ;
+
+    companion object {
+        fun nearest(fraction: Float): LauncherKeyboardHeightPreset = entries.minBy { preset ->
+            kotlin.math.abs(preset.portraitFraction - fraction)
+        }
+    }
+}
+
 internal data class LauncherKeyboardPreferences(
+    val useMinkKeyboard: Boolean = true,
     val style: LauncherKeyboardStyle = LauncherKeyboardStyle.FLAT_PRIMARY,
     val layout: LauncherKeyboardLayout = LauncherKeyboardLayout.QWERTY,
     val colorSource: LauncherKeyboardColorSource = LauncherKeyboardColorSource.THEME,
@@ -50,10 +64,24 @@ internal data class LauncherKeyboardPreferences(
     val splitOnWideDisplays: Boolean = true,
     val hapticFeedbackEnabled: Boolean = true,
     val heightDp: Float = DEFAULT_KEYBOARD_HEIGHT_DP,
+    val portraitHeightPreset: LauncherKeyboardHeightPreset = LauncherKeyboardHeightPreset.BALANCED,
 )
 
 internal fun normalizeLauncherKeyboardHeight(heightDp: Float): Float =
     heightDp.coerceIn(MIN_KEYBOARD_HEIGHT_DP, MAX_KEYBOARD_HEIGHT_DP)
+
+internal fun resolveLauncherKeyboardHeightDp(
+    preferences: LauncherKeyboardPreferences,
+    screenWidthDp: Int,
+    screenHeightDp: Int,
+): Float {
+    return if (screenHeightDp > screenWidthDp) {
+        (screenHeightDp * preferences.portraitHeightPreset.portraitFraction)
+            .coerceAtLeast(MIN_KEYBOARD_HEIGHT_DP)
+    } else {
+        normalizeLauncherKeyboardHeight(preferences.heightDp)
+    }
+}
 
 internal const val MIN_KEYBOARD_HEIGHT_DP = 210f
 internal const val MAX_KEYBOARD_HEIGHT_DP = 360f

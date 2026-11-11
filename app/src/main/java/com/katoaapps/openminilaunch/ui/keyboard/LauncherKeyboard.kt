@@ -44,6 +44,7 @@ internal fun LauncherKeyboard(
     multiline: Boolean,
     modifier: Modifier = Modifier,
     onOpenSettings: () -> Unit = {},
+    onHotkey: ((Char) -> Unit)? = null,
     extendBehindNavigationBar: Boolean = false,
 ) {
     var symbols by remember { mutableStateOf(false) }
@@ -83,7 +84,6 @@ internal fun LauncherKeyboard(
     } else {
         0.dp
     }
-
     fun updateValue(transform: (TextFieldValue) -> TextFieldValue) {
         val updated = transform(editValue)
         editValue = updated
@@ -108,6 +108,16 @@ internal fun LauncherKeyboard(
     fun insertAlternateKey(key: LauncherKeyboardKey) {
         key.secondaryLabel?.let(::insert)
         shiftOverride = null
+    }
+
+    fun activateHotkey(key: LauncherKeyboardKey) {
+        val trigger = key.label.singleOrNull()?.takeIf { it.toString() in launcherKeyboardHotkeys }
+        if (trigger != null && onHotkey != null) {
+            onHotkey(trigger)
+            shiftOverride = null
+        } else {
+            insertKey(key)
+        }
     }
 
     Surface(
@@ -150,7 +160,7 @@ internal fun LauncherKeyboard(
                         colors = colors,
                         style = style,
                         haptic = preferences.hapticFeedbackEnabled,
-                        onKey = ::insertKey,
+                        onKey = ::activateHotkey,
                         rowWeight = LauncherKeyboardGeometry.hotkeyRowWeight,
                         keyColors = { key -> hotkeyColors[key.label] },
                         solidKeysWhenFlat = true,
@@ -172,7 +182,7 @@ internal fun LauncherKeyboard(
                         colors = colors,
                         style = style,
                         haptic = preferences.hapticFeedbackEnabled,
-                        onKey = ::insertKey,
+                        onKey = ::activateHotkey,
                         rowWeight = LauncherKeyboardGeometry.hotkeyRowWeight,
                         keyColors = { key -> hotkeyColors[key.label] },
                         solidKeysWhenFlat = true,

@@ -1,0 +1,17 @@
+<resources>
+    <string name="home_spotlight_folders_title">Создайте папку</string>
+    <string name="home_spotlight_folders_description">Нажмите и удерживайте приложение, затем добавьте ещё одно, чтобы превратить плитку в папку.</string>
+    <string name="home_spotlight_minkspace_title">Мини-приложения находятся здесь</string>
+    <string name="home_spotlight_minkspace_description">Проведите вверх или вниз внутри MinkSpace, чтобы переключать мини-приложения. Нажмите поддерживаемое приложение, чтобы развернуть его.</string>
+    <string name="home_spotlight_magic_title">Начните печатать</string>
+    <string name="home_spotlight_magic_description">Ищите, отправляйте сообщения, звоните, создавайте заметки и запускайте действия с помощью текста или горячих клавиш Magic Box.</string>
+    <string name="home_spotlight_keyboard_title">Больше, чем клавиатура</string>
+    <string name="home_spotlight_keyboard_description">Нажмите, чтобы открыть клавиатуру. Нажмите и удерживайте, чтобы запустить Adrift.</string>
+    <string name="home_spotlight_header_title">Главное с первого взгляда</string>
+    <string name="home_spotlight_header_description">Откройте Сообщения, проверьте дату и заряд или перейдите в Настройки.</string>
+    <string name="home_spotlight_gestures_title">Перемещение по главному экрану</string>
+    <string name="home_spotlight_gestures_description">Проведите от главного экрана, чтобы перейти в соседние разделы.</string>
+    <string name="notifications">Уведомления</string>
+    <string name="replay_home_tour">Повторить обзор главного экрана</string>
+    <string name="replay_home_tour_summary">Снова посмотреть элементы управления, ярлыки и жесты</string>
+</resources>

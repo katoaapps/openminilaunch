@@ -639,7 +639,6 @@
     <string name="demo_search_data_enabled">Página inicial de demonstração, contatos, arquivos e conversas ativadas</string>
     <string name="demo_search_data_disabled">Página inicial de demonstração, contatos, arquivos e conversas desativados</string>
     <string name="demo_home_profile">Perfil inicial de demonstração</string>
-    <string name="demo_home_profile_picker_description">Escolha uma cena inicial repetível para capturas de tela e gravações.</string>
     <string name="preview_update_alert">Alerta de atualização de visualização</string>
     <string name="preview_update_alert_description">Abra o cartão de atualização de produção sem alterar os dados de atualização ou lembrete.</string>
     <string name="demo_mode_disable">Desligue o modo de demonstração</string>
@@ -1060,4 +1059,28 @@
     <string name="sensitive_backup_export_title">Exportar dados de contato legíveis?</string>
     <string name="favorite_contacts_backup_import_description">Os Favoritos criados no Mink presentes neste backup serão adicionados sem remover os que já estão neste dispositivo.</string>
     <string name="favorite_attention_colors_backup_import_description">As cores de atenção dos Favoritos deste backup serão mescladas sem apagar as cores que já estão neste dispositivo.</string>
+    <string name="demo_studio">Estúdio de demonstração</string>
+    <string name="demo_studio_description">Crie uma cena fictícia e repetível para capturas de tela e gravações.</string>
+    <string name="demo_scenario">Cenário</string>
+    <string name="demo_scenario_product_tour">Tour do produto</string>
+    <string name="demo_scenario_product_tour_description">Uma visão ampla da Tela inicial, pesquisa, arquivos e conversas</string>
+    <string name="demo_scenario_pet_mink">História do vison de estimação</string>
+    <string name="demo_scenario_pet_mink_description">May, Gary e a busca por um vison de estimação na Califórnia</string>
+    <string name="demo_scenario_workday">Dia de trabalho</string>
+    <string name="demo_scenario_workday_description">Tarefas de projeto, colegas e arquivos de trabalho</string>
+    <string name="demo_visual_profile">Perfil visual</string>
+    <string name="demo_conversation_state">Estado das conversas</string>
+    <string name="demo_conversation_state_quiet">Tranquilo</string>
+    <string name="demo_conversation_state_one_favorite">Um favorito</string>
+    <string name="demo_conversation_state_active_inbox">Caixa de entrada ativa</string>
+    <string name="demo_capture_moment">Momento da captura</string>
+    <string name="demo_capture_moment_home">Início</string>
+    <string name="demo_capture_moment_quick_apps">Apps rápidos</string>
+    <string name="demo_capture_moment_conversations">Conversas</string>
+    <string name="demo_capture_moment_magic_box">Pesquisa na Magic Box</string>
+    <string name="demo_preview_action">Apenas prévia de demonstração</string>
+    <string name="demo_reset_scene">Redefinir cena atual</string>
+    <string name="demo_reset_scene_description">Restaure as tarefas, os arquivos gerados e as respostas originais deste cenário.</string>
+    <string name="demo_scene_reset">Cena de demonstração redefinida</string>
+    <string name="could_not_rename_favorite">Não foi possível renomear este favorito.</string>
 </resources>

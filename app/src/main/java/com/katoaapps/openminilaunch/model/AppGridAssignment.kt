@@ -51,6 +51,8 @@ internal fun AppGridAssignment.placePinnedTarget(
         is AppGridAssignment.Folder -> {
             if (folder?.id != folderId) {
                 AppGridTargetPlacement(AppGridAssignment.Target(normalizedTarget))
+            } else if (folder.orderedTargetKeys.size >= MAX_APP_FOLDER_TARGETS) {
+                AppGridTargetPlacement(this)
             } else {
                 AppGridTargetPlacement(
                     assignment = this,

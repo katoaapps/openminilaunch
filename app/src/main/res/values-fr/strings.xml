@@ -639,7 +639,6 @@
     <string name="demo_search_data_enabled">Accueil de démonstration, contacts, fichiers et conversations activés</string>
     <string name="demo_search_data_disabled">Accueil de démonstration, contacts, fichiers et conversations désactivés</string>
     <string name="demo_home_profile">Profil d’accueil de démonstration</string>
-    <string name="demo_home_profile_picker_description">Choisissez une scène d\'accueil reproductible pour les captures d\'écran et les enregistrements.</string>
     <string name="preview_update_alert">Aperçu de l\'alerte de mise à jour</string>
     <string name="preview_update_alert_description">Ouvrez la carte de mise à jour de production sans modifier les données de mise à jour ou de rappel.</string>
     <string name="demo_mode_disable">Désactiver le mode démo</string>
@@ -1060,4 +1059,28 @@
     <string name="sensitive_backup_export_title">Exporter des coordonnées lisibles ?</string>
     <string name="favorite_contacts_backup_import_description">Les favoris créés dans Mink et présents dans cette sauvegarde seront ajoutés sans supprimer ceux qui existent déjà sur cet appareil.</string>
     <string name="favorite_attention_colors_backup_import_description">Les couleurs d’attention des favoris de cette sauvegarde seront fusionnées sans effacer celles déjà présentes sur cet appareil.</string>
+    <string name="demo_studio">Studio de démonstration</string>
+    <string name="demo_studio_description">Créez une scène fictive et reproductible pour les captures d’écran et les enregistrements.</string>
+    <string name="demo_scenario">Scénario</string>
+    <string name="demo_scenario_product_tour">Présentation du produit</string>
+    <string name="demo_scenario_product_tour_description">Un aperçu complet de l’accueil, de la recherche, des fichiers et des conversations</string>
+    <string name="demo_scenario_pet_mink">Histoire du vison domestique</string>
+    <string name="demo_scenario_pet_mink_description">May, Gary et la recherche d’un vison domestique en Californie</string>
+    <string name="demo_scenario_workday">Journée de travail</string>
+    <string name="demo_scenario_workday_description">Tâches de projet, collègues et fichiers professionnels</string>
+    <string name="demo_visual_profile">Profil visuel</string>
+    <string name="demo_conversation_state">État des conversations</string>
+    <string name="demo_conversation_state_quiet">Calme</string>
+    <string name="demo_conversation_state_one_favorite">Un favori</string>
+    <string name="demo_conversation_state_active_inbox">Boîte de réception active</string>
+    <string name="demo_capture_moment">Scène à capturer</string>
+    <string name="demo_capture_moment_home">Accueil</string>
+    <string name="demo_capture_moment_quick_apps">Apps rapides</string>
+    <string name="demo_capture_moment_conversations">Conversations</string>
+    <string name="demo_capture_moment_magic_box">Recherche Magic Box</string>
+    <string name="demo_preview_action">Aperçu de démonstration uniquement</string>
+    <string name="demo_reset_scene">Réinitialiser la scène actuelle</string>
+    <string name="demo_reset_scene_description">Restaurez les tâches, les fichiers générés et les réponses d’origine de ce scénario.</string>
+    <string name="demo_scene_reset">Scène de démonstration réinitialisée</string>
+    <string name="could_not_rename_favorite">Impossible de renommer ce favori.</string>
 </resources>

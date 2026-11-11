@@ -3,13 +3,15 @@ package com.katoaapps.openminilaunch.ui.magic
 import androidx.compose.foundation.text.KeyboardActions
 import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.foundation.text.selection.LocalTextSelectionColors
+import androidx.compose.foundation.text.selection.TextSelectionColors
 import androidx.compose.foundation.interaction.MutableInteractionSource
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.LocalTextStyle
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextFieldDefaults
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -32,17 +34,27 @@ import androidx.compose.ui.platform.PlatformTextInputInterceptor
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.TextLayoutResult
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.input.TextFieldValue
 import com.katoaapps.openminilaunch.R
-import com.katoaapps.openminilaunch.features.magic.MAGIC_AI_PREFIX
-import com.katoaapps.openminilaunch.features.magic.MAGIC_NOTE_PREFIX
+import com.katoaapps.openminilaunch.features.magic.MagicBoxRoute
 import com.katoaapps.openminilaunch.ui.theme.MinkTransparent
-import com.katoaapps.openminilaunch.ui.theme.Muted
 import kotlinx.coroutines.awaitCancellation
 
-private val SEND_IME_PREFIXES = setOf('@', '#', '-', '+', '?')
-private val HARDWARE_SUBMIT_PREFIXES = setOf('@', '#', '-', '?')
+private val SEND_IME_ROUTES = setOf(
+    MagicBoxRoute.MESSAGE,
+    MagicBoxRoute.CALL,
+    MagicBoxRoute.TODO,
+    MagicBoxRoute.EVENT,
+    MagicBoxRoute.APP,
+)
+private val HARDWARE_SUBMIT_ROUTES = setOf(
+    MagicBoxRoute.MESSAGE,
+    MagicBoxRoute.CALL,
+    MagicBoxRoute.TODO,
+    MagicBoxRoute.APP,
+)
 
 internal data class MagicActionVisuals(
     val color: Color,
@@ -55,7 +67,8 @@ internal data class MagicActionVisuals(
 internal fun MagicInputField(
     value: TextFieldValue,
     onValueChange: (TextFieldValue) -> Unit,
-    prefix: Char?,
+    route: MagicBoxRoute,
+    contentColor: Color,
     acceptPlatformTextInput: Boolean,
     focusRequester: FocusRequester,
     onPlaced: () -> Unit,
@@ -80,9 +93,10 @@ internal fun MagicInputField(
     }
     val keyboardOptions = KeyboardOptions(
         showKeyboardOnFocus = false,
+        keyboardType = KeyboardType.Text,
         imeAction = when {
-            prefix == MAGIC_NOTE_PREFIX || prefix == MAGIC_AI_PREFIX -> ImeAction.Default
-            prefix in SEND_IME_PREFIXES -> ImeAction.Send
+            route == MagicBoxRoute.NOTE || route == MagicBoxRoute.ASSISTANT -> ImeAction.Default
+            route in SEND_IME_ROUTES -> ImeAction.Send
             else -> ImeAction.Search
         },
     )
@@ -92,6 +106,16 @@ internal fun MagicInputField(
     )
     val blockPlatformIme = remember {
         PlatformTextInputInterceptor { _, _ -> awaitCancellation() }
+    }
+    val placeholderRes = when (route) {
+        MagicBoxRoute.SEARCH -> R.string.magic_box_hotkey_hint
+        MagicBoxRoute.MESSAGE -> R.string.command_text
+        MagicBoxRoute.CALL -> R.string.command_call
+        MagicBoxRoute.TODO -> R.string.command_todo
+        MagicBoxRoute.NOTE -> R.string.command_note
+        MagicBoxRoute.EVENT -> R.string.command_event
+        MagicBoxRoute.APP -> R.string.search_apps
+        MagicBoxRoute.ASSISTANT -> R.string.ai
     }
 
     val textField = @Composable {
@@ -106,7 +130,7 @@ internal fun MagicInputField(
                     if (event.type == KeyEventType.KeyUp) {
                         onHardwareKeyUp(nativeEvent.keyCode)
                     }
-                    if (prefix in HARDWARE_SUBMIT_PREFIXES && event.key == Key.Enter) {
+                    if (route in HARDWARE_SUBMIT_ROUTES && event.key == Key.Enter) {
                         if (event.type == KeyEventType.KeyUp) onSubmit()
                         true
                     } else {
@@ -121,14 +145,14 @@ internal fun MagicInputField(
                     }
                 },
             textStyle = LocalTextStyle.current.merge(
-                TextStyle(color = MaterialTheme.colorScheme.onSurface),
+                TextStyle(color = contentColor),
             ),
             minLines = minLines,
             maxLines = maxLines,
             keyboardOptions = keyboardOptions,
             keyboardActions = keyboardActions,
             interactionSource = interactionSource,
-            cursorBrush = SolidColor(MaterialTheme.colorScheme.primary),
+            cursorBrush = SolidColor(contentColor),
             onTextLayout = { textLayout = it },
             decorationBox = { innerTextField ->
                 TextFieldDefaults.DecorationBox(
@@ -139,19 +163,31 @@ internal fun MagicInputField(
                     visualTransformation = androidx.compose.ui.text.input.VisualTransformation.None,
                     interactionSource = interactionSource,
                     placeholder = {
-                        Text(stringResource(R.string.magic_box_hotkey_hint), color = Muted)
+                        Text(
+                            stringResource(placeholderRes),
+                            color = contentColor.copy(alpha = .68f),
+                        )
                     },
                     colors = colors,
                 )
             },
         )
     }
+    val textFieldWithSelectionColors = @Composable {
+        CompositionLocalProvider(
+            LocalTextSelectionColors provides TextSelectionColors(
+                handleColor = contentColor,
+                backgroundColor = contentColor.copy(alpha = .28f),
+            ),
+            content = textField,
+        )
+    }
     if (acceptPlatformTextInput) {
-        textField()
+        textFieldWithSelectionColors()
     } else {
         InterceptPlatformTextInput(
             interceptor = blockPlatformIme,
-            content = textField,
+            content = textFieldWithSelectionColors,
         )
     }
 }

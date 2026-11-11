@@ -1,5 +1,6 @@
 package com.katoaapps.openminilaunch.ui.magic
 
+import com.katoaapps.openminilaunch.features.magic.MagicBoxRoute
 import com.katoaapps.openminilaunch.model.LauncherShortcutTarget
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
@@ -19,7 +20,7 @@ class MagicBoxSessionStateTest {
         state.prepareConversationMessage(conversation)
 
         assertEquals("", state.textState.value.text)
-        assertEquals('@', state.lockedPrefixState.value)
+        assertEquals(MagicBoxRoute.MESSAGE, state.routeState.value)
         assertEquals(
             SelectedMessageRecipient.ConversationRecipient(conversation),
             state.selectedRecipientState.value,

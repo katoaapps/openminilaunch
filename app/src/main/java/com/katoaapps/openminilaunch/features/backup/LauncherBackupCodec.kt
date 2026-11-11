@@ -26,6 +26,8 @@ import com.katoaapps.openminilaunch.model.LauncherKeyboardColorSource
 import com.katoaapps.openminilaunch.model.LauncherKeyboardLayout
 import com.katoaapps.openminilaunch.model.LauncherKeyboardPreferences
 import com.katoaapps.openminilaunch.model.LauncherKeyboardStyle
+import com.katoaapps.openminilaunch.model.LauncherKeyboardHeightPreset
+import com.katoaapps.openminilaunch.model.DEFAULT_KEYBOARD_HEIGHT_DP
 import com.katoaapps.openminilaunch.model.normalizeLauncherKeyboardHeight
 import com.katoaapps.openminilaunch.model.PalettePreference
 import com.katoaapps.openminilaunch.model.QuickDrawerConfig
@@ -343,6 +345,7 @@ internal object LauncherBackupCodec {
             putNullable("preferredWebPackage", settings.preferredWebPackage)
             settings.launcherKeyboardPreferences?.let { keyboard ->
                 put("launcherKeyboard", JSONObject().apply {
+                    put("useMinkKeyboard", keyboard.useMinkKeyboard)
                     put("style", keyboard.style.name)
                     put("layout", keyboard.layout.name)
                     put("colorSource", keyboard.colorSource.name)
@@ -352,6 +355,7 @@ internal object LauncherBackupCodec {
                     put("splitOnWideDisplays", keyboard.splitOnWideDisplays)
                     put("hapticFeedbackEnabled", keyboard.hapticFeedbackEnabled)
                     put("heightDp", keyboard.heightDp.toDouble())
+                    put("portraitHeightPreset", keyboard.portraitHeightPreset.name)
                 })
             }
         })
@@ -476,7 +480,11 @@ internal object LauncherBackupCodec {
             ),
             openSoftwareKeyboardOnHome = magicBox.optBoolean("openSoftwareKeyboardOnHome", true),
             launcherKeyboardPreferences = launcherKeyboard?.let { keyboard ->
+                val heightDp = normalizeLauncherKeyboardHeight(
+                    keyboard.optDouble("heightDp", DEFAULT_KEYBOARD_HEIGHT_DP.toDouble()).toFloat(),
+                )
                 LauncherKeyboardPreferences(
+                    useMinkKeyboard = keyboard.optBoolean("useMinkKeyboard", true),
                     style = keyboard.enumValue("style", LauncherKeyboardStyle.FLAT_PRIMARY),
                     layout = keyboard.enumValue("layout", LauncherKeyboardLayout.QWERTY),
                     colorSource = keyboard.enumValue("colorSource", LauncherKeyboardColorSource.THEME),
@@ -485,8 +493,10 @@ internal object LauncherBackupCodec {
                     keyColorOverrideArgb = keyboard.optNullableInt("keyColorOverrideArgb"),
                     splitOnWideDisplays = keyboard.optBoolean("splitOnWideDisplays", true),
                     hapticFeedbackEnabled = keyboard.optBoolean("hapticFeedbackEnabled", true),
-                    heightDp = normalizeLauncherKeyboardHeight(
-                        keyboard.optDouble("heightDp", 276.0).toFloat(),
+                    heightDp = heightDp,
+                    portraitHeightPreset = keyboard.enumValue(
+                        "portraitHeightPreset",
+                        LauncherKeyboardHeightPreset.BALANCED,
                     ),
                 )
             },

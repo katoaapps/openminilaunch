@@ -15,6 +15,8 @@ import android.service.notification.NotificationListenerService
 import androidx.compose.runtime.mutableStateListOf
 import androidx.core.app.NotificationManagerCompat
 import java.util.Locale
+import com.katoaapps.openminilaunch.features.demo.DemoConversationState
+import com.katoaapps.openminilaunch.features.demo.DemoScenario
 
 data class ConversationMessage(
     val id: String,
@@ -107,10 +109,19 @@ object ConversationNotificationStore {
     fun notificationAccessSettingsIntent(): Intent =
         Intent(Settings.ACTION_NOTIFICATION_LISTENER_SETTINGS)
 
-    fun currentConversations(useDemoData: Boolean = false): List<NotificationConversation> =
+    internal fun currentConversations(
+        useDemoData: Boolean = false,
+        demoScenario: DemoScenario = DemoScenario.PRODUCT_TOUR,
+        demoConversationState: DemoConversationState = DemoConversationState.ACTIVE_INBOX,
+        demoSessionStartedAt: Long = System.currentTimeMillis(),
+    ): List<NotificationConversation> =
         groupConversations(
             sourceNotifications = if (useDemoData) {
-                DemoConversationData.notifications()
+                DemoConversationData.notifications(
+                    now = demoSessionStartedAt,
+                    scenario = demoScenario,
+                    state = demoConversationState,
+                )
             } else {
                 activeNotifications
             },

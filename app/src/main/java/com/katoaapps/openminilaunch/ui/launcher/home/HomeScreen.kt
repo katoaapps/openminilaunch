@@ -15,6 +15,8 @@ import com.katoaapps.openminilaunch.ui.minkspace.core.MinkSpaceMiniAppCatalog
 import com.katoaapps.openminilaunch.ui.minkspace.core.MinkSpacePresentationState
 import com.katoaapps.openminilaunch.ui.minkspace.todo.TodoFlightChip
 import com.katoaapps.openminilaunch.ui.minkspace.todo.todoFlightAnimationSpec
+import com.katoaapps.openminilaunch.ui.onboarding.HomeTourTarget
+import com.katoaapps.openminilaunch.ui.onboarding.homeTourTarget
 import com.katoaapps.openminilaunch.ui.quickdrawer.QuickAppsEditorDialog
 import com.katoaapps.openminilaunch.ui.settings.LockAccessibilityDisclosureDialog
 import com.katoaapps.openminilaunch.ui.settings.SettingsDestination
@@ -132,7 +134,9 @@ internal fun HomeScreen(
 
     Box(Modifier.fillMaxSize()) {
         BoxWithConstraints(
-            paneModifier.homePaneGestures(
+            paneModifier
+                .homeTourTarget(HomeTourTarget.GESTURES)
+                .homePaneGestures(
                 magicExpanded = magicExpanded,
                 verticalGesturesEnabled = !minkSpacePresentation.isExpanded,
                 horizontalGesturesEnabled = !minkSpacePresentation.isExpanded,
@@ -142,7 +146,7 @@ internal fun HomeScreen(
                 onSwipeUp = { actions.openAllAppsFromBottom() },
                 onSwipeDown = actions::expandNotificationShade,
                 onDoubleTap = ::lockFromHome,
-            ),
+                ),
         ) {
             val qwertyHome = maxHeight <= maxWidth * 1.55f
             val homeHorizontalPadding = if (qwertyHome) Dimens.dp14 else Dimens.dp22
@@ -177,6 +181,7 @@ internal fun HomeScreen(
                         horizontalPadding = homeHorizontalPadding,
                         actionSize = headerActionSize,
                         iconSize = headerIconSize,
+                        followHorizontalWindowOffset = twoPanelLayout,
                         updateAvailable = updateAvailable,
                         onMinkDay = openMinkDay,
                         onUpdate = { showUpdateConfirmation = true },
@@ -319,8 +324,10 @@ internal fun HomeScreen(
         HomeDrawerSheet(
             store = store,
             actions = actions,
+            appAccessState = appAccessState,
             onDismiss = { drawerOpen = false },
             onManageQuickApps = { quickAppsEditorOpen = true },
+            onPausedApp = { pausedAppPackage = it },
         )
     }
 

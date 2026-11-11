@@ -639,7 +639,6 @@
     <string name="demo_search_data_enabled">Demo home, contacts, files, and conversations enabled</string>
     <string name="demo_search_data_disabled">Demo home, contacts, files, and conversations disabled</string>
     <string name="demo_home_profile">Demo Home profile</string>
-    <string name="demo_home_profile_picker_description">Choose a repeatable Home scene for screenshots and recordings.</string>
     <string name="preview_update_alert">Preview update alert</string>
     <string name="preview_update_alert_description">Open the production update card without changing update or reminder data.</string>
     <string name="demo_mode_disable">Turn off demo mode</string>
@@ -1060,4 +1059,28 @@
     <string name="sensitive_backup_export_title">Export readable contact details?</string>
     <string name="favorite_contacts_backup_import_description">Mink-created Favorites in this backup will be added without removing the ones already on this device.</string>
     <string name="favorite_attention_colors_backup_import_description">Favorite attention colours in this backup will be merged without clearing colours already on this device.</string>
+    <string name="demo_studio">Demo Studio</string>
+    <string name="demo_studio_description">Build a repeatable, fictional scene for screenshots and recordings.</string>
+    <string name="demo_scenario">Scenario</string>
+    <string name="demo_scenario_product_tour">Product tour</string>
+    <string name="demo_scenario_product_tour_description">A broad look at Home, search, files, and conversations</string>
+    <string name="demo_scenario_pet_mink">Pet mink story</string>
+    <string name="demo_scenario_pet_mink_description">May, Gary, and the search for a pet mink in California</string>
+    <string name="demo_scenario_workday">Workday</string>
+    <string name="demo_scenario_workday_description">Project tasks, colleagues, and business files</string>
+    <string name="demo_visual_profile">Visual profile</string>
+    <string name="demo_conversation_state">Conversation state</string>
+    <string name="demo_conversation_state_quiet">Quiet</string>
+    <string name="demo_conversation_state_one_favorite">One favourite</string>
+    <string name="demo_conversation_state_active_inbox">Active inbox</string>
+    <string name="demo_capture_moment">Capture moment</string>
+    <string name="demo_capture_moment_home">Home</string>
+    <string name="demo_capture_moment_quick_apps">Quick Apps</string>
+    <string name="demo_capture_moment_conversations">Conversations</string>
+    <string name="demo_capture_moment_magic_box">Magic Box search</string>
+    <string name="demo_preview_action">Demo preview only</string>
+    <string name="demo_reset_scene">Reset current scene</string>
+    <string name="demo_reset_scene_description">Restore this scenario’s original tasks, generated files, and conversation replies.</string>
+    <string name="demo_scene_reset">Demo scene reset</string>
+    <string name="could_not_rename_favorite">Couldn’t rename this favourite.</string>
 </resources>

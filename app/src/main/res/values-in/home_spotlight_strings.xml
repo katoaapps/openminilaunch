@@ -1,0 +1,17 @@
+<resources>
+    <string name="home_spotlight_folders_title">Buat folder</string>
+    <string name="home_spotlight_folders_description">Tekan lama aplikasi, lalu tambahkan aplikasi lain untuk mengubah petak menjadi folder.</string>
+    <string name="home_spotlight_minkspace_title">Mini App ada di sini</string>
+    <string name="home_spotlight_minkspace_description">Geser ke atas atau bawah di MinkSpace untuk berpindah Mini App. Ketuk app yang didukung untuk memperluas.</string>
+    <string name="home_spotlight_magic_title">Mulai mengetik</string>
+    <string name="home_spotlight_magic_description">Cari, kirim pesan, telepon, buat catatan, dan jalankan tindakan dengan teks biasa atau tombol pintas Magic Box.</string>
+    <string name="home_spotlight_keyboard_title">Lebih dari keyboard</string>
+    <string name="home_spotlight_keyboard_description">Ketuk untuk membuka keyboard. Tekan lama untuk membuka Adrift.</string>
+    <string name="home_spotlight_header_title">Beranda dalam sekilas</string>
+    <string name="home_spotlight_header_description">Buka Pesan, periksa tanggal dan baterai, atau masuk ke Setelan.</string>
+    <string name="home_spotlight_gestures_title">Bergerak di Beranda</string>
+    <string name="home_spotlight_gestures_description">Geser dari Beranda untuk membuka ruang di sekitarnya.</string>
+    <string name="notifications">Notifikasi</string>
+    <string name="replay_home_tour">Ulangi tur Beranda</string>
+    <string name="replay_home_tour_summary">Tinjau kontrol, pintasan, dan gestur Beranda</string>
+</resources>

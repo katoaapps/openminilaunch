@@ -1,14 +1,17 @@
 package com.katoaapps.openminilaunch.ui.appgrid
 
 import android.os.Build
+import android.widget.Toast
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.remember
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import com.katoaapps.openminilaunch.R
 import com.katoaapps.openminilaunch.model.AppGridSlot
 import com.katoaapps.openminilaunch.model.LauncherAppTarget
 import com.katoaapps.openminilaunch.model.LauncherShortcutTarget
+import com.katoaapps.openminilaunch.model.MAX_APP_FOLDER_TARGETS
 import com.katoaapps.openminilaunch.platform.DeviceActions
 import com.katoaapps.openminilaunch.ui.components.moveItem
 import com.katoaapps.openminilaunch.ui.settings.LauncherTargetPickerDialog
@@ -26,6 +29,7 @@ internal fun AppGridSelectionDialog(
     onSave: (selectedTargetKeys: List<String>) -> Unit,
     onDismiss: () -> Unit,
 ) {
+    val context = LocalContext.current
     val draftSelection = remember(slot) {
         mutableStateListOf<String>().apply { addAll(initialSelectionKeys) }
     }
@@ -54,6 +58,17 @@ internal fun AppGridSelectionDialog(
             if (target.selectionKey in draftSelection) draftSelection.remove(target.selectionKey)
             else draftSelection += target.selectionKey
         },
+        onSelectionLimit = {
+            Toast.makeText(
+                context,
+                context.resources.getQuantityString(
+                    R.plurals.maximum_apps_selected,
+                    MAX_APP_FOLDER_TARGETS,
+                    MAX_APP_FOLDER_TARGETS,
+                ),
+                Toast.LENGTH_SHORT,
+            ).show()
+        },
         onMoveSelected = { fromIndex, toIndex ->
             draftSelection.moveItem(fromIndex, toIndex)
         },
@@ -63,7 +78,7 @@ internal fun AppGridSelectionDialog(
         },
         onDismiss = onDismiss,
         multiSelect = true,
-        selectionLimit = Int.MAX_VALUE,
+        selectionLimit = MAX_APP_FOLDER_TARGETS,
         showSearch = false,
     )
 }

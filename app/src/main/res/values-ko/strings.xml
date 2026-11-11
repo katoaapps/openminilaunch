@@ -639,7 +639,6 @@
     <string name="demo_search_data_enabled">데모 홈, 연락처, 파일 및 대화가 활성화되었습니다.</string>
     <string name="demo_search_data_disabled">데모 홈, 연락처, 파일 및 대화가 비활성화되었습니다.</string>
     <string name="demo_home_profile">데모 홈 프로필</string>
-    <string name="demo_home_profile_picker_description">스크린샷과 녹화를 위해 반복 가능한 홈 장면을 선택하세요.</string>
     <string name="preview_update_alert">미리보기 업데이트 알림</string>
     <string name="preview_update_alert_description">업데이트 또는 알림 데이터를 변경하지 않고 프로덕션 업데이트 카드를 엽니다.</string>
     <string name="demo_mode_disable">데모 모드 끄기</string>
@@ -1060,4 +1059,28 @@
     <string name="sensitive_backup_export_title">읽을 수 있는 연락처 세부정보를 내보낼까요?</string>
     <string name="favorite_contacts_backup_import_description">이 백업의 Mink에서 만든 즐겨찾기는 이 기기에 이미 있는 즐겨찾기를 삭제하지 않고 추가됩니다.</string>
     <string name="favorite_attention_colors_backup_import_description">이 백업의 즐겨찾기 알림 색상은 이 기기에 이미 있는 색상을 지우지 않고 병합됩니다.</string>
+    <string name="demo_studio">데모 스튜디오</string>
+    <string name="demo_studio_description">스크린샷과 녹화를 위한 반복 가능한 가상 장면을 만듭니다.</string>
+    <string name="demo_scenario">시나리오</string>
+    <string name="demo_scenario_product_tour">제품 둘러보기</string>
+    <string name="demo_scenario_product_tour_description">홈, 검색, 파일, 대화를 폭넓게 소개</string>
+    <string name="demo_scenario_pet_mink">애완 밍크 이야기</string>
+    <string name="demo_scenario_pet_mink_description">May, Gary와 캘리포니아에서 애완 밍크를 찾는 이야기</string>
+    <string name="demo_scenario_workday">업무일</string>
+    <string name="demo_scenario_workday_description">프로젝트 작업, 동료, 업무 파일</string>
+    <string name="demo_visual_profile">시각 프로필</string>
+    <string name="demo_conversation_state">대화 상태</string>
+    <string name="demo_conversation_state_quiet">조용함</string>
+    <string name="demo_conversation_state_one_favorite">즐겨찾기 1명</string>
+    <string name="demo_conversation_state_active_inbox">활성 받은편지함</string>
+    <string name="demo_capture_moment">캡처 장면</string>
+    <string name="demo_capture_moment_home">홈</string>
+    <string name="demo_capture_moment_quick_apps">빠른 앱</string>
+    <string name="demo_capture_moment_conversations">대화</string>
+    <string name="demo_capture_moment_magic_box">Magic Box 검색</string>
+    <string name="demo_preview_action">데모 미리보기 전용</string>
+    <string name="demo_reset_scene">현재 장면 재설정</string>
+    <string name="demo_reset_scene_description">이 시나리오의 원래 작업, 생성된 파일, 대화 답장을 복원합니다.</string>
+    <string name="demo_scene_reset">데모 장면이 재설정되었습니다</string>
+    <string name="could_not_rename_favorite">이 즐겨찾기의 이름을 변경할 수 없습니다.</string>
 </resources>

@@ -3,6 +3,7 @@ package com.katoaapps.openminilaunch.features.contacts
 import android.content.Context
 import com.katoaapps.openminilaunch.model.FavoriteContactId
 import com.katoaapps.openminilaunch.model.FavoriteIntegratedContact
+import com.katoaapps.openminilaunch.model.FavoriteIntegratedContactNameSource
 import com.katoaapps.openminilaunch.model.IntegratedContactCallEndpoint
 import com.katoaapps.openminilaunch.model.IntegratedContactEndpoint
 import com.katoaapps.openminilaunch.model.LauncherShortcutTarget
@@ -42,10 +43,19 @@ internal class FavoriteIntegratedContactStore(
         displayName: String = shortcut.label,
     ): FavoriteIntegratedContactAddResult {
         val endpoint = shortcut.toIntegratedEndpoint()
+        val providerName = shortcut.label.cleanFavoriteName()
         val cleanName = displayName.cleanFavoriteName()
-            ?: shortcut.label.cleanFavoriteName()
+            ?: providerName
             ?: return FavoriteIntegratedContactAddResult.FAILED
-        return add(endpoint, cleanName)
+        return add(
+            endpoint = endpoint,
+            displayName = cleanName,
+            nameSource = if (cleanName == providerName) {
+                FavoriteIntegratedContactNameSource.PROVIDER
+            } else {
+                FavoriteIntegratedContactNameSource.USER
+            },
+        )
     }
 
     /** Adds a favorite through a provider contract that accepts an explicit recipient address. */
@@ -65,7 +75,7 @@ internal class FavoriteIntegratedContactStore(
         ) ?: return FavoriteIntegratedContactAddResult.FAILED
         val cleanName = displayName.cleanFavoriteName()
             ?: return FavoriteIntegratedContactAddResult.FAILED
-        return add(endpoint, cleanName)
+        return add(endpoint, cleanName, FavoriteIntegratedContactNameSource.USER)
     }
 
     /** Adds a call-only favorite through Android's standard phone-number contract. */
@@ -88,6 +98,7 @@ internal class FavoriteIntegratedContactStore(
             displayName = cleanName,
             endpoints = emptyList(),
             callEndpoint = endpoint,
+            nameSource = FavoriteIntegratedContactNameSource.USER,
         )
         return if (save(updated)) {
             FavoriteIntegratedContactAddResult.ADDED
@@ -101,6 +112,29 @@ internal class FavoriteIntegratedContactStore(
         val current = allContacts()
         val updated = current.filterNot { it.id == id }
         if (updated.size == current.size) return false
+        return save(updated)
+    }
+
+    /** Saves an explicit user alias without changing the provider identity or routes. */
+    @Synchronized
+    fun rename(id: FavoriteContactId.Integrated, displayName: String): Boolean {
+        val cleanName = displayName.cleanFavoriteName() ?: return false
+        val current = allContacts()
+        val contactIndex = current.indexOfFirst { it.id == id }
+        if (contactIndex == -1) return false
+        val existing = current[contactIndex]
+        if (
+            existing.displayName == cleanName &&
+            existing.nameSource == FavoriteIntegratedContactNameSource.USER
+        ) {
+            return true
+        }
+        val updated = current.toMutableList().apply {
+            this[contactIndex] = existing.copy(
+                displayName = cleanName,
+                nameSource = FavoriteIntegratedContactNameSource.USER,
+            )
+        }
         return save(updated)
     }
 
@@ -174,6 +208,7 @@ internal class FavoriteIntegratedContactStore(
     private fun add(
         endpoint: IntegratedContactEndpoint,
         displayName: String,
+        nameSource: FavoriteIntegratedContactNameSource,
     ): FavoriteIntegratedContactAddResult {
         val current = allContacts()
         if (current.hasEndpoint(endpoint, excluding = null)) {
@@ -183,6 +218,7 @@ internal class FavoriteIntegratedContactStore(
             id = FavoriteContactId.Integrated(UUID.randomUUID().toString()),
             displayName = displayName,
             endpoints = listOf(endpoint),
+            nameSource = nameSource,
         )
         return if (save(updated)) {
             FavoriteIntegratedContactAddResult.ADDED
@@ -202,8 +238,28 @@ internal class FavoriteIntegratedContactStore(
         val existing = current[contactIndex]
         if (existing.endpoints.singleOrNull()?.identity == replacement.identity) return true
 
+        val providerManagedReplacementName = if (
+            existing.nameSource == FavoriteIntegratedContactNameSource.PROVIDER
+        ) {
+            (replacement as? IntegratedContactEndpoint.ConversationShortcut)
+                ?.label
+                ?.cleanFavoriteName()
+        } else {
+            null
+        }
         val updated = current.toMutableList().apply {
-            this[contactIndex] = existing.copy(endpoints = listOf(replacement))
+            this[contactIndex] = existing.copy(
+                displayName = providerManagedReplacementName ?: existing.displayName,
+                endpoints = listOf(replacement),
+                nameSource = if (
+                    existing.nameSource == FavoriteIntegratedContactNameSource.PROVIDER &&
+                    replacement !is IntegratedContactEndpoint.ConversationShortcut
+                ) {
+                    FavoriteIntegratedContactNameSource.USER
+                } else {
+                    existing.nameSource
+                },
+            )
         }
         return save(updated)
     }

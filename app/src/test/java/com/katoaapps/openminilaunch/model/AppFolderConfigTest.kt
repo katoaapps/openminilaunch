@@ -23,6 +23,18 @@ class AppFolderConfigTest {
     }
 
     @Test
+    fun `folder normalization keeps at most twelve targets`() {
+        val normalized = AppFolderConfig(
+            id = "folder-1",
+            orderedTargetKeys = (1..20).map { "target-$it" },
+        ).normalized()
+
+        assertEquals(MAX_APP_FOLDER_TARGETS, normalized.orderedTargetKeys.size)
+        assertEquals("target-1", normalized.orderedTargetKeys.first())
+        assertEquals("target-12", normalized.orderedTargetKeys.last())
+    }
+
+    @Test
     fun `custom appearance without a color safely returns to default`() {
         val normalized = AppFolderConfig(
             id = "folder-1",

@@ -641,7 +641,6 @@
     <string name="demo_search_data_enabled">Демо-дом, контакты, файлы и разговоры включены</string>
     <string name="demo_search_data_disabled">Демо-дом, контакты, файлы и разговоры отключены</string>
     <string name="demo_home_profile">Демо Домашний профиль</string>
-    <string name="demo_home_profile_picker_description">Выберите повторяемую домашнюю сцену для снимков экрана и записей.</string>
     <string name="preview_update_alert">Предварительный просмотр оповещения об обновлении</string>
     <string name="preview_update_alert_description">Откройте карточку производственного обновления, не изменяя данные обновления или напоминания.</string>
     <string name="demo_mode_disable">Отключить демонстрационный режим</string>
@@ -1078,4 +1077,28 @@
     <string name="sensitive_backup_export_title">Экспортировать читаемые данные контактов?</string>
     <string name="favorite_contacts_backup_import_description">Избранные контакты, созданные в Mink и содержащиеся в этой резервной копии, будут добавлены без удаления уже имеющихся на устройстве.</string>
     <string name="favorite_attention_colors_backup_import_description">Цвета уведомлений для избранных контактов из этой резервной копии будут объединены без удаления цветов, уже сохранённых на устройстве.</string>
+    <string name="demo_studio">Демо-студия</string>
+    <string name="demo_studio_description">Создайте повторяемую вымышленную сцену для снимков экрана и записи.</string>
+    <string name="demo_scenario">Сценарий</string>
+    <string name="demo_scenario_product_tour">Обзор продукта</string>
+    <string name="demo_scenario_product_tour_description">Общий обзор главного экрана, поиска, файлов и разговоров</string>
+    <string name="demo_scenario_pet_mink">История о домашней норке</string>
+    <string name="demo_scenario_pet_mink_description">Мэй, Гэри и поиски домашней норки в Калифорнии</string>
+    <string name="demo_scenario_workday">Рабочий день</string>
+    <string name="demo_scenario_workday_description">Задачи проекта, коллеги и рабочие файлы</string>
+    <string name="demo_visual_profile">Визуальный профиль</string>
+    <string name="demo_conversation_state">Состояние разговоров</string>
+    <string name="demo_conversation_state_quiet">Тихо</string>
+    <string name="demo_conversation_state_one_favorite">Один избранный</string>
+    <string name="demo_conversation_state_active_inbox">Активные сообщения</string>
+    <string name="demo_capture_moment">Сцена для записи</string>
+    <string name="demo_capture_moment_home">Главная</string>
+    <string name="demo_capture_moment_quick_apps">Быстрые приложения</string>
+    <string name="demo_capture_moment_conversations">Диалоги</string>
+    <string name="demo_capture_moment_magic_box">Поиск Magic Box</string>
+    <string name="demo_preview_action">Только демонстрационный просмотр</string>
+    <string name="demo_reset_scene">Сбросить текущую сцену</string>
+    <string name="demo_reset_scene_description">Восстановите исходные задачи, созданные файлы и ответы в разговорах этого сценария.</string>
+    <string name="demo_scene_reset">Демо-сцена сброшена</string>
+    <string name="could_not_rename_favorite">Не удалось переименовать избранное.</string>
 </resources>

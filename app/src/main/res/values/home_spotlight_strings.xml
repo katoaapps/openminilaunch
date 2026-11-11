@@ -1,0 +1,17 @@
+<resources>
+    <string name="home_spotlight_folders_title">Build a folder</string>
+    <string name="home_spotlight_folders_description">Press and hold any app, then add another app to turn the tile into a folder.</string>
+    <string name="home_spotlight_minkspace_title">Mini Apps live here</string>
+    <string name="home_spotlight_minkspace_description">Swipe up or down inside MinkSpace to move between Mini Apps. Tap supported apps to expand.</string>
+    <string name="home_spotlight_magic_title">Start typing</string>
+    <string name="home_spotlight_magic_description">Search, message, call, create notes, and launch actions with ordinary text or Magic Box hotkeys.</string>
+    <string name="home_spotlight_keyboard_title">More than a keyboard</string>
+    <string name="home_spotlight_keyboard_description">Tap to open the keyboard. Press and hold to launch Adrift.</string>
+    <string name="home_spotlight_header_title">Home at a glance</string>
+    <string name="home_spotlight_header_description">Open Messages, check the date and battery, or jump into Settings.</string>
+    <string name="home_spotlight_gestures_title">Move around Home</string>
+    <string name="home_spotlight_gestures_description">Swipe from Home to reach the spaces around it.</string>
+    <string name="notifications">Notifications</string>
+    <string name="replay_home_tour">Replay Home Tour</string>
+    <string name="replay_home_tour_summary">Review Home controls, shortcuts, and gestures</string>
+</resources>

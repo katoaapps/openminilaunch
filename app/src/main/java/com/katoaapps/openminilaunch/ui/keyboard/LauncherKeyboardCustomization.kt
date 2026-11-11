@@ -37,6 +37,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import com.katoaapps.openminilaunch.model.LauncherKeyboardPreferences
+import com.katoaapps.openminilaunch.model.resolveLauncherKeyboardHeightDp
 import com.katoaapps.openminilaunch.ui.theme.Dimens
 import kotlin.math.min
 
@@ -113,6 +114,13 @@ internal fun KeyboardDevicePreview(
     val configuration = LocalConfiguration.current
     val deviceWidth = configuration.screenWidthDp.coerceAtLeast(1).dp
     val deviceHeight = configuration.screenHeightDp.coerceAtLeast(1).dp
+    val previewPreferences = preferences.copy(
+        heightDp = resolveLauncherKeyboardHeightDp(
+            preferences = preferences,
+            screenWidthDp = configuration.screenWidthDp,
+            screenHeightDp = configuration.screenHeightDp,
+        ),
+    )
 
     BoxWithConstraints(Modifier.fillMaxWidth(), contentAlignment = Alignment.Center) {
         val scale = min(
@@ -148,7 +156,7 @@ internal fun KeyboardDevicePreview(
                 LauncherKeyboard(
                     value = value,
                     onValueChange = onValueChange,
-                    preferences = preferences,
+                    preferences = previewPreferences,
                     themePrimaryArgb = themePrimaryArgb,
                     themeSecondaryArgb = themeSecondaryArgb,
                     onSubmit = {},

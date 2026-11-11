@@ -69,7 +69,12 @@ internal fun MinkSpaceTotalScreenHost(
     val view = LocalView.current
     val window = activity?.window
     var chromeVisible by remember { mutableStateOf(true) }
-    val conversations = ConversationNotificationStore.currentConversations()
+    val conversations = ConversationNotificationStore.currentConversations(
+        useDemoData = store.demoModeEnabled,
+        demoScenario = store.demoScenario,
+        demoConversationState = store.demoConversationState,
+        demoSessionStartedAt = store.demoSessionStartedAt,
+    )
     val favoriteAttention = rememberPendingFavoriteAttention(
         store = store,
         conversations = conversations,

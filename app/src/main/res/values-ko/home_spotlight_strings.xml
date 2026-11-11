@@ -1,0 +1,17 @@
+<resources>
+    <string name="home_spotlight_folders_title">폴더 만들기</string>
+    <string name="home_spotlight_folders_description">앱을 길게 누른 다음 다른 앱을 추가하면 타일이 폴더로 바뀝니다.</string>
+    <string name="home_spotlight_minkspace_title">미니 앱은 여기에 있습니다</string>
+    <string name="home_spotlight_minkspace_description">MinkSpace 안에서 위아래로 스와이프해 미니 앱을 전환하세요. 지원되는 앱을 탭하면 확장됩니다.</string>
+    <string name="home_spotlight_magic_title">입력 시작</string>
+    <string name="home_spotlight_magic_description">일반 텍스트나 Magic Box 단축키로 검색, 메시지, 통화, 메모 및 작업을 실행하세요.</string>
+    <string name="home_spotlight_keyboard_title">키보드 그 이상</string>
+    <string name="home_spotlight_keyboard_description">탭하여 키보드를 엽니다. 길게 눌러 Adrift를 실행합니다.</string>
+    <string name="home_spotlight_header_title">한눈에 보는 홈</string>
+    <string name="home_spotlight_header_description">메시지를 열고 날짜와 배터리를 확인하거나 설정으로 이동하세요.</string>
+    <string name="home_spotlight_gestures_title">홈 둘러보기</string>
+    <string name="home_spotlight_gestures_description">홈에서 스와이프하여 주변 공간으로 이동하세요.</string>
+    <string name="notifications">알림</string>
+    <string name="replay_home_tour">홈 둘러보기 다시 재생</string>
+    <string name="replay_home_tour_summary">홈 컨트롤, 바로가기 및 제스처 다시 보기</string>
+</resources>

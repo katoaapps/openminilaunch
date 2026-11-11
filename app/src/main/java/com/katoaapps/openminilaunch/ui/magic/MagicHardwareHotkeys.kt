@@ -6,34 +6,34 @@ import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.platform.LocalContext
-import com.katoaapps.openminilaunch.features.magic.MAGIC_COMMAND_PREFIXES
+import com.katoaapps.openminilaunch.features.magic.MAGIC_HOTKEY_TRIGGERS
 import com.katoaapps.openminilaunch.features.magic.printableHardwareText
 
-/** Lets Home catch command hotkeys before focus routing on unusual physical keyboards. */
+/** Lets Home catch Magic Box hotkeys before focus routing on unusual physical keyboards. */
 interface MagicHardwareHotkeyHost {
     fun registerMagicHardwareHotkeyHandler(handler: (KeyEvent) -> Boolean): () -> Unit
 }
 
-/** Registers only while the collapsed Home Magic Box is eligible to receive command hotkeys. */
+/** Registers only while the collapsed Home Magic Box is eligible to receive hotkeys. */
 @Composable
-internal fun MagicHardwareCommandHotkeyEffect(
+internal fun MagicHardwareHotkeyEffect(
     enabled: Boolean,
-    onCommand: (prefix: String, keyCode: Int) -> Unit,
+    onHotkey: (trigger: String, keyCode: Int) -> Unit,
 ) {
     val host = LocalContext.current as? MagicHardwareHotkeyHost
-    val currentOnCommand by rememberUpdatedState(onCommand)
+    val currentOnHotkey by rememberUpdatedState(onHotkey)
 
     DisposableEffect(host, enabled) {
         if (!enabled || host == null) return@DisposableEffect onDispose { }
 
         val unregister = host.registerMagicHardwareHotkeyHandler { event ->
-            val prefix = printableHardwareText(event.unicodeChar)
+            val trigger = printableHardwareText(event.unicodeChar)
                 ?.singleOrNull()
-                ?.takeIf { it in MAGIC_COMMAND_PREFIXES }
-            if (event.action != KeyEvent.ACTION_DOWN || prefix == null) {
+                ?.takeIf { it in MAGIC_HOTKEY_TRIGGERS }
+            if (event.action != KeyEvent.ACTION_DOWN || trigger == null) {
                 false
             } else {
-                if (event.repeatCount == 0) currentOnCommand(prefix.toString(), event.keyCode)
+                if (event.repeatCount == 0) currentOnHotkey(trigger.toString(), event.keyCode)
                 true
             }
         }

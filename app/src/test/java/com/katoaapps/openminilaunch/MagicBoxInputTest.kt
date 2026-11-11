@@ -1,12 +1,30 @@
 package com.katoaapps.openminilaunch
 
 import com.katoaapps.openminilaunch.features.magic.*
+import com.katoaapps.openminilaunch.ui.magic.MagicBoxSessionState
 
 import android.content.res.Configuration
 import org.junit.Assert.assertEquals
 import org.junit.Test
 
 class MagicBoxInputTest {
+    @Test
+    fun demoCaptureSearchCanReturnToACleanHomeFrame() {
+        val session = MagicBoxSessionState.empty()
+
+        session.prepareDemoSearch("invoice")
+
+        assertEquals("invoice", session.textState.value.text)
+        assertEquals(true, session.expanded)
+
+        session.resetForDemoHome()
+
+        assertEquals("", session.textState.value.text)
+        assertEquals(null, session.selectedRecipientState.value)
+        assertEquals(MagicBoxRoute.SEARCH, session.routeState.value)
+        assertEquals(false, session.expanded)
+    }
+
     @Test
     fun printableHardwareInputKeepsShiftedHotkeysAndUnicode() {
         assertEquals("@", printableHardwareText('@'.code))
@@ -68,79 +86,103 @@ class MagicBoxInputTest {
     fun plainTextBecomesSearchQuery() {
         val input = parseMagicBoxInput("  quarterly budget  ")
 
-        assertEquals(' ', input.prefix)
+        assertEquals(MagicBoxRoute.SEARCH, input.route)
         assertEquals("quarterly budget", input.plainQuery)
     }
 
     @Test
-    fun commandPrefixProducesSuggestionTermWithoutPlainSearch() {
-        val input = parseMagicBoxInput("?maps Home Depot")
+    fun appRouteProducesSuggestionTermWithoutPlainSearch() {
+        val input = parseMagicBoxInput("maps Home Depot", MagicBoxRoute.APP)
 
-        assertEquals('?', input.prefix)
-        assertEquals("maps", input.searchTerm)
+        assertEquals(MagicBoxRoute.APP, input.route)
+        assertEquals("maps Home Depot", input.searchTerm)
         assertEquals("", input.plainQuery)
     }
 
     @Test
-    fun slashPrefixProducesNoteCommandWithoutPlainSearch() {
-        val input = parseMagicBoxInput("/Draft the release announcement")
+    fun noteRouteDoesNotProducePlainSearch() {
+        val input = parseMagicBoxInput("Draft the release announcement", MagicBoxRoute.NOTE)
 
-        assertEquals(MAGIC_NOTE_PREFIX, input.prefix)
+        assertEquals(MagicBoxRoute.NOTE, input.route)
         assertEquals("", input.plainQuery)
     }
 
     @Test
-    fun starPrefixProducesAiCommandWithoutPlainSearch() {
-        val input = parseMagicBoxInput("*Summarize this release")
+    fun assistantRouteDoesNotProducePlainSearch() {
+        val input = parseMagicBoxInput("Summarize this release", MagicBoxRoute.ASSISTANT)
 
-        assertEquals(MAGIC_AI_PREFIX, input.prefix)
+        assertEquals(MagicBoxRoute.ASSISTANT, input.route)
         assertEquals("", input.plainQuery)
     }
 
     @Test
-    fun dollarPrefixIsNowPlainSearchText() {
+    fun ordinaryPunctuationRemainsPlainSearchText() {
         val input = parseMagicBoxInput("\$quarterly revenue")
 
-        assertEquals('$', input.prefix)
+        assertEquals(MagicBoxRoute.SEARCH, input.route)
         assertEquals("\$quarterly revenue", input.plainQuery)
     }
 
     @Test
-    fun selectedContactLocksCommandAndStopsContactFiltering() {
-        val input = parseMagicBoxInput("message body", lockedPrefix = '@')
+    fun messageRouteKeepsEditorContentOutOfPlainSearch() {
+        val input = parseMagicBoxInput("message body", MagicBoxRoute.MESSAGE)
 
-        assertEquals('@', input.prefix)
-        assertEquals("", input.searchTerm)
+        assertEquals(MagicBoxRoute.MESSAGE, input.route)
+        assertEquals("message body", input.searchTerm)
         assertEquals("", input.plainQuery)
     }
 
     @Test
-    fun commandPrefixAloneIsNotConsideredADraft() {
-        MAGIC_COMMAND_PREFIXES.forEach { prefix ->
-            assertEquals(false, hasMagicBoxDraftText(prefix.toString()))
-        }
+    fun hotkeySelectsRouteWithoutBecomingEditorContent() {
+        val result = consumeMagicBoxTrigger("", "@")
+
+        assertEquals(MagicBoxRoute.MESSAGE, result?.route)
+        assertEquals("", result?.content)
     }
 
     @Test
     fun emptyTodoCommandOpensTodoList() {
-        assertEquals(true, isOpenTodosCommand("-"))
-        assertEquals(true, isOpenTodosCommand("-   "))
-        assertEquals(false, isOpenTodosCommand("-Buy milk"))
-        assertEquals(false, isOpenTodosCommand("Buy milk"))
-        assertEquals(false, isOpenTodosCommand("-", lockedPrefix = '@'))
+        assertEquals(true, isOpenTodosCommand("", MagicBoxRoute.TODO))
+        assertEquals(true, isOpenTodosCommand("   ", MagicBoxRoute.TODO))
+        assertEquals(false, isOpenTodosCommand("Buy milk", MagicBoxRoute.TODO))
+        assertEquals(false, isOpenTodosCommand("", MagicBoxRoute.MESSAGE))
     }
 
     @Test
     fun commandAndPlainTextAreConsideredDrafts() {
-        assertEquals(true, hasMagicBoxDraftText("-Book train tickets"))
-        assertEquals(true, hasMagicBoxDraftText("+Dinner Friday at 7"))
-        assertEquals(true, hasMagicBoxDraftText("*Summarize this release"))
+        assertEquals(true, hasMagicBoxDraftText("Book train tickets"))
+        assertEquals(true, hasMagicBoxDraftText("Dinner Friday at 7"))
+        assertEquals(true, hasMagicBoxDraftText("Summarize this release"))
         assertEquals(true, hasMagicBoxDraftText("quarterly budget"))
     }
 
     @Test
     fun lockedContactRequiresMessageTextBeforeItIsADraft() {
-        assertEquals(false, hasMagicBoxDraftText("", lockedPrefix = '@'))
-        assertEquals(true, hasMagicBoxDraftText("On my way", lockedPrefix = '@'))
+        assertEquals(false, hasMagicBoxDraftText(""))
+        assertEquals(true, hasMagicBoxDraftText("On my way"))
+    }
+
+    @Test
+    fun pastedLegacyCommandIsSplitIntoRouteAndPayload() {
+        val result = consumeMagicBoxTrigger("", "-Buy milk")
+
+        assertEquals(MagicBoxRoute.TODO, result?.route)
+        assertEquals("Buy milk", result?.content)
+    }
+
+    @Test
+    fun commandCharactersRemainLiteralAfterTypingHasStarted() {
+        assertEquals(
+            null,
+            consumeMagicBoxTrigger("email", "email@example.com"),
+        )
+    }
+
+    @Test
+    fun selectedRecipientBodyCanStartWithLiteralHotkeyCharacter() {
+        assertEquals(
+            null,
+            consumeMagicBoxTrigger("", "@home", routeSelectionEnabled = false),
+        )
     }
 }

@@ -643,7 +643,6 @@
     <string name="demo_search_data_enabled">تم تمكين الصفحة الرئيسية التجريبية وجهات الاتصال والملفات والمحادثات</string>
     <string name="demo_search_data_disabled">تم تعطيل الصفحة الرئيسية التجريبية وجهات الاتصال والملفات والمحادثات</string>
     <string name="demo_home_profile">الصفحة الرئيسية التجريبية</string>
-    <string name="demo_home_profile_picker_description">اختر مشهدًا رئيسيًا قابلاً للتكرار لالتقاط لقطات الشاشة والتسجيلات.</string>
     <string name="preview_update_alert">معاينة تنبيه التحديث</string>
     <string name="preview_update_alert_description">افتح بطاقة تحديث الإنتاج دون تغيير بيانات التحديث أو التذكير.</string>
     <string name="demo_mode_disable">قم بإيقاف تشغيل الوضع التجريبي</string>
@@ -1096,4 +1095,28 @@
     <string name="sensitive_backup_export_title">هل تريد تصدير تفاصيل جهات الاتصال القابلة للقراءة؟</string>
     <string name="favorite_contacts_backup_import_description">ستتم إضافة المفضلة التي أنشأها Mink في هذه النسخة الاحتياطية دون إزالة المفضلة الموجودة بالفعل على هذا الجهاز.</string>
     <string name="favorite_attention_colors_backup_import_description">سيتم دمج ألوان تنبيه المفضلة في هذه النسخة الاحتياطية دون مسح الألوان الموجودة بالفعل على هذا الجهاز.</string>
+    <string name="demo_studio">استوديو العرض</string>
+    <string name="demo_studio_description">أنشئ مشهدًا خياليًا قابلاً للتكرار للقطات الشاشة والتسجيلات.</string>
+    <string name="demo_scenario">السيناريو</string>
+    <string name="demo_scenario_product_tour">جولة في المنتج</string>
+    <string name="demo_scenario_product_tour_description">نظرة شاملة على الشاشة الرئيسية والبحث والملفات والمحادثات</string>
+    <string name="demo_scenario_pet_mink">قصة المنك الأليف</string>
+    <string name="demo_scenario_pet_mink_description">May وGary والبحث عن منك أليف في كاليفورنيا</string>
+    <string name="demo_scenario_workday">يوم العمل</string>
+    <string name="demo_scenario_workday_description">مهام المشروع والزملاء وملفات العمل</string>
+    <string name="demo_visual_profile">الملف المرئي</string>
+    <string name="demo_conversation_state">حالة المحادثات</string>
+    <string name="demo_conversation_state_quiet">هادئ</string>
+    <string name="demo_conversation_state_one_favorite">مفضل واحد</string>
+    <string name="demo_conversation_state_active_inbox">صندوق وارد نشط</string>
+    <string name="demo_capture_moment">مشهد الالتقاط</string>
+    <string name="demo_capture_moment_home">الرئيسية</string>
+    <string name="demo_capture_moment_quick_apps">التطبيقات السريعة</string>
+    <string name="demo_capture_moment_conversations">المحادثات</string>
+    <string name="demo_capture_moment_magic_box">بحث Magic Box</string>
+    <string name="demo_preview_action">معاينة تجريبية فقط</string>
+    <string name="demo_reset_scene">إعادة ضبط المشهد الحالي</string>
+    <string name="demo_reset_scene_description">استعد المهام الأصلية والملفات التي تم إنشاؤها وردود المحادثة لهذا السيناريو.</string>
+    <string name="demo_scene_reset">تمت إعادة ضبط مشهد العرض</string>
+    <string name="could_not_rename_favorite">تعذّر إعادة تسمية هذه المفضلة.</string>
 </resources>

@@ -1,8 +1,7 @@
 package com.katoaapps.openminilaunch.ui.magic
 
 import com.katoaapps.openminilaunch.data.LauncherStore
-import com.katoaapps.openminilaunch.features.magic.MAGIC_AI_PREFIX
-import com.katoaapps.openminilaunch.features.magic.MAGIC_NOTE_PREFIX
+import com.katoaapps.openminilaunch.features.magic.MagicBoxRoute
 import com.katoaapps.openminilaunch.features.messaging.MessageDraft
 import com.katoaapps.openminilaunch.features.messaging.ConversationShortcutDraft
 import com.katoaapps.openminilaunch.features.messaging.MessagingSendRoute
@@ -11,8 +10,7 @@ import com.katoaapps.openminilaunch.platform.DeviceActions
 
 /** Executes a parsed Magic Box command while the composable owns UI handoff state. */
 internal fun dispatchMagicCommand(
-    prefix: Char?,
-    lockedPrefix: Char?,
+    route: MagicBoxRoute,
     rawText: String,
     selectedRecipient: SelectedMessageRecipient?,
     store: LauncherStore,
@@ -23,21 +21,21 @@ internal fun dispatchMagicCommand(
     onConversationShortcutMessage: (ConversationShortcutDraft) -> Unit = {},
     onDismiss: () -> Unit,
 ) {
-    val payload = if (lockedPrefix != null) rawText.trim() else rawText.drop(1).trim()
+    val payload = rawText.trim()
     var keepDraftAfterExternalHandoff = false
-    val handled = when (prefix) {
-        '-' -> payload.isNotBlank().also {
+    val handled = when (route) {
+        MagicBoxRoute.TODO -> payload.isNotBlank().also {
             if (it) {
                 store.addTodo(payload)
                 onTodoAdded(payload)
             }
         }
-        MAGIC_NOTE_PREFIX -> payload.isNotBlank() && actions.createNote(payload).also { opened ->
+        MagicBoxRoute.NOTE -> payload.isNotBlank() && actions.createNote(payload).also { opened ->
             keepDraftAfterExternalHandoff = opened
         }
         // Calendar commands are parsed and reviewed by MagicBox before platform handoff.
-        '+' -> false
-        '@' -> (selectedRecipient != null && payload.isNotBlank()).also { ready ->
+        MagicBoxRoute.EVENT -> false
+        MagicBoxRoute.MESSAGE -> (selectedRecipient != null && payload.isNotBlank()).also { ready ->
             if (ready) {
                 when (val recipient = checkNotNull(selectedRecipient)) {
                     is SelectedMessageRecipient.ConversationRecipient -> {
@@ -70,15 +68,18 @@ internal fun dispatchMagicCommand(
                 }
             }
         }
-        '#', '?', MAGIC_AI_PREFIX -> false
-        else -> rawText.isNotBlank() && actions.webSearch(rawText, store.preferredWebPackage).also {
+        MagicBoxRoute.CALL,
+        MagicBoxRoute.APP,
+        MagicBoxRoute.ASSISTANT,
+        -> false
+        MagicBoxRoute.SEARCH -> rawText.isNotBlank() && actions.webSearch(rawText, store.preferredWebPackage).also {
             if (it) store.addSearchQuery(rawText)
         }
     }
     // Todo completion is owned by the UI host. Home can dismiss immediately while its
     // widget animation continues; Assistant keeps its window alive until its feedback
     // animation has finished.
-    if (handled && prefix != '@' && prefix != '-') {
+    if (handled && route != MagicBoxRoute.MESSAGE && route != MagicBoxRoute.TODO) {
         if (keepDraftAfterExternalHandoff) onExternalDraftOpened() else onDismiss()
     }
 }

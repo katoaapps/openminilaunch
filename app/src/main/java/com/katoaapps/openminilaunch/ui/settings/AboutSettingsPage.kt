@@ -3,16 +3,12 @@ package com.katoaapps.openminilaunch.ui.settings
 import com.katoaapps.openminilaunch.BuildConfig
 import com.katoaapps.openminilaunch.R
 import com.katoaapps.openminilaunch.data.LauncherStore
-import com.katoaapps.openminilaunch.features.conversations.ConversationNotificationStore
-import com.katoaapps.openminilaunch.features.demo.DemoSearchData
 import com.katoaapps.openminilaunch.platform.DeviceActions
 import com.katoaapps.openminilaunch.ui.components.SettingsRow
 import com.katoaapps.openminilaunch.ui.components.SettingsSwitchRow
 import com.katoaapps.openminilaunch.ui.theme.Dimens
 import com.katoaapps.openminilaunch.ui.theme.Muted
 import com.katoaapps.openminilaunch.ui.theme.Sage
-import com.katoaapps.openminilaunch.ui.updates.GitHubUpdateDialog
-import com.katoaapps.openminilaunch.ui.updates.previewUpdateVersion
 
 import android.widget.Toast
 import androidx.compose.foundation.clickable
@@ -24,18 +20,17 @@ import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Download
 import androidx.compose.material.icons.filled.Forum
 import androidx.compose.material.icons.filled.Gavel
+import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Palette
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.PrivacyTip
 import androidx.compose.material.icons.filled.School
 import androidx.compose.material.icons.filled.SystemUpdateAlt
-import androidx.compose.material.icons.filled.VisibilityOff
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
@@ -50,6 +45,8 @@ internal fun AboutSettingsPage(
     store: LauncherStore,
     actions: DeviceActions,
     onRepeatTutorial: () -> Unit,
+    onReplayHomeTour: () -> Unit,
+    onOpenDemoStudio: () -> Unit,
     goBack: () -> Unit,
 ) {
     val context = LocalContext.current
@@ -57,8 +54,6 @@ internal fun AboutSettingsPage(
     val enabledMessage = stringResource(R.string.demo_search_data_enabled)
     val disabledMessage = stringResource(R.string.demo_search_data_disabled)
     var versionTapCount by remember { mutableIntStateOf(0) }
-    var showDemoProfilePicker by remember { mutableStateOf(false) }
-    var showDemoUpdatePreview by remember { mutableStateOf(false) }
     SettingsPage(stringResource(R.string.about), goBack) {
         SettingsSwitchRow(
             title = stringResource(R.string.github_update_checks),
@@ -131,29 +126,18 @@ internal fun AboutSettingsPage(
             Icons.Default.School,
             onClick = onRepeatTutorial,
         )
-        if (store.demoSearchDataEnabled) {
+        SettingsRow(
+            stringResource(R.string.replay_home_tour),
+            stringResource(R.string.replay_home_tour_summary),
+            Icons.Default.Home,
+            onClick = onReplayHomeTour,
+        )
+        if (store.demoModeEnabled) {
             SettingsRow(
-                stringResource(R.string.demo_home_profile),
-                stringResource(store.demoHomeProfile.labelRes),
+                stringResource(R.string.demo_studio),
+                stringResource(store.demoScenario.labelRes),
                 Icons.Default.Palette,
-                onClick = { showDemoProfilePicker = true },
-            )
-            SettingsRow(
-                stringResource(R.string.preview_update_alert),
-                stringResource(R.string.preview_update_alert_description),
-                Icons.Default.SystemUpdateAlt,
-                onClick = { showDemoUpdatePreview = true },
-            )
-            SettingsRow(
-                stringResource(R.string.demo_mode_disable),
-                stringResource(R.string.demo_mode_disable_description),
-                Icons.Default.VisibilityOff,
-                onClick = {
-                    store.toggleDemoSearchData()
-                    DemoSearchData.clearFiles(context.applicationContext)
-                    ConversationNotificationStore.clearDemoReplyHistory()
-                    Toast.makeText(context, disabledMessage, Toast.LENGTH_SHORT).show()
-                },
+                onClick = onOpenDemoStudio,
             )
         }
         Row(
@@ -161,11 +145,7 @@ internal fun AboutSettingsPage(
                 versionTapCount++
                 if (versionTapCount >= DEMO_MODE_TAP_COUNT) {
                     versionTapCount = 0
-                    val enabled = store.toggleDemoSearchData()
-                    if (!enabled) {
-                        DemoSearchData.clearFiles(context.applicationContext)
-                        ConversationNotificationStore.clearDemoReplyHistory()
-                    }
+                    val enabled = store.toggleDemoMode()
                     Toast.makeText(
                         context,
                         if (enabled) enabledMessage else disabledMessage,
@@ -177,33 +157,5 @@ internal fun AboutSettingsPage(
             Text(stringResource(R.string.version), Modifier.weight(1f), fontWeight = FontWeight.Medium)
             Text(BuildConfig.VERSION_NAME, color = Muted)
         }
-    }
-    if (showDemoProfilePicker) {
-        DemoHomeProfilePicker(
-            selected = store.demoHomeProfile,
-            onSelect = store::selectDemoHomeProfile,
-            onDismiss = { showDemoProfilePicker = false },
-        )
-    }
-    if (showDemoUpdatePreview) {
-        GitHubUpdateDialog(
-            currentVersion = BuildConfig.VERSION_NAME,
-            availableVersion = previewUpdateVersion(BuildConfig.VERSION_NAME),
-            onOpenGitHub = {
-                if (actions.openLatestGitHubReleaseDownload()) {
-                    showDemoUpdatePreview = false
-                } else {
-                    Toast.makeText(context, R.string.no_browser_available, Toast.LENGTH_SHORT).show()
-                }
-            },
-            onOpenFdroid = {
-                if (actions.openFdroidPackagePage()) {
-                    showDemoUpdatePreview = false
-                } else {
-                    Toast.makeText(context, R.string.no_browser_available, Toast.LENGTH_SHORT).show()
-                }
-            },
-            onDismiss = { showDemoUpdatePreview = false },
-        )
     }
 }

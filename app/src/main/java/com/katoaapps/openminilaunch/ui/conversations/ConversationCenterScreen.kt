@@ -24,6 +24,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
@@ -51,6 +52,7 @@ import com.katoaapps.openminilaunch.features.conversations.prioritizeFavoriteCon
 import com.katoaapps.openminilaunch.features.conversations.shouldShowConversationAttention
 import com.katoaapps.openminilaunch.model.CommunicationRecipient
 import com.katoaapps.openminilaunch.model.ContactAppRoute
+import com.katoaapps.openminilaunch.model.FavoriteContact
 import com.katoaapps.openminilaunch.model.LauncherShortcutTarget
 import com.katoaapps.openminilaunch.platform.DeviceActions
 import com.katoaapps.openminilaunch.ui.components.PageHeader
@@ -74,38 +76,60 @@ internal fun ConversationCenterScreen(
 ) {
     val context = LocalContext.current
     val activity = context as ComponentActivity
+    val shortcutsRevision by actions.launcherShortcutsRevision.collectAsState()
+    val demoModeEnabled = store.demoModeEnabled
     var accessGranted by remember {
         mutableStateOf(ConversationNotificationStore.hasNotificationAccess(context))
     }
     var showAccessDisclosure by remember { mutableStateOf(false) }
-    var showFeatureTour by rememberSaveable {
-        mutableStateOf(!store.hasSeenUpdate(CONVERSATION_FEATURE_TOUR_ID))
+    var showFeatureTour by rememberSaveable(demoModeEnabled) {
+        mutableStateOf(!demoModeEnabled && !store.hasSeenUpdate(CONVERSATION_FEATURE_TOUR_ID))
     }
     var selectedConversationId by rememberSaveable { mutableStateOf<String?>(null) }
     var selectedSection by rememberSaveable { mutableStateOf(ConversationSection.MESSAGES) }
     var acknowledgementRevision by remember { mutableIntStateOf(0) }
-    val demoModeEnabled = store.demoSearchDataEnabled
     val conversations = ConversationNotificationStore.currentConversations(
         useDemoData = demoModeEnabled,
+        demoScenario = store.demoScenario,
+        demoConversationState = store.demoConversationState,
+        demoSessionStartedAt = store.demoSessionStartedAt,
     )
-    val favoriteContacts = rememberOrderedConversationFavorites(store, refreshKey = selectedSection)
+    val favoriteContacts = rememberOrderedConversationFavorites(
+        store = store,
+        refreshKey = selectedSection to shortcutsRevision,
+        actions = actions,
+    )
     val orderedConversations = remember(conversations, favoriteContacts) {
         prioritizeFavoriteConversations(conversations, favoriteContacts)
     }
     val favoriteMatches = remember(conversations, favoriteContacts) {
         matchFavoriteConversations(conversations, favoriteContacts)
     }
+    val favoriteContactsByConversation = remember(favoriteMatches, favoriteContacts) {
+        val favoriteContactsById = favoriteContacts.associateBy(FavoriteContact::id)
+        favoriteMatches.mapNotNull { (conversationId, match) ->
+            favoriteContactsById[match.favoriteId]?.let { conversationId to it }
+        }.toMap()
+    }
     val conversationsById = remember(conversations) {
         conversations.associateBy(NotificationConversation::id)
     }
     val acknowledgedActivityByConversationId = remember(conversations, acknowledgementRevision) {
         conversations.associate { conversation ->
-            conversation.id to store.acknowledgedConversationActivityAt(conversation.id)
+            conversation.id to if (demoModeEnabled) {
+                0L
+            } else {
+                store.acknowledgedConversationActivityAt(conversation.id)
+            }
         }
     }
     val favoriteRowStyles = favoriteMatches.mapValues { (conversationId, match) ->
         ConversationFavoriteRowStyle(
-            color = store.favoriteAttentionColorStore.color(match.favoriteId)?.let(::Color)
+            color = (if (demoModeEnabled) {
+                store.demoFavoriteAttentionColor(match.favoriteId)
+            } else {
+                store.favoriteAttentionColorStore.color(match.favoriteId)
+            })?.let(::Color)
                 ?: MinkFeatureColors.ConversationAttention,
             isUnread = shouldShowConversationAttention(
                 latestActivityAt = conversationsById[conversationId]
@@ -133,11 +157,13 @@ internal fun ConversationCenterScreen(
         }
     }
 
-    DisposableEffect(activity, context) {
+    DisposableEffect(activity, context, demoModeEnabled) {
         val observer = LifecycleEventObserver { _, event ->
             if (event == Lifecycle.Event.ON_RESUME) {
                 accessGranted = ConversationNotificationStore.hasNotificationAccess(context)
-                if (accessGranted) ConversationNotificationStore.refreshActiveNotifications(context)
+                if (accessGranted && !demoModeEnabled) {
+                    ConversationNotificationStore.refreshActiveNotifications(context)
+                }
             }
         }
         activity.lifecycle.addObserver(observer)
@@ -151,6 +177,10 @@ internal fun ConversationCenterScreen(
             if (selectedConversation != null) {
                 ConversationWindow(
                     conversation = selectedConversation,
+                    displayName = favoriteContactsByConversation[selectedConversation.id]
+                        ?.displayName
+                        ?: selectedConversation.name,
+                    favoriteContact = favoriteContactsByConversation[selectedConversation.id],
                     actions = actions,
                     goBack = { selectedConversationId = null },
                 )
@@ -173,6 +203,7 @@ internal fun ConversationCenterScreen(
                             else -> ConversationList(
                                 conversations = orderedConversations,
                                 favoriteRowStyles = favoriteRowStyles,
+                                favoriteContacts = favoriteContactsByConversation,
                                 actions = actions,
                                 onConversation = { selectedConversationId = it.id },
                             )
@@ -207,6 +238,7 @@ internal fun ConversationCenterScreen(
 private fun ConversationList(
     conversations: List<NotificationConversation>,
     favoriteRowStyles: Map<String, ConversationFavoriteRowStyle>,
+    favoriteContacts: Map<String, FavoriteContact>,
     actions: DeviceActions,
     onConversation: (NotificationConversation) -> Unit,
 ) {
@@ -226,6 +258,7 @@ private fun ConversationList(
         items(conversations, key = NotificationConversation::id) { conversation ->
             ConversationCard(
                 conversation = conversation,
+                favoriteContact = favoriteContacts[conversation.id],
                 actions = actions,
                 favoriteStyle = favoriteRowStyles[conversation.id],
                 onOpen = { onConversation(conversation) },

@@ -1,0 +1,5 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="mink_keyboard">Mink কীবোর্ড</string>
+    <string name="mink_keyboard_description">Magic Box-এ সিস্টেম কীবোর্ডের বদলে Mink-এর বিল্ট-ইন কীবোর্ড ব্যবহার করুন।</string>
+</resources>

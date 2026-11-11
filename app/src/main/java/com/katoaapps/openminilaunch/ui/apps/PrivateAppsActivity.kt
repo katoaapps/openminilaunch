@@ -26,7 +26,7 @@ class PrivateAppsActivity : ComponentActivity() {
                 PrivateAppsScreen(
                     repository = repository,
                     actions = actions,
-                    demoMode = store.demoSearchDataEnabled,
+                    demoMode = store.demoModeEnabled,
                     userGatewaySelectionKey = store.privateContainerGatewaySelectionKey,
                     onUserGatewayUnavailable = {
                         store.clearPrivateContainerGateway()

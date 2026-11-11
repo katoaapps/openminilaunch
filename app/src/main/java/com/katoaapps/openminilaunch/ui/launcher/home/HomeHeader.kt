@@ -38,6 +38,8 @@ import com.katoaapps.openminilaunch.data.LauncherStore
 import com.katoaapps.openminilaunch.features.conversations.ConversationNotificationStore
 import com.katoaapps.openminilaunch.platform.DeviceActions
 import com.katoaapps.openminilaunch.ui.settings.SettingsDestination
+import com.katoaapps.openminilaunch.ui.onboarding.HomeTourTarget
+import com.katoaapps.openminilaunch.ui.onboarding.homeTourTarget
 import com.katoaapps.openminilaunch.ui.theme.Dimens
 import com.katoaapps.openminilaunch.ui.theme.MinkFeatureColors
 import com.katoaapps.openminilaunch.ui.wellbeing.MinkHomeIcon
@@ -51,6 +53,7 @@ internal fun HomeHeader(
     horizontalPadding: Dp,
     actionSize: Dp,
     iconSize: Dp,
+    followHorizontalWindowOffset: Boolean,
     updateAvailable: Boolean,
     onMinkDay: () -> Unit,
     onUpdate: () -> Unit,
@@ -63,7 +66,12 @@ internal fun HomeHeader(
     val verticalPadding = if (qwertyHome) Dimens.dp0 else Dimens.dp8
     val groupGap = Dimens.dp6
     CompositionLocalProvider(LocalMinimumInteractiveComponentSize provides actionSize) {
-        val conversations = ConversationNotificationStore.currentConversations()
+        val conversations = ConversationNotificationStore.currentConversations(
+            useDemoData = store.demoModeEnabled,
+            demoScenario = store.demoScenario,
+            demoConversationState = store.demoConversationState,
+            demoSessionStartedAt = store.demoSessionStartedAt,
+        )
         val favoriteAttention = rememberPendingFavoriteAttention(
             store = store,
             conversations = conversations,
@@ -88,14 +96,16 @@ internal fun HomeHeader(
             }
         }
         CutoutAwareHomeHeaderLayout(
-            modifier = Modifier.fillMaxWidth().windowInsetsPadding(
-                WindowInsets.statusBars.only(WindowInsetsSides.Top),
-            ),
+            modifier = Modifier
+                .fillMaxWidth()
+                .windowInsetsPadding(WindowInsets.statusBars.only(WindowInsetsSides.Top))
+                .homeTourTarget(HomeTourTarget.HEADER),
             horizontalPaddingPx = with(density) { horizontalPadding.roundToPx() },
             verticalPaddingPx = with(density) { verticalPadding.roundToPx() },
             rowHeightPx = with(density) { actionSize.roundToPx() },
             minimumFlexibleWidthPx = with(density) { Dimens.dp64.roundToPx() },
             groupGapPx = with(density) { groupGap.roundToPx() },
+            followHorizontalWindowOffset = followHorizontalWindowOffset,
             leadingContent = {
                 Row(verticalAlignment = Alignment.CenterVertically) {
                     MinkHomeIcon(

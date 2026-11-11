@@ -29,7 +29,6 @@ import com.katoaapps.openminilaunch.platform.mediaReadPermissions
 import com.katoaapps.openminilaunch.platform.supportsDirectCalls
 import com.katoaapps.openminilaunch.platform.supportsDirectSms
 import com.katoaapps.openminilaunch.ui.wellbeing.rememberMinkAppAccessState
-import com.katoaapps.openminilaunch.ui.keyboard.LauncherKeyboard
 
 import android.Manifest
 import android.content.Intent
@@ -97,7 +96,9 @@ internal fun MagicBoxContent(
         configuration.keyboard,
         configuration.hardKeyboardHidden,
     )
-    val useNativeLauncherKeyboard = keyboardInputEnabled && !useDirectHardwareInput
+    val useMinkKeyboard = store.launcherKeyboardPreferences.useMinkKeyboard &&
+        keyboardInputEnabled &&
+        !useDirectHardwareInput
     val shouldAutoOpenOnHome = shouldAutoOpenSoftwareKeyboard(
         autoOpenSoftwareKeyboardOnHome,
         configuration.keyboard,
@@ -112,10 +113,10 @@ internal fun MagicBoxContent(
     var text by editorSession.textState
     val initialHardwareKeyCorrection = remember { InitialHardwareKeyCorrection() }
     var selectedRecipient by editorSession.selectedRecipientState
-    var lockedPrefix by editorSession.lockedPrefixState
+    var route by editorSession.routeState
     var expanded by editorSession.expandedState
     var showKeyboardWhileCollapsed by remember {
-        mutableStateOf(shouldAutoOpenOnHome && !useNativeLauncherKeyboard && !initiallyExpanded)
+        mutableStateOf(shouldAutoOpenOnHome && !useMinkKeyboard && !initiallyExpanded)
     }
     var hasContacts by remember {
         mutableStateOf(ContextCompat.checkSelfPermission(context, Manifest.permission.READ_CONTACTS) == PackageManager.PERMISSION_GRANTED)
@@ -201,7 +202,7 @@ internal fun MagicBoxContent(
     var textFieldPlaced by remember { mutableStateOf(false) }
     var armedTargetPlaced by remember { mutableStateOf(false) }
 
-    fun refocus(showSoftwareKeyboard: Boolean = !useNativeLauncherKeyboard) {
+    fun refocus(showSoftwareKeyboard: Boolean = !useMinkKeyboard) {
         focusRequestShowsKeyboard = showSoftwareKeyboard
         focusRequestSerial += 1
     }
@@ -262,11 +263,10 @@ internal fun MagicBoxContent(
         }
     }
     val magicResultsScroll = rememberScrollState()
-    val parsedInput = parseMagicBoxInput(text.text, lockedPrefix)
-    val prefix = parsedInput.prefix
+    val parsedInput = parseMagicBoxInput(text.text, route)
     val searchTerm = parsedInput.searchTerm
     val calendarLanguageTag = SupportedAppLanguages.activeLanguageTag(context)
-    val calendarPayload = if (prefix == '+') text.text.drop(1).trim() else ""
+    val calendarPayload = text.text.trim().takeIf { route == MagicBoxRoute.EVENT }.orEmpty()
     val calendarParseResult = remember(calendarPayload, calendarLanguageTag) {
         calendarPayload.takeIf(String::isNotBlank)?.let { payload ->
             CalendarPhraseEngine.parse(
@@ -278,24 +278,24 @@ internal fun MagicBoxContent(
             )
         }
     }
-    val canSearchContacts = hasContacts || store.demoSearchDataEnabled
-    val contactResults = remember(prefix, searchTerm, canSearchContacts, store.demoSearchDataEnabled) {
+    val canSearchContacts = hasContacts || store.demoModeEnabled
+    val contactResults = remember(route, searchTerm, canSearchContacts, store.demoModeEnabled) {
         if (
-            prefix in listOf('@', '#') &&
+            (route == MagicBoxRoute.MESSAGE || route == MagicBoxRoute.CALL) &&
             canSearchContacts &&
             selectedRecipient == null
         ) {
-            actions.searchContacts(searchTerm, useDemoData = store.demoSearchDataEnabled).take(5)
+            actions.searchContacts(searchTerm, useDemoData = store.demoModeEnabled).take(5)
         } else emptyList()
     }
     val recentConversations = rememberRecentConversationResults(
-        prefix = prefix,
+        route = route,
         query = searchTerm,
         hasSelectedRecipient = selectedRecipient != null,
         launcherShortcutsRevision = launcherShortcutsRevision,
         sendAutomatically = store.sendMessagesAutomatically,
         preferredMessagingPackage = store.preferredMessagingPackage,
-        demoModeEnabled = store.demoSearchDataEnabled,
+        demoModeEnabled = store.demoModeEnabled,
         actions = actions,
     )
     val visibleRecentConversations = remember(recentConversations, effectiveAppAccessState) {
@@ -308,15 +308,18 @@ internal fun MagicBoxContent(
     val alwaysVisibleTargetKeys = store.pinnedLauncherSelectionKeys
     val appSearchMatcher = remember(actions) { AppSearchMatcher(actions::appLabel) }
     val appResults = remember(
-        prefix,
+        route,
         searchTerm,
+        store.demoModeEnabled,
         launcherAppsRevision,
         launcherShortcutsRevision,
         alwaysVisibleTargetKeys,
         store.includeAppShortcutsInDiscovery,
         appSearchMatcher,
     ) {
-        if (prefix == '?' && searchTerm.isNotBlank()) {
+        if (store.demoModeEnabled) {
+            emptyList()
+        } else if (route == MagicBoxRoute.APP && searchTerm.isNotBlank()) {
             val targets = launcherLibraryTargets(
                 apps = actions.installedApps(),
                 alwaysVisibleTargetKeys = alwaysVisibleTargetKeys,
@@ -335,12 +338,12 @@ internal fun MagicBoxContent(
         }
     }
     val plainQuery = parsedInput.plainQuery
-    val aiQuery = if (prefix == MAGIC_AI_PREFIX) text.text.drop(1).trim() else plainQuery
-    val noteMode = expanded && prefix == MAGIC_NOTE_PREFIX
-    val hasTextDraft = expanded && hasMagicBoxDraftText(text.text, lockedPrefix)
+    val aiQuery = if (route == MagicBoxRoute.ASSISTANT) text.text.trim() else plainQuery
+    val noteMode = expanded && route == MagicBoxRoute.NOTE
+    val hasTextDraft = expanded && hasMagicBoxDraftText(text.text)
     val hasNoteDraft = noteMode && hasTextDraft
     val hasMessageDraft = expanded &&
-        lockedPrefix == '@' &&
+        route == MagicBoxRoute.MESSAGE &&
         selectedRecipient != null &&
         text.text.isNotBlank()
     val fileSearchState = rememberMagicFileSearchState(
@@ -350,12 +353,12 @@ internal fun MagicBoxContent(
         hasMediaAccess = hasMediaAccess,
         resultsScroll = magicResultsScroll,
     )
-    val actionVisuals = when (prefix) {
-        '@' -> MagicActionVisuals(MagicTextColor, Icons.AutoMirrored.Filled.Send)
-        '#' -> MagicActionVisuals(MagicCallColor, Icons.Default.Phone)
-        '-' -> MagicActionVisuals(MagicTodoColor, Icons.Default.Checklist)
-        MAGIC_NOTE_PREFIX -> MagicActionVisuals(MagicNoteColor, Icons.AutoMirrored.Filled.NoteAdd)
-        '+' -> if (
+    val actionVisuals = when (route) {
+        MagicBoxRoute.MESSAGE -> MagicActionVisuals(MagicTextColor, Icons.AutoMirrored.Filled.Send)
+        MagicBoxRoute.CALL -> MagicActionVisuals(MagicCallColor, Icons.Default.Phone)
+        MagicBoxRoute.TODO -> MagicActionVisuals(MagicTodoColor, Icons.Default.Checklist)
+        MagicBoxRoute.NOTE -> MagicActionVisuals(MagicNoteColor, Icons.AutoMirrored.Filled.NoteAdd)
+        MagicBoxRoute.EVENT -> if (
             calendarParseResult is CalendarParseResult.NeedsReview ||
             calendarParseResult is CalendarParseResult.Invalid
         ) {
@@ -363,16 +366,16 @@ internal fun MagicBoxContent(
         } else {
             MagicActionVisuals(MagicEventColor, Icons.Default.Event)
         }
-        '?' -> MagicActionVisuals(MagicAppColor, Icons.Default.Apps)
-        MAGIC_AI_PREFIX -> MagicActionVisuals(MinkBlack, Icons.Default.AutoAwesome)
-        else -> MagicActionVisuals(
+        MagicBoxRoute.APP -> MagicActionVisuals(MagicAppColor, Icons.Default.Apps)
+        MagicBoxRoute.ASSISTANT -> MagicActionVisuals(MinkBlack, Icons.Default.AutoAwesome)
+        MagicBoxRoute.SEARCH -> MagicActionVisuals(
             MaterialTheme.colorScheme.primary,
             Icons.Default.Search,
         )
     }
-    val actionContentColor = when (prefix) {
-        '-' -> LightInk
-        null -> MaterialTheme.colorScheme.onPrimary
+    val actionContentColor = when (route) {
+        MagicBoxRoute.TODO -> LightInk
+        MagicBoxRoute.SEARCH -> MaterialTheme.colorScheme.onPrimary
         else -> MinkWhite
     }
     fun clearCommand() {
@@ -380,15 +383,59 @@ internal fun MagicBoxContent(
         initialHardwareKeyCorrection.clear()
         text = TextFieldValue()
         selectedRecipient = null
-        lockedPrefix = null
+        route = MagicBoxRoute.SEARCH
         pendingCalendarReview = null
+    }
+
+    fun activateRoute(
+        nextRoute: MagicBoxRoute,
+        showSoftwareKeyboard: Boolean = !useMinkKeyboard,
+    ) {
+        clearCommand()
+        route = nextRoute
+        expanded = true
+        refocus(showSoftwareKeyboard = showSoftwareKeyboard)
+    }
+
+    fun updateEditorValue(value: TextFieldValue, correctHardwareInput: Boolean) {
+        val correctedValue = if (correctHardwareInput) {
+            initialHardwareKeyCorrection.correct(value)
+        } else {
+            value
+        }
+        val trigger = consumeMagicBoxTrigger(
+            previousText = text.text,
+            updatedText = correctedValue.text,
+            routeSelectionEnabled = selectedRecipient == null,
+        )
+        if (trigger != null) {
+            initialHardwareKeyCorrection.clear()
+            route = trigger.route
+            selectedRecipient = null
+            val selectionStart = (correctedValue.selection.start - 1)
+                .coerceIn(0, trigger.content.length)
+            val selectionEnd = (correctedValue.selection.end - 1)
+                .coerceIn(0, trigger.content.length)
+            text = TextFieldValue(
+                text = trigger.content,
+                selection = TextRange(selectionStart, selectionEnd),
+            )
+        } else {
+            text = correctedValue
+        }
+        if (!expanded && correctedValue.text.isNotEmpty()) expanded = true
     }
 
     fun beginCollapsedHardwareInput(typedText: String, keyCode: Int) {
         if (expanded) return
         clearCommand()
-        initialHardwareKeyCorrection.begin(typedText, keyCode)
-        text = TextFieldValue(typedText, selection = TextRange(typedText.length))
+        val hotkeyRoute = typedText.singleOrNull()?.let(MagicBoxRoute::fromTrigger)
+        if (hotkeyRoute != null) {
+            route = hotkeyRoute
+        } else {
+            initialHardwareKeyCorrection.begin(typedText, keyCode)
+            text = TextFieldValue(typedText, selection = TextRange(typedText.length))
+        }
         expanded = true
         refocus(showSoftwareKeyboard = false)
     }
@@ -529,11 +576,12 @@ internal fun MagicBoxContent(
     }
 
     fun selectContact(contact: ContactResult) {
-        if (prefix == '#') {
+        if (store.demoModeEnabled && route == MagicBoxRoute.CALL) {
+            Toast.makeText(context, R.string.demo_preview_action, Toast.LENGTH_SHORT).show()
+        } else if (route == MagicBoxRoute.CALL) {
             callFlow.requestConfirmation(contact.toCommunicationRecipient())
             collapseForDialog()
         } else {
-            lockedPrefix = prefix
             selectedRecipient = SelectedMessageRecipient.AddressRecipient(
                 contact.toCommunicationRecipient(),
             )
@@ -549,13 +597,13 @@ internal fun MagicBoxContent(
             canSearchContacts = canSearchContacts,
             actions = actions,
             onShortcutDraft = { shortcut ->
-                lockedPrefix = '@'
+                route = MagicBoxRoute.MESSAGE
                 selectedRecipient = SelectedMessageRecipient.ConversationRecipient(shortcut)
                 text = TextFieldValue()
                 refocus()
             },
             onDraftRecipient = { contact, packageName ->
-                lockedPrefix = '@'
+                route = MagicBoxRoute.MESSAGE
                 selectedRecipient = SelectedMessageRecipient.AddressRecipient(
                     recipient = contact.toCommunicationRecipient(),
                     providerPackage = packageName,
@@ -568,7 +616,9 @@ internal fun MagicBoxContent(
     }
 
     fun selectApp(app: LauncherTarget) {
-        if (app is LauncherAppTarget && appBubbleFlow.opensAutomatically(app)) {
+        if (store.demoModeEnabled) {
+            Toast.makeText(context, R.string.demo_preview_action, Toast.LENGTH_SHORT).show()
+        } else if (app is LauncherAppTarget && appBubbleFlow.opensAutomatically(app)) {
             appBubbleFlow.launchInBubble(app)
         } else if (actions.launchLauncherTarget(app)) {
             store.addSearchQuery("?${app.label}")
@@ -584,43 +634,54 @@ internal fun MagicBoxContent(
     }
 
     fun showAppActions(target: LauncherAppTarget) {
+        if (store.demoModeEnabled) {
+            Toast.makeText(context, R.string.demo_preview_action, Toast.LENGTH_SHORT).show()
+            return
+        }
         keyboard?.hide()
         appBubbleFlow.showActions(target)
     }
 
     fun selectFirstCommandResult(): Boolean {
-        when (prefix) {
-            '@', '#' -> {
+        when (route) {
+            MagicBoxRoute.MESSAGE,
+            MagicBoxRoute.CALL,
+            -> {
                 contactResults.firstOrNull()?.let {
                     selectContact(it)
                     return true
                 }
-                if (prefix == '@') {
+                if (route == MagicBoxRoute.MESSAGE) {
                     visibleRecentConversations.firstOrNull()?.let {
                         selectRecentConversation(it)
                         return true
                     }
                 }
             }
-            '?' -> visibleAppResults.firstOrNull()?.let {
+            MagicBoxRoute.APP -> visibleAppResults.firstOrNull()?.let {
                 selectApp(it)
                 return true
             }
+            else -> Unit
         }
         return false
     }
 
     fun submit() {
-        if (onOpenTodos != null && isOpenTodosCommand(text.text, lockedPrefix)) {
+        if (onOpenTodos != null && isOpenTodosCommand(text.text, route)) {
             openTodos()
             return
         }
+        if (store.demoModeEnabled && route != MagicBoxRoute.TODO) {
+            Toast.makeText(context, R.string.demo_preview_action, Toast.LENGTH_SHORT).show()
+            return
+        }
         if (selectFirstCommandResult()) return
-        if (prefix == MAGIC_AI_PREFIX) {
+        if (route == MagicBoxRoute.ASSISTANT) {
             submitAi()
             return
         }
-        if (prefix == '+') {
+        if (route == MagicBoxRoute.EVENT) {
             when (val result = calendarParseResult) {
                 is CalendarParseResult.Success,
                 is CalendarParseResult.NoTemporalPhrase -> {
@@ -636,8 +697,7 @@ internal fun MagicBoxContent(
             return
         }
         dispatchMagicCommand(
-            prefix = prefix,
-            lockedPrefix = lockedPrefix,
+            route = route,
             rawText = text.text,
             selectedRecipient = selectedRecipient,
             store = store,
@@ -691,6 +751,7 @@ internal fun MagicBoxContent(
     // The Home-keyboard preference still focuses the real field for touch-first devices.
     LaunchedEffect(
         keyboardInputEnabled,
+        useMinkKeyboard,
         expanded,
         smsFlow.sentConfirmationVisible,
         showKeyboardWhileCollapsed,
@@ -705,7 +766,7 @@ internal fun MagicBoxContent(
                 withFrameNanos { }
                 focusRequester.requestFocus()
                 withFrameNanos { }
-                if (!useNativeLauncherKeyboard) keyboard?.show() else keyboard?.hide()
+                if (!useMinkKeyboard) keyboard?.show() else keyboard?.hide()
             } else {
                 while (!armedTargetPlaced) withFrameNanos { }
                 withFrameNanos { }
@@ -716,9 +777,14 @@ internal fun MagicBoxContent(
             armedTargetPlaced = false
             if (expanded) showKeyboardWhileCollapsed = false
             if (expanded && focusRequestSerial == 0) {
-                if (useNativeLauncherKeyboard) {
+                if (useMinkKeyboard) {
+                    // Mink's keyboard writes directly to this editor, so the field still needs
+                    // focus for an immediate cursor and selection even though Android's IME is
+                    // intentionally blocked by MagicInputField.
+                    while (!textFieldPlaced) withFrameNanos { }
+                    withFrameNanos { }
+                    focusRequester.requestFocus()
                     keyboard?.hide()
-                    focusManager.clearFocus(force = true)
                 } else {
                     while (!textFieldPlaced) withFrameNanos { }
                     withFrameNanos { }
@@ -734,14 +800,15 @@ internal fun MagicBoxContent(
         }
     }
 
-    LaunchedEffect(homeRequestToken, shouldAutoOpenOnHome, keyboardInputEnabled) {
+    LaunchedEffect(homeRequestToken, shouldAutoOpenOnHome, keyboardInputEnabled, useMinkKeyboard) {
         if (homeRequestToken > 0 && shouldAutoOpenOnHome && keyboardInputEnabled &&
-            !expanded && text.text.isBlank() && lockedPrefix == null && selectedRecipient == null
+            !expanded && text.text.isBlank() &&
+            route == MagicBoxRoute.SEARCH && selectedRecipient == null
         ) {
             // Android can redeliver the launcher's Home intent while a fold changes displays.
             // Re-arm an idle field, but never erase an expanded draft as a side effect.
             clearCommand()
-            if (useNativeLauncherKeyboard) {
+            if (useMinkKeyboard) {
                 keyboard?.hide()
             } else {
                 showKeyboardWhileCollapsed = true
@@ -749,15 +816,17 @@ internal fun MagicBoxContent(
         }
     }
 
-    LaunchedEffect(shouldAutoOpenOnHome) {
-        showKeyboardWhileCollapsed = shouldAutoOpenOnHome && !useNativeLauncherKeyboard && !expanded
+    LaunchedEffect(shouldAutoOpenOnHome, useMinkKeyboard) {
+        showKeyboardWhileCollapsed = shouldAutoOpenOnHome && !useMinkKeyboard && !expanded
     }
 
     LaunchedEffect(focusRequestSerial) {
         if (focusRequestSerial > 0) {
-            if (useNativeLauncherKeyboard) {
+            if (useMinkKeyboard) {
+                while (!textFieldPlaced) withFrameNanos { }
+                withFrameNanos { }
+                focusRequester.requestFocus()
                 keyboard?.hide()
-                focusManager.clearFocus(force = true)
             } else {
                 // TextField focus can request bring-into-view. Wait until its newly docked parent
                 // has completed placement before requesting focus or showing the IME.
@@ -772,32 +841,34 @@ internal fun MagicBoxContent(
         }
     }
 
-    MagicHardwareCommandHotkeyEffect(
+    MagicHardwareHotkeyEffect(
         enabled = captureActivityCommandHotkeys &&
             keyboardInputEnabled &&
             !expanded &&
             !smsFlow.sentConfirmationVisible &&
             !todoCompletionPending,
-        onCommand = ::beginCollapsedHardwareInput,
+        onHotkey = ::beginCollapsedHardwareInput,
     )
 
+    val resolvedLauncherKeyboardHeight = resolveLauncherKeyboardHeightDp(
+        preferences = store.launcherKeyboardPreferences,
+        screenWidthDp = configuration.screenWidthDp,
+        screenHeightDp = configuration.screenHeightDp,
+    )
     val launcherKeyboardPreferences = store.launcherKeyboardPreferences.copy(
-        heightDp = store.launcherKeyboardPreferences.heightDp.coerceAtMost(
+        heightDp = resolvedLauncherKeyboardHeight.coerceAtMost(
             (configuration.screenHeightDp - 168).coerceAtLeast(168).toFloat(),
         ),
     )
     val onLauncherKeyboardValueChange: (TextFieldValue) -> Unit = { value ->
-        text = value
-        if (!noteMode && lockedPrefix == null && value.text.firstOrNull() != prefix) {
-            selectedRecipient = null
-        }
+        updateEditorValue(value, correctHardwareInput = false)
     }
-    val showDockedLauncherKeyboard = useNativeLauncherKeyboard &&
+    val showDockedLauncherKeyboard = useMinkKeyboard &&
         shouldAutoOpenOnHome &&
         !expanded &&
         !smsFlow.sentConfirmationVisible &&
         !todoCompletionPending
-    val launcherKeyboardNavigationBottom = if (useNativeLauncherKeyboard) {
+    val launcherKeyboardNavigationBottom = if (useMinkKeyboard) {
         WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()
     } else {
         Dimens.dp0
@@ -817,7 +888,7 @@ internal fun MagicBoxContent(
                 .matchParentSize()
                 .statusBarsPadding()
                 .then(
-                    if (!useNativeLauncherKeyboard) {
+                    if (!useMinkKeyboard) {
                         Modifier.imePadding()
                     } else {
                         Modifier
@@ -833,7 +904,7 @@ internal fun MagicBoxContent(
                         start = Dimens.dp18,
                         top = Dimens.dp18,
                         end = Dimens.dp18,
-                        bottom = if (expanded && useNativeLauncherKeyboard) {
+                        bottom = if (expanded && useMinkKeyboard) {
                             Dimens.dp0
                         } else {
                             Dimens.dp18
@@ -847,8 +918,7 @@ internal fun MagicBoxContent(
                         store = store,
                         actions = actions,
                         rawText = text.text,
-                        lockedPrefix = lockedPrefix,
-                        prefix = prefix,
+                        route = route,
                         launcherAppsRevision = launcherAppsRevision,
                         launcherShortcutsRevision = launcherShortcutsRevision,
                         plainQuery = plainQuery,
@@ -860,7 +930,7 @@ internal fun MagicBoxContent(
                         contactResults = contactResults,
                         recentConversations = visibleRecentConversations,
                         forcedRecipient = searchTerm.takeIf {
-                            prefix in listOf('@', '#') &&
+                            (route == MagicBoxRoute.MESSAGE || route == MagicBoxRoute.CALL) &&
                                 it.isNotBlank() &&
                                 selectedRecipient == null
                         },
@@ -869,28 +939,57 @@ internal fun MagicBoxContent(
                         showClearMessage = hasMessageDraft,
                         scrollState = magicResultsScroll,
                         onSelectHistory = { query ->
-                            text = TextFieldValue(query, selection = TextRange(query.length))
+                            updateEditorValue(
+                                TextFieldValue(query, selection = TextRange(query.length)),
+                                correctHardwareInput = false,
+                            )
                             refocus()
                         },
                         onOpenFile = { file ->
-                            store.addSearchQuery(plainQuery)
-                            actions.openFile(file)
-                            dismiss()
+                            if (store.demoModeEnabled) {
+                                Toast.makeText(
+                                    context,
+                                    R.string.demo_preview_action,
+                                    Toast.LENGTH_SHORT,
+                                ).show()
+                            } else {
+                                store.addSearchQuery(plainQuery)
+                                actions.openFile(file)
+                                dismiss()
+                            }
                         },
                         onRequestMedia = { mediaPermissionLauncher.launch(mediaReadPermissions()) },
                         onRequestFolder = { showFileScopeChoice = true },
                         onSubmitWeb = ::submit,
-                        onSubmitAi = ::submitAi,
+                        onSubmitAi = {
+                            if (store.demoModeEnabled) {
+                                Toast.makeText(
+                                    context,
+                                    R.string.demo_preview_action,
+                                    Toast.LENGTH_SHORT,
+                                ).show()
+                            } else {
+                                submitAi()
+                            }
+                        },
                         onOpenTodos = onOpenTodos?.let { { openTodos() } },
                         onSelectContact = ::selectContact,
                         onSelectRecentConversation = ::selectRecentConversation,
                         onSelectForcedRecipient = { identifier ->
+                            if (store.demoModeEnabled && route == MagicBoxRoute.CALL) {
+                                Toast.makeText(
+                                    context,
+                                    R.string.demo_preview_action,
+                                    Toast.LENGTH_SHORT,
+                                ).show()
+                                return@MagicResultsPanel
+                            }
                             val recipient = userEnteredRecipient(identifier)
-                            if (prefix == '#') {
+                            if (route == MagicBoxRoute.CALL) {
                                 callFlow.requestConfirmation(recipient)
                                 collapseForDialog()
                             } else {
-                                lockedPrefix = '@'
+                                route = MagicBoxRoute.MESSAGE
                                 selectedRecipient = SelectedMessageRecipient.AddressRecipient(
                                     recipient = recipient,
                                     providerPackage = automaticMessagingPackage(
@@ -917,7 +1016,10 @@ internal fun MagicBoxContent(
                 }
             }
 
-            if (!noteMode && expanded && text.text.isBlank() && lockedPrefix == null) {
+            if (
+                !noteMode && expanded && text.text.isBlank() &&
+                route == MagicBoxRoute.SEARCH
+            ) {
                 if (appBubbleHost == MagicAppBubbleHost.ASSISTANT) {
                     QuickAppsPanel(
                         store = store,
@@ -926,10 +1028,8 @@ internal fun MagicBoxContent(
                         onSelect = ::selectApp,
                     )
                 } else {
-                    MagicBoxLegend(prefix, enabled = true) { key ->
-                        clearCommand()
-                        text = TextFieldValue(key.toString(), selection = TextRange(1))
-                        refocus()
+                    MagicBoxLegend(route.trigger, enabled = true) { key ->
+                        MagicBoxRoute.fromTrigger(key)?.let(::activateRoute)
                     }
                 }
             }
@@ -960,22 +1060,15 @@ internal fun MagicBoxContent(
                         )
                     }
                 },
-                prefix = prefix,
-                acceptPlatformTextInput = !useNativeLauncherKeyboard,
+                route = route,
+                acceptPlatformTextInput = !useMinkKeyboard,
                 actionVisuals = actionVisuals,
                 actionContentColor = actionContentColor,
                 focusRequester = focusRequester,
                 interactionSource = inputSurfaceInteractionSource,
-                onRefocus = { refocus(showSoftwareKeyboard = !useNativeLauncherKeyboard) },
+                onRefocus = { refocus(showSoftwareKeyboard = !useMinkKeyboard) },
                 onTextChange = { value ->
-                    val correctedValue = initialHardwareKeyCorrection.correct(value)
-                    text = correctedValue
-                    if (!expanded && correctedValue.text.isNotEmpty()) {
-                        expanded = true
-                    }
-                    if (!noteMode && lockedPrefix == null && correctedValue.text.firstOrNull() != prefix) {
-                        selectedRecipient = null
-                    }
+                    updateEditorValue(value, correctHardwareInput = true)
                 },
                 onPlaced = { textFieldPlaced = true },
                 onSubmit = ::submit,
@@ -991,7 +1084,7 @@ internal fun MagicBoxContent(
                 ),
             )
 
-                if (expanded && useNativeLauncherKeyboard) {
+                if (expanded && useMinkKeyboard) {
                     Spacer(
                         Modifier.height(
                             launcherKeyboardTotalHeight + Dimens.dp8,
@@ -1000,20 +1093,6 @@ internal fun MagicBoxContent(
                 }
             }
 
-            if (expanded && useNativeLauncherKeyboard) {
-                LauncherKeyboard(
-                    value = text,
-                    onValueChange = onLauncherKeyboardValueChange,
-                    preferences = launcherKeyboardPreferences,
-                    themePrimaryArgb = store.effectiveHomePanelColorArgb,
-                    themeSecondaryArgb = store.effectiveThemeSecondaryColorArgb,
-                    onSubmit = ::submit,
-                    multiline = noteMode,
-                    modifier = Modifier.align(Alignment.BottomCenter).fillMaxWidth(),
-                    onOpenSettings = onOpenKeyboardSettings,
-                    extendBehindNavigationBar = true,
-                )
-            }
         }
 
         if (!expanded && !smsFlow.sentConfirmationVisible && !todoCompletionPending) {
@@ -1045,38 +1124,37 @@ internal fun MagicBoxContent(
                 onOpen = {
                     clearCommand()
                     expanded = true
-                    refocus(showSoftwareKeyboard = !useNativeLauncherKeyboard)
+                    refocus(showSoftwareKeyboard = !useMinkKeyboard)
                 },
                 onOpenTotalScreen = onOpenTotalScreen,
             )
 
-            if (showDockedLauncherKeyboard) {
-                Box(
-                    modifier = Modifier
-                        .align(Alignment.BottomCenter)
-                        .fillMaxWidth(),
-                ) {
-                    LauncherKeyboard(
-                        value = text,
-                        onValueChange = { value ->
-                            val changed = value.text != text.text
-                            onLauncherKeyboardValueChange(value)
-                            if (changed) {
-                                expanded = true
-                            }
-                        },
-                        preferences = launcherKeyboardPreferences,
-                        themePrimaryArgb = store.effectiveHomePanelColorArgb,
-                        themeSecondaryArgb = store.effectiveThemeSecondaryColorArgb,
-                        onSubmit = ::submit,
-                        multiline = false,
-                        modifier = Modifier.fillMaxWidth(),
-                        onOpenSettings = onOpenKeyboardSettings,
-                        extendBehindNavigationBar = true,
-                    )
-                }
-            }
         }
+
+        MagicLauncherKeyboardHost(
+            visible = useMinkKeyboard && (expanded || showDockedLauncherKeyboard),
+            value = text,
+            onValueChange = { value ->
+                val changed = value.text != text.text
+                onLauncherKeyboardValueChange(value)
+                if (!expanded && changed) {
+                    expanded = true
+                    refocus(showSoftwareKeyboard = false)
+                }
+            },
+            preferences = launcherKeyboardPreferences,
+            themePrimaryArgb = store.effectiveHomePanelColorArgb,
+            themeSecondaryArgb = store.effectiveThemeSecondaryColorArgb,
+            onHotkey = { trigger ->
+                MagicBoxRoute.fromTrigger(trigger)?.let { nextRoute ->
+                    activateRoute(nextRoute, showSoftwareKeyboard = false)
+                }
+            },
+            onSubmit = ::submit,
+            multiline = expanded && noteMode,
+            onOpenSettings = onOpenKeyboardSettings,
+            modifier = Modifier.align(Alignment.BottomCenter),
+        )
 
         SmsSentConfirmation(
             visible = smsFlow.sentConfirmationVisible,

@@ -73,6 +73,9 @@ internal fun FavoriteAndroidContactActionDialog(
     onAttentionColor: (Int?) -> Unit,
     onOpenContact: () -> Unit,
     onDismiss: () -> Unit,
+    showContactManagement: Boolean = true,
+    showActionRoutes: Boolean = true,
+    showPrimaryActions: Boolean = true,
 ) {
     val availablePhones = contact.uniquePhones()
     Dialog(onDismissRequest = onDismiss, properties = MinkDialogDefaults.properties) {
@@ -103,27 +106,31 @@ internal fun FavoriteAndroidContactActionDialog(
                         modifier = Modifier.padding(top = Dimens.dp14),
                     )
                 }
-                ManageContactRow(
-                    onClick = onOpenContact,
-                    modifier = Modifier.padding(top = Dimens.dp18),
-                )
+                if (showContactManagement) {
+                    ManageContactRow(
+                        onClick = onOpenContact,
+                        modifier = Modifier.padding(top = Dimens.dp18),
+                    )
+                }
                 ContactActionAppsSection(
                     routes = routes,
                     messagingOptions = messagingOptions,
                     callingOptions = callingOptions,
                     attentionColorArgb = attentionColorArgb,
-                    showActionRoutes = availablePhones.isNotEmpty(),
+                    showActionRoutes = showActionRoutes && availablePhones.isNotEmpty(),
                     onMessageRoute = onMessageRoute,
                     onCallRoute = onCallRoute,
                     onAttentionColor = onAttentionColor,
                     modifier = Modifier.padding(top = Dimens.dp10),
                 )
-                FavoriteContactPrimaryActions(
-                    enabled = availablePhones.isNotEmpty(),
-                    onCall = { onAction(FavoriteContactAction.CALL) },
-                    onMessage = { onAction(FavoriteContactAction.MESSAGE) },
-                    modifier = Modifier.padding(top = Dimens.dp18),
-                )
+                if (showPrimaryActions) {
+                    FavoriteContactPrimaryActions(
+                        enabled = availablePhones.isNotEmpty(),
+                        onCall = { onAction(FavoriteContactAction.CALL) },
+                        onMessage = { onAction(FavoriteContactAction.MESSAGE) },
+                        modifier = Modifier.padding(top = Dimens.dp18),
+                    )
+                }
             }
         }
     }

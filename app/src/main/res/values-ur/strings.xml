@@ -639,7 +639,6 @@
     <string name="demo_search_data_enabled">ڈیمو ہوم، رابطے، فائلیں، اور بات چیت کو فعال کر دیا گیا۔</string>
     <string name="demo_search_data_disabled">ڈیمو ہوم، رابطے، فائلیں، اور بات چیت کو غیر فعال کر دیا گیا ہے۔</string>
     <string name="demo_home_profile">ڈیمو ہوم پروفائل</string>
-    <string name="demo_home_profile_picker_description">اسکرین شاٹس اور ریکارڈنگز کے لیے دوبارہ قابل گھر منظر کا انتخاب کریں۔</string>
     <string name="preview_update_alert">پیش نظارہ اپ ڈیٹ الرٹ</string>
     <string name="preview_update_alert_description">اپ ڈیٹ یا یاد دہانی کے ڈیٹا کو تبدیل کیے بغیر پروڈکشن اپ ڈیٹ کارڈ کھولیں۔</string>
     <string name="demo_mode_disable">ڈیمو موڈ کو آف کریں۔</string>
@@ -1060,4 +1059,28 @@
     <string name="sensitive_backup_export_title">قابلِ مطالعہ رابطے کی تفصیلات برآمد کریں؟</string>
     <string name="favorite_contacts_backup_import_description">اس بیک اپ میں Mink میں بنائے گئے پسندیدہ رابطے شامل کیے جائیں گے اور اس ڈیوائس پر پہلے سے موجود پسندیدہ رابطے حذف نہیں ہوں گے۔</string>
     <string name="favorite_attention_colors_backup_import_description">اس بیک اپ میں پسندیدہ رابطوں کے توجہ دلانے والے رنگ اس ڈیوائس پر پہلے سے موجود رنگ صاف کیے بغیر ضم کیے جائیں گے۔</string>
+    <string name="demo_studio">ڈیمو اسٹوڈیو</string>
+    <string name="demo_studio_description">اسکرین شاٹس اور ریکارڈنگز کے لیے ایک قابل تکرار فرضی منظر بنائیں۔</string>
+    <string name="demo_scenario">منظرنامہ</string>
+    <string name="demo_scenario_product_tour">پروڈکٹ ٹور</string>
+    <string name="demo_scenario_product_tour_description">ہوم، تلاش، فائلوں اور گفتگو کا جامع جائزہ</string>
+    <string name="demo_scenario_pet_mink">پالتو منک کی کہانی</string>
+    <string name="demo_scenario_pet_mink_description">May، Gary اور کیلیفورنیا میں پالتو منک کی تلاش</string>
+    <string name="demo_scenario_workday">کام کا دن</string>
+    <string name="demo_scenario_workday_description">پروجیکٹ کے کام، ساتھی اور کام کی فائلیں</string>
+    <string name="demo_visual_profile">بصری پروفائل</string>
+    <string name="demo_conversation_state">گفتگو کی حالت</string>
+    <string name="demo_conversation_state_quiet">خاموش</string>
+    <string name="demo_conversation_state_one_favorite">ایک پسندیدہ</string>
+    <string name="demo_conversation_state_active_inbox">فعال ان باکس</string>
+    <string name="demo_capture_moment">کیپچر منظر</string>
+    <string name="demo_capture_moment_home">ہوم</string>
+    <string name="demo_capture_moment_quick_apps">کوئیک ایپس</string>
+    <string name="demo_capture_moment_conversations">گفتگو</string>
+    <string name="demo_capture_moment_magic_box">Magic Box تلاش</string>
+    <string name="demo_preview_action">صرف ڈیمو پیش منظر</string>
+    <string name="demo_reset_scene">موجودہ منظر ری سیٹ کریں</string>
+    <string name="demo_reset_scene_description">اس منظرنامے کے اصل کام، بنائی گئی فائلیں اور گفتگو کے جوابات بحال کریں۔</string>
+    <string name="demo_scene_reset">ڈیمو منظر ری سیٹ ہو گیا</string>
+    <string name="could_not_rename_favorite">اس پسندیدہ کا نام تبدیل نہیں کیا جا سکا۔</string>
 </resources>

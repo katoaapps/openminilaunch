@@ -15,6 +15,7 @@ import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.layout.positionInWindow
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalView
+import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.IntRect
 import androidx.compose.ui.unit.LayoutDirection
 import androidx.core.view.ViewCompat
@@ -173,34 +174,32 @@ internal fun CutoutAwareHomeHeaderLayout(
     rowHeightPx: Int,
     minimumFlexibleWidthPx: Int,
     groupGapPx: Int,
+    followHorizontalWindowOffset: Boolean,
     leadingContent: @Composable () -> Unit,
     dateContent: @Composable () -> Unit,
     timeContent: @Composable () -> Unit,
     trailingContent: @Composable () -> Unit,
 ) {
     val windowCutouts = rememberWindowCutoutBounds()
-    var positionInWindow by remember { mutableStateOf(Offset.Zero) }
+    var headerOriginInWindow by remember(followHorizontalWindowOffset) {
+        mutableStateOf(IntOffset.Zero)
+    }
 
     SubcomposeLayout(
-        modifier = modifier.onGloballyPositioned { positionInWindow = it.positionInWindow() },
+        modifier = modifier.onGloballyPositioned { coordinates ->
+            headerOriginInWindow = resolveHomeHeaderOriginInWindow(
+                positionInWindow = coordinates.positionInWindow(),
+                followHorizontalWindowOffset = followHorizontalWindowOffset,
+            )
+        },
     ) { constraints ->
         val width = constraints.maxWidth
-        val physicalCutouts = windowCutouts.map { rect ->
-            IntRect(
-                left = rect.left - positionInWindow.x.roundToInt(),
-                top = rect.top - positionInWindow.y.roundToInt(),
-                right = rect.right - positionInWindow.x.roundToInt(),
-                bottom = rect.bottom - positionInWindow.y.roundToInt(),
-            )
-        }
-        // The plan uses logical start/end coordinates because placement is relative in RTL layouts.
-        val localCutouts = if (layoutDirection == LayoutDirection.Rtl) {
-            physicalCutouts.map { rect ->
-                IntRect(width - rect.right, rect.top, width - rect.left, rect.bottom)
-            }
-        } else {
-            physicalCutouts
-        }
+        val localCutouts = localizeHomeHeaderCutouts(
+            windowCutouts = windowCutouts,
+            headerOriginInWindow = headerOriginInWindow,
+            containerWidthPx = width,
+            layoutDirection = layoutDirection,
+        )
         val availableContentWidth = (width - horizontalPaddingPx * 2).coerceAtLeast(0)
         val childConstraints = constraints.copy(
             minWidth = 0,
@@ -244,6 +243,51 @@ internal fun CutoutAwareHomeHeaderLayout(
             timePlaceable.placeRelative(plan.timeLeftPx, childY(timePlaceable.height))
             trailingPlaceable.placeRelative(plan.trailingLeftPx, childY(trailingPlaceable.height))
         }
+    }
+}
+
+/**
+ * Resolves the part of the header's window position that affects cutout placement.
+ *
+ * A full-width Home page moves horizontally inside its pager, but its resting relationship to the
+ * camera does not. Following that temporary X offset would make the header change layouts midway
+ * through a swipe. Two-panel Home panes occupy a real moving window region and still track X.
+ */
+internal fun resolveHomeHeaderOriginInWindow(
+    positionInWindow: Offset,
+    followHorizontalWindowOffset: Boolean,
+): IntOffset = IntOffset(
+    x = if (followHorizontalWindowOffset) positionInWindow.x.roundToInt() else 0,
+    y = positionInWindow.y.roundToInt(),
+)
+
+/** Converts physical window cutouts into header coordinates. */
+internal fun localizeHomeHeaderCutouts(
+    windowCutouts: List<IntRect>,
+    headerOriginInWindow: IntOffset,
+    containerWidthPx: Int,
+    layoutDirection: LayoutDirection,
+): List<IntRect> {
+    val physicalCutouts = windowCutouts.map { rect ->
+        IntRect(
+            left = rect.left - headerOriginInWindow.x,
+            top = rect.top - headerOriginInWindow.y,
+            right = rect.right - headerOriginInWindow.x,
+            bottom = rect.bottom - headerOriginInWindow.y,
+        )
+    }
+    // The plan uses logical start/end coordinates because placement is relative in RTL layouts.
+    return if (layoutDirection == LayoutDirection.Rtl) {
+        physicalCutouts.map { rect ->
+            IntRect(
+                left = containerWidthPx - rect.right,
+                top = rect.top,
+                right = containerWidthPx - rect.left,
+                bottom = rect.bottom,
+            )
+        }
+    } else {
+        physicalCutouts
     }
 }
 

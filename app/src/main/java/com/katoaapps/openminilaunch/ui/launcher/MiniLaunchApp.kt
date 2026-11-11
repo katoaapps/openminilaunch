@@ -6,6 +6,7 @@
 package com.katoaapps.openminilaunch.ui.launcher
 
 import android.app.Activity
+import android.content.Intent
 import android.widget.Toast
 import androidx.activity.compose.BackHandler
 import androidx.compose.foundation.layout.WindowInsets
@@ -16,6 +17,7 @@ import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.SideEffect
 import androidx.compose.runtime.getValue
@@ -33,6 +35,7 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import com.katoaapps.openminilaunch.R
 import com.katoaapps.openminilaunch.data.LauncherStore
+import com.katoaapps.openminilaunch.features.demo.DemoCaptureMoment
 import com.katoaapps.openminilaunch.model.ContactAppRoute
 import com.katoaapps.openminilaunch.model.Screen
 import com.katoaapps.openminilaunch.platform.DeviceActions
@@ -43,12 +46,16 @@ import com.katoaapps.openminilaunch.ui.launcher.layout.HOME_PAGE
 import com.katoaapps.openminilaunch.ui.launcher.layout.LauncherHomePager
 import com.katoaapps.openminilaunch.ui.launcher.layout.WIDGET_PAGE
 import com.katoaapps.openminilaunch.ui.magic.rememberMagicBoxSessionState
+import com.katoaapps.openminilaunch.ui.magic.AssistantActivity
 import com.katoaapps.openminilaunch.ui.minkspace.core.rememberMinkSpacePresentationState
 import com.katoaapps.openminilaunch.ui.minkspace.todo.TodosScreen
 import com.katoaapps.openminilaunch.ui.onboarding.FeatureUpdateDialog
 import com.katoaapps.openminilaunch.ui.onboarding.GooglePlayBetaDialog
 import com.katoaapps.openminilaunch.ui.onboarding.HomeFeatureTour
+import com.katoaapps.openminilaunch.ui.onboarding.LocalHomeTourTargetRegistry
 import com.katoaapps.openminilaunch.ui.onboarding.OnboardingScreen
+import com.katoaapps.openminilaunch.ui.onboarding.shouldShowHomeFeatureTour
+import com.katoaapps.openminilaunch.ui.onboarding.rememberHomeTourTargetRegistry
 import com.katoaapps.openminilaunch.ui.settings.SettingsDestination
 import com.katoaapps.openminilaunch.ui.settings.SettingsScreen
 import com.katoaapps.openminilaunch.ui.theme.FontAppearanceTheme
@@ -60,7 +67,7 @@ import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collect
 
 private const val FEATURE_UPDATE_ID = "v320_whats_new_v1"
-private const val HOME_FEATURE_TOUR_ID = "home_feature_tour_v2"
+private const val HOME_FEATURE_TOUR_ID = "home_spotlight_tour_v2"
 private const val GOOGLE_PLAY_BETA_NOTICE_ID = "google_play_beta_v1"
 private const val PACKAGE_REMOVAL_CONFIRMATION_MS = 750L
 
@@ -79,13 +86,19 @@ internal fun MiniLaunchApp(
         mutableStateOf(store.onboardingComplete && !store.hasSeenUpdate(FEATURE_UPDATE_ID))
     }
     var showHomeFeatureTour by rememberSaveable {
-        mutableStateOf(store.onboardingComplete && !store.hasSeenUpdate(HOME_FEATURE_TOUR_ID))
+        mutableStateOf(
+            shouldShowHomeFeatureTour(
+                onboardingComplete = store.onboardingComplete,
+                currentTourSeen = store.hasSeenUpdate(HOME_FEATURE_TOUR_ID),
+            ),
+        )
     }
     var showGooglePlayBetaNotice by rememberSaveable {
         mutableStateOf(store.onboardingComplete && !store.hasSeenUpdate(GOOGLE_PLAY_BETA_NOTICE_ID))
     }
     var tutorialRun by rememberSaveable { mutableIntStateOf(0) }
     val homeMagicBoxSessionState = rememberMagicBoxSessionState()
+    val homeTourTargetRegistry = rememberHomeTourTargetRegistry()
     val minkSpacePresentation = rememberMinkSpacePresentationState()
     var animateHomeEntrance by remember { mutableStateOf(false) }
     var focusedLauncherPage by rememberSaveable { mutableIntStateOf(HOME_PAGE) }
@@ -197,33 +210,38 @@ internal fun MiniLaunchApp(
                         modifier = Modifier.fillMaxSize(),
                     ) {
                         FontAppearanceTheme(store) {
-                            LauncherHomePager(
-                                store = store,
-                                actions = actions,
-                                pagerState = launcherPagerState,
-                                twoPanelState = twoPanelState,
-                                focusedPage = focusedLauncherPage,
-                                onFocusedPageChange = { focusedLauncherPage = it },
-                                onTwoPanelActiveChange = { twoPanelActive = it },
-                                homePageRequestToken = homePageRequestToken,
-                                keyboardInputEnabled =
-                                    (twoPanelActive || launcherPagerState.currentPage == HOME_PAGE) &&
-                                        !showTutorial && !showUpdateNotice && !showHomeFeatureTour &&
-                                        !showGooglePlayBetaNotice,
-                                homeRequestToken = homeRequestToken,
-                                magicBoxSessionState = homeMagicBoxSessionState,
-                                minkSpacePresentation = minkSpacePresentation,
-                                openSettings = { destination ->
-                                    settingsDestination = destination
-                                    screen = Screen.SETTINGS
-                                },
-                                openTodos = { screen = Screen.TODOS },
-                                openVCardSettings = {
-                                    openVirtualContactCard(context)
-                                },
-                                openConversations = { screen = Screen.CONVERSATIONS },
-                                modifier = Modifier.fillMaxSize(),
-                            )
+                            CompositionLocalProvider(
+                                LocalHomeTourTargetRegistry provides homeTourTargetRegistry,
+                            ) {
+                                LauncherHomePager(
+                                    store = store,
+                                    actions = actions,
+                                    pagerState = launcherPagerState,
+                                    twoPanelState = twoPanelState,
+                                    focusedPage = focusedLauncherPage,
+                                    onFocusedPageChange = { focusedLauncherPage = it },
+                                    onTwoPanelActiveChange = { twoPanelActive = it },
+                                    homePageRequestToken = homePageRequestToken,
+                                    keyboardInputEnabled =
+                                        (twoPanelActive || launcherPagerState.currentPage == HOME_PAGE) &&
+                                            !showTutorial && !showUpdateNotice &&
+                                            !showHomeFeatureTour &&
+                                            !showGooglePlayBetaNotice,
+                                    homeRequestToken = homeRequestToken,
+                                    magicBoxSessionState = homeMagicBoxSessionState,
+                                    minkSpacePresentation = minkSpacePresentation,
+                                    openSettings = { destination ->
+                                        settingsDestination = destination
+                                        screen = Screen.SETTINGS
+                                    },
+                                    openTodos = { screen = Screen.TODOS },
+                                    openVCardSettings = {
+                                        openVirtualContactCard(context)
+                                    },
+                                    openConversations = { screen = Screen.CONVERSATIONS },
+                                    modifier = Modifier.fillMaxSize(),
+                                )
+                            }
                         }
                     }
                     Screen.SETTINGS -> FontAppearanceTheme(store, applyFontColor = true) {
@@ -232,6 +250,13 @@ internal fun MiniLaunchApp(
                             actions = actions,
                             requestHomeRole = requestHomeRole,
                             onRepeatTutorial = { tutorialRun++; showTutorial = true },
+                            onReplayHomeTour = {
+                                settingsDestination = SettingsDestination.OVERVIEW
+                                focusedLauncherPage = HOME_PAGE
+                                homePageRequestToken++
+                                screen = Screen.HOME
+                                showHomeFeatureTour = true
+                            },
                             initialDestination = settingsDestination,
                             onIconStyleApplied = {
                                 settingsDestination = SettingsDestination.OVERVIEW
@@ -239,6 +264,29 @@ internal fun MiniLaunchApp(
                                 screen = Screen.HOME
                             },
                             openTodos = { screen = Screen.TODOS },
+                            onDemoCaptureMoment = { moment ->
+                                settingsDestination = SettingsDestination.OVERVIEW
+                                when (moment) {
+                                    DemoCaptureMoment.HOME -> {
+                                        homeMagicBoxSessionState.resetForDemoHome()
+                                        focusedLauncherPage = HOME_PAGE
+                                        homePageRequestToken++
+                                        screen = Screen.HOME
+                                    }
+                                    DemoCaptureMoment.QUICK_APPS -> {
+                                        context.startActivity(Intent(context, AssistantActivity::class.java))
+                                    }
+                                    DemoCaptureMoment.CONVERSATIONS -> {
+                                        screen = Screen.CONVERSATIONS
+                                    }
+                                    DemoCaptureMoment.MAGIC_BOX_SEARCH -> {
+                                        homeMagicBoxSessionState.prepareDemoSearch("invoice")
+                                        focusedLauncherPage = HOME_PAGE
+                                        homePageRequestToken++
+                                        screen = Screen.HOME
+                                    }
+                                }
+                            },
                             goBack = {
                                 settingsDestination = SettingsDestination.OVERVIEW
                                 screen = Screen.HOME
@@ -298,7 +346,8 @@ internal fun MiniLaunchApp(
         }
         if (showHomeFeatureTour && !showTutorial && !showUpdateNotice) {
             HomeFeatureTour(
-                onDismiss = {
+                registry = homeTourTargetRegistry,
+                onComplete = {
                     store.markUpdateSeen(HOME_FEATURE_TOUR_ID)
                     showHomeFeatureTour = false
                 },

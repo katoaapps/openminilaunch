@@ -7,6 +7,7 @@ import com.katoaapps.openminilaunch.model.*
 import com.katoaapps.openminilaunch.platform.*
 import com.katoaapps.openminilaunch.features.files.*
 import com.katoaapps.openminilaunch.features.messaging.MessagingProviderCatalog
+import com.katoaapps.openminilaunch.features.demo.DemoCaptureMoment
 import com.katoaapps.openminilaunch.ui.onboarding.FileSearchScopeDialog
 
 import android.content.Intent
@@ -28,9 +29,11 @@ internal fun SettingsScreen(
     actions: DeviceActions,
     requestHomeRole: () -> Unit,
     onRepeatTutorial: () -> Unit,
+    onReplayHomeTour: () -> Unit,
     initialDestination: SettingsDestination = SettingsDestination.OVERVIEW,
     onIconStyleApplied: () -> Unit,
     openTodos: () -> Unit,
+    onDemoCaptureMoment: (DemoCaptureMoment) -> Unit,
     goBack: () -> Unit,
 ) {
     val context = LocalContext.current
@@ -266,11 +269,13 @@ internal fun SettingsScreen(
                 permissionActions = permissionHost.actions,
                 requestHomeRole = requestHomeRole,
                 onRepeatTutorial = onRepeatTutorial,
+                onReplayHomeTour = onReplayHomeTour,
                 onNavigate = ::navigateTo,
                 onOverviewNavigate = ::navigateFromOverview,
                 onNavigateBack = ::navigateBack,
                 onExitSettings = ::navigateBack,
                 onOpenTodos = openTodos,
+                onDemoCaptureMoment = onDemoCaptureMoment,
                 onIconStyleApplied = onIconStyleApplied,
                 onPickAppGridSlot = { picker = SettingsPicker.AppGridSlotPicker(it) },
                 onPickDrawer = { picker = SettingsPicker.DrawerApps },

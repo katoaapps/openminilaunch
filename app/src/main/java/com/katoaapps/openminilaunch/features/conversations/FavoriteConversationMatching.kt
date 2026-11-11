@@ -34,7 +34,10 @@ internal fun matchFavoriteConversations(
                 .forEach { conversation ->
                     put(
                         conversation.id,
-                        FavoriteConversationMatch(favorite.id, favoriteRank),
+                        FavoriteConversationMatch(
+                            favoriteId = favorite.id,
+                            favoriteRank = favoriteRank,
+                        ),
                     )
                 }
         }

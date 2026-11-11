@@ -61,8 +61,14 @@ internal fun MinkSpaceHost(
     val registry = remember(dependencies) {
         MinkSpaceMiniAppCatalog.createRegistry(dependencies)
     }
-    val activeMiniApps = store.minkSpaceMiniAppOrder.filter { miniApp ->
-        miniApp.readyForHome && miniApp in store.enabledMinkSpaceMiniApps
+    // A capture scene must not inherit a live widget, media grant, vCard, or media session.
+    // Keep the real MinkSpace configuration untouched and substitute only safe built-in pages.
+    val activeMiniApps = if (store.demoModeEnabled) {
+        listOf(MinkSpaceMiniApp.TODO, MinkSpaceMiniApp.CALCULATOR)
+    } else {
+        store.minkSpaceMiniAppOrder.filter { miniApp ->
+            miniApp.readyForHome && miniApp in store.enabledMinkSpaceMiniApps
+        }
     }
     val settingsPage = activeMiniApps.size
     val pagerState = rememberPagerState(pageCount = { activeMiniApps.size + 1 })

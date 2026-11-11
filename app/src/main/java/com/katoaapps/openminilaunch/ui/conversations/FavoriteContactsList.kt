@@ -58,6 +58,7 @@ import com.katoaapps.openminilaunch.model.FavoriteAndroidContact
 import com.katoaapps.openminilaunch.model.FavoriteContact
 import com.katoaapps.openminilaunch.model.FavoriteContactId
 import com.katoaapps.openminilaunch.model.FavoriteIntegratedContact
+import com.katoaapps.openminilaunch.platform.DeviceActions
 import com.katoaapps.openminilaunch.ui.components.moveItem
 import com.katoaapps.openminilaunch.ui.theme.Dimens
 import com.katoaapps.openminilaunch.ui.theme.MinkFeatureColors
@@ -69,12 +70,14 @@ import sh.calvin.reorderable.rememberReorderableLazyGridState
 @Composable
 internal fun FavoriteContactsList(
     contacts: List<FavoriteContact>,
+    actions: DeviceActions,
     attentionColorFor: (FavoriteContactId) -> Int?,
     integratedAvailability: Map<FavoriteContactId.Integrated, FavoriteIntegratedContactAvailability>,
     integratedCallAvailability: Map<FavoriteContactId.Integrated, FavoriteIntegratedCallAvailability?>,
     onOpen: (FavoriteContact) -> Unit,
     onAddPerson: () -> Unit,
     onReorder: (List<FavoriteContactId>) -> Unit,
+    editable: Boolean = true,
 ) {
     val visibleContacts = remember { mutableStateListOf<FavoriteContact>() }
     var draggedContact by remember { mutableStateOf<FavoriteContactId?>(null) }
@@ -105,8 +108,10 @@ internal fun FavoriteContactsList(
                 fontWeight = FontWeight.Black,
                 fontSize = Dimens.sp12,
             )
-            IconButton(onClick = onAddPerson) {
-                Icon(Icons.Default.Add, stringResource(R.string.add_person))
+            if (editable) {
+                IconButton(onClick = onAddPerson) {
+                    Icon(Icons.Default.Add, stringResource(R.string.add_person))
+                }
             }
         }
         LazyVerticalGrid(
@@ -133,27 +138,29 @@ internal fun FavoriteContactsList(
                         label = "favorite contact drag elevation",
                     )
                     val dragHandle: @Composable () -> Unit = {
-                        Icon(
-                            Icons.Default.DragHandle,
-                            stringResource(R.string.drag_to_reorder),
-                            Modifier
-                                .size(Dimens.dp28)
-                                .draggableHandle(
-                                    interactionSource = interactionSource,
-                                    onDragStarted = {
-                                        draggedContact = contact.id
-                                        hapticFeedback.performHapticFeedback(
-                                            HapticFeedbackType.LongPress,
-                                        )
-                                    },
-                                    onDragStopped = {
-                                        onReorder(visibleContacts.map(FavoriteContact::id))
-                                        draggedContact = null
-                                    },
-                                )
-                                .padding(Dimens.dp4),
-                            tint = if (isDragging) MaterialTheme.colorScheme.primary else Muted,
-                        )
+                        if (editable) {
+                            Icon(
+                                Icons.Default.DragHandle,
+                                stringResource(R.string.drag_to_reorder),
+                                Modifier
+                                    .size(Dimens.dp28)
+                                    .draggableHandle(
+                                        interactionSource = interactionSource,
+                                        onDragStarted = {
+                                            draggedContact = contact.id
+                                            hapticFeedback.performHapticFeedback(
+                                                HapticFeedbackType.LongPress,
+                                            )
+                                        },
+                                        onDragStopped = {
+                                            onReorder(visibleContacts.map(FavoriteContact::id))
+                                            draggedContact = null
+                                        },
+                                    )
+                                    .padding(Dimens.dp4),
+                                tint = if (isDragging) MaterialTheme.colorScheme.primary else Muted,
+                            )
+                        }
                     }
                     val cardModifier = Modifier
                         .fillMaxWidth()
@@ -174,6 +181,7 @@ internal fun FavoriteContactsList(
                         )
                         is FavoriteIntegratedContact -> FavoriteIntegratedContactCard(
                             contact = contact,
+                            actions = actions,
                             attentionColorArgb = attentionColorFor(contact.id),
                             availability = integratedAvailability[contact.id],
                             callAvailability = integratedCallAvailability[contact.id],
@@ -201,7 +209,9 @@ private fun FavoriteAndroidContactCard(
         attentionColorArgb = attentionColorArgb,
         modifier = modifier,
         dragHandle = dragHandle,
-        photoUri = contact.photoUri,
+        avatar = {
+            FavoriteContactAvatar(contact.displayName, contact.photoUri, size = Dimens.dp40)
+        },
         detail = contact.organization
             ?: contact.phones.firstOrNull()?.label
             ?: stringResource(R.string.no_phone_numbers),
@@ -213,6 +223,7 @@ private fun FavoriteAndroidContactCard(
 @Composable
 private fun FavoriteIntegratedContactCard(
     contact: FavoriteIntegratedContact,
+    actions: DeviceActions,
     attentionColorArgb: Int?,
     availability: FavoriteIntegratedContactAvailability?,
     callAvailability: FavoriteIntegratedCallAvailability?,
@@ -254,7 +265,14 @@ private fun FavoriteIntegratedContactCard(
         attentionColorArgb = attentionColorArgb,
         modifier = modifier,
         dragHandle = dragHandle,
-        photoUri = null,
+        avatar = {
+            FavoriteIntegratedContactAvatar(
+                contact = contact,
+                availability = resolvedAvailability,
+                actions = actions,
+                size = Dimens.dp40,
+            )
+        },
         detail = detail,
         error = unavailable,
         onOpen = onOpen,
@@ -267,7 +285,7 @@ private fun FavoriteContactGridCard(
     attentionColorArgb: Int?,
     modifier: Modifier,
     dragHandle: @Composable () -> Unit,
-    photoUri: String?,
+    avatar: @Composable () -> Unit,
     detail: String,
     error: Boolean,
     onOpen: (FavoriteContact) -> Unit,
@@ -297,9 +315,7 @@ private fun FavoriteContactGridCard(
         ) {
             Box(Modifier.fillMaxWidth()) {
                 Box(Modifier.align(Alignment.CenterStart)) { dragHandle() }
-                Box(Modifier.align(Alignment.Center)) {
-                    FavoriteContactAvatar(contact.displayName, photoUri, size = Dimens.dp40)
-                }
+                Box(Modifier.align(Alignment.Center)) { avatar() }
             }
             Text(
                 contact.displayName,
