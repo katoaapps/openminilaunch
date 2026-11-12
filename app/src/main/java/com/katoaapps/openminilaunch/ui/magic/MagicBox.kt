@@ -111,7 +111,7 @@ internal fun MagicBoxContent(
     val effectiveAppAccessState = appAccessState ?: checkNotNull(localAppAccessState).value
     val editorSession = sessionState ?: rememberMagicBoxSessionState(initiallyExpanded)
     var text by editorSession.textState
-    val initialHardwareKeyCorrection = remember { InitialHardwareKeyCorrection() }
+    val initialInputCorrection = remember { InitialMagicInputCorrection() }
     var selectedRecipient by editorSession.selectedRecipientState
     var route by editorSession.routeState
     var expanded by editorSession.expandedState
@@ -380,7 +380,7 @@ internal fun MagicBoxContent(
     }
     fun clearCommand() {
         fileSearchState.clear()
-        initialHardwareKeyCorrection.clear()
+        initialInputCorrection.clear()
         text = TextFieldValue()
         selectedRecipient = null
         route = MagicBoxRoute.SEARCH
@@ -398,18 +398,20 @@ internal fun MagicBoxContent(
     }
 
     fun updateEditorValue(value: TextFieldValue, correctHardwareInput: Boolean) {
-        val correctedValue = if (correctHardwareInput) {
-            initialHardwareKeyCorrection.correct(value)
+        val wasCollapsed = !expanded
+        val correction = if (correctHardwareInput) {
+            initialInputCorrection.correct(value)
         } else {
-            value
+            InitialMagicInputCorrection.Result(value)
         }
+        val correctedValue = correction.value
         val trigger = consumeMagicBoxTrigger(
-            previousText = text.text,
+            previousText = if (correction.replacedInitialInput) "" else text.text,
             updatedText = correctedValue.text,
             routeSelectionEnabled = selectedRecipient == null,
         )
         if (trigger != null) {
-            initialHardwareKeyCorrection.clear()
+            initialInputCorrection.clear()
             route = trigger.route
             selectedRecipient = null
             val selectionStart = (correctedValue.selection.start - 1)
@@ -423,6 +425,14 @@ internal fun MagicBoxContent(
         } else {
             text = correctedValue
         }
+        if (
+            correctHardwareInput &&
+            wasCollapsed &&
+            trigger == null &&
+            text.text.codePointCount(0, text.text.length) == 1
+        ) {
+            initialInputCorrection.beginPlatformInput(text.text)
+        }
         if (!expanded && correctedValue.text.isNotEmpty()) expanded = true
     }
 
@@ -433,7 +443,7 @@ internal fun MagicBoxContent(
         if (hotkeyRoute != null) {
             route = hotkeyRoute
         } else {
-            initialHardwareKeyCorrection.begin(typedText, keyCode)
+            initialInputCorrection.beginHardwareCapture(typedText, keyCode)
             text = TextFieldValue(typedText, selection = TextRange(typedText.length))
         }
         expanded = true
@@ -1072,7 +1082,7 @@ internal fun MagicBoxContent(
                 },
                 onPlaced = { textFieldPlaced = true },
                 onSubmit = ::submit,
-                onHardwareKeyUp = initialHardwareKeyCorrection::onHardwareKeyUp,
+                onHardwareKeyUp = initialInputCorrection::onHardwareKeyUp,
                 onClearMessage = ::requestClearMessageDraft,
                 onDeleteNote = {
                     keyboard?.hide()
