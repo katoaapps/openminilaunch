@@ -45,9 +45,11 @@ import com.katoaapps.openminilaunch.model.LauncherAppTarget
 import com.katoaapps.openminilaunch.model.LauncherShortcutTarget
 import com.katoaapps.openminilaunch.platform.DeviceActions
 import com.katoaapps.openminilaunch.ui.components.LauncherTargetIcon
+import com.katoaapps.openminilaunch.ui.theme.DestructiveColor
 import com.katoaapps.openminilaunch.ui.theme.Dimens
 import com.katoaapps.openminilaunch.ui.theme.MagicTodoColor
 import com.katoaapps.openminilaunch.ui.theme.Muted
+import com.katoaapps.openminilaunch.ui.theme.readableContentColor
 
 @Composable
 internal fun MagicResultsPanel(
@@ -131,8 +133,8 @@ internal fun MagicResultsPanel(
                 onClick = onClearMessage,
                 modifier = Modifier.align(Alignment.TopEnd),
                 colors = IconButtonDefaults.filledTonalIconButtonColors(
-                    containerColor = MaterialTheme.colorScheme.errorContainer,
-                    contentColor = MaterialTheme.colorScheme.onErrorContainer,
+                    containerColor = DestructiveColor,
+                    contentColor = readableContentColor(DestructiveColor),
                 ),
             ) {
                 Icon(Icons.Default.DeleteOutline, stringResource(R.string.clear_message_draft))

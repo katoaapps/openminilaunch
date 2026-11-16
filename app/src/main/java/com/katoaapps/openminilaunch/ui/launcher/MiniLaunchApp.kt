@@ -44,7 +44,9 @@ import com.katoaapps.openminilaunch.ui.launcher.home.HomeEntranceTransition
 import com.katoaapps.openminilaunch.ui.launcher.home.launcherBackgroundColor
 import com.katoaapps.openminilaunch.ui.launcher.layout.HOME_PAGE
 import com.katoaapps.openminilaunch.ui.launcher.layout.LauncherHomePager
-import com.katoaapps.openminilaunch.ui.launcher.layout.WIDGET_PAGE
+import com.katoaapps.openminilaunch.ui.launcher.layout.launcherPagerIndex
+import com.katoaapps.openminilaunch.ui.launcher.layout.pairForFocusedPage
+import com.katoaapps.openminilaunch.ui.launcher.layout.visibleLauncherPages
 import com.katoaapps.openminilaunch.ui.magic.rememberMagicBoxSessionState
 import com.katoaapps.openminilaunch.ui.magic.AssistantActivity
 import com.katoaapps.openminilaunch.ui.minkspace.core.rememberMinkSpacePresentationState
@@ -63,6 +65,7 @@ import com.katoaapps.openminilaunch.ui.theme.MinkLauncherTheme
 import com.katoaapps.openminilaunch.ui.theme.MinkTransparent
 import com.katoaapps.openminilaunch.ui.theme.shouldUseDarkForeground
 import com.katoaapps.openminilaunch.ui.profile.openVirtualContactCard
+import com.katoaapps.openminilaunch.ui.wellbeing.MinkDayScreen
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.collect
 
@@ -102,10 +105,14 @@ internal fun MiniLaunchApp(
     val minkSpacePresentation = rememberMinkSpacePresentationState()
     var animateHomeEntrance by remember { mutableStateOf(false) }
     var focusedLauncherPage by rememberSaveable { mutableIntStateOf(HOME_PAGE) }
-    var twoPanelActive by remember { mutableStateOf(false) }
     var homePageRequestToken by remember { mutableIntStateOf(0) }
-    val launcherPagerState = rememberPagerState(initialPage = HOME_PAGE, pageCount = { WIDGET_PAGE + 1 })
-    val twoPanelState = rememberLazyListState(initialFirstVisibleItemIndex = 1)
+    val launcherPagerState = rememberPagerState(
+        initialPage = launcherPagerIndex(HOME_PAGE, store.showMinkDayTab),
+        pageCount = { visibleLauncherPages(store.showMinkDayTab).size },
+    )
+    val twoPanelState = rememberLazyListState(
+        initialFirstVisibleItemIndex = pairForFocusedPage(HOME_PAGE, store.showMinkDayTab),
+    )
     LaunchedEffect(screen) {
         setSettingsVisibleInRecents(screen == Screen.SETTINGS)
     }
@@ -167,8 +174,7 @@ internal fun MiniLaunchApp(
         BackHandler(enabled = !showTutorial && screen != Screen.HOME) { screen = Screen.HOME }
         BackHandler(
             enabled = !showTutorial && screen == Screen.HOME &&
-                (if (twoPanelActive) twoPanelState.firstVisibleItemIndex == 0
-                    else launcherPagerState.currentPage != HOME_PAGE),
+                focusedLauncherPage != HOME_PAGE,
         ) {
             focusedLauncherPage = HOME_PAGE
             homePageRequestToken++
@@ -176,7 +182,7 @@ internal fun MiniLaunchApp(
         val imeVisible = WindowInsets.isImeVisible
         BackHandler(
             enabled = !showTutorial && screen == Screen.HOME &&
-                (twoPanelActive || launcherPagerState.currentPage == HOME_PAGE) && !imeVisible,
+                focusedLauncherPage == HOME_PAGE && !imeVisible,
         ) { }
 
         val revealSystemWallpaper = !showTutorial && screen == Screen.HOME && store.useSystemHomeWallpaper
@@ -220,10 +226,9 @@ internal fun MiniLaunchApp(
                                     twoPanelState = twoPanelState,
                                     focusedPage = focusedLauncherPage,
                                     onFocusedPageChange = { focusedLauncherPage = it },
-                                    onTwoPanelActiveChange = { twoPanelActive = it },
                                     homePageRequestToken = homePageRequestToken,
                                     keyboardInputEnabled =
-                                        (twoPanelActive || launcherPagerState.currentPage == HOME_PAGE) &&
+                                        focusedLauncherPage == HOME_PAGE &&
                                             !showTutorial && !showUpdateNotice &&
                                             !showHomeFeatureTour &&
                                             !showGooglePlayBetaNotice,
@@ -239,6 +244,7 @@ internal fun MiniLaunchApp(
                                         openVirtualContactCard(context)
                                     },
                                     openConversations = { screen = Screen.CONVERSATIONS },
+                                    openMinkDay = { screen = Screen.MINK_DAY },
                                     modifier = Modifier.fillMaxSize(),
                                 )
                             }
@@ -318,6 +324,13 @@ internal fun MiniLaunchApp(
                                 screen = Screen.HOME
                             },
                             goBack = { screen = Screen.HOME },
+                        )
+                    }
+                    Screen.MINK_DAY -> FontAppearanceTheme(store) {
+                        MinkDayScreen(
+                            store = store,
+                            isActive = true,
+                            goHome = { screen = Screen.HOME },
                         )
                     }
                 }

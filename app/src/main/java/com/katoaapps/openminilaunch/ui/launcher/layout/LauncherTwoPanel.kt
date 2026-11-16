@@ -56,6 +56,7 @@ internal fun LauncherTwoPanel(
     openTodos: () -> Unit,
     openVCardSettings: () -> Unit,
     openConversations: () -> Unit,
+    showMinkDayTab: Boolean,
     onMinkSpaceExpandedChange: (Boolean) -> Unit,
     modifier: Modifier = Modifier,
 ) {
@@ -68,7 +69,9 @@ internal fun LauncherTwoPanel(
     val absoluteScrollPx =
         listState.firstVisibleItemIndex * (geometry.paneWidthPx + geometry.gapPx) +
             listState.firstVisibleItemScrollOffset
-    val homeLeftPx = geometry.outerLeftPx + geometry.paneWidthPx + geometry.gapPx - absoluteScrollPx
+    val homeBaseIndex = if (showMinkDayTab) 1 else 0
+    val homeLeftPx = geometry.outerLeftPx +
+        homeBaseIndex * (geometry.paneWidthPx + geometry.gapPx) - absoluteScrollPx
     val collapsedBarOffset = with(density) {
         (homeLeftPx + geometry.paneWidthPx / 2 - viewportWidthPx / 2).toDp()
     }
@@ -85,15 +88,17 @@ internal fun LauncherTwoPanel(
             horizontalArrangement = Arrangement.spacedBy(gap),
             contentPadding = PaddingValues(start = outerLeft, end = outerRight),
             flingBehavior = rememberSnapFlingBehavior(listState, snapPosition = SnapPosition.Start),
-            userScrollEnabled = !magicBoxExpanded && !minkSpaceExpanded,
+            userScrollEnabled = showMinkDayTab && !magicBoxExpanded && !minkSpaceExpanded,
         ) {
-            item(key = "mink-day") {
-                Box(Modifier.width(paneWidth).fillMaxHeight().focusPane { onFocusPage(MINK_DAY_PAGE) }) {
-                    MinkDayScreen(
-                        store = store,
-                        isActive = listState.firstVisibleItemIndex == 0,
-                        goHome = onGoHome,
-                    )
+            if (showMinkDayTab) {
+                item(key = "mink-day") {
+                    Box(Modifier.width(paneWidth).fillMaxHeight().focusPane { onFocusPage(MINK_DAY_PAGE) }) {
+                        MinkDayScreen(
+                            store = store,
+                            isActive = listState.firstVisibleItemIndex == 0,
+                            goHome = onGoHome,
+                        )
+                    }
                 }
             }
             item(key = "home-slot") {
@@ -130,15 +135,19 @@ internal fun LauncherTwoPanel(
                 collapsedBarOffsetX = collapsedBarOffset,
                 twoPanelLayout = true,
                 onPaneInteracted = { onFocusPage(HOME_PAGE) },
-                onHorizontalDrag = { amount -> listState.dispatchRawDelta(-amount) },
+                onHorizontalDrag = { amount ->
+                    if (showMinkDayTab) listState.dispatchRawDelta(-amount)
+                },
                 onHorizontalDragFinished = { draggedPx, elapsedMillis ->
-                    val scrollPx = listState.firstVisibleItemIndex *
-                        (geometry.paneWidthPx + geometry.gapPx) + listState.firstVisibleItemScrollOffset
-                    val quickSwipe = abs(draggedPx) >= 48f * density.density && elapsedMillis < 250L
-                    val targetPair = if (quickSwipe) {
-                        if (draggedPx > 0f) 0 else 1
-                    } else if (scrollPx >= (geometry.paneWidthPx + geometry.gapPx) / 2) 1 else 0
-                    scope.launch { listState.animateScrollToItem(targetPair) }
+                    if (showMinkDayTab) {
+                        val scrollPx = listState.firstVisibleItemIndex *
+                            (geometry.paneWidthPx + geometry.gapPx) + listState.firstVisibleItemScrollOffset
+                        val quickSwipe = abs(draggedPx) >= 48f * density.density && elapsedMillis < 250L
+                        val targetPair = if (quickSwipe) {
+                            if (draggedPx > 0f) 0 else 1
+                        } else if (scrollPx >= (geometry.paneWidthPx + geometry.gapPx) / 2) 1 else 0
+                        scope.launch { listState.animateScrollToItem(targetPair) }
+                    }
                 },
             )
         }

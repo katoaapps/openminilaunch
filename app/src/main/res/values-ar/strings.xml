@@ -1,6 +1,13 @@
 <?xml version='1.0' encoding='utf-8'?>
 <resources>
     <string name="app_name">MinkLauncher OpenSource</string>
+    <string name="show_mink_day_tab">إظهار علامة تبويب يوم Mink</string>
+    <string name="show_mink_day_tab_description">احتفظ بيوم Mink ضمن صفحات الشاشة الرئيسية. أوقفه لفتحه فقط من زر الشاشة الرئيسية أو الإعدادات.</string>
+    <string name="choose_icon">اختيار رمز</string>
+    <string name="choose_app_icon">اختيار رمز واحد للتطبيق</string>
+    <string name="use_default_app_icon">استخدام الرمز الافتراضي</string>
+    <string name="use_default_app_icon_description">اتبع نمط الرموز المحدد في المظهر</string>
+    <string name="choose_one_icon_from_pack">اختر رمزًا واحدًا من هذه الحزمة</string>
     <string name="lock_accessibility_label">MinkLauncher OpenSource - قفل الشاشة بنقرة مزدوجة</string>
     <string name="lock_accessibility_description">يسمح لـ MinkLauncher OpenSource بتنفيذ إجراء شاشة القفل الخاص بـ Android فقط بعد النقر المزدوج على المساحة الرئيسية الفارغة. ولا يمكنه قراءة محتوى الشاشة أو التفاعل معه.</string>
     <string name="home_date_pattern">إي، ط ط ط د</string>

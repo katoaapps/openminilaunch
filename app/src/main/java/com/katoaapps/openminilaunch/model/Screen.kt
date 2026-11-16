@@ -1,3 +1,3 @@
 package com.katoaapps.openminilaunch.model
 
-enum class Screen { HOME, SETTINGS, TODOS, CONVERSATIONS }
+enum class Screen { HOME, SETTINGS, TODOS, CONVERSATIONS, MINK_DAY }

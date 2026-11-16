@@ -185,4 +185,44 @@ class MagicBoxInputTest {
             consumeMagicBoxTrigger("", "@home", routeSelectionEnabled = false),
         )
     }
+
+    @Test
+    fun launcherKeyboardHotkeyStartsOnlyAFreshSearchCommand() {
+        assertEquals(
+            true,
+            shouldActivateLauncherKeyboardRoute(
+                route = MagicBoxRoute.SEARCH,
+                text = "",
+                hasSelectedRecipient = false,
+            ),
+        )
+        assertEquals(
+            false,
+            shouldActivateLauncherKeyboardRoute(
+                route = MagicBoxRoute.SEARCH,
+                text = "hey man how are you",
+                hasSelectedRecipient = false,
+            ),
+        )
+    }
+
+    @Test
+    fun launcherKeyboardHotkeyIsLiteralInsideAnActiveRouteOrRecipientDraft() {
+        assertEquals(
+            false,
+            shouldActivateLauncherKeyboardRoute(
+                route = MagicBoxRoute.MESSAGE,
+                text = "",
+                hasSelectedRecipient = false,
+            ),
+        )
+        assertEquals(
+            false,
+            shouldActivateLauncherKeyboardRoute(
+                route = MagicBoxRoute.MESSAGE,
+                text = "hey man how are you",
+                hasSelectedRecipient = true,
+            ),
+        )
+    }
 }

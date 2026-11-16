@@ -1156,9 +1156,17 @@ internal fun MagicBoxContent(
             themePrimaryArgb = store.effectiveHomePanelColorArgb,
             themeSecondaryArgb = store.effectiveThemeSecondaryColorArgb,
             onHotkey = { trigger ->
-                MagicBoxRoute.fromTrigger(trigger)?.let { nextRoute ->
-                    activateRoute(nextRoute, showSoftwareKeyboard = false)
+                val nextRoute = MagicBoxRoute.fromTrigger(trigger)
+                val shouldActivateRoute = nextRoute != null &&
+                    shouldActivateLauncherKeyboardRoute(
+                        route = route,
+                        text = text.text,
+                        hasSelectedRecipient = selectedRecipient != null,
+                    )
+                if (shouldActivateRoute) {
+                    activateRoute(checkNotNull(nextRoute), showSoftwareKeyboard = false)
                 }
+                shouldActivateRoute
             },
             onSubmit = ::submit,
             multiline = expanded && noteMode,

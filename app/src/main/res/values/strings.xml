@@ -1,6 +1,13 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources xmlns:tools="http://schemas.android.com/tools">
     <string name="app_name">MinkLauncher OpenSource</string>
+    <string name="show_mink_day_tab">Show Mink’s Day tab</string>
+    <string name="show_mink_day_tab_description">Keep Mink’s Day in Home swipes. Turn this off to open it only from its Home button or Settings.</string>
+    <string name="choose_icon">Choose icon</string>
+    <string name="choose_app_icon">Choose one app icon</string>
+    <string name="use_default_app_icon">Use default icon</string>
+    <string name="use_default_app_icon_description">Follow the icon style selected in Appearance</string>
+    <string name="choose_one_icon_from_pack">Pick one icon from this pack</string>
     <string name="lock_accessibility_label">MinkLauncher OpenSource - Double-tap screen lock</string>
     <string name="lock_accessibility_description">Allows MinkLauncher OpenSource to perform Android’s Lock screen action only after you double-tap empty Home space. It cannot read or interact with screen content.</string>
     <string name="home_date_pattern">EEE, MMM d</string>

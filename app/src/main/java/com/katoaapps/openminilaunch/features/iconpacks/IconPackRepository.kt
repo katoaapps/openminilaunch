@@ -87,6 +87,27 @@ internal class IconPackRepository private constructor(context: Context) {
         return drawableLoader.load(iconPackPackage, specification)
     }
 
+    fun iconForOverride(iconPackPackage: String, drawableName: String): Drawable? =
+        drawableLoader.loadNamed(iconPackPackage, drawableName)
+
+    fun iconForOverride(
+        target: LauncherTarget,
+        iconPackPackage: String,
+        drawableName: String,
+    ): Drawable? {
+        val drawable = iconForOverride(iconPackPackage, drawableName) ?: return null
+        if (!target.isWorkProfile) return drawable
+        val user = userManager?.getUserForSerialNumber(target.userSerial) ?: return drawable
+        return packageManager.getUserBadgedIcon(drawable, user)
+    }
+
+    fun iconsInPack(iconPackPackage: String): List<IconPackIconChoice> {
+        return definition(iconPackPackage)?.iconsByComponent?.values.orEmpty()
+            .map { it.drawableName(java.time.LocalDate.now().dayOfMonth) }
+            .distinct()
+            .map(::IconPackIconChoice)
+    }
+
     fun invalidate() {
         synchronized(cacheLock) { definitions.clear() }
         revisionState.update { it + 1 }

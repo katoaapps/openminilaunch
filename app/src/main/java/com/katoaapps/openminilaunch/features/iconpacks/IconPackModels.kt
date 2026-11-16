@@ -10,6 +10,10 @@ internal data class InstalledIconPack(
     val hasReadableMappings: Boolean,
 )
 
+internal data class IconPackIconChoice(
+    val drawableName: String,
+)
+
 internal sealed interface IconPackDrawable {
     data class Static(val drawableName: String) : IconPackDrawable
     data class Calendar(val drawablePrefix: String) : IconPackDrawable

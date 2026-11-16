@@ -1,6 +1,13 @@
 <?xml version='1.0' encoding='utf-8'?>
 <resources>
     <string name="app_name">MinkLauncher OpenSource</string>
+    <string name="show_mink_day_tab">Mink’s Day ট্যাব দেখান</string>
+    <string name="show_mink_day_tab_description">হোম সোয়াইপে Mink’s Day রাখুন। বন্ধ করলে শুধু হোম বোতাম বা সেটিংস থেকে খুলবে।</string>
+    <string name="choose_icon">আইকন বেছে নিন</string>
+    <string name="choose_app_icon">একটি অ্যাপ আইকন বেছে নিন</string>
+    <string name="use_default_app_icon">ডিফল্ট আইকন ব্যবহার করুন</string>
+    <string name="use_default_app_icon_description">চেহারায় বেছে নেওয়া আইকন স্টাইল অনুসরণ করে</string>
+    <string name="choose_one_icon_from_pack">এই প্যাক থেকে একটি আইকন বেছে নিন</string>
     <string name="lock_accessibility_label">MinkLauncher OpenSource - স্ক্রিন লক ডবল-ট্যাপ করুন</string>
     <string name="lock_accessibility_description">MinkLauncher OpenSource-কে Android-এর লক স্ক্রিন অ্যাকশন সঞ্চালনের অনুমতি দেয় শুধুমাত্র আপনি খালি হোম স্পেসে ডবল-ট্যাপ করার পরে। এটি পর্দার বিষয়বস্তু পড়তে বা ইন্টারঅ্যাক্ট করতে পারে না।</string>
     <string name="home_date_pattern">EEE, MMM d</string>

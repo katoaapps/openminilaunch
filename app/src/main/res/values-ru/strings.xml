@@ -1,6 +1,13 @@
 <?xml version='1.0' encoding='utf-8'?>
 <resources>
     <string name="app_name">MinkLauncher OpenSource</string>
+    <string name="show_mink_day_tab">Показывать вкладку «День Mink»</string>
+    <string name="show_mink_day_tab_description">Оставляет «День Mink» среди страниц главного экрана. Отключите, чтобы открывать его только кнопкой на главном экране или из настроек.</string>
+    <string name="choose_icon">Выбрать значок</string>
+    <string name="choose_app_icon">Выбрать один значок приложения</string>
+    <string name="use_default_app_icon">Использовать значок по умолчанию</string>
+    <string name="use_default_app_icon_description">Использует стиль значков, выбранный в разделе «Внешний вид»</string>
+    <string name="choose_one_icon_from_pack">Выберите один значок из этого набора</string>
     <string name="lock_accessibility_label">MinkLauncher OpenSource — блокировка экрана двойным касанием</string>
     <string name="lock_accessibility_description">Позволяет MinkLauncher OpenSource выполнять действие Android на экране блокировки только после двойного касания пустого домашнего пространства. Он не может читать или взаимодействовать с содержимым экрана.</string>
     <string name="home_date_pattern">ЭЭЭ, МММ д</string>

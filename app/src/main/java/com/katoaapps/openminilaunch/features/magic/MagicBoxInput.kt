@@ -53,6 +53,17 @@ internal fun hasMagicBoxDraftText(text: String): Boolean = text.isNotBlank()
 internal fun isOpenTodosCommand(text: String, route: MagicBoxRoute): Boolean =
     route == MagicBoxRoute.TODO && text.isBlank()
 
+/**
+ * The launcher keyboard's colored symbols choose a route only at the start of a fresh command.
+ * After a route or draft exists, those same keys are ordinary punctuation in the editor.
+ */
+internal fun shouldActivateLauncherKeyboardRoute(
+    route: MagicBoxRoute,
+    text: String,
+    hasSelectedRecipient: Boolean,
+): Boolean =
+    route == MagicBoxRoute.SEARCH && text.isEmpty() && !hasSelectedRecipient
+
 internal data class MagicBoxTriggerResult(
     val route: MagicBoxRoute,
     val content: String,

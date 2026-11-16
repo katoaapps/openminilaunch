@@ -58,7 +58,7 @@ internal fun TodoPager(
     }
     LaunchedEffect(jumpToken, pages) {
         if (jumpToken > 0) {
-            val newestUnfinishedPage = store.todos.indexOfLast { !it.completed }
+            val newestUnfinishedPage = store.todos.indexOfFirst { !it.completed }
                 .coerceAtLeast(0) / safeItemsPerPage
             pagerState.animateScrollToPage(newestUnfinishedPage.coerceAtMost(pages - 1))
         }

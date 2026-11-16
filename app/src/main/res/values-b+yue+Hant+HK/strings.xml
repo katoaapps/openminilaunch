@@ -1,6 +1,13 @@
 <?xml version='1.0' encoding='utf-8'?>
 <resources>
     <string name="app_name">MinkLauncher OpenSource</string>
+    <string name="show_mink_day_tab">顯示 Mink’s Day 分頁</string>
+    <string name="show_mink_day_tab_description">喺主畫面滑動頁面保留 Mink’s Day。關閉後，只可以由主畫面按鈕或者設定開啟。</string>
+    <string name="choose_icon">揀圖示</string>
+    <string name="choose_app_icon">揀一個應用程式圖示</string>
+    <string name="use_default_app_icon">使用預設圖示</string>
+    <string name="use_default_app_icon_description">跟隨「外觀」入面揀選嘅圖示樣式</string>
+    <string name="choose_one_icon_from_pack">由呢個圖示包揀一個圖示</string>
     <string name="lock_accessibility_label">MinkLauncher OpenSource - 撳兩下螢幕鎖定</string>
     <string name="lock_accessibility_description">只有喺你撳兩下空白嘅主頁空間之後，先可以畀 MinkLauncher OpenSource 執行 Android 嘅鎖定畫面動作。佢讀唔到或者同螢幕內容互動。</string>
     <string name="home_date_pattern">EEE ， MMM 啲</string>

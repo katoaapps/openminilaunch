@@ -19,6 +19,7 @@ internal fun LauncherStore.createPortableBackup(appVersion: String): LauncherBac
             confirmedAppGridChoices = confirmedAppGridChoices.toList(),
             drawerTargets = drawerTargets.toList(),
             libraryShortcutTargets = libraryShortcutTargets.toList(),
+            iconOverrides = appIconOverrides.toMap(),
         ),
         settings = LauncherBackupSettings(
             themePreference = themePreference,
@@ -58,6 +59,7 @@ internal fun LauncherStore.createPortableBackup(appVersion: String): LauncherBac
             socialPackages = socialPackages.toList(),
             socialGoalHours = socialGoalHours,
             minkAppPauseMode = minkAppPauseMode,
+            showMinkDayTab = showMinkDayTab,
             githubUpdateChecksEnabled = githubUpdateChecksEnabled,
             minkPadPreferences = minkPadPreferences.state.value,
             fontAppearance = fontAppearance,
@@ -93,6 +95,7 @@ internal fun LauncherStore.restorePortableBackup(
         drawerTargets = settings.quickDrawer?.orderedTargetKeys ?: backup.launcher.drawerTargets,
         libraryShortcutTargets = backup.launcher.libraryShortcutTargets,
     )
+    replaceAppIconOverrides(backup.launcher.iconOverrides)
     replaceTodosFromBackup(backup.todos)
     profileRepository.replaceFromBackup(backup.profile, backup.profileLinks)
 
@@ -162,6 +165,7 @@ internal fun LauncherStore.restorePortableBackup(
 
     updateSocialGoalHours(settings.socialGoalHours)
     updateMinkAppPauseMode(settings.minkAppPauseMode)
+    settings.showMinkDayTab?.let(::updateShowMinkDayTab)
     if (settings.usesAutomaticSocialApps) clearSocialApps()
     else replaceSocialApps(settings.socialPackages.toSet())
 

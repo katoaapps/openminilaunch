@@ -36,6 +36,7 @@ internal val MagicTodoColor = MinkFeatureColors.MagicTodo
 internal val MagicNoteColor = MinkFeatureColors.MagicNote
 internal val MagicEventColor = MinkFeatureColors.MagicEvent
 internal val MagicAppColor = MinkFeatureColors.MagicApp
+internal val DestructiveColor = MinkFeatureColors.Destructive
 internal val AppBlockedRed = MinkFeatureColors.AppBlocked
 internal val MinkWhite: Color @Composable get() = colorResource(R.color.mink_white)
 internal val MinkBlack: Color @Composable get() = colorResource(R.color.mink_black)

@@ -44,7 +44,7 @@ internal fun LauncherKeyboard(
     multiline: Boolean,
     modifier: Modifier = Modifier,
     onOpenSettings: () -> Unit = {},
-    onHotkey: ((Char) -> Unit)? = null,
+    onHotkey: ((Char) -> Boolean)? = null,
     extendBehindNavigationBar: Boolean = false,
 ) {
     var symbols by remember { mutableStateOf(false) }
@@ -112,8 +112,7 @@ internal fun LauncherKeyboard(
 
     fun activateHotkey(key: LauncherKeyboardKey) {
         val trigger = key.label.singleOrNull()?.takeIf { it.toString() in launcherKeyboardHotkeys }
-        if (trigger != null && onHotkey != null) {
-            onHotkey(trigger)
+        if (trigger != null && onHotkey?.invoke(trigger) == true) {
             shiftOverride = null
         } else {
             insertKey(key)

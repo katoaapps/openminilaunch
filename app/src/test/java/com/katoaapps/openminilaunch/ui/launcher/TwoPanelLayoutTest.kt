@@ -6,9 +6,12 @@ import com.katoaapps.openminilaunch.ui.launcher.layout.HOME_PAGE
 import com.katoaapps.openminilaunch.ui.launcher.layout.MINK_DAY_PAGE
 import com.katoaapps.openminilaunch.ui.launcher.layout.TwoPanelGeometry
 import com.katoaapps.openminilaunch.ui.launcher.layout.WIDGET_PAGE
+import com.katoaapps.openminilaunch.ui.launcher.layout.launcherPageAt
+import com.katoaapps.openminilaunch.ui.launcher.layout.launcherPagerIndex
 import com.katoaapps.openminilaunch.ui.launcher.layout.newlyRevealedPage
 import com.katoaapps.openminilaunch.ui.launcher.layout.pairForFocusedPage
 import com.katoaapps.openminilaunch.ui.launcher.layout.twoPanelGeometry
+import com.katoaapps.openminilaunch.ui.launcher.layout.visibleLauncherPages
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertNotNull
 import org.junit.Assert.assertNull
@@ -97,10 +100,20 @@ class TwoPanelLayoutTest {
     }
 
     @Test fun pageMappingKeepsMinkWhenUnfoldingAndFolding() {
-        assertEquals(0, pairForFocusedPage(MINK_DAY_PAGE))
-        assertEquals(MINK_DAY_PAGE, newlyRevealedPage(0))
-        assertEquals(1, pairForFocusedPage(HOME_PAGE))
-        assertEquals(1, pairForFocusedPage(WIDGET_PAGE))
-        assertEquals(WIDGET_PAGE, newlyRevealedPage(1))
+        assertEquals(0, pairForFocusedPage(MINK_DAY_PAGE, showMinkDayTab = true))
+        assertEquals(MINK_DAY_PAGE, newlyRevealedPage(0, showMinkDayTab = true))
+        assertEquals(1, pairForFocusedPage(HOME_PAGE, showMinkDayTab = true))
+        assertEquals(1, pairForFocusedPage(WIDGET_PAGE, showMinkDayTab = true))
+        assertEquals(WIDGET_PAGE, newlyRevealedPage(1, showMinkDayTab = true))
+    }
+
+    @Test fun hiddenMinkDayTabRemovesOnlyItsSwipePage() {
+        assertEquals(listOf(HOME_PAGE, WIDGET_PAGE), visibleLauncherPages(showMinkDayTab = false))
+        assertEquals(0, launcherPagerIndex(HOME_PAGE, showMinkDayTab = false))
+        assertEquals(1, launcherPagerIndex(WIDGET_PAGE, showMinkDayTab = false))
+        assertEquals(HOME_PAGE, launcherPageAt(0, showMinkDayTab = false))
+        assertEquals(WIDGET_PAGE, launcherPageAt(1, showMinkDayTab = false))
+        assertEquals(0, pairForFocusedPage(HOME_PAGE, showMinkDayTab = false))
+        assertEquals(HOME_PAGE, newlyRevealedPage(0, showMinkDayTab = false))
     }
 }

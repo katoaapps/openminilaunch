@@ -11,6 +11,8 @@ import com.katoaapps.openminilaunch.model.MinkAppPauseMode
 
 internal class MinkDayPreferenceStore(private val prefs: SharedPreferences) {
     val socialPackages = mutableStateListOf<String>()
+    var showTab by mutableStateOf(prefs.getBoolean(SHOW_TAB_KEY, true))
+        private set
     var usesAutomaticSocialApps by mutableStateOf(!prefs.contains(SOCIAL_PACKAGES_KEY))
         private set
     var socialGoalMinutes by mutableStateOf(
@@ -48,6 +50,11 @@ internal class MinkDayPreferenceStore(private val prefs: SharedPreferences) {
         prefs.edit().putString(MINK_APP_PAUSE_MODE_KEY, mode.name).apply()
     }
 
+    fun updateShowTab(show: Boolean) {
+        showTab = show
+        prefs.edit().putBoolean(SHOW_TAB_KEY, show).apply()
+    }
+
     fun reconcileApps(installedPackages: Set<String>) {
         if (usesAutomaticSocialApps) return
         val changed = socialPackages.removeAll { it !in installedPackages }
@@ -75,6 +82,7 @@ internal class MinkDayPreferenceStore(private val prefs: SharedPreferences) {
         const val MINK_APP_PAUSE_MODE_KEY = "mink_app_pause_mode"
         const val SOCIAL_GOAL_MINUTES_KEY = "social_goal_minutes"
         const val SOCIAL_PACKAGES_KEY = "social_packages"
+        const val SHOW_TAB_KEY = "show_mink_day_tab"
     }
 }
 

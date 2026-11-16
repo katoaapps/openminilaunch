@@ -43,6 +43,7 @@ class LauncherStore private constructor(context: Context) {
         isFreshInstall = !generalPreferences.onboardingComplete,
     )
     private val iconAppearancePreferences = IconAppearancePreferenceStore(prefs)
+    private val launcherIconOverrides = LauncherIconOverrideStore(prefs)
     private val fontAppearancePreferences = FontAppearancePreferenceStore(prefs)
     private val messagingPreferences = MessagingPreferenceStore(prefs)
     private val callingPreferences = CallingPreferenceStore(prefs)
@@ -138,6 +139,7 @@ class LauncherStore private constructor(context: Context) {
         get() = !demoModeStore.enabled && appearancePreferences.useSystemHomeWallpaper
     internal val appBackgroundImageFile get() = homeWallpaperRepository.wallpaperFile
     val iconAppearance get() = iconAppearancePreferences.appearance
+    val appIconOverrides get() = launcherIconOverrides.overrides
     val fontAppearance get() = fontAppearancePreferences.appearance
     internal val customFontFile get() = customFontRepository.fontFile
     val hasCustomFont get() = customFontRepository.hasFont
@@ -149,6 +151,7 @@ class LauncherStore private constructor(context: Context) {
     val preferredWebPackage get() = messagingPreferences.preferredWebPackage
     val socialGoalMinutes get() = minkDayPreferences.socialGoalMinutes
     val socialGoalHours get() = minkDayPreferences.socialGoalHours
+    val showMinkDayTab get() = minkDayPreferences.showTab
     val minkAppPauseMode get() = minkDayPreferences.pauseMode
     val demoModeEnabled get() = demoModeStore.enabled
     val githubUpdateChecksEnabled get() = updatePreferences.checksEnabled
@@ -322,8 +325,19 @@ class LauncherStore private constructor(context: Context) {
         )
     }
 
-    fun pruneLauncherTargets(shouldRemove: (String) -> Boolean): Boolean =
-        launcherSelections.pruneLauncherTargets(shouldRemove)
+    fun pruneLauncherTargets(shouldRemove: (String) -> Boolean): Boolean {
+        val selectionsChanged = launcherSelections.pruneLauncherTargets(shouldRemove)
+        val iconsChanged = launcherIconOverrides.prune(shouldRemove)
+        return selectionsChanged || iconsChanged
+    }
+
+    fun setAppIconOverride(selectionKey: String, override: LauncherIconOverride?) {
+        launcherIconOverrides.set(selectionKey, override)
+    }
+
+    internal fun replaceAppIconOverrides(overrides: Map<String, LauncherIconOverride>) {
+        launcherIconOverrides.replace(overrides)
+    }
 
     fun confirmSystemDefaultsForUnselectedShortcuts() {
         launcherSelections.confirmSystemDefaults()
@@ -681,6 +695,10 @@ class LauncherStore private constructor(context: Context) {
 
     fun updateMinkAppPauseMode(mode: MinkAppPauseMode) {
         minkDayPreferences.updatePauseMode(mode)
+    }
+
+    fun updateShowMinkDayTab(show: Boolean) {
+        minkDayPreferences.updateShowTab(show)
     }
 
     fun reconcileSocialApps(installedPackages: Set<String>) {

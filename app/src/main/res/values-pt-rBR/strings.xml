@@ -1,6 +1,13 @@
 <?xml version='1.0' encoding='utf-8'?>
 <resources>
     <string name="app_name">MinkLauncher OpenSource</string>
+    <string name="show_mink_day_tab">Mostrar a guia Dia do Mink</string>
+    <string name="show_mink_day_tab_description">Mantenha o Dia do Mink nos gestos da tela inicial. Desative para abri-lo apenas pelo botão da tela inicial ou pelas Configurações.</string>
+    <string name="choose_icon">Escolher ícone</string>
+    <string name="choose_app_icon">Escolher um ícone para o app</string>
+    <string name="use_default_app_icon">Usar ícone padrão</string>
+    <string name="use_default_app_icon_description">Segue o estilo de ícone escolhido em Aparência</string>
+    <string name="choose_one_icon_from_pack">Escolha um ícone deste pacote</string>
     <string name="lock_accessibility_label">MinkLauncher OpenSource - Bloqueio de tela com toque duplo</string>
     <string name="lock_accessibility_description">Permite que MinkLauncher OpenSource execute a ação da tela de bloqueio do Android somente após você tocar duas vezes no espaço inicial vazio. Ele não pode ler ou interagir com o conteúdo da tela.</string>
     <string name="home_date_pattern">EEE, MMM d</string>

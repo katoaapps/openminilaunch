@@ -4,6 +4,7 @@ import com.katoaapps.openminilaunch.R
 import com.katoaapps.openminilaunch.data.LauncherStore
 import com.katoaapps.openminilaunch.ui.components.SectionLabel
 import com.katoaapps.openminilaunch.ui.components.SettingsRow
+import com.katoaapps.openminilaunch.ui.components.SettingsSwitchRow
 import com.katoaapps.openminilaunch.ui.theme.Dimens
 import com.katoaapps.openminilaunch.ui.theme.Muted
 import com.katoaapps.openminilaunch.ui.wellbeing.MinkDailyLimitControl
@@ -36,6 +37,12 @@ internal fun MinkDaySettingsPage(
 ) {
     SettingsPage(stringResource(R.string.mink_day), goBack) {
         Text(stringResource(R.string.mink_day_settings_description), color = Muted, fontSize = Dimens.sp13)
+        SettingsSwitchRow(
+            title = stringResource(R.string.show_mink_day_tab),
+            subtitle = stringResource(R.string.show_mink_day_tab_description),
+            checked = store.showMinkDayTab,
+            onCheckedChange = store::updateShowMinkDayTab,
+        )
         SettingsRow(
             stringResource(R.string.usage_access),
             stringResource(if (usageAccessGranted) R.string.usage_access_active else R.string.usage_access_open_permissions),

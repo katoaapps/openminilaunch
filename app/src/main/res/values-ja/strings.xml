@@ -1,6 +1,13 @@
 <?xml version='1.0' encoding='utf-8'?>
 <resources>
     <string name="app_name">MinkLauncher OpenSource</string>
+    <string name="show_mink_day_tab">Mink’s Day タブを表示</string>
+    <string name="show_mink_day_tab_description">ホームのスワイプに Mink’s Day を残します。オフにすると、ホームボタンまたは設定からのみ開けます。</string>
+    <string name="choose_icon">アイコンを選択</string>
+    <string name="choose_app_icon">アプリアイコンを1つ選択</string>
+    <string name="use_default_app_icon">デフォルトのアイコンを使用</string>
+    <string name="use_default_app_icon_description">外観で選択したアイコンスタイルに従います</string>
+    <string name="choose_one_icon_from_pack">このパックからアイコンを1つ選択</string>
     <string name="lock_accessibility_label">MinkLauncher OpenSource - ダブルタップ画面ロック</string>
     <string name="lock_accessibility_description">空のホームスペースをダブルタップした後にのみ、MinkLauncher OpenSource が Android のロック画面アクションを実行できるようにします。画面コンテンツを読み取ったり、操作したりすることはできません。</string>
     <string name="home_date_pattern">えー、うーん</string>

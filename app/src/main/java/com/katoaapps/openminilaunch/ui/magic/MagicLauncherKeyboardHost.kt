@@ -29,7 +29,7 @@ internal fun MagicLauncherKeyboardHost(
     preferences: LauncherKeyboardPreferences,
     themePrimaryArgb: Int,
     themeSecondaryArgb: Int,
-    onHotkey: (Char) -> Unit,
+    onHotkey: (Char) -> Boolean,
     onSubmit: () -> Unit,
     multiline: Boolean,
     onOpenSettings: () -> Unit,

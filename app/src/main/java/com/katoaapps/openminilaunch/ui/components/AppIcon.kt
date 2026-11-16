@@ -87,14 +87,17 @@ internal fun LauncherAppIcon(
     contentDescription: String? = null,
 ) {
     val context = LocalContext.current
-    val appearance = LauncherStore.get(context).iconAppearance
+    val store = LauncherStore.get(context)
+    val appearance = store.iconAppearance
+    val override = store.appIconOverrides[target.selectionKey]
     val iconPacks = remember(context) { IconPackRepository.get(context) }
     val iconPacksRevision by iconPacks.revision.collectAsState()
     val launcherAppsRevision by actions.launcherAppsRevision.collectAsState()
     RenderedAppIcon(
-        iconKey = "${target.selectionKey}:$launcherAppsRevision:$iconPacksRevision:$appearance",
+        iconKey = "${target.selectionKey}:$launcherAppsRevision:$iconPacksRevision:$appearance:$override",
         drawable = {
-            appearance.iconPackPackage
+            override?.let { iconPacks.iconForOverride(target, it.iconPackPackage, it.drawableName) }
+                ?: appearance.iconPackPackage
                 ?.takeIf { appearance.source == IconSource.ICON_PACK }
                 ?.let { iconPacks.iconFor(target, it) }
                 ?: actions.launcherAppIcon(target)
@@ -115,15 +118,18 @@ internal fun LauncherTargetIcon(
     contentDescription: String? = null,
 ) {
     val context = LocalContext.current
-    val appearance = LauncherStore.get(context).iconAppearance
+    val store = LauncherStore.get(context)
+    val appearance = store.iconAppearance
+    val override = store.appIconOverrides[target.selectionKey]
     val iconPacks = remember(context) { IconPackRepository.get(context) }
     val iconPacksRevision by iconPacks.revision.collectAsState()
     val appsRevision by actions.launcherAppsRevision.collectAsState()
     val shortcutsRevision by actions.launcherShortcutsRevision.collectAsState()
     RenderedAppIcon(
-        iconKey = "${target.selectionKey}:$appsRevision:$shortcutsRevision:$iconPacksRevision:$appearance",
+        iconKey = "${target.selectionKey}:$appsRevision:$shortcutsRevision:$iconPacksRevision:$appearance:$override",
         drawable = {
-            appearance.iconPackPackage
+            override?.let { iconPacks.iconForOverride(target, it.iconPackPackage, it.drawableName) }
+                ?: appearance.iconPackPackage
                 ?.takeIf { appearance.source == IconSource.ICON_PACK }
                 ?.let { iconPacks.iconFor(target, it) }
                 ?: actions.launcherTargetIcon(target)

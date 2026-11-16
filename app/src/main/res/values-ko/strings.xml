@@ -1,6 +1,13 @@
 <?xml version='1.0' encoding='utf-8'?>
 <resources>
     <string name="app_name">MinkLauncher OpenSource</string>
+    <string name="show_mink_day_tab">Mink’s Day 탭 표시</string>
+    <string name="show_mink_day_tab_description">홈 화면 스와이프에 Mink’s Day를 유지합니다. 끄면 홈 버튼이나 설정에서만 열 수 있습니다.</string>
+    <string name="choose_icon">아이콘 선택</string>
+    <string name="choose_app_icon">앱 아이콘 하나 선택</string>
+    <string name="use_default_app_icon">기본 아이콘 사용</string>
+    <string name="use_default_app_icon_description">모양에서 선택한 아이콘 스타일을 따릅니다</string>
+    <string name="choose_one_icon_from_pack">이 팩에서 아이콘 하나 선택</string>
     <string name="lock_accessibility_label">MinkLauncher OpenSource - 두 번 탭하여 화면 잠금</string>
     <string name="lock_accessibility_description">빈 홈 공간을 두 번 탭한 후에만 MinkLauncher OpenSource가 Android의 잠금 화면 작업을 수행할 수 있습니다. 화면 내용을 읽거나 상호 작용할 수 없습니다.</string>
     <string name="home_date_pattern">EEE, MMM d</string>

@@ -28,10 +28,7 @@ internal class TodoStore(
     fun add(text: String) {
         val clean = text.trim()
         if (clean.isEmpty()) return
-        val firstCompletedIndex = items.indexOfFirst(TodoItem::completed)
-            .takeUnless { it == -1 }
-            ?: items.size
-        items.add(firstCompletedIndex, TodoItem(UUID.randomUUID().toString(), clean))
+        items.add(0, TodoItem(UUID.randomUUID().toString(), clean))
         save()
     }
 

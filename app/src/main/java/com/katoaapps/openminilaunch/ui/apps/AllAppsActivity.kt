@@ -161,6 +161,7 @@ internal fun AllAppsScreen(
     val pagerState = rememberPagerState(pageCount = { apps.size })
     val scope = rememberCoroutineScope()
     var managementTarget by remember { mutableStateOf<LauncherTarget?>(null) }
+    var iconPickerTarget by remember { mutableStateOf<LauncherTarget?>(null) }
 
     LaunchedEffect(apps) {
         if (apps.isNotEmpty()) pagerState.scrollToPage(initialLauncherTargetsIndex(apps))
@@ -350,6 +351,10 @@ internal fun AllAppsScreen(
             displayLabel = displayLabel,
             actions = actions,
             onDismiss = { managementTarget = null },
+            onChooseIcon = {
+                managementTarget = null
+                iconPickerTarget = target
+            },
             onAppInfo = {
                 managementTarget = null
                 if (!actions.openLauncherTargetAppInfo(target)) {
@@ -360,6 +365,17 @@ internal fun AllAppsScreen(
                     ).show()
                 }
             },
+        )
+    }
+    iconPickerTarget?.let { target ->
+        AppIconOverrideDialog(
+            appLabel = launcherDiscoveryLabel(target, actions::appLabel),
+            current = store.appIconOverrides[target.selectionKey],
+            onSelect = { override ->
+                store.setAppIconOverride(target.selectionKey, override)
+                iconPickerTarget = null
+            },
+            onDismiss = { iconPickerTarget = null },
         )
     }
 }

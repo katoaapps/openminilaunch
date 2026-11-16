@@ -1,6 +1,13 @@
 <?xml version='1.0' encoding='utf-8'?>
 <resources>
     <string name="app_name">MinkLauncher OpenSource</string>
+    <string name="show_mink_day_tab">Tampilkan tab Mink’s Day</string>
+    <string name="show_mink_day_tab_description">Pertahankan Mink’s Day dalam geseran Beranda. Matikan untuk membukanya hanya dari tombol Beranda atau Setelan.</string>
+    <string name="choose_icon">Pilih ikon</string>
+    <string name="choose_app_icon">Pilih satu ikon aplikasi</string>
+    <string name="use_default_app_icon">Gunakan ikon bawaan</string>
+    <string name="use_default_app_icon_description">Ikuti gaya ikon yang dipilih di Tampilan</string>
+    <string name="choose_one_icon_from_pack">Pilih satu ikon dari paket ini</string>
     <string name="lock_accessibility_label">MinkLauncher OpenSource - Ketuk dua kali kunci layar</string>
     <string name="lock_accessibility_description">Mengizinkan MinkLauncher OpenSource melakukan tindakan Kunci layar Android hanya setelah Anda mengetuk dua kali ruang Beranda yang kosong. Itu tidak dapat membaca atau berinteraksi dengan konten layar.</string>
     <string name="home_date_pattern">EEE, MMM d</string>

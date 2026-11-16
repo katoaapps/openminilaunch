@@ -21,6 +21,9 @@ internal class IconPackDrawableLoader(
             ?: resources.getIdentifier(drawableName, "mipmap", packageName).takeIf { it != 0 }
         resourceId?.let { ContextCompat.getDrawable(packContext, it) }
     }.getOrNull()
+
+    fun loadNamed(packageName: String, drawableName: String): Drawable? =
+        load(packageName, IconPackDrawable.Static(drawableName))
 }
 
 internal fun IconPackDrawable.drawableName(dayOfMonth: Int): String = when (this) {

@@ -61,6 +61,7 @@ import com.katoaapps.openminilaunch.R
 import com.katoaapps.openminilaunch.features.magic.MagicBoxRoute
 import com.katoaapps.openminilaunch.features.magic.printableHardwareText
 import com.katoaapps.openminilaunch.ui.theme.Dimens
+import com.katoaapps.openminilaunch.ui.theme.DestructiveColor
 import com.katoaapps.openminilaunch.ui.theme.Muted
 
 @Composable
@@ -86,6 +87,7 @@ internal fun MagicEditorSurface(
     visible: Boolean,
     modifier: Modifier = Modifier,
 ) {
+    val activeTrigger = route.trigger
     val editorColor by animateColorAsState(
         targetValue = actionVisuals.color,
         animationSpec = tween(180),
@@ -115,6 +117,12 @@ internal fun MagicEditorSurface(
                 verticalAlignment = Alignment.CenterVertically,
             ) {
                 if (!noteMode) {
+                    activeTrigger?.let { trigger ->
+                        MagicHotkeyIndicator(
+                            trigger = trigger,
+                            contentColor = editorContentColor,
+                        )
+                    }
                     selectedRecipientLabel?.let { recipientLabel ->
                         CommandChip(
                             stringResource(
@@ -141,7 +149,11 @@ internal fun MagicEditorSurface(
                     onHardwareKeyUp = onHardwareKeyUp,
                     modifier = Modifier.weight(1f).then(
                         if (noteMode) {
-                            Modifier.fillMaxHeight().padding(end = Dimens.dp48, bottom = Dimens.dp54)
+                            Modifier.fillMaxHeight().padding(
+                                start = if (activeTrigger != null) Dimens.dp52 else Dimens.dp0,
+                                end = Dimens.dp48,
+                                bottom = Dimens.dp54,
+                            )
                         } else {
                             Modifier
                         },
@@ -161,6 +173,13 @@ internal fun MagicEditorSurface(
                 }
             }
             if (noteMode) {
+                activeTrigger?.let { trigger ->
+                    MagicHotkeyIndicator(
+                        trigger = trigger,
+                        contentColor = editorContentColor,
+                        modifier = Modifier.align(Alignment.TopStart).padding(Dimens.dp8),
+                    )
+                }
                 IconButton(
                     onClick = onDeleteNote,
                     modifier = Modifier.align(Alignment.TopEnd).padding(Dimens.dp6),
@@ -168,7 +187,7 @@ internal fun MagicEditorSurface(
                     Icon(
                         Icons.Default.DeleteOutline,
                         stringResource(R.string.delete_note_draft),
-                        tint = editorContentColor,
+                        tint = DestructiveColor,
                     )
                 }
                 FilledIconButton(
@@ -180,6 +199,28 @@ internal fun MagicEditorSurface(
                     ),
                 ) { Icon(actionVisuals.icon, stringResource(R.string.run_command)) }
             }
+        }
+    }
+}
+
+@Composable
+private fun MagicHotkeyIndicator(
+    trigger: Char,
+    contentColor: Color,
+    modifier: Modifier = Modifier,
+) {
+    Surface(
+        modifier = modifier.size(Dimens.dp38),
+        shape = CircleShape,
+        color = contentColor.copy(alpha = .14f),
+        contentColor = contentColor,
+    ) {
+        Box(contentAlignment = Alignment.Center) {
+            Text(
+                text = trigger.toString(),
+                fontWeight = FontWeight.Black,
+                fontSize = Dimens.sp20,
+            )
         }
     }
 }

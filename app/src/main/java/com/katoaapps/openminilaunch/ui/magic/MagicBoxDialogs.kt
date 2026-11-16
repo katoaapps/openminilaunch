@@ -14,7 +14,6 @@ import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
-import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
@@ -26,6 +25,7 @@ import com.katoaapps.openminilaunch.model.CommunicationRecipient
 import com.katoaapps.openminilaunch.model.looksLikePhoneRecipient
 import com.katoaapps.openminilaunch.ui.components.MinkDialogDefaults
 import com.katoaapps.openminilaunch.ui.components.minkDialogWidth
+import com.katoaapps.openminilaunch.ui.theme.DestructiveColor
 import com.katoaapps.openminilaunch.ui.theme.Dimens
 import com.katoaapps.openminilaunch.ui.theme.MagicCallColor
 import com.katoaapps.openminilaunch.ui.theme.MagicTextColor
@@ -44,12 +44,12 @@ internal fun MagicDiscardDialog(
         modifier = Modifier.minkDialogWidth(),
         onDismissRequest = onDismiss,
         properties = MinkDialogDefaults.properties,
-        icon = { Icon(Icons.Default.DeleteOutline, null) },
+        icon = { Icon(Icons.Default.DeleteOutline, null, tint = DestructiveColor) },
         title = { Text(title) },
         text = { Text(description) },
         confirmButton = {
             TextButton(onClick = onConfirm) {
-                Text(confirmLabel, color = MaterialTheme.colorScheme.error)
+                Text(confirmLabel, color = DestructiveColor)
             }
         },
         dismissButton = {

@@ -13,6 +13,7 @@ import com.katoaapps.openminilaunch.model.AppGridSlot
 import com.katoaapps.openminilaunch.model.FontAppearance
 import com.katoaapps.openminilaunch.model.FavoriteIntegratedContact
 import com.katoaapps.openminilaunch.model.IconAppearance
+import com.katoaapps.openminilaunch.model.LauncherIconOverride
 import com.katoaapps.openminilaunch.model.MinkAppPauseMode
 import com.katoaapps.openminilaunch.model.LauncherKeyboardPreferences
 import com.katoaapps.openminilaunch.model.PalettePreference
@@ -54,6 +55,7 @@ internal data class LauncherBackupLayout(
     val confirmedAppGridChoices: List<AppGridSlot>,
     val drawerTargets: List<String>,
     val libraryShortcutTargets: List<String>,
+    val iconOverrides: Map<String, LauncherIconOverride> = emptyMap(),
 )
 
 internal data class LauncherBackupSettings(
@@ -94,6 +96,8 @@ internal data class LauncherBackupSettings(
     val socialPackages: List<String>,
     val socialGoalHours: Int,
     val minkAppPauseMode: MinkAppPauseMode,
+    /** Null means this backup predates the Mink's Day tab visibility preference. */
+    val showMinkDayTab: Boolean? = null,
     val githubUpdateChecksEnabled: Boolean,
     val minkPadPreferences: com.katoaapps.minkpad.core.MinkPadPreferences? = null,
     val fontAppearance: FontAppearance = FontAppearance(),

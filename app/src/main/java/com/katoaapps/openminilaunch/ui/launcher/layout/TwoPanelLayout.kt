@@ -26,11 +26,25 @@ internal data class FoldLayoutFeature(
     val halfOpened: Boolean = false,
 )
 
-internal fun pairForFocusedPage(page: Int): Int =
-    if (page == MINK_DAY_PAGE) 0 else 1
+internal fun visibleLauncherPages(showMinkDayTab: Boolean): List<Int> =
+    if (showMinkDayTab) listOf(MINK_DAY_PAGE, HOME_PAGE, WIDGET_PAGE)
+    else listOf(HOME_PAGE, WIDGET_PAGE)
 
-internal fun newlyRevealedPage(pair: Int): Int =
-    if (pair == 0) MINK_DAY_PAGE else WIDGET_PAGE
+internal fun launcherPagerIndex(page: Int, showMinkDayTab: Boolean): Int =
+    visibleLauncherPages(showMinkDayTab).indexOf(page).takeIf { it >= 0 }
+        ?: visibleLauncherPages(showMinkDayTab).indexOf(HOME_PAGE)
+
+internal fun launcherPageAt(index: Int, showMinkDayTab: Boolean): Int =
+    visibleLauncherPages(showMinkDayTab).getOrElse(index) { HOME_PAGE }
+
+internal fun pairForFocusedPage(page: Int, showMinkDayTab: Boolean): Int =
+    if (showMinkDayTab && page != MINK_DAY_PAGE) 1 else 0
+
+internal fun newlyRevealedPage(pair: Int, showMinkDayTab: Boolean): Int = when {
+    !showMinkDayTab -> HOME_PAGE
+    pair == 0 -> MINK_DAY_PAGE
+    else -> WIDGET_PAGE
+}
 
 /** A narrow window or a tabletop posture retains the familiar single-page Home. */
 internal fun twoPanelGeometry(

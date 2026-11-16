@@ -30,6 +30,7 @@ import com.katoaapps.openminilaunch.model.LauncherKeyboardHeightPreset
 import com.katoaapps.openminilaunch.model.LauncherKeyboardLayout
 import com.katoaapps.openminilaunch.model.LauncherKeyboardPreferences
 import com.katoaapps.openminilaunch.model.LauncherKeyboardStyle
+import com.katoaapps.openminilaunch.model.LauncherIconOverride
 import com.katoaapps.openminilaunch.model.PalettePreference
 import com.katoaapps.openminilaunch.model.QuickDrawerConfig
 import com.katoaapps.openminilaunch.model.ThemePreference
@@ -43,6 +44,28 @@ import org.junit.Assert.assertNull
 import org.junit.Test
 
 class LauncherBackupCodecTest {
+    @Test fun minkDayTabAndPerAppIconsSurvivePortableBackupRoundTrip() {
+        val targetKey = "app:0:com.example/.MainActivity"
+        val override = LauncherIconOverride("com.example.icons", "custom_mail")
+        val sample = sampleBackup(twoPanelMode = true)
+        val original = sample.copy(
+            launcher = sample.launcher.copy(iconOverrides = mapOf(targetKey to override)),
+            settings = sample.settings.copy(showMinkDayTab = false),
+        )
+
+        val restored = LauncherBackupCodec.decode(LauncherBackupCodec.encode(original))
+
+        assertEquals(mapOf(targetKey to override), restored.launcher.iconOverrides)
+        assertEquals(false, restored.settings.showMinkDayTab)
+    }
+
+    @Test fun oldBackupLeavesMinkDayTabPreferenceAlone() {
+        val json = JSONObject(LauncherBackupCodec.encode(sampleBackup(twoPanelMode = true)))
+        json.getJSONObject("settings").getJSONObject("minkDay").remove("showTab")
+
+        assertNull(LauncherBackupCodec.decode(json.toString()).settings.showMinkDayTab)
+    }
+
     @Test fun launcherKeyboardPreferencesSurvivePortableBackupRoundTrip() {
         val keyboard = LauncherKeyboardPreferences(
             useMinkKeyboard = false,

@@ -1,6 +1,13 @@
 <?xml version='1.0' encoding='utf-8'?>
 <resources>
     <string name="app_name">MinkLauncher OpenSource</string>
+    <string name="show_mink_day_tab">Mink’s Day टैब दिखाएँ</string>
+    <string name="show_mink_day_tab_description">होम स्वाइप में Mink’s Day रखें। इसे बंद करने पर केवल होम बटन या सेटिंग्स से खोला जा सकेगा।</string>
+    <string name="choose_icon">आइकन चुनें</string>
+    <string name="choose_app_icon">एक ऐप आइकन चुनें</string>
+    <string name="use_default_app_icon">डिफ़ॉल्ट आइकन इस्तेमाल करें</string>
+    <string name="use_default_app_icon_description">दिखावट में चुनी गई आइकन शैली का उपयोग करें</string>
+    <string name="choose_one_icon_from_pack">इस पैक से एक आइकन चुनें</string>
     <string name="lock_accessibility_label">MinkLauncher OpenSource - स्क्रीन लॉक पर डबल-टैप करें</string>
     <string name="lock_accessibility_description">आपके द्वारा खाली होम स्पेस पर डबल-टैप करने के बाद ही MinkLauncher OpenSource को Android की लॉक स्क्रीन कार्रवाई करने की अनुमति मिलती है। यह स्क्रीन सामग्री को पढ़ या उसके साथ इंटरैक्ट नहीं कर सकता।</string>
     <string name="home_date_pattern">ईईई, एमएमएम डी</string>

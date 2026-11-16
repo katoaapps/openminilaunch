@@ -1,6 +1,13 @@
 <?xml version='1.0' encoding='utf-8'?>
 <resources>
     <string name="app_name">MinkLauncher OpenSource</string>
+    <string name="show_mink_day_tab">Mink’s Day ٹیب دکھائیں</string>
+    <string name="show_mink_day_tab_description">ہوم سوائپ میں Mink’s Day کو رکھیں۔ بند کرنے پر اسے صرف ہوم بٹن یا ترتیبات سے کھولا جا سکے گا۔</string>
+    <string name="choose_icon">آئیکن منتخب کریں</string>
+    <string name="choose_app_icon">ایک ایپ آئیکن منتخب کریں</string>
+    <string name="use_default_app_icon">ڈیفالٹ آئیکن استعمال کریں</string>
+    <string name="use_default_app_icon_description">ظاہری شکل میں منتخب کردہ آئیکن اسٹائل استعمال کریں</string>
+    <string name="choose_one_icon_from_pack">اس پیک سے ایک آئیکن منتخب کریں</string>
     <string name="lock_accessibility_label">MinkLauncher OpenSource - اسکرین لاک کو دو بار تھپتھپائیں۔</string>
     <string name="lock_accessibility_description">MinkLauncher OpenSource کو Android کی لاک اسکرین ایکشن کرنے کی اجازت دیتا ہے صرف آپ کے گھر کی خالی جگہ کو دو بار تھپتھپانے کے بعد۔ یہ اسکرین کے مواد کو پڑھ یا اس کے ساتھ تعامل نہیں کر سکتا۔</string>
     <string name="home_date_pattern">EEE، MMM d</string>

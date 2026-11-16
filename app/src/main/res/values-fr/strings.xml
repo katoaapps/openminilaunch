@@ -1,6 +1,13 @@
 <?xml version='1.0' encoding='utf-8'?>
 <resources>
     <string name="app_name">MinkLauncher OpenSource</string>
+    <string name="show_mink_day_tab">Afficher l’onglet Journée de Mink</string>
+    <string name="show_mink_day_tab_description">Conservez Journée de Mink dans les balayages d’accueil. Désactivez cette option pour l’ouvrir uniquement depuis son bouton d’accueil ou les paramètres.</string>
+    <string name="choose_icon">Choisir l’icône</string>
+    <string name="choose_app_icon">Choisir une icône d’application</string>
+    <string name="use_default_app_icon">Utiliser l’icône par défaut</string>
+    <string name="use_default_app_icon_description">Suit le style d’icône choisi dans Apparence</string>
+    <string name="choose_one_icon_from_pack">Choisissez une icône de ce pack</string>
     <string name="lock_accessibility_label">MinkLauncher OpenSource – Verrouillage de l\'écran en appuyant deux fois</string>
     <string name="lock_accessibility_description">Permet au MinkLauncher OpenSource d\'effectuer l\'action d\'écran de verrouillage du Android uniquement après avoir appuyé deux fois sur l\'espace d\'accueil vide. Il ne peut pas lire ni interagir avec le contenu de l\'écran.</string>
     <string name="home_date_pattern">EEE, MMMd</string>

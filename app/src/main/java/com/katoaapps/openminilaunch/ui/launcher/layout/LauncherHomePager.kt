@@ -49,7 +49,6 @@ internal fun LauncherHomePager(
     twoPanelState: LazyListState,
     focusedPage: Int,
     onFocusedPageChange: (Int) -> Unit,
-    onTwoPanelActiveChange: (Boolean) -> Unit,
     homePageRequestToken: Int,
     keyboardInputEnabled: Boolean,
     homeRequestToken: Int,
@@ -59,6 +58,7 @@ internal fun LauncherHomePager(
     openTodos: () -> Unit,
     openVCardSettings: () -> Unit,
     openConversations: () -> Unit,
+    openMinkDay: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val scope = rememberCoroutineScope()
@@ -67,7 +67,7 @@ internal fun LauncherHomePager(
     val contentLayoutDirection = LocalLayoutDirection.current
     val fold = currentFoldLayoutFeature()
     val homeStateHolder = rememberSaveableStateHolder()
-    var settledPair by remember { mutableIntStateOf(1) }
+    var settledPair by remember { mutableIntStateOf(pairForFocusedPage(HOME_PAGE, store.showMinkDayTab)) }
     var initialized by remember { mutableStateOf(false) }
     var previousModeWasTwoPanel by remember { mutableStateOf(false) }
     var minkSpaceExpanded by remember { mutableStateOf(false) }
@@ -91,22 +91,27 @@ internal fun LauncherHomePager(
         )
         val twoPanelActive = geometry != null
 
-        LaunchedEffect(geometry) {
+        LaunchedEffect(geometry, store.showMinkDayTab) {
             if (twoPanelActive) {
                 val pair = if (initialized && previousModeWasTwoPanel) settledPair
-                    else pairForFocusedPage(focusedPage)
+                    else pairForFocusedPage(focusedPage, store.showMinkDayTab)
                 settledPair = pair
                 twoPanelState.scrollToItem(pair)
             } else if (!initialized || previousModeWasTwoPanel) {
-                pagerState.scrollToPage(focusedPage)
+                pagerState.scrollToPage(
+                    launcherPagerIndex(focusedPage, store.showMinkDayTab),
+                )
             }
             previousModeWasTwoPanel = twoPanelActive
             initialized = true
-            onTwoPanelActiveChange(twoPanelActive)
         }
 
-        LaunchedEffect(pagerState.settledPage) {
-            if (!twoPanelActive) onFocusedPageChange(pagerState.settledPage)
+        LaunchedEffect(pagerState.settledPage, store.showMinkDayTab) {
+            if (!twoPanelActive) {
+                onFocusedPageChange(
+                    launcherPageAt(pagerState.settledPage, store.showMinkDayTab),
+                )
+            }
         }
 
         LaunchedEffect(
@@ -118,7 +123,7 @@ internal fun LauncherHomePager(
                 val pair = twoPanelState.firstVisibleItemIndex.coerceIn(0, 1)
                 if (pair != settledPair) {
                     settledPair = pair
-                    onFocusedPageChange(newlyRevealedPage(pair))
+                    onFocusedPageChange(newlyRevealedPage(pair, store.showMinkDayTab))
                 }
             }
         }
@@ -130,10 +135,10 @@ internal fun LauncherHomePager(
                 // Jumping cancels that in-flight motion; starting a second animation makes RTL
                 // layouts visibly oscillate between logical and physical directions.
                 if (twoPanelActive) {
-                    settledPair = 1
-                    twoPanelState.scrollToItem(1)
+                    settledPair = pairForFocusedPage(HOME_PAGE, store.showMinkDayTab)
+                    twoPanelState.scrollToItem(settledPair)
                 } else {
-                    pagerState.scrollToPage(HOME_PAGE)
+                    pagerState.scrollToPage(launcherPagerIndex(HOME_PAGE, store.showMinkDayTab))
                 }
             }
         }
@@ -142,21 +147,29 @@ internal fun LauncherHomePager(
             onFocusedPageChange(HOME_PAGE)
             scope.launch {
                 if (twoPanelActive) {
-                    settledPair = 1
-                    twoPanelState.animateScrollToItem(1)
+                    settledPair = pairForFocusedPage(HOME_PAGE, store.showMinkDayTab)
+                    twoPanelState.animateScrollToItem(settledPair)
                 } else {
-                    pagerState.animateScrollToPage(HOME_PAGE)
+                    pagerState.animateScrollToPage(
+                        launcherPagerIndex(HOME_PAGE, store.showMinkDayTab),
+                    )
                 }
             }
         }
         val goToMinkDay: () -> Unit = {
-            onFocusedPageChange(MINK_DAY_PAGE)
-            scope.launch {
-                if (twoPanelActive) {
-                    settledPair = 0
-                    twoPanelState.animateScrollToItem(0)
-                } else {
-                    pagerState.animateScrollToPage(MINK_DAY_PAGE)
+            if (!store.showMinkDayTab) {
+                openMinkDay()
+            } else {
+                onFocusedPageChange(MINK_DAY_PAGE)
+                scope.launch {
+                    if (twoPanelActive) {
+                        settledPair = 0
+                        twoPanelState.animateScrollToItem(0)
+                    } else {
+                        pagerState.animateScrollToPage(
+                            launcherPagerIndex(MINK_DAY_PAGE, showMinkDayTab = true),
+                        )
+                    }
                 }
             }
         }
@@ -164,7 +177,7 @@ internal fun LauncherHomePager(
         HomeBackground(
             store = store,
             modifier = Modifier.blur(
-                if (magicBoxExpanded && (twoPanelActive || pagerState.currentPage == HOME_PAGE)) {
+                if (magicBoxExpanded && focusedPage == HOME_PAGE) {
                     Dimens.dp10
                 } else {
                     Dimens.dp0
@@ -192,6 +205,7 @@ internal fun LauncherHomePager(
                 openTodos = openTodos,
                 openVCardSettings = openVCardSettings,
                 openConversations = openConversations,
+                showMinkDayTab = store.showMinkDayTab,
                 onMinkSpaceExpandedChange = { minkSpaceExpanded = it },
                 modifier = Modifier.fillMaxSize(),
             )
@@ -204,12 +218,16 @@ internal fun LauncherHomePager(
                     state = pagerState,
                     modifier = Modifier.fillMaxSize(),
                     userScrollEnabled = !magicBoxExpanded && !minkSpaceExpanded,
-                ) { page ->
+                ) { pageIndex ->
+                    val page = launcherPageAt(pageIndex, store.showMinkDayTab)
                     CompositionLocalProvider(LocalLayoutDirection provides contentLayoutDirection) {
                         when (page) {
                             MINK_DAY_PAGE -> MinkDayScreen(
                                 store = store,
-                                isActive = pagerState.currentPage == MINK_DAY_PAGE,
+                                isActive = launcherPageAt(
+                                    pagerState.currentPage,
+                                    store.showMinkDayTab,
+                                ) == MINK_DAY_PAGE,
                                 goHome = goHome,
                             )
                             HOME_PAGE -> homeStateHolder.SaveableStateProvider("home") {
@@ -221,7 +239,10 @@ internal fun LauncherHomePager(
                                     openVCardSettings = openVCardSettings,
                                     openConversations = openConversations,
                                     openMinkDay = goToMinkDay,
-                                    minkStatusActive = pagerState.currentPage == HOME_PAGE,
+                                    minkStatusActive = launcherPageAt(
+                                        pagerState.currentPage,
+                                        store.showMinkDayTab,
+                                    ) == HOME_PAGE,
                                     onMagicExpandedChange = {},
                                     onMinkSpaceExpandedChange = { minkSpaceExpanded = it },
                                     keyboardInputEnabled = keyboardInputEnabled,

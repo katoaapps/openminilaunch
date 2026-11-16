@@ -26,6 +26,7 @@ import com.katoaapps.openminilaunch.model.LauncherKeyboardColorSource
 import com.katoaapps.openminilaunch.model.LauncherKeyboardLayout
 import com.katoaapps.openminilaunch.model.LauncherKeyboardPreferences
 import com.katoaapps.openminilaunch.model.LauncherKeyboardStyle
+import com.katoaapps.openminilaunch.model.LauncherIconOverride
 import com.katoaapps.openminilaunch.model.LauncherKeyboardHeightPreset
 import com.katoaapps.openminilaunch.model.DEFAULT_KEYBOARD_HEIGHT_DP
 import com.katoaapps.openminilaunch.model.normalizeLauncherKeyboardHeight
@@ -273,6 +274,16 @@ internal object LauncherBackupCodec {
         put("confirmedShortcutChoices", layout.confirmedAppGridChoices.namesJsonArray())
         put("drawerTargets", layout.drawerTargets.stringsJsonArray())
         put("libraryShortcutTargets", layout.libraryShortcutTargets.stringsJsonArray())
+        put("iconOverrides", JSONObject().apply {
+            layout.iconOverrides.forEach { (selectionKey, override) ->
+                put(
+                    selectionKey,
+                    JSONObject()
+                        .put("iconPackPackage", override.iconPackPackage)
+                        .put("drawableName", override.drawableName),
+                )
+            }
+        })
     }
 
     private fun decodeLauncher(json: JSONObject): LauncherBackupLayout {
@@ -310,6 +321,7 @@ internal object LauncherBackupCodec {
                 .distinct(),
             drawerTargets = json.optJSONArray("drawerTargets").safeTargets(),
             libraryShortcutTargets = json.optJSONArray("libraryShortcutTargets").safeTargets(),
+            iconOverrides = json.optJSONObject("iconOverrides").launcherIconOverrides(),
         )
     }
 
@@ -405,6 +417,7 @@ internal object LauncherBackupCodec {
             put("socialPackages", settings.socialPackages.stringsJsonArray())
             put("socialGoalHours", settings.socialGoalHours)
             put("pauseMode", settings.minkAppPauseMode.name)
+            settings.showMinkDayTab?.let { put("showTab", it) }
         })
         put("githubUpdateChecksEnabled", settings.githubUpdateChecksEnabled)
         settings.minkPadPreferences?.let { put("minkPad", MinkPadBackupCodec.encode(it)) }
@@ -533,6 +546,7 @@ internal object LauncherBackupCodec {
             socialGoalHours = minkDay.optInt("socialGoalHours", 1)
                 .coerceIn(MIN_SOCIAL_GOAL_HOURS, MAX_SOCIAL_GOAL_HOURS),
             minkAppPauseMode = minkDay.enumValue("pauseMode", MinkAppPauseMode.NEVER),
+            showMinkDayTab = if (minkDay.has("showTab")) minkDay.getBoolean("showTab") else null,
             githubUpdateChecksEnabled = json.optBoolean("githubUpdateChecksEnabled", true),
             minkPadPreferences = json.optJSONObject("minkPad")?.let(MinkPadBackupCodec::decode),
         )
@@ -607,6 +621,21 @@ internal object LauncherBackupCodec {
                     colorArgb = colorArgb,
                 ),
             )
+        }
+    }
+
+    private fun JSONObject?.launcherIconOverrides(): Map<String, LauncherIconOverride> = buildMap {
+        val source = this@launcherIconOverrides ?: return@buildMap
+        val keys = source.keys()
+        while (keys.hasNext() && size < MAX_TARGETS) {
+            val rawSelectionKey = keys.next()
+            val selectionKey = rawSelectionKey.safeText(MAX_TARGET_LENGTH)
+            val saved = source.optJSONObject(rawSelectionKey) ?: continue
+            val iconPackPackage = saved.optString("iconPackPackage").safePackage() ?: continue
+            val drawableName = saved.optString("drawableName").safeText(256)
+            if (selectionKey.isNotBlank() && drawableName.isNotBlank()) {
+                put(selectionKey, LauncherIconOverride(iconPackPackage, drawableName))
+            }
         }
     }
 

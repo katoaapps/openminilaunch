@@ -20,6 +20,9 @@ internal object MinkFeatureColors {
     /** Numeric unread badge; intentionally independent from favorite and theme colors. */
     val ConversationCount = Color(0xFFC62828)
 
+    /** Destructive actions stay visibly red regardless of wallpaper, Material You, or theme mode. */
+    val Destructive = Color(0xFFC62828)
+
     val AppBlocked = Color(0xFFFF0000)
 
     val Slack = Color(0xFF4A154B)

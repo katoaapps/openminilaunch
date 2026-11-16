@@ -63,4 +63,38 @@ class InitialMagicInputCorrectionTest {
         assertEquals("pm", corrected.value.text)
         assertEquals(false, corrected.replacedInitialInput)
     }
+
+    @Test fun releasedHardwareKeyStopsLateAlternateReplacement() {
+        val correction = InitialMagicInputCorrection(now = { 100L })
+        correction.beginHardwareCapture("p", keyCode = 44)
+        correction.onHardwareKeyUp(keyCode = 44)
+
+        val corrected = correction.correct(TextFieldValue("p?", TextRange(2)))
+
+        assertEquals("p?", corrected.value.text)
+        assertEquals(false, corrected.replacedInitialInput)
+    }
+
+    @Test fun expiredHardwareCaptureDoesNotRewriteLaterInput() {
+        var now = 100L
+        val correction = InitialMagicInputCorrection(now = { now })
+        correction.beginHardwareCapture("p", keyCode = 44)
+        now = 1_601L
+
+        val corrected = correction.correct(TextFieldValue("p?", TextRange(2)))
+
+        assertEquals("p?", corrected.value.text)
+        assertEquals(false, corrected.replacedInitialInput)
+    }
+
+    @Test fun imeCommittedWhitespaceDoesNotReplaceCapturedPunctuation() {
+        val correction = InitialMagicInputCorrection(now = { 100L })
+        correction.beginHardwareCapture("-", keyCode = 69)
+
+        val corrected = correction.correct(TextFieldValue("- ", TextRange(2)))
+
+        assertEquals("-", corrected.value.text)
+        assertEquals(TextRange(1), corrected.value.selection)
+        assertEquals(false, corrected.replacedInitialInput)
+    }
 }

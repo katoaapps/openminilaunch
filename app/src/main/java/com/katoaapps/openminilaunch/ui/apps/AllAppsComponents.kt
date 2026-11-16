@@ -155,6 +155,7 @@ internal fun AppManagementDialog(
     displayLabel: String,
     actions: DeviceActions,
     onDismiss: () -> Unit,
+    onChooseIcon: () -> Unit,
     onAppInfo: () -> Unit,
 ) {
     AlertDialog(
@@ -169,8 +170,13 @@ internal fun AppManagementDialog(
         },
         title = { Text(displayLabel, maxLines = 2, overflow = TextOverflow.Ellipsis) },
         confirmButton = {
-            TextButton(onClick = onAppInfo) {
-                Text(stringResource(R.string.app_info))
+            Row {
+                TextButton(onClick = onChooseIcon) {
+                    Text(stringResource(R.string.choose_icon))
+                }
+                TextButton(onClick = onAppInfo) {
+                    Text(stringResource(R.string.app_info))
+                }
             }
         },
         dismissButton = {
