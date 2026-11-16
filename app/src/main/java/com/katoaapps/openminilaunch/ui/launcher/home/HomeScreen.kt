@@ -88,6 +88,7 @@ internal fun HomeScreen(
     val magicExpanded = magicBoxSessionState.expanded
     val classicLayout = store.homeLayoutStyle == HomeLayoutStyle.CLASSIC
     var classicVerticalGesturesEnabled by remember { mutableStateOf(false) }
+    var launcherKeyboardVisible by remember { mutableStateOf(false) }
     var showLockDisclosure by remember { mutableStateOf(false) }
     var showUpdateConfirmation by remember { mutableStateOf(false) }
     var pausedAppPackage by remember { mutableStateOf<String?>(null) }
@@ -174,6 +175,7 @@ internal fun HomeScreen(
             val dockedMinkKeyboardHeight = if (
                 classicLayout &&
                 !magicExpanded &&
+                launcherKeyboardVisible &&
                 keyboardInputEnabled &&
                 store.openSoftwareKeyboardOnHome &&
                 store.launcherKeyboardPreferences.useMinkKeyboard
@@ -246,6 +248,7 @@ internal fun HomeScreen(
                                 onVerticalGesturesEnabledChange = {
                                     classicVerticalGesturesEnabled = it
                                 },
+                                launcherKeyboardVisible = launcherKeyboardVisible,
                             )
                         } else {
                             HomeFocusPanel(
@@ -327,6 +330,7 @@ internal fun HomeScreen(
                 },
             onOpenTodos = openTodos,
             appAccessState = appAccessState,
+            onLauncherKeyboardVisibilityChanged = { launcherKeyboardVisible = it },
         )
         SnackbarHost(
             hostState = todoSnackbarHostState,

@@ -33,6 +33,7 @@ internal fun MagicLauncherKeyboardHost(
     onSubmit: () -> Unit,
     multiline: Boolean,
     onOpenSettings: () -> Unit,
+    onMinimize: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     AnimatedVisibility(
@@ -61,6 +62,7 @@ internal fun MagicLauncherKeyboardHost(
             multiline = multiline,
             modifier = Modifier.fillMaxWidth(),
             onOpenSettings = onOpenSettings,
+            onMinimize = onMinimize,
             extendBehindNavigationBar = true,
         )
     }

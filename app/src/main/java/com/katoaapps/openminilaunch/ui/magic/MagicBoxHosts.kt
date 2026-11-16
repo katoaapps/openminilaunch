@@ -30,6 +30,7 @@ internal fun HomeMagicBox(
     onOpenKeyboardSettings: () -> Unit,
     onOpenTotalScreen: (() -> Unit)?,
     appAccessState: MinkAppAccessState,
+    onLauncherKeyboardVisibilityChanged: (Boolean) -> Unit = {},
     modifier: Modifier = Modifier,
     collapsedModifier: Modifier = Modifier,
 ) {
@@ -51,6 +52,7 @@ internal fun HomeMagicBox(
         onOpenKeyboardSettings = onOpenKeyboardSettings,
         onOpenTotalScreen = onOpenTotalScreen,
         appAccessState = appAccessState,
+        onLauncherKeyboardVisibilityChanged = onLauncherKeyboardVisibilityChanged,
     )
 }
 

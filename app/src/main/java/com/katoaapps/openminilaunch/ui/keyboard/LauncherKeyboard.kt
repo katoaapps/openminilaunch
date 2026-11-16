@@ -44,6 +44,7 @@ internal fun LauncherKeyboard(
     multiline: Boolean,
     modifier: Modifier = Modifier,
     onOpenSettings: () -> Unit = {},
+    onMinimize: () -> Unit = {},
     onHotkey: ((Char) -> Boolean)? = null,
     extendBehindNavigationBar: Boolean = false,
 ) {
@@ -291,6 +292,7 @@ internal fun LauncherKeyboard(
                         shiftOverride = null
                     },
                     onOpenSettings = onOpenSettings,
+                    onMinimize = onMinimize,
                     onComma = { insert(",") },
                     onSpace = { insert(" ") },
                     onPeriod = { insert(".") },

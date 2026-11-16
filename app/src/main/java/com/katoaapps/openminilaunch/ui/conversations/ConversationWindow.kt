@@ -1,3 +1,5 @@
+@file:OptIn(androidx.compose.foundation.layout.ExperimentalLayoutApi::class)
+
 package com.katoaapps.openminilaunch.ui.conversations
 
 import android.widget.Toast
@@ -6,10 +8,12 @@ import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.imePadding
+import androidx.compose.foundation.layout.isImeVisible
 import androidx.compose.foundation.layout.navigationBarsPadding
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
@@ -23,10 +27,12 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -54,6 +60,9 @@ internal fun ConversationWindow(
     favoriteContact: FavoriteContact?,
     actions: DeviceActions,
     goBack: () -> Unit,
+    embedded: Boolean,
+    launcherKeyboardVisible: Boolean,
+    onKeyboardVisibilityChanged: (Boolean) -> Unit,
 ) {
     val context = LocalContext.current
     val activity = context as ComponentActivity
@@ -61,6 +70,15 @@ internal fun ConversationWindow(
     var replyStatus by remember(conversation.id) { mutableStateOf<Int?>(null) }
     val replyTarget = conversation.replyTarget
     val messageListState = rememberLazyListState()
+    val keyboardVisible = WindowInsets.isImeVisible || launcherKeyboardVisible
+    val currentOnKeyboardVisibilityChanged by rememberUpdatedState(onKeyboardVisibilityChanged)
+
+    LaunchedEffect(keyboardVisible) {
+        currentOnKeyboardVisibilityChanged(keyboardVisible)
+    }
+    DisposableEffect(Unit) {
+        onDispose { currentOnKeyboardVisibilityChanged(false) }
+    }
 
     fun sendReply() {
         val target = replyTarget ?: return
@@ -79,7 +97,14 @@ internal fun ConversationWindow(
         if (conversation.messages.isNotEmpty()) messageListState.scrollToItem(conversation.messages.size + 1)
     }
 
-    Column(Modifier.fillMaxSize().statusBarsPadding().navigationBarsPadding().imePadding()) {
+    val windowModifier = Modifier.fillMaxSize().then(
+        if (embedded) {
+            Modifier
+        } else {
+            Modifier.statusBarsPadding().navigationBarsPadding().imePadding()
+        },
+    )
+    Column(windowModifier) {
         PageHeader(displayName, goBack)
         ConversationWindowHeader(conversation, favoriteContact, actions, activity)
         LazyColumn(
@@ -93,29 +118,31 @@ internal fun ConversationWindow(
             }
             item { Spacer(Modifier.height(Dimens.dp8)) }
         }
-        ConversationActionRow(
-            conversationActions = conversation.actions,
-            dismissAvailable = conversation.canDismiss,
-            actions = actions,
-            onAction = { action ->
-                if (!ConversationNotificationStore.performAction(context, action)) {
-                    Toast.makeText(
-                        context,
-                        context.getString(R.string.conversation_action_unavailable),
-                        Toast.LENGTH_SHORT,
-                    ).show()
-                }
-            },
-            onDismiss = {
-                if (!ConversationNotificationStore.dismissConversation(conversation)) {
-                    Toast.makeText(
-                        context,
-                        context.getString(R.string.conversation_action_unavailable),
-                        Toast.LENGTH_SHORT,
-                    ).show()
-                }
-            },
-        )
+        if (!keyboardVisible) {
+            ConversationActionRow(
+                conversationActions = conversation.actions,
+                dismissAvailable = conversation.canDismiss,
+                actions = actions,
+                onAction = { action ->
+                    if (!ConversationNotificationStore.performAction(context, action)) {
+                        Toast.makeText(
+                            context,
+                            context.getString(R.string.conversation_action_unavailable),
+                            Toast.LENGTH_SHORT,
+                        ).show()
+                    }
+                },
+                onDismiss = {
+                    if (!ConversationNotificationStore.dismissConversation(conversation)) {
+                        Toast.makeText(
+                            context,
+                            context.getString(R.string.conversation_action_unavailable),
+                            Toast.LENGTH_SHORT,
+                        ).show()
+                    }
+                },
+            )
+        }
         ConversationReplyBox(
             focusSessionKey = conversation.id,
             replyText = replyText,

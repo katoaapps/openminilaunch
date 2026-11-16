@@ -7,6 +7,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Backspace
 import androidx.compose.material.icons.automirrored.filled.KeyboardReturn
 import androidx.compose.material.icons.filled.KeyboardCapslock
+import androidx.compose.material.icons.filled.KeyboardArrowDown
 import androidx.compose.material.icons.filled.Search
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.remember
@@ -308,6 +309,7 @@ internal fun ColumnScope.KeyboardUtilityRow(
     haptic: Boolean,
     onToggleSymbols: () -> Unit,
     onOpenSettings: () -> Unit,
+    onMinimize: () -> Unit,
     onComma: () -> Unit,
     onSpace: () -> Unit,
     onPeriod: () -> Unit,
@@ -333,6 +335,7 @@ internal fun ColumnScope.KeyboardUtilityRow(
             ) {
                 SpaceKey(colors, style, haptic, onSpace)
                 PunctuationKey(".", colors, style, haptic, onPeriod)
+                MinimizeKey(colors, style, haptic, onMinimize)
                 SubmitKey(multiline, colors, style, haptic, onSubmit)
             }
         }
@@ -345,10 +348,27 @@ internal fun ColumnScope.KeyboardUtilityRow(
             PunctuationKey(",", colors, style, haptic, onComma)
             SpaceKey(colors, style, haptic, onSpace)
             PunctuationKey(".", colors, style, haptic, onPeriod)
+            MinimizeKey(colors, style, haptic, onMinimize)
             SubmitKey(multiline, colors, style, haptic, onSubmit)
         }
     }
 }
+
+@Composable
+private fun RowScope.MinimizeKey(
+    colors: LauncherKeyboardColors,
+    style: LauncherKeyboardStyle,
+    haptic: Boolean,
+    onClick: () -> Unit,
+) = KeyboardActionKey(
+    icon = Icons.Default.KeyboardArrowDown,
+    contentDescription = stringResource(R.string.close),
+    colors = colors,
+    style = style,
+    haptic = haptic,
+    weight = 1f,
+    onClick = onClick,
+)
 
 @Composable
 private fun RowScope.SymbolKey(

@@ -74,6 +74,8 @@ internal fun ConversationCenterScreen(
     onComposeConversationMessage: (LauncherShortcutTarget) -> Unit,
     goBack: () -> Unit,
     embedded: Boolean = false,
+    launcherKeyboardVisible: Boolean = false,
+    onKeyboardVisibilityChanged: (Boolean) -> Unit = {},
 ) {
     val context = LocalContext.current
     val activity = context as ComponentActivity
@@ -89,6 +91,7 @@ internal fun ConversationCenterScreen(
     var selectedConversationId by rememberSaveable { mutableStateOf<String?>(null) }
     var selectedSection by rememberSaveable { mutableStateOf(ConversationSection.MESSAGES) }
     var acknowledgementRevision by remember { mutableIntStateOf(0) }
+    var conversationKeyboardVisible by remember { mutableStateOf(false) }
     val conversations = ConversationNotificationStore.currentConversations(
         useDemoData = demoModeEnabled,
         demoScenario = store.demoScenario,
@@ -171,7 +174,9 @@ internal fun ConversationCenterScreen(
         onDispose { activity.lifecycle.removeObserver(observer) }
     }
 
-    BackHandler(enabled = selectedConversation != null) { selectedConversationId = null }
+    BackHandler(enabled = selectedConversation != null && !conversationKeyboardVisible) {
+        selectedConversationId = null
+    }
 
     Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
         Box(Modifier.widthIn(max = Dimens.dp720).fillMaxWidth().fillMaxHeight()) {
@@ -184,6 +189,12 @@ internal fun ConversationCenterScreen(
                     favoriteContact = favoriteContactsByConversation[selectedConversation.id],
                     actions = actions,
                     goBack = { selectedConversationId = null },
+                    embedded = embedded,
+                    launcherKeyboardVisible = launcherKeyboardVisible,
+                    onKeyboardVisibilityChanged = { visible ->
+                        conversationKeyboardVisible = visible
+                        onKeyboardVisibilityChanged(visible)
+                    },
                 )
             } else {
                 Column(

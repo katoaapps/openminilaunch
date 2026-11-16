@@ -99,6 +99,7 @@ internal fun ClassicLauncherHome(
     onEditQuickApps: () -> Unit,
     onPausedApp: (String) -> Unit,
     onVerticalGesturesEnabledChange: (Boolean) -> Unit,
+    launcherKeyboardVisible: Boolean,
     modifier: Modifier = Modifier,
 ) {
     val scope = rememberCoroutineScope()
@@ -112,6 +113,7 @@ internal fun ClassicLauncherHome(
     val widgetHorizontalDragHandler = rememberWidgetPagerDragHandler(pagerState)
     var editingSlot by remember { mutableStateOf<AppGridSlot?>(null) }
     var unavailableTarget by remember { mutableStateOf<LauncherTarget?>(null) }
+    var conversationKeyboardVisible by remember { mutableStateOf(false) }
 
     LaunchedEffect(homeRequestToken) {
         if (homeRequestToken > 0 && pagerState.currentPage != quickAppsPage) {
@@ -119,6 +121,9 @@ internal fun ClassicLauncherHome(
         }
     }
     LaunchedEffect(pagerState.currentPage, pages) {
+        if (pages.getOrNull(pagerState.currentPage) != ClassicLauncherPage.Conversations) {
+            conversationKeyboardVisible = false
+        }
         onVerticalGesturesEnabledChange(
             pages.getOrNull(pagerState.currentPage)?.supportsLauncherVerticalGestures == true,
         )
@@ -147,6 +152,8 @@ internal fun ClassicLauncherHome(
                             scope.launch { pagerState.animateScrollToPage(quickAppsPage) }
                         },
                         embedded = true,
+                        launcherKeyboardVisible = launcherKeyboardVisible,
+                        onKeyboardVisibilityChanged = { conversationKeyboardVisible = it },
                     )
                     ClassicLauncherPage.QuickApps -> ClassicTargetPage(
                         title = stringResource(R.string.quick_apps),
@@ -196,13 +203,15 @@ internal fun ClassicLauncherHome(
                     }
                 }
             }
-            ClassicPageRail(
-                store = store,
-                currentPage = pagerState.currentPage,
-                pages = pages,
-                contentColor = contentColor,
-                onPage = { page -> scope.launch { pagerState.animateScrollToPage(page) } },
-            )
+            if (!conversationKeyboardVisible) {
+                ClassicPageRail(
+                    store = store,
+                    currentPage = pagerState.currentPage,
+                    pages = pages,
+                    contentColor = contentColor,
+                    onPage = { page -> scope.launch { pagerState.animateScrollToPage(page) } },
+                )
+            }
         }
     }
 

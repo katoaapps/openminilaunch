@@ -88,6 +88,7 @@ internal fun MagicBoxContent(
     onBubblePublished: () -> Unit = {},
     appBubbleHost: MagicAppBubbleHost = MagicAppBubbleHost.HOME,
     appAccessState: MinkAppAccessState? = null,
+    onLauncherKeyboardVisibilityChanged: (Boolean) -> Unit = {},
 ) {
     val magicBoxMinimumHeight = Dimens.dp64
     val context = LocalContext.current
@@ -118,6 +119,7 @@ internal fun MagicBoxContent(
     var showKeyboardWhileCollapsed by remember {
         mutableStateOf(shouldAutoOpenOnHome && !useMinkKeyboard && !initiallyExpanded)
     }
+    var minkKeyboardMinimized by remember { mutableStateOf(false) }
     var hasContacts by remember {
         mutableStateOf(ContextCompat.checkSelfPermission(context, Manifest.permission.READ_CONTACTS) == PackageManager.PERMISSION_GRANTED)
     }
@@ -203,6 +205,7 @@ internal fun MagicBoxContent(
     var armedTargetPlaced by remember { mutableStateOf(false) }
 
     fun refocus(showSoftwareKeyboard: Boolean = !useMinkKeyboard) {
+        if (useMinkKeyboard) minkKeyboardMinimized = false
         focusRequestShowsKeyboard = showSoftwareKeyboard
         focusRequestSerial += 1
     }
@@ -828,6 +831,7 @@ internal fun MagicBoxContent(
 
     LaunchedEffect(shouldAutoOpenOnHome, useMinkKeyboard) {
         showKeyboardWhileCollapsed = shouldAutoOpenOnHome && !useMinkKeyboard && !expanded
+        if (!useMinkKeyboard) minkKeyboardMinimized = false
     }
 
     LaunchedEffect(focusRequestSerial) {
@@ -874,10 +878,21 @@ internal fun MagicBoxContent(
         updateEditorValue(value, correctHardwareInput = false)
     }
     val showDockedLauncherKeyboard = useMinkKeyboard &&
+        !minkKeyboardMinimized &&
         shouldAutoOpenOnHome &&
         !expanded &&
         !smsFlow.sentConfirmationVisible &&
         !todoCompletionPending
+    val showLauncherKeyboard = useMinkKeyboard &&
+        !minkKeyboardMinimized &&
+        (expanded || showDockedLauncherKeyboard)
+
+    LaunchedEffect(showLauncherKeyboard) {
+        onLauncherKeyboardVisibilityChanged(showLauncherKeyboard)
+    }
+    DisposableEffect(Unit) {
+        onDispose { onLauncherKeyboardVisibilityChanged(false) }
+    }
     val launcherKeyboardNavigationBottom = if (useMinkKeyboard) {
         WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()
     } else {
@@ -886,7 +901,14 @@ internal fun MagicBoxContent(
     val launcherKeyboardTotalHeight =
         launcherKeyboardPreferences.heightDp.dp + launcherKeyboardNavigationBottom
 
-    BackHandler(enabled = expanded) { requestDismiss() }
+    fun minimizeMinkKeyboard() {
+        minkKeyboardMinimized = true
+        focusManager.clearFocus(force = true)
+    }
+
+    BackHandler(enabled = expanded || showLauncherKeyboard) {
+        if (showLauncherKeyboard) minimizeMinkKeyboard() else requestDismiss()
+    }
 
     Box(modifier) {
         if (expanded) {
@@ -1094,7 +1116,7 @@ internal fun MagicBoxContent(
                 ),
             )
 
-                if (expanded && useMinkKeyboard) {
+                if (expanded && showLauncherKeyboard) {
                     Spacer(
                         Modifier.height(
                             launcherKeyboardTotalHeight + Dimens.dp8,
@@ -1142,7 +1164,7 @@ internal fun MagicBoxContent(
         }
 
         MagicLauncherKeyboardHost(
-            visible = useMinkKeyboard && (expanded || showDockedLauncherKeyboard),
+            visible = showLauncherKeyboard,
             value = text,
             onValueChange = { value ->
                 val changed = value.text != text.text
@@ -1171,6 +1193,7 @@ internal fun MagicBoxContent(
             onSubmit = ::submit,
             multiline = expanded && noteMode,
             onOpenSettings = onOpenKeyboardSettings,
+            onMinimize = ::minimizeMinkKeyboard,
             modifier = Modifier.align(Alignment.BottomCenter),
         )
 
