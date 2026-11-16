@@ -1,0 +1,6 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Stable IDs let AndroidView restore the native wall and RecyclerView hierarchy state. -->
+    <item name="widget_wall" type="id" />
+    <item name="widget_wall_list" type="id" />
+</resources>

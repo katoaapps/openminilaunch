@@ -38,6 +38,7 @@ import com.katoaapps.openminilaunch.ui.settings.SettingsDestination
 import com.katoaapps.openminilaunch.ui.theme.Dimens
 import com.katoaapps.openminilaunch.ui.wellbeing.MinkDayScreen
 import com.katoaapps.openminilaunch.ui.widgets.WidgetPage
+import com.katoaapps.openminilaunch.ui.widgets.rememberWidgetPagerDragHandler
 import kotlinx.coroutines.launch
 
 internal const val MINK_DAY_PAGE = 0
@@ -283,7 +284,12 @@ internal fun LauncherHomePager(
                                     minkSpacePresentation = minkSpacePresentation,
                                 )
                             }
-                            else -> WidgetPage(store = store, actions = actions, goHome = goHome)
+                            else -> WidgetPage(
+                                store = store,
+                                actions = actions,
+                                goHome = goHome,
+                                horizontalDragHandler = rememberWidgetPagerDragHandler(pagerState),
+                            )
                         }
                     }
                 }

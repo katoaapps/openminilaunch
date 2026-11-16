@@ -32,6 +32,7 @@ import com.katoaapps.openminilaunch.ui.settings.SettingsDestination
 import com.katoaapps.openminilaunch.ui.theme.Dimens
 import com.katoaapps.openminilaunch.ui.wellbeing.MinkDayScreen
 import com.katoaapps.openminilaunch.ui.widgets.WidgetPage
+import com.katoaapps.openminilaunch.ui.widgets.rememberWidgetLazyRowDragHandler
 import kotlinx.coroutines.launch
 import kotlin.math.abs
 
@@ -62,6 +63,10 @@ internal fun LauncherTwoPanel(
 ) {
     val density = LocalDensity.current
     val scope = rememberCoroutineScope()
+    val widgetHorizontalDragHandler = rememberWidgetLazyRowDragHandler(
+        state = listState,
+        itemCount = if (showMinkDayTab) 3 else 2,
+    )
     val paneWidth = with(density) { geometry.paneWidthPx.toDp() }
     val gap = with(density) { geometry.gapPx.toDp() }
     val outerLeft = with(density) { geometry.outerLeftPx.toDp() }
@@ -106,7 +111,12 @@ internal fun LauncherTwoPanel(
             }
             item(key = "widgets") {
                 Box(Modifier.width(paneWidth).fillMaxHeight().focusPane { onFocusPage(WIDGET_PAGE) }) {
-                    WidgetPage(store = store, actions = actions, goHome = onGoHome)
+                    WidgetPage(
+                        store = store,
+                        actions = actions,
+                        goHome = onGoHome,
+                        horizontalDragHandler = widgetHorizontalDragHandler,
+                    )
                 }
             }
         }

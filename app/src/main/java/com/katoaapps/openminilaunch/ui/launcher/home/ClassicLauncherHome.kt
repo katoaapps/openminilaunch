@@ -78,6 +78,7 @@ import com.katoaapps.openminilaunch.ui.theme.Dimens
 import com.katoaapps.openminilaunch.ui.theme.MinkFeatureColors
 import com.katoaapps.openminilaunch.ui.theme.resolveContentColor
 import com.katoaapps.openminilaunch.ui.widgets.WidgetPage
+import com.katoaapps.openminilaunch.ui.widgets.rememberWidgetPagerDragHandler
 import com.katoaapps.openminilaunch.ui.wellbeing.MinkPausedBadge
 import kotlinx.coroutines.launch
 
@@ -108,6 +109,7 @@ internal fun ClassicLauncherHome(
         initialPage = quickAppsPage,
         pageCount = pages::size,
     )
+    val widgetHorizontalDragHandler = rememberWidgetPagerDragHandler(pagerState)
     var editingSlot by remember { mutableStateOf<AppGridSlot?>(null) }
     var unavailableTarget by remember { mutableStateOf<LauncherTarget?>(null) }
 
@@ -162,6 +164,7 @@ internal fun ClassicLauncherHome(
                             scope.launch { pagerState.animateScrollToPage(quickAppsPage) }
                         },
                         embedded = true,
+                        horizontalDragHandler = widgetHorizontalDragHandler,
                     )
                     ClassicLauncherPage.MinkSpace -> ClassicMinkSpacePage(
                         store = store,

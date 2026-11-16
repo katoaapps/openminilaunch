@@ -37,6 +37,7 @@ import androidx.compose.ui.text.font.FontWeight
 import com.katoaapps.openminilaunch.R
 import com.katoaapps.openminilaunch.data.LauncherStore
 import com.katoaapps.openminilaunch.data.toWidgetProviderIdentity
+import com.katoaapps.openminilaunch.features.appearance.launcherTypeface
 import com.katoaapps.openminilaunch.model.MAX_WIDGET_ENTRIES
 import com.katoaapps.openminilaunch.model.WidgetEntry
 import com.katoaapps.openminilaunch.model.WidgetGridSize
@@ -70,6 +71,7 @@ internal fun WidgetPage(
     actions: DeviceActions,
     goHome: () -> Unit,
     embedded: Boolean = false,
+    horizontalDragHandler: WidgetHorizontalDragHandler? = null,
 ) {
     val context = LocalContext.current
     val activity = context as MainActivity
@@ -82,6 +84,9 @@ internal fun WidgetPage(
         mutableStateOf<WidgetEntry.RestorePlaceholder?>(null)
     }
     var sizingProvider by remember { mutableStateOf<AppWidgetProviderInfo?>(null) }
+    var resizingBoundWidget by remember {
+        mutableStateOf<Pair<WidgetEntry.Bound, AppWidgetProviderInfo>?>(null)
+    }
     var pendingReplacementEntryId by rememberSaveable { mutableStateOf<String?>(null) }
     var pendingColumns by rememberSaveable { mutableIntStateOf(0) }
     var pendingRows by rememberSaveable { mutableIntStateOf(0) }
@@ -90,6 +95,12 @@ internal fun WidgetPage(
     val launcherAppsRevision by actions.launcherAppsRevision.collectAsState()
     val headerContentColor = launcherBackgroundContentColor(store, header = true)
     val backgroundContentColor = launcherBackgroundContentColor(store)
+    val widgetTypeface = remember(
+        store.fontAppearance.source,
+        store.customFontRevision,
+    ) {
+        launcherTypeface(context, store.fontAppearance.source, store.customFontFile)
+    }
     val homeScreenProviders = remember(launcherAppsRevision, widgetInfoRevision) {
         manager.homeScreenProviders(context.packageManager)
     }
@@ -231,33 +242,37 @@ internal fun WidgetPage(
                 modifier = Modifier.fillMaxSize(),
             )
         } else {
-            ReorderableWidgetColumn(
-                entries = store.widgetEntries,
+            NativeWidgetWall(
+                entries = store.widgetEntries.toList(),
                 host = host,
                 manager = manager,
                 availableProviders = homeScreenProviders,
                 installedPackages = installedRestorablePackages,
-                widgetInfoRevision = widgetInfoRevision,
-                launcherAppsRevision = launcherAppsRevision,
-                onRetryUnavailableWidget = { widgetInfoRevision++ },
-                onOrderChange = store::setWidgetOrder,
-                onRemove = { entry ->
-                    val removed = store.removeWidget(entry.entryId)
-                    if (removed is WidgetEntry.Bound) {
-                        runCatching { host.deleteAppWidgetId(removed.appWidgetId) }
-                    }
-                },
-                onResize = store::setWidgetSize,
-                onBindReplacement = { entryId, info, size ->
-                    beginWidgetBinding(info, size, entryId)
-                },
-                onChooseReplacement = { replacementPlaceholder = it },
-                onReinstall = { provider ->
-                    actions.webSearch(
-                        query = "Download ${provider.appLabel.ifBlank { provider.packageName }} Android app",
-                        preferredPackage = store.preferredWebPackage,
-                    )
-                },
+                horizontalDragHandler = horizontalDragHandler,
+                contentColor = backgroundContentColor,
+                typeface = widgetTypeface,
+                callbacks = WidgetWallCallbacks(
+                    onRetryUnavailableWidget = { widgetInfoRevision++ },
+                    onOrderChange = store::setWidgetOrder,
+                    onRemove = { entry ->
+                        val removed = store.removeWidget(entry.entryId)
+                        if (removed is WidgetEntry.Bound) {
+                            runCatching { host.deleteAppWidgetId(removed.appWidgetId) }
+                        }
+                    },
+                    onResize = { entry, info, _ -> resizingBoundWidget = entry to info },
+                    onBindReplacement = { entryId, info, size ->
+                        beginWidgetBinding(info, size, entryId)
+                    },
+                    onChooseReplacement = { replacementPlaceholder = it },
+                    onReinstall = { provider ->
+                        actions.webSearch(
+                            query = "Download ${provider.appLabel.ifBlank { provider.packageName }} Android app",
+                            preferredPackage = store.preferredWebPackage,
+                        )
+                    },
+                ),
+                modifier = Modifier.fillMaxSize(),
             )
         }
     }
@@ -308,6 +323,20 @@ internal fun WidgetPage(
                 sizingProvider = null
                 pendingReplacementEntryId = null
             },
+        )
+    }
+    resizingBoundWidget?.let { (entry, info) ->
+        val current = entry.gridSize
+            ?: widgetSizeRange(info, context.resources.displayMetrics.density).preferred
+        WidgetSizeDialog(
+            info = info,
+            current = current,
+            confirmLabelRes = R.string.apply,
+            onConfirm = { size ->
+                resizingBoundWidget = null
+                store.setWidgetSize(entry.appWidgetId, size)
+            },
+            onDismiss = { resizingBoundWidget = null },
         )
     }
     bindingController.configurationToConfirm?.let { info ->
