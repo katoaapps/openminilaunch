@@ -4,6 +4,8 @@ import com.katoaapps.openminilaunch.ui.launcher.home.*
 import com.katoaapps.openminilaunch.model.*
 
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
+import org.junit.Assert.assertTrue
 import org.junit.Test
 
 class HomeLayoutTest {
@@ -75,5 +77,16 @@ class HomeLayoutTest {
             pages.filterIsInstance<ClassicLauncherPage.Folder>().map { it.slot },
         )
         assertEquals(ClassicLauncherPage.MinkSpace, pages.last())
+    }
+
+    @Test fun classicHomePreservesVerticalMotionForEmbeddedTools() {
+        assertTrue(ClassicLauncherPage.QuickApps.supportsLauncherVerticalGestures)
+        assertTrue(
+            ClassicLauncherPage.Folder(AppGridSlot.NOTE, 1)
+                .supportsLauncherVerticalGestures,
+        )
+        assertFalse(ClassicLauncherPage.Conversations.supportsLauncherVerticalGestures)
+        assertFalse(ClassicLauncherPage.Widgets.supportsLauncherVerticalGestures)
+        assertFalse(ClassicLauncherPage.MinkSpace.supportsLauncherVerticalGestures)
     }
 }

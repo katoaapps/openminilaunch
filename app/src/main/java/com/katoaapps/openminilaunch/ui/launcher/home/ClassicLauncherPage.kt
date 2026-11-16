@@ -36,3 +36,7 @@ internal fun classicLauncherPages(slots: List<AppGridSlot>): List<ClassicLaunche
     }
     add(ClassicLauncherPage.MinkSpace)
 }
+
+/** Scrollable embedded tools retain vertical motion; app pages retain launcher gestures. */
+internal val ClassicLauncherPage.supportsLauncherVerticalGestures: Boolean
+    get() = this == ClassicLauncherPage.QuickApps || this is ClassicLauncherPage.Folder

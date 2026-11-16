@@ -97,6 +97,7 @@ internal fun ClassicLauncherHome(
     openMinkSpaceSettings: () -> Unit,
     onEditQuickApps: () -> Unit,
     onPausedApp: (String) -> Unit,
+    onVerticalGesturesEnabledChange: (Boolean) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val scope = rememberCoroutineScope()
@@ -114,6 +115,11 @@ internal fun ClassicLauncherHome(
         if (homeRequestToken > 0 && pagerState.currentPage != quickAppsPage) {
             pagerState.animateScrollToPage(quickAppsPage)
         }
+    }
+    LaunchedEffect(pagerState.currentPage, pages) {
+        onVerticalGesturesEnabledChange(
+            pages.getOrNull(pagerState.currentPage)?.supportsLauncherVerticalGestures == true,
+        )
     }
 
     val contentColor = launcherBackgroundContentColor(store)

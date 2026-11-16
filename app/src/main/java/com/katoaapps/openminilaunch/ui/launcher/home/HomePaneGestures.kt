@@ -15,12 +15,14 @@ import androidx.compose.ui.input.pointer.PointerEventPass
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalDensity
 import com.katoaapps.openminilaunch.ui.theme.Dimens
+import kotlin.math.abs
 
 /** Keeps Home's pane navigation gestures separate from its visual layout. */
 @Composable
 internal fun Modifier.homePaneGestures(
     magicExpanded: Boolean,
     verticalGesturesEnabled: Boolean,
+    observeVerticalGesturesBeforeChildren: Boolean = false,
     horizontalGesturesEnabled: Boolean,
     onPaneInteracted: () -> Unit,
     onHorizontalDrag: ((Float) -> Unit)?,
@@ -72,6 +74,54 @@ internal fun Modifier.homePaneGestures(
         Modifier
     }
 
+    val verticalDragModifier = Modifier.pointerInput(
+        verticalSwipeThresholdPx,
+        magicExpanded,
+        verticalGesturesEnabled,
+        observeVerticalGesturesBeforeChildren,
+    ) {
+        if (!verticalGesturesEnabled) return@pointerInput
+        if (observeVerticalGesturesBeforeChildren) {
+            awaitEachGesture {
+                val first = awaitFirstDown(
+                    requireUnconsumed = false,
+                    pass = PointerEventPass.Initial,
+                )
+                var lastPosition = first.position
+                do {
+                    val change = awaitPointerEvent(PointerEventPass.Initial).changes
+                        .firstOrNull { it.id == first.id }
+                    if (change != null) lastPosition = change.position
+                } while (change?.pressed == true)
+
+                val horizontalDistance = lastPosition.x - first.position.x
+                val verticalDistance = lastPosition.y - first.position.y
+                if (abs(verticalDistance) > abs(horizontalDistance)) {
+                    when {
+                        verticalDistance >= verticalSwipeThresholdPx -> currentSwipeDown()
+                        verticalDistance <= -verticalSwipeThresholdPx && !magicExpanded -> {
+                            currentSwipeUp()
+                        }
+                    }
+                }
+            }
+        } else {
+            var verticalDistance = 0f
+            detectVerticalDragGestures(
+                onDragStart = { verticalDistance = 0f },
+                onVerticalDrag = { _, amount -> verticalDistance += amount },
+                onDragEnd = {
+                    when {
+                        verticalDistance >= verticalSwipeThresholdPx -> currentSwipeDown()
+                        verticalDistance <= -verticalSwipeThresholdPx && !magicExpanded -> {
+                            currentSwipeUp()
+                        }
+                    }
+                },
+            )
+        }
+    }
+
     return clipToBounds()
         .then(horizontalDragModifier)
         .pointerInput(Unit) {
@@ -80,21 +130,7 @@ internal fun Modifier.homePaneGestures(
                 currentPaneInteracted()
             }
         }
-        .pointerInput(verticalSwipeThresholdPx, magicExpanded, verticalGesturesEnabled) {
-            if (verticalGesturesEnabled) {
-                var verticalDistance = 0f
-                detectVerticalDragGestures(
-                    onDragStart = { verticalDistance = 0f },
-                    onVerticalDrag = { _, amount -> verticalDistance += amount },
-                    onDragEnd = {
-                        when {
-                            verticalDistance >= verticalSwipeThresholdPx -> currentSwipeDown()
-                            verticalDistance <= -verticalSwipeThresholdPx && !magicExpanded -> currentSwipeUp()
-                        }
-                    },
-                )
-            }
-        }
+        .then(verticalDragModifier)
         .pointerInput(magicExpanded) {
             if (!magicExpanded) detectTapGestures(onDoubleTap = { currentDoubleTap() })
         }

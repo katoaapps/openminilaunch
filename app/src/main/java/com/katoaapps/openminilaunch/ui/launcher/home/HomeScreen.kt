@@ -87,6 +87,7 @@ internal fun HomeScreen(
     var magicCenter by remember { mutableStateOf(Offset.Zero) }
     val magicExpanded = magicBoxSessionState.expanded
     val classicLayout = store.homeLayoutStyle == HomeLayoutStyle.CLASSIC
+    var classicVerticalGesturesEnabled by remember { mutableStateOf(false) }
     var showLockDisclosure by remember { mutableStateOf(false) }
     var showUpdateConfirmation by remember { mutableStateOf(false) }
     var pausedAppPackage by remember { mutableStateOf<String?>(null) }
@@ -146,15 +147,17 @@ internal fun HomeScreen(
             paneModifier
                 .homeTourTarget(HomeTourTarget.GESTURES)
                 .homePaneGestures(
-                magicExpanded = magicExpanded,
-                verticalGesturesEnabled = !minkSpacePresentation.isExpanded,
-                horizontalGesturesEnabled = !minkSpacePresentation.isExpanded,
-                onPaneInteracted = onPaneInteracted,
-                onHorizontalDrag = onHorizontalDrag,
-                onHorizontalDragFinished = onHorizontalDragFinished,
-                onSwipeUp = { actions.openAllAppsFromBottom() },
-                onSwipeDown = actions::expandNotificationShade,
-                onDoubleTap = ::lockFromHome,
+                    magicExpanded = magicExpanded,
+                    verticalGesturesEnabled = !minkSpacePresentation.isExpanded &&
+                        (!classicLayout || classicVerticalGesturesEnabled),
+                    observeVerticalGesturesBeforeChildren = classicLayout,
+                    horizontalGesturesEnabled = !minkSpacePresentation.isExpanded,
+                    onPaneInteracted = onPaneInteracted,
+                    onHorizontalDrag = onHorizontalDrag,
+                    onHorizontalDragFinished = onHorizontalDragFinished,
+                    onSwipeUp = { actions.openAllAppsFromBottom() },
+                    onSwipeDown = actions::expandNotificationShade,
+                    onDoubleTap = ::lockFromHome,
                 ),
         ) {
             val qwertyHome = maxHeight <= maxWidth * 1.55f
@@ -240,6 +243,9 @@ internal fun HomeScreen(
                                 },
                                 onEditQuickApps = { quickAppsEditorOpen = true },
                                 onPausedApp = { pausedAppPackage = it },
+                                onVerticalGesturesEnabledChange = {
+                                    classicVerticalGesturesEnabled = it
+                                },
                             )
                         } else {
                             HomeFocusPanel(
