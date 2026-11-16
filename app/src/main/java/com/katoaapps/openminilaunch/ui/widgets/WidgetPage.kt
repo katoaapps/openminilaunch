@@ -65,7 +65,12 @@ internal data class WidgetSizeRange(
 }
 
 @Composable
-internal fun WidgetPage(store: LauncherStore, actions: DeviceActions, goHome: () -> Unit) {
+internal fun WidgetPage(
+    store: LauncherStore,
+    actions: DeviceActions,
+    goHome: () -> Unit,
+    embedded: Boolean = false,
+) {
     val context = LocalContext.current
     val activity = context as MainActivity
     val density = LocalDensity.current.density
@@ -179,7 +184,8 @@ internal fun WidgetPage(store: LauncherStore, actions: DeviceActions, goHome: ()
     }
 
     Column(
-        Modifier.fillMaxSize().statusBarsPadding().navigationBarsPadding()
+        Modifier.fillMaxSize()
+            .then(if (embedded) Modifier else Modifier.statusBarsPadding().navigationBarsPadding())
             .onSizeChanged { paneWidthPx = it.width },
     ) {
         Row(

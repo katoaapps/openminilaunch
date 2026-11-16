@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.statusBars
 import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Settings
+import androidx.compose.material.icons.filled.GridView
 import androidx.compose.material.icons.filled.SystemUpdateAlt
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -58,6 +59,8 @@ internal fun HomeHeader(
     onMinkDay: () -> Unit,
     onUpdate: () -> Unit,
     onConversations: () -> Unit,
+    classicLayout: Boolean = false,
+    onQuickDrawer: () -> Unit = {},
     openSettings: (SettingsDestination) -> Unit,
 ) {
     val context = LocalContext.current
@@ -156,14 +159,25 @@ internal fun HomeHeader(
                             )
                         }
                     }
-                    ConversationAttentionButton(
-                        conversationCount = conversations.size,
-                        attentionColors = favoriteAttention.map { Color(it.colorArgb) },
-                        actionSize = actionSize,
-                        iconSize = iconSize,
-                        restingColor = headerContentColor,
-                        onClick = onConversations,
-                    )
+                    if (classicLayout) {
+                        IconButton(onClick = onQuickDrawer, modifier = Modifier.size(actionSize)) {
+                            Icon(
+                                Icons.Default.GridView,
+                                stringResource(R.string.quick_drawer),
+                                Modifier.size(iconSize),
+                                tint = headerContentColor,
+                            )
+                        }
+                    } else {
+                        ConversationAttentionButton(
+                            conversationCount = conversations.size,
+                            attentionColors = favoriteAttention.map { Color(it.colorArgb) },
+                            actionSize = actionSize,
+                            iconSize = iconSize,
+                            restingColor = headerContentColor,
+                            onClick = onConversations,
+                        )
+                    }
                     IconButton(
                         onClick = { openSettings(SettingsDestination.OVERVIEW) },
                         modifier = Modifier.size(actionSize),

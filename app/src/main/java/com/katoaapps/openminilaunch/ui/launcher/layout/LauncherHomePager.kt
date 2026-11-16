@@ -22,6 +22,10 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.platform.LocalLayoutDirection
 import androidx.compose.ui.unit.LayoutDirection
 import com.katoaapps.openminilaunch.data.LauncherStore
+import com.katoaapps.openminilaunch.model.CommunicationRecipient
+import com.katoaapps.openminilaunch.model.ContactAppRoute
+import com.katoaapps.openminilaunch.model.HomeLayoutStyle
+import com.katoaapps.openminilaunch.model.LauncherShortcutTarget
 import com.katoaapps.openminilaunch.platform.DeviceActions
 import com.katoaapps.openminilaunch.ui.launcher.home.HomeScreen
 import com.katoaapps.openminilaunch.ui.launcher.home.HomeBackground
@@ -59,6 +63,8 @@ internal fun LauncherHomePager(
     openVCardSettings: () -> Unit,
     openConversations: () -> Unit,
     openMinkDay: () -> Unit,
+    onComposeMessage: (CommunicationRecipient, ContactAppRoute) -> Unit,
+    onComposeConversationMessage: (LauncherShortcutTarget) -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val scope = rememberCoroutineScope()
@@ -89,7 +95,12 @@ internal fun LauncherHomePager(
             density = density.density,
             fold = fold,
         )
-        val twoPanelActive = geometry != null
+        val classicLayout = store.homeLayoutStyle == HomeLayoutStyle.CLASSIC
+        val twoPanelActive = geometry != null && !classicLayout
+
+        LaunchedEffect(classicLayout) {
+            if (classicLayout) onFocusedPageChange(HOME_PAGE)
+        }
 
         LaunchedEffect(geometry, store.showMinkDayTab) {
             if (twoPanelActive) {
@@ -185,7 +196,26 @@ internal fun LauncherHomePager(
             ),
         )
 
-        if (geometry != null) {
+        if (classicLayout) {
+            HomeScreen(
+                store = store,
+                actions = actions,
+                openSettings = openSettings,
+                openTodos = openTodos,
+                openVCardSettings = openVCardSettings,
+                openConversations = openConversations,
+                openMinkDay = goToMinkDay,
+                onComposeMessage = onComposeMessage,
+                onComposeConversationMessage = onComposeConversationMessage,
+                minkStatusActive = true,
+                onMagicExpandedChange = {},
+                onMinkSpaceExpandedChange = { minkSpaceExpanded = it },
+                keyboardInputEnabled = keyboardInputEnabled,
+                homeRequestToken = homeRequestToken,
+                magicBoxSessionState = magicBoxSessionState,
+                minkSpacePresentation = minkSpacePresentation,
+            )
+        } else if (geometry != null) {
             LauncherTwoPanel(
                 store = store,
                 actions = actions,
@@ -239,6 +269,8 @@ internal fun LauncherHomePager(
                                     openVCardSettings = openVCardSettings,
                                     openConversations = openConversations,
                                     openMinkDay = goToMinkDay,
+                                    onComposeMessage = onComposeMessage,
+                                    onComposeConversationMessage = onComposeConversationMessage,
                                     minkStatusActive = launcherPageAt(
                                         pagerState.currentPage,
                                         store.showMinkDayTab,

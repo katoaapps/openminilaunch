@@ -62,4 +62,18 @@ class HomeLayoutTest {
         assertEquals(R.string.shortcut_files, AppGridSlot.FILES.labelRes)
         assertEquals(R.string.shortcut_extra, AppGridSlot.EXTRA.labelRes)
     }
+
+    @Test fun classicHomeWrapsAllSevenSlotsWithFixedDestinations() {
+        val pages = classicLauncherPages(configurableAppGridSlots)
+
+        assertEquals(11, pages.size)
+        assertEquals(ClassicLauncherPage.Conversations, pages.first())
+        assertEquals(ClassicLauncherPage.QuickApps, pages[1])
+        assertEquals(ClassicLauncherPage.Widgets, pages[2])
+        assertEquals(
+            configurableAppGridSlots,
+            pages.filterIsInstance<ClassicLauncherPage.Folder>().map { it.slot },
+        )
+        assertEquals(ClassicLauncherPage.MinkSpace, pages.last())
+    }
 }

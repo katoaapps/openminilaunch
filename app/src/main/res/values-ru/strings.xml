@@ -1108,4 +1108,11 @@
     <string name="demo_reset_scene_description">Восстановите исходные задачи, созданные файлы и ответы в разговорах этого сценария.</string>
     <string name="demo_scene_reset">Демо-сцена сброшена</string>
     <string name="could_not_rename_favorite">Не удалось переименовать избранное.</string>
+    <string name="home_layout">МАКЕТ ГЛАВНОГО ЭКРАНА</string>
+    <string name="home_layout_mink">Mink</string>
+    <string name="home_layout_mink_description">Современный интерфейс для осознанных действий</string>
+    <string name="home_layout_classic">Классический</string>
+    <string name="home_layout_classic_description">Классический интерфейс лаунчера в стиле BlackBerry</string>
+    <string name="classic_folder_number">Папка %1$d</string>
+    <string name="classic_empty_folder">Добавьте приложения, чтобы настроить эту страницу.</string>
 </resources>

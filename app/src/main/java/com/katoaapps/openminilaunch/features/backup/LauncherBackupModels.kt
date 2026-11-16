@@ -13,6 +13,7 @@ import com.katoaapps.openminilaunch.model.AppGridSlot
 import com.katoaapps.openminilaunch.model.FontAppearance
 import com.katoaapps.openminilaunch.model.FavoriteIntegratedContact
 import com.katoaapps.openminilaunch.model.IconAppearance
+import com.katoaapps.openminilaunch.model.HomeLayoutStyle
 import com.katoaapps.openminilaunch.model.LauncherIconOverride
 import com.katoaapps.openminilaunch.model.MinkAppPauseMode
 import com.katoaapps.openminilaunch.model.LauncherKeyboardPreferences
@@ -107,6 +108,8 @@ internal data class LauncherBackupSettings(
     val folderIndicatorStyle: AppFolderIndicatorStyle? = null,
     /** Null means this backup predates the folder-animation preference. */
     val folderAnimationStyle: AppFolderAnimationStyle? = null,
+    /** Null means this backup predates the optional Classic Home layout. */
+    val homeLayoutStyle: HomeLayoutStyle? = null,
 )
 
 internal data class MinkSpaceTotalScreenShortcutBackup(

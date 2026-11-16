@@ -26,6 +26,7 @@ internal fun SettingsDestinationContent(
     onOpenTodos: () -> Unit,
     onDemoCaptureMoment: (DemoCaptureMoment) -> Unit,
     onIconStyleApplied: () -> Unit,
+    onHomeLayoutApplied: () -> Unit,
     onPickAppGridSlot: (AppGridSlot) -> Unit,
     onPickDrawer: () -> Unit,
     onPickPrivateContainerGateway: () -> Unit,
@@ -53,6 +54,7 @@ internal fun SettingsDestinationContent(
         SettingsDestination.LAUNCHER -> LauncherSettingsPage(
             store = store,
             onNavigate = onNavigate,
+            onHomeLayoutApplied = onHomeLayoutApplied,
             goBack = onNavigateBack,
         )
         SettingsDestination.APPEARANCE -> AppearanceSettingsPage(

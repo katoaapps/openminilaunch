@@ -1090,4 +1090,11 @@
     <string name="demo_reset_scene_description">اس منظرنامے کے اصل کام، بنائی گئی فائلیں اور گفتگو کے جوابات بحال کریں۔</string>
     <string name="demo_scene_reset">ڈیمو منظر ری سیٹ ہو گیا</string>
     <string name="could_not_rename_favorite">اس پسندیدہ کا نام تبدیل نہیں کیا جا سکا۔</string>
+    <string name="home_layout">ہوم لے آؤٹ</string>
+    <string name="home_layout_mink">Mink</string>
+    <string name="home_layout_mink_description">سوچے سمجھے کاموں کے لیے جدید UI</string>
+    <string name="home_layout_classic">کلاسک</string>
+    <string name="home_layout_classic_description">BlackBerry سے متاثر کلاسک لانچر UI</string>
+    <string name="classic_folder_number">فولڈر %1$d</string>
+    <string name="classic_empty_folder">اس صفحے کو اپنا بنانے کے لیے ایپس شامل کریں۔</string>
 </resources>

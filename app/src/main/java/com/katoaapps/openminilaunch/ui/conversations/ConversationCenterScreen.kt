@@ -73,6 +73,7 @@ internal fun ConversationCenterScreen(
     onComposeMessage: (CommunicationRecipient, ContactAppRoute) -> Unit,
     onComposeConversationMessage: (LauncherShortcutTarget) -> Unit,
     goBack: () -> Unit,
+    embedded: Boolean = false,
 ) {
     val context = LocalContext.current
     val activity = context as ComponentActivity
@@ -185,8 +186,12 @@ internal fun ConversationCenterScreen(
                     goBack = { selectedConversationId = null },
                 )
             } else {
-                Column(Modifier.fillMaxSize().statusBarsPadding().navigationBarsPadding()) {
-                    PageHeader(stringResource(R.string.conversations), goBack)
+                Column(
+                    Modifier.fillMaxSize().then(
+                        if (embedded) Modifier else Modifier.statusBarsPadding().navigationBarsPadding(),
+                    ),
+                ) {
+                    if (!embedded) PageHeader(stringResource(R.string.conversations), goBack)
                     ConversationSectionTabs(selectedSection) { selectedSection = it }
                     when (selectedSection) {
                         ConversationSection.FAVORITES -> FavoriteContactsPane(

@@ -1090,4 +1090,11 @@
     <string name="demo_reset_scene_description">Pulihkan tugas, file yang dibuat, dan balasan percakapan asli untuk skenario ini.</string>
     <string name="demo_scene_reset">Adegan demo diatur ulang</string>
     <string name="could_not_rename_favorite">Favorit ini tidak dapat diganti namanya.</string>
+    <string name="home_layout">TATA LETAK BERANDA</string>
+    <string name="home_layout_mink">Mink</string>
+    <string name="home_layout_mink_description">UI modern untuk tindakan yang disengaja</string>
+    <string name="home_layout_classic">Klasik</string>
+    <string name="home_layout_classic_description">UI peluncur klasik yang terinspirasi BlackBerry</string>
+    <string name="classic_folder_number">Folder %1$d</string>
+    <string name="classic_empty_folder">Tambahkan aplikasi untuk menyesuaikan halaman ini.</string>
 </resources>

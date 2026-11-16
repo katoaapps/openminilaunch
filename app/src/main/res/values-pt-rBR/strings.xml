@@ -1090,4 +1090,11 @@
     <string name="demo_reset_scene_description">Restaure as tarefas, os arquivos gerados e as respostas originais deste cenário.</string>
     <string name="demo_scene_reset">Cena de demonstração redefinida</string>
     <string name="could_not_rename_favorite">Não foi possível renomear este favorito.</string>
+    <string name="home_layout">LAYOUT DA TELA INICIAL</string>
+    <string name="home_layout_mink">Mink</string>
+    <string name="home_layout_mink_description">Interface moderna para ações intencionais</string>
+    <string name="home_layout_classic">Clássico</string>
+    <string name="home_layout_classic_description">Interface clássica inspirada no BlackBerry</string>
+    <string name="classic_folder_number">Pasta %1$d</string>
+    <string name="classic_empty_folder">Adicione apps para deixar esta página do seu jeito.</string>
 </resources>

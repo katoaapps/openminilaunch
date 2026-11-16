@@ -6,6 +6,11 @@ import com.katoaapps.openminilaunch.BuildConfig
 import com.katoaapps.openminilaunch.R
 import com.katoaapps.openminilaunch.data.LauncherStore
 import com.katoaapps.openminilaunch.features.minkspace.MinkSpaceMiniApp
+import com.katoaapps.openminilaunch.model.CommunicationRecipient
+import com.katoaapps.openminilaunch.model.ContactAppRoute
+import com.katoaapps.openminilaunch.model.HomeLayoutStyle
+import com.katoaapps.openminilaunch.model.LauncherShortcutTarget
+import com.katoaapps.openminilaunch.model.resolveLauncherKeyboardHeightDp
 import com.katoaapps.openminilaunch.features.updates.GitHubReleaseChecker
 import com.katoaapps.openminilaunch.features.updates.isNewerRelease
 import com.katoaapps.openminilaunch.platform.DeviceActions
@@ -40,6 +45,7 @@ import androidx.compose.ui.focus.focusProperties
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.layout.positionInRoot
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -54,6 +60,8 @@ internal fun HomeScreen(
     openVCardSettings: () -> Unit,
     openConversations: () -> Unit,
     openMinkDay: () -> Unit,
+    onComposeMessage: (CommunicationRecipient, ContactAppRoute) -> Unit = { _, _ -> },
+    onComposeConversationMessage: (LauncherShortcutTarget) -> Unit = {},
     minkStatusActive: Boolean,
     onMagicExpandedChange: (Boolean) -> Unit,
     onMinkSpaceExpandedChange: (Boolean) -> Unit = {},
@@ -78,6 +86,7 @@ internal fun HomeScreen(
     var widgetCenter by remember { mutableStateOf(Offset.Zero) }
     var magicCenter by remember { mutableStateOf(Offset.Zero) }
     val magicExpanded = magicBoxSessionState.expanded
+    val classicLayout = store.homeLayoutStyle == HomeLayoutStyle.CLASSIC
     var showLockDisclosure by remember { mutableStateOf(false) }
     var showUpdateConfirmation by remember { mutableStateOf(false) }
     var pausedAppPackage by remember { mutableStateOf<String?>(null) }
@@ -159,10 +168,28 @@ internal fun HomeScreen(
             }
             val imeBottom = WindowInsets.ime.asPaddingValues().calculateBottomPadding()
             val navigationBottom = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()
+            val dockedMinkKeyboardHeight = if (
+                classicLayout &&
+                !magicExpanded &&
+                keyboardInputEnabled &&
+                store.openSoftwareKeyboardOnHome &&
+                store.launcherKeyboardPreferences.useMinkKeyboard
+            ) {
+                resolveLauncherKeyboardHeightDp(
+                    preferences = store.launcherKeyboardPreferences,
+                    screenWidthDp = maxWidth.value.toInt(),
+                    screenHeightDp = maxHeight.value.toInt(),
+                ).dp + Dimens.dp8
+            } else {
+                Dimens.dp0
+            }
             val softInputRowHeight = if (magicExpanded) {
                 Dimens.dp0
             } else {
-                (imeBottom - navigationBottom).coerceAtLeast(Dimens.dp0)
+                maxOf(
+                    (imeBottom - navigationBottom).coerceAtLeast(Dimens.dp0),
+                    dockedMinkKeyboardHeight,
+                )
             }
             Box(
                 Modifier.fillMaxSize()
@@ -186,32 +213,56 @@ internal fun HomeScreen(
                         onMinkDay = openMinkDay,
                         onUpdate = { showUpdateConfirmation = true },
                         onConversations = openConversations,
+                        classicLayout = classicLayout,
+                        onQuickDrawer = { drawerOpen = true },
                         openSettings = openSettings,
                     )
                     BoxWithConstraints(
                         Modifier.fillMaxWidth().weight(1f).padding(
-                            horizontal = homeHorizontalPadding,
+                            horizontal = if (classicLayout) Dimens.dp0 else homeHorizontalPadding,
                             vertical = if (qwertyHome) Dimens.dp2 else Dimens.dp10,
                         ),
                     ) {
-                        HomeFocusPanel(
-                            store = store,
-                            actions = actions,
-                            appAccessState = appAccessState,
-                            qwertyHome = qwertyHome,
-                            expandToAvailableHeight = qwertyHome && !twoPanelLayout,
-                            availableHeight = maxHeight,
-                            focusPanelHeight = focusPanelHeight,
-                            todoJumpToken = todoJumpToken,
-                            minkSpacePresentation = minkSpacePresentation,
-                            openTodos = openTodos,
-                            openVCardSettings = openVCardSettings,
-                            openMinkSpaceSettings = { openSettings(SettingsDestination.MINK_SPACE) },
-                            openAppGridSettings = { openSettings(SettingsDestination.APP_GRID) },
-                            onTodoCenterChanged = { widgetCenter = it },
-                            onPausedApp = { pausedAppPackage = it },
-                            onOpenDrawer = { drawerOpen = true },
-                        )
+                        if (classicLayout) {
+                            ClassicLauncherHome(
+                                store = store,
+                                actions = actions,
+                                appAccessState = appAccessState,
+                                homeRequestToken = homeRequestToken,
+                                todoJumpToken = todoJumpToken,
+                                minkSpacePresentation = minkSpacePresentation,
+                                onComposeMessage = onComposeMessage,
+                                onComposeConversationMessage = onComposeConversationMessage,
+                                openTodos = openTodos,
+                                openVCardSettings = openVCardSettings,
+                                openMinkSpaceSettings = {
+                                    openSettings(SettingsDestination.MINK_SPACE)
+                                },
+                                onEditQuickApps = { quickAppsEditorOpen = true },
+                                onPausedApp = { pausedAppPackage = it },
+                            )
+                        } else {
+                            HomeFocusPanel(
+                                store = store,
+                                actions = actions,
+                                appAccessState = appAccessState,
+                                qwertyHome = qwertyHome,
+                                expandToAvailableHeight = qwertyHome && !twoPanelLayout,
+                                availableHeight = maxHeight,
+                                focusPanelHeight = focusPanelHeight,
+                                todoJumpToken = todoJumpToken,
+                                minkSpacePresentation = minkSpacePresentation,
+                                openTodos = openTodos,
+                                openVCardSettings = openVCardSettings,
+                                openMinkSpaceSettings = {
+                                    openSettings(SettingsDestination.MINK_SPACE)
+                                },
+                                openAppGridSettings = { openSettings(SettingsDestination.APP_GRID) },
+                                onTodoCenterChanged = { widgetCenter = it },
+                                onPausedApp = { pausedAppPackage = it },
+                                onOpenDrawer = { drawerOpen = true },
+                            )
+                        }
                     }
                     Spacer(
                         Modifier.navigationBarsPadding()

@@ -21,6 +21,7 @@ import com.katoaapps.openminilaunch.model.FavoriteContactId
 import com.katoaapps.openminilaunch.model.FavoriteIntegratedContact
 import com.katoaapps.openminilaunch.model.FavoriteIntegratedContactNameSource
 import com.katoaapps.openminilaunch.model.IconAppearance
+import com.katoaapps.openminilaunch.model.HomeLayoutStyle
 import com.katoaapps.openminilaunch.model.IntegratedContactCallEndpoint
 import com.katoaapps.openminilaunch.model.IntegratedContactEndpoint
 import com.katoaapps.openminilaunch.model.ProviderAddressType
@@ -44,6 +45,26 @@ import org.junit.Assert.assertNull
 import org.junit.Test
 
 class LauncherBackupCodecTest {
+    @Test fun classicHomeLayoutSurvivesPortableBackupRoundTrip() {
+        val sample = sampleBackup(twoPanelMode = true)
+        val restored = LauncherBackupCodec.decode(
+            LauncherBackupCodec.encode(
+                sample.copy(
+                    settings = sample.settings.copy(homeLayoutStyle = HomeLayoutStyle.CLASSIC),
+                ),
+            ),
+        )
+
+        assertEquals(HomeLayoutStyle.CLASSIC, restored.settings.homeLayoutStyle)
+    }
+
+    @Test fun oldBackupLeavesHomeLayoutPreferenceAlone() {
+        val json = JSONObject(LauncherBackupCodec.encode(sampleBackup(twoPanelMode = true)))
+        json.getJSONObject("settings").optJSONObject("appGrid")?.remove("homeLayoutStyle")
+
+        assertNull(LauncherBackupCodec.decode(json.toString()).settings.homeLayoutStyle)
+    }
+
     @Test fun minkDayTabAndPerAppIconsSurvivePortableBackupRoundTrip() {
         val targetKey = "app:0:com.example/.MainActivity"
         val override = LauncherIconOverride("com.example.icons", "custom_mail")

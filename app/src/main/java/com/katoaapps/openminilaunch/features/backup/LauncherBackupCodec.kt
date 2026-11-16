@@ -18,6 +18,7 @@ import com.katoaapps.openminilaunch.model.FontAppearance
 import com.katoaapps.openminilaunch.model.FontSource
 import com.katoaapps.openminilaunch.model.IconAppearance
 import com.katoaapps.openminilaunch.model.IconSource
+import com.katoaapps.openminilaunch.model.HomeLayoutStyle
 import com.katoaapps.openminilaunch.model.MAX_APP_FOLDER_NAME_LENGTH
 import com.katoaapps.openminilaunch.model.MAX_SOCIAL_GOAL_HOURS
 import com.katoaapps.openminilaunch.model.MIN_SOCIAL_GOAL_HOURS
@@ -406,10 +407,15 @@ internal object LauncherBackupCodec {
                 putNullable("colorArgb", quickDrawer.colorArgb)
             })
         }
-        if (settings.folderIndicatorStyle != null || settings.folderAnimationStyle != null) {
+        if (
+            settings.folderIndicatorStyle != null ||
+            settings.folderAnimationStyle != null ||
+            settings.homeLayoutStyle != null
+        ) {
             put("appGrid", JSONObject().apply {
                 settings.folderIndicatorStyle?.let { put("folderIndicatorStyle", it.name) }
                 settings.folderAnimationStyle?.let { put("folderAnimationStyle", it.name) }
+                settings.homeLayoutStyle?.let { put("homeLayoutStyle", it.name) }
             })
         }
         put("minkDay", JSONObject().apply {
@@ -539,6 +545,8 @@ internal object LauncherBackupCodec {
                 ?.enumValueOrNull<AppFolderIndicatorStyle>("folderIndicatorStyle"),
             folderAnimationStyle = appGrid
                 ?.enumValueOrNull<AppFolderAnimationStyle>("folderAnimationStyle"),
+            homeLayoutStyle = appGrid
+                ?.enumValueOrNull<HomeLayoutStyle>("homeLayoutStyle"),
             preferredAiPackage = magicBox.optNullableString("preferredAiPackage")?.safePackage(),
             preferredWebPackage = magicBox.optNullableString("preferredWebPackage")?.safePackage(),
             usesAutomaticSocialApps = minkDay.optBoolean("usesAutomaticSocialApps", true),

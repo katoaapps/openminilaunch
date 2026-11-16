@@ -1090,4 +1090,11 @@
     <string name="demo_reset_scene_description">이 시나리오의 원래 작업, 생성된 파일, 대화 답장을 복원합니다.</string>
     <string name="demo_scene_reset">데모 장면이 재설정되었습니다</string>
     <string name="could_not_rename_favorite">이 즐겨찾기의 이름을 변경할 수 없습니다.</string>
+    <string name="home_layout">홈 레이아웃</string>
+    <string name="home_layout_mink">Mink</string>
+    <string name="home_layout_mink_description">의도적인 동작을 위한 현대적인 UI</string>
+    <string name="home_layout_classic">클래식</string>
+    <string name="home_layout_classic_description">BlackBerry에서 영감을 받은 클래식 런처 UI</string>
+    <string name="classic_folder_number">폴더 %1$d</string>
+    <string name="classic_empty_folder">앱을 추가해 이 페이지를 꾸며 보세요.</string>
 </resources>

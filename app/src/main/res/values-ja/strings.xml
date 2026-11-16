@@ -1090,4 +1090,11 @@
     <string name="demo_reset_scene_description">このシナリオの元のタスク、生成ファイル、会話の返信を復元します。</string>
     <string name="demo_scene_reset">デモシーンをリセットしました</string>
     <string name="could_not_rename_favorite">このお気に入りの名前を変更できませんでした。</string>
+    <string name="home_layout">ホームのレイアウト</string>
+    <string name="home_layout_mink">Mink</string>
+    <string name="home_layout_mink_description">意図した操作のためのモダン UI</string>
+    <string name="home_layout_classic">クラシック</string>
+    <string name="home_layout_classic_description">BlackBerry に着想を得たクラシックなランチャー UI</string>
+    <string name="classic_folder_number">フォルダー %1$d</string>
+    <string name="classic_empty_folder">アプリを追加して、このページを自分仕様にしましょう。</string>
 </resources>

@@ -245,6 +245,22 @@ internal fun MiniLaunchApp(
                                     },
                                     openConversations = { screen = Screen.CONVERSATIONS },
                                     openMinkDay = { screen = Screen.MINK_DAY },
+                                    onComposeMessage = { recipient, route ->
+                                        minkSpacePresentation.collapse()
+                                        val providerPackage =
+                                            (route as? ContactAppRoute.Package)?.packageName
+                                        homeMagicBoxSessionState.prepareMessage(
+                                            recipient = recipient,
+                                            providerPackage = providerPackage,
+                                            providerRouteOverridden =
+                                                route != ContactAppRoute.Inherit,
+                                        )
+                                    },
+                                    onComposeConversationMessage = { conversation ->
+                                        minkSpacePresentation.collapse()
+                                        homeMagicBoxSessionState
+                                            .prepareConversationMessage(conversation)
+                                    },
                                     modifier = Modifier.fillMaxSize(),
                                 )
                             }
@@ -266,6 +282,13 @@ internal fun MiniLaunchApp(
                             initialDestination = settingsDestination,
                             onIconStyleApplied = {
                                 settingsDestination = SettingsDestination.OVERVIEW
+                                animateHomeEntrance = true
+                                screen = Screen.HOME
+                            },
+                            onHomeLayoutApplied = {
+                                settingsDestination = SettingsDestination.OVERVIEW
+                                focusedLauncherPage = HOME_PAGE
+                                homePageRequestToken++
                                 animateHomeEntrance = true
                                 screen = Screen.HOME
                             },

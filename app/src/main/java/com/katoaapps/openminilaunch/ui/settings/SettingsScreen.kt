@@ -32,6 +32,7 @@ internal fun SettingsScreen(
     onReplayHomeTour: () -> Unit,
     initialDestination: SettingsDestination = SettingsDestination.OVERVIEW,
     onIconStyleApplied: () -> Unit,
+    onHomeLayoutApplied: () -> Unit,
     openTodos: () -> Unit,
     onDemoCaptureMoment: (DemoCaptureMoment) -> Unit,
     goBack: () -> Unit,
@@ -277,6 +278,7 @@ internal fun SettingsScreen(
                 onOpenTodos = openTodos,
                 onDemoCaptureMoment = onDemoCaptureMoment,
                 onIconStyleApplied = onIconStyleApplied,
+                onHomeLayoutApplied = onHomeLayoutApplied,
                 onPickAppGridSlot = { picker = SettingsPicker.AppGridSlotPicker(it) },
                 onPickDrawer = { picker = SettingsPicker.DrawerApps },
                 onPickPrivateContainerGateway = {

@@ -1090,4 +1090,11 @@
     <string name="demo_reset_scene_description">इस परिदृश्य के मूल कार्य, बनाई गई फ़ाइलें और बातचीत के जवाब पुनर्स्थापित करें।</string>
     <string name="demo_scene_reset">डेमो दृश्य रीसेट किया गया</string>
     <string name="could_not_rename_favorite">इस पसंदीदा का नाम नहीं बदला जा सका।</string>
+    <string name="home_layout">होम लेआउट</string>
+    <string name="home_layout_mink">Mink</string>
+    <string name="home_layout_mink_description">सोच-समझकर किए जाने वाले कामों के लिए आधुनिक UI</string>
+    <string name="home_layout_classic">क्लासिक</string>
+    <string name="home_layout_classic_description">BlackBerry से प्रेरित क्लासिक लॉन्चर UI</string>
+    <string name="classic_folder_number">फ़ोल्डर %1$d</string>
+    <string name="classic_empty_folder">इस पेज को अपना बनाने के लिए ऐप जोड़ें।</string>
 </resources>

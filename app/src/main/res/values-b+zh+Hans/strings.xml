@@ -1090,4 +1090,11 @@
     <string name="demo_reset_scene_description">恢复此场景原始的任务、生成文件和对话回复。</string>
     <string name="demo_scene_reset">演示场景已重置</string>
     <string name="could_not_rename_favorite">无法重命名此收藏联系人。</string>
+    <string name="home_layout">主屏幕布局</string>
+    <string name="home_layout_mink">Mink</string>
+    <string name="home_layout_mink_description">为有意识操作打造的现代界面</string>
+    <string name="home_layout_classic">经典</string>
+    <string name="home_layout_classic_description">受 BlackBerry 启发的经典启动器界面</string>
+    <string name="classic_folder_number">文件夹 %1$d</string>
+    <string name="classic_empty_folder">添加应用，打造属于你的页面。</string>
 </resources>

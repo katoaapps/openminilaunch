@@ -52,6 +52,7 @@ class LauncherStore private constructor(context: Context) {
     private val updatePreferences = UpdatePreferenceStore(prefs)
     private val appDiscoveryPreferences = AppDiscoveryPreferenceStore(prefs)
     private val appGridPreferences = AppGridPreferenceStore(prefs)
+    private val homeLayoutPreferences = HomeLayoutPreferenceStore(prefs)
     private val appBubblePreferences = AppBubblePreferenceStore(prefs)
     private val privateContainerPreferences = PrivateContainerPreferenceStore(prefs)
     private val quickDrawerPreferences = QuickDrawerPreferenceStore(prefs)
@@ -157,6 +158,7 @@ class LauncherStore private constructor(context: Context) {
     val githubUpdateChecksEnabled get() = updatePreferences.checksEnabled
     val latestGitHubReleaseTag get() = updatePreferences.latestReleaseTag
     val includeAppShortcutsInDiscovery get() = appDiscoveryPreferences.includeAppShortcuts
+    val homeLayoutStyle get() = homeLayoutPreferences.style
     val folderIndicatorStyle get() = appGridPreferences.folderIndicatorStyle
     val folderAnimationStyle get() = appGridPreferences.folderAnimationStyle
     val automaticAppBubbleTargets get() = appBubblePreferences.automaticTargetKeys
@@ -385,6 +387,10 @@ class LauncherStore private constructor(context: Context) {
 
     fun updateFolderIndicatorStyle(style: AppFolderIndicatorStyle) {
         appGridPreferences.updateFolderIndicatorStyle(style)
+    }
+
+    fun updateHomeLayoutStyle(style: HomeLayoutStyle) {
+        homeLayoutPreferences.update(style)
     }
 
     fun updateFolderAnimationStyle(style: AppFolderAnimationStyle) {

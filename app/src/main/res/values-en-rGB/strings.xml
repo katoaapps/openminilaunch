@@ -1090,4 +1090,11 @@
     <string name="demo_reset_scene_description">Restore this scenario’s original tasks, generated files, and conversation replies.</string>
     <string name="demo_scene_reset">Demo scene reset</string>
     <string name="could_not_rename_favorite">Couldn’t rename this favourite.</string>
+    <string name="home_layout">HOME LAYOUT</string>
+    <string name="home_layout_mink">Mink</string>
+    <string name="home_layout_mink_description">Modern UI for intentional actions</string>
+    <string name="home_layout_classic">Classic</string>
+    <string name="home_layout_classic_description">BlackBerry-inspired classic launcher UI</string>
+    <string name="classic_folder_number">Folder %1$d</string>
+    <string name="classic_empty_folder">Add apps to make this page yours.</string>
 </resources>
