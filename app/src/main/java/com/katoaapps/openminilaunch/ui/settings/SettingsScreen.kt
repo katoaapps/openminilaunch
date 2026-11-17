@@ -33,7 +33,6 @@ internal fun SettingsScreen(
     initialDestination: SettingsDestination = SettingsDestination.OVERVIEW,
     onIconStyleApplied: () -> Unit,
     onHomeLayoutApplied: () -> Unit,
-    openTodos: () -> Unit,
     onDemoCaptureMoment: (DemoCaptureMoment) -> Unit,
     goBack: () -> Unit,
 ) {
@@ -275,7 +274,6 @@ internal fun SettingsScreen(
                 onOverviewNavigate = ::navigateFromOverview,
                 onNavigateBack = ::navigateBack,
                 onExitSettings = ::navigateBack,
-                onOpenTodos = openTodos,
                 onDemoCaptureMoment = onDemoCaptureMoment,
                 onIconStyleApplied = onIconStyleApplied,
                 onHomeLayoutApplied = onHomeLayoutApplied,

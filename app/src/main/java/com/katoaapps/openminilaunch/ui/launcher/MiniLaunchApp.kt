@@ -20,6 +20,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.CompositionLocalProvider
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.SideEffect
+import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableIntStateOf
@@ -35,6 +36,7 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import com.katoaapps.openminilaunch.R
 import com.katoaapps.openminilaunch.data.LauncherStore
+import com.katoaapps.openminilaunch.openMinkMinkBoardRuntime
 import com.katoaapps.openminilaunch.features.demo.DemoCaptureMoment
 import com.katoaapps.openminilaunch.model.ContactAppRoute
 import com.katoaapps.openminilaunch.model.Screen
@@ -49,8 +51,8 @@ import com.katoaapps.openminilaunch.ui.launcher.layout.pairForFocusedPage
 import com.katoaapps.openminilaunch.ui.launcher.layout.visibleLauncherPages
 import com.katoaapps.openminilaunch.ui.magic.rememberMagicBoxSessionState
 import com.katoaapps.openminilaunch.ui.magic.AssistantActivity
+import com.katoaapps.openminilaunch.ui.minkboard.OpenMinkBoardScreen
 import com.katoaapps.openminilaunch.ui.minkspace.core.rememberMinkSpacePresentationState
-import com.katoaapps.openminilaunch.ui.minkspace.todo.TodosScreen
 import com.katoaapps.openminilaunch.ui.onboarding.FeatureUpdateDialog
 import com.katoaapps.openminilaunch.ui.onboarding.GooglePlayBetaDialog
 import com.katoaapps.openminilaunch.ui.onboarding.HomeFeatureTour
@@ -142,6 +144,11 @@ internal fun MiniLaunchApp(
         }
     }
     val context = LocalContext.current
+    val minkBoardRuntime = remember(context) { context.openMinkMinkBoardRuntime }
+    val minkBoardNavigation by minkBoardRuntime.navigationRequest.collectAsState()
+    LaunchedEffect(minkBoardNavigation?.token) {
+        if (minkBoardNavigation != null) screen = Screen.TODOS
+    }
     val view = LocalView.current
 
     val transparent = MinkTransparent
@@ -239,7 +246,10 @@ internal fun MiniLaunchApp(
                                         settingsDestination = destination
                                         screen = Screen.SETTINGS
                                     },
-                                    openTodos = { screen = Screen.TODOS },
+                                    openTodos = {
+                                        screen = Screen.TODOS
+                                        minkBoardRuntime.requestHomeBoardNavigation()
+                                    },
                                     openVCardSettings = {
                                         openVirtualContactCard(context)
                                     },
@@ -292,7 +302,6 @@ internal fun MiniLaunchApp(
                                 animateHomeEntrance = true
                                 screen = Screen.HOME
                             },
-                            openTodos = { screen = Screen.TODOS },
                             onDemoCaptureMoment = { moment ->
                                 settingsDestination = SettingsDestination.OVERVIEW
                                 when (moment) {
@@ -322,7 +331,13 @@ internal fun MiniLaunchApp(
                             },
                         )
                     }
-                    Screen.TODOS -> TodosScreen(store, actions) { screen = Screen.HOME }
+                    Screen.TODOS -> OpenMinkBoardScreen(
+                        modifier = Modifier.fillMaxSize(),
+                        onOpenSettings = {
+                            settingsDestination = SettingsDestination.MINKBOARD_HOME
+                            screen = Screen.SETTINGS
+                        },
+                    )
                     Screen.CONVERSATIONS -> FontAppearanceTheme(store) {
                         ConversationCenterScreen(
                             store = store,

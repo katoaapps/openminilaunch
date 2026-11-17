@@ -34,7 +34,6 @@ internal fun SettingsOverviewPage(
     permissionState: SettingsPermissionState,
     onPickWeb: () -> Unit,
     onPickAi: () -> Unit,
-    openTodos: () -> Unit,
     onNavigate: (SettingsDestination) -> Unit,
     goBack: () -> Unit,
 ) {
@@ -43,7 +42,7 @@ internal fun SettingsOverviewPage(
         SettingsSection.MINI_APPS -> MinkSpaceSettingsPage(
             store = store,
             actions = actions,
-            openTodos = openTodos,
+            openMinkBoardSettings = { onNavigate(SettingsDestination.MINKBOARD_HOME) },
             goBack = goBack,
         )
         SettingsSection.MAGIC_BOX -> MagicBoxSettingsPage(

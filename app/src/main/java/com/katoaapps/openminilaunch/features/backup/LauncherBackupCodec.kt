@@ -47,6 +47,7 @@ import com.katoaapps.openminilaunch.model.normalizeHomePanelTransparency
 import com.katoaapps.openminilaunch.model.normalizedAppGridOrder
 import org.json.JSONArray
 import org.json.JSONObject
+import java.util.Base64
 
 internal object LauncherBackupCodec {
     private const val MAX_APP_FOLDERS = 64
@@ -54,6 +55,8 @@ internal object LauncherBackupCodec {
     private const val MAX_TODOS = 5_000
     private const val MAX_TARGET_LENGTH = 2_048
     private const val MAX_TODO_TEXT_LENGTH = 20_000
+    private const val MAX_MINKBOARD_ENVELOPE_BYTES = 32 * 1024 * 1024
+    private const val MAX_MINKBOARD_HOME_ENVELOPE_BYTES = 64 * 1024
     private const val TOTAL_SCREEN_SHORTCUT_OFF = "off"
 
     fun encode(backup: LauncherBackup): String = JSONObject().apply {
@@ -63,7 +66,19 @@ internal object LauncherBackupCodec {
         put("exportedAtMillis", backup.exportedAtMillis)
         put("launcher", encodeLauncher(backup.launcher))
         put("settings", encodeSettings(backup.settings))
-        put("todos", JSONArray().apply {
+        backup.minkBoardEnvelope?.let { envelope ->
+            require(envelope.isNotEmpty() && envelope.size <= MAX_MINKBOARD_ENVELOPE_BYTES) {
+                "MinkBoard backup envelope size is invalid"
+            }
+            put("minkBoard", Base64.getEncoder().encodeToString(envelope))
+            backup.minkBoardHomeEnvelope?.let { homeEnvelope ->
+                require(
+                    homeEnvelope.isNotEmpty() &&
+                        homeEnvelope.size <= MAX_MINKBOARD_HOME_ENVELOPE_BYTES,
+                ) { "MinkBoard Home envelope size is invalid" }
+                put("minkBoardHome", Base64.getEncoder().encodeToString(homeEnvelope))
+            }
+        } ?: put("todos", JSONArray().apply {
             backup.todos.forEach { todo ->
                 put(JSONObject().apply {
                     put("id", todo.id)
@@ -100,12 +115,49 @@ internal object LauncherBackupCodec {
         val profile = root.optJSONObject("profile")?.let(ProfileBackupCodec::decode)
         val launcher = decodeLauncher(root.getJSONObject("launcher"))
 
+        val minkBoardEnvelope = if (root.has("minkBoard")) {
+            val encoded = root.optString("minkBoard")
+            require(encoded.isNotBlank()) { "MinkBoard backup envelope is empty" }
+            runCatching { Base64.getDecoder().decode(encoded) }
+                .getOrElse { throw IllegalArgumentException("MinkBoard backup envelope is invalid") }
+                .also { envelope ->
+                    require(envelope.isNotEmpty() && envelope.size <= MAX_MINKBOARD_ENVELOPE_BYTES) {
+                        "MinkBoard backup envelope size is invalid"
+                    }
+                }
+        } else null
+        require(minkBoardEnvelope != null || !root.has("minkBoardHome")) {
+            "MinkBoard Home settings require MinkBoard data"
+        }
+        val minkBoardHomeEnvelope = if (root.has("minkBoardHome")) {
+            val encoded = root.optString("minkBoardHome")
+            require(encoded.isNotBlank()) { "MinkBoard Home envelope is empty" }
+            runCatching { Base64.getDecoder().decode(encoded) }
+                .getOrElse {
+                    throw IllegalArgumentException("MinkBoard Home envelope is invalid")
+                }
+                .also { envelope ->
+                    require(
+                        envelope.isNotEmpty() &&
+                            envelope.size <= MAX_MINKBOARD_HOME_ENVELOPE_BYTES,
+                    ) { "MinkBoard Home envelope size is invalid" }
+                }
+        } else null
+
         return LauncherBackup(
             sourceAppVersion = root.optString("sourceAppVersion").safeText(80),
             exportedAtMillis = root.optLong("exportedAtMillis", 0L),
             launcher = launcher,
             settings = decodeSettings(root.getJSONObject("settings"), launcher.drawerTargets),
-            todos = decodeTodos(root.optJSONArray("todos") ?: JSONArray()),
+            todos = if (minkBoardEnvelope == null) {
+                decodeTodos(root.optJSONArray("todos") ?: JSONArray())
+            } else {
+                // A present rich field is authoritative. Never fall back to a sibling legacy list.
+                emptyList()
+            },
+            legacyTodosPresent = root.has("todos"),
+            minkBoardEnvelope = minkBoardEnvelope,
+            minkBoardHomeEnvelope = minkBoardHomeEnvelope,
             profile = profile?.first,
             profileLinks = profile?.second.orEmpty(),
             widgetRecipes = decodeWidgetRecipes(root.optJSONArray("widgets")),

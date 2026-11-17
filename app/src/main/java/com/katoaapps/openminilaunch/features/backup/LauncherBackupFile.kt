@@ -5,7 +5,9 @@ import android.net.Uri
 import java.io.Reader
 
 internal object LauncherBackupFile {
-    private const val MAX_BACKUP_CHARACTERS = 2_000_000
+    // The encrypted board envelope is bounded to 32 MiB before Base64 expansion. Leave room for
+    // the outer launcher JSON while still rejecting unexpectedly large documents before parsing.
+    private const val MAX_BACKUP_CHARACTERS = 48 * 1024 * 1024
 
     fun write(context: Context, uri: Uri, backup: LauncherBackup): Result<Unit> = runCatching {
         val json = LauncherBackupCodec.encode(backup)

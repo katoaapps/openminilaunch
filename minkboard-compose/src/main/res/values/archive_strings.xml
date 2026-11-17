@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="archive_export_title">Protect your MinkBoard archive</string>
+    <string name="archive_import_title">Import MinkBoard archive</string>
+    <string name="archive_spencer_import_title">Import from Spencer</string>
+    <string name="archive_passphrase">Passphrase</string>
+    <string name="archive_confirm_passphrase">Confirm passphrase</string>
+    <string name="archive_passphrase_help">Use at least %1$d characters. Mink cannot recover this passphrase.</string>
+    <string name="archive_batch_passphrase_help">Use at least %1$d characters. You’ll unlock each selected archive separately.</string>
+    <string name="archive_import_additive_help">Imported boards are added without changing the boards already here.</string>
+    <string name="archive_import_progress">Archive %1$d of %2$d</string>
+    <string name="archive_export_action">Save archive</string>
+    <string name="archive_import_action">Import</string>
+    <string name="archive_import_working">Decrypting and importing this board…</string>
+    <string name="archive_export_working">Encrypting your selected boards…</string>
+    <string name="archive_board_name">Board name</string>
+    <string name="archive_board_name_help">This older Spencer export does not include a board name. Choose one for the imported MinkBoard.</string>
+    <string name="archive_spencer_mapping_help">MinkBoard creates a short title for each card and keeps the complete Spencer message in its details. Spencer’s downloaded JSON does not include subtasks.</string>
+    <string name="archive_show_passphrase">Show passphrase</string>
+    <string name="archive_hide_passphrase">Hide passphrase</string>
+    <string name="archive_import_results_title">Archive import results</string>
+    <string name="archive_import_results_summary">Imported %1$d of %2$d selected archives.</string>
+</resources>

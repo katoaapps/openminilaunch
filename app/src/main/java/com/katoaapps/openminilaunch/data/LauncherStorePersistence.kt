@@ -146,13 +146,6 @@ internal class LauncherStorePersistence(private val prefs: SharedPreferences) {
         )
     }.getOrDefault(LauncherStoreSnapshot())
 
-    fun saveTodos(todos: List<TodoItem>) {
-        val value = JSONArray().apply {
-            todos.forEach { put(JSONObject().put("id", it.id).put("text", it.text).put("completed", it.completed)) }
-        }
-        prefs.edit().putString(TODOS_KEY, value.toString()).apply()
-    }
-
     fun saveLauncherSelections(
         appGridAssignments: Map<AppGridSlot, AppGridAssignment>,
         appFolders: List<AppFolderConfig>,

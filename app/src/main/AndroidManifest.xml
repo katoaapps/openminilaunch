@@ -18,6 +18,11 @@
     <uses-permission android:name="android.permission.CALL_PHONE" />
     <uses-permission android:name="android.permission.SEND_SMS" />
     <uses-permission android:name="android.permission.POST_NOTIFICATIONS" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
+    <uses-permission android:name="android.permission.SCHEDULE_EXACT_ALARM" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.WAKE_LOCK" />
+    <uses-permission android:name="android.permission.FOREGROUND_SERVICE_SPECIAL_USE" />
     <uses-permission android:name="android.permission.EXPAND_STATUS_BAR" />
     <!-- Normal permission used by the default launcher to discover Android 15 Private Space. -->
     <uses-permission android:name="android.permission.ACCESS_HIDDEN_PROFILES" />
@@ -102,6 +107,7 @@
     </queries>
 
     <application
+        android:name=".OpenMinkApplication"
         android:allowBackup="false"
         android:icon="@mipmap/ic_launcher"
         android:label="@string/app_name"
@@ -110,6 +116,28 @@
         android:theme="@style/Theme.MiniLaunch">
         <service android:name=".features.minkpad.MinkPadSessionService"
             android:exported="false" android:foregroundServiceType="connectedDevice" />
+        <service
+            android:name=".features.minkboard.focus.FocusTimerService"
+            android:exported="false"
+            android:foregroundServiceType="specialUse">
+            <property
+                android:name="android.app.PROPERTY_SPECIAL_USE_FGS_SUBTYPE"
+                android:value="Keeps a user-started board focus timer visible, accurate, and controllable while the launcher is not open." />
+        </service>
+        <receiver
+            android:name=".features.minkboard.focus.FocusAlarmReceiver"
+            android:exported="false" />
+        <receiver
+            android:name=".features.minkboard.focus.FocusTimerActionReceiver"
+            android:exported="false" />
+        <receiver
+            android:name=".features.minkboard.focus.FocusBootReceiver"
+            android:exported="false">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.intent.action.MY_PACKAGE_REPLACED" />
+            </intent-filter>
+        </receiver>
         <provider
             android:name="androidx.core.content.FileProvider"
             android:authorities="${applicationId}.demo-files"

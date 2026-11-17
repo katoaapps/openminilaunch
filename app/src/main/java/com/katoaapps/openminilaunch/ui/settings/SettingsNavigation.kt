@@ -12,6 +12,7 @@ internal enum class SettingsDestination {
     APPEARANCE_ICONS,
     APPEARANCE_LAYOUT_CLOCK,
     MINK_SPACE,
+    MINKBOARD_HOME,
     APP_GRID,
     QUICK_DRAWER,
     PRIVACY_APPS,
@@ -104,6 +105,10 @@ internal fun settingsPathTo(destination: SettingsDestination): List<SettingsDest
         destination,
     )
     SettingsDestination.MINK_SPACE -> listOf(SettingsDestination.OVERVIEW)
+    SettingsDestination.MINKBOARD_HOME -> listOf(
+        SettingsDestination.OVERVIEW,
+        SettingsDestination.MINKBOARD_HOME,
+    )
     SettingsDestination.APP_GRID,
     SettingsDestination.QUICK_DRAWER -> listOf(SettingsDestination.OVERVIEW, destination)
     SettingsDestination.PRIVACY_APPS -> listOf(

@@ -561,18 +561,6 @@ class DeviceActions(private val context: Context) {
         return launchPackage(samsungPackage)
     }
 
-    fun exportTodosToNotes(text: String): Boolean {
-        val clean = text.trim()
-        if (clean.isEmpty()) return false
-        val title = context.getString(R.string.todo_export_title, context.getString(R.string.app_name))
-        return start(
-            Intent(Intent.ACTION_SEND).setType("text/plain")
-                .putExtra(Intent.EXTRA_TITLE, title)
-                .putExtra(Intent.EXTRA_TEXT, clean),
-            chooser = true,
-        )
-    }
-
     internal fun createEvent(draft: CalendarDraft): Boolean {
         val intent = Intent(Intent.ACTION_INSERT).setData(CalendarContract.Events.CONTENT_URI)
             .putExtra(CalendarContract.Events.TITLE, draft.title)

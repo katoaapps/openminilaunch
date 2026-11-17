@@ -11,7 +11,6 @@ import android.os.Bundle
 import android.provider.Settings
 import android.view.KeyEvent
 import android.view.WindowManager
-import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.runtime.LaunchedEffect
@@ -21,7 +20,9 @@ import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.core.view.WindowCompat
+import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.lifecycleScope
+import com.katoaapps.openminilaunch.openMinkMinkBoardRuntime
 import com.katoaapps.openminilaunch.data.LauncherStore
 import com.katoaapps.openminilaunch.platform.DeviceActions
 import com.katoaapps.openminilaunch.ui.components.applyLargeDisplayOrientation
@@ -37,7 +38,7 @@ private const val STATE_CONFIGURING_WIDGET_ID = "configuring_widget_id"
 private const val STATE_WIDGET_RESULT_ID = "widget_result_id"
 private const val STATE_WIDGET_RESULT_OK = "widget_result_ok"
 
-class MainActivity : ComponentActivity(), MagicHardwareHotkeyHost {
+class MainActivity : FragmentActivity(), MagicHardwareHotkeyHost {
     private val homeRoleLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { }
     private var homeRequestToken by mutableIntStateOf(0)
     private var configuringWidgetId: Int? = null
@@ -66,6 +67,7 @@ class MainActivity : ComponentActivity(), MagicHardwareHotkeyHost {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        openMinkMinkBoardRuntime.handleNavigationIntent(intent)
         WindowCompat.setDecorFitsSystemWindows(window, false)
         allowContentBesideDisplayCutouts()
         val store = LauncherStore.get(this)
@@ -122,18 +124,21 @@ class MainActivity : ComponentActivity(), MagicHardwareHotkeyHost {
 
     override fun onStart() {
         super.onStart()
+        openMinkMinkBoardRuntime.onForegrounded()
         runCatching { appWidgetHost.startListening() }
         actions.refreshDynamicLauncherIcons()
     }
 
     override fun onStop() {
         runCatching { appWidgetHost.stopListening() }
+        if (!isChangingConfigurations) openMinkMinkBoardRuntime.onBackgrounded()
         super.onStop()
     }
 
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
         setIntent(intent)
+        openMinkMinkBoardRuntime.handleNavigationIntent(intent)
         // Home requests reuse the launcher activity. This token resets transient Compose pages.
         if (intent.action == Intent.ACTION_MAIN) homeRequestToken++
     }

@@ -223,7 +223,7 @@ class LauncherBackupCodecTest {
         val encoded = LauncherBackupCodec.encode(original)
         val restored = LauncherBackupCodec.decode(encoded)
 
-        assertEquals(3, JSONObject(encoded).getInt("schemaVersion"))
+        assertEquals(5, JSONObject(encoded).getInt("schemaVersion"))
         assertEquals(
             listOf(
                 MinkSpaceMiniApp.MUSIC,
@@ -241,6 +241,41 @@ class LauncherBackupCodecTest {
             MinkSpaceTotalScreenShortcutBackup(MinkSpaceMiniApp.MEDIA),
             restored.settings.minkSpaceTotalScreenShortcut,
         )
+    }
+
+    @Test fun richMinkBoardEnvelopeIsAuthoritativeAndSurvivesRoundTrip() {
+        val envelope = "encrypted-board-data".toByteArray()
+        val homeEnvelope = "encrypted-home-data".toByteArray()
+        val encoded = LauncherBackupCodec.encode(
+            sampleBackup(twoPanelMode = true).copy(
+                todos = listOf(
+                    com.katoaapps.openminilaunch.features.minkspace.todo.TodoItem(
+                        id = "legacy",
+                        text = "must not leak",
+                        completed = false,
+                    ),
+                ),
+                minkBoardEnvelope = envelope,
+                minkBoardHomeEnvelope = homeEnvelope,
+            ),
+        )
+        val json = JSONObject(encoded)
+        val restored = LauncherBackupCodec.decode(encoded)
+
+        assertFalse(json.has("todos"))
+        assertTrue(json.has("minkBoard"))
+        assertTrue(json.has("minkBoardHome"))
+        assertTrue(checkNotNull(restored.minkBoardEnvelope).contentEquals(envelope))
+        assertTrue(checkNotNull(restored.minkBoardHomeEnvelope).contentEquals(homeEnvelope))
+        assertTrue(restored.todos.isEmpty())
+    }
+
+    @Test(expected = IllegalArgumentException::class)
+    fun homeSettingsWithoutRichMinkBoardDataAreRejected() {
+        val json = JSONObject(LauncherBackupCodec.encode(sampleBackup(twoPanelMode = true)))
+        json.put("minkBoardHome", java.util.Base64.getEncoder().encodeToString("orphan".toByteArray()))
+
+        LauncherBackupCodec.decode(json.toString())
     }
 
     @Test fun disabledTotalScreenShortcutSurvivesPortableBackupRoundTrip() {

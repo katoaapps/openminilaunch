@@ -3,6 +3,7 @@
 package com.katoaapps.openminilaunch.ui.magic
 
 import com.katoaapps.openminilaunch.R
+import com.katoaapps.openminilaunch.openMinkMinkBoardRuntime
 import com.katoaapps.openminilaunch.data.*
 import com.katoaapps.openminilaunch.model.*
 import com.katoaapps.openminilaunch.platform.*
@@ -19,6 +20,7 @@ import com.katoaapps.openminilaunch.features.conversations.*
 import com.katoaapps.openminilaunch.features.files.*
 import com.katoaapps.openminilaunch.features.magic.*
 import com.katoaapps.openminilaunch.features.messaging.*
+import com.katoaapps.minkboard.core.LauncherCardAddResult
 import com.katoaapps.openminilaunch.features.wellbeing.MinkAppAccessState
 import com.katoaapps.openminilaunch.ui.components.*
 import com.katoaapps.openminilaunch.ui.theme.*
@@ -63,6 +65,7 @@ import androidx.core.content.ContextCompat
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 @Composable
@@ -93,6 +96,10 @@ internal fun MagicBoxContent(
 ) {
     val magicBoxMinimumHeight = Dimens.dp64
     val context = LocalContext.current
+    val coroutineScope = rememberCoroutineScope()
+    val minkBoardController = remember(context) {
+        context.openMinkMinkBoardRuntime.launcherController
+    }
     val configuration = LocalConfiguration.current
     val useDirectHardwareInput = hasUsableHardwareKeyboard(
         configuration.keyboard,
@@ -686,6 +693,24 @@ internal fun MagicBoxContent(
             openTodos()
             return
         }
+        if (route == MagicBoxRoute.TODO) {
+            val payload = text.text.trim()
+            if (payload.isBlank()) return
+            coroutineScope.launch {
+                when (minkBoardController.addToIntake(payload)) {
+                    is LauncherCardAddResult.Added -> beginTodoCompletion(payload)
+                    LauncherCardAddResult.InvalidText -> Unit
+                    LauncherCardAddResult.Unbound,
+                    is LauncherCardAddResult.BrokenBinding,
+                    -> Toast.makeText(
+                        context,
+                        R.string.minkboard_home_needs_repair,
+                        Toast.LENGTH_LONG,
+                    ).show()
+                }
+            }
+            return
+        }
         if (store.demoModeEnabled && route != MagicBoxRoute.TODO) {
             Toast.makeText(context, R.string.demo_preview_action, Toast.LENGTH_SHORT).show()
             return
@@ -716,7 +741,6 @@ internal fun MagicBoxContent(
             selectedRecipient = selectedRecipient,
             store = store,
             actions = actions,
-            onTodoAdded = ::beginTodoCompletion,
             onExternalDraftOpened = { keyboard?.hide() },
             onMessage = { draft, route ->
                 val resolvedRoute = resolvedMessageSendRoute(

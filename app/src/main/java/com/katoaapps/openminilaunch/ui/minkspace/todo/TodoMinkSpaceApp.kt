@@ -4,10 +4,16 @@ import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Checklist
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.collectAsState
+import androidx.compose.runtime.getValue
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.platform.LocalContext
+import com.katoaapps.minkboard.model.BoardId
+import com.katoaapps.minkboard.model.CardId
 import com.katoaapps.openminilaunch.R
 import com.katoaapps.openminilaunch.data.LauncherStore
 import com.katoaapps.openminilaunch.features.minkspace.MinkSpaceMiniApp
+import com.katoaapps.openminilaunch.openMinkMinkBoardRuntime
 import com.katoaapps.openminilaunch.ui.launcher.home.HomeTodoTextMetrics
 import com.katoaapps.openminilaunch.ui.minkspace.core.MinkSpaceApp
 import com.katoaapps.openminilaunch.ui.minkspace.core.MinkSpaceMiniAppManifest
@@ -26,18 +32,40 @@ internal class TodoMinkSpaceApp(
 
     @Composable
     override fun Content(scope: MinkSpaceScope, modifier: Modifier) {
+        val runtime = LocalContext.current.openMinkMinkBoardRuntime
+        val boardAccessRevision by runtime.boardAccessRevision.collectAsState()
         scope.Surface(modifier = modifier) {
-            TodoPager(
-                store = store,
-                openTodos = openTodos,
-                jumpToken = jumpToken,
-                itemsPerPage = itemsPerPage,
-                textMetrics = textMetrics,
-                compact = scope.compact,
-                contentColor = scope.contentColor,
-                mutedContentColor = scope.mutedContentColor,
-                modifier = Modifier.fillMaxSize(),
-            )
+            if (store.demoModeEnabled) {
+                TodoPager(
+                    items = store.demoTodos,
+                    onToggle = store::toggleDemoTodo,
+                    openTodos = openTodos,
+                    jumpToken = jumpToken,
+                    itemsPerPage = itemsPerPage,
+                    textMetrics = textMetrics,
+                    compact = scope.compact,
+                    contentColor = scope.contentColor,
+                    mutedContentColor = scope.mutedContentColor,
+                    modifier = Modifier.fillMaxSize(),
+                )
+            } else {
+                MinkBoardTodoPager(
+                    controller = runtime.launcherController,
+                    openBoard = openTodos,
+                    openCard = { boardId: BoardId, cardId: CardId ->
+                        runtime.requestNavigation(boardId, cardId)
+                    },
+                    boardAccessRevision = boardAccessRevision,
+                    isBoardAccessGranted = runtime.boardAccessSessions::isGranted,
+                    jumpToken = jumpToken,
+                    itemsPerPage = itemsPerPage,
+                    textMetrics = textMetrics,
+                    compact = scope.compact,
+                    contentColor = scope.contentColor,
+                    mutedContentColor = scope.mutedContentColor,
+                    modifier = Modifier.fillMaxSize(),
+                )
+            }
         }
     }
 

@@ -14,9 +14,11 @@ import androidx.compose.material.icons.filled.FileDownload
 import androidx.compose.material.icons.filled.FileUpload
 import androidx.compose.material3.AlertDialog
 import androidx.compose.material3.Checkbox
+import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Text
 import androidx.compose.material3.TextButton
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.produceState
@@ -27,11 +29,16 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
+import androidx.compose.ui.text.input.PasswordVisualTransformation
+import com.katoaapps.minkboard.core.LauncherBackupApplyResult
 import com.katoaapps.openminilaunch.BuildConfig
 import com.katoaapps.openminilaunch.R
+import com.katoaapps.openminilaunch.openMinkMinkBoardRuntime
 import com.katoaapps.openminilaunch.data.LauncherStore
 import com.katoaapps.openminilaunch.features.backup.LauncherBackup
 import com.katoaapps.openminilaunch.features.backup.LauncherBackupFile
+import com.katoaapps.openminilaunch.features.backup.OpenMinkBoardRestorePreparationResult
+import com.katoaapps.openminilaunch.features.backup.OpenMinkEncryptedBoardBackupResult
 import com.katoaapps.openminilaunch.features.backup.createPortableBackup
 import com.katoaapps.openminilaunch.features.backup.restorePortableBackup
 import com.katoaapps.openminilaunch.features.profile.ProfileState
@@ -54,6 +61,11 @@ internal fun BackupRestoreSettingsPage(
     val scope = rememberCoroutineScope()
     var pendingImport by remember { mutableStateOf<LauncherBackup?>(null) }
     var confirmSensitiveExport by remember { mutableStateOf(false) }
+    var showExportPassphrase by remember { mutableStateOf(false) }
+    var exportPassphrase by remember { mutableStateOf("") }
+    var exportPassphraseConfirmation by remember { mutableStateOf("") }
+    var pendingExportSecret by remember { mutableStateOf<CharArray?>(null) }
+    var importPassphrase by remember { mutableStateOf("") }
     val includesMinkFavoriteContacts by produceState(
         initialValue = false,
         key1 = store.favoriteIntegratedContactStore,
@@ -75,18 +87,61 @@ internal fun BackupRestoreSettingsPage(
     val importFailure = stringResource(R.string.backup_import_failed)
     val importSuccess = stringResource(R.string.backup_imported)
 
+    DisposableEffect(Unit) {
+        onDispose {
+            pendingExportSecret?.fill('\u0000')
+            pendingExportSecret = null
+            exportPassphrase = ""
+            exportPassphraseConfirmation = ""
+            importPassphrase = ""
+        }
+    }
+
     val createBackup = rememberLauncherForActivityResult(
         ActivityResultContracts.CreateDocument("application/json"),
     ) { uri ->
         if (uri != null) {
             scope.launch {
                 val succeeded = withContext(Dispatchers.IO) {
-                    val backup = store.createPortableBackup(BuildConfig.VERSION_NAME)
-                    LauncherBackupFile.write(context, uri, backup).isSuccess
+                    val secret = pendingExportSecret ?: return@withContext false
+                    try {
+                        val runtime = context.openMinkMinkBoardRuntime
+                        if (runtime.launcherController.initialize() !=
+                            com.katoaapps.openminilaunch.features.minkboard
+                                .LauncherBoardInitializationState.Ready
+                        ) {
+                            return@withContext false
+                        }
+                        when (
+                            val result = runtime.backupCoordinator.createEncryptedBackup(
+                                sourceApp = "Mink Launcher Open Source",
+                                secret = secret,
+                            )
+                        ) {
+                            is OpenMinkEncryptedBoardBackupResult.Ready -> {
+                                val backup = store.createPortableBackup(
+                                    BuildConfig.VERSION_NAME,
+                                    minkBoardEnvelope = result.boardEnvelope,
+                                    minkBoardHomeEnvelope = result.homeEnvelope,
+                                )
+                                LauncherBackupFile.write(context, uri, backup).isSuccess
+                            }
+                            OpenMinkEncryptedBoardBackupResult.UnboundWorkspace,
+                            OpenMinkEncryptedBoardBackupResult.BrokenBinding,
+                            OpenMinkEncryptedBoardBackupResult.EncryptionFailed,
+                            -> false
+                        }
+                    } finally {
+                        secret.fill('\u0000')
+                    }
                 }
+                pendingExportSecret = null
                 val message = if (succeeded) exportSuccess else exportFailure
                 Toast.makeText(context, message, Toast.LENGTH_SHORT).show()
             }
+        } else {
+            pendingExportSecret?.fill('\u0000')
+            pendingExportSecret = null
         }
     }
     val openBackup = rememberLauncherForActivityResult(ActivityResultContracts.OpenDocument()) { uri ->
@@ -99,10 +154,11 @@ internal fun BackupRestoreSettingsPage(
             }
         }
     }
-    val beginExport = {
+    val beginExportFile = {
         val date = SimpleDateFormat("yyyy-MM-dd", Locale.US).format(Date())
         createBackup.launch(context.getString(R.string.backup_filename, date))
     }
+    val beginProtectedExport = { showExportPassphrase = true }
 
     SettingsPage(stringResource(R.string.backup_and_restore), goBack) {
         Text(
@@ -122,7 +178,7 @@ internal fun BackupRestoreSettingsPage(
                 ) {
                     confirmSensitiveExport = true
                 } else {
-                    beginExport()
+                    beginProtectedExport()
                 }
             },
         )
@@ -168,12 +224,67 @@ internal fun BackupRestoreSettingsPage(
                 TextButton(
                     onClick = {
                         confirmSensitiveExport = false
-                        beginExport()
+                        beginProtectedExport()
                     },
                 ) { Text(stringResource(R.string.continue_action)) }
             },
             dismissButton = {
                 TextButton(onClick = { confirmSensitiveExport = false }) {
+                    Text(stringResource(R.string.cancel))
+                }
+            },
+        )
+    }
+
+    if (showExportPassphrase) {
+        val passphrasesMatch = exportPassphrase == exportPassphraseConfirmation
+        val passphraseValid = exportPassphrase.length >= 8 && passphrasesMatch
+        AlertDialog(
+            onDismissRequest = {
+                exportPassphrase = ""
+                exportPassphraseConfirmation = ""
+                showExportPassphrase = false
+            },
+            title = { Text(stringResource(R.string.backup_passphrase_title)) },
+            text = {
+                Column(verticalArrangement = Arrangement.spacedBy(Dimens.dp8)) {
+                    Text(stringResource(R.string.backup_passphrase_description))
+                    OutlinedTextField(
+                        value = exportPassphrase,
+                        onValueChange = { exportPassphrase = it },
+                        label = { Text(stringResource(R.string.backup_passphrase)) },
+                        visualTransformation = PasswordVisualTransformation(),
+                        singleLine = true,
+                    )
+                    OutlinedTextField(
+                        value = exportPassphraseConfirmation,
+                        onValueChange = { exportPassphraseConfirmation = it },
+                        label = { Text(stringResource(R.string.backup_passphrase_confirm)) },
+                        visualTransformation = PasswordVisualTransformation(),
+                        singleLine = true,
+                        isError = exportPassphraseConfirmation.isNotEmpty() && !passphrasesMatch,
+                    )
+                }
+            },
+            confirmButton = {
+                TextButton(
+                    enabled = passphraseValid,
+                    onClick = {
+                        pendingExportSecret?.fill('\u0000')
+                        pendingExportSecret = exportPassphrase.toCharArray()
+                        exportPassphrase = ""
+                        exportPassphraseConfirmation = ""
+                        showExportPassphrase = false
+                        beginExportFile()
+                    },
+                ) { Text(stringResource(R.string.export_backup)) }
+            },
+            dismissButton = {
+                TextButton(onClick = {
+                    exportPassphrase = ""
+                    exportPassphraseConfirmation = ""
+                    showExportPassphrase = false
+                }) {
                     Text(stringResource(R.string.cancel))
                 }
             },
@@ -189,18 +300,36 @@ internal fun BackupRestoreSettingsPage(
             DateFormat.getMediumDateFormat(context).format(Date(timestamp))
         } ?: stringResource(R.string.unknown_date)
         AlertDialog(
-            onDismissRequest = { pendingImport = null },
+            onDismissRequest = { pendingImport = null; importPassphrase = "" },
             title = { Text(stringResource(R.string.confirm_backup_import)) },
             text = {
                 Column {
-                    Text(
-                        stringResource(
-                            R.string.confirm_backup_import_description,
-                            sourceVersion,
-                            exportedAt,
-                            backup.todos.size,
-                        ),
-                    )
+                    if (backup.minkBoardEnvelope != null) {
+                        Text(
+                            stringResource(
+                                R.string.confirm_minkboard_backup_import_description,
+                                sourceVersion,
+                                exportedAt,
+                            ),
+                        )
+                        OutlinedTextField(
+                            value = importPassphrase,
+                            onValueChange = { importPassphrase = it },
+                            label = { Text(stringResource(R.string.backup_passphrase)) },
+                            visualTransformation = PasswordVisualTransformation(),
+                            singleLine = true,
+                            modifier = Modifier.padding(top = Dimens.dp8),
+                        )
+                    } else {
+                        Text(
+                            stringResource(
+                                R.string.confirm_backup_import_description,
+                                sourceVersion,
+                                exportedAt,
+                                backup.todos.size,
+                            ),
+                        )
+                    }
                     if (backup.integratedContacts != null) {
                         Text(
                             stringResource(R.string.favorite_contacts_backup_import_description),
@@ -246,26 +375,64 @@ internal fun BackupRestoreSettingsPage(
             },
             confirmButton = {
                 TextButton(
+                    enabled = backup.minkBoardEnvelope == null || importPassphrase.length >= 8,
                     onClick = {
-                        val widgetResult = store.restorePortableBackup(
-                            backup,
-                            restoreWidgetPlaceholders = restoreWidgetPlaceholders,
-                        )
-                        pendingImport = null
-                        val message = if (widgetResult.skippedAtLimit > 0) {
-                            context.getString(
-                                R.string.backup_imported_widget_limit,
-                                widgetResult.skippedAtLimit,
+                        val secret = importPassphrase.takeIf { backup.minkBoardEnvelope != null }
+                            ?.toCharArray()
+                        scope.launch {
+                            val boardRestored = withContext(Dispatchers.IO) {
+                                try {
+                                    val coordinator = context.openMinkMinkBoardRuntime.backupCoordinator
+                                    when (val prepared = coordinator.prepareRestore(backup, secret)) {
+                                        is OpenMinkBoardRestorePreparationResult.Prepared -> when (
+                                            coordinator.applyPrepared(prepared)
+                                        ) {
+                                            LauncherBackupApplyResult.LeftDestinationUntouched,
+                                            LauncherBackupApplyResult.ExplicitlyEmptyWorkspace,
+                                            is LauncherBackupApplyResult.LegacyNormalized,
+                                            is LauncherBackupApplyResult.WorkspaceImported,
+                                            -> true
+                                            LauncherBackupApplyResult.MissingLegacySchemaVersion,
+                                            LauncherBackupApplyResult.RejectedInvalidRichBackup,
+                                            LauncherBackupApplyResult.RejectedCorruptLegacyData,
+                                            -> false
+                                        }
+                                        OpenMinkBoardRestorePreparationResult.UnsupportedEnvelope,
+                                        OpenMinkBoardRestorePreparationResult.CorruptEnvelope,
+                                        OpenMinkBoardRestorePreparationResult.MissingSecret,
+                                        OpenMinkBoardRestorePreparationResult.InvalidRichBackup,
+                                        OpenMinkBoardRestorePreparationResult.CorruptLegacyData,
+                                        -> false
+                                    }
+                                } finally {
+                                    secret?.fill('\u0000')
+                                }
+                            }
+                            if (!boardRestored) {
+                                Toast.makeText(context, importFailure, Toast.LENGTH_LONG).show()
+                                return@launch
+                            }
+                            val widgetResult = store.restorePortableBackup(
+                                backup,
+                                restoreWidgetPlaceholders = restoreWidgetPlaceholders,
                             )
-                        } else {
-                            importSuccess
+                            pendingImport = null
+                            importPassphrase = ""
+                            val message = if (widgetResult.skippedAtLimit > 0) {
+                                context.getString(
+                                    R.string.backup_imported_widget_limit,
+                                    widgetResult.skippedAtLimit,
+                                )
+                            } else {
+                                importSuccess
+                            }
+                            Toast.makeText(context, message, Toast.LENGTH_LONG).show()
                         }
-                        Toast.makeText(context, message, Toast.LENGTH_LONG).show()
                     },
                 ) { Text(stringResource(R.string.import_backup)) }
             },
             dismissButton = {
-                TextButton(onClick = { pendingImport = null }) {
+                TextButton(onClick = { pendingImport = null; importPassphrase = "" }) {
                     Text(stringResource(R.string.cancel))
                 }
             },

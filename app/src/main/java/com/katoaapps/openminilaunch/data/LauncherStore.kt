@@ -22,8 +22,6 @@ import com.katoaapps.openminilaunch.features.contacts.AndroidFavoriteAttentionRe
 import com.katoaapps.openminilaunch.features.contacts.FavoriteContactOrderStore
 import com.katoaapps.openminilaunch.features.contacts.FavoriteIntegratedContactStore
 import com.katoaapps.openminilaunch.features.minkspace.MinkSpaceMiniApp
-import com.katoaapps.openminilaunch.features.minkspace.todo.TodoItem
-import com.katoaapps.openminilaunch.features.minkspace.todo.TodoStore
 import com.katoaapps.openminilaunch.features.profile.ProfileRepository
 import com.katoaapps.openminilaunch.model.*
 
@@ -31,7 +29,6 @@ class LauncherStore private constructor(context: Context) {
     private val appContext = context.applicationContext
     private val prefs = appContext.getSharedPreferences("mini_launch", Context.MODE_PRIVATE)
     private val persistence = LauncherStorePersistence(prefs)
-    private val todoStore: TodoStore = TodoStore(persistence) { demoModeEnabled }
     private val launcherSelections = LauncherSelectionStore(persistence)
     private val searchStore = SearchStore(persistence, MAX_SEARCH_HISTORY)
     private val widgetStore = WidgetStore(persistence, MAX_WIDGET_ENTRIES)
@@ -71,12 +68,12 @@ class LauncherStore private constructor(context: Context) {
         favoriteAttentionColorStore,
     )
     internal val minkPadPreferences = com.katoaapps.openminilaunch.features.minkpad.minkPadRepository(appContext).preferences
-    private val demoModeStore: DemoModeStore = DemoModeStore(appContext, prefs, todoStore)
+    private val demoModeStore: DemoModeStore = DemoModeStore(appContext, prefs)
     internal val demoHomeProfile get() = demoModeStore.profile
     internal val demoScenario get() = demoModeStore.scenario
     internal val demoConversationState get() = demoModeStore.conversationState
     internal val demoSessionStartedAt get() = demoModeStore.sessionStartedAt
-    val todos get() = todoStore.items
+    internal val demoTodos get() = demoModeStore.todos
     internal val savedTodosForBackup get() = persistence.loadTodos()
     /** Typed App Grid contents. Legacy package-only target values migrate after discovery. */
     val appGridAssignments get() = launcherSelections.appGridAssignments
@@ -271,7 +268,6 @@ class LauncherStore private constructor(context: Context) {
     }
 
     private fun load() {
-        todoStore.restoreSaved()
         val saved = persistence.load(MAX_SEARCH_HISTORY, MAX_WIDGET_ENTRIES)
         launcherSelections.restore(saved)
         searchStore.restore(saved)
@@ -280,19 +276,7 @@ class LauncherStore private constructor(context: Context) {
         demoModeStore.applyIfEnabled()
     }
 
-    fun addTodo(text: String) = todoStore.add(text)
-
-    fun toggleTodo(id: String) = todoStore.toggle(id)
-
-    fun renameTodo(id: String, text: String) = todoStore.rename(id, text)
-
-    fun deleteTodo(id: String) = todoStore.delete(id)
-
-    fun setTodoOrder(orderedIds: List<String>) = todoStore.setOrder(orderedIds)
-
-    internal fun replaceTodosFromBackup(items: List<TodoItem>) {
-        todoStore.replaceFromBackup(items)
-    }
+    internal fun toggleDemoTodo(id: String) = demoModeStore.toggleTodo(id)
 
     fun placePinnedAppGridTarget(slot: AppGridSlot, targetKey: String) {
         launcherSelections.placePinnedAppGridTarget(slot, targetKey)

@@ -15,7 +15,6 @@ internal fun dispatchMagicCommand(
     selectedRecipient: SelectedMessageRecipient?,
     store: LauncherStore,
     actions: DeviceActions,
-    onTodoAdded: (String) -> Unit,
     onExternalDraftOpened: () -> Unit,
     onMessage: (MessageDraft, MessagingSendRoute) -> Unit,
     onConversationShortcutMessage: (ConversationShortcutDraft) -> Unit = {},
@@ -24,12 +23,9 @@ internal fun dispatchMagicCommand(
     val payload = rawText.trim()
     var keepDraftAfterExternalHandoff = false
     val handled = when (route) {
-        MagicBoxRoute.TODO -> payload.isNotBlank().also {
-            if (it) {
-                store.addTodo(payload)
-                onTodoAdded(payload)
-            }
-        }
+        // MinkBoard owns this route before dispatch. Keeping it false here prevents a future
+        // caller from accidentally resurrecting LauncherStore's legacy To-Do persistence.
+        MagicBoxRoute.TODO -> false
         MagicBoxRoute.NOTE -> payload.isNotBlank() && actions.createNote(payload).also { opened ->
             keepDraftAfterExternalHandoff = opened
         }

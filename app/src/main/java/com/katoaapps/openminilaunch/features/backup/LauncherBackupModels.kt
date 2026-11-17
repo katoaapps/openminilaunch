@@ -23,11 +23,11 @@ import com.katoaapps.openminilaunch.model.ThemePreference
 import com.katoaapps.openminilaunch.model.WidgetRestoreRecipe
 
 internal const val LAUNCHER_BACKUP_FORMAT = "minklauncher-open-backup"
-// Keep schema 3 while new fields remain optional. OpenMink 1.5.5 ignores unknown JSON keys,
-// which lets a 2.0 export restore there without losing fields that version understands.
-internal const val LAUNCHER_BACKUP_SCHEMA_VERSION = 3
+// Schema 5 introduces authoritative rich MinkBoard data. Older launchers must reject it instead
+// of partially restoring launcher settings while silently dropping boards.
+internal const val LAUNCHER_BACKUP_SCHEMA_VERSION = 5
 // Interim 2.0 development builds wrote schema 4 before downgrade compatibility was restored.
-internal const val LAUNCHER_BACKUP_MAX_READABLE_SCHEMA_VERSION = 4
+internal const val LAUNCHER_BACKUP_MAX_READABLE_SCHEMA_VERSION = 5
 
 /** Portable state that is safe to move between OpenMink distributions on the same device. */
 internal data class LauncherBackup(
@@ -36,6 +36,12 @@ internal data class LauncherBackup(
     val launcher: LauncherBackupLayout,
     val settings: LauncherBackupSettings,
     val todos: List<TodoItem>,
+    /** Distinguishes an intentionally empty legacy list from a backup that never contained it. */
+    val legacyTodosPresent: Boolean = true,
+    /** Passphrase-encrypted, versioned MinkBoard launcher envelope. Null means a legacy backup. */
+    val minkBoardEnvelope: ByteArray? = null,
+    /** Encrypted launcher-owned MinkSpace status visibility; only valid with [minkBoardEnvelope]. */
+    val minkBoardHomeEnvelope: ByteArray? = null,
     val profile: ProfileCard?,
     val profileLinks: List<ProfileLink>,
     val widgetRecipes: List<WidgetRestoreRecipe> = emptyList(),

@@ -3,6 +3,7 @@ package com.katoaapps.openminilaunch.data
 import android.content.Context
 import android.content.SharedPreferences
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateMapOf
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableLongStateOf
@@ -14,7 +15,7 @@ import com.katoaapps.openminilaunch.features.demo.DemoFavoriteData
 import com.katoaapps.openminilaunch.features.demo.DemoHomeData
 import com.katoaapps.openminilaunch.features.demo.DemoHomeProfile
 import com.katoaapps.openminilaunch.features.demo.DemoScenario
-import com.katoaapps.openminilaunch.features.minkspace.todo.TodoStore
+import com.katoaapps.openminilaunch.features.minkspace.todo.TodoItem
 import com.katoaapps.openminilaunch.model.AppGridSlot
 import com.katoaapps.openminilaunch.model.FavoriteContactId
 
@@ -28,8 +29,8 @@ import com.katoaapps.openminilaunch.model.FavoriteContactId
 internal class DemoModeStore(
     private val context: Context,
     private val prefs: SharedPreferences,
-    private val todoStore: TodoStore,
 ) {
+    val todos = mutableStateListOf<TodoItem>()
     var profile by mutableStateOf(
         DemoHomeProfile.fromStoredName(prefs.getString(DEMO_HOME_PROFILE_KEY, null)),
     )
@@ -77,7 +78,7 @@ internal class DemoModeStore(
         if (!enabled) return
         enabled = false
         favoriteAttentionColorOverrides.clear()
-        todoStore.restoreSaved()
+        todos.clear()
         persistEnabled()
     }
 
@@ -145,10 +146,17 @@ internal class DemoModeStore(
         favoriteAttentionColorOverrides[id.storageKey] = colorArgb?.or(0xFF000000.toInt())
     }
 
+    fun toggleTodo(id: String) {
+        val index = todos.indexOfFirst { it.id == id }
+        if (index < 0) return
+        todos[index] = todos[index].copy(completed = !todos[index].completed)
+    }
+
     private fun applyScene() {
         panelColorArgb = ContextCompat.getColor(context, profile.panelColorRes)
         backgroundColorArgb = ContextCompat.getColor(context, profile.backgroundColorRes)
-        todoStore.showDemo(DemoHomeData.todos(profile, scenario))
+        todos.clear()
+        todos.addAll(DemoHomeData.todos(profile, scenario))
     }
 
     private fun restartSessionClock() {

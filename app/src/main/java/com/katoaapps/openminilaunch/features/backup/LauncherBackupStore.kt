@@ -7,7 +7,11 @@ import com.katoaapps.openminilaunch.features.profile.ProfileState
 import com.katoaapps.openminilaunch.model.FontSource
 import com.katoaapps.openminilaunch.model.IconSource
 
-internal fun LauncherStore.createPortableBackup(appVersion: String): LauncherBackup {
+internal fun LauncherStore.createPortableBackup(
+    appVersion: String,
+    minkBoardEnvelope: ByteArray? = null,
+    minkBoardHomeEnvelope: ByteArray? = null,
+): LauncherBackup {
     val profile = profileRepository.state as? ProfileState.Ready
     return LauncherBackup(
         sourceAppVersion = appVersion,
@@ -66,7 +70,11 @@ internal fun LauncherStore.createPortableBackup(appVersion: String): LauncherBac
             minkPadPreferences = minkPadPreferences.state.value,
             fontAppearance = fontAppearance,
         ),
-        todos = savedTodosForBackup,
+        // Rich exports never manufacture a rollback projection for the retired flat To-Do store.
+        todos = if (minkBoardEnvelope == null) savedTodosForBackup else emptyList(),
+        legacyTodosPresent = minkBoardEnvelope == null,
+        minkBoardEnvelope = minkBoardEnvelope,
+        minkBoardHomeEnvelope = minkBoardHomeEnvelope,
         profile = profile?.card?.copy(hasPortrait = false),
         profileLinks = profile?.links.orEmpty(),
         widgetRecipes = portableWidgetRestoreRecipes(),
@@ -98,7 +106,8 @@ internal fun LauncherStore.restorePortableBackup(
         libraryShortcutTargets = backup.launcher.libraryShortcutTargets,
     )
     replaceAppIconOverrides(backup.launcher.iconOverrides)
-    replaceTodosFromBackup(backup.todos)
+    // The board coordinator imports both rich MinkBoard data and legacy flat To-Dos before this
+    // settings restore runs. Never repopulate the retired SharedPreferences To-Do runtime.
     profileRepository.replaceFromBackup(backup.profile, backup.profileLinks)
 
     setTheme(settings.themePreference)

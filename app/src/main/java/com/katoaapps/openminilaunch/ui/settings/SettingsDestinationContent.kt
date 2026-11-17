@@ -23,7 +23,6 @@ internal fun SettingsDestinationContent(
     onOverviewNavigate: (SettingsDestination) -> Unit,
     onNavigateBack: () -> Unit,
     onExitSettings: () -> Unit,
-    onOpenTodos: () -> Unit,
     onDemoCaptureMoment: (DemoCaptureMoment) -> Unit,
     onIconStyleApplied: () -> Unit,
     onHomeLayoutApplied: () -> Unit,
@@ -46,7 +45,6 @@ internal fun SettingsDestinationContent(
             permissionState = permissionState,
             onPickWeb = onPickWeb,
             onPickAi = onPickAi,
-            openTodos = onOpenTodos,
             onNavigate = onOverviewNavigate,
             goBack = onExitSettings,
         )
@@ -79,7 +77,10 @@ internal fun SettingsDestinationContent(
         SettingsDestination.MINK_SPACE -> MinkSpaceSettingsPage(
             store = store,
             actions = actions,
-            openTodos = onOpenTodos,
+            openMinkBoardSettings = { onNavigate(SettingsDestination.MINKBOARD_HOME) },
+            goBack = onNavigateBack,
+        )
+        SettingsDestination.MINKBOARD_HOME -> MinkBoardHomeSettingsPage(
             goBack = onNavigateBack,
         )
         SettingsDestination.APP_GRID -> AppGridSettingsPage(

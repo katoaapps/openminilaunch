@@ -66,7 +66,7 @@ import sh.calvin.reorderable.rememberReorderableLazyListState
 internal fun MinkSpaceSettingsPage(
     store: LauncherStore,
     actions: DeviceActions,
-    openTodos: () -> Unit,
+    openMinkBoardSettings: () -> Unit,
     goBack: () -> Unit,
 ) {
     val context = LocalContext.current
@@ -145,7 +145,7 @@ internal fun MinkSpaceSettingsPage(
         items(visibleMiniApps, key = MinkSpaceMiniApp::stableId) { miniApp ->
             val spec = MinkSpaceMiniAppCatalog.get(miniApp)
             val onSettingsClick: (() -> Unit)? = when (spec.settingsTarget) {
-                MinkSpaceMiniAppSettingsTarget.TODOS -> openTodos
+                MinkSpaceMiniAppSettingsTarget.TODOS -> openMinkBoardSettings
                 MinkSpaceMiniAppSettingsTarget.MEDIA -> actions::openMediaLab
                 MinkSpaceMiniAppSettingsTarget.WIDGET -> ({ showWidgetSetup = true })
                 MinkSpaceMiniAppSettingsTarget.VCARD -> ({ openVirtualContactCard(context) })

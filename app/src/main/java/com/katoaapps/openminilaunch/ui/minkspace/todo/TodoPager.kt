@@ -28,7 +28,7 @@ import androidx.compose.ui.text.style.TextDecoration
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.sp
 import com.katoaapps.openminilaunch.R
-import com.katoaapps.openminilaunch.data.LauncherStore
+import com.katoaapps.openminilaunch.features.minkspace.todo.TodoItem
 import com.katoaapps.openminilaunch.ui.launcher.home.HomeTodoTextMetrics
 import com.katoaapps.openminilaunch.ui.minkspace.core.MinkSpaceTitle
 import com.katoaapps.openminilaunch.ui.theme.Dimens
@@ -40,7 +40,8 @@ import kotlin.math.ceil
 
 @Composable
 internal fun TodoPager(
-    store: LauncherStore,
+    items: List<TodoItem>,
+    onToggle: (String) -> Unit,
     openTodos: () -> Unit,
     jumpToken: Int,
     itemsPerPage: Int = 3,
@@ -51,14 +52,14 @@ internal fun TodoPager(
     modifier: Modifier = Modifier,
 ) {
     val safeItemsPerPage = itemsPerPage.coerceIn(1, 5)
-    val pages = maxOf(1, ceil(store.todos.size / safeItemsPerPage.toFloat()).toInt())
+    val pages = maxOf(1, ceil(items.size / safeItemsPerPage.toFloat()).toInt())
     val pagerState = rememberPagerState(pageCount = { pages })
     LaunchedEffect(pages) {
         if (pagerState.currentPage >= pages) pagerState.scrollToPage(pages - 1)
     }
     LaunchedEffect(jumpToken, pages) {
         if (jumpToken > 0) {
-            val newestUnfinishedPage = store.todos.indexOfFirst { !it.completed }
+            val newestUnfinishedPage = items.indexOfFirst { !it.completed }
                 .coerceAtLeast(0) / safeItemsPerPage
             pagerState.animateScrollToPage(newestUnfinishedPage.coerceAtMost(pages - 1))
         }
@@ -83,7 +84,7 @@ internal fun TodoPager(
             )
         }
         HorizontalPager(state = pagerState, modifier = Modifier.fillMaxWidth().weight(1f)) { page ->
-            val pageItems = store.todos
+            val pageItems = items
                 .drop(page * safeItemsPerPage)
                 .take(safeItemsPerPage)
             if (pageItems.isEmpty()) {
@@ -102,7 +103,7 @@ internal fun TodoPager(
                         ) {
                             Checkbox(
                                 checked = item.completed,
-                                onCheckedChange = { store.toggleTodo(item.id) },
+                                onCheckedChange = { onToggle(item.id) },
                                 colors = CheckboxDefaults.colors(
                                     checkedColor = contentColor,
                                     uncheckedColor = mutedContentColor,
