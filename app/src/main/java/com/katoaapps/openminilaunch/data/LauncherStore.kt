@@ -159,6 +159,7 @@ class LauncherStore private constructor(context: Context) {
     val latestGitHubReleaseTag get() = updatePreferences.latestReleaseTag
     val includeAppShortcutsInDiscovery get() = appDiscoveryPreferences.includeAppShortcuts
     val homeLayoutStyle get() = homeLayoutPreferences.style
+    val classicHomeSlot get() = homeLayoutPreferences.classicHomeSlot
     val folderIndicatorStyle get() = appGridPreferences.folderIndicatorStyle
     val folderAnimationStyle get() = appGridPreferences.folderAnimationStyle
     val automaticAppBubbleTargets get() = appBubblePreferences.automaticTargetKeys
@@ -391,6 +392,10 @@ class LauncherStore private constructor(context: Context) {
 
     fun updateHomeLayoutStyle(style: HomeLayoutStyle) {
         homeLayoutPreferences.update(style)
+    }
+
+    fun updateClassicHomeSlot(slot: AppGridSlot?) {
+        homeLayoutPreferences.updateClassicHomeSlot(slot)
     }
 
     fun updateFolderAnimationStyle(style: AppFolderAnimationStyle) {

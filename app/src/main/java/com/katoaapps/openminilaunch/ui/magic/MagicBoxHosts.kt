@@ -25,6 +25,7 @@ internal fun HomeMagicBox(
     keyboardInputEnabled: Boolean,
     autoOpenSoftwareKeyboardOnHome: Boolean,
     homeRequestToken: Int,
+    focusRearmToken: Int = 0,
     onTodoAdded: (String) -> Unit,
     onOpenTodos: () -> Unit,
     onOpenKeyboardSettings: () -> Unit,
@@ -44,6 +45,7 @@ internal fun HomeMagicBox(
         autoOpenSoftwareKeyboardOnHome = autoOpenSoftwareKeyboardOnHome,
         captureActivityCommandHotkeys = true,
         homeRequestToken = homeRequestToken,
+        focusRearmToken = focusRearmToken,
         onTodoAdded = { text, animationFinished ->
             onTodoAdded(text)
             animationFinished()

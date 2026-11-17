@@ -14,6 +14,8 @@ import android.os.Bundle
 import android.view.Gravity
 import android.view.MotionEvent
 import android.view.View
+import android.view.VelocityTracker
+import android.view.ViewConfiguration
 import android.view.ViewOutlineProvider
 import android.view.accessibility.AccessibilityNodeInfo
 import android.widget.Button
@@ -282,7 +284,13 @@ internal class WidgetWallScrollRail(
 ) : View(context) {
     var palette = fallbackWidgetWallPalette()
     private val paint = Paint(Paint.ANTI_ALIAS_FLAG)
-    private var dragging = false
+    private val touchSlop = ViewConfiguration.get(context).scaledTouchSlop
+    private var axis = WidgetGestureAxis.UNDECIDED
+    private var downX = 0f
+    private var downY = 0f
+    private var lastX = 0f
+    private var totalX = 0f
+    private var velocityTracker: VelocityTracker? = null
 
     init {
         contentDescription = context.getString(R.string.scroll_widgets)
@@ -332,21 +340,83 @@ internal class WidgetWallScrollRail(
         val (range, extent, offset) = recyclerView.verticalMetrics()
         if (range <= extent) return false
         when (event.actionMasked) {
-            MotionEvent.ACTION_DOWN -> dragging = true
-            MotionEvent.ACTION_MOVE -> if (dragging) {
-                val trackTop = height * .16f
-                val trackHeight = height * .68f
-                val fraction = ((event.y - trackTop) / trackHeight).coerceIn(0f, 1f)
-                val target = ((range - extent) * fraction).roundToInt()
-                recyclerView.scrollBy(0, target - offset)
+            MotionEvent.ACTION_DOWN -> {
+                resetGesture()
+                downX = event.x
+                downY = event.y
+                lastX = event.x
+                velocityTracker = VelocityTracker.obtain().also { it.addMovement(event) }
+                parent?.requestDisallowInterceptTouchEvent(true)
+            }
+            MotionEvent.ACTION_MOVE -> {
+                velocityTracker?.addMovement(event)
+                if (axis == WidgetGestureAxis.UNDECIDED) {
+                    axis = classifyWidgetGesture(
+                        dx = event.x - downX,
+                        dy = event.y - downY,
+                        touchSlop = touchSlop,
+                    )
+                    if (axis == WidgetGestureAxis.HORIZONTAL) {
+                        recyclerView.horizontalDragHandler?.onDragStart()
+                    }
+                }
+                when (axis) {
+                    WidgetGestureAxis.HORIZONTAL -> {
+                        val delta = event.x - lastX
+                        totalX += delta
+                        lastX = event.x
+                        recyclerView.horizontalDragHandler?.onDragBy(delta)
+                    }
+                    WidgetGestureAxis.VERTICAL -> scrollToRailPosition(event.y, range, extent, offset)
+                    WidgetGestureAxis.UNDECIDED -> Unit
+                }
             }
             MotionEvent.ACTION_UP -> {
-                dragging = false
+                velocityTracker?.addMovement(event)
+                if (axis == WidgetGestureAxis.HORIZONTAL) {
+                    velocityTracker?.computeCurrentVelocity(1000)
+                    recyclerView.horizontalDragHandler?.onDragEnd(
+                        totalDeltaX = totalX,
+                        velocityX = velocityTracker?.xVelocity ?: 0f,
+                    )
+                }
                 performClick()
+                resetGesture()
+                parent?.requestDisallowInterceptTouchEvent(false)
             }
-            MotionEvent.ACTION_CANCEL -> dragging = false
+            MotionEvent.ACTION_CANCEL -> {
+                if (axis == WidgetGestureAxis.HORIZONTAL) {
+                    recyclerView.horizontalDragHandler?.onDragCancel()
+                }
+                resetGesture()
+                parent?.requestDisallowInterceptTouchEvent(false)
+            }
         }
         return true
+    }
+
+    private fun scrollToRailPosition(y: Float, range: Int, extent: Int, offset: Int) {
+        val trackTop = height * .16f
+        val trackHeight = height * .68f
+        val fraction = ((y - trackTop) / trackHeight).coerceIn(0f, 1f)
+        val target = ((range - extent) * fraction).roundToInt()
+        recyclerView.scrollBy(0, target - offset)
+    }
+
+    private fun resetGesture() {
+        axis = WidgetGestureAxis.UNDECIDED
+        totalX = 0f
+        velocityTracker?.recycle()
+        velocityTracker = null
+    }
+
+    override fun onDetachedFromWindow() {
+        if (axis == WidgetGestureAxis.HORIZONTAL) {
+            recyclerView.horizontalDragHandler?.onDragCancel()
+        }
+        parent?.requestDisallowInterceptTouchEvent(false)
+        resetGesture()
+        super.onDetachedFromWindow()
     }
 
     override fun performClick(): Boolean = super.performClick()

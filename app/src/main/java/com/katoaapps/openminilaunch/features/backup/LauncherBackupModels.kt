@@ -110,6 +110,13 @@ internal data class LauncherBackupSettings(
     val folderAnimationStyle: AppFolderAnimationStyle? = null,
     /** Null means this backup predates the optional Classic Home layout. */
     val homeLayoutStyle: HomeLayoutStyle? = null,
+    /** Null wrapper means this backup predates the Classic default-folder preference. */
+    val classicHomeSlot: ClassicHomeSlotBackup? = null,
+)
+
+internal data class ClassicHomeSlotBackup(
+    /** Null slot explicitly restores Mini-Apps as Classic Home. */
+    val slot: AppGridSlot?,
 )
 
 internal data class MinkSpaceTotalScreenShortcutBackup(

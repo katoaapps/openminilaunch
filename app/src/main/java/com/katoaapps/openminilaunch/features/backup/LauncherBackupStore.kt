@@ -54,6 +54,7 @@ internal fun LauncherStore.createPortableBackup(appVersion: String): LauncherBac
             folderIndicatorStyle = folderIndicatorStyle,
             folderAnimationStyle = folderAnimationStyle,
             homeLayoutStyle = homeLayoutStyle,
+            classicHomeSlot = ClassicHomeSlotBackup(classicHomeSlot),
             preferredAiPackage = preferredAiPackage,
             preferredWebPackage = preferredWebPackage,
             usesAutomaticSocialApps = usesAutomaticSocialApps,
@@ -140,6 +141,7 @@ internal fun LauncherStore.restorePortableBackup(
     settings.folderIndicatorStyle?.let(::updateFolderIndicatorStyle)
     settings.folderAnimationStyle?.let(::updateFolderAnimationStyle)
     settings.homeLayoutStyle?.let(::updateHomeLayoutStyle)
+    settings.classicHomeSlot?.let { updateClassicHomeSlot(it.slot) }
     replaceAutomaticAppBubbleTargets(settings.automaticAppBubbleTargets)
     if (settings.minkSpaceMiniAppOrder != null && settings.enabledMinkSpaceMiniApps != null) {
         replaceMinkSpacePreferencesFromBackup(

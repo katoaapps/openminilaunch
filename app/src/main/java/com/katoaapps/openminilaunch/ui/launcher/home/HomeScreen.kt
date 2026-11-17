@@ -48,6 +48,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
@@ -89,6 +90,7 @@ internal fun HomeScreen(
     val classicLayout = store.homeLayoutStyle == HomeLayoutStyle.CLASSIC
     var classicVerticalGesturesEnabled by remember { mutableStateOf(false) }
     var launcherKeyboardVisible by remember { mutableStateOf(false) }
+    var magicBoxFocusRearmToken by remember { mutableIntStateOf(0) }
     var showLockDisclosure by remember { mutableStateOf(false) }
     var showUpdateConfirmation by remember { mutableStateOf(false) }
     var pausedAppPackage by remember { mutableStateOf<String?>(null) }
@@ -116,13 +118,16 @@ internal fun HomeScreen(
     }
 
     LaunchedEffect(flyingTodo) {
-        if (flyingTodo != null && widgetCenter != Offset.Zero && magicCenter != Offset.Zero) {
-            flightProgress.snapTo(0f)
-            flightActive = true
-            flightProgress.animateTo(1f, todoFlightAnimationSpec())
-            flightActive = false
-            flyingTodo = null
-        }
+        if (flyingTodo == null) return@LaunchedEffect
+        snapshotFlow { widgetCenter to magicCenter }
+            .first { (destination, source) ->
+                destination != Offset.Zero && source != Offset.Zero
+            }
+        flightProgress.snapTo(0f)
+        flightActive = true
+        flightProgress.animateTo(1f, todoFlightAnimationSpec())
+        flightActive = false
+        flyingTodo = null
     }
 
     LaunchedEffect(homeRequestToken, store.onboardingComplete, store.githubUpdateChecksEnabled) {
@@ -248,6 +253,10 @@ internal fun HomeScreen(
                                 onVerticalGesturesEnabledChange = {
                                     classicVerticalGesturesEnabled = it
                                 },
+                                onTodoCenterChanged = { widgetCenter = it },
+                                onMagicBoxReadinessRequested = {
+                                    magicBoxFocusRearmToken++
+                                },
                                 launcherKeyboardVisible = launcherKeyboardVisible,
                             )
                         } else {
@@ -303,6 +312,7 @@ internal fun HomeScreen(
             keyboardInputEnabled = keyboardInputEnabled,
             autoOpenSoftwareKeyboardOnHome = store.openSoftwareKeyboardOnHome,
             homeRequestToken = homeRequestToken,
+            focusRearmToken = magicBoxFocusRearmToken,
             onTodoAdded = { text ->
                 if (MinkSpaceMiniApp.TODO in store.enabledMinkSpaceMiniApps) {
                     flyingTodo = text

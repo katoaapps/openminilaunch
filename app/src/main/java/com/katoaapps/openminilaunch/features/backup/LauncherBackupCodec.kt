@@ -410,12 +410,14 @@ internal object LauncherBackupCodec {
         if (
             settings.folderIndicatorStyle != null ||
             settings.folderAnimationStyle != null ||
-            settings.homeLayoutStyle != null
+            settings.homeLayoutStyle != null ||
+            settings.classicHomeSlot != null
         ) {
             put("appGrid", JSONObject().apply {
                 settings.folderIndicatorStyle?.let { put("folderIndicatorStyle", it.name) }
                 settings.folderAnimationStyle?.let { put("folderAnimationStyle", it.name) }
                 settings.homeLayoutStyle?.let { put("homeLayoutStyle", it.name) }
+                settings.classicHomeSlot?.let { putNullable("classicHomeSlot", it.slot?.name) }
             })
         }
         put("minkDay", JSONObject().apply {
@@ -547,6 +549,15 @@ internal object LauncherBackupCodec {
                 ?.enumValueOrNull<AppFolderAnimationStyle>("folderAnimationStyle"),
             homeLayoutStyle = appGrid
                 ?.enumValueOrNull<HomeLayoutStyle>("homeLayoutStyle"),
+            classicHomeSlot = appGrid
+                ?.takeIf { it.has("classicHomeSlot") }
+                ?.let { grid ->
+                    ClassicHomeSlotBackup(
+                        grid.optNullableString("classicHomeSlot")
+                            ?.let(::appGridSlotFromStoredName)
+                            ?.takeIf(configurableAppGridSlots::contains),
+                    )
+                },
             preferredAiPackage = magicBox.optNullableString("preferredAiPackage")?.safePackage(),
             preferredWebPackage = magicBox.optNullableString("preferredWebPackage")?.safePackage(),
             usesAutomaticSocialApps = minkDay.optBoolean("usesAutomaticSocialApps", true),

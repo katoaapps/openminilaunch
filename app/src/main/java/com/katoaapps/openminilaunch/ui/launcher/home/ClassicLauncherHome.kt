@@ -25,7 +25,12 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
 import androidx.compose.material.icons.filled.AutoAwesome
 import androidx.compose.material.icons.filled.GridView
+import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Widgets
+import androidx.compose.material.icons.outlined.Home
+import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.LocalContentColor
@@ -35,6 +40,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
@@ -42,15 +48,23 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
+import androidx.compose.ui.focus.onFocusChanged
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.SolidColor
 import androidx.compose.ui.graphics.toArgb
+import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.layout.positionInRoot
 import androidx.compose.ui.platform.LocalConfiguration
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.LocalFocusManager
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.semantics.selected
 import androidx.compose.ui.semantics.semantics
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.Dp
@@ -65,6 +79,7 @@ import com.katoaapps.openminilaunch.model.CommunicationRecipient
 import com.katoaapps.openminilaunch.model.ContactAppRoute
 import com.katoaapps.openminilaunch.model.LauncherShortcutTarget
 import com.katoaapps.openminilaunch.model.LauncherTarget
+import com.katoaapps.openminilaunch.model.MAX_APP_FOLDER_NAME_LENGTH
 import com.katoaapps.openminilaunch.model.configurableAppGridSlots
 import com.katoaapps.openminilaunch.platform.DeviceActions
 import com.katoaapps.openminilaunch.ui.appgrid.AppGridSelectionDialog
@@ -99,34 +114,64 @@ internal fun ClassicLauncherHome(
     onEditQuickApps: () -> Unit,
     onPausedApp: (String) -> Unit,
     onVerticalGesturesEnabledChange: (Boolean) -> Unit,
+    onTodoCenterChanged: (Offset) -> Unit,
+    onMagicBoxReadinessRequested: () -> Unit,
     launcherKeyboardVisible: Boolean,
     modifier: Modifier = Modifier,
 ) {
     val scope = rememberCoroutineScope()
     val classicSlots = store.effectiveAppGridOrder.filter(configurableAppGridSlots::contains)
     val pages = classicLauncherPages(classicSlots)
-    val quickAppsPage = pages.indexOf(ClassicLauncherPage.QuickApps)
+    val homePage = classicHomePageIndex(pages, store.classicHomeSlot)
+    val minkSpacePage = pages.indexOf(ClassicLauncherPage.MinkSpace)
     val pagerState = rememberPagerState(
-        initialPage = quickAppsPage,
+        initialPage = homePage,
         pageCount = pages::size,
     )
+    val focusManager = LocalFocusManager.current
+    val softwareKeyboard = LocalSoftwareKeyboardController.current
     val widgetHorizontalDragHandler = rememberWidgetPagerDragHandler(pagerState)
     var editingSlot by remember { mutableStateOf<AppGridSlot?>(null) }
     var unavailableTarget by remember { mutableStateOf<LauncherTarget?>(null) }
     var conversationKeyboardVisible by remember { mutableStateOf(false) }
+    var conversationRootRequestToken by remember { mutableIntStateOf(0) }
+    var previousPage by remember(pages) {
+        mutableStateOf(pages.getOrNull(pagerState.currentPage))
+    }
 
+    // Pager state may be restored after switching away from Classic UI. Re-apply the persisted
+    // Classic Home destination instead of treating the previously viewed page as Home.
+    LaunchedEffect(homePage) {
+        if (pagerState.currentPage != homePage) {
+            pagerState.scrollToPage(homePage)
+        }
+    }
     LaunchedEffect(homeRequestToken) {
-        if (homeRequestToken > 0 && pagerState.currentPage != quickAppsPage) {
-            pagerState.animateScrollToPage(quickAppsPage)
+        if (homeRequestToken > 0 && pagerState.currentPage != homePage) {
+            pagerState.animateScrollToPage(homePage)
+        }
+    }
+    LaunchedEffect(todoJumpToken) {
+        if (todoJumpToken > 0 && pagerState.currentPage != minkSpacePage) {
+            pagerState.animateScrollToPage(minkSpacePage)
         }
     }
     LaunchedEffect(pagerState.currentPage, pages) {
-        if (pages.getOrNull(pagerState.currentPage) != ClassicLauncherPage.Conversations) {
+        val currentPage = pages.getOrNull(pagerState.currentPage)
+        val leftConversations = shouldRearmMagicBox(previousPage, currentPage)
+        if (currentPage != ClassicLauncherPage.Conversations) {
             conversationKeyboardVisible = false
+            softwareKeyboard?.hide()
+            focusManager.clearFocus(force = true)
         }
         onVerticalGesturesEnabledChange(
-            pages.getOrNull(pagerState.currentPage)?.supportsLauncherVerticalGestures == true,
+            currentPage?.supportsLauncherVerticalGestures == true,
         )
+        if (leftConversations) {
+            conversationRootRequestToken++
+            onMagicBoxReadinessRequested()
+        }
+        previousPage = currentPage
     }
 
     val contentColor = launcherBackgroundContentColor(store)
@@ -149,9 +194,10 @@ internal fun ClassicLauncherHome(
                         onComposeMessage = onComposeMessage,
                         onComposeConversationMessage = onComposeConversationMessage,
                         goBack = {
-                            scope.launch { pagerState.animateScrollToPage(quickAppsPage) }
+                            scope.launch { pagerState.animateScrollToPage(homePage) }
                         },
                         embedded = true,
+                        rootRequestToken = conversationRootRequestToken,
                         launcherKeyboardVisible = launcherKeyboardVisible,
                         onKeyboardVisibilityChanged = { conversationKeyboardVisible = it },
                     )
@@ -168,7 +214,7 @@ internal fun ClassicLauncherHome(
                         store = store,
                         actions = actions,
                         goHome = {
-                            scope.launch { pagerState.animateScrollToPage(quickAppsPage) }
+                            scope.launch { pagerState.animateScrollToPage(homePage) }
                         },
                         embedded = true,
                         horizontalDragHandler = widgetHorizontalDragHandler,
@@ -181,6 +227,8 @@ internal fun ClassicLauncherHome(
                         openTodos = openTodos,
                         openVCardSettings = openVCardSettings,
                         openMinkSpaceSettings = openMinkSpaceSettings,
+                        onTodoCenterChanged = onTodoCenterChanged,
+                        active = pagerState.currentPage == page,
                     )
                     is ClassicLauncherPage.Folder -> {
                         val slot = classicPage.slot
@@ -188,15 +236,36 @@ internal fun ClassicLauncherHome(
                         val folder = (assignment as? AppGridAssignment.Folder)
                             ?.let { store.appFolder(it.folderId) }
                         ClassicTargetPage(
-                            title = folder?.customName
-                                ?: stringResource(
-                                    R.string.classic_folder_number,
-                                    classicPage.position,
-                                ),
+                            title = folder?.customName ?: stringResource(
+                                R.string.classic_folder_number,
+                                classicPage.position,
+                            ),
+                            titlePlaceholder = stringResource(
+                                R.string.classic_folder_number,
+                                classicPage.position,
+                            ),
+                            titleEditable = folder != null,
+                            editableTitleValue = folder?.customName.orEmpty(),
                             targetKeys = store.appGridSelectionKeys(slot),
                             actions = actions,
                             appAccessState = appAccessState,
                             onEdit = { editingSlot = slot },
+                            isHome = store.classicHomeSlot == slot,
+                            onHome = {
+                                store.updateClassicHomeSlot(
+                                    slot.takeUnless { store.classicHomeSlot == slot },
+                                )
+                            },
+                            onTitleCommit = { customName ->
+                                folder?.let {
+                                    store.updateAppFolderAppearance(
+                                        folderId = it.id,
+                                        customName = customName,
+                                        colorMode = it.colorMode,
+                                        colorArgb = it.colorArgb,
+                                    )
+                                }
+                            },
                             onUnavailable = { unavailableTarget = it },
                             onPausedApp = onPausedApp,
                         )
@@ -210,6 +279,14 @@ internal fun ClassicLauncherHome(
                     pages = pages,
                     contentColor = contentColor,
                     onPage = { page -> scope.launch { pagerState.animateScrollToPage(page) } },
+                    onConversations = {
+                        conversationRootRequestToken++
+                        scope.launch {
+                            pagerState.animateScrollToPage(
+                                pages.indexOf(ClassicLauncherPage.Conversations),
+                            )
+                        }
+                    },
                 )
             }
         }
@@ -253,10 +330,16 @@ internal fun ClassicLauncherHome(
 @Composable
 private fun ClassicTargetPage(
     title: String,
+    titlePlaceholder: String = title,
+    titleEditable: Boolean = false,
+    editableTitleValue: String = title,
     targetKeys: List<String>,
     actions: DeviceActions,
     appAccessState: MinkAppAccessState,
     onEdit: () -> Unit,
+    isHome: Boolean = false,
+    onHome: (() -> Unit)? = null,
+    onTitleCommit: ((String?) -> Unit)? = null,
     onUnavailable: (LauncherTarget) -> Unit,
     onPausedApp: (String) -> Unit,
 ) {
@@ -265,19 +348,75 @@ private fun ClassicTargetPage(
     val targets = remember(targetKeys, appsRevision, shortcutsRevision) {
         targetKeys.map(actions::resolveLauncherSelection)
     }
+    val focusManager = LocalFocusManager.current
+    var draftTitle by remember(titleEditable, editableTitleValue) {
+        mutableStateOf(editableTitleValue)
+    }
+
+    fun commitTitle() {
+        if (!titleEditable) return
+        onTitleCommit?.invoke(draftTitle.trim().ifEmpty { null })
+    }
     Column(Modifier.fillMaxSize().padding(horizontal = Dimens.dp12)) {
         Row(
             Modifier.fillMaxWidth().padding(vertical = Dimens.dp6),
             verticalAlignment = Alignment.CenterVertically,
         ) {
-            Text(
-                title,
-                modifier = Modifier.weight(1f),
-                fontWeight = FontWeight.Black,
-                fontSize = Dimens.sp20,
-                maxLines = 1,
-                overflow = TextOverflow.Ellipsis,
-            )
+            if (titleEditable) {
+                BasicTextField(
+                    value = draftTitle,
+                    onValueChange = { draftTitle = it.take(MAX_APP_FOLDER_NAME_LENGTH) },
+                    modifier = Modifier.weight(1f).onFocusChanged { state ->
+                        if (!state.isFocused) commitTitle()
+                    },
+                    singleLine = true,
+                    textStyle = androidx.compose.material3.MaterialTheme.typography.titleLarge.copy(
+                        color = LocalContentColor.current,
+                        fontWeight = FontWeight.Black,
+                    ),
+                    cursorBrush = SolidColor(LocalContentColor.current),
+                    keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
+                    keyboardActions = KeyboardActions(onDone = {
+                        commitTitle()
+                        focusManager.clearFocus()
+                    }),
+                    decorationBox = { field ->
+                        Box {
+                            if (draftTitle.isBlank()) {
+                                Text(
+                                    titlePlaceholder,
+                                    color = LocalContentColor.current.copy(alpha = .68f),
+                                    fontWeight = FontWeight.Black,
+                                    fontSize = Dimens.sp20,
+                                    maxLines = 1,
+                                    overflow = TextOverflow.Ellipsis,
+                                )
+                            }
+                            field()
+                        }
+                    },
+                )
+            } else {
+                Text(
+                    title,
+                    modifier = Modifier.weight(1f),
+                    fontWeight = FontWeight.Black,
+                    fontSize = Dimens.sp20,
+                    maxLines = 1,
+                    overflow = TextOverflow.Ellipsis,
+                )
+            }
+            onHome?.let { selectHome ->
+                IconButton(
+                    onClick = selectHome,
+                    modifier = Modifier.semantics { selected = isHome },
+                ) {
+                    Icon(
+                        imageVector = if (isHome) Icons.Filled.Home else Icons.Outlined.Home,
+                        contentDescription = stringResource(R.string.settings_section_home),
+                    )
+                }
+            }
             IconButton(onClick = onEdit) {
                 Icon(Icons.Default.Add, stringResource(R.string.add))
             }
@@ -295,7 +434,7 @@ private fun ClassicTargetPage(
             }
         } else {
             LazyVerticalGrid(
-                columns = GridCells.Adaptive(64.dp),
+                columns = GridCells.Fixed(4),
                 modifier = Modifier.fillMaxSize(),
                 horizontalArrangement = Arrangement.spacedBy(Dimens.dp8),
                 verticalArrangement = Arrangement.spacedBy(Dimens.dp10),
@@ -348,11 +487,22 @@ private fun ClassicMinkSpacePage(
     openTodos: () -> Unit,
     openVCardSettings: () -> Unit,
     openMinkSpaceSettings: () -> Unit,
+    onTodoCenterChanged: (Offset) -> Unit,
+    active: Boolean,
 ) {
     val configuration = LocalConfiguration.current
     val density = LocalDensity.current
     val contentColor = launcherBackgroundContentColor(store)
-    BoxWithConstraints(Modifier.fillMaxSize().padding(horizontal = Dimens.dp12)) {
+    var center by remember { mutableStateOf(Offset.Zero) }
+    LaunchedEffect(active, center) {
+        onTodoCenterChanged(if (active) center else Offset.Zero)
+    }
+    BoxWithConstraints(
+        Modifier.fillMaxSize().padding(horizontal = Dimens.dp12).onGloballyPositioned { coordinates ->
+            val origin = coordinates.positionInRoot()
+            center = origin + Offset(coordinates.size.width / 2f, coordinates.size.height / 2f)
+        },
+    ) {
         val itemsPerPage = visibleTodoItemsForHeight(maxHeight.value)
         val metrics = homeTodoTextMetrics(
             largeDisplay = configuration.smallestScreenWidthDp >= 600,
@@ -389,6 +539,7 @@ private fun ClassicPageRail(
     pages: List<ClassicLauncherPage>,
     contentColor: Color,
     onPage: (Int) -> Unit,
+    onConversations: () -> Unit,
 ) {
     val conversations = ConversationNotificationStore.currentConversations(
         useDemoData = store.demoModeEnabled,
@@ -410,7 +561,7 @@ private fun ClassicPageRail(
             actionSize = 40.dp,
             iconSize = 21.dp,
             restingColor = contentColor,
-            onClick = { onPage(pages.indexOf(ClassicLauncherPage.Conversations)) },
+            onClick = onConversations,
             modifier = Modifier.classicRailSelection(
                 currentPage == pages.indexOf(ClassicLauncherPage.Conversations),
                 contentColor,
@@ -421,26 +572,14 @@ private fun ClassicPageRail(
             verticalAlignment = Alignment.CenterVertically,
         ) {
             ClassicRailIcon(
-                selected = currentPage == pages.indexOf(ClassicLauncherPage.QuickApps),
+                selected = currentPage == pages.indexOf(ClassicLauncherPage.MinkSpace),
                 selectionColor = contentColor,
                 size = 30.dp,
-                onClick = { onPage(pages.indexOf(ClassicLauncherPage.QuickApps)) },
+                onClick = { onPage(pages.indexOf(ClassicLauncherPage.MinkSpace)) },
             ) {
                 Icon(
-                    Icons.Default.GridView,
-                    stringResource(R.string.quick_apps),
-                    Modifier.size(18.dp),
-                )
-            }
-            ClassicRailIcon(
-                selected = currentPage == pages.indexOf(ClassicLauncherPage.Widgets),
-                selectionColor = contentColor,
-                size = 30.dp,
-                onClick = { onPage(pages.indexOf(ClassicLauncherPage.Widgets)) },
-            ) {
-                Icon(
-                    Icons.Default.Widgets,
-                    stringResource(R.string.widgets),
+                    Icons.Default.AutoAwesome,
+                    stringResource(R.string.settings_tab_mini_apps),
                     Modifier.size(18.dp),
                 )
             }
@@ -459,16 +598,28 @@ private fun ClassicPageRail(
                     onClick = { onPage(page) },
                 )
             }
+            ClassicRailIcon(
+                selected = currentPage == pages.indexOf(ClassicLauncherPage.QuickApps),
+                selectionColor = contentColor,
+                size = 30.dp,
+                onClick = { onPage(pages.indexOf(ClassicLauncherPage.QuickApps)) },
+            ) {
+                Icon(
+                    Icons.Default.GridView,
+                    stringResource(R.string.quick_apps),
+                    Modifier.size(18.dp),
+                )
+            }
         }
         ClassicRailIcon(
-            selected = currentPage == pages.indexOf(ClassicLauncherPage.MinkSpace),
+            selected = currentPage == pages.indexOf(ClassicLauncherPage.Widgets),
             selectionColor = contentColor,
-            onClick = { onPage(pages.indexOf(ClassicLauncherPage.MinkSpace)) },
+            onClick = { onPage(pages.indexOf(ClassicLauncherPage.Widgets)) },
             modifier = Modifier.align(Alignment.CenterEnd),
         ) {
             Icon(
-                Icons.Default.AutoAwesome,
-                stringResource(R.string.settings_tab_mini_apps),
+                Icons.Default.Widgets,
+                stringResource(R.string.widgets),
                 Modifier.size(20.dp),
             )
         }

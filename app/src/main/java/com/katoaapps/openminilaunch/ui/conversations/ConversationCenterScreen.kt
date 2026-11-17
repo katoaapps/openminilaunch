@@ -74,6 +74,7 @@ internal fun ConversationCenterScreen(
     onComposeConversationMessage: (LauncherShortcutTarget) -> Unit,
     goBack: () -> Unit,
     embedded: Boolean = false,
+    rootRequestToken: Int = 0,
     launcherKeyboardVisible: Boolean = false,
     onKeyboardVisibilityChanged: (Boolean) -> Unit = {},
 ) {
@@ -144,6 +145,15 @@ internal fun ConversationCenterScreen(
     }
     val selectedConversation = conversations.firstOrNull { it.id == selectedConversationId }
     val selectedActivityAt = selectedConversation?.let(::conversationActivityAt)
+
+    LaunchedEffect(rootRequestToken) {
+        if (rootRequestToken > 0) {
+            selectedConversationId = null
+            selectedSection = ConversationSection.MESSAGES
+            conversationKeyboardVisible = false
+            onKeyboardVisibilityChanged(false)
+        }
+    }
 
     LaunchedEffect(context, accessGranted, demoModeEnabled) {
         if (accessGranted && !demoModeEnabled) {

@@ -29,13 +29,28 @@ internal sealed interface ClassicLauncherPage {
 
 internal fun classicLauncherPages(slots: List<AppGridSlot>): List<ClassicLauncherPage> = buildList {
     add(ClassicLauncherPage.Conversations)
-    add(ClassicLauncherPage.QuickApps)
-    add(ClassicLauncherPage.Widgets)
+    add(ClassicLauncherPage.MinkSpace)
     slots.forEachIndexed { index, slot ->
         add(ClassicLauncherPage.Folder(slot = slot, position = index + 1))
     }
-    add(ClassicLauncherPage.MinkSpace)
+    add(ClassicLauncherPage.QuickApps)
+    add(ClassicLauncherPage.Widgets)
 }
+
+internal fun classicHomePageIndex(
+    pages: List<ClassicLauncherPage>,
+    homeSlot: AppGridSlot?,
+): Int = homeSlot
+    ?.let { slot -> pages.indexOfFirst { it is ClassicLauncherPage.Folder && it.slot == slot } }
+    ?.takeIf { it >= 0 }
+    ?: pages.indexOf(ClassicLauncherPage.MinkSpace).coerceAtLeast(0)
+
+internal fun shouldRearmMagicBox(
+    previousPage: ClassicLauncherPage?,
+    currentPage: ClassicLauncherPage?,
+): Boolean = previousPage == ClassicLauncherPage.Conversations &&
+    currentPage != null &&
+    currentPage != ClassicLauncherPage.Conversations
 
 /** Scrollable embedded tools retain vertical motion; app pages retain launcher gestures. */
 internal val ClassicLauncherPage.supportsLauncherVerticalGestures: Boolean

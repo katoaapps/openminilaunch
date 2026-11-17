@@ -78,6 +78,7 @@ internal fun MagicBoxContent(
     autoOpenSoftwareKeyboardOnHome: Boolean = false,
     captureActivityCommandHotkeys: Boolean = false,
     homeRequestToken: Int = 0,
+    focusRearmToken: Int = 0,
     onTodoAdded: (String, onAnimationFinished: () -> Unit) -> Unit = { _, finished ->
         finished()
     },
@@ -769,6 +770,7 @@ internal fun MagicBoxContent(
         smsFlow.sentConfirmationVisible,
         showKeyboardWhileCollapsed,
         todoCompletionPending,
+        focusRearmToken,
     ) {
         if (!keyboardInputEnabled) {
             keyboard?.hide()

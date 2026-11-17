@@ -42,6 +42,7 @@ import org.json.JSONObject
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertNull
+import org.junit.Assert.assertTrue
 import org.junit.Test
 
 class LauncherBackupCodecTest {
@@ -50,19 +51,41 @@ class LauncherBackupCodecTest {
         val restored = LauncherBackupCodec.decode(
             LauncherBackupCodec.encode(
                 sample.copy(
-                    settings = sample.settings.copy(homeLayoutStyle = HomeLayoutStyle.CLASSIC),
+                    settings = sample.settings.copy(
+                        homeLayoutStyle = HomeLayoutStyle.CLASSIC,
+                        classicHomeSlot = ClassicHomeSlotBackup(AppGridSlot.FILES),
+                    ),
                 ),
             ),
         )
 
         assertEquals(HomeLayoutStyle.CLASSIC, restored.settings.homeLayoutStyle)
+        assertEquals(AppGridSlot.FILES, restored.settings.classicHomeSlot?.slot)
     }
 
     @Test fun oldBackupLeavesHomeLayoutPreferenceAlone() {
         val json = JSONObject(LauncherBackupCodec.encode(sampleBackup(twoPanelMode = true)))
         json.getJSONObject("settings").optJSONObject("appGrid")?.remove("homeLayoutStyle")
+        json.getJSONObject("settings").optJSONObject("appGrid")?.remove("classicHomeSlot")
 
         assertNull(LauncherBackupCodec.decode(json.toString()).settings.homeLayoutStyle)
+        assertNull(LauncherBackupCodec.decode(json.toString()).settings.classicHomeSlot)
+    }
+
+    @Test fun classicMiniAppsDefaultSurvivesPortableBackupRoundTrip() {
+        val sample = sampleBackup(twoPanelMode = true)
+        val restored = LauncherBackupCodec.decode(
+            LauncherBackupCodec.encode(
+                sample.copy(
+                    settings = sample.settings.copy(
+                        classicHomeSlot = ClassicHomeSlotBackup(null),
+                    ),
+                ),
+            ),
+        )
+
+        assertEquals(null, restored.settings.classicHomeSlot?.slot)
+        assertTrue(restored.settings.classicHomeSlot != null)
     }
 
     @Test fun minkDayTabAndPerAppIconsSurvivePortableBackupRoundTrip() {

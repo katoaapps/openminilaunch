@@ -70,13 +70,46 @@ class HomeLayoutTest {
 
         assertEquals(11, pages.size)
         assertEquals(ClassicLauncherPage.Conversations, pages.first())
-        assertEquals(ClassicLauncherPage.QuickApps, pages[1])
-        assertEquals(ClassicLauncherPage.Widgets, pages[2])
+        assertEquals(ClassicLauncherPage.MinkSpace, pages[1])
         assertEquals(
             configurableAppGridSlots,
             pages.filterIsInstance<ClassicLauncherPage.Folder>().map { it.slot },
         )
-        assertEquals(ClassicLauncherPage.MinkSpace, pages.last())
+        assertEquals(ClassicLauncherPage.QuickApps, pages[pages.lastIndex - 1])
+        assertEquals(ClassicLauncherPage.Widgets, pages.last())
+    }
+
+    @Test fun classicHomeDefaultsToMiniAppsUntilAFolderIsSelected() {
+        val pages = classicLauncherPages(configurableAppGridSlots)
+
+        assertEquals(pages.indexOf(ClassicLauncherPage.MinkSpace), classicHomePageIndex(pages, null))
+        assertEquals(
+            pages.indexOfFirst {
+                it is ClassicLauncherPage.Folder && it.slot == AppGridSlot.FILES
+            },
+            classicHomePageIndex(pages, AppGridSlot.FILES),
+        )
+    }
+
+    @Test fun leavingClassicConversationsRearmsMagicBoxOnlyOnceOwnershipChanges() {
+        assertTrue(
+            shouldRearmMagicBox(
+                ClassicLauncherPage.Conversations,
+                ClassicLauncherPage.MinkSpace,
+            ),
+        )
+        assertFalse(
+            shouldRearmMagicBox(
+                ClassicLauncherPage.MinkSpace,
+                ClassicLauncherPage.Folder(AppGridSlot.NOTE, 1),
+            ),
+        )
+        assertFalse(
+            shouldRearmMagicBox(
+                ClassicLauncherPage.Conversations,
+                ClassicLauncherPage.Conversations,
+            ),
+        )
     }
 
     @Test fun classicHomePreservesVerticalMotionForEmbeddedTools() {
