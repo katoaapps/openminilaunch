@@ -91,23 +91,41 @@ class HomeLayoutTest {
         )
     }
 
-    @Test fun leavingClassicConversationsRearmsMagicBoxOnlyOnceOwnershipChanges() {
+    @Test fun classicPageChangesRearmMagicBoxWheneverMagicCanOwnInput() {
         assertTrue(
             shouldRearmMagicBox(
                 ClassicLauncherPage.Conversations,
                 ClassicLauncherPage.MinkSpace,
             ),
         )
-        assertFalse(
+        assertTrue(
             shouldRearmMagicBox(
                 ClassicLauncherPage.MinkSpace,
                 ClassicLauncherPage.Folder(AppGridSlot.NOTE, 1),
+            ),
+        )
+        assertTrue(
+            shouldRearmMagicBox(
+                ClassicLauncherPage.MinkSpace,
+                ClassicLauncherPage.QuickApps,
             ),
         )
         assertFalse(
             shouldRearmMagicBox(
                 ClassicLauncherPage.Conversations,
                 ClassicLauncherPage.Conversations,
+            ),
+        )
+        assertFalse(
+            shouldRearmMagicBox(
+                ClassicLauncherPage.QuickApps,
+                ClassicLauncherPage.Conversations,
+            ),
+        )
+        assertFalse(
+            shouldRearmMagicBox(
+                ClassicLauncherPage.Folder(AppGridSlot.NOTE, 1),
+                ClassicLauncherPage.Folder(AppGridSlot.NOTE, 1),
             ),
         )
     }

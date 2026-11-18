@@ -33,6 +33,8 @@ import com.katoaapps.openminilaunch.platform.supportsDirectSms
 import com.katoaapps.openminilaunch.ui.wellbeing.rememberMinkAppAccessState
 
 import android.Manifest
+import android.content.Context
+import android.content.ContextWrapper
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.widget.Toast
@@ -143,6 +145,7 @@ internal fun MagicBoxContent(
     var showMessageDiscardConfirmation by remember { mutableStateOf(false) }
     var showCommandDiscardConfirmation by remember { mutableStateOf(false) }
     var todoCompletionPending by remember { mutableStateOf(false) }
+    var lifecycleFocusRearmToken by remember { mutableIntStateOf(0) }
     val todoSubmissionInFlight = remember { AtomicBoolean(false) }
     var pendingCalendarReview by remember { mutableStateOf<CalendarParseResult?>(null) }
     val callFlow = rememberMagicCallFlow(
@@ -188,12 +191,14 @@ internal fun MagicBoxContent(
             )
         }
     }
-    DisposableEffect(context) {
-        val lifecycle = (context as? ComponentActivity)?.lifecycle
+    val activity = remember(context) { context.findComponentActivity() }
+    DisposableEffect(context, activity) {
+        val lifecycle = activity?.lifecycle
         val observer = LifecycleEventObserver { _, event ->
             if (event == Lifecycle.Event.ON_RESUME) {
                 hasContacts = ContextCompat.checkSelfPermission(context, Manifest.permission.READ_CONTACTS) == PackageManager.PERMISSION_GRANTED
                 hasMediaAccess = hasMediaReadAccess(context)
+                lifecycleFocusRearmToken++
             }
         }
         lifecycle?.addObserver(observer)
@@ -824,6 +829,7 @@ internal fun MagicBoxContent(
         showKeyboardWhileCollapsed,
         todoCompletionPending,
         focusRearmToken,
+        lifecycleFocusRearmToken,
     ) {
         if (!keyboardInputEnabled) {
             keyboard?.hide()
@@ -1375,4 +1381,15 @@ internal fun MagicBoxContent(
             },
         )
     }
+}
+
+private fun Context.findComponentActivity(): ComponentActivity? {
+    var current: Context? = this
+    while (current != null) {
+        if (current is ComponentActivity) return current
+        current = (current as? ContextWrapper)
+            ?.baseContext
+            ?.takeUnless { it === current }
+    }
+    return null
 }

@@ -1,9 +1,12 @@
 package com.katoaapps.openminilaunch.ui.magic
 
+import android.content.Context
+import android.content.ContextWrapper
 import android.view.KeyEvent
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.ui.platform.LocalContext
 import com.katoaapps.openminilaunch.features.magic.MAGIC_HOTKEY_TRIGGERS
@@ -20,7 +23,11 @@ internal fun MagicHardwareHotkeyEffect(
     enabled: Boolean,
     onHotkey: (trigger: String, keyCode: Int) -> Unit,
 ) {
-    val host = LocalContext.current as? MagicHardwareHotkeyHost
+    val context = LocalContext.current
+    // LocalContext may be a themed/configuration wrapper rather than MainActivity itself.
+    // Resolve through that chain so collapsed Home hotkeys do not depend on a prior tap
+    // giving the Compose focus target a chance to handle the event instead.
+    val host = remember(context) { context.findMagicHardwareHotkeyHost() }
     val currentOnHotkey by rememberUpdatedState(onHotkey)
 
     DisposableEffect(host, enabled) {
@@ -39,4 +46,15 @@ internal fun MagicHardwareHotkeyEffect(
         }
         onDispose(unregister)
     }
+}
+
+private fun Context.findMagicHardwareHotkeyHost(): MagicHardwareHotkeyHost? {
+    var current: Context? = this
+    while (current != null) {
+        if (current is MagicHardwareHotkeyHost) return current
+        current = (current as? ContextWrapper)
+            ?.baseContext
+            ?.takeUnless { it === current }
+    }
+    return null
 }

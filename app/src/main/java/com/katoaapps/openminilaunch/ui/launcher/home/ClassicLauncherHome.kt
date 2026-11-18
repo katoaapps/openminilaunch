@@ -158,17 +158,19 @@ internal fun ClassicLauncherHome(
     }
     LaunchedEffect(pagerState.currentPage, pages) {
         val currentPage = pages.getOrNull(pagerState.currentPage)
-        val leftConversations = shouldRearmMagicBox(previousPage, currentPage)
-        if (currentPage != ClassicLauncherPage.Conversations) {
+        val leftConversations = previousPage == ClassicLauncherPage.Conversations &&
+            currentPage != null &&
+            currentPage != ClassicLauncherPage.Conversations
+        if (leftConversations) {
             conversationKeyboardVisible = false
             softwareKeyboard?.hide()
             focusManager.clearFocus(force = true)
+            conversationRootRequestToken++
         }
         onVerticalGesturesEnabledChange(
             currentPage?.supportsLauncherVerticalGestures == true,
         )
-        if (leftConversations) {
-            conversationRootRequestToken++
+        if (shouldRearmMagicBox(previousPage, currentPage)) {
             onMagicBoxReadinessRequested()
         }
         previousPage = currentPage

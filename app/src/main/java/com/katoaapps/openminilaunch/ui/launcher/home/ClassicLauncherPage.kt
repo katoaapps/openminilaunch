@@ -45,11 +45,13 @@ internal fun classicHomePageIndex(
     ?.takeIf { it >= 0 }
     ?: pages.indexOf(ClassicLauncherPage.MinkSpace).coerceAtLeast(0)
 
+/** Conversation replies own typing; every other completed page change returns it to Magic Box. */
 internal fun shouldRearmMagicBox(
     previousPage: ClassicLauncherPage?,
     currentPage: ClassicLauncherPage?,
-): Boolean = previousPage == ClassicLauncherPage.Conversations &&
+): Boolean = previousPage != null &&
     currentPage != null &&
+    previousPage != currentPage &&
     currentPage != ClassicLauncherPage.Conversations
 
 /** Scrollable embedded tools retain vertical motion; app pages retain launcher gestures. */
