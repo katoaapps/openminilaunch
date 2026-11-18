@@ -880,7 +880,7 @@ class MinkBoardLauncherFacadeTest {
         override suspend fun updateStatus(statusId: StatusId, update: StatusUpdate) = unsupported()
         override suspend fun reorderStatuses(boardId: BoardId, orderedStatusIds: List<StatusId>) = unsupported()
         override suspend fun deleteStatus(statusId: StatusId, policy: StatusDeletionPolicy) = unsupported()
-        override suspend fun cloneCard(cardId: CardId): CardId = unsupported()
+        override suspend fun cloneCard(cardId: CardId, title: String?): CardId = unsupported()
         override suspend fun updateCard(cardId: CardId, update: CardUpdate) = unsupported()
         override suspend fun moveCard(cardId: CardId, destination: StatusId, position: Int) = unsupported()
         override suspend fun deleteCard(cardId: CardId) = unsupported()

@@ -40,6 +40,7 @@ import org.junit.runner.RunWith
 class RoomMinkBoardRepositoryTest {
     private lateinit var database: MinkBoardDatabase
     private lateinit var repository: RoomMinkBoardRepository
+    private lateinit var cipher: TestFieldCipher
     private val ids = AtomicInteger()
     private val clock = AtomicInteger(1_000)
 
@@ -49,9 +50,10 @@ class RoomMinkBoardRepositoryTest {
         database = Room.inMemoryDatabaseBuilder(context, MinkBoardDatabase::class.java)
             .allowMainThreadQueries()
             .build()
+        cipher = TestFieldCipher()
         repository = RoomMinkBoardRepository(
             database = database,
-            cipher = TestFieldCipher(),
+            cipher = cipher,
             idFactory = { "test-${ids.incrementAndGet()}" },
             clockMillis = { clock.incrementAndGet().toLong() },
         )
@@ -109,6 +111,34 @@ class RoomMinkBoardRepositoryTest {
     }
 
     @Test
+    fun boardCatalogAndActiveBoardDoNotDecryptUnrelatedCards() = runBlocking {
+        repository.ensureDefaultWorkspace()
+        val first = repository.observeWorkspace().first().firstBoard!!
+        val secondId = repository.createBoard(BoardDraft("Large unrelated board"))
+        val second = repository.board(secondId)!!
+        val corruptCardId = "corrupt-unrelated-card"
+        database.boardDao().insertCard(
+            CardEntity(
+                id = corruptCardId,
+                statusId = second.statuses.first().id.value,
+                encryptedTitle = "not-valid-ciphertext".toByteArray(),
+                encryptedDetails = "not-valid-ciphertext".toByteArray(),
+                encryptedDueDate = null,
+                isMajor = false,
+                position = 0,
+                createdAtEpochMillis = 1L,
+                updatedAtEpochMillis = 1L,
+            ),
+        )
+
+        val summaries = repository.observeBoardSummaries().first()
+        assertEquals(2, summaries.size)
+        assertEquals(1, summaries.single { it.board.id == secondId }.cardCount)
+        assertEquals(first, repository.board(first.board.id))
+        assertTrue(runCatching { repository.board(secondId) }.isFailure)
+    }
+
+    @Test
     fun movingCardAcrossBoardsIsRejectedWithoutChangingIt() = runBlocking {
         repository.ensureDefaultWorkspace()
         val first = repository.observeWorkspace().first().firstBoard!!
@@ -136,11 +166,11 @@ class RoomMinkBoardRepositoryTest {
         val thirdId = repository.addCard(source.id, CardDraft("Third"))
         val existingDestinationId = repository.addCard(destination.id, CardDraft("Already there"))
 
-        repository.moveCard(thirdId, source.id, 0)
+        repository.moveCard(firstId, source.id, 0)
 
         var updated = repository.observeWorkspace().first().firstBoard!!
         assertEquals(
-            listOf(thirdId, firstId, secondId),
+            listOf(firstId, thirdId, secondId),
             updated.cardsIn(source.id).map { it.id },
         )
         assertEquals(listOf(0, 1, 2), updated.cardsIn(source.id).map { it.position })
@@ -155,6 +185,48 @@ class RoomMinkBoardRepositoryTest {
             updated.cardsIn(destination.id).map { it.id },
         )
         assertEquals(listOf(0, 1), updated.cardsIn(destination.id).map { it.position })
+    }
+
+    @Test
+    fun newCardsAreInsertedAtTopWithoutPositionGaps() = runBlocking {
+        repository.ensureDefaultWorkspace()
+        val status = repository.observeWorkspace().first().firstBoard!!.statuses.first()
+        val firstId = repository.addCard(status.id, CardDraft("First"))
+        val secondId = repository.addCard(status.id, CardDraft("Second"))
+        val thirdId = repository.addCard(status.id, CardDraft("Third"))
+
+        val cards = repository.observeWorkspace().first().firstBoard!!.cardsIn(status.id)
+        assertEquals(listOf(thirdId, secondId, firstId), cards.map { it.id })
+        assertEquals(listOf(0, 1, 2), cards.map { it.position })
+    }
+
+    @Test
+    fun remappingLargeBoardOnlyDecryptsChangedCardFields() = runBlocking {
+        repository.ensureDefaultWorkspace()
+        val board = repository.observeWorkspace().first().firstBoard!!
+        val status = board.statuses.first()
+        val cardIds = (1..40).map { number ->
+            repository.addCard(status.id, CardDraft("Card $number", details = "Details $number"))
+        }
+
+        repository.board(board.board.id)
+        val decryptionsAfterFirstMap = cipher.decryptCount
+        repository.board(board.board.id)
+        assertEquals(decryptionsAfterFirstMap, cipher.decryptCount)
+
+        val changedId = cardIds.last()
+        repository.updateCard(
+            changedId,
+            CardUpdate(
+                title = "Changed title",
+                details = "Details 40",
+                dueDate = null,
+                isMajor = false,
+            ),
+        )
+        repository.board(board.board.id)
+
+        assertTrue(cipher.decryptCount - decryptionsAfterFirstMap <= 3)
     }
 
     @Test
@@ -293,7 +365,7 @@ class RoomMinkBoardRepositoryTest {
         val updated = repository.observeWorkspace().first().firstBoard!!
         assertFalse(updated.statuses.any { it.id == source.id })
         assertEquals(
-            listOf(existingId, firstMovedId, secondMovedId),
+            listOf(existingId, secondMovedId, firstMovedId),
             updated.cardsIn(destination.id).map { it.id },
         )
         assertEquals(listOf(0, 1, 2), updated.cardsIn(destination.id).map { it.position })
@@ -351,14 +423,14 @@ class RoomMinkBoardRepositoryTest {
         repository.setSubtaskCompleted(firstSubtaskId, true)
         repository.addSubtask(originalId, "Second step")
 
-        val cloneId = repository.cloneCard(originalId)
+        val cloneId = repository.cloneCard(originalId, "Original (duplicate)")
         var board = repository.observeWorkspace().first().firstBoard!!
         val original = board.cards.single { it.id == originalId }
         val clone = board.cards.single { it.id == cloneId }
 
         assertNotEquals(original.id, clone.id)
         assertEquals(original.statusId, clone.statusId)
-        assertEquals(original.title, clone.title)
+        assertEquals("Original (duplicate)", clone.title)
         assertEquals(original.details, clone.details)
         assertEquals(original.dueDate, clone.dueDate)
         assertEquals(original.isMajor, clone.isMajor)
@@ -415,7 +487,10 @@ class RoomMinkBoardRepositoryTest {
     fun boardLockAndFocusSessionRoundTripWithoutDuplicatingCardText() = runBlocking {
         repository.ensureDefaultWorkspace()
         val board = repository.observeWorkspace().first().firstBoard!!
-        val cardId = repository.addCard(board.statuses.first().id, CardDraft("Private focus"))
+        val cardId = repository.addCard(
+            board.statuses.first().id,
+            CardDraft("Private focus", details = "Visible only while the board is unlocked"),
+        )
         repository.updateBoard(board.board.id, BoardUpdate("Protected", isLocked = true))
         val session = FocusSession(
             id = FocusTimerId("timer"),
@@ -428,6 +503,7 @@ class RoomMinkBoardRepositoryTest {
 
         val running = repository.replaceFocusTimer(session)
         assertEquals("Private focus", running.cardTitle)
+        assertEquals("Visible only while the board is unlocked", running.cardDetails)
         assertTrue(running.boardIsLocked)
         assertEquals(session, repository.observeFocusSession().first())
         assertEquals(1, database.query("SELECT COUNT(*) FROM focus_sessions", null).use {
@@ -593,10 +669,14 @@ class RoomMinkBoardRepositoryTest {
 }
 
 private class TestFieldCipher : FieldCipher {
+    var decryptCount: Int = 0
+        private set
+
     override fun encrypt(value: String, subject: String, field: String): ByteArray =
         "$subject\u0000$field\u0000$value".toByteArray(Charsets.UTF_8)
 
     override fun decrypt(value: ByteArray, subject: String, field: String): String {
+        decryptCount++
         val prefix = "$subject\u0000$field\u0000"
         val decoded = value.toString(Charsets.UTF_8)
         require(decoded.startsWith(prefix)) { "Ciphertext context mismatch" }

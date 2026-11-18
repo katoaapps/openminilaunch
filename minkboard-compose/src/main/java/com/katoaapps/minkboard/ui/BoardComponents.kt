@@ -2,7 +2,8 @@ package com.katoaapps.minkboard.ui
 
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
-import androidx.compose.foundation.gestures.detectDragGestures
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.gestures.detectDragGesturesAfterLongPress
 import androidx.compose.foundation.gestures.scrollBy
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.absoluteOffset
@@ -55,6 +56,7 @@ import androidx.compose.ui.layout.LayoutCoordinates
 import androidx.compose.ui.layout.boundsInRoot
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.LocalHapticFeedback
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.semantics.CustomAccessibilityAction
@@ -65,6 +67,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
 import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.hapticfeedback.HapticFeedbackType
 import androidx.compose.ui.zIndex
 import com.katoaapps.minkboard.model.BoardCard
 import com.katoaapps.minkboard.model.BoardStatus
@@ -87,11 +90,14 @@ internal fun BoardStatusPanel(
     previousStatusCardCount: Int,
     nextStatusId: StatusId?,
     nextStatusCardCount: Int,
+    compactLayout: Boolean,
     statusDragHandle: @Composable () -> Unit,
     modifier: Modifier = Modifier,
     onAddCard: () -> Unit,
     onManageStatus: () -> Unit,
     onOpenCard: (BoardCard) -> Unit,
+    revealCardId: CardId?,
+    onRevealFinished: (CardId) -> Unit,
     onMoveCard: (CardId, StatusId, Int) -> Unit,
 ) {
     val accent = Color(status.colorArgb)
@@ -103,6 +109,7 @@ internal fun BoardStatusPanel(
     val moveToPreviousStatusLabel = stringResource(R.string.move_card_to_previous_status)
     val moveToNextStatusLabel = stringResource(R.string.move_card_to_next_status)
     val cardListState = rememberLazyListState()
+    var highlightedCardId by remember(status.id) { mutableStateOf<CardId?>(null) }
     var cardListBounds by remember { mutableStateOf<Rect?>(null) }
     val edgeThresholdPx = with(LocalDensity.current) { 56.dp.toPx() }
     val pointer = dragDropState.activeDrag?.pointerInRoot
@@ -123,6 +130,20 @@ internal fun BoardStatusPanel(
         ?.let { it.card.id to status.id }
     val dropPreviewDrag = dragDropState.activeDrag?.takeIf { it.targetStatusId == status.id }
     val dropPreviewAnchorY = dragDropState.dropPreviewAnchorY(status.id)
+
+    LaunchedEffect(revealCardId?.value, cards.map { it.id.value }) {
+        val target = revealCardId ?: return@LaunchedEffect
+        val targetIndex = cards.indexOfFirst { it.id == target }
+        if (targetIndex < 0) return@LaunchedEffect
+        cardListState.animateScrollToItem(targetIndex)
+        repeat(3) {
+            highlightedCardId = target
+            delay(150)
+            highlightedCardId = null
+            delay(100)
+        }
+        onRevealFinished(target)
+    }
 
     LaunchedEffect(activeVerticalScrollTarget) {
         if (activeVerticalScrollTarget == null) return@LaunchedEffect
@@ -161,7 +182,7 @@ internal fun BoardStatusPanel(
         modifier = modifier.onGloballyPositioned { coordinates ->
             dragDropState.registerStatus(status.id, coordinates.boundsInRoot())
         },
-        shape = RoundedCornerShape(28.dp),
+        shape = RoundedCornerShape(if (compactLayout) 18.dp else 28.dp),
         color = accent.copy(alpha = if (MaterialTheme.colorScheme.background.luminance() < 0.5f) 0.22f else 0.14f),
         border = BorderStroke(
             width = if (isDropTarget) 3.dp else 1.dp,
@@ -169,25 +190,39 @@ internal fun BoardStatusPanel(
         ),
     ) {
         Column(
-            modifier = Modifier.padding(14.dp),
-            verticalArrangement = Arrangement.spacedBy(10.dp),
+            modifier = Modifier.padding(if (compactLayout) 8.dp else 14.dp),
+            verticalArrangement = Arrangement.spacedBy(if (compactLayout) 6.dp else 10.dp),
         ) {
             Row(
                 modifier = Modifier.fillMaxWidth(),
                 verticalAlignment = Alignment.CenterVertically,
-                horizontalArrangement = Arrangement.spacedBy(8.dp),
+                horizontalArrangement = Arrangement.spacedBy(if (compactLayout) 4.dp else 8.dp),
             ) {
                 statusDragHandle()
                 Box(
                     Modifier
-                        .weight(1f, fill = false)
+                        .weight(1f)
+                        .then(
+                            if (compactLayout) {
+                                Modifier.clickable(onClick = onManageStatus)
+                            } else {
+                                Modifier
+                            },
+                        )
                         .background(accent, RoundedCornerShape(99.dp))
-                        .padding(horizontal = 12.dp, vertical = 5.dp),
+                        .padding(
+                            horizontal = if (compactLayout) 8.dp else 12.dp,
+                            vertical = if (compactLayout) 4.dp else 5.dp,
+                        ),
                 ) {
                     Text(
                         text = status.name,
                         color = readableContentColor(accent),
-                        style = MaterialTheme.typography.titleMedium,
+                        style = if (compactLayout) {
+                            MaterialTheme.typography.labelLarge
+                        } else {
+                            MaterialTheme.typography.titleMedium
+                        },
                         fontWeight = FontWeight.SemiBold,
                         maxLines = 1,
                         overflow = TextOverflow.Ellipsis,
@@ -197,6 +232,7 @@ internal fun BoardStatusPanel(
                     Icon(
                         imageVector = Icons.Outlined.CheckCircle,
                         contentDescription = stringResource(R.string.done_status),
+                        modifier = Modifier.size(if (compactLayout) 16.dp else 24.dp),
                         tint = accent,
                     )
                 }
@@ -205,15 +241,21 @@ internal fun BoardStatusPanel(
                     modifier = Modifier.semantics {
                         contentDescription = cardCountDescription
                     },
-                    style = MaterialTheme.typography.labelLarge,
+                    style = if (compactLayout) {
+                        MaterialTheme.typography.labelSmall
+                    } else {
+                        MaterialTheme.typography.labelLarge
+                    },
                     color = MaterialTheme.colorScheme.onSurfaceVariant,
                 )
-                IconButton(onClick = onManageStatus) {
-                    Icon(
-                        imageVector = Icons.Outlined.Edit,
-                        contentDescription = stringResource(R.string.edit_status_named, status.name),
-                        tint = MaterialTheme.colorScheme.onSurfaceVariant,
-                    )
+                if (!compactLayout) {
+                    IconButton(onClick = onManageStatus) {
+                        Icon(
+                            imageVector = Icons.Outlined.Edit,
+                            contentDescription = stringResource(R.string.edit_status_named, status.name),
+                            tint = MaterialTheme.colorScheme.onSurfaceVariant,
+                        )
+                    }
                 }
             }
 
@@ -240,6 +282,8 @@ internal fun BoardStatusPanel(
                                 isCompleted = status.isDoneStatus,
                                 today = today,
                                 dragDropState = dragDropState,
+                                compactLayout = compactLayout,
+                                isRevealHighlighted = highlightedCardId == card.id,
                                 accessibilityActions = buildList {
                                     if (index > 0) {
                                         add(CustomAccessibilityAction(moveUpLabel) {
@@ -299,11 +343,20 @@ internal fun BoardStatusPanel(
                 onClick = onAddCard,
                 modifier = Modifier.fillMaxWidth(),
             ) {
-                Icon(Icons.Outlined.Add, contentDescription = null)
-                Text(
-                    text = stringResource(R.string.add_card),
-                    modifier = Modifier.padding(start = 6.dp),
+                Icon(
+                    Icons.Outlined.Add,
+                    contentDescription = if (compactLayout) {
+                        stringResource(R.string.add_card)
+                    } else {
+                        null
+                    },
                 )
+                if (!compactLayout) {
+                    Text(
+                        text = stringResource(R.string.add_card),
+                        modifier = Modifier.padding(start = 6.dp),
+                    )
+                }
             }
         }
     }
@@ -316,6 +369,8 @@ private fun BoardCardTile(
     isCompleted: Boolean,
     today: LocalDate,
     dragDropState: CardDragDropState,
+    compactLayout: Boolean,
+    isRevealHighlighted: Boolean,
     accessibilityActions: List<CustomAccessibilityAction>,
     onClick: () -> Unit,
 ) {
@@ -324,6 +379,7 @@ private fun BoardCardTile(
     val cardContentColor = readableContentColor(statusColor)
     val secondaryContentColor = cardContentColor.copy(alpha = 0.78f)
     val cardBorder = when {
+        isRevealHighlighted -> BorderStroke(4.dp, cardContentColor)
         card.isMajor -> BorderStroke(2.dp, IMPORTANT_COLOR)
         dueState == CardDueState.Overdue -> BorderStroke(2.dp, MaterialTheme.colorScheme.error)
         else -> null
@@ -339,6 +395,7 @@ private fun BoardCardTile(
     } else {
         null
     }
+    val hapticFeedback = LocalHapticFeedback.current
     var dragHandleCoordinates by remember(card.id) { mutableStateOf<LayoutCoordinates?>(null) }
 
     DisposableEffect(dragDropState, card.id) {
@@ -361,8 +418,8 @@ private fun BoardCardTile(
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(14.dp),
-            horizontalArrangement = Arrangement.spacedBy(8.dp),
+                .padding(if (compactLayout) 8.dp else 14.dp),
+            horizontalArrangement = Arrangement.spacedBy(if (compactLayout) 4.dp else 8.dp),
             verticalAlignment = Alignment.CenterVertically,
         ) {
             if (card.isMajor || dueState == CardDueState.Overdue) {
@@ -375,6 +432,7 @@ private fun BoardCardTile(
                         Icon(
                             imageVector = Icons.Outlined.Star,
                             contentDescription = stringResource(R.string.important),
+                            modifier = Modifier.size(if (compactLayout) 16.dp else 24.dp),
                             tint = IMPORTANT_COLOR,
                         )
                     }
@@ -382,6 +440,7 @@ private fun BoardCardTile(
                         Icon(
                             imageVector = Icons.Outlined.EventBusy,
                             contentDescription = stringResource(R.string.overdue),
+                            modifier = Modifier.size(if (compactLayout) 16.dp else 24.dp),
                             tint = MaterialTheme.colorScheme.error,
                         )
                     }
@@ -389,14 +448,20 @@ private fun BoardCardTile(
             }
             Column(
                 modifier = Modifier.weight(1f),
-                verticalArrangement = Arrangement.spacedBy(8.dp),
+                verticalArrangement = Arrangement.spacedBy(if (compactLayout) 4.dp else 8.dp),
             ) {
                 Text(
                     text = card.title,
-                    style = MaterialTheme.typography.titleSmall,
+                    style = if (compactLayout) {
+                        MaterialTheme.typography.labelLarge
+                    } else {
+                        MaterialTheme.typography.titleSmall
+                    },
                     fontWeight = FontWeight.SemiBold,
+                    maxLines = if (compactLayout) 2 else Int.MAX_VALUE,
+                    overflow = TextOverflow.Ellipsis,
                 )
-                if (card.details.isNotBlank()) {
+                if (!compactLayout && card.details.isNotBlank()) {
                     Text(
                         text = card.details,
                         maxLines = 3,
@@ -407,7 +472,9 @@ private fun BoardCardTile(
                 }
                 if (card.dueDate != null || card.subtasks.isNotEmpty()) {
                     Row(
-                        horizontalArrangement = Arrangement.spacedBy(12.dp),
+                        horizontalArrangement = Arrangement.spacedBy(
+                            if (compactLayout) 4.dp else 12.dp,
+                        ),
                         verticalAlignment = Alignment.CenterVertically,
                     ) {
                         card.dueDate?.let { date ->
@@ -415,6 +482,7 @@ private fun BoardCardTile(
                                 Icon(
                                     Icons.Outlined.CalendarMonth,
                                     contentDescription = null,
+                                    modifier = Modifier.size(if (compactLayout) 14.dp else 24.dp),
                                     tint = if (dueState == CardDueState.Overdue) {
                                         MaterialTheme.colorScheme.error
                                     } else {
@@ -429,6 +497,8 @@ private fun BoardCardTile(
                                     },
                                     modifier = Modifier.padding(start = 4.dp),
                                     style = MaterialTheme.typography.labelMedium,
+                                    maxLines = 1,
+                                    overflow = TextOverflow.Ellipsis,
                                     color = if (dueState == CardDueState.Overdue) {
                                         MaterialTheme.colorScheme.error
                                     } else {
@@ -456,13 +526,14 @@ private fun BoardCardTile(
             }
             Box(
                 modifier = Modifier
-                    .size(48.dp)
+                    .size(if (compactLayout) 36.dp else 48.dp)
                     .onGloballyPositioned { dragHandleCoordinates = it }
                     .semantics { contentDescription = reorderCardDescription }
                     .pointerInput(card.id, dragDropState) {
-                        detectDragGestures(
+                        detectDragGesturesAfterLongPress(
                             onDragStart = { localOffset ->
                                 dragHandleCoordinates?.let { coordinates ->
+                                    hapticFeedback.performHapticFeedback(HapticFeedbackType.LongPress)
                                     dragDropState.startDrag(
                                         card = card,
                                         pointerInRoot = coordinates.localToRoot(localOffset),
@@ -483,6 +554,7 @@ private fun BoardCardTile(
                 Icon(
                     imageVector = Icons.Default.DragHandle,
                     contentDescription = null,
+                    modifier = Modifier.size(if (compactLayout) 18.dp else 24.dp),
                     tint = secondaryContentColor,
                 )
             }

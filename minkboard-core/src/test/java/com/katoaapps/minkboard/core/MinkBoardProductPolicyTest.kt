@@ -3,6 +3,7 @@ package com.katoaapps.minkboard.core
 import com.katoaapps.minkboard.model.Board
 import com.katoaapps.minkboard.model.BoardId
 import com.katoaapps.minkboard.model.BoardSnapshot
+import com.katoaapps.minkboard.model.BoardSummary
 import com.katoaapps.minkboard.model.MinkBoardWorkspace
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
@@ -60,6 +61,12 @@ class MinkBoardProductPolicyTest {
         assertEquals(listOf("two"), visible.boards.map { it.board.id.value })
         assertEquals(listOf("one", "two", "three"), workspace.boards.map { it.board.id.value })
         assertFalse(access.canCreateBoard(workspace))
+
+        val summaries = workspace.boards.map { snapshot ->
+            BoardSummary(snapshot.board, snapshot.statuses.size, snapshot.cards.size)
+        }
+        assertEquals(listOf("two"), access.editableBoards(summaries).map { it.board.id.value })
+        assertFalse(access.canCreateBoard(summaries))
     }
 
     @Test

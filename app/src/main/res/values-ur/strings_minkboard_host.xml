@@ -3,7 +3,9 @@
     <string name="minkboard_focus_running_channel_name">MinkBoard فوکس ٹائمر</string>
     <string name="minkboard_focus_running_channel_description">چلتا ہوا بورڈ فوکس ٹائمر دکھاتا ہے۔</string>
     <string name="minkboard_focus_finished_channel_name">MinkBoard فوکس ٹائمر مکمل</string>
-    <string name="minkboard_focus_finished_channel_description">مکمل شدہ فوکس ٹائمر بند کرنے تک آواز اور وائبریشن جاری رکھتا ہے۔</string>
+    <string name="minkboard_focus_finished_channel_description">MinkBoard فوکس ٹائمر مکمل ہونے پر زیادہ سے زیادہ دو منٹ تک وائبریٹ کرتا ہے۔</string>
+    <string name="minkboard_focus_finished_quiet_channel_name">مکمل فوکس کی یاددہانیاں</string>
+    <string name="minkboard_focus_finished_quiet_channel_description">وائبریشن رکنے کے بعد بھی مکمل فوکس ٹائمر کو دکھاتا رہتا ہے۔</string>
     <string name="minkboard_focus_generic_running_title">فوکس ٹائمر چل رہا ہے</string>
     <string name="minkboard_focus_generic_finished_title">فوکس ٹائمر مکمل ہو گیا</string>
     <string name="minkboard_focus_running_title">%1$s پر فوکس جاری ہے</string>

@@ -3,7 +3,9 @@
     <string name="minkboard_focus_running_channel_name">MinkBoard 集中タイマー</string>
     <string name="minkboard_focus_running_channel_description">実行中のボード集中タイマーを表示します。</string>
     <string name="minkboard_focus_finished_channel_name">MinkBoard 集中タイマー終了</string>
-    <string name="minkboard_focus_finished_channel_description">終了した集中タイマーをオフにするまで音と振動で知らせます。</string>
+    <string name="minkboard_focus_finished_channel_description">MinkBoard の集中タイマーが終了すると、最長2分間振動します。</string>
+    <string name="minkboard_focus_finished_quiet_channel_name">集中完了のリマインダー</string>
+    <string name="minkboard_focus_finished_quiet_channel_description">振動が止まった後も、終了した集中タイマーを表示し続けます。</string>
     <string name="minkboard_focus_generic_running_title">集中タイマー実行中</string>
     <string name="minkboard_focus_generic_finished_title">集中タイマー終了</string>
     <string name="minkboard_focus_running_title">%1$s に集中しています</string>

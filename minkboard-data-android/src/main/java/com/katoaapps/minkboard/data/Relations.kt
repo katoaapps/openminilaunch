@@ -1,5 +1,6 @@
 package com.katoaapps.minkboard.data
 
+import androidx.room.ColumnInfo
 import androidx.room.Embedded
 import androidx.room.Relation
 
@@ -30,4 +31,10 @@ internal data class BoardGraph(
         entityColumn = "board_id",
     )
     val statuses: List<StatusGraph>,
+)
+
+internal data class BoardSummaryRow(
+    @Embedded val board: BoardEntity,
+    @ColumnInfo(name = "status_count") val statusCount: Int,
+    @ColumnInfo(name = "card_count") val cardCount: Int,
 )

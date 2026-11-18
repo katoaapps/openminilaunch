@@ -3,7 +3,9 @@
     <string name="minkboard_focus_running_channel_name">Temporizador de concentración de MinkBoard</string>
     <string name="minkboard_focus_running_channel_description">Muestra un temporizador de concentración activo del tablero.</string>
     <string name="minkboard_focus_finished_channel_name">Temporizador de concentración de MinkBoard finalizado</string>
-    <string name="minkboard_focus_finished_channel_description">Suena y vibra hasta que apagues un temporizador de concentración finalizado.</string>
+    <string name="minkboard_focus_finished_channel_description">Vibra durante un máximo de dos minutos cuando termina un temporizador de concentración de MinkBoard.</string>
+    <string name="minkboard_focus_finished_quiet_channel_name">Recordatorios de concentración finalizada</string>
+    <string name="minkboard_focus_finished_quiet_channel_description">Mantiene visible un temporizador de concentración finalizado después de que se detiene la vibración.</string>
     <string name="minkboard_focus_generic_running_title">Temporizador de concentración activo</string>
     <string name="minkboard_focus_generic_finished_title">Temporizador de concentración finalizado</string>
     <string name="minkboard_focus_running_title">Concentración en %1$s</string>

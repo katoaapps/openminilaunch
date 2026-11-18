@@ -3,7 +3,9 @@
     <string name="minkboard_focus_running_channel_name">MinkBoard फ़ोकस टाइमर</string>
     <string name="minkboard_focus_running_channel_description">चल रहा बोर्ड फ़ोकस टाइमर दिखाता है।</string>
     <string name="minkboard_focus_finished_channel_name">MinkBoard फ़ोकस टाइमर पूरा हुआ</string>
-    <string name="minkboard_focus_finished_channel_description">पूरा हुआ फ़ोकस टाइमर बंद करने तक घंटी बजाता और कंपन करता है।</string>
+    <string name="minkboard_focus_finished_channel_description">MinkBoard फ़ोकस टाइमर पूरा होने पर अधिकतम दो मिनट तक कंपन करता है।</string>
+    <string name="minkboard_focus_finished_quiet_channel_name">पूरे हुए फ़ोकस के रिमाइंडर</string>
+    <string name="minkboard_focus_finished_quiet_channel_description">कंपन रुकने के बाद भी पूरे हुए फ़ोकस टाइमर को दिखाई देता रखता है।</string>
     <string name="minkboard_focus_generic_running_title">फ़ोकस टाइमर चल रहा है</string>
     <string name="minkboard_focus_generic_finished_title">फ़ोकस टाइमर पूरा हुआ</string>
     <string name="minkboard_focus_running_title">%1$s पर फ़ोकस किया जा रहा है</string>

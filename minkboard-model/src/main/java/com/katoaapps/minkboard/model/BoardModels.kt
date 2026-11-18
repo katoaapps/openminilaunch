@@ -58,6 +58,18 @@ data class BoardSnapshot(
         }
 }
 
+/**
+ * Lightweight workspace metadata used by board pickers and management surfaces.
+ *
+ * Keeping counts beside the board avoids hydrating and decrypting every card just to render the
+ * board menu or confirm a deletion. The active board is still represented by [BoardSnapshot].
+ */
+data class BoardSummary(
+    val board: Board,
+    val statusCount: Int,
+    val cardCount: Int,
+)
+
 data class MinkBoardWorkspace(
     val boards: List<BoardSnapshot>,
 ) {
@@ -115,4 +127,11 @@ data class CardUpdate(
     val details: String,
     val dueDate: LocalDate?,
     val isMajor: Boolean,
+)
+
+/** Final persisted location returned to a host after a card mutation. */
+data class CardPlacement(
+    val cardId: CardId,
+    val statusId: StatusId,
+    val position: Int,
 )

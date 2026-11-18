@@ -3,7 +3,9 @@
     <string name="minkboard_focus_running_channel_name">MinkBoard 专注计时器</string>
     <string name="minkboard_focus_running_channel_description">显示正在运行的看板专注计时器。</string>
     <string name="minkboard_focus_finished_channel_name">MinkBoard 专注计时器已结束</string>
-    <string name="minkboard_focus_finished_channel_description">计时结束后会响铃并振动，直到你将其关闭。</string>
+    <string name="minkboard_focus_finished_channel_description">MinkBoard 专注计时器结束时会振动最多两分钟。</string>
+    <string name="minkboard_focus_finished_quiet_channel_name">已完成专注提醒</string>
+    <string name="minkboard_focus_finished_quiet_channel_description">振动停止后仍会显示已完成的专注计时器。</string>
     <string name="minkboard_focus_generic_running_title">专注计时器正在运行</string>
     <string name="minkboard_focus_generic_finished_title">专注计时器已结束</string>
     <string name="minkboard_focus_running_title">正在专注于 %1$s</string>

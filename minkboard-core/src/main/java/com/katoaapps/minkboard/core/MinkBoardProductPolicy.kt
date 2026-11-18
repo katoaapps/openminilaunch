@@ -1,6 +1,7 @@
 package com.katoaapps.minkboard.core
 
 import com.katoaapps.minkboard.model.BoardId
+import com.katoaapps.minkboard.model.BoardSummary
 import com.katoaapps.minkboard.model.MinkBoardWorkspace
 
 data class MinkBoardCapabilities(
@@ -71,18 +72,37 @@ data class MinkBoardHostAccess(
         )
     }
 
+    fun editableBoards(boards: List<BoardSummary>): List<BoardSummary> {
+        val ids = editableBoardIds ?: return boards
+        return boards.filter { it.board.id in ids }
+    }
+
     fun missingEditableBoardIds(workspace: MinkBoardWorkspace): Set<BoardId> {
         val ids = editableBoardIds ?: return emptySet()
         val storedIds = workspace.boards.mapTo(mutableSetOf()) { it.board.id }
         return ids - storedIds
     }
 
+    fun missingEditableBoardIds(boards: List<BoardSummary>): Set<BoardId> {
+        val ids = editableBoardIds ?: return emptySet()
+        val storedIds = boards.mapTo(mutableSetOf()) { it.board.id }
+        return ids - storedIds
+    }
+
     fun hasBrokenBinding(workspace: MinkBoardWorkspace): Boolean =
         missingEditableBoardIds(workspace).isNotEmpty()
+
+    fun hasBrokenBinding(boards: List<BoardSummary>): Boolean =
+        missingEditableBoardIds(boards).isNotEmpty()
 
     fun canCreateBoard(workspace: MinkBoardWorkspace): Boolean {
         if (hasBrokenBinding(workspace)) return false
         return capabilities.canCreateBoard(editableWorkspace(workspace).boards.size)
+    }
+
+    fun canCreateBoard(boards: List<BoardSummary>): Boolean {
+        if (hasBrokenBinding(boards)) return false
+        return capabilities.canCreateBoard(editableBoards(boards).size)
     }
 
     companion object {

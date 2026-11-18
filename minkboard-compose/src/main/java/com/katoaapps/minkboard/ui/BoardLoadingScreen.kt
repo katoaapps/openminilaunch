@@ -31,7 +31,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 
-/** Full-screen progress treatment shown while the local workspace is being opened. */
+/** Full-screen progress treatment shown while the selected board is being opened. */
 @Composable
 internal fun BoardLoadingScreen(modifier: Modifier = Modifier) {
     val transition = rememberInfiniteTransition(label = "board loading")

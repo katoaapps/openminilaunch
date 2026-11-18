@@ -156,6 +156,24 @@ internal fun EditCardDialog(
     val selectedStatus = statuses.firstOrNull {
         it.id.value == draft.destinationStatusIdValue
     } ?: currentStatus
+    val saveCard = {
+        val parsedDate = draft.dueDateText
+            .takeIf(String::isNotEmpty)
+            ?.let(LocalDate::parse)
+        if (draft.title.isBlank()) {
+            titleError = true
+        } else {
+            onSave(
+                CardUpdate(
+                    draft.title,
+                    draft.details,
+                    parsedDate,
+                    draft.isMajor,
+                ),
+                selectedStatus,
+            )
+        }
+    }
 
     MinkBoardAlertDialog(
         onDismissRequest = onDismiss,
@@ -185,6 +203,9 @@ internal fun EditCardDialog(
                             androidx.compose.material3.MaterialTheme.colorScheme.onSurfaceVariant
                         },
                     )
+                }
+                Button(onClick = saveCard) {
+                    Text(stringResource(R.string.save))
                 }
             }
         },
@@ -275,28 +296,7 @@ internal fun EditCardDialog(
                 )
             }
         },
-        confirmButton = {
-            Button(
-                onClick = {
-                    val parsedDate = draft.dueDateText
-                        .takeIf(String::isNotEmpty)
-                        ?.let(LocalDate::parse)
-                    if (draft.title.isBlank()) {
-                        titleError = true
-                    } else {
-                        onSave(
-                            CardUpdate(
-                                draft.title,
-                                draft.details,
-                                parsedDate,
-                                draft.isMajor,
-                            ),
-                            selectedStatus,
-                        )
-                    }
-                },
-            ) { Text(stringResource(R.string.save)) }
-        },
+        confirmButton = {},
         dismissButton = {
             TextButton(onClick = onDismiss) { Text(stringResource(R.string.cancel)) }
         },

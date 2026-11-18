@@ -3,7 +3,9 @@
     <string name="minkboard_focus_running_channel_name">Таймер фокусировки MinkBoard</string>
     <string name="minkboard_focus_running_channel_description">Показывает запущенный таймер фокусировки на доске.</string>
     <string name="minkboard_focus_finished_channel_name">Таймер фокусировки MinkBoard завершён</string>
-    <string name="minkboard_focus_finished_channel_description">Звонит и вибрирует, пока вы не отключите завершённый таймер фокусировки.</string>
+    <string name="minkboard_focus_finished_channel_description">Вибрирует до двух минут после завершения таймера фокусировки MinkBoard.</string>
+    <string name="minkboard_focus_finished_quiet_channel_name">Напоминания о завершённой фокусировке</string>
+    <string name="minkboard_focus_finished_quiet_channel_description">Оставляет завершённый таймер фокусировки видимым после окончания вибрации.</string>
     <string name="minkboard_focus_generic_running_title">Таймер фокусировки запущен</string>
     <string name="minkboard_focus_generic_finished_title">Таймер фокусировки завершён</string>
     <string name="minkboard_focus_running_title">Фокусировка на %1$s</string>

@@ -147,6 +147,8 @@ internal class OpenMinkMinkBoardRuntime(context: Context) {
                 runningChannelDescription = applicationContext.getString(R.string.minkboard_focus_running_channel_description),
                 finishedChannelName = applicationContext.getString(R.string.minkboard_focus_finished_channel_name),
                 finishedChannelDescription = applicationContext.getString(R.string.minkboard_focus_finished_channel_description),
+                quietFinishedChannelName = applicationContext.getString(R.string.minkboard_focus_finished_quiet_channel_name),
+                quietFinishedChannelDescription = applicationContext.getString(R.string.minkboard_focus_finished_quiet_channel_description),
                 genericRunningTitle = applicationContext.getString(R.string.minkboard_focus_generic_running_title),
                 genericFinishedTitle = applicationContext.getString(R.string.minkboard_focus_generic_finished_title),
                 focusingTitle = { applicationContext.getString(R.string.minkboard_focus_running_title, it) },

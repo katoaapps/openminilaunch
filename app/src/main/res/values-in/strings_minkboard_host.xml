@@ -3,7 +3,9 @@
     <string name="minkboard_focus_running_channel_name">Timer fokus MinkBoard</string>
     <string name="minkboard_focus_running_channel_description">Menampilkan timer fokus papan yang sedang berjalan.</string>
     <string name="minkboard_focus_finished_channel_name">Timer fokus MinkBoard selesai</string>
-    <string name="minkboard_focus_finished_channel_description">Berbunyi dan bergetar sampai Anda mematikan timer fokus yang sudah selesai.</string>
+    <string name="minkboard_focus_finished_channel_description">Bergetar hingga dua menit saat timer fokus MinkBoard selesai.</string>
+    <string name="minkboard_focus_finished_quiet_channel_name">Pengingat fokus selesai</string>
+    <string name="minkboard_focus_finished_quiet_channel_description">Tetap menampilkan timer fokus yang selesai setelah getaran berhenti.</string>
     <string name="minkboard_focus_generic_running_title">Timer fokus sedang berjalan</string>
     <string name="minkboard_focus_generic_finished_title">Timer fokus selesai</string>
     <string name="minkboard_focus_running_title">Berfokus pada %1$s</string>

@@ -3,7 +3,9 @@
     <string name="minkboard_focus_running_channel_name">Minuteur de concentration MinkBoard</string>
     <string name="minkboard_focus_running_channel_description">Affiche un minuteur de concentration actif pour un tableau.</string>
     <string name="minkboard_focus_finished_channel_name">Minuteur de concentration MinkBoard terminé</string>
-    <string name="minkboard_focus_finished_channel_description">Sonne et vibre jusqu’à l’arrêt d’un minuteur de concentration terminé.</string>
+    <string name="minkboard_focus_finished_channel_description">Vibre pendant deux minutes maximum lorsqu’un minuteur de concentration MinkBoard se termine.</string>
+    <string name="minkboard_focus_finished_quiet_channel_name">Rappels de concentration terminée</string>
+    <string name="minkboard_focus_finished_quiet_channel_description">Garde un minuteur de concentration terminé visible après l’arrêt des vibrations.</string>
     <string name="minkboard_focus_generic_running_title">Minuteur de concentration en cours</string>
     <string name="minkboard_focus_generic_finished_title">Minuteur de concentration terminé</string>
     <string name="minkboard_focus_running_title">Concentration sur %1$s</string>

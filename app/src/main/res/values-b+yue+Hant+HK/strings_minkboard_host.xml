@@ -3,7 +3,9 @@
     <string name="minkboard_focus_running_channel_name">MinkBoard 專注計時器</string>
     <string name="minkboard_focus_running_channel_description">顯示運行中嘅看板專注計時器。</string>
     <string name="minkboard_focus_finished_channel_name">MinkBoard 專注計時器已完成</string>
-    <string name="minkboard_focus_finished_channel_description">計時完成後會響同震，直到你將佢關閉。</string>
+    <string name="minkboard_focus_finished_channel_description">MinkBoard 專注計時器完成時會震動最多兩分鐘。</string>
+    <string name="minkboard_focus_finished_quiet_channel_name">已完成專注提醒</string>
+    <string name="minkboard_focus_finished_quiet_channel_description">震動停止後，仍會顯示已完成嘅專注計時器。</string>
     <string name="minkboard_focus_generic_running_title">專注計時器運行中</string>
     <string name="minkboard_focus_generic_finished_title">專注計時器已完成</string>
     <string name="minkboard_focus_running_title">正專注於 %1$s</string>

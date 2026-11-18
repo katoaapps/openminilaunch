@@ -17,6 +17,29 @@ internal interface MinkBoardDao {
     @Query("SELECT * FROM boards ORDER BY position, board_id")
     fun observeWorkspace(): Flow<List<BoardGraph>>
 
+    @Query(
+        """
+        SELECT boards.*,
+            (SELECT COUNT(*) FROM board_columns WHERE board_columns.board_id = boards.board_id)
+                AS status_count,
+            (SELECT COUNT(*) FROM cards
+                INNER JOIN board_columns ON cards.column_id = board_columns.column_id
+                WHERE board_columns.board_id = boards.board_id)
+                AS card_count
+        FROM boards
+        ORDER BY boards.position, boards.board_id
+        """,
+    )
+    fun observeBoardSummaries(): Flow<List<BoardSummaryRow>>
+
+    @Transaction
+    @Query("SELECT * FROM boards WHERE board_id = :boardId LIMIT 1")
+    fun observeBoard(boardId: String): Flow<BoardGraph?>
+
+    @Transaction
+    @Query("SELECT * FROM boards WHERE board_id = :boardId LIMIT 1")
+    suspend fun boardGraph(boardId: String): BoardGraph?
+
     /** A transaction-stable workspace view for export and archive mutation checks. */
     @Transaction
     @Query("SELECT * FROM boards ORDER BY position, board_id")
@@ -51,6 +74,9 @@ internal interface MinkBoardDao {
 
     @Query("SELECT COALESCE(MAX(position), -1) FROM cards WHERE column_id = :statusId")
     suspend fun maxCardPosition(statusId: String): Int
+
+    @Query("SELECT COUNT(*) FROM cards WHERE column_id = :statusId")
+    suspend fun cardCount(statusId: String): Int
 
     @Query("SELECT COALESCE(MAX(position), -1) FROM subtasks WHERE card_id = :cardId")
     suspend fun maxSubtaskPosition(cardId: String): Int
@@ -130,6 +156,17 @@ internal interface MinkBoardDao {
 
     @Query("UPDATE cards SET position = :position WHERE card_id = :cardId")
     suspend fun updateCardPosition(cardId: String, position: Int)
+
+    @Query(
+        "UPDATE cards SET position = position + :delta " +
+            "WHERE column_id = :statusId AND position BETWEEN :fromInclusive AND :toInclusive",
+    )
+    suspend fun shiftCardPositions(
+        statusId: String,
+        fromInclusive: Int,
+        toInclusive: Int,
+        delta: Int,
+    )
 
     @Query("UPDATE boards SET position = :position WHERE board_id = :boardId")
     suspend fun updateBoardPosition(boardId: String, position: Int)

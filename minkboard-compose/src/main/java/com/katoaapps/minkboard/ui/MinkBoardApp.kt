@@ -87,20 +87,23 @@ import com.katoaapps.minkboard.core.MinkBoardCapability
 import com.katoaapps.minkboard.core.MinkBoardHostAccess
 import com.katoaapps.minkboard.core.MinkBoardTemplates
 import com.katoaapps.minkboard.model.BoardId
+import com.katoaapps.minkboard.model.BoardSnapshot
+import com.katoaapps.minkboard.model.BoardSummary
 import com.katoaapps.minkboard.model.BoardUpdate
 import com.katoaapps.minkboard.model.BoardSubtask
 import com.katoaapps.minkboard.model.CardDraft
 import com.katoaapps.minkboard.model.CardId
+import com.katoaapps.minkboard.model.CardPlacement
 import com.katoaapps.minkboard.model.CardUpdate
 import com.katoaapps.minkboard.model.FocusSession
 import com.katoaapps.minkboard.model.FocusSessionState
 import com.katoaapps.minkboard.model.FocusTimerId
-import com.katoaapps.minkboard.model.MinkBoardWorkspace
 import com.katoaapps.minkboard.model.StatusDraft
 import com.katoaapps.minkboard.model.StatusDeletionPolicy
 import com.katoaapps.minkboard.model.StatusId
 import com.katoaapps.minkboard.model.StatusUpdate
 import com.katoaapps.minkboard.model.SubtaskId
+import kotlin.math.ceil
 import kotlin.math.roundToInt
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.isActive
@@ -122,9 +125,9 @@ data class MinkBoardActions(
     val updateStatus: (StatusId, StatusUpdate, () -> Unit) -> Unit,
     val reorderStatuses: (BoardId, List<StatusId>) -> Unit,
     val deleteStatus: (StatusId, StatusDeletionPolicy, () -> Unit) -> Unit,
-    val addCard: (StatusId, CardDraft, () -> Unit) -> Unit,
-    val cloneCard: (CardId, String, () -> Unit) -> Unit,
-    val updateCardAndMove: (CardId, CardUpdate, StatusId, () -> Unit) -> Unit,
+    val addCard: (StatusId, CardDraft, (CardPlacement) -> Unit) -> Unit,
+    val cloneCard: (CardId, String, (CardPlacement) -> Unit) -> Unit,
+    val updateCardAndMove: (CardId, CardUpdate, StatusId, (CardPlacement?) -> Unit) -> Unit,
     val moveCard: (CardId, StatusId, Int) -> Unit,
     val deleteCard: (CardId, () -> Unit) -> Unit,
     val addSubtask: (CardId, String, () -> Unit) -> Unit,
@@ -147,9 +150,9 @@ enum class MinkBoardFatalErrorDisplay {
 @OptIn(ExperimentalFoundationApi::class, ExperimentalMaterial3Api::class)
 @Composable
 fun MinkBoardApp(
-    workspace: MinkBoardWorkspace,
+    boards: List<BoardSummary>,
+    selectedBoard: BoardSnapshot?,
     hostAccess: MinkBoardHostAccess,
-    selectedBoardId: BoardId?,
     openCardId: CardId?,
     isBoardAccessible: (BoardId) -> Boolean,
     activeFocusSession: FocusSession?,
@@ -169,13 +172,15 @@ fun MinkBoardApp(
         return
     }
 
-    val editableWorkspace = remember(workspace, hostAccess) {
-        hostAccess.editableWorkspace(workspace)
+    val editableBoards = remember(boards, hostAccess) {
+        hostAccess.editableBoards(boards)
     }
-    val selectedBoard = editableWorkspace.board(selectedBoardId) ?: editableWorkspace.firstBoard
-    val effectiveSelectedBoardId = selectedBoard?.board?.id
+    val visibleSelectedBoard = selectedBoard?.takeIf { selected ->
+        editableBoards.any { it.board.id == selected.board.id }
+    }
+    val effectiveSelectedBoardId = visibleSelectedBoard?.board?.id
     val isSelectedBoardAccessible = effectiveSelectedBoardId?.let(isBoardAccessible) ?: true
-    val editableBoardIdValues = editableWorkspace.boards
+    val editableBoardIdValues = editableBoards
         .map { it.board.id.value }
         .sorted()
     var boardMenuOpen by rememberSaveable { mutableStateOf(false) }
@@ -190,20 +195,23 @@ fun MinkBoardApp(
     var pendingDeleteBoardIdValues by remember { mutableStateOf<Set<String>>(emptySet()) }
     var pendingDeleteStatusIdValue by remember { mutableStateOf<String?>(null) }
     var pendingDeleteCardIdValue by remember { mutableStateOf<String?>(null) }
+    var pendingCardReveal by remember(effectiveSelectedBoardId?.value) {
+        mutableStateOf<CardPlacement?>(null)
+    }
     val snackbarHostState = remember { SnackbarHostState() }
     val boardNavigationScope = rememberCoroutineScope()
     val statusListState = rememberLazyListState()
     val boardMapListState = rememberLazyListState()
-    val openCard = selectedBoard?.cards?.firstOrNull { it.id == openCardId }
+    val openCard = visibleSelectedBoard?.cards?.firstOrNull { it.id == openCardId }
     val pendingDeleteBoard = pendingDeleteBoardIdValue
-        ?.let { id -> editableWorkspace.boards.firstOrNull { it.board.id.value == id } }
-    val pendingDeleteBoards = editableWorkspace.boards.filter {
+        ?.let { id -> editableBoards.firstOrNull { it.board.id.value == id } }
+    val pendingDeleteBoards = editableBoards.filter {
         it.board.id.value in pendingDeleteBoardIdValues
     }
     val pendingDeleteStatus = pendingDeleteStatusIdValue
-        ?.let { id -> selectedBoard?.statuses?.firstOrNull { it.id.value == id } }
+        ?.let { id -> visibleSelectedBoard?.statuses?.firstOrNull { it.id.value == id } }
     val requestNewBoard = {
-        if (hostAccess.canCreateBoard(workspace)) {
+        if (hostAccess.canCreateBoard(boards)) {
             onEditorStateChange(
                 MinkBoardEditorState.NewBoard(
                     BoardEditorDraft(
@@ -215,27 +223,27 @@ fun MinkBoardApp(
             onCapabilityUnavailable(MinkBoardCapability.CreateAdditionalBoard)
         }
     }
-    val requestEditBoard: (com.katoaapps.minkboard.model.BoardSnapshot) -> Unit = { boardSnapshot ->
-        if (isBoardAccessible(boardSnapshot.board.id)) {
+    val requestEditBoard: (BoardSummary) -> Unit = { boardSummary ->
+        if (isBoardAccessible(boardSummary.board.id)) {
             onEditorStateChange(
                 MinkBoardEditorState.EditBoard(
-                    boardIdValue = boardSnapshot.board.id.value,
+                    boardIdValue = boardSummary.board.id.value,
                     draft = BoardEditorDraft(
-                        name = boardSnapshot.board.name,
-                        isLocked = boardSnapshot.board.isLocked,
+                        name = boardSummary.board.name,
+                        isLocked = boardSummary.board.isLocked,
                     ),
                 ),
             )
         } else {
-            actions.selectBoard(boardSnapshot.board.id)
+            actions.selectBoard(boardSummary.board.id)
         }
     }
     val boardMenuScrollState = rememberScrollState()
 
     var previousSelectedBoardId by remember { mutableStateOf(effectiveSelectedBoardId?.value) }
     LaunchedEffect(effectiveSelectedBoardId?.value, editableBoardIdValues) {
-        // The repository initially emits an empty workspace. Treat the first resolved board as
-        // hydration, not as user navigation, or a host-restored editor would be discarded.
+        // Treat the first hydrated board as loading, not user navigation, or a host-restored
+        // editor would be discarded.
         val selectedBoardChanged = previousSelectedBoardId != null &&
             previousSelectedBoardId != effectiveSelectedBoardId?.value
         if (selectedBoardChanged) {
@@ -250,8 +258,9 @@ fun MinkBoardApp(
     }
 
     val editorTargetIsValid = editorState.isValidFor(
-        workspace = editableWorkspace,
-        canCreateBoard = hostAccess.canCreateBoard(workspace),
+        boards = editableBoards,
+        selectedBoard = visibleSelectedBoard,
+        canCreateBoard = hostAccess.canCreateBoard(boards),
     )
     LaunchedEffect(isLoading, editorState.targetKey(), editorTargetIsValid) {
         if (!isLoading && !editorTargetIsValid) {
@@ -266,10 +275,10 @@ fun MinkBoardApp(
         }
     }
 
-    if (showBoardMap && selectedBoard != null && isSelectedBoardAccessible) {
-        val orderedStatuses = selectedBoard.statuses.sortedBy { it.position }
+    if (showBoardMap && visibleSelectedBoard != null && isSelectedBoardAccessible) {
+        val orderedStatuses = visibleSelectedBoard.statuses.sortedBy { it.position }
         BoardMapScreen(
-            board = selectedBoard,
+            board = visibleSelectedBoard,
             focusedStatusId = orderedStatuses.getOrNull(statusListState.firstVisibleItemIndex)?.id,
             listState = boardMapListState,
             onDismiss = { showBoardMap = false },
@@ -286,12 +295,12 @@ fun MinkBoardApp(
         return
     }
 
-    if (showCalendar && selectedBoard != null && isSelectedBoardAccessible) {
+    if (showCalendar && visibleSelectedBoard != null && isSelectedBoardAccessible) {
         BoardCalendarScreen(
-            board = selectedBoard,
+            board = visibleSelectedBoard,
             onBack = { showCalendar = false },
             onOpenCard = { card ->
-                actions.openCard(selectedBoard.board.id, card.id)
+                actions.openCard(visibleSelectedBoard.board.id, card.id)
                 showCalendar = false
             },
         )
@@ -310,11 +319,13 @@ fun MinkBoardApp(
                                 .fillMaxWidth()
                                 .combinedClickable(
                                     onClick = { boardMenuOpen = true },
-                                    onLongClickLabel = selectedBoard?.board?.name?.let {
+                                    onLongClickLabel = visibleSelectedBoard?.board?.name?.let {
                                         stringResource(R.string.edit_board_named, it)
                                     },
                                     onLongClick = {
-                                        selectedBoard?.let(requestEditBoard)
+                                        editableBoards.firstOrNull {
+                                            it.board.id == visibleSelectedBoard?.board?.id
+                                        }?.let(requestEditBoard)
                                     },
                                 ),
                             shape = RoundedCornerShape(24.dp),
@@ -330,7 +341,7 @@ fun MinkBoardApp(
                             ) {
                                 Icon(Icons.Outlined.Dashboard, contentDescription = null)
                                 Text(
-                                    text = selectedBoard?.board?.name
+                                    text = visibleSelectedBoard?.board?.name
                                         ?: stringResource(R.string.minkboard_title),
                                     modifier = Modifier
                                         .padding(start = 8.dp)
@@ -357,7 +368,7 @@ fun MinkBoardApp(
                                     showManageBoards = true
                                 },
                             )
-                            editableWorkspace.boards.sortedBy { it.board.position }.forEach { board ->
+                            editableBoards.sortedBy { it.board.position }.forEach { board ->
                                 DropdownMenuItem(
                                     text = { Text(board.board.name) },
                                     onClick = {
@@ -372,7 +383,7 @@ fun MinkBoardApp(
                 actions = {
                     IconButton(
                         onClick = { showCalendar = true },
-                        enabled = selectedBoard != null && isSelectedBoardAccessible,
+                        enabled = visibleSelectedBoard != null && isSelectedBoardAccessible,
                     ) {
                         Icon(
                             Icons.Outlined.CalendarMonth,
@@ -389,7 +400,7 @@ fun MinkBoardApp(
                             }
                             showBoardMap = true
                         },
-                        enabled = selectedBoard != null && isSelectedBoardAccessible,
+                        enabled = visibleSelectedBoard != null && isSelectedBoardAccessible,
                     ) {
                         Icon(
                             Icons.Outlined.ZoomOutMap,
@@ -408,12 +419,12 @@ fun MinkBoardApp(
                                 text = { Text(stringResource(R.string.new_card)) },
                                 onClick = {
                                     showAddMenu = false
-                                    val statuses = selectedBoard?.statuses.orEmpty()
+                                    val statuses = visibleSelectedBoard?.statuses.orEmpty()
                                     if (statuses.size == 1) {
                                         val status = statuses.single()
                                         onEditorStateChange(
                                             MinkBoardEditorState.NewCard(
-                                                boardIdValue = checkNotNull(selectedBoard).board.id.value,
+                                                boardIdValue = checkNotNull(visibleSelectedBoard).board.id.value,
                                                 statusIdValue = status.id.value,
                                             ),
                                         )
@@ -426,7 +437,7 @@ fun MinkBoardApp(
                                 text = { Text(stringResource(R.string.new_status)) },
                                 onClick = {
                                     showAddMenu = false
-                                    selectedBoard?.let { board ->
+                                    visibleSelectedBoard?.let { board ->
                                         onEditorStateChange(
                                             MinkBoardEditorState.NewStatus(
                                                 boardIdValue = board.board.id.value,
@@ -458,22 +469,32 @@ fun MinkBoardApp(
     ) { padding ->
         when {
             fatalError != null -> ErrorPane(fatalError, Modifier.padding(padding))
-            selectedBoard == null -> StatusPane(stringResource(R.string.empty_workspace), Modifier.padding(padding))
+            visibleSelectedBoard == null -> StatusPane(stringResource(R.string.empty_workspace), Modifier.padding(padding))
             !isSelectedBoardAccessible -> LockedBoardPane(
                 onUnlock = { actions.unlockBoard(checkNotNull(effectiveSelectedBoardId)) },
                 modifier = Modifier.padding(padding),
             )
             else -> {
-                val canonicalStatuses = selectedBoard.statuses.sortedBy { it.position }
-                val visibleStatuses = remember(selectedBoard.board.id) {
+                val canonicalStatuses = visibleSelectedBoard.statuses.sortedBy { it.position }
+                val visibleStatuses = remember(visibleSelectedBoard.board.id) {
                     mutableStateListOf<com.katoaapps.minkboard.model.BoardStatus>().apply {
                         addAll(canonicalStatuses)
                     }
                 }
-                var draggedStatusIdValue by remember(selectedBoard.board.id) {
+                LaunchedEffect(
+                    pendingCardReveal?.statusId?.value,
+                    visibleStatuses.map { it.id.value },
+                ) {
+                    val reveal = pendingCardReveal ?: return@LaunchedEffect
+                    val statusIndex = visibleStatuses.indexOfFirst { it.id == reveal.statusId }
+                    if (statusIndex >= 0) {
+                        statusListState.animateScrollToItem(statusIndex)
+                    }
+                }
+                var draggedStatusIdValue by remember(visibleSelectedBoard.board.id) {
                     mutableStateOf<String?>(null)
                 }
-                var pendingStatusOrder by remember(selectedBoard.board.id) {
+                var pendingStatusOrder by remember(visibleSelectedBoard.board.id) {
                     mutableStateOf<List<String>?>(null)
                 }
                 val statusHapticFeedback = LocalHapticFeedback.current
@@ -498,13 +519,13 @@ fun MinkBoardApp(
                         visibleStatuses.addAll(canonicalStatuses)
                     }
                 }
-                val dragDropState = remember(selectedBoard.board.id) {
+                val dragDropState = remember(visibleSelectedBoard.board.id) {
                     CardDragDropState().apply {
-                        sync(selectedBoard.statuses, selectedBoard.cards)
+                        sync(visibleSelectedBoard.statuses, visibleSelectedBoard.cards)
                     }
                 }
-                LaunchedEffect(selectedBoard.statuses, selectedBoard.cards) {
-                    dragDropState.sync(selectedBoard.statuses, selectedBoard.cards)
+                LaunchedEffect(visibleSelectedBoard.statuses, visibleSelectedBoard.cards) {
+                    dragDropState.sync(visibleSelectedBoard.statuses, visibleSelectedBoard.cards)
                 }
                 LaunchedEffect(actionErrorMessage) {
                     if (actionErrorMessage != null) {
@@ -557,7 +578,20 @@ fun MinkBoardApp(
                         },
                 ) {
                     val density = LocalDensity.current
-                    val statusWidth = if (maxWidth < 600.dp) maxWidth * 0.86f else 360.dp
+                    val targetVisibleColumns = when {
+                        maxWidth >= 1_200.dp -> 5.5f
+                        maxWidth >= 840.dp -> 4.5f
+                        maxWidth >= 600.dp -> 3.5f
+                        else -> 2f
+                    }
+                    val columnSpacing = if (maxWidth < 600.dp) 6.dp else 12.dp
+                    val visibleColumnGaps = columnSpacing *
+                        (ceil(targetVisibleColumns).toInt() - 1).coerceAtLeast(0)
+                    val statusWidth = maxOf(
+                        120.dp,
+                        (maxWidth - 32.dp - visibleColumnGaps) / targetVisibleColumns,
+                    )
+                    val useCompactCards = statusWidth < 240.dp
                     val horizontalEdgeThresholdPx = with(density) { 64.dp.toPx() }
                     val dragPointer = dragDropState.activeDrag?.pointerInRoot
                     val pointerXInBoard = dragPointer?.x?.minus(boardPositionInRoot.x)
@@ -591,8 +625,8 @@ fun MinkBoardApp(
                         Text(
                             text = stringResource(
                                 R.string.completion_count,
-                                selectedBoard.completedCardCount,
-                                selectedBoard.cards.size,
+                                visibleSelectedBoard.completedCardCount,
+                                visibleSelectedBoard.cards.size,
                             ),
                             modifier = Modifier.padding(horizontal = 20.dp, vertical = 8.dp),
                             style = MaterialTheme.typography.labelLarge,
@@ -603,7 +637,7 @@ fun MinkBoardApp(
                                 .weight(1f),
                             state = statusListState,
                             contentPadding = PaddingValues(horizontal = 16.dp, vertical = 8.dp),
-                            horizontalArrangement = Arrangement.spacedBy(12.dp),
+                            horizontalArrangement = Arrangement.spacedBy(columnSpacing),
                         ) {
                             items(
                                 visibleStatuses,
@@ -638,7 +672,7 @@ fun MinkBoardApp(
                                                 } else {
                                                     pendingStatusOrder = visibleStatuses.map { it.id.value }
                                                     actions.reorderStatuses(
-                                                        selectedBoard.board.id,
+                                                        visibleSelectedBoard.board.id,
                                                         visibleStatuses.map { it.id },
                                                     )
                                                     statusHapticFeedback.performHapticFeedback(
@@ -655,7 +689,7 @@ fun MinkBoardApp(
                                                 } else {
                                                     pendingStatusOrder = visibleStatuses.map { it.id.value }
                                                     actions.reorderStatuses(
-                                                        selectedBoard.board.id,
+                                                        visibleSelectedBoard.board.id,
                                                         visibleStatuses.map { it.id },
                                                     )
                                                     statusHapticFeedback.performHapticFeedback(
@@ -678,6 +712,7 @@ fun MinkBoardApp(
                                         nextStatusCardCount = nextStatus
                                             ?.let { dragDropState.cardOrders[it.id].orEmpty().size }
                                             ?: 0,
+                                        compactLayout = useCompactCards,
                                         statusDragHandle = {
                                             Icon(
                                                 imageVector = Icons.Default.DragHandle,
@@ -686,7 +721,7 @@ fun MinkBoardApp(
                                                     status.name,
                                                 ),
                                                 modifier = Modifier
-                                                    .size(44.dp)
+                                                    .size(if (useCompactCards) 34.dp else 44.dp)
                                                     .draggableHandle(
                                                         interactionSource = interactionSource,
                                                         onDragStarted = {
@@ -698,13 +733,13 @@ fun MinkBoardApp(
                                                         onDragStopped = {
                                                             pendingStatusOrder = visibleStatuses.map { it.id.value }
                                                             actions.reorderStatuses(
-                                                                selectedBoard.board.id,
+                                                                visibleSelectedBoard.board.id,
                                                                 visibleStatuses.map { it.id },
                                                             )
                                                             draggedStatusIdValue = null
                                                         },
                                                     )
-                                                    .padding(10.dp),
+                                                    .padding(if (useCompactCards) 7.dp else 10.dp),
                                                 tint = MaterialTheme.colorScheme.onSurfaceVariant,
                                             )
                                         },
@@ -722,7 +757,7 @@ fun MinkBoardApp(
                                         onAddCard = {
                                             onEditorStateChange(
                                                 MinkBoardEditorState.NewCard(
-                                                    boardIdValue = selectedBoard.board.id.value,
+                                                    boardIdValue = visibleSelectedBoard.board.id.value,
                                                     statusIdValue = status.id.value,
                                                 ),
                                             )
@@ -730,7 +765,7 @@ fun MinkBoardApp(
                                         onManageStatus = {
                                             onEditorStateChange(
                                                 MinkBoardEditorState.EditStatus(
-                                                    boardIdValue = selectedBoard.board.id.value,
+                                                    boardIdValue = visibleSelectedBoard.board.id.value,
                                                     statusIdValue = status.id.value,
                                                     draft = StatusEditorDraft(
                                                         name = status.name,
@@ -741,7 +776,15 @@ fun MinkBoardApp(
                                             )
                                         },
                                         onOpenCard = { card ->
-                                            actions.openCard(selectedBoard.board.id, card.id)
+                                            actions.openCard(visibleSelectedBoard.board.id, card.id)
+                                        },
+                                        revealCardId = pendingCardReveal
+                                            ?.takeIf { it.statusId == status.id }
+                                            ?.cardId,
+                                        onRevealFinished = { revealedCardId ->
+                                            if (pendingCardReveal?.cardId == revealedCardId) {
+                                                pendingCardReveal = null
+                                            }
                                         },
                                         onMoveCard = actions.moveCard,
                                     )
@@ -751,18 +794,18 @@ fun MinkBoardApp(
                         StatusScrollDock(
                             state = statusListState,
                             statuses = canonicalStatuses,
-                            itemSpacing = 12.dp,
+                            itemSpacing = columnSpacing,
                             contentDescription = stringResource(R.string.board_position),
                             modifier = Modifier.padding(horizontal = 20.dp),
                         )
                     }
 
                     dragDropState.activeDrag?.let { drag ->
-                        val previewStatusColor = selectedBoard.statuses
+                        val previewStatusColor = visibleSelectedBoard.statuses
                             .firstOrNull { it.id == (drag.targetStatusId ?: drag.card.statusId) }
                             ?.let { Color(it.colorArgb) }
                             ?: MaterialTheme.colorScheme.surface
-                        val previewWidth = 240.dp
+                        val previewWidth = statusWidth.coerceAtMost(240.dp)
                         val previewHeight = 72.dp
                         val previewWidthPx = with(density) { previewWidth.toPx() }
                         val previewHeightPx = with(density) { previewHeight.toPx() }
@@ -788,7 +831,7 @@ fun MinkBoardApp(
 
     if (showManageBoards) {
         ManageBoardsDialog(
-            boards = editableWorkspace.boards.map { it.board },
+            boards = editableBoards.map { it.board },
             actionErrorMessage = actionErrorMessage,
             onDismiss = { showManageBoards = false },
             onSelect = { boardId ->
@@ -797,7 +840,7 @@ fun MinkBoardApp(
             },
             onEdit = { boardId ->
                 showManageBoards = false
-                editableWorkspace.board(boardId)?.let(requestEditBoard)
+                editableBoards.firstOrNull { it.board.id == boardId }?.let(requestEditBoard)
             },
             onReorder = actions.reorderBoards,
             onDeleteMany = { boardIds ->
@@ -807,15 +850,15 @@ fun MinkBoardApp(
         )
     }
 
-    if (showCardStatusPicker && selectedBoard != null && isSelectedBoardAccessible) {
+    if (showCardStatusPicker && visibleSelectedBoard != null && isSelectedBoardAccessible) {
         ChooseCardStatusDialog(
-            statuses = selectedBoard.statuses,
+            statuses = visibleSelectedBoard.statuses,
             onDismiss = { showCardStatusPicker = false },
             onSelect = { status ->
                 showCardStatusPicker = false
                 onEditorStateChange(
                     MinkBoardEditorState.NewCard(
-                        boardIdValue = selectedBoard.board.id.value,
+                        boardIdValue = visibleSelectedBoard.board.id.value,
                         statusIdValue = status.id.value,
                     ),
                 )
@@ -828,10 +871,10 @@ fun MinkBoardApp(
         openCard != null &&
         isSelectedBoardAccessible
     ) {
-        val cardStatus = selectedBoard.statuses.firstOrNull { it.id == openCard.statusId }
+        val cardStatus = visibleSelectedBoard.statuses.firstOrNull { it.id == openCard.statusId }
         val cardDuplicateSuffix = stringResource(R.string.duplicate_title_suffix)
         if (cardStatus != null) {
-            val statusCards = selectedBoard.cardsIn(cardStatus.id)
+            val statusCards = visibleSelectedBoard.cardsIn(cardStatus.id)
             val cardIndex = statusCards.indexOfFirst { it.id == openCard.id }
             CardViewDialog(
                 card = openCard,
@@ -841,12 +884,12 @@ fun MinkBoardApp(
                 } == true,
                 onDismiss = actions.closeCard,
                 onEdit = {
-                    onEditorStateChange(openCard.toEditorState(selectedBoard.board.id.value))
+                    onEditorStateChange(openCard.toEditorState(visibleSelectedBoard.board.id.value))
                 },
                 onManageSubtasks = {
                     onEditorStateChange(
                         MinkBoardEditorState.ManageCardSubtasks(
-                            boardIdValue = selectedBoard.board.id.value,
+                            boardIdValue = visibleSelectedBoard.board.id.value,
                             cardIdValue = openCard.id.value,
                         ),
                     )
@@ -861,7 +904,7 @@ fun MinkBoardApp(
                     } else {
                         onEditorStateChange(
                             MinkBoardEditorState.FocusCard(
-                                boardIdValue = selectedBoard.board.id.value,
+                                boardIdValue = visibleSelectedBoard.board.id.value,
                                 cardIdValue = openCard.id.value,
                             ),
                         )
@@ -879,7 +922,10 @@ fun MinkBoardApp(
                     actions.cloneCard(
                         openCard.id,
                         cardDuplicateSuffix,
-                    ) {}
+                    ) { placement ->
+                        actions.closeCard()
+                        pendingCardReveal = placement
+                    }
                 },
                 onDelete = { pendingDeleteCardIdValue = openCard.id.value },
             )
@@ -909,27 +955,27 @@ fun MinkBoardApp(
         )
 
         is MinkBoardEditorState.EditBoard -> {
-            val boardSnapshot = editableWorkspace.boards.firstOrNull {
+            val boardSummary = editableBoards.firstOrNull {
                 it.board.id.value == editor.boardIdValue
             }
             if (
-                boardSnapshot != null &&
-                isBoardAccessible(boardSnapshot.board.id)
+                boardSummary != null &&
+                isBoardAccessible(boardSummary.board.id)
             ) {
                 BoardSettingsDialog(
-                    board = boardSnapshot.board,
+                    board = boardSummary.board,
                     draft = editor.draft,
-                    canDelete = editableWorkspace.boards.size > 1,
+                    canDelete = editableBoards.size > 1,
                     canLockBoard = canUseBoardLock,
                     onDraftChange = { onEditorStateChange(editor.copy(draft = it)) },
                     onDismiss = { onEditorStateChange(MinkBoardEditorState.None) },
                     onSave = { update ->
-                        actions.updateBoard(boardSnapshot.board.id, update) {
+                        actions.updateBoard(boardSummary.board.id, update) {
                             onEditorStateChange(MinkBoardEditorState.None)
                         }
                     },
                     onRequestDelete = {
-                        pendingDeleteBoardIdValue = boardSnapshot.board.id.value
+                        pendingDeleteBoardIdValue = boardSummary.board.id.value
                         onEditorStateChange(MinkBoardEditorState.None)
                     },
                 )
@@ -937,7 +983,7 @@ fun MinkBoardApp(
         }
 
         is MinkBoardEditorState.NewStatus -> {
-            val boardSnapshot = editableWorkspace.boards.firstOrNull {
+            val boardSnapshot = visibleSelectedBoard?.takeIf {
                 it.board.id.value == editor.boardIdValue
             }
             if (boardSnapshot != null && isBoardAccessible(boardSnapshot.board.id)) {
@@ -956,7 +1002,7 @@ fun MinkBoardApp(
         }
 
         is MinkBoardEditorState.EditStatus -> {
-            val boardSnapshot = editableWorkspace.boards.firstOrNull {
+            val boardSnapshot = visibleSelectedBoard?.takeIf {
                 it.board.id.value == editor.boardIdValue
             }
             val status = boardSnapshot?.statuses?.firstOrNull {
@@ -990,7 +1036,7 @@ fun MinkBoardApp(
         }
 
         is MinkBoardEditorState.NewCard -> {
-            val boardSnapshot = editableWorkspace.boards.firstOrNull {
+            val boardSnapshot = visibleSelectedBoard?.takeIf {
                 it.board.id.value == editor.boardIdValue
             }
             val status = boardSnapshot?.statuses?.firstOrNull {
@@ -1006,8 +1052,9 @@ fun MinkBoardApp(
                     onDraftChange = { onEditorStateChange(editor.copy(draft = it)) },
                     onDismiss = { onEditorStateChange(MinkBoardEditorState.None) },
                     onCreate = { cardDraft ->
-                        actions.addCard(status.id, cardDraft) {
+                        actions.addCard(status.id, cardDraft) { placement ->
                             onEditorStateChange(MinkBoardEditorState.None)
+                            pendingCardReveal = placement
                         }
                     },
                 )
@@ -1015,7 +1062,7 @@ fun MinkBoardApp(
         }
 
         is MinkBoardEditorState.EditCard -> {
-            val boardSnapshot = editableWorkspace.boards.firstOrNull {
+            val boardSnapshot = visibleSelectedBoard?.takeIf {
                 it.board.id.value == editor.boardIdValue
             }
             val card = boardSnapshot?.cards?.firstOrNull { it.id.value == editor.cardIdValue }
@@ -1036,8 +1083,12 @@ fun MinkBoardApp(
                         onEditorStateChange(MinkBoardEditorState.None)
                     },
                     onSave = { update, destination ->
-                        actions.updateCardAndMove(card.id, update, destination.id) {
+                        actions.updateCardAndMove(card.id, update, destination.id) { placement ->
                             onEditorStateChange(MinkBoardEditorState.None)
+                            if (placement != null) {
+                                actions.closeCard()
+                                pendingCardReveal = placement
+                            }
                         }
                     },
                 )
@@ -1045,7 +1096,7 @@ fun MinkBoardApp(
         }
 
         is MinkBoardEditorState.ManageCardSubtasks -> {
-            val boardSnapshot = editableWorkspace.boards.firstOrNull {
+            val boardSnapshot = visibleSelectedBoard?.takeIf {
                 it.board.id.value == editor.boardIdValue
             }
             val card = boardSnapshot?.cards?.firstOrNull { it.id.value == editor.cardIdValue }
@@ -1074,7 +1125,7 @@ fun MinkBoardApp(
         }
 
         is MinkBoardEditorState.FocusCard -> {
-            val boardSnapshot = editableWorkspace.boards.firstOrNull {
+            val boardSnapshot = visibleSelectedBoard?.takeIf {
                 it.board.id.value == editor.boardIdValue
             }
             val card = boardSnapshot?.cards?.firstOrNull { it.id.value == editor.cardIdValue }
@@ -1121,7 +1172,7 @@ fun MinkBoardApp(
         ?.let { boardSnapshot ->
             DeleteBoardConfirmationDialog(
                 boardName = boardSnapshot.board.name,
-                cardCount = boardSnapshot.cards.size,
+                cardCount = boardSnapshot.cardCount,
                 onDismiss = { pendingDeleteBoardIdValue = null },
                 onConfirm = {
                     actions.deleteBoard(boardSnapshot.board.id) {
@@ -1133,7 +1184,7 @@ fun MinkBoardApp(
     if (pendingDeleteBoards.isNotEmpty()) {
         DeleteBoardsConfirmationDialog(
             boardCount = pendingDeleteBoards.size,
-            cardCount = pendingDeleteBoards.sumOf { it.cards.size },
+            cardCount = pendingDeleteBoards.sumOf { it.cardCount },
             onDismiss = { pendingDeleteBoardIdValues = emptySet() },
             onConfirm = {
                 val boardIds = pendingDeleteBoards.map { it.board.id }.toSet()
@@ -1145,13 +1196,13 @@ fun MinkBoardApp(
     }
     if (
         pendingDeleteStatus != null &&
-        selectedBoard != null &&
-        isBoardAccessible(selectedBoard.board.id)
+        visibleSelectedBoard != null &&
+        isBoardAccessible(visibleSelectedBoard.board.id)
     ) {
         DeleteStatusDialog(
             status = pendingDeleteStatus,
-            cardCount = selectedBoard.cardsIn(pendingDeleteStatus.id).size,
-            destinations = selectedBoard.statuses.filter { it.id != pendingDeleteStatus.id },
+            cardCount = visibleSelectedBoard.cardsIn(pendingDeleteStatus.id).size,
+            destinations = visibleSelectedBoard.statuses.filter { it.id != pendingDeleteStatus.id },
             onDismiss = { pendingDeleteStatusIdValue = null },
             onConfirm = { policy ->
                 actions.deleteStatus(pendingDeleteStatus.id, policy) {
@@ -1161,9 +1212,8 @@ fun MinkBoardApp(
         )
     }
     val pendingDeleteCard = pendingDeleteCardIdValue?.let { cardIdValue ->
-        editableWorkspace.boards.firstNotNullOfOrNull { board ->
-            board.cards.firstOrNull { it.id.value == cardIdValue }?.let { board to it }
-        }
+        visibleSelectedBoard?.cards?.firstOrNull { it.id.value == cardIdValue }
+            ?.let { visibleSelectedBoard to it }
     }
     if (pendingDeleteCard != null) {
         val (board, card) = pendingDeleteCard
@@ -1211,30 +1261,32 @@ private fun MinkBoardEditorState.targetKey(): String = when (this) {
 }
 
 private fun MinkBoardEditorState.isValidFor(
-    workspace: MinkBoardWorkspace,
+    boards: List<BoardSummary>,
+    selectedBoard: BoardSnapshot?,
     canCreateBoard: Boolean,
 ): Boolean {
-    fun board(idValue: String) = workspace.boards.firstOrNull { it.board.id.value == idValue }
+    fun boardExists(idValue: String) = boards.any { it.board.id.value == idValue }
+    fun selected(idValue: String) = selectedBoard?.takeIf { it.board.id.value == idValue }
 
     return when (this) {
         MinkBoardEditorState.None -> true
         is MinkBoardEditorState.NewBoard -> canCreateBoard
 
-        is MinkBoardEditorState.EditBoard -> board(boardIdValue) != null
-        is MinkBoardEditorState.NewStatus -> board(boardIdValue) != null
-        is MinkBoardEditorState.EditStatus -> board(boardIdValue)
+        is MinkBoardEditorState.EditBoard -> boardExists(boardIdValue)
+        is MinkBoardEditorState.NewStatus -> selected(boardIdValue) != null
+        is MinkBoardEditorState.EditStatus -> selected(boardIdValue)
             ?.statuses
             ?.any { it.id.value == statusIdValue } == true
-        is MinkBoardEditorState.NewCard -> board(boardIdValue)
+        is MinkBoardEditorState.NewCard -> selected(boardIdValue)
             ?.statuses
             ?.any { it.id.value == statusIdValue } == true
-        is MinkBoardEditorState.EditCard -> board(boardIdValue)
+        is MinkBoardEditorState.EditCard -> selected(boardIdValue)
             ?.cards
             ?.any { it.id.value == cardIdValue } == true
-        is MinkBoardEditorState.ManageCardSubtasks -> board(boardIdValue)
+        is MinkBoardEditorState.ManageCardSubtasks -> selected(boardIdValue)
             ?.cards
             ?.any { it.id.value == cardIdValue } == true
-        is MinkBoardEditorState.FocusCard -> board(boardIdValue)
+        is MinkBoardEditorState.FocusCard -> selected(boardIdValue)
             ?.cards
             ?.any { it.id.value == cardIdValue } == true
     }

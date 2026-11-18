@@ -3,7 +3,9 @@
     <string name="minkboard_focus_running_channel_name">Temporizador de foco do MinkBoard</string>
     <string name="minkboard_focus_running_channel_description">Mostra um temporizador de foco ativo do quadro.</string>
     <string name="minkboard_focus_finished_channel_name">Temporizador de foco do MinkBoard concluído</string>
-    <string name="minkboard_focus_finished_channel_description">Toca e vibra até você desligar um temporizador de foco concluído.</string>
+    <string name="minkboard_focus_finished_channel_description">Vibra por até dois minutos quando um temporizador de foco do MinkBoard termina.</string>
+    <string name="minkboard_focus_finished_quiet_channel_name">Lembretes de foco concluído</string>
+    <string name="minkboard_focus_finished_quiet_channel_description">Mantém um temporizador de foco concluído visível após a vibração parar.</string>
     <string name="minkboard_focus_generic_running_title">Temporizador de foco em andamento</string>
     <string name="minkboard_focus_generic_finished_title">Temporizador de foco concluído</string>
     <string name="minkboard_focus_running_title">Foco em %1$s</string>

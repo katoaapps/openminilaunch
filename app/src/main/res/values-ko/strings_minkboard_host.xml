@@ -3,7 +3,9 @@
     <string name="minkboard_focus_running_channel_name">MinkBoard 집중 타이머</string>
     <string name="minkboard_focus_running_channel_description">실행 중인 보드 집중 타이머를 표시합니다.</string>
     <string name="minkboard_focus_finished_channel_name">MinkBoard 집중 타이머 완료</string>
-    <string name="minkboard_focus_finished_channel_description">완료된 집중 타이머를 끌 때까지 소리와 진동으로 알립니다.</string>
+    <string name="minkboard_focus_finished_channel_description">MinkBoard 집중 타이머가 끝나면 최대 2분 동안 진동합니다.</string>
+    <string name="minkboard_focus_finished_quiet_channel_name">집중 완료 알림</string>
+    <string name="minkboard_focus_finished_quiet_channel_description">진동이 멈춘 후에도 완료된 집중 타이머를 계속 표시합니다.</string>
     <string name="minkboard_focus_generic_running_title">집중 타이머 실행 중</string>
     <string name="minkboard_focus_generic_finished_title">집중 타이머 완료</string>
     <string name="minkboard_focus_running_title">%1$s에 집중하는 중</string>

@@ -76,12 +76,40 @@ internal class FocusTimerService : Service() {
                     }
 
                     FocusSessionState.Finished -> {
-                        if (!finishedEffectsActive) {
-                            startInForeground(runtime.focusTimerNotifier.buildFinished(snapshot))
+                        val alertRemaining = finishedAlertRemainingMillis(
+                            endsAtEpochMillis = snapshot.session.endsAtEpochMillis,
+                            nowEpochMillis = System.currentTimeMillis(),
+                        )
+                        if (alertRemaining > 0L && !finishedEffectsActive) {
+                            startInForeground(
+                                runtime.focusTimerNotifier.buildFinished(
+                                    snapshot = snapshot,
+                                    alerting = true,
+                                ),
+                                AndroidFocusTimerNotifier.NOTIFICATION_FINISHED,
+                            )
+                            runtime.focusTimerNotifier.cancelRunningPresentation()
                             runtime.focusTimerNotifier.startFinishedEffects()
                             finishedEffectsActive = true
                         }
-                        delay(ALARM_STATE_POLL_MILLIS)
+                        if (alertRemaining > 0L) {
+                            delay(min(alertRemaining, ALARM_STATE_POLL_MILLIS))
+                        } else {
+                            if (finishedEffectsActive) {
+                                runtime.focusTimerNotifier.stopFinishedEffects()
+                                finishedEffectsActive = false
+                            }
+                            startInForeground(
+                                runtime.focusTimerNotifier.buildFinished(
+                                    snapshot = snapshot,
+                                    alerting = false,
+                                ),
+                                AndroidFocusTimerNotifier.NOTIFICATION_FINISHED,
+                            )
+                            runtime.focusTimerNotifier.cancelRunningPresentation()
+                            detachForegroundAndSelf()
+                            return
+                        }
                     }
                 }
             }
@@ -93,7 +121,10 @@ internal class FocusTimerService : Service() {
         }
     }
 
-    private fun startInForeground(notification: android.app.Notification) {
+    private fun startInForeground(
+        notification: android.app.Notification,
+        notificationId: Int = AndroidFocusTimerNotifier.NOTIFICATION_RUNNING,
+    ) {
         val type = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.UPSIDE_DOWN_CAKE) {
             ServiceInfo.FOREGROUND_SERVICE_TYPE_SPECIAL_USE
         } else {
@@ -101,7 +132,7 @@ internal class FocusTimerService : Service() {
         }
         ServiceCompat.startForeground(
             this,
-            AndroidFocusTimerNotifier.NOTIFICATION_RUNNING,
+            notificationId,
             notification,
             type,
         )
@@ -109,6 +140,12 @@ internal class FocusTimerService : Service() {
 
     private fun stopForegroundAndSelf() {
         ServiceCompat.stopForeground(this, ServiceCompat.STOP_FOREGROUND_REMOVE)
+        stopSelf()
+    }
+
+    /** Leaves the quiet finished notification visible without keeping a polling service alive. */
+    private fun detachForegroundAndSelf() {
+        ServiceCompat.stopForeground(this, ServiceCompat.STOP_FOREGROUND_DETACH)
         stopSelf()
     }
 
@@ -131,4 +168,22 @@ internal class FocusTimerService : Service() {
             )
         }
     }
+}
+
+internal const val FINISHED_ALERT_DURATION_MILLIS = 2 * 60 * 1_000L
+
+/**
+ * Derives the remaining vibration window from durable timer timestamps. A process restart resumes
+ * only the time that remains instead of starting a fresh two-minute alert.
+ */
+internal fun finishedAlertRemainingMillis(
+    endsAtEpochMillis: Long,
+    nowEpochMillis: Long,
+): Long {
+    val alertDeadline = if (endsAtEpochMillis > Long.MAX_VALUE - FINISHED_ALERT_DURATION_MILLIS) {
+        Long.MAX_VALUE
+    } else {
+        endsAtEpochMillis + FINISHED_ALERT_DURATION_MILLIS
+    }
+    return (alertDeadline - nowEpochMillis).coerceAtLeast(0L)
 }

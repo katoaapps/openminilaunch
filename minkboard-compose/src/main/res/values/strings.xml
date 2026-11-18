@@ -2,8 +2,8 @@
     <string name="import_archive">Import archive</string>
     <string name="export_archive">Export archive</string>
     <string name="minkboard_title">MinkBoard</string>
-    <string name="loading_boards">Opening your boards</string>
-    <string name="loading_boards_detail">Getting your local workspace ready…</string>
+    <string name="loading_boards">Opening board</string>
+    <string name="loading_boards_detail">Loading its statuses and cards…</string>
     <string name="empty_workspace">Create a board to get started.</string>
     <string name="data_locked_title">MinkBoard could not unlock local data</string>
     <string name="data_locked_body">Your existing data has not been erased. Close MinkBoard and try again before making storage changes.</string>

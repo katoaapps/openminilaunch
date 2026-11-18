@@ -7,7 +7,10 @@ import com.katoaapps.minkboard.model.MinkBoardWorkspace
 import com.katoaapps.minkboard.model.StatusId
 import kotlinx.coroutines.flow.Flow
 
-/** One transaction-stable launcher view; workspace and designation must describe the same commit. */
+/**
+ * One transaction-stable launcher view. [workspace] contains only the designated board because a
+ * launcher host must never hydrate unrelated standalone boards.
+ */
 data class LauncherBoardHostSnapshot(
     val workspace: MinkBoardWorkspace,
     val designation: LauncherBoardDesignation?,
@@ -72,7 +75,7 @@ sealed interface LauncherBoundIntakeWriteResult {
 interface LauncherBoardIntegrationStore {
     fun observeLauncherBoardHostSnapshot(): Flow<LauncherBoardHostSnapshot>
 
-    /** Reads workspace plus designation from one persistence transaction for command planning. */
+    /** Reads the designated board plus its designation in one transaction for command planning. */
     suspend fun launcherBoardHostSnapshot(): LauncherBoardHostSnapshot
 
     suspend fun launcherBoardDesignation(): LauncherBoardDesignation?

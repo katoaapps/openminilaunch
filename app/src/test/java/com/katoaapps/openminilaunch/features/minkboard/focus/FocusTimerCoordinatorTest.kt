@@ -136,6 +136,7 @@ class FocusTimerCoordinatorTest {
     private fun snapshot(session: FocusSession) = FocusTimerSnapshot(
         session = session,
         cardTitle = "Card",
+        cardDetails = "",
         boardIsLocked = false,
     )
 
@@ -147,7 +148,12 @@ class FocusTimerCoordinatorTest {
         override fun observeFocusSession(): Flow<FocusSession?> = flow
         override suspend fun currentFocusTimer(): FocusTimerSnapshot? = value
         override suspend fun replaceFocusTimer(session: FocusSession): FocusTimerSnapshot =
-            FocusTimerSnapshot(session, "Card", false).also {
+            FocusTimerSnapshot(
+                session = session,
+                cardTitle = "Card",
+                cardDetails = "",
+                boardIsLocked = false,
+            ).also {
                 require(!rejectReplacement) { "Unknown timer target" }
                 value = it
                 flow.value = session

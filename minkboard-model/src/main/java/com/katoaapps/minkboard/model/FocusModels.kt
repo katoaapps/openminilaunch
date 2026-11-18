@@ -47,5 +47,6 @@ data class FocusSession(
 data class FocusTimerSnapshot(
     val session: FocusSession,
     val cardTitle: String,
+    val cardDetails: String,
     val boardIsLocked: Boolean,
 )

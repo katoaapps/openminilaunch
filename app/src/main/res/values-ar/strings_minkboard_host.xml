@@ -3,7 +3,9 @@
     <string name="minkboard_focus_running_channel_name">مؤقت التركيز في MinkBoard</string>
     <string name="minkboard_focus_running_channel_description">يعرض مؤقت تركيز نشطًا للوحة.</string>
     <string name="minkboard_focus_finished_channel_name">انتهى مؤقت التركيز في MinkBoard</string>
-    <string name="minkboard_focus_finished_channel_description">يصدر صوتًا ويهتز حتى توقف مؤقت التركيز المنتهي.</string>
+    <string name="minkboard_focus_finished_channel_description">يهتز لمدة تصل إلى دقيقتين عند انتهاء مؤقت تركيز MinkBoard.</string>
+    <string name="minkboard_focus_finished_quiet_channel_name">تذكيرات انتهاء التركيز</string>
+    <string name="minkboard_focus_finished_quiet_channel_description">يُبقي مؤقت التركيز المنتهي ظاهرًا بعد توقف الاهتزاز.</string>
     <string name="minkboard_focus_generic_running_title">مؤقت التركيز قيد التشغيل</string>
     <string name="minkboard_focus_generic_finished_title">انتهى مؤقت التركيز</string>
     <string name="minkboard_focus_running_title">التركيز على %1$s</string>

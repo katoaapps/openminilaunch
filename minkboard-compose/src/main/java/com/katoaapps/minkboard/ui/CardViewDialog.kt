@@ -20,7 +20,6 @@ import androidx.compose.material.icons.outlined.Star
 import androidx.compose.material.icons.outlined.Timer
 import androidx.compose.material.icons.outlined.VerticalAlignBottom
 import androidx.compose.material.icons.outlined.VerticalAlignTop
-import androidx.compose.material3.Button
 import androidx.compose.material3.DropdownMenu
 import androidx.compose.material3.DropdownMenuItem
 import androidx.compose.material3.Icon
@@ -78,6 +77,12 @@ internal fun CardViewDialog(
                     )
                 }
                 Text(card.title, modifier = Modifier.weight(1f))
+                IconButton(onClick = onEdit) {
+                    Icon(
+                        Icons.Outlined.Edit,
+                        contentDescription = stringResource(R.string.edit_card),
+                    )
+                }
                 IconButton(onClick = { moreMenuOpen = true }) {
                     Icon(
                         Icons.Outlined.MoreVert,
@@ -216,12 +221,7 @@ internal fun CardViewDialog(
                 }
             }
         },
-        confirmButton = {
-            Button(onClick = onEdit) {
-                Icon(Icons.Outlined.Edit, contentDescription = null)
-                Text(stringResource(R.string.edit_card), modifier = Modifier.padding(start = 6.dp))
-            }
-        },
+        confirmButton = {},
         dismissButton = {
             TextButton(onClick = onDismiss) { Text(stringResource(R.string.close)) }
         },

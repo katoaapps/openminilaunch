@@ -36,6 +36,8 @@ import com.katoaapps.minkboard.core.BoardTemplateId
 import com.katoaapps.minkboard.core.BoardTemplateStatus
 import com.katoaapps.minkboard.model.BoardDraft
 import com.katoaapps.minkboard.model.BoardId
+import com.katoaapps.minkboard.model.BoardSnapshot
+import com.katoaapps.minkboard.model.BoardSummary
 import com.katoaapps.minkboard.model.BoardUpdate
 import com.katoaapps.minkboard.model.CardDraft
 import com.katoaapps.minkboard.model.CardId
@@ -55,6 +57,7 @@ import com.katoaapps.minkboard.model.SubtaskId
 import java.util.UUID
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.flow.Flow
+import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 
@@ -80,6 +83,20 @@ class RoomMinkBoardRepository internal constructor(
         }
         .flowOn(Dispatchers.Default)
 
+    override fun observeBoardSummaries(): Flow<List<BoardSummary>> = dao.observeBoardSummaries()
+        .map { rows -> rows.map(entityMapper::mapBoardSummary) }
+        .distinctUntilChanged()
+        .flowOn(Dispatchers.Default)
+
+    override fun observeBoard(boardId: BoardId): Flow<BoardSnapshot?> =
+        dao.observeBoard(boardId.value)
+            .map { graph -> graph?.let(entityMapper::mapBoard) }
+            .distinctUntilChanged()
+            .flowOn(Dispatchers.Default)
+
+    override suspend fun board(boardId: BoardId): BoardSnapshot? =
+        dao.boardGraph(boardId.value)?.let(entityMapper::mapBoard)
+
     override fun observeFocusSession(): Flow<FocusSession?> = dao.observeFocusSession()
         .map { it?.toModel() }
         .flowOn(Dispatchers.Default)
@@ -99,13 +116,16 @@ class RoomMinkBoardRepository internal constructor(
 
     /** Caller must already hold [database]'s transaction. */
     private suspend fun launcherBoardHostSnapshotInTransaction(): LauncherBoardHostSnapshot {
-        val workspace = MinkBoardWorkspace(
-            boards = dao.workspace().map(entityMapper::mapBoard)
-                .sortedBy { board -> board.board.position },
-        )
+        val designation = dao.launcherBoardDesignation()?.toModel()
+        // A launcher host can only operate on its designated board. Hydrating unrelated Pro boards
+        // here made every launcher To-Do observation decrypt the entire standalone workspace.
+        val designatedBoard = designation
+            ?.boardId
+            ?.let { boardId -> dao.boardGraph(boardId.value) }
+            ?.let(entityMapper::mapBoard)
         return LauncherBoardHostSnapshot(
-            workspace = workspace,
-            designation = dao.launcherBoardDesignation()?.toModel(),
+            workspace = MinkBoardWorkspace(listOfNotNull(designatedBoard)),
+            designation = designation,
         )
     }
 
@@ -622,6 +642,15 @@ class RoomMinkBoardRepository internal constructor(
     /** Caller must already hold [database]'s transaction. */
     private suspend fun insertCardInTransaction(statusId: StatusId, draft: CardDraft): CardId {
         requireNotNull(dao.status(statusId.value)) { "Unknown destination status" }
+        val previousLastPosition = dao.maxCardPosition(statusId.value)
+        if (previousLastPosition >= 0) {
+            dao.shiftCardPositions(
+                statusId = statusId.value,
+                fromInclusive = 0,
+                toInclusive = previousLastPosition,
+                delta = 1,
+            )
+        }
         val id = CardId(idFactory())
         val now = clockMillis()
         dao.insertCard(
@@ -642,7 +671,7 @@ class RoomMinkBoardRepository internal constructor(
                     cipher.encrypt(date, cardSubject(id.value), FIELD_DUE_DATE)
                 },
                 isMajor = draft.isMajor,
-                position = dao.maxCardPosition(statusId.value) + 1,
+                position = 0,
                 createdAtEpochMillis = now,
                 updatedAtEpochMillis = now,
             ),
@@ -650,22 +679,30 @@ class RoomMinkBoardRepository internal constructor(
         return id
     }
 
-    override suspend fun cloneCard(cardId: CardId): CardId = database.withTransaction {
+    override suspend fun cloneCard(cardId: CardId, title: String?): CardId = database.withTransaction {
         val source = requireNotNull(dao.card(cardId.value)) { "Unknown card" }
         val sourceSubject = cardSubject(source.id)
         val cloneId = CardId(idFactory())
         val cloneSubject = cardSubject(cloneId.value)
         val now = clockMillis()
-        val orderedCardIds = dao.cardIds(source.statusId).toMutableList()
-        val sourceIndex = orderedCardIds.indexOf(source.id)
-        check(sourceIndex >= 0) { "Card order is inconsistent" }
-        orderedCardIds.add(sourceIndex + 1, cloneId.value)
+        val clonePosition = source.position + 1
+        val previousLastPosition = dao.maxCardPosition(source.statusId)
+        if (clonePosition <= previousLastPosition) {
+            dao.shiftCardPositions(
+                statusId = source.statusId,
+                fromInclusive = clonePosition,
+                toInclusive = previousLastPosition,
+                delta = 1,
+            )
+        }
 
         dao.insertCard(
             CardEntity(
                 id = cloneId.value,
                 statusId = source.statusId,
-                encryptedTitle = cipher.reencrypt(
+                encryptedTitle = title?.let { cloneTitle ->
+                    cipher.encrypt(MinkBoardRules.cardTitle(cloneTitle), cloneSubject, FIELD_TITLE)
+                } ?: cipher.reencrypt(
                     source.encryptedTitle,
                     sourceSubject,
                     cloneSubject,
@@ -686,15 +723,11 @@ class RoomMinkBoardRepository internal constructor(
                     )
                 },
                 isMajor = source.isMajor,
-                position = orderedCardIds.lastIndex,
+                position = clonePosition,
                 createdAtEpochMillis = now,
                 updatedAtEpochMillis = now,
             ),
         )
-        orderedCardIds.forEachIndexed { position, id ->
-            dao.updateCardPosition(id, position)
-        }
-
         dao.subtasks(source.id).forEach { sourceSubtask ->
             val cloneSubtaskId = SubtaskId(idFactory())
             dao.insertSubtask(
@@ -752,24 +785,47 @@ class RoomMinkBoardRepository internal constructor(
                 "Cards cannot move between boards"
             }
 
-            val sourceIds = dao.cardIds(card.statusId).filterNot { it == cardId.value }
-            val destinationIds = if (card.statusId == destination.value) {
-                sourceIds.toMutableList()
-            } else {
-                dao.cardIds(destination.value).filterNot { it == cardId.value }.toMutableList()
-            }
-            val destinationIndex = position.coerceIn(0, destinationIds.size)
-            destinationIds.add(destinationIndex, cardId.value)
-
-            if (card.statusId != destination.value) {
-                sourceIds.forEachIndexed { index, id -> dao.updateCardPosition(id, index) }
-            }
-            destinationIds.forEachIndexed { index, id ->
-                if (id == cardId.value) {
-                    dao.moveCard(id, destination.value, index, clockMillis())
-                } else {
-                    dao.updateCardPosition(id, index)
+            val sourcePosition = card.position
+            if (card.statusId == destination.value) {
+                val destinationIndex = position.coerceIn(0, dao.cardCount(destination.value) - 1)
+                when {
+                    destinationIndex < sourcePosition -> dao.shiftCardPositions(
+                        statusId = destination.value,
+                        fromInclusive = destinationIndex,
+                        toInclusive = sourcePosition - 1,
+                        delta = 1,
+                    )
+                    destinationIndex > sourcePosition -> dao.shiftCardPositions(
+                        statusId = destination.value,
+                        fromInclusive = sourcePosition + 1,
+                        toInclusive = destinationIndex,
+                        delta = -1,
+                    )
                 }
+                if (destinationIndex != sourcePosition) {
+                    dao.moveCard(cardId.value, destination.value, destinationIndex, clockMillis())
+                }
+            } else {
+                val destinationIndex = position.coerceIn(0, dao.cardCount(destination.value))
+                val sourceLastPosition = dao.maxCardPosition(card.statusId)
+                if (sourcePosition < sourceLastPosition) {
+                    dao.shiftCardPositions(
+                        statusId = card.statusId,
+                        fromInclusive = sourcePosition + 1,
+                        toInclusive = sourceLastPosition,
+                        delta = -1,
+                    )
+                }
+                val destinationLastPosition = dao.maxCardPosition(destination.value)
+                if (destinationIndex <= destinationLastPosition) {
+                    dao.shiftCardPositions(
+                        statusId = destination.value,
+                        fromInclusive = destinationIndex,
+                        toInclusive = destinationLastPosition,
+                        delta = 1,
+                    )
+                }
+                dao.moveCard(cardId.value, destination.value, destinationIndex, clockMillis())
             }
         }
     }
@@ -777,9 +833,15 @@ class RoomMinkBoardRepository internal constructor(
     override suspend fun deleteCard(cardId: CardId) {
         database.withTransaction {
             val card = dao.card(cardId.value) ?: return@withTransaction
+            val previousLastPosition = dao.maxCardPosition(card.statusId)
             dao.deleteCard(cardId.value)
-            dao.cardIds(card.statusId).forEachIndexed { index, id ->
-                dao.updateCardPosition(id, index)
+            if (card.position < previousLastPosition) {
+                dao.shiftCardPositions(
+                    statusId = card.statusId,
+                    fromInclusive = card.position + 1,
+                    toInclusive = previousLastPosition,
+                    delta = -1,
+                )
             }
         }
     }
@@ -873,6 +935,11 @@ class RoomMinkBoardRepository internal constructor(
                 card.encryptedTitle,
                 cardSubject(card.id),
                 FIELD_TITLE,
+            ),
+            cardDetails = cipher.decrypt(
+                card.encryptedDetails,
+                cardSubject(card.id),
+                FIELD_DETAILS,
             ),
             boardIsLocked = board.isLocked,
         )

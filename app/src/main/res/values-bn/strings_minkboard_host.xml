@@ -3,7 +3,9 @@
     <string name="minkboard_focus_running_channel_name">MinkBoard ফোকাস টাইমার</string>
     <string name="minkboard_focus_running_channel_description">চলমান বোর্ড ফোকাস টাইমার দেখায়।</string>
     <string name="minkboard_focus_finished_channel_name">MinkBoard ফোকাস টাইমার শেষ হয়েছে</string>
-    <string name="minkboard_focus_finished_channel_description">শেষ হওয়া ফোকাস টাইমার বন্ধ না করা পর্যন্ত শব্দ ও কম্পন চালায়।</string>
+    <string name="minkboard_focus_finished_channel_description">MinkBoard ফোকাস টাইমার শেষ হলে সর্বোচ্চ দুই মিনিট কম্পন করে।</string>
+    <string name="minkboard_focus_finished_quiet_channel_name">শেষ হওয়া ফোকাসের রিমাইন্ডার</string>
+    <string name="minkboard_focus_finished_quiet_channel_description">কম্পন বন্ধ হওয়ার পরও শেষ হওয়া ফোকাস টাইমারটি দৃশ্যমান রাখে।</string>
     <string name="minkboard_focus_generic_running_title">ফোকাস টাইমার চলছে</string>
     <string name="minkboard_focus_generic_finished_title">ফোকাস টাইমার শেষ হয়েছে</string>
     <string name="minkboard_focus_running_title">%1$s-এ ফোকাস করা হচ্ছে</string>

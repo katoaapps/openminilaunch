@@ -187,6 +187,37 @@ class RoomLauncherWorkspaceIntegrationTest {
     }
 
     @Test
+    fun launcherHostSnapshotHydratesOnlyItsDesignatedBoard() = runBlocking {
+        val created = repository.createAndDesignateFreshBoard(
+            LauncherFreshBoardRequest("Launcher board"),
+        ) as LauncherFreshBoardDesignationResult.Created
+        val unrelatedId = repository.createBoard(BoardDraft("Unrelated Pro board"))
+        val unrelated = repository.board(unrelatedId)!!
+        val corruptCardId = "corrupt-unrelated-launcher-card"
+        database.boardDao().insertCard(
+            CardEntity(
+                id = corruptCardId,
+                statusId = unrelated.statuses.first().id.value,
+                encryptedTitle = "not-valid-ciphertext".toByteArray(),
+                encryptedDetails = "not-valid-ciphertext".toByteArray(),
+                encryptedDueDate = null,
+                isMajor = false,
+                position = 0,
+                createdAtEpochMillis = 1L,
+                updatedAtEpochMillis = 1L,
+            ),
+        )
+
+        val snapshot = repository.launcherBoardHostSnapshot()
+
+        assertEquals(created.designation, snapshot.designation)
+        assertEquals(
+            listOf(created.designation.boardId),
+            snapshot.workspace.boards.map { it.board.id },
+        )
+    }
+
+    @Test
     fun explicitExistingDesignationCreatesNoAdditionalBoardOrLegacyReceipt() = runBlocking {
         repository.ensureDefaultWorkspace()
         val board = repository.observeWorkspace().first().boards.single()

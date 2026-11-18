@@ -4,7 +4,9 @@
     <string name="minkboard_focus_running_channel_name">MinkBoard focus timer</string>
     <string name="minkboard_focus_running_channel_description">Shows a running board focus timer.</string>
     <string name="minkboard_focus_finished_channel_name">MinkBoard focus timer finished</string>
-    <string name="minkboard_focus_finished_channel_description">Rings and vibrates until you turn off a finished board focus timer.</string>
+    <string name="minkboard_focus_finished_channel_description">Vibrates for up to two minutes when a MinkBoard focus timer finishes.</string>
+    <string name="minkboard_focus_finished_quiet_channel_name">Finished focus reminders</string>
+    <string name="minkboard_focus_finished_quiet_channel_description">Keeps a finished focus timer visible after its vibration stops.</string>
     <string name="minkboard_focus_generic_running_title">Focus timer running</string>
     <string name="minkboard_focus_generic_finished_title">Focus timer finished</string>
     <string name="minkboard_focus_running_title">Focusing on %1$s</string>
