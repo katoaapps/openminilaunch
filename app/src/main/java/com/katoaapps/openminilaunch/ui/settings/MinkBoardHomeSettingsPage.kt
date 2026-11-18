@@ -63,6 +63,7 @@ internal fun MinkBoardHomeSettingsPage(goBack: () -> Unit) {
     val boardAccessRevision by runtime.boardAccessRevision.collectAsState()
     val visibility by runtime.homePreferences.visibleStatuses.collectAsState()
     var actionError by remember { mutableStateOf<String?>(null) }
+    var designationPending by remember { mutableStateOf(false) }
 
     LaunchedEffect(runtime) {
         if (runtime.launcherController.initialize() != LauncherBoardInitializationState.Ready) {
@@ -97,21 +98,27 @@ internal fun MinkBoardHomeSettingsPage(goBack: () -> Unit) {
     }
 
     fun applyDesignation(boardId: BoardId, intakeStatusId: StatusId, resetVisibility: Boolean) {
+        if (designationPending) return
+        designationPending = true
         scope.launch {
-            actionError = null
-            when (runtime.launcherController.designateHomeBoard(boardId, intakeStatusId)) {
-                LauncherHomeConfigurationResult.Updated -> {
-                    if (resetVisibility) runtime.homePreferences.showAllStatuses()
+            try {
+                actionError = null
+                when (runtime.launcherController.designateHomeBoard(boardId, intakeStatusId)) {
+                    LauncherHomeConfigurationResult.Updated -> {
+                        if (resetVisibility) runtime.homePreferences.showAllStatuses()
+                    }
+                    LauncherHomeConfigurationResult.InvalidTarget -> {
+                        actionError = context.getString(R.string.minkboard_home_invalid_target)
+                    }
+                    LauncherHomeConfigurationResult.Stale -> {
+                        actionError = context.getString(R.string.minkboard_home_changed_retry)
+                    }
+                    LauncherHomeConfigurationResult.Failed -> {
+                        actionError = context.getString(R.string.minkboard_home_save_failed)
+                    }
                 }
-                LauncherHomeConfigurationResult.InvalidTarget -> {
-                    actionError = context.getString(R.string.minkboard_home_invalid_target)
-                }
-                LauncherHomeConfigurationResult.Stale -> {
-                    actionError = context.getString(R.string.minkboard_home_changed_retry)
-                }
-                LauncherHomeConfigurationResult.Failed -> {
-                    actionError = context.getString(R.string.minkboard_home_save_failed)
-                }
+            } finally {
+                designationPending = false
             }
         }
     }
@@ -120,6 +127,7 @@ internal fun MinkBoardHomeSettingsPage(goBack: () -> Unit) {
         title = stringResource(R.string.minkboard_home_settings_title),
         goBack = goBack,
         state = listState,
+        blocked = designationPending,
     ) {
         item(key = "minkboard-home-description") {
             Text(

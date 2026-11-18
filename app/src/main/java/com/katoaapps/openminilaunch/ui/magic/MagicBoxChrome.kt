@@ -29,6 +29,7 @@ import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.CheckCircle
 import androidx.compose.material.icons.filled.DeleteOutline
 import androidx.compose.material.icons.filled.Keyboard
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.FilledIconButton
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
@@ -72,6 +73,7 @@ internal fun MagicEditorSurface(
     selectedRecipientDetail: String? = null,
     selectedRecipientLeadingIcon: (@Composable () -> Unit)? = null,
     route: MagicBoxRoute,
+    submissionPending: Boolean,
     acceptPlatformTextInput: Boolean,
     actionVisuals: MagicActionVisuals,
     actionContentColor: Color,
@@ -100,7 +102,12 @@ internal fun MagicEditorSurface(
     )
     Surface(
         modifier = modifier
-            .clickable(interactionSource = interactionSource, indication = null, onClick = onRefocus)
+            .clickable(
+                interactionSource = interactionSource,
+                indication = null,
+                enabled = !submissionPending,
+                onClick = onRefocus,
+            )
             .graphicsLayer { alpha = if (visible) 1f else 0f },
         shape = RoundedCornerShape(Dimens.dp24),
         color = editorColor,
@@ -142,6 +149,7 @@ internal fun MagicEditorSurface(
                     onValueChange = onTextChange,
                     route = route,
                     contentColor = editorContentColor,
+                    enabled = !submissionPending,
                     acceptPlatformTextInput = acceptPlatformTextInput,
                     focusRequester = focusRequester,
                     onPlaced = onPlaced,
@@ -165,11 +173,22 @@ internal fun MagicEditorSurface(
                 if (!noteMode) {
                     FilledIconButton(
                         onClick = onSubmit,
+                        enabled = !submissionPending,
                         colors = IconButtonDefaults.filledIconButtonColors(
                             containerColor = editorContentColor.copy(alpha = .14f),
                             contentColor = editorContentColor,
                         ),
-                    ) { Icon(actionVisuals.icon, stringResource(R.string.run_command)) }
+                    ) {
+                        if (submissionPending) {
+                            CircularProgressIndicator(
+                                modifier = Modifier.size(Dimens.dp22),
+                                color = editorContentColor,
+                                strokeWidth = Dimens.dp2,
+                            )
+                        } else {
+                            Icon(actionVisuals.icon, stringResource(R.string.run_command))
+                        }
+                    }
                 }
             }
             if (noteMode) {
@@ -192,12 +211,23 @@ internal fun MagicEditorSurface(
                 }
                 FilledIconButton(
                     onClick = onSubmit,
+                    enabled = !submissionPending,
                     modifier = Modifier.align(Alignment.BottomEnd).padding(Dimens.dp10),
                     colors = IconButtonDefaults.filledIconButtonColors(
                         containerColor = editorContentColor.copy(alpha = .14f),
                         contentColor = editorContentColor,
                     ),
-                ) { Icon(actionVisuals.icon, stringResource(R.string.run_command)) }
+                ) {
+                    if (submissionPending) {
+                        CircularProgressIndicator(
+                            modifier = Modifier.size(Dimens.dp22),
+                            color = editorContentColor,
+                            strokeWidth = Dimens.dp2,
+                        )
+                    } else {
+                        Icon(actionVisuals.icon, stringResource(R.string.run_command))
+                    }
+                }
             }
         }
     }

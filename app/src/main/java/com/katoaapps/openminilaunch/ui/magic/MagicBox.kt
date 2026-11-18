@@ -64,9 +64,11 @@ import androidx.compose.ui.unit.dp
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Lifecycle
 import androidx.lifecycle.LifecycleEventObserver
+import kotlinx.coroutines.CancellationException
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.util.concurrent.atomic.AtomicBoolean
 
 @Composable
 internal fun MagicBoxContent(
@@ -141,6 +143,7 @@ internal fun MagicBoxContent(
     var showMessageDiscardConfirmation by remember { mutableStateOf(false) }
     var showCommandDiscardConfirmation by remember { mutableStateOf(false) }
     var todoCompletionPending by remember { mutableStateOf(false) }
+    val todoSubmissionInFlight = remember { AtomicBoolean(false) }
     var pendingCalendarReview by remember { mutableStateOf<CalendarParseResult?>(null) }
     val callFlow = rememberMagicCallFlow(
         actions = actions,
@@ -488,8 +491,8 @@ internal fun MagicBoxContent(
         clearCommand()
         keyboard?.hide()
         expanded = false
-        todoCompletionPending = true
         onTodoAdded(todo) {
+            todoSubmissionInFlight.set(false)
             todoCompletionPending = false
             onSessionComplete()
         }
@@ -695,18 +698,44 @@ internal fun MagicBoxContent(
         }
         if (route == MagicBoxRoute.TODO) {
             val payload = text.text.trim()
-            if (payload.isBlank()) return
+            if (payload.isBlank() || !todoSubmissionInFlight.compareAndSet(false, true)) return
+            todoCompletionPending = true
+            keyboard?.hide()
             coroutineScope.launch {
-                when (minkBoardController.addToIntake(payload)) {
-                    is LauncherCardAddResult.Added -> beginTodoCompletion(payload)
-                    LauncherCardAddResult.InvalidText -> Unit
-                    LauncherCardAddResult.Unbound,
-                    is LauncherCardAddResult.BrokenBinding,
-                    -> Toast.makeText(
+                var completionHandedOff = false
+                var restoreEditor = true
+                try {
+                    when (minkBoardController.addToIntake(payload)) {
+                        is LauncherCardAddResult.Added -> {
+                            completionHandedOff = true
+                            beginTodoCompletion(payload)
+                        }
+                        LauncherCardAddResult.InvalidText -> Unit
+                        LauncherCardAddResult.Unbound,
+                        is LauncherCardAddResult.BrokenBinding,
+                        -> Toast.makeText(
+                            context,
+                            R.string.minkboard_home_needs_repair,
+                            Toast.LENGTH_LONG,
+                        ).show()
+                    }
+                } catch (cancelled: CancellationException) {
+                    restoreEditor = false
+                    throw cancelled
+                } catch (_: Exception) {
+                    Toast.makeText(
                         context,
-                        R.string.minkboard_home_needs_repair,
+                        R.string.minkboard_change_failed,
                         Toast.LENGTH_LONG,
                     ).show()
+                } finally {
+                    if (!completionHandedOff) {
+                        todoSubmissionInFlight.set(false)
+                        todoCompletionPending = false
+                        if (restoreEditor && expanded) {
+                            refocus(showSoftwareKeyboard = !useMinkKeyboard)
+                        }
+                    }
                 }
             }
             return
@@ -911,6 +940,7 @@ internal fun MagicBoxContent(
         !todoCompletionPending
     val showLauncherKeyboard = useMinkKeyboard &&
         !minkKeyboardMinimized &&
+        !todoCompletionPending &&
         (expanded || showDockedLauncherKeyboard)
 
     LaunchedEffect(showLauncherKeyboard) {
@@ -933,7 +963,9 @@ internal fun MagicBoxContent(
     }
 
     BackHandler(enabled = expanded || showLauncherKeyboard) {
-        if (showLauncherKeyboard) minimizeMinkKeyboard() else requestDismiss()
+        if (!todoCompletionPending) {
+            if (showLauncherKeyboard) minimizeMinkKeyboard() else requestDismiss()
+        }
     }
 
     Box(modifier) {
@@ -1119,6 +1151,7 @@ internal fun MagicBoxContent(
                     }
                 },
                 route = route,
+                submissionPending = todoCompletionPending,
                 acceptPlatformTextInput = !useMinkKeyboard,
                 actionVisuals = actionVisuals,
                 actionContentColor = actionContentColor,

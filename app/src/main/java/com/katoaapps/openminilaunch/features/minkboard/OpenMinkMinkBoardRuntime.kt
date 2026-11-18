@@ -12,6 +12,7 @@ import com.katoaapps.openminilaunch.features.minkboard.focus.FocusTimerCoordinat
 import com.katoaapps.openminilaunch.features.minkboard.focus.FocusTimerIntents
 import com.katoaapps.minkboard.core.BoardAccessSessionController
 import com.katoaapps.minkboard.core.IdFactory
+import com.katoaapps.minkboard.core.LauncherBoardDesignation
 import com.katoaapps.minkboard.core.LauncherBoardState
 import com.katoaapps.minkboard.core.LauncherCardAddResult
 import com.katoaapps.minkboard.core.LauncherFreshBoardDesignationResult
@@ -335,18 +336,23 @@ internal class OpenMinkLauncherBoardController(
             // newest-first contract. Resolve the card's actual status from a fresh transactional
             // snapshot instead of trusting a possibly stale designation flow, then move only the
             // newly-created card to the front. The shared MinkBoard modules remain unchanged.
-            val insertedCard = repository.launcherBoardHostSnapshot()
-                .workspace
-                .boards
-                .asSequence()
-                .flatMap { board -> board.cards.asSequence() }
-                .firstOrNull { card -> card.id == result.cardId }
-            if (insertedCard != null) {
-                repository.moveCard(
-                    cardId = result.cardId,
-                    destination = insertedCard.statusId,
-                    position = 0,
-                )
+            // The card already exists once addToIntake returns Added. Treat the move as a
+            // best-effort launcher ordering step: surfacing a move failure as an add failure
+            // would invite a retry that creates a duplicate of the successfully inserted card.
+            runCatching {
+                val insertedCard = repository.launcherBoardHostSnapshot()
+                    .workspace
+                    .boards
+                    .asSequence()
+                    .flatMap { board -> board.cards.asSequence() }
+                    .firstOrNull { card -> card.id == result.cardId }
+                if (insertedCard != null) {
+                    repository.moveCard(
+                        cardId = result.cardId,
+                        destination = insertedCard.statusId,
+                        position = 0,
+                    )
+                }
             }
         }
         result
@@ -356,12 +362,24 @@ internal class OpenMinkLauncherBoardController(
         boardId: BoardId,
         intakeStatusId: StatusId,
     ): LauncherHomeConfigurationResult {
-        if (initialize() != LauncherBoardInitializationState.Ready) {
+        val initialization = initialize()
+        val persistedDesignation = runCatching {
+            repository.launcherBoardDesignation()
+        }.getOrElse {
             return LauncherHomeConfigurationResult.Failed
         }
-        val generation = (boardState.value as? LauncherBoardState.Ready)
-            ?.designation
-            ?.generation
+        val plan = planHomeBoardDesignation(initialization, persistedDesignation)
+
+        // Read the compare-and-set token directly from Room instead of the asynchronously
+        // hydrated StateFlow. A deleted Home Board intentionally leaves its designation behind
+        // as repair evidence, and that broken designation's generation is required to replace it.
+        // This also keeps repair available after process restart, when initialization correctly
+        // reports the broken binding before the user chooses a replacement.
+        val generation = when (plan) {
+            LauncherHomeDesignationPlan.Blocked ->
+                return LauncherHomeConfigurationResult.Failed
+            is LauncherHomeDesignationPlan.Attempt -> plan.expectedGeneration
+        }
         return runCatching {
             when (
                 launcherFacade.designateExistingBoard(
@@ -416,6 +434,28 @@ internal class OpenMinkLauncherBoardController(
         // OpenMink intentionally never writes a rollback projection after the cutover.
         launcherFacade.finishLegacyCompatibility()
     }
+}
+
+/**
+ * A persisted designation means the launcher database has already been initialized far enough for
+ * an explicit user choice to repair it. Without one, initialization must succeed before a first
+ * designation can be created.
+ */
+internal sealed interface LauncherHomeDesignationPlan {
+    data class Attempt(val expectedGeneration: String?) : LauncherHomeDesignationPlan
+    data object Blocked : LauncherHomeDesignationPlan
+}
+
+internal fun planHomeBoardDesignation(
+    initialization: LauncherBoardInitializationState,
+    persistedDesignation: LauncherBoardDesignation?,
+): LauncherHomeDesignationPlan = when {
+    persistedDesignation != null -> LauncherHomeDesignationPlan.Attempt(
+        expectedGeneration = persistedDesignation.generation,
+    )
+    initialization == LauncherBoardInitializationState.Ready ->
+        LauncherHomeDesignationPlan.Attempt(expectedGeneration = null)
+    else -> LauncherHomeDesignationPlan.Blocked
 }
 
 private const val LEGACY_LAUNCHER_PREFERENCES = "mini_launch"

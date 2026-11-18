@@ -77,6 +77,7 @@ internal fun OpenMinkBoardScreen(
     var editorState by remember { mutableStateOf<MinkBoardEditorState>(MinkBoardEditorState.None) }
     var actionError by remember { mutableStateOf<String?>(null) }
     var loading by remember { mutableStateOf(true) }
+    var navigationLoading by remember { mutableStateOf(false) }
     var pendingFocusRequest by remember { mutableStateOf<PendingFocusRequest?>(null) }
 
     val activity = context as? FragmentActivity
@@ -202,14 +203,20 @@ internal fun OpenMinkBoardScreen(
 
     LaunchedEffect(navigationRequest?.token) {
         val request = navigationRequest ?: return@LaunchedEffect
-        val currentWorkspace = runtime.repository.observeWorkspace().first()
-        val targetBoard = currentWorkspace.board(request.boardId)
-        val requestedCardExists = request.cardId == null ||
-            targetBoard?.cards?.any { it.id == request.cardId } == true
-        if (targetBoard == null || !requestedCardExists) {
-            runtime.consumeNavigationRequest(request.token)
-            actionError = context.getString(R.string.minkboard_focus_card_unavailable)
-            return@LaunchedEffect
+        navigationLoading = true
+        val targetBoard = try {
+            val currentWorkspace = runtime.repository.observeWorkspace().first()
+            val board = currentWorkspace.board(request.boardId)
+            val requestedCardExists = request.cardId == null ||
+                board?.cards?.any { it.id == request.cardId } == true
+            if (board == null || !requestedCardExists) {
+                runtime.consumeNavigationRequest(request.token)
+                actionError = context.getString(R.string.minkboard_focus_card_unavailable)
+                return@LaunchedEffect
+            }
+            board
+        } finally {
+            navigationLoading = false
         }
         selectedBoardIdValue = request.boardId.value
         openCardIdValue = null
@@ -483,7 +490,7 @@ internal fun OpenMinkBoardScreen(
             },
             activeFocusSession = activeFocusSession,
             canUseBoardLock = canUseBoardLock,
-            isLoading = loading,
+            isLoading = loading || navigationLoading,
             fatalError = null,
             actionErrorMessage = actionError,
             editorState = editorState,

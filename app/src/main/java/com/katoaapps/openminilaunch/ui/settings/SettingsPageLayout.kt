@@ -28,6 +28,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.ChevronRight
+import androidx.compose.material3.CircularProgressIndicator
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
@@ -37,6 +38,7 @@ import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.vector.ImageVector
+import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.res.pluralStringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextOverflow
@@ -79,30 +81,50 @@ internal fun SettingsLazyPage(
     title: String,
     goBack: () -> Unit,
     state: LazyListState,
+    blocked: Boolean = false,
     content: LazyListScope.() -> Unit,
 ) {
-    Column(
-        Modifier.fillMaxSize().statusBarsPadding(),
-        horizontalAlignment = Alignment.CenterHorizontally,
-    ) {
-        Box(Modifier.widthIn(max = Dimens.dp720).fillMaxWidth()) {
-            PageHeader(
-                title = title,
-                goBack = goBack,
-                showBackButton = LocalSettingsShowBackButton.current,
+    Box(Modifier.fillMaxSize()) {
+        Column(
+            Modifier.fillMaxSize().statusBarsPadding(),
+            horizontalAlignment = Alignment.CenterHorizontally,
+        ) {
+            Box(Modifier.widthIn(max = Dimens.dp720).fillMaxWidth()) {
+                PageHeader(
+                    title = title,
+                    goBack = goBack,
+                    showBackButton = LocalSettingsShowBackButton.current,
+                )
+            }
+            LazyColumn(
+                modifier = Modifier.widthIn(max = Dimens.dp720).fillMaxWidth().weight(1f),
+                state = state,
+                contentPadding = PaddingValues(
+                    start = Dimens.dp22,
+                    end = Dimens.dp22,
+                    bottom = Dimens.dp24,
+                ),
+                verticalArrangement = Arrangement.spacedBy(Dimens.dp14),
+                content = content,
             )
         }
-        LazyColumn(
-            modifier = Modifier.widthIn(max = Dimens.dp720).fillMaxWidth().weight(1f),
-            state = state,
-            contentPadding = PaddingValues(
-                start = Dimens.dp22,
-                end = Dimens.dp22,
-                bottom = Dimens.dp24,
-            ),
-            verticalArrangement = Arrangement.spacedBy(Dimens.dp14),
-            content = content,
-        )
+        if (blocked) {
+            Box(
+                modifier = Modifier
+                    .matchParentSize()
+                    .background(MaterialTheme.colorScheme.scrim.copy(alpha = 0.18f))
+                    .pointerInput(Unit) {
+                        awaitPointerEventScope {
+                            while (true) {
+                                awaitPointerEvent().changes.forEach { it.consume() }
+                            }
+                        }
+                    },
+                contentAlignment = Alignment.Center,
+            ) {
+                CircularProgressIndicator()
+            }
+        }
     }
 }
 

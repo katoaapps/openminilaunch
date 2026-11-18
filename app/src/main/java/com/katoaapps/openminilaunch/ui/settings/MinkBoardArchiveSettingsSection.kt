@@ -3,9 +3,11 @@ package com.katoaapps.openminilaunch.ui.settings
 import android.net.Uri
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.FileOpen
 import androidx.compose.material.icons.outlined.SaveAlt
+import androidx.compose.material3.LinearProgressIndicator
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -16,6 +18,7 @@ import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import androidx.fragment.app.FragmentActivity
@@ -71,6 +74,7 @@ internal fun MinkBoardArchiveSettingsSection(
     }
     var workflowError by remember { mutableStateOf<String?>(null) }
     var workflowBusy by remember { mutableStateOf(false) }
+    var documentIoBusy by remember { mutableStateOf(false) }
     var selectedArchives by remember { mutableStateOf<List<OpenMinkSelectedArchive>>(emptyList()) }
     var selectedArchiveSupport by remember { mutableStateOf<List<Boolean>>(emptyList()) }
     var selectedArchiveIndex by remember { mutableStateOf(0) }
@@ -159,6 +163,7 @@ internal fun MinkBoardArchiveSettingsSection(
             bytes?.fill(0)
             return@rememberLauncherForActivityResult
         }
+        documentIoBusy = true
         scope.launch(start = CoroutineStart.UNDISPATCHED) {
             val result = try {
                 withContext(Dispatchers.IO) {
@@ -168,6 +173,7 @@ internal fun MinkBoardArchiveSettingsSection(
                 }
             } finally {
                 bytes.fill(0)
+                documentIoBusy = false
             }
             statusMessage = result.fold(
                 onSuccess = { context.getString(R.string.minkboard_archive_exported) },
@@ -181,30 +187,35 @@ internal fun MinkBoardArchiveSettingsSection(
         ActivityResultContracts.OpenMultipleDocuments(),
     ) { uris: List<Uri> ->
         if (uris.isEmpty()) return@rememberLauncherForActivityResult
+        documentIoBusy = true
         scope.launch {
-            statusMessage = null
-            val result = withContext(Dispatchers.IO) {
-                archiveResult {
-                    OpenMinkArchiveDocumentIo.readArchives(context.contentResolver, uris)
-                }
-            }
-            result.fold(
-                onSuccess = { archives ->
-                    val support = withContext(Dispatchers.Default) {
-                        archives.map { archive -> archiveService.isSupportedArchive(archive.bytes) }
+            try {
+                statusMessage = null
+                val result = withContext(Dispatchers.IO) {
+                    archiveResult {
+                        OpenMinkArchiveDocumentIo.readArchives(context.contentResolver, uris)
                     }
-                    clearSelectedArchives()
-                    selectedArchives = archives
-                    selectedArchiveSupport = support
-                    selectedArchiveIndex = 0
-                    pendingImportResults = emptyList()
-                    prepareCurrentImport()
-                },
-                onFailure = { failure ->
-                    statusMessage = failureMessage(failure)
-                    statusIsError = true
-                },
-            )
+                }
+                result.fold(
+                    onSuccess = { archives ->
+                        val support = withContext(Dispatchers.Default) {
+                            archives.map { archive -> archiveService.isSupportedArchive(archive.bytes) }
+                        }
+                        clearSelectedArchives()
+                        selectedArchives = archives
+                        selectedArchiveSupport = support
+                        selectedArchiveIndex = 0
+                        pendingImportResults = emptyList()
+                        prepareCurrentImport()
+                    },
+                    onFailure = { failure ->
+                        statusMessage = failureMessage(failure)
+                        statusIsError = true
+                    },
+                )
+            } finally {
+                documentIoBusy = false
+            }
         }
     }
 
@@ -255,10 +266,14 @@ internal fun MinkBoardArchiveSettingsSection(
         text = stringResource(R.string.minkboard_archives_description),
         color = Muted,
     )
+    if (documentIoBusy) {
+        LinearProgressIndicator(Modifier.fillMaxWidth())
+    }
     SettingsRow(
         title = stringResource(R.string.minkboard_import_archive),
         subtitle = stringResource(R.string.minkboard_import_archive_description),
         icon = Icons.Outlined.FileOpen,
+        enabled = !documentIoBusy,
         onClick = {
             statusMessage = null
             runCatching {
@@ -279,7 +294,7 @@ internal fun MinkBoardArchiveSettingsSection(
         title = stringResource(R.string.minkboard_export_archive),
         subtitle = stringResource(R.string.minkboard_export_archive_description),
         icon = Icons.Outlined.SaveAlt,
-        enabled = boards.isNotEmpty(),
+        enabled = boards.isNotEmpty() && !documentIoBusy,
         onClick = {
             statusMessage = null
             selectedExportBoardIds = boards.mapTo(linkedSetOf()) { it.board.id }

@@ -69,6 +69,7 @@ internal fun MagicInputField(
     onValueChange: (TextFieldValue) -> Unit,
     route: MagicBoxRoute,
     contentColor: Color,
+    enabled: Boolean,
     acceptPlatformTextInput: Boolean,
     focusRequester: FocusRequester,
     onPlaced: () -> Unit,
@@ -122,6 +123,7 @@ internal fun MagicInputField(
         BasicTextField(
             value = value,
             onValueChange = updateValue,
+            enabled = enabled,
             modifier = modifier
                 .focusRequester(focusRequester)
                 .onGloballyPositioned { onPlaced() }
@@ -158,7 +160,7 @@ internal fun MagicInputField(
                 TextFieldDefaults.DecorationBox(
                     value = value.text,
                     innerTextField = innerTextField,
-                    enabled = true,
+                    enabled = enabled,
                     singleLine = false,
                     visualTransformation = androidx.compose.ui.text.input.VisualTransformation.None,
                     interactionSource = interactionSource,
