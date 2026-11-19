@@ -50,22 +50,4 @@
     <string name="backup_passphrase_description">অন্তত ৮ অক্ষরের একটি পাসফ্রেজ তৈরি করুন। অন্য ডিভাইসে বোর্ড, কার্ড, বিবরণ ও উপকাজ পুনরুদ্ধার করতে ঠিক এই পাসফ্রেজটি লাগবে। OpenMink এটি পুনরুদ্ধার করতে পারে না।</string>
     <string name="backup_passphrase">ব্যাকআপ পাসফ্রেজ</string>
     <string name="backup_passphrase_confirm">পাসফ্রেজ নিশ্চিত করুন</string>
-    <string name="minkboard_archives">বোর্ড স্থানান্তর</string>
-    <string name="minkboard_archives_description">নির্বাচিত বোর্ড OpenMink, MinkBoard Pro এবং অন্যান্য সামঞ্জস্যপূর্ণ MinkBoard অ্যাপের মধ্যে সরান। এটি সম্পূর্ণ লঞ্চার ব্যাকআপ থেকে আলাদা।</string>
-    <string name="minkboard_import_archive">আর্কাইভ আমদানি করুন</string>
-    <string name="minkboard_export_archive">আর্কাইভ রপ্তানি করুন</string>
-    <string name="minkboard_import_archive_description">বর্তমান বোর্ড প্রতিস্থাপন না করে এনক্রিপ্ট করা .minkboard ফাইল থেকে বোর্ড যোগ করুন।</string>
-    <string name="minkboard_export_archive_description">বোর্ড বেছে নিন এবং পাসফ্রেজ দিয়ে বহনযোগ্য ফাইল সুরক্ষিত করুন।</string>
-    <string name="minkboard_select_boards_to_export">রপ্তানির জন্য বোর্ড বেছে নিন</string>
-    <string name="minkboard_select_boards_to_export_description">আর্কাইভে শুধু নির্বাচিত বোর্ড থাকবে।</string>
-    <string name="minkboard_select_all">সব নির্বাচন করুন</string>
-    <string name="minkboard_select_none">সব অনির্বাচন করুন</string>
-    <string name="minkboard_protected_board">সুরক্ষিত বোর্ড</string>
-    <string name="minkboard_archive_export_auth_description">সুরক্ষিত বোর্ড রপ্তানির আগে আপনার পরিচয় নিশ্চিত করুন।</string>
-    <string name="minkboard_archive_imported">বোর্ড আর্কাইভ আমদানি হয়েছে।</string>
-    <string name="minkboard_archive_exported">বোর্ড আর্কাইভ সংরক্ষিত হয়েছে।</string>
-    <string name="minkboard_archive_failed">Mink বোর্ড আর্কাইভের কাজ শেষ করতে পারেনি।</string>
-    <string name="minkboard_archive_wrong_format">একটি এনক্রিপ্ট করা .minkboard আর্কাইভ বেছে নিন।</string>
-    <string name="minkboard_archive_selection_lost">নির্বাচিত আর্কাইভ আর পাওয়া যাচ্ছে না। আবার বেছে নিন।</string>
-    <string name="minkboard_archive_unnamed">আর্কাইভ %1$d</string>
 </resources>

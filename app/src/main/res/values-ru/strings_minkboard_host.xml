@@ -50,22 +50,4 @@
     <string name="backup_passphrase_description">Создайте парольную фразу длиной не менее 8 символов. Она понадобится в точности для восстановления досок, карточек, сведений и подзадач на другом устройстве. OpenMink не сможет её восстановить.</string>
     <string name="backup_passphrase">Парольная фраза резервной копии</string>
     <string name="backup_passphrase_confirm">Подтвердите парольную фразу</string>
-    <string name="minkboard_archives">ПЕРЕНОС ДОСОК</string>
-    <string name="minkboard_archives_description">Переносите выбранные доски между OpenMink, MinkBoard Pro и другими совместимыми приложениями MinkBoard. Это не полная резервная копия лаунчера.</string>
-    <string name="minkboard_import_archive">Импортировать архив</string>
-    <string name="minkboard_export_archive">Экспортировать архив</string>
-    <string name="minkboard_import_archive_description">Добавьте доски из зашифрованного файла .minkboard, не заменяя текущие доски.</string>
-    <string name="minkboard_export_archive_description">Выберите доски и защитите переносимый файл парольной фразой.</string>
-    <string name="minkboard_select_boards_to_export">Выберите доски для экспорта</string>
-    <string name="minkboard_select_boards_to_export_description">В архив войдут только выбранные доски.</string>
-    <string name="minkboard_select_all">Выбрать все</string>
-    <string name="minkboard_select_none">Снять выделение</string>
-    <string name="minkboard_protected_board">Защищённая доска</string>
-    <string name="minkboard_archive_export_auth_description">Подтвердите личность перед экспортом защищённой доски.</string>
-    <string name="minkboard_archive_imported">Архив доски импортирован.</string>
-    <string name="minkboard_archive_exported">Архив доски сохранён.</string>
-    <string name="minkboard_archive_failed">Mink не удалось завершить операцию с архивом доски.</string>
-    <string name="minkboard_archive_wrong_format">Выберите зашифрованный архив .minkboard.</string>
-    <string name="minkboard_archive_selection_lost">Выбранный архив больше недоступен. Выберите его снова.</string>
-    <string name="minkboard_archive_unnamed">Архив %1$d</string>
 </resources>

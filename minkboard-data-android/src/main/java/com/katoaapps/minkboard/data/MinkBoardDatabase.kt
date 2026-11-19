@@ -16,7 +16,7 @@ import androidx.sqlite.db.SupportSQLiteDatabase
         FocusSessionEntity::class,
         LauncherBoardDesignationEntity::class,
     ],
-    version = 5,
+    version = 6,
     exportSchema = true,
 )
 internal abstract class MinkBoardDatabase : RoomDatabase() {
@@ -28,7 +28,13 @@ internal abstract class MinkBoardDatabase : RoomDatabase() {
             MinkBoardDatabase::class.java,
             "minkboard.db",
         )
-            .addMigrations(MIGRATION_1_2, MIGRATION_2_3, MIGRATION_3_4, MIGRATION_4_5)
+            .addMigrations(
+                MIGRATION_1_2,
+                MIGRATION_2_3,
+                MIGRATION_3_4,
+                MIGRATION_4_5,
+                MIGRATION_5_6,
+            )
             .build()
 
         val MIGRATION_1_2 = object : Migration(1, 2) {
@@ -149,6 +155,27 @@ internal abstract class MinkBoardDatabase : RoomDatabase() {
                     """.trimIndent(),
                 )
                 db.execSQL("DROP TABLE `launcher_todo_binding`")
+            }
+        }
+
+        val MIGRATION_5_6 = object : Migration(5, 6) {
+            override fun migrate(db: SupportSQLiteDatabase) {
+                db.execSQL("DROP INDEX IF EXISTS `index_board_columns_board_id`")
+                db.execSQL("DROP INDEX IF EXISTS `index_cards_column_id`")
+                db.execSQL("DROP INDEX IF EXISTS `index_subtasks_card_id`")
+                db.execSQL(
+                    "CREATE INDEX IF NOT EXISTS " +
+                        "`index_board_columns_board_id_position_column_id` " +
+                        "ON `board_columns` (`board_id`, `position`, `column_id`)",
+                )
+                db.execSQL(
+                    "CREATE INDEX IF NOT EXISTS `index_cards_column_id_position_card_id` " +
+                        "ON `cards` (`column_id`, `position`, `card_id`)",
+                )
+                db.execSQL(
+                    "CREATE INDEX IF NOT EXISTS `index_subtasks_card_id_position_subtask_id` " +
+                        "ON `subtasks` (`card_id`, `position`, `subtask_id`)",
+                )
             }
         }
     }

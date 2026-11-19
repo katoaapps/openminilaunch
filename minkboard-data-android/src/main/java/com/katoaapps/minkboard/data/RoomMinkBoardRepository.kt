@@ -8,12 +8,14 @@ import com.katoaapps.minkboard.core.FocusTimerStore
 import com.katoaapps.minkboard.core.LauncherBoardBackupDesignation
 import com.katoaapps.minkboard.core.LauncherBoardDesignation
 import com.katoaapps.minkboard.core.LauncherBoardIntegrationStore
+import com.katoaapps.minkboard.core.LauncherBoardDesignationCandidate
 import com.katoaapps.minkboard.core.LauncherBoardHostSnapshot
 import com.katoaapps.minkboard.core.LauncherBindingProblem
 import com.katoaapps.minkboard.core.LauncherBackupCreationResult
 import com.katoaapps.minkboard.core.LauncherBackupRestoreContext
 import com.katoaapps.minkboard.core.LauncherBackupRestorePlan
 import com.katoaapps.minkboard.core.LauncherBoundIntakeWriteResult
+import com.katoaapps.minkboard.core.LauncherCardCompletionWriteResult
 import com.katoaapps.minkboard.core.LauncherExistingBoardDesignationResult
 import com.katoaapps.minkboard.core.LauncherFreshBoardDesignationResult
 import com.katoaapps.minkboard.core.LauncherFreshBoardRequest
@@ -41,6 +43,7 @@ import com.katoaapps.minkboard.model.BoardSummary
 import com.katoaapps.minkboard.model.BoardUpdate
 import com.katoaapps.minkboard.model.CardDraft
 import com.katoaapps.minkboard.model.CardId
+import com.katoaapps.minkboard.model.CardPlacement
 import com.katoaapps.minkboard.model.CardUpdate
 import com.katoaapps.minkboard.model.MinkBoardWorkspace
 import com.katoaapps.minkboard.model.PortableBoardSnapshot
@@ -74,6 +77,7 @@ class RoomMinkBoardRepository internal constructor(
     private val dao = database.boardDao()
     private val entityMapper = EncryptedEntityMapper(cipher)
     private val archiveValidator = PortableArchiveValidator()
+    private val focusTimerStore = RoomFocusTimerStore(database, dao, cipher)
 
     override fun observeWorkspace(): Flow<MinkBoardWorkspace> = dao.observeWorkspace()
         .map { graphs ->
@@ -97,9 +101,8 @@ class RoomMinkBoardRepository internal constructor(
     override suspend fun board(boardId: BoardId): BoardSnapshot? =
         dao.boardGraph(boardId.value)?.let(entityMapper::mapBoard)
 
-    override fun observeFocusSession(): Flow<FocusSession?> = dao.observeFocusSession()
-        .map { it?.toModel() }
-        .flowOn(Dispatchers.Default)
+    override fun observeFocusSession(): Flow<FocusSession?> =
+        focusTimerStore.observeFocusSession()
 
     override fun observeLauncherBoardHostSnapshot(): Flow<LauncherBoardHostSnapshot> =
         dao.observeLauncherHostInvalidations(LAUNCHER_HOST_INVALIDATION_QUERY)
@@ -113,6 +116,16 @@ class RoomMinkBoardRepository internal constructor(
         database.withTransaction {
             dao.launcherBoardDesignation()?.toModel()
         }
+
+    override suspend fun launcherBoardDesignationCandidate(
+        boardId: BoardId,
+    ): LauncherBoardDesignationCandidate? = dao.boardDesignationCandidate(boardId.value)?.let { row ->
+        LauncherBoardDesignationCandidate(
+            boardId = BoardId(row.boardId),
+            isLocked = row.isLocked,
+            intakeStatusId = row.intakeStatusId?.let(::StatusId),
+        )
+    }
 
     /** Caller must already hold [database]'s transaction. */
     private suspend fun launcherBoardHostSnapshotInTransaction(): LauncherBoardHostSnapshot {
@@ -215,6 +228,38 @@ class RoomMinkBoardRepository internal constructor(
         }
         LauncherBoundIntakeWriteResult.Added(
             insertCardInTransaction(designation.intakeStatusId, draft),
+        )
+    }
+
+    override suspend fun toggleBoundCardCompletion(
+        cardId: CardId,
+    ): LauncherCardCompletionWriteResult = database.withTransaction {
+        val designation = dao.launcherBoardDesignation()?.toModel()
+            ?: return@withTransaction LauncherCardCompletionWriteResult.Unbound
+        designationProblem(designation)?.let { problem ->
+            return@withTransaction LauncherCardCompletionWriteResult.BrokenBinding(problem)
+        }
+        val card = dao.card(cardId.value)
+            ?: return@withTransaction LauncherCardCompletionWriteResult.CardMissing
+        val source = dao.status(card.statusId)
+            ?: return@withTransaction LauncherCardCompletionWriteResult.CardMissing
+        if (source.boardId != designation.boardId.value) {
+            return@withTransaction LauncherCardCompletionWriteResult.CardMissing
+        }
+
+        val destination = if (source.isDone) {
+            designation.intakeStatusId
+        } else {
+            dao.statusIds(designation.boardId.value)
+                .mapNotNull { dao.status(it) }
+                .firstOrNull(StatusEntity::isDone)
+                ?.id
+                ?.let(::StatusId)
+                ?: createDefaultDoneStatusInTransaction(designation.boardId)
+        }
+        moveCardInTransaction(card, destination, position = 0)
+        LauncherCardCompletionWriteResult.Updated(
+            CardPlacement(cardId = cardId, statusId = destination, position = 0),
         )
     }
 
@@ -563,6 +608,27 @@ class RoomMinkBoardRepository internal constructor(
             id
         }
 
+    /** Caller must already hold [database]'s transaction. */
+    private suspend fun createDefaultDoneStatusInTransaction(boardId: BoardId): StatusId {
+        val done = MinkBoardDefaults.statuses.first { it.isDone }
+        val id = StatusId(idFactory())
+        dao.insertStatus(
+            StatusEntity(
+                id = id.value,
+                boardId = boardId.value,
+                encryptedName = cipher.encrypt(
+                    MinkBoardRules.statusName(done.name),
+                    subject = statusSubject(id.value),
+                    field = FIELD_NAME,
+                ),
+                colorArgb = done.colorArgb,
+                isDone = true,
+                position = dao.maxStatusPosition(boardId.value) + 1,
+            ),
+        )
+        return id
+    }
+
     override suspend fun updateStatus(statusId: StatusId, update: StatusUpdate) {
         database.withTransaction {
             val status = requireNotNull(dao.status(statusId.value)) { "Unknown status" }
@@ -777,56 +843,65 @@ class RoomMinkBoardRepository internal constructor(
     override suspend fun moveCard(cardId: CardId, destination: StatusId, position: Int) {
         database.withTransaction {
             val card = requireNotNull(dao.card(cardId.value)) { "Unknown card" }
-            val sourceStatus = requireNotNull(dao.status(card.statusId)) { "Unknown source status" }
-            val destinationStatus = requireNotNull(dao.status(destination.value)) {
-                "Unknown destination status"
-            }
-            require(sourceStatus.boardId == destinationStatus.boardId) {
-                "Cards cannot move between boards"
-            }
+            moveCardInTransaction(card, destination, position)
+        }
+    }
 
-            val sourcePosition = card.position
-            if (card.statusId == destination.value) {
-                val destinationIndex = position.coerceIn(0, dao.cardCount(destination.value) - 1)
-                when {
-                    destinationIndex < sourcePosition -> dao.shiftCardPositions(
-                        statusId = destination.value,
-                        fromInclusive = destinationIndex,
-                        toInclusive = sourcePosition - 1,
-                        delta = 1,
-                    )
-                    destinationIndex > sourcePosition -> dao.shiftCardPositions(
-                        statusId = destination.value,
-                        fromInclusive = sourcePosition + 1,
-                        toInclusive = destinationIndex,
-                        delta = -1,
-                    )
-                }
-                if (destinationIndex != sourcePosition) {
-                    dao.moveCard(cardId.value, destination.value, destinationIndex, clockMillis())
-                }
-            } else {
-                val destinationIndex = position.coerceIn(0, dao.cardCount(destination.value))
-                val sourceLastPosition = dao.maxCardPosition(card.statusId)
-                if (sourcePosition < sourceLastPosition) {
-                    dao.shiftCardPositions(
-                        statusId = card.statusId,
-                        fromInclusive = sourcePosition + 1,
-                        toInclusive = sourceLastPosition,
-                        delta = -1,
-                    )
-                }
-                val destinationLastPosition = dao.maxCardPosition(destination.value)
-                if (destinationIndex <= destinationLastPosition) {
-                    dao.shiftCardPositions(
-                        statusId = destination.value,
-                        fromInclusive = destinationIndex,
-                        toInclusive = destinationLastPosition,
-                        delta = 1,
-                    )
-                }
-                dao.moveCard(cardId.value, destination.value, destinationIndex, clockMillis())
+    /** Caller must already hold [database]'s transaction. */
+    private suspend fun moveCardInTransaction(
+        card: CardEntity,
+        destination: StatusId,
+        position: Int,
+    ) {
+        val sourceStatus = requireNotNull(dao.status(card.statusId)) { "Unknown source status" }
+        val destinationStatus = requireNotNull(dao.status(destination.value)) {
+            "Unknown destination status"
+        }
+        require(sourceStatus.boardId == destinationStatus.boardId) {
+            "Cards cannot move between boards"
+        }
+
+        val sourcePosition = card.position
+        if (card.statusId == destination.value) {
+            val destinationIndex = position.coerceIn(0, dao.cardCount(destination.value) - 1)
+            when {
+                destinationIndex < sourcePosition -> dao.shiftCardPositions(
+                    statusId = destination.value,
+                    fromInclusive = destinationIndex,
+                    toInclusive = sourcePosition - 1,
+                    delta = 1,
+                )
+                destinationIndex > sourcePosition -> dao.shiftCardPositions(
+                    statusId = destination.value,
+                    fromInclusive = sourcePosition + 1,
+                    toInclusive = destinationIndex,
+                    delta = -1,
+                )
             }
+            if (destinationIndex != sourcePosition) {
+                dao.moveCard(card.id, destination.value, destinationIndex, clockMillis())
+            }
+        } else {
+            val destinationIndex = position.coerceIn(0, dao.cardCount(destination.value))
+            val sourceLastPosition = dao.maxCardPosition(card.statusId)
+            if (sourcePosition < sourceLastPosition) {
+                dao.shiftCardPositions(
+                    statusId = card.statusId,
+                    fromInclusive = sourcePosition + 1,
+                    toInclusive = sourceLastPosition,
+                    delta = -1,
+                )
+            }
+            val destinationLastPosition = dao.maxCardPosition(destination.value)
+            if (destinationIndex <= destinationLastPosition) {
+                dao.shiftCardPositions(
+                    statusId = destination.value,
+                    fromInclusive = destinationIndex,
+                    toInclusive = destinationLastPosition,
+                    delta = 1,
+                )
+            }
+            dao.moveCard(card.id, destination.value, destinationIndex, clockMillis())
         }
     }
 
@@ -901,49 +976,17 @@ class RoomMinkBoardRepository internal constructor(
         }
     }
 
-    override suspend fun currentFocusTimer(): FocusTimerSnapshot? = database.withTransaction {
-        dao.focusSession()?.let { focusSnapshot(it) }
-    }
+    override suspend fun currentFocusTimer(): FocusTimerSnapshot? =
+        focusTimerStore.currentFocusTimer()
 
     override suspend fun replaceFocusTimer(session: FocusSession): FocusTimerSnapshot =
-        database.withTransaction {
-            val board = requireNotNull(dao.board(session.boardId.value)) { "Unknown timer board" }
-            val card = requireNotNull(dao.card(session.cardId.value)) { "Unknown timer card" }
-            val status = requireNotNull(dao.status(card.statusId)) { "Unknown timer status" }
-            require(status.boardId == board.id) { "Timer card does not belong to its board" }
-            dao.replaceFocusSession(session.toEntity())
-            focusSnapshot(session.toEntity())
-        }
+        focusTimerStore.replaceFocusTimer(session)
 
     override suspend fun finishFocusTimer(timerId: FocusTimerId): FocusTimerSnapshot? =
-        database.withTransaction {
-            if (dao.setFocusSessionState(timerId.value, FOCUS_STATE_FINISHED) == 0) {
-                return@withTransaction null
-            }
-            dao.focusSession()?.let { focusSnapshot(it) }
-        }
+        focusTimerStore.finishFocusTimer(timerId)
 
     override suspend fun clearFocusTimer(timerId: FocusTimerId): Boolean =
-        database.withTransaction { dao.deleteFocusSession(timerId.value) > 0 }
-
-    private suspend fun focusSnapshot(entity: FocusSessionEntity): FocusTimerSnapshot {
-        val card = requireNotNull(dao.card(entity.cardId)) { "Timer card is missing" }
-        val board = requireNotNull(dao.board(entity.boardId)) { "Timer board is missing" }
-        return FocusTimerSnapshot(
-            session = entity.toModel(),
-            cardTitle = cipher.decrypt(
-                card.encryptedTitle,
-                cardSubject(card.id),
-                FIELD_TITLE,
-            ),
-            cardDetails = cipher.decrypt(
-                card.encryptedDetails,
-                cardSubject(card.id),
-                FIELD_DETAILS,
-            ),
-            boardIsLocked = board.isLocked,
-        )
-    }
+        focusTimerStore.clearFocusTimer(timerId)
 
     /**
      * Builds the complete merge graph before the first insert. Incoming IDs are never reused,
@@ -1401,34 +1444,7 @@ private fun requireFingerprint(value: String) {
     }
 }
 
-private const val FOCUS_STATE_RUNNING = "running"
-private const val FOCUS_STATE_FINISHED = "finished"
 private const val SHA_256_HEX_LENGTH = 64
-
-private fun FocusSession.toEntity() = FocusSessionEntity(
-    timerId = id.value,
-    boardId = boardId.value,
-    cardId = cardId.value,
-    startedAtEpochMillis = startedAtEpochMillis,
-    endsAtEpochMillis = endsAtEpochMillis,
-    state = when (state) {
-        FocusSessionState.Running -> FOCUS_STATE_RUNNING
-        FocusSessionState.Finished -> FOCUS_STATE_FINISHED
-    },
-)
-
-private fun FocusSessionEntity.toModel() = FocusSession(
-    id = FocusTimerId(timerId),
-    boardId = BoardId(boardId),
-    cardId = CardId(cardId),
-    startedAtEpochMillis = startedAtEpochMillis,
-    endsAtEpochMillis = endsAtEpochMillis,
-    state = when (state) {
-        FOCUS_STATE_RUNNING -> FocusSessionState.Running
-        FOCUS_STATE_FINISHED -> FocusSessionState.Finished
-        else -> error("Unknown focus timer state")
-    },
-)
 
 private fun FieldCipher.reencrypt(
     ciphertext: ByteArray,

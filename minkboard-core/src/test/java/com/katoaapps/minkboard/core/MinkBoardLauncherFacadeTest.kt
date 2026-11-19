@@ -917,6 +917,19 @@ class MinkBoardLauncherFacadeTest {
 
         override suspend fun launcherBoardDesignation(): LauncherBoardDesignation? = designation.value
 
+        override suspend fun launcherBoardDesignationCandidate(
+            boardId: BoardId,
+        ): LauncherBoardDesignationCandidate? = repository.workspace.value.board(boardId)?.let { board ->
+            LauncherBoardDesignationCandidate(
+                boardId = board.board.id,
+                isLocked = board.board.isLocked,
+                intakeStatusId = board.statuses
+                    .sortedBy { it.position }
+                    .firstOrNull { !it.isDoneStatus }
+                    ?.id,
+            )
+        }
+
         fun publishHostSnapshot() {
             hostSnapshot.value = LauncherBoardHostSnapshot(
                 workspace = repository.workspace.value,
@@ -1043,6 +1056,10 @@ class MinkBoardLauncherFacadeTest {
             lastAddedDraft = draft
             return LauncherBoundIntakeWriteResult.Added(CardId("added-card"))
         }
+
+        override suspend fun toggleBoundCardCompletion(
+            cardId: CardId,
+        ): LauncherCardCompletionWriteResult = LauncherCardCompletionWriteResult.CardMissing
 
         override suspend fun recordLegacyProjectionWritten(
             generation: String,

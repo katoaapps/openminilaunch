@@ -6,10 +6,16 @@ import androidx.compose.material.icons.filled.Checklist
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.platform.LocalContext
 import com.katoaapps.minkboard.model.BoardId
 import com.katoaapps.minkboard.model.CardId
+import com.katoaapps.minkboard.model.CardPlacement
+import com.katoaapps.minkboard.model.FocusSessionState
+import com.katoaapps.minkboard.model.StatusId
 import com.katoaapps.openminilaunch.R
 import com.katoaapps.openminilaunch.data.LauncherStore
 import com.katoaapps.openminilaunch.features.minkspace.MinkSpaceMiniApp
@@ -19,6 +25,8 @@ import com.katoaapps.openminilaunch.ui.minkspace.core.MinkSpaceApp
 import com.katoaapps.openminilaunch.ui.minkspace.core.MinkSpaceMiniAppManifest
 import com.katoaapps.openminilaunch.ui.minkspace.core.MinkSpaceMiniAppSettingsTarget
 import com.katoaapps.openminilaunch.ui.minkspace.core.MinkSpaceScope
+import com.katoaapps.openminilaunch.ui.minkboard.OpenMinkHomeCardDialog
+import kotlinx.coroutines.flow.catch
 
 /** Todo's complete MinkSpace adapter. The feature only receives platform primitives through [MinkSpaceScope]. */
 internal class TodoMinkSpaceApp(
@@ -34,12 +42,22 @@ internal class TodoMinkSpaceApp(
     override fun Content(scope: MinkSpaceScope, modifier: Modifier) {
         val runtime = LocalContext.current.openMinkMinkBoardRuntime
         val boardAccessRevision by runtime.boardAccessRevision.collectAsState()
+        val activeFocusSession by remember(runtime) {
+            runtime.repository.observeFocusSession().catch { emit(null) }
+        }.collectAsState(initial = null)
+        var openCardIdValue by remember { mutableStateOf<String?>(null) }
+        var cardRevealSequence by remember { mutableStateOf(0) }
+        var cardRevealRequest by remember { mutableStateOf<CompactCardRevealRequest?>(null) }
+        val openHomeBoard = {
+            runtime.requestHomeBoardNavigation()
+            openTodos()
+        }
         scope.Surface(modifier = modifier) {
             if (store.demoModeEnabled) {
                 TodoPager(
                     items = store.demoTodos,
                     onToggle = store::toggleDemoTodo,
-                    openTodos = openTodos,
+                    openTodos = openHomeBoard,
                     jumpToken = jumpToken,
                     itemsPerPage = itemsPerPage,
                     textMetrics = textMetrics,
@@ -51,9 +69,24 @@ internal class TodoMinkSpaceApp(
             } else {
                 MinkBoardTodoPager(
                     controller = runtime.launcherController,
-                    openBoard = openTodos,
-                    openCard = { boardId: BoardId, cardId: CardId ->
-                        runtime.requestNavigation(boardId, cardId)
+                    openBoard = openHomeBoard,
+                    openStatus = { boardId: BoardId, statusId: StatusId ->
+                        runtime.requestNavigation(boardId, statusId = statusId)
+                        openTodos()
+                    },
+                    openCard = { _: BoardId, cardId: CardId ->
+                        openCardIdValue = cardId.value
+                    },
+                    cardRevealRequest = cardRevealRequest,
+                    initialPosition = runtime.readCompactHomePosition(),
+                    onPositionChanged = runtime::rememberCompactHomePosition,
+                    focusedCardId = activeFocusSession
+                        ?.takeIf { it.state == FocusSessionState.Running }
+                        ?.cardId,
+                    onCardRevealFinished = { sequence ->
+                        if (cardRevealRequest?.sequence == sequence) {
+                            cardRevealRequest = null
+                        }
                     },
                     boardAccessRevision = boardAccessRevision,
                     isBoardAccessGranted = runtime.boardAccessSessions::isGranted,
@@ -66,6 +99,20 @@ internal class TodoMinkSpaceApp(
                     modifier = Modifier.fillMaxSize(),
                 )
             }
+        }
+        openCardIdValue?.let { cardIdValue ->
+            OpenMinkHomeCardDialog(
+                controller = runtime.launcherController,
+                cardId = CardId(cardIdValue),
+                onDismiss = { openCardIdValue = null },
+                onCardPlacementChanged = { placement: CardPlacement ->
+                    cardRevealSequence += 1
+                    cardRevealRequest = CompactCardRevealRequest(
+                        sequence = cardRevealSequence,
+                        placement = placement,
+                    )
+                },
+            )
         }
     }
 

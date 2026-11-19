@@ -50,22 +50,4 @@
     <string name="backup_passphrase_description">کم از کم 8 حروف پر مشتمل پاس فریز بنائیں۔ دوسرے ڈیوائس پر بورڈز، کارڈز، تفصیلات اور ذیلی کام بحال کرنے کے لیے بالکل یہی پاس فریز درکار ہو گا۔ OpenMink اسے بازیافت نہیں کر سکتا۔</string>
     <string name="backup_passphrase">بیک اپ پاس فریز</string>
     <string name="backup_passphrase_confirm">پاس فریز کی تصدیق کریں</string>
-    <string name="minkboard_archives">بورڈ منتقلی</string>
-    <string name="minkboard_archives_description">منتخب بورڈز کو OpenMink، MinkBoard Pro اور دیگر ہم آہنگ MinkBoard ایپس کے درمیان منتقل کریں۔ یہ مکمل لانچر بیک اپ سے الگ ہے۔</string>
-    <string name="minkboard_import_archive">آرکائیو درآمد کریں</string>
-    <string name="minkboard_export_archive">آرکائیو برآمد کریں</string>
-    <string name="minkboard_import_archive_description">موجودہ بورڈز کو بدلے بغیر خفیہ کردہ .minkboard فائل سے بورڈز شامل کریں۔</string>
-    <string name="minkboard_export_archive_description">بورڈز منتخب کریں اور قابل منتقلی فائل کو پاس فریز سے محفوظ کریں۔</string>
-    <string name="minkboard_select_boards_to_export">برآمد کرنے کے لیے بورڈز منتخب کریں</string>
-    <string name="minkboard_select_boards_to_export_description">آرکائیو میں صرف منتخب بورڈز شامل ہوں گے۔</string>
-    <string name="minkboard_select_all">سب منتخب کریں</string>
-    <string name="minkboard_select_none">سب کا انتخاب ختم کریں</string>
-    <string name="minkboard_protected_board">محفوظ بورڈ</string>
-    <string name="minkboard_archive_export_auth_description">محفوظ بورڈ برآمد کرنے سے پہلے اپنی شناخت کی تصدیق کریں۔</string>
-    <string name="minkboard_archive_imported">بورڈ آرکائیو درآمد ہو گیا۔</string>
-    <string name="minkboard_archive_exported">بورڈ آرکائیو محفوظ ہو گیا۔</string>
-    <string name="minkboard_archive_failed">Mink بورڈ آرکائیو کا عمل مکمل نہیں کر سکا۔</string>
-    <string name="minkboard_archive_wrong_format">خفیہ کردہ .minkboard آرکائیو منتخب کریں۔</string>
-    <string name="minkboard_archive_selection_lost">منتخب آرکائیو اب دستیاب نہیں ہے۔ اسے دوبارہ منتخب کریں۔</string>
-    <string name="minkboard_archive_unnamed">آرکائیو %1$d</string>
 </resources>

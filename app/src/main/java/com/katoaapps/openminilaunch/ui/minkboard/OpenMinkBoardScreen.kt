@@ -23,7 +23,6 @@ import androidx.fragment.app.FragmentActivity
 import com.katoaapps.minkboard.model.Board
 import com.katoaapps.minkboard.core.MinkBoardCapability
 import com.katoaapps.minkboard.core.MinkBoardHostAccess
-import com.katoaapps.minkboard.core.MinkBoardRules
 import com.katoaapps.minkboard.core.OpenMinkFullPolicy
 import com.katoaapps.minkboard.model.BoardId
 import com.katoaapps.minkboard.model.BoardUpdate
@@ -31,11 +30,13 @@ import com.katoaapps.minkboard.model.CardId
 import com.katoaapps.minkboard.model.CardPlacement
 import com.katoaapps.minkboard.model.CardUpdate
 import com.katoaapps.minkboard.model.FocusTimerId
+import com.katoaapps.minkboard.model.StatusId
 import com.katoaapps.minkboard.ui.MinkBoardActions
 import com.katoaapps.minkboard.ui.MinkBoardApp
 import com.katoaapps.minkboard.ui.MinkBoardEditorState
 import com.katoaapps.minkboard.ui.MinkBoardTheme
 import com.katoaapps.openminilaunch.R
+import com.katoaapps.openminilaunch.features.minkboard.OpenMinkCardActionController
 import com.katoaapps.openminilaunch.features.minkboard.access.AndroidBoardAuthenticator
 import com.katoaapps.openminilaunch.features.minkboard.access.BoardAuthenticationAvailability
 import com.katoaapps.openminilaunch.features.minkboard.access.BoardAuthenticationResult
@@ -61,9 +62,13 @@ internal fun OpenMinkBoardScreen(
 ) {
     val context = LocalContext.current
     val runtime = remember(context) { context.openMinkMinkBoardRuntime }
+    val cardActionController = remember(runtime) {
+        OpenMinkCardActionController(runtime.repository, runtime.focusTimerCoordinator)
+    }
     val scope = rememberCoroutineScope()
     var selectedBoardIdValue by rememberSaveable { mutableStateOf<String?>(null) }
     var openCardIdValue by rememberSaveable { mutableStateOf<String?>(null) }
+    var openStatusIdValue by rememberSaveable { mutableStateOf<String?>(null) }
     var editorState by remember { mutableStateOf<MinkBoardEditorState>(MinkBoardEditorState.None) }
     var actionError by remember { mutableStateOf<String?>(null) }
     var loading by remember { mutableStateOf(true) }
@@ -82,7 +87,7 @@ internal fun OpenMinkBoardScreen(
     }
     val selectedBoard by selectedBoardFlow
         .catch { failure ->
-            actionError = failure.message ?: context.getString(R.string.minkboard_change_failed)
+            actionError = context.openMinkBoardErrorMessage(failure)
             emit(null)
         }
         .collectAsState(initial = null)
@@ -112,8 +117,7 @@ internal fun OpenMinkBoardScreen(
             runCatching { block() }
                 .onSuccess { onSuccess() }
                 .onFailure { failure ->
-                    actionError = failure.message
-                        ?: context.getString(R.string.minkboard_change_failed)
+                    actionError = context.openMinkBoardErrorMessage(failure)
                 }
         }
     }
@@ -124,8 +128,7 @@ internal fun OpenMinkBoardScreen(
             runCatching { block() }
                 .onSuccess(onSuccess)
                 .onFailure { failure ->
-                    actionError = failure.message
-                        ?: context.getString(R.string.minkboard_change_failed)
+                    actionError = context.openMinkBoardErrorMessage(failure)
                 }
         }
     }
@@ -172,11 +175,11 @@ internal fun OpenMinkBoardScreen(
     fun startFocus(request: PendingFocusRequest) {
         mutate {
             when (
-                val result = runtime.focusTimerCoordinator.start(
-                    boardId = request.boardId,
-                    cardId = request.cardId,
-                    durationMillis = request.durationMillis,
-                    replaceCurrent = request.replace,
+                val result = cardActionController.startFocus(
+                    request.boardId,
+                    request.cardId,
+                    request.durationMillis,
+                    request.replace,
                 )
             ) {
                 is StartFocusTimerResult.ActiveTimerExists -> {
@@ -219,6 +222,7 @@ internal fun OpenMinkBoardScreen(
                 ?: designation?.boardId?.value
                 ?: boards.minByOrNull { it.board.position }?.board?.id?.value
             openCardIdValue = null
+            openStatusIdValue = null
         }
     }
     LaunchedEffect(selectedBoardIdValue, boards) {
@@ -233,11 +237,22 @@ internal fun OpenMinkBoardScreen(
         navigationLoading = true
         val targetBoard = try {
             val board = runtime.repository.board(request.boardId)
-            val requestedCardExists = request.cardId == null ||
-                board?.cards?.any { it.id == request.cardId } == true
-            if (board == null || !requestedCardExists) {
+            val requestedCard = request.cardId?.let { requestedId ->
+                board?.cards?.firstOrNull { it.id == requestedId }
+            }
+            val requestedStatusId = request.statusId ?: requestedCard?.statusId
+            val targetExists = board != null &&
+                (request.cardId == null || requestedCard != null) &&
+                (requestedStatusId == null || board.statuses.any { it.id == requestedStatusId })
+            if (!targetExists) {
                 runtime.consumeNavigationRequest(request.token)
-                actionError = context.getString(R.string.minkboard_focus_card_unavailable)
+                actionError = context.getString(
+                    if (request.cardId != null) {
+                        R.string.minkboard_focus_card_unavailable
+                    } else {
+                        R.string.minkboard_change_failed
+                    },
+                )
                 return@LaunchedEffect
             }
             board
@@ -246,8 +261,13 @@ internal fun OpenMinkBoardScreen(
         }
         selectedBoardIdValue = request.boardId.value
         openCardIdValue = null
+        openStatusIdValue = null
         editorState = MinkBoardEditorState.None
         requestBoardAccess(targetBoard.board) {
+            openStatusIdValue = request.statusId?.value
+                ?: request.cardId?.let { requestedId ->
+                    targetBoard.cards.firstOrNull { it.id == requestedId }?.statusId?.value
+                }
             openCardIdValue = request.cardId?.value
             runtime.consumeNavigationRequest(request.token)
         }
@@ -283,6 +303,7 @@ internal fun OpenMinkBoardScreen(
                 ) {
                     selectedBoardIdValue = boardId.value
                     openCardIdValue = null
+                    openStatusIdValue = null
                     editorState = MinkBoardEditorState.None
                 }
             }
@@ -419,63 +440,47 @@ internal fun OpenMinkBoardScreen(
             mutateResult(onSuccess) {
                 val activeBoard = selectedBoard
                     ?: error(context.getString(R.string.minkboard_card_unavailable))
-                val source = activeBoard.cards.firstOrNull { it.id == cardId }
-                    ?: error(context.getString(R.string.minkboard_card_unavailable))
-                val sourceIndex = activeBoard.cardsIn(source.statusId)
-                    .indexOfFirst { it.id == source.id }
-                    .takeIf { it >= 0 }
-                    ?: error(context.getString(R.string.minkboard_card_unavailable))
-                val suffix = duplicateSuffix.trim().takeIf(String::isNotEmpty)
-                    ?.let { " ($it)" }.orEmpty()
-                val baseLength = (MinkBoardRules.MAX_CARD_TITLE_LENGTH - suffix.length)
-                    .coerceAtLeast(0)
-                val duplicateTitle = (source.title.take(baseLength).trimEnd() + suffix)
-                    .take(MinkBoardRules.MAX_CARD_TITLE_LENGTH)
-                CardPlacement(
-                    cardId = runtime.repository.cloneCard(cardId, duplicateTitle),
-                    statusId = source.statusId,
-                    position = sourceIndex + 1,
-                )
+                cardActionController.cloneCard(activeBoard, cardId, duplicateSuffix)
             }
         },
         updateCardAndMove = { cardId, update, destination, onSuccess ->
             mutateResult(onSuccess) {
                 val activeBoard = selectedBoard
                     ?: error(context.getString(R.string.minkboard_card_unavailable))
-                val source = activeBoard.cards.firstOrNull { it.id == cardId }
-                    ?: error(context.getString(R.string.minkboard_card_unavailable))
-                runtime.repository.updateCard(cardId, update)
-                if (source.statusId != destination) {
-                    val destinationIndex = activeBoard.cardsIn(destination).size
-                    runtime.repository.moveCard(cardId, destination, Int.MAX_VALUE)
-                    CardPlacement(cardId, destination, destinationIndex)
-                } else {
-                    null
-                }
+                cardActionController.updateCardAndMove(
+                    activeBoard,
+                    cardId,
+                    update,
+                    destination,
+                )
             }
         },
         moveCard = { cardId, statusId, position ->
             mutate { runtime.repository.moveCard(cardId, statusId, position) }
         },
+        moveCardAndReport = { cardId, statusId, position, onSuccess ->
+            mutateResult(onSuccess) {
+                cardActionController.moveCard(cardId, statusId, position)
+            }
+        },
         deleteCard = { cardId, onSuccess ->
             mutate({
                 openCardIdValue = null
-                scope.launch { runtime.focusTimerCoordinator.reconcile() }
                 onSuccess()
             }) {
-                runtime.repository.deleteCard(cardId)
+                cardActionController.deleteCard(cardId)
             }
         },
         addSubtask = { cardId, text, onSuccess ->
-            mutate(onSuccess) { runtime.repository.addSubtask(cardId, text) }
+            mutate(onSuccess) { cardActionController.addSubtask(cardId, text) }
         },
         updateSubtask = { id, text, onSuccess ->
-            mutate(onSuccess) { runtime.repository.updateSubtask(id, text) }
+            mutate(onSuccess) { cardActionController.updateSubtask(id, text) }
         },
         setSubtaskCompleted = { id, completed ->
-            mutate { runtime.repository.setSubtaskCompleted(id, completed) }
+            mutate { cardActionController.setSubtaskCompleted(id, completed) }
         },
-        deleteSubtask = { id -> mutate { runtime.repository.deleteSubtask(id) } },
+        deleteSubtask = { id -> mutate { cardActionController.deleteSubtask(id) } },
         openCard = { boardId, cardId ->
             boards.firstOrNull { it.board.id == boardId }?.let { summary ->
                 requestBoardAccess(summary.board) {
@@ -506,7 +511,7 @@ internal fun OpenMinkBoardScreen(
             }
         },
         stopFocus = { timerId: FocusTimerId ->
-            mutate { runtime.focusTimerCoordinator.stop(timerId) }
+            mutate { cardActionController.stopFocus(timerId) }
         },
         clearActionError = { actionError = null },
     )
@@ -517,6 +522,7 @@ internal fun OpenMinkBoardScreen(
             selectedBoard = selectedBoard,
             hostAccess = MinkBoardHostAccess.full(OpenMinkFullPolicy),
             openCardId = openCardId,
+            openStatusId = openStatusIdValue?.let(::StatusId),
             isBoardAccessible = { boardId ->
                 // Capturing the revision makes access grants observable to this stateless shell.
                 boardAccessRevision.let {

@@ -248,7 +248,6 @@ internal fun MiniLaunchApp(
                                     },
                                     openTodos = {
                                         screen = Screen.TODOS
-                                        minkBoardRuntime.requestHomeBoardNavigation()
                                     },
                                     openVCardSettings = {
                                         openVirtualContactCard(context)

@@ -50,22 +50,4 @@
     <string name="backup_passphrase_description">8자 이상의 암호를 만드세요. 다른 기기에서 보드, 카드, 세부 정보, 하위 작업을 복원하려면 정확히 같은 암호가 필요합니다. OpenMink에서는 복구할 수 없습니다.</string>
     <string name="backup_passphrase">백업 암호</string>
     <string name="backup_passphrase_confirm">암호 확인</string>
-    <string name="minkboard_archives">보드 전송</string>
-    <string name="minkboard_archives_description">선택한 보드를 OpenMink, MinkBoard Pro 및 기타 호환 MinkBoard 앱 간에 이동합니다. 전체 런처 백업과는 별개입니다.</string>
-    <string name="minkboard_import_archive">보관 파일 가져오기</string>
-    <string name="minkboard_export_archive">보관 파일 내보내기</string>
-    <string name="minkboard_import_archive_description">현재 보드를 바꾸지 않고 암호화된 .minkboard 파일에서 보드를 추가합니다.</string>
-    <string name="minkboard_export_archive_description">보드를 선택하고 암호로 이동식 파일을 보호합니다.</string>
-    <string name="minkboard_select_boards_to_export">내보낼 보드 선택</string>
-    <string name="minkboard_select_boards_to_export_description">보관 파일에는 선택한 보드만 포함됩니다.</string>
-    <string name="minkboard_select_all">모두 선택</string>
-    <string name="minkboard_select_none">모두 선택 해제</string>
-    <string name="minkboard_protected_board">보호된 보드</string>
-    <string name="minkboard_archive_export_auth_description">보호된 보드를 내보내기 전에 본인임을 확인하세요.</string>
-    <string name="minkboard_archive_imported">보드 보관 파일을 가져왔습니다.</string>
-    <string name="minkboard_archive_exported">보드 보관 파일을 저장했습니다.</string>
-    <string name="minkboard_archive_failed">Mink가 보드 보관 작업을 완료하지 못했습니다.</string>
-    <string name="minkboard_archive_wrong_format">암호화된 .minkboard 보관 파일을 선택하세요.</string>
-    <string name="minkboard_archive_selection_lost">선택한 보관 파일을 더 이상 사용할 수 없습니다. 다시 선택하세요.</string>
-    <string name="minkboard_archive_unnamed">보관 파일 %1$d</string>
 </resources>

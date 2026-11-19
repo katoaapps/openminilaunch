@@ -99,6 +99,22 @@ internal interface MinkBoardDao {
     @Query("SELECT * FROM launcher_board_designation WHERE singleton_key = 0 LIMIT 1")
     suspend fun launcherBoardDesignation(): LauncherBoardDesignationEntity?
 
+    @Query(
+        """
+        SELECT boards.board_id, boards.is_locked,
+            (SELECT board_columns.column_id
+                FROM board_columns
+                WHERE board_columns.board_id = boards.board_id
+                    AND board_columns.is_done = 0
+                ORDER BY board_columns.position, board_columns.column_id
+                LIMIT 1) AS intake_status_id
+        FROM boards
+        WHERE boards.board_id = :boardId
+        LIMIT 1
+        """,
+    )
+    suspend fun boardDesignationCandidate(boardId: String): BoardDesignationCandidateRow?
+
     @Query("SELECT card_id FROM cards WHERE column_id = :statusId ORDER BY position, card_id")
     suspend fun cardIds(statusId: String): List<String>
 

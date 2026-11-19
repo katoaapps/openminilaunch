@@ -50,22 +50,4 @@
     <string name="backup_passphrase_description">Crea una contraseña de al menos 8 caracteres. Necesitarás esta contraseña exacta para restaurar tableros, tarjetas, detalles y subtareas en otro dispositivo. OpenMink no puede recuperarla.</string>
     <string name="backup_passphrase">Contraseña de la copia de seguridad</string>
     <string name="backup_passphrase_confirm">Confirmar contraseña</string>
-    <string name="minkboard_archives">TRANSFERENCIA DE TABLEROS</string>
-    <string name="minkboard_archives_description">Mueve tableros seleccionados entre OpenMink, MinkBoard Pro y otras apps MinkBoard compatibles. Esto es independiente de una copia completa del lanzador.</string>
-    <string name="minkboard_import_archive">Importar archivo</string>
-    <string name="minkboard_export_archive">Exportar archivo</string>
-    <string name="minkboard_import_archive_description">Añade tableros desde un archivo .minkboard cifrado sin reemplazar los tableros actuales.</string>
-    <string name="minkboard_export_archive_description">Elige tableros y protege el archivo portátil con una contraseña.</string>
-    <string name="minkboard_select_boards_to_export">Elegir tableros para exportar</string>
-    <string name="minkboard_select_boards_to_export_description">El archivo contendrá solo los tableros seleccionados.</string>
-    <string name="minkboard_select_all">Seleccionar todo</string>
-    <string name="minkboard_select_none">No seleccionar ninguno</string>
-    <string name="minkboard_protected_board">Tablero protegido</string>
-    <string name="minkboard_archive_export_auth_description">Confirma tu identidad antes de exportar un tablero protegido.</string>
-    <string name="minkboard_archive_imported">Archivo de tablero importado.</string>
-    <string name="minkboard_archive_exported">Archivo de tablero guardado.</string>
-    <string name="minkboard_archive_failed">Mink no pudo completar la operación del archivo de tablero.</string>
-    <string name="minkboard_archive_wrong_format">Elige un archivo .minkboard cifrado.</string>
-    <string name="minkboard_archive_selection_lost">El archivo seleccionado ya no está disponible. Elígelo de nuevo.</string>
-    <string name="minkboard_archive_unnamed">Archivo %1$d</string>
 </resources>

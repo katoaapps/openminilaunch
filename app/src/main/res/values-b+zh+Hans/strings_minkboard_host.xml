@@ -50,22 +50,4 @@
     <string name="backup_passphrase_description">创建一个至少包含 8 个字符的密码短语。在另一台设备上恢复看板、卡片、详细信息和子任务时，你需要输入完全相同的密码短语。OpenMink 无法找回它。</string>
     <string name="backup_passphrase">备份密码短语</string>
     <string name="backup_passphrase_confirm">确认密码短语</string>
-    <string name="minkboard_archives">看板传输</string>
-    <string name="minkboard_archives_description">在 OpenMink、MinkBoard Pro 和其他兼容的 MinkBoard 应用之间移动所选看板。这与完整的启动器备份相互独立。</string>
-    <string name="minkboard_import_archive">导入归档</string>
-    <string name="minkboard_export_archive">导出归档</string>
-    <string name="minkboard_import_archive_description">从加密的 .minkboard 文件添加看板，不会替换当前看板。</string>
-    <string name="minkboard_export_archive_description">选择看板，并使用密码短语保护可移植文件。</string>
-    <string name="minkboard_select_boards_to_export">选择要导出的看板</string>
-    <string name="minkboard_select_boards_to_export_description">归档只会包含所选看板。</string>
-    <string name="minkboard_select_all">全选</string>
-    <string name="minkboard_select_none">全部取消</string>
-    <string name="minkboard_protected_board">受保护的看板</string>
-    <string name="minkboard_archive_export_auth_description">导出受保护的看板前，请确认你的身份。</string>
-    <string name="minkboard_archive_imported">已导入看板归档。</string>
-    <string name="minkboard_archive_exported">已保存看板归档。</string>
-    <string name="minkboard_archive_failed">Mink 无法完成看板归档操作。</string>
-    <string name="minkboard_archive_wrong_format">请选择加密的 .minkboard 归档。</string>
-    <string name="minkboard_archive_selection_lost">所选归档已不可用。请重新选择。</string>
-    <string name="minkboard_archive_unnamed">归档 %1$d</string>
 </resources>

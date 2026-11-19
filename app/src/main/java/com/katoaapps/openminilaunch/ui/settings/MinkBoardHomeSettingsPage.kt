@@ -24,8 +24,6 @@ import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberCoroutineScope
-import androidx.compose.runtime.setValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -36,8 +34,6 @@ import com.katoaapps.minkboard.core.LauncherBoardState
 import com.katoaapps.minkboard.model.BoardId
 import com.katoaapps.minkboard.model.StatusId
 import com.katoaapps.openminilaunch.R
-import com.katoaapps.openminilaunch.features.minkboard.LauncherBoardInitializationState
-import com.katoaapps.openminilaunch.features.minkboard.LauncherHomeConfigurationResult
 import com.katoaapps.openminilaunch.features.minkboard.LauncherVisibleStatuses
 import com.katoaapps.openminilaunch.features.minkboard.canRevealLauncherHomeBoard
 import com.katoaapps.openminilaunch.openMinkMinkBoardRuntime
@@ -47,7 +43,6 @@ import com.katoaapps.openminilaunch.ui.components.SettingsDropdownRow
 import com.katoaapps.openminilaunch.ui.components.SettingsSwitchRow
 import com.katoaapps.openminilaunch.ui.theme.Dimens
 import com.katoaapps.openminilaunch.ui.theme.Muted
-import kotlinx.coroutines.launch
 
 /** Launcher-owned controls for the board/status projection shown by MinkSpace and Magic Box. */
 @Composable
@@ -55,28 +50,23 @@ internal fun MinkBoardHomeSettingsPage(goBack: () -> Unit) {
     val context = LocalContext.current
     val runtime = remember(context) { context.openMinkMinkBoardRuntime }
     val scope = rememberCoroutineScope()
+    val controller = remember(context, runtime, scope) {
+        MinkBoardHomeSettingsController(context, runtime, scope)
+    }
     val listState = rememberLazyListState()
-    val workspace by runtime.repository.observeWorkspace().collectAsState(
-        initial = com.katoaapps.minkboard.model.MinkBoardWorkspace.Empty,
-    )
+    val boardSummaries by runtime.repository.observeBoardSummaries().collectAsState(emptyList())
     val boardState by runtime.launcherController.boardState.collectAsState()
     val boardAccessRevision by runtime.boardAccessRevision.collectAsState()
     val visibility by runtime.homePreferences.visibleStatuses.collectAsState()
-    var actionError by remember { mutableStateOf<String?>(null) }
-    var designationPending by remember { mutableStateOf(false) }
-
-    LaunchedEffect(runtime) {
-        if (runtime.launcherController.initialize() != LauncherBoardInitializationState.Ready) {
-            actionError = context.getString(R.string.minkboard_home_needs_repair)
-        }
-    }
+    LaunchedEffect(controller) { controller.initialize() }
 
     val ready = boardState as? LauncherBoardState.Ready
+    val boardBindingBroken = boardState is LauncherBoardState.BrokenBinding
     LaunchedEffect(ready, visibility) {
         ready?.let(runtime.homePreferences::reconcile)
     }
     val selectedBoardId = ready?.designation?.boardId
-    val selectedBoard = workspace.board(selectedBoardId)
+    val selectedBoard = ready?.board?.takeIf { it.board.id == selectedBoardId }
     val canRevealSelectedBoard = remember(selectedBoard, boardAccessRevision) {
         selectedBoard?.let { snapshot ->
             canRevealLauncherHomeBoard(
@@ -86,7 +76,7 @@ internal fun MinkBoardHomeSettingsPage(goBack: () -> Unit) {
         } ?: true
     }
     val selectedIntakeId = ready?.designation?.intakeStatusId
-    val orderedBoards = workspace.boards.sortedBy { it.board.position }
+    val orderedBoards = boardSummaries.sortedBy { it.board.position }
     val orderedStatuses = if (canRevealSelectedBoard) {
         selectedBoard?.statuses?.sortedBy { it.position }.orEmpty()
     } else {
@@ -97,37 +87,15 @@ internal fun MinkBoardHomeSettingsPage(goBack: () -> Unit) {
         is LauncherVisibleStatuses.Selected -> current.statusIds
     }
 
-    fun applyDesignation(boardId: BoardId, intakeStatusId: StatusId, resetVisibility: Boolean) {
-        if (designationPending) return
-        designationPending = true
-        scope.launch {
-            try {
-                actionError = null
-                when (runtime.launcherController.designateHomeBoard(boardId, intakeStatusId)) {
-                    LauncherHomeConfigurationResult.Updated -> {
-                        if (resetVisibility) runtime.homePreferences.showAllStatuses()
-                    }
-                    LauncherHomeConfigurationResult.InvalidTarget -> {
-                        actionError = context.getString(R.string.minkboard_home_invalid_target)
-                    }
-                    LauncherHomeConfigurationResult.Stale -> {
-                        actionError = context.getString(R.string.minkboard_home_changed_retry)
-                    }
-                    LauncherHomeConfigurationResult.Failed -> {
-                        actionError = context.getString(R.string.minkboard_home_save_failed)
-                    }
-                }
-            } finally {
-                designationPending = false
-            }
-        }
+    LaunchedEffect(controller.pendingBoardLoadId, ready?.board?.board?.id, boardBindingBroken) {
+        controller.reconcilePendingLoad(ready, boardBindingBroken)
     }
 
     SettingsLazyPage(
         title = stringResource(R.string.minkboard_home_settings_title),
         goBack = goBack,
         state = listState,
-        blocked = designationPending,
+        blocked = controller.designationPending || controller.pendingBoardLoadId != null,
     ) {
         item(key = "minkboard-home-description") {
             Text(
@@ -139,30 +107,12 @@ internal fun MinkBoardHomeSettingsPage(goBack: () -> Unit) {
             SettingsDropdownRow(
                 title = stringResource(R.string.minkboard_home_board),
                 selectedValue = selectedBoardId,
-                options = orderedBoards.map { snapshot ->
-                    SettingsDropdownOption<BoardId?>(snapshot.board.id, snapshot.board.name)
+                options = orderedBoards.map { summary ->
+                    SettingsDropdownOption<BoardId?>(summary.board.id, summary.board.name)
                 },
                 onValueSelected = { boardId ->
                     if (boardId == null) return@SettingsDropdownRow
-                    val board = workspace.board(boardId)
-                    if (
-                        board != null &&
-                        !canRevealLauncherHomeBoard(
-                            isLocked = board.board.isLocked,
-                            accessGranted = runtime.boardAccessSessions.isGranted(boardId),
-                        )
-                    ) {
-                        actionError = context.getString(R.string.minkboard_home_locked)
-                        return@SettingsDropdownRow
-                    }
-                    val intake = board?.statuses
-                        ?.sortedBy { it.position }
-                        ?.firstOrNull { !it.isDoneStatus }
-                    if (intake == null) {
-                        actionError = context.getString(R.string.minkboard_home_board_needs_intake)
-                    } else {
-                        applyDesignation(boardId, intake.id, resetVisibility = true)
-                    }
+                    orderedBoards.firstOrNull { it.board.id == boardId }?.let(controller::chooseBoard)
                 },
             )
         }
@@ -185,7 +135,7 @@ internal fun MinkBoardHomeSettingsPage(goBack: () -> Unit) {
                         },
                     onValueSelected = { statusId ->
                         if (statusId != null) selectedBoardId?.let { boardId ->
-                            applyDesignation(boardId, statusId, resetVisibility = false)
+                            controller.applyDesignation(boardId, statusId, resetVisibility = false)
                         }
                     },
                 )
@@ -303,15 +253,7 @@ internal fun MinkBoardHomeSettingsPage(goBack: () -> Unit) {
                 }
             }
         }
-        item(key = "minkboard-archives") {
-            Column(verticalArrangement = Arrangement.spacedBy(Dimens.dp14)) {
-                MinkBoardArchiveSettingsSection(
-                    runtime = runtime,
-                    boards = orderedBoards,
-                )
-            }
-        }
-        actionError?.let { message ->
+        controller.actionError?.let { message ->
             item(key = "minkboard-home-error") {
                 Text(message, color = MaterialTheme.colorScheme.error)
             }

@@ -222,5 +222,43 @@ class MinkBoardMigrationTest {
         }
     }
 
+    @Test
+    fun migrationFiveToSixAddsOrderedRelationshipIndexes() {
+        helper.createDatabase(DATABASE, 5).close()
+
+        helper.runMigrationsAndValidate(DATABASE, 6, true, MinkBoardDatabase.MIGRATION_5_6)
+            .use { db ->
+                listOf(
+                    "index_board_columns_board_id_position_column_id",
+                    "index_cards_column_id_position_card_id",
+                    "index_subtasks_card_id_position_subtask_id",
+                ).forEach { indexName ->
+                    db.query(
+                        "SELECT COUNT(*) FROM sqlite_master WHERE type = 'index' AND name = ?",
+                        arrayOf(indexName),
+                    ).use { cursor ->
+                        assertEquals(true, cursor.moveToFirst())
+                        assertEquals(1, cursor.getInt(0))
+                    }
+                }
+            }
+    }
+
+    @Test
+    fun migrationOneToSixRunsEveryRequiredStep() {
+        helper.createDatabase(DATABASE, 1).close()
+
+        helper.runMigrationsAndValidate(
+            DATABASE,
+            6,
+            true,
+            MinkBoardDatabase.MIGRATION_1_2,
+            MinkBoardDatabase.MIGRATION_2_3,
+            MinkBoardDatabase.MIGRATION_3_4,
+            MinkBoardDatabase.MIGRATION_4_5,
+            MinkBoardDatabase.MIGRATION_5_6,
+        ).close()
+    }
+
     private companion object { const val DATABASE = "minkboard-migration-test" }
 }

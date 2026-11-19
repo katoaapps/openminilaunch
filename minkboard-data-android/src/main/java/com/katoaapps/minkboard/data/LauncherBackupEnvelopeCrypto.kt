@@ -3,13 +3,6 @@ package com.katoaapps.minkboard.data
 import java.nio.charset.StandardCharsets
 import java.security.MessageDigest
 import java.security.SecureRandom
-import java.util.Base64
-import javax.crypto.AEADBadTagException
-import javax.crypto.Cipher
-import javax.crypto.SecretKeyFactory
-import javax.crypto.spec.GCMParameterSpec
-import javax.crypto.spec.PBEKeySpec
-import javax.crypto.spec.SecretKeySpec
 import org.json.JSONObject
 
 internal class InvalidLauncherBackupEnvelopeException(
@@ -30,6 +23,22 @@ internal class LauncherBackupEnvelopeCrypto(
     private val random: SecureRandom = SecureRandom(),
     private val writeIterations: Int = DEFAULT_KDF_ITERATIONS,
 ) {
+    private val envelopeCodec = PassphraseAesGcmEnvelopeCodec(
+        config = PassphraseEnvelopeConfig(
+            format = ENVELOPE_FORMAT,
+            envelopeVersion = ENVELOPE_VERSION,
+            defaultKdfIterations = DEFAULT_KDF_ITERATIONS,
+            minKdfIterations = MIN_KDF_ITERATIONS,
+            maxKdfIterations = MAX_KDF_ITERATIONS,
+            minPassphraseLength = MIN_PASSPHRASE_LENGTH,
+            maxPassphraseLength = MAX_PASSPHRASE_LENGTH,
+            maxEnvelopeBytes = MAX_ARCHIVE_BYTES,
+            maxPlaintextBytes = MAX_ARCHIVE_BYTES,
+        ),
+        random = random,
+        writeIterations = writeIterations,
+    )
+
     init {
         require(writeIterations in MIN_KDF_ITERATIONS..MAX_KDF_ITERATIONS)
     }
@@ -57,38 +66,11 @@ internal class LauncherBackupEnvelopeCrypto(
             payloadBytes.fill(0)
         }
 
-        val salt = ByteArray(SALT_BYTES).also(random::nextBytes)
-        val nonce = ByteArray(GCM_NONCE_BYTES).also(random::nextBytes)
-        val keyBytes = deriveKeyBytes(passphrase, salt, writeIterations)
-        val encrypted = try {
-            Cipher.getInstance(CIPHER_ALGORITHM).run {
-                init(
-                    Cipher.ENCRYPT_MODE,
-                    SecretKeySpec(keyBytes, "AES"),
-                    GCMParameterSpec(GCM_TAG_BITS, nonce),
-                )
-                updateAAD(aad(writeIterations))
-                doFinal(plaintext)
-            }
+        return try {
+            envelopeCodec.encode(plaintext, passphrase)
         } finally {
-            keyBytes.fill(0)
             plaintext.fill(0)
         }
-
-        return JSONObject()
-            .put("format", ENVELOPE_FORMAT)
-            .put("envelopeVersion", ENVELOPE_VERSION)
-            .put("kdf", KDF_NAME)
-            .put("kdfIterations", writeIterations)
-            .put("salt", Base64.getEncoder().encodeToString(salt))
-            .put("cipher", CIPHER_NAME)
-            .put("nonce", Base64.getEncoder().encodeToString(nonce))
-            .put("ciphertext", Base64.getEncoder().encodeToString(encrypted))
-            .toString()
-            .toByteArray(StandardCharsets.UTF_8)
-            .also {
-                require(it.size <= MAX_ARCHIVE_BYTES) { "Launcher backup archive is too large" }
-            }
     }
 
     fun decode(archive: ByteArray, passphrase: CharArray): String {
@@ -159,37 +141,18 @@ internal class LauncherBackupEnvelopeCrypto(
             )
         }
 
-        val salt = decodeBoundedBase64(envelope, "salt", SALT_BYTES, SALT_BYTES)
-        val nonce = decodeBoundedBase64(envelope, "nonce", GCM_NONCE_BYTES, GCM_NONCE_BYTES)
-        val ciphertext = decodeBoundedBase64(
-            envelope,
-            "ciphertext",
-            GCM_TAG_BITS / 8,
-            MAX_ARCHIVE_BYTES,
-        )
-        val keyBytes = deriveKeyBytes(passphrase, salt, iterations)
-        val plaintext = try {
-            Cipher.getInstance(CIPHER_ALGORITHM).run {
-                init(
-                    Cipher.DECRYPT_MODE,
-                    SecretKeySpec(keyBytes, "AES"),
-                    GCMParameterSpec(GCM_TAG_BITS, nonce),
+        val plaintext = when (val decoded = envelopeCodec.decode(archive, passphrase)) {
+            is PassphraseEnvelopeDecodeResult.Decoded -> decoded.plaintext
+            PassphraseEnvelopeDecodeResult.Unsupported -> {
+                throw UnsupportedLauncherBackupEnvelopeException(
+                    "Launcher backup archive encryption is unsupported",
                 )
-                updateAAD(aad(iterations))
-                doFinal(ciphertext)
             }
-        } catch (failure: AEADBadTagException) {
-            throw InvalidLauncherBackupEnvelopeException(
-                "Passphrase is incorrect or the launcher backup was damaged",
-                failure,
-            )
-        } catch (failure: Exception) {
-            throw InvalidLauncherBackupEnvelopeException(
-                "Launcher backup archive could not be decrypted",
-                failure,
-            )
-        } finally {
-            keyBytes.fill(0)
+            PassphraseEnvelopeDecodeResult.Corrupt -> {
+                throw InvalidLauncherBackupEnvelopeException(
+                    "Passphrase is incorrect or the launcher backup was damaged",
+                )
+            }
         }
 
         try {
@@ -224,44 +187,11 @@ internal class LauncherBackupEnvelopeCrypto(
         }
     }
 
-    private fun deriveKeyBytes(
-        passphrase: CharArray,
-        salt: ByteArray,
-        iterations: Int,
-    ): ByteArray {
-        val spec = PBEKeySpec(passphrase, salt, iterations, KEY_BITS)
-        return try {
-            SecretKeyFactory.getInstance(KDF_ALGORITHM).generateSecret(spec).encoded
-        } finally {
-            spec.clearPassword()
-        }
-    }
-
-    private fun decodeBoundedBase64(
-        value: JSONObject,
-        field: String,
-        minBytes: Int,
-        maxBytes: Int,
-    ): ByteArray = try {
-        Base64.getDecoder().decode(value.getString(field)).also { decoded ->
-            require(decoded.size in minBytes..maxBytes)
-        }
-    } catch (failure: Exception) {
-        throw InvalidLauncherBackupEnvelopeException(
-            "Launcher backup archive $field is invalid",
-            failure,
-        )
-    }
-
     private fun requireValidPassphrase(passphrase: CharArray) {
         require(passphrase.size in MIN_PASSPHRASE_LENGTH..MAX_PASSPHRASE_LENGTH) {
             "Passphrase must contain at least $MIN_PASSPHRASE_LENGTH characters"
         }
     }
-
-    private fun aad(iterations: Int): ByteArray =
-        "$ENVELOPE_FORMAT|$ENVELOPE_VERSION|$KDF_NAME|$iterations|$CIPHER_NAME"
-            .toByteArray(StandardCharsets.UTF_8)
 
     private fun sha256(value: ByteArray): ByteArray =
         MessageDigest.getInstance("SHA-256").digest(value)
@@ -280,12 +210,6 @@ internal class LauncherBackupEnvelopeCrypto(
 
         private const val MAX_PAYLOAD_BYTES = 23 * 1024 * 1024
         private const val KDF_NAME = "PBKDF2-HMAC-SHA256"
-        private const val KDF_ALGORITHM = "PBKDF2WithHmacSHA256"
         private const val CIPHER_NAME = "AES-256-GCM"
-        private const val CIPHER_ALGORITHM = "AES/GCM/NoPadding"
-        private const val SALT_BYTES = 16
-        private const val GCM_NONCE_BYTES = 12
-        private const val GCM_TAG_BITS = 128
-        private const val KEY_BITS = 256
     }
 }

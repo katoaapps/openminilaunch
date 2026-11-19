@@ -50,22 +50,4 @@
     <string name="backup_passphrase_description">कम से कम 8 वर्णों का पासफ़्रेज़ बनाएँ। दूसरे डिवाइस पर बोर्ड, कार्ड, विवरण और उपकार्य पुनर्स्थापित करने के लिए आपको यही पासफ़्रेज़ चाहिए। OpenMink इसे वापस नहीं ला सकता।</string>
     <string name="backup_passphrase">बैकअप पासफ़्रेज़</string>
     <string name="backup_passphrase_confirm">पासफ़्रेज़ की पुष्टि करें</string>
-    <string name="minkboard_archives">बोर्ड ट्रांसफ़र</string>
-    <string name="minkboard_archives_description">चुने हुए बोर्ड OpenMink, MinkBoard Pro और दूसरे संगत MinkBoard ऐप्स के बीच ले जाएँ। यह पूरे लॉन्चर बैकअप से अलग है।</string>
-    <string name="minkboard_import_archive">आर्काइव इंपोर्ट करें</string>
-    <string name="minkboard_export_archive">आर्काइव एक्सपोर्ट करें</string>
-    <string name="minkboard_import_archive_description">मौजूदा बोर्ड बदले बिना एन्क्रिप्ट की गई .minkboard फ़ाइल से बोर्ड जोड़ें।</string>
-    <string name="minkboard_export_archive_description">बोर्ड चुनें और पोर्टेबल फ़ाइल को पासफ़्रेज़ से सुरक्षित करें।</string>
-    <string name="minkboard_select_boards_to_export">एक्सपोर्ट करने के लिए बोर्ड चुनें</string>
-    <string name="minkboard_select_boards_to_export_description">आर्काइव में केवल चुने हुए बोर्ड होंगे।</string>
-    <string name="minkboard_select_all">सभी चुनें</string>
-    <string name="minkboard_select_none">सभी का चयन हटाएँ</string>
-    <string name="minkboard_protected_board">सुरक्षित बोर्ड</string>
-    <string name="minkboard_archive_export_auth_description">सुरक्षित बोर्ड एक्सपोर्ट करने से पहले अपनी पहचान की पुष्टि करें।</string>
-    <string name="minkboard_archive_imported">बोर्ड आर्काइव इंपोर्ट किया गया।</string>
-    <string name="minkboard_archive_exported">बोर्ड आर्काइव सेव किया गया।</string>
-    <string name="minkboard_archive_failed">Mink बोर्ड आर्काइव का काम पूरा नहीं कर सका।</string>
-    <string name="minkboard_archive_wrong_format">एन्क्रिप्ट किया गया .minkboard आर्काइव चुनें।</string>
-    <string name="minkboard_archive_selection_lost">चुना हुआ आर्काइव अब उपलब्ध नहीं है। इसे फिर से चुनें।</string>
-    <string name="minkboard_archive_unnamed">आर्काइव %1$d</string>
 </resources>

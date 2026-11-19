@@ -38,3 +38,9 @@ internal data class BoardSummaryRow(
     @ColumnInfo(name = "status_count") val statusCount: Int,
     @ColumnInfo(name = "card_count") val cardCount: Int,
 )
+
+internal data class BoardDesignationCandidateRow(
+    @ColumnInfo(name = "board_id") val boardId: String,
+    @ColumnInfo(name = "is_locked") val isLocked: Boolean,
+    @ColumnInfo(name = "intake_status_id") val intakeStatusId: String?,
+)

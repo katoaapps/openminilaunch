@@ -1,5 +1,11 @@
 package com.katoaapps.minkboard.ui
 
+import androidx.compose.animation.core.RepeatMode
+import androidx.compose.animation.core.animateFloat
+import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.LinearEasing
+import androidx.compose.animation.core.rememberInfiniteTransition
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
@@ -47,8 +53,15 @@ import androidx.compose.runtime.setValue
 import androidx.compose.runtime.withFrameNanos
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.geometry.Rect
+import androidx.compose.ui.geometry.Size
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.geometry.CornerRadius
+import androidx.compose.ui.graphics.PathEffect
+import androidx.compose.ui.graphics.StrokeCap
+import androidx.compose.ui.graphics.drawscope.Stroke
+import androidx.compose.ui.draw.drawWithContent
 import androidx.compose.ui.graphics.luminance
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.input.pointer.pointerInput
@@ -72,6 +85,7 @@ import androidx.compose.ui.zIndex
 import com.katoaapps.minkboard.model.BoardCard
 import com.katoaapps.minkboard.model.BoardStatus
 import com.katoaapps.minkboard.model.CardId
+import com.katoaapps.minkboard.model.CardPlacement
 import com.katoaapps.minkboard.model.StatusId
 import com.katoaapps.minkboard.core.CardDueState
 import com.katoaapps.minkboard.core.dueState
@@ -91,12 +105,13 @@ internal fun BoardStatusPanel(
     nextStatusId: StatusId?,
     nextStatusCardCount: Int,
     compactLayout: Boolean,
+    focusedCardId: CardId?,
     statusDragHandle: @Composable () -> Unit,
     modifier: Modifier = Modifier,
     onAddCard: () -> Unit,
     onManageStatus: () -> Unit,
     onOpenCard: (BoardCard) -> Unit,
-    revealCardId: CardId?,
+    revealCard: CardPlacement?,
     onRevealFinished: (CardId) -> Unit,
     onMoveCard: (CardId, StatusId, Int) -> Unit,
 ) {
@@ -131,18 +146,23 @@ internal fun BoardStatusPanel(
     val dropPreviewDrag = dragDropState.activeDrag?.takeIf { it.targetStatusId == status.id }
     val dropPreviewAnchorY = dragDropState.dropPreviewAnchorY(status.id)
 
-    LaunchedEffect(revealCardId?.value, cards.map { it.id.value }) {
-        val target = revealCardId ?: return@LaunchedEffect
-        val targetIndex = cards.indexOfFirst { it.id == target }
-        if (targetIndex < 0) return@LaunchedEffect
+    LaunchedEffect(
+        revealCard?.cardId?.value,
+        revealCard?.position,
+        cards.map { it.id.value },
+    ) {
+        val target = revealCard ?: return@LaunchedEffect
+        val targetIndex = cards.indexOfFirst { it.id == target.cardId }
+        val expectedIndex = target.position.coerceIn(0, cards.lastIndex.coerceAtLeast(0))
+        if (targetIndex != expectedIndex) return@LaunchedEffect
         cardListState.animateScrollToItem(targetIndex)
         repeat(3) {
-            highlightedCardId = target
+            highlightedCardId = target.cardId
             delay(150)
             highlightedCardId = null
             delay(100)
         }
-        onRevealFinished(target)
+        onRevealFinished(target.cardId)
     }
 
     LaunchedEffect(activeVerticalScrollTarget) {
@@ -284,6 +304,7 @@ internal fun BoardStatusPanel(
                                 dragDropState = dragDropState,
                                 compactLayout = compactLayout,
                                 isRevealHighlighted = highlightedCardId == card.id,
+                                isFocusRunning = focusedCardId == card.id,
                                 accessibilityActions = buildList {
                                     if (index > 0) {
                                         add(CustomAccessibilityAction(moveUpLabel) {
@@ -371,6 +392,7 @@ private fun BoardCardTile(
     dragDropState: CardDragDropState,
     compactLayout: Boolean,
     isRevealHighlighted: Boolean,
+    isFocusRunning: Boolean,
     accessibilityActions: List<CustomAccessibilityAction>,
     onClick: () -> Unit,
 ) {
@@ -397,6 +419,21 @@ private fun BoardCardTile(
     }
     val hapticFeedback = LocalHapticFeedback.current
     var dragHandleCoordinates by remember(card.id) { mutableStateOf<LayoutCoordinates?>(null) }
+    val focusDashPhase = if (isFocusRunning) {
+        val focusTransition = rememberInfiniteTransition(label = "focused card border")
+        val phase by focusTransition.animateFloat(
+            initialValue = 0f,
+            targetValue = 1f,
+            animationSpec = infiniteRepeatable(
+                animation = tween(durationMillis = 900, easing = LinearEasing),
+                repeatMode = RepeatMode.Restart,
+            ),
+            label = "focused card dash phase",
+        )
+        phase
+    } else {
+        0f
+    }
 
     DisposableEffect(dragDropState, card.id) {
         onDispose { dragDropState.unregisterCard(card.id) }
@@ -408,6 +445,31 @@ private fun BoardCardTile(
                 dragDropState.registerCard(card.id, coordinates.boundsInRoot())
             }
             .graphicsLayer { alpha = if (dragDropState.isDragging(card.id)) 0.28f else 1f }
+            .drawWithContent {
+                drawContent()
+                if (isFocusRunning) {
+                    val strokeWidth = 3.dp.toPx()
+                    val inset = strokeWidth / 2f
+                    val gap = 7.dp.toPx()
+                    drawRoundRect(
+                        color = cardContentColor,
+                        topLeft = Offset(inset, inset),
+                        size = Size(
+                            width = size.width - strokeWidth,
+                            height = size.height - strokeWidth,
+                        ),
+                        cornerRadius = CornerRadius(12.dp.toPx()),
+                        style = Stroke(
+                            width = strokeWidth,
+                            cap = StrokeCap.Round,
+                            pathEffect = PathEffect.dashPathEffect(
+                                intervals = floatArrayOf(0.5f, gap),
+                                phase = (gap + 0.5f) * focusDashPhase,
+                            ),
+                        ),
+                    )
+                }
+            }
             .semantics { customActions = accessibilityActions },
         border = cardBorder,
         colors = CardDefaults.cardColors(

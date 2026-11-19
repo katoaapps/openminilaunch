@@ -50,22 +50,4 @@
     <string name="backup_passphrase_description">Buat frasa sandi minimal 8 karakter. Anda memerlukan frasa sandi yang sama persis untuk memulihkan papan, kartu, detail, dan subtugas di perangkat lain. OpenMink tidak dapat memulihkannya.</string>
     <string name="backup_passphrase">Frasa sandi cadangan</string>
     <string name="backup_passphrase_confirm">Konfirmasi frasa sandi</string>
-    <string name="minkboard_archives">TRANSFER PAPAN</string>
-    <string name="minkboard_archives_description">Pindahkan papan terpilih antara OpenMink, MinkBoard Pro, dan aplikasi MinkBoard kompatibel lainnya. Ini terpisah dari pencadangan launcher lengkap.</string>
-    <string name="minkboard_import_archive">Impor arsip</string>
-    <string name="minkboard_export_archive">Ekspor arsip</string>
-    <string name="minkboard_import_archive_description">Tambahkan papan dari file .minkboard terenkripsi tanpa mengganti papan saat ini.</string>
-    <string name="minkboard_export_archive_description">Pilih papan dan lindungi file portabel dengan frasa sandi.</string>
-    <string name="minkboard_select_boards_to_export">Pilih papan untuk diekspor</string>
-    <string name="minkboard_select_boards_to_export_description">Arsip hanya akan berisi papan yang dipilih.</string>
-    <string name="minkboard_select_all">Pilih semua</string>
-    <string name="minkboard_select_none">Kosongkan pilihan</string>
-    <string name="minkboard_protected_board">Papan terlindungi</string>
-    <string name="minkboard_archive_export_auth_description">Konfirmasi identitas Anda sebelum mengekspor papan terlindungi.</string>
-    <string name="minkboard_archive_imported">Arsip papan diimpor.</string>
-    <string name="minkboard_archive_exported">Arsip papan disimpan.</string>
-    <string name="minkboard_archive_failed">Mink tidak dapat menyelesaikan operasi arsip papan.</string>
-    <string name="minkboard_archive_wrong_format">Pilih arsip .minkboard terenkripsi.</string>
-    <string name="minkboard_archive_selection_lost">Arsip yang dipilih tidak lagi tersedia. Pilih lagi.</string>
-    <string name="minkboard_archive_unnamed">Arsip %1$d</string>
 </resources>

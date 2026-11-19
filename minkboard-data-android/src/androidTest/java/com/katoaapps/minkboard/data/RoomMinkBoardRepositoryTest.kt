@@ -6,6 +6,10 @@ import androidx.test.core.app.ApplicationProvider
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.katoaapps.minkboard.core.IdFactory
 import com.katoaapps.minkboard.core.LauncherTodoCompatibilityState
+import com.katoaapps.minkboard.core.LauncherBoundIntakeWriteResult
+import com.katoaapps.minkboard.core.LauncherCardCompletionWriteResult
+import com.katoaapps.minkboard.core.LauncherFreshBoardDesignationResult
+import com.katoaapps.minkboard.core.LauncherFreshBoardRequest
 import com.katoaapps.minkboard.core.LauncherTodoMigrationOutcome
 import com.katoaapps.minkboard.core.LauncherTodoNormalizer
 import com.katoaapps.minkboard.core.LegacyLauncherTodo
@@ -88,6 +92,40 @@ class RoomMinkBoardRepositoryTest {
     }
 
     @Test
+    fun launcherCompletionCreatesDoneAndMovesCardAtomicallyAtTheFront() = runBlocking {
+        val created = repository.createAndDesignateFreshBoard(
+            LauncherFreshBoardRequest("Launcher To-Dos"),
+        ) as LauncherFreshBoardDesignationResult.Created
+        var board = repository.board(created.designation.boardId)!!
+        board.statuses.single { it.isDoneStatus }.let { done ->
+            repository.deleteStatus(done.id, StatusDeletionPolicy.DeleteCards)
+        }
+        val older = repository.addCardToBoundIntake(CardDraft("Older"))
+            as LauncherBoundIntakeWriteResult.Added
+        val newest = repository.addCardToBoundIntake(CardDraft("Newest"))
+            as LauncherBoundIntakeWriteResult.Added
+
+        val completed = repository.toggleBoundCardCompletion(newest.cardId)
+            as LauncherCardCompletionWriteResult.Updated
+
+        board = repository.board(created.designation.boardId)!!
+        val done = board.statuses.single { it.isDoneStatus }
+        assertEquals(done.id, completed.placement.statusId)
+        assertEquals(listOf(newest.cardId), board.cardsIn(done.id).map { it.id })
+        assertEquals(listOf(older.cardId), board.cardsIn(created.designation.intakeStatusId).map { it.id })
+
+        val restored = repository.toggleBoundCardCompletion(newest.cardId)
+            as LauncherCardCompletionWriteResult.Updated
+
+        board = repository.board(created.designation.boardId)!!
+        assertEquals(created.designation.intakeStatusId, restored.placement.statusId)
+        assertEquals(
+            listOf(newest.cardId, older.cardId),
+            board.cardsIn(created.designation.intakeStatusId).map { it.id },
+        )
+    }
+
+    @Test
     fun templateCreationPersistsExactIndependentStatusGraphs() = runBlocking {
         repository.ensureDefaultWorkspace()
         val firstId = repository.createBoardFromTemplate(
@@ -136,6 +174,32 @@ class RoomMinkBoardRepositoryTest {
         assertEquals(1, summaries.single { it.board.id == secondId }.cardCount)
         assertEquals(first, repository.board(first.board.id))
         assertTrue(runCatching { repository.board(secondId) }.isFailure)
+    }
+
+    @Test
+    fun designationCandidateDoesNotHydrateOrDecryptCards() = runBlocking {
+        repository.ensureDefaultWorkspace()
+        val board = repository.observeWorkspace().first().firstBoard!!
+        database.boardDao().insertCard(
+            CardEntity(
+                id = "corrupt-card",
+                statusId = board.statuses.first().id.value,
+                encryptedTitle = "not-valid-ciphertext".toByteArray(),
+                encryptedDetails = "not-valid-ciphertext".toByteArray(),
+                encryptedDueDate = null,
+                isMajor = false,
+                position = 0,
+                createdAtEpochMillis = 1L,
+                updatedAtEpochMillis = 1L,
+            ),
+        )
+
+        val candidate = repository.launcherBoardDesignationCandidate(board.board.id)
+
+        assertEquals(board.board.id, candidate?.boardId)
+        assertEquals(board.board.isLocked, candidate?.isLocked)
+        assertEquals(board.statuses.first { !it.isDoneStatus }.id, candidate?.intakeStatusId)
+        assertTrue(runCatching { repository.board(board.board.id) }.isFailure)
     }
 
     @Test

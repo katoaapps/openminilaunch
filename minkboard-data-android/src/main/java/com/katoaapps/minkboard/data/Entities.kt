@@ -25,7 +25,7 @@ internal data class BoardEntity(
             onDelete = ForeignKey.CASCADE,
         ),
     ],
-    indices = [Index("board_id")],
+    indices = [Index(value = ["board_id", "position", "column_id"])],
 )
 internal data class StatusEntity(
     @PrimaryKey @ColumnInfo(name = "column_id") val id: String,
@@ -46,7 +46,7 @@ internal data class StatusEntity(
             onDelete = ForeignKey.CASCADE,
         ),
     ],
-    indices = [Index("column_id")],
+    indices = [Index(value = ["column_id", "position", "card_id"])],
 )
 internal data class CardEntity(
     @PrimaryKey @ColumnInfo(name = "card_id") val id: String,
@@ -70,7 +70,7 @@ internal data class CardEntity(
             onDelete = ForeignKey.CASCADE,
         ),
     ],
-    indices = [Index("card_id")],
+    indices = [Index(value = ["card_id", "position", "subtask_id"])],
 )
 internal data class SubtaskEntity(
     @PrimaryKey @ColumnInfo(name = "subtask_id") val id: String,

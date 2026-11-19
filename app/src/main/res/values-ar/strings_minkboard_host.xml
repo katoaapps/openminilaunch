@@ -50,22 +50,4 @@
     <string name="backup_passphrase_description">أنشئ عبارة مرور من 8 أحرف على الأقل. ستحتاج إلى عبارة المرور نفسها تمامًا لاستعادة اللوحات والبطاقات والتفاصيل والمهام الفرعية على جهاز آخر. لا يستطيع OpenMink استعادتها.</string>
     <string name="backup_passphrase">عبارة مرور النسخة الاحتياطية</string>
     <string name="backup_passphrase_confirm">تأكيد عبارة المرور</string>
-    <string name="minkboard_archives">نقل اللوحات</string>
-    <string name="minkboard_archives_description">انقل اللوحات المحددة بين OpenMink وMinkBoard Pro وتطبيقات MinkBoard المتوافقة الأخرى. هذا منفصل عن النسخة الاحتياطية الكاملة للمشغّل.</string>
-    <string name="minkboard_import_archive">استيراد أرشيف</string>
-    <string name="minkboard_export_archive">تصدير أرشيف</string>
-    <string name="minkboard_import_archive_description">أضف لوحات من ملف .minkboard مشفّر دون استبدال لوحاتك الحالية.</string>
-    <string name="minkboard_export_archive_description">اختر اللوحات واحمِ الملف القابل للنقل بعبارة مرور.</string>
-    <string name="minkboard_select_boards_to_export">اختر اللوحات المراد تصديرها</string>
-    <string name="minkboard_select_boards_to_export_description">سيحتوي الأرشيف على اللوحات المحددة فقط.</string>
-    <string name="minkboard_select_all">تحديد الكل</string>
-    <string name="minkboard_select_none">إلغاء تحديد الكل</string>
-    <string name="minkboard_protected_board">لوحة محمية</string>
-    <string name="minkboard_archive_export_auth_description">أكّد هويتك قبل تصدير لوحة محمية.</string>
-    <string name="minkboard_archive_imported">تم استيراد أرشيف اللوحة.</string>
-    <string name="minkboard_archive_exported">تم حفظ أرشيف اللوحة.</string>
-    <string name="minkboard_archive_failed">تعذر على Mink إكمال عملية أرشيف اللوحة.</string>
-    <string name="minkboard_archive_wrong_format">اختر أرشيف .minkboard مشفّرًا.</string>
-    <string name="minkboard_archive_selection_lost">لم يعد الأرشيف المحدد متاحًا. اختره مرة أخرى.</string>
-    <string name="minkboard_archive_unnamed">الأرشيف %1$d</string>
 </resources>

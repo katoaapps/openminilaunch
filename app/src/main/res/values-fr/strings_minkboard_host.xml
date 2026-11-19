@@ -50,22 +50,4 @@
     <string name="backup_passphrase_description">Créez une phrase secrète d’au moins 8 caractères. Vous aurez besoin de cette phrase secrète exacte pour restaurer les tableaux, cartes, détails et sous-tâches sur un autre appareil. OpenMink ne peut pas la récupérer.</string>
     <string name="backup_passphrase">Phrase secrète de sauvegarde</string>
     <string name="backup_passphrase_confirm">Confirmer la phrase secrète</string>
-    <string name="minkboard_archives">TRANSFERT DE TABLEAUX</string>
-    <string name="minkboard_archives_description">Transférez les tableaux sélectionnés entre OpenMink, MinkBoard Pro et d’autres applications MinkBoard compatibles. Cette opération est distincte d’une sauvegarde complète du lanceur.</string>
-    <string name="minkboard_import_archive">Importer une archive</string>
-    <string name="minkboard_export_archive">Exporter une archive</string>
-    <string name="minkboard_import_archive_description">Ajoutez des tableaux depuis un fichier .minkboard chiffré sans remplacer les tableaux actuels.</string>
-    <string name="minkboard_export_archive_description">Choisissez des tableaux et protégez le fichier portable avec une phrase secrète.</string>
-    <string name="minkboard_select_boards_to_export">Choisir les tableaux à exporter</string>
-    <string name="minkboard_select_boards_to_export_description">L’archive contiendra uniquement les tableaux sélectionnés.</string>
-    <string name="minkboard_select_all">Tout sélectionner</string>
-    <string name="minkboard_select_none">Tout désélectionner</string>
-    <string name="minkboard_protected_board">Tableau protégé</string>
-    <string name="minkboard_archive_export_auth_description">Confirmez votre identité avant d’exporter un tableau protégé.</string>
-    <string name="minkboard_archive_imported">Archive de tableau importée.</string>
-    <string name="minkboard_archive_exported">Archive de tableau enregistrée.</string>
-    <string name="minkboard_archive_failed">Mink n’a pas pu terminer l’opération sur l’archive de tableau.</string>
-    <string name="minkboard_archive_wrong_format">Choisissez une archive .minkboard chiffrée.</string>
-    <string name="minkboard_archive_selection_lost">L’archive sélectionnée n’est plus disponible. Sélectionnez-la à nouveau.</string>
-    <string name="minkboard_archive_unnamed">Archive %1$d</string>
 </resources>

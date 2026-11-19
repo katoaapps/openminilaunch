@@ -50,22 +50,4 @@
     <string name="backup_passphrase_description">建立最少 8 個字元嘅密碼短語。喺另一部裝置還原看板、卡片、詳細資料同子任務時，你要輸入完全相同嘅密碼短語。OpenMink 無法幫你搵返。</string>
     <string name="backup_passphrase">備份密碼短語</string>
     <string name="backup_passphrase_confirm">確認密碼短語</string>
-    <string name="minkboard_archives">看板傳輸</string>
-    <string name="minkboard_archives_description">喺 OpenMink、MinkBoard Pro 同其他兼容嘅 MinkBoard 應用程式之間移動所選看板。呢個功能同完整啟動器備份分開。</string>
-    <string name="minkboard_import_archive">匯入封存檔</string>
-    <string name="minkboard_export_archive">匯出封存檔</string>
-    <string name="minkboard_import_archive_description">由已加密嘅 .minkboard 檔案加入看板，而唔會取代現有看板。</string>
-    <string name="minkboard_export_archive_description">揀選看板，並用密碼短語保護可攜式檔案。</string>
-    <string name="minkboard_select_boards_to_export">揀選要匯出嘅看板</string>
-    <string name="minkboard_select_boards_to_export_description">封存檔只會包含所選看板。</string>
-    <string name="minkboard_select_all">全部揀選</string>
-    <string name="minkboard_select_none">全部取消</string>
-    <string name="minkboard_protected_board">受保護嘅看板</string>
-    <string name="minkboard_archive_export_auth_description">匯出受保護嘅看板前，請確認你嘅身分。</string>
-    <string name="minkboard_archive_imported">已匯入看板封存檔。</string>
-    <string name="minkboard_archive_exported">已儲存看板封存檔。</string>
-    <string name="minkboard_archive_failed">Mink 無法完成看板封存操作。</string>
-    <string name="minkboard_archive_wrong_format">請揀選已加密嘅 .minkboard 封存檔。</string>
-    <string name="minkboard_archive_selection_lost">所選封存檔已無法使用。請重新揀選。</string>
-    <string name="minkboard_archive_unnamed">封存檔 %1$d</string>
 </resources>

@@ -139,6 +139,7 @@
     <string name="send_to_bottom">Send to bottom</string>
     <string name="stop_focus">Stop focus</string>
     <string name="focus_timer">Focus timer</string>
+    <string name="jump_to_focused_card">Jump to focused card</string>
     <string name="focus_duration">Choose how long to focus.</string>
     <string name="hours">Hours</string>
     <string name="minutes">Minutes</string>

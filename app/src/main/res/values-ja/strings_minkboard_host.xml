@@ -50,22 +50,4 @@
     <string name="backup_passphrase_description">8 文字以上のパスフレーズを作成してください。別のデバイスでボード、カード、詳細、サブタスクを復元するには、まったく同じパスフレーズが必要です。OpenMink では復元できません。</string>
     <string name="backup_passphrase">バックアップのパスフレーズ</string>
     <string name="backup_passphrase_confirm">パスフレーズを確認</string>
-    <string name="minkboard_archives">ボード転送</string>
-    <string name="minkboard_archives_description">選択したボードを OpenMink、MinkBoard Pro、その他の互換 MinkBoard アプリ間で移動します。ランチャー全体のバックアップとは別の機能です。</string>
-    <string name="minkboard_import_archive">アーカイブをインポート</string>
-    <string name="minkboard_export_archive">アーカイブをエクスポート</string>
-    <string name="minkboard_import_archive_description">現在のボードを置き換えずに、暗号化された .minkboard ファイルからボードを追加します。</string>
-    <string name="minkboard_export_archive_description">ボードを選択し、パスフレーズでポータブルファイルを保護します。</string>
-    <string name="minkboard_select_boards_to_export">エクスポートするボードを選択</string>
-    <string name="minkboard_select_boards_to_export_description">アーカイブには選択したボードだけが含まれます。</string>
-    <string name="minkboard_select_all">すべて選択</string>
-    <string name="minkboard_select_none">すべて解除</string>
-    <string name="minkboard_protected_board">保護されたボード</string>
-    <string name="minkboard_archive_export_auth_description">保護されたボードをエクスポートする前に本人確認を行います。</string>
-    <string name="minkboard_archive_imported">ボードアーカイブをインポートしました。</string>
-    <string name="minkboard_archive_exported">ボードアーカイブを保存しました。</string>
-    <string name="minkboard_archive_failed">Mink はボードアーカイブの操作を完了できませんでした。</string>
-    <string name="minkboard_archive_wrong_format">暗号化された .minkboard アーカイブを選択してください。</string>
-    <string name="minkboard_archive_selection_lost">選択したアーカイブは利用できません。もう一度選択してください。</string>
-    <string name="minkboard_archive_unnamed">アーカイブ %1$d</string>
 </resources>
