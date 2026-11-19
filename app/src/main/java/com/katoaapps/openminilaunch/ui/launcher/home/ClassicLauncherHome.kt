@@ -23,9 +23,9 @@ import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Add
-import androidx.compose.material.icons.filled.AutoAwesome
 import androidx.compose.material.icons.filled.GridView
 import androidx.compose.material.icons.filled.Home
+import androidx.compose.material.icons.filled.ViewCarousel
 import androidx.compose.material.icons.filled.Widgets
 import androidx.compose.material.icons.outlined.Home
 import androidx.compose.foundation.text.BasicTextField
@@ -80,6 +80,7 @@ import com.katoaapps.openminilaunch.model.ContactAppRoute
 import com.katoaapps.openminilaunch.model.LauncherShortcutTarget
 import com.katoaapps.openminilaunch.model.LauncherTarget
 import com.katoaapps.openminilaunch.model.MAX_APP_FOLDER_NAME_LENGTH
+import com.katoaapps.openminilaunch.model.MAX_APP_FOLDER_TARGETS
 import com.katoaapps.openminilaunch.model.configurableAppGridSlots
 import com.katoaapps.openminilaunch.platform.DeviceActions
 import com.katoaapps.openminilaunch.ui.appgrid.AppGridSelectionDialog
@@ -114,6 +115,7 @@ internal fun ClassicLauncherHome(
     onEditQuickApps: () -> Unit,
     onPausedApp: (String) -> Unit,
     onVerticalGesturesEnabledChange: (Boolean) -> Unit,
+    onConversationsActiveChange: (Boolean) -> Unit,
     onTodoCenterChanged: (Offset) -> Unit,
     onMagicBoxReadinessRequested: () -> Unit,
     launcherKeyboardVisible: Boolean,
@@ -170,6 +172,7 @@ internal fun ClassicLauncherHome(
         onVerticalGesturesEnabledChange(
             currentPage?.supportsLauncherVerticalGestures == true,
         )
+        onConversationsActiveChange(currentPage == ClassicLauncherPage.Conversations)
         if (shouldRearmMagicBox(previousPage, currentPage)) {
             onMagicBoxReadinessRequested()
         }
@@ -248,6 +251,7 @@ internal fun ClassicLauncherHome(
                             ),
                             titleEditable = folder != null,
                             editableTitleValue = folder?.customName.orEmpty(),
+                            targetLimit = MAX_APP_FOLDER_TARGETS,
                             targetKeys = store.appGridSelectionKeys(slot),
                             actions = actions,
                             appAccessState = appAccessState,
@@ -335,6 +339,7 @@ private fun ClassicTargetPage(
     titlePlaceholder: String = title,
     titleEditable: Boolean = false,
     editableTitleValue: String = title,
+    targetLimit: Int? = null,
     targetKeys: List<String>,
     actions: DeviceActions,
     appAccessState: MinkAppAccessState,
@@ -365,42 +370,53 @@ private fun ClassicTargetPage(
             verticalAlignment = Alignment.CenterVertically,
         ) {
             if (titleEditable) {
-                BasicTextField(
-                    value = draftTitle,
-                    onValueChange = { draftTitle = it.take(MAX_APP_FOLDER_NAME_LENGTH) },
-                    modifier = Modifier.weight(1f).onFocusChanged { state ->
-                        if (!state.isFocused) commitTitle()
-                    },
-                    singleLine = true,
-                    textStyle = androidx.compose.material3.MaterialTheme.typography.titleLarge.copy(
-                        color = LocalContentColor.current,
-                        fontWeight = FontWeight.Black,
-                    ),
-                    cursorBrush = SolidColor(LocalContentColor.current),
-                    keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
-                    keyboardActions = KeyboardActions(onDone = {
-                        commitTitle()
-                        focusManager.clearFocus()
-                    }),
-                    decorationBox = { field ->
-                        Box {
-                            if (draftTitle.isBlank()) {
-                                Text(
-                                    titlePlaceholder,
-                                    color = LocalContentColor.current.copy(alpha = .68f),
-                                    fontWeight = FontWeight.Black,
-                                    fontSize = Dimens.sp20,
-                                    maxLines = 1,
-                                    overflow = TextOverflow.Ellipsis,
-                                )
+                Row(Modifier.weight(1f), verticalAlignment = Alignment.CenterVertically) {
+                    BasicTextField(
+                        value = draftTitle,
+                        onValueChange = { draftTitle = it.take(MAX_APP_FOLDER_NAME_LENGTH) },
+                        modifier = Modifier.weight(1f).onFocusChanged { state ->
+                            if (!state.isFocused) commitTitle()
+                        },
+                        singleLine = true,
+                        textStyle = androidx.compose.material3.MaterialTheme.typography.titleLarge.copy(
+                            color = LocalContentColor.current,
+                            fontWeight = FontWeight.Black,
+                        ),
+                        cursorBrush = SolidColor(LocalContentColor.current),
+                        keyboardOptions = KeyboardOptions(imeAction = ImeAction.Done),
+                        keyboardActions = KeyboardActions(onDone = {
+                            commitTitle()
+                            focusManager.clearFocus()
+                        }),
+                        decorationBox = { field ->
+                            Box {
+                                if (draftTitle.isBlank()) {
+                                    Text(
+                                        titlePlaceholder,
+                                        color = LocalContentColor.current.copy(alpha = .68f),
+                                        fontWeight = FontWeight.Black,
+                                        fontSize = Dimens.sp20,
+                                        maxLines = 1,
+                                        overflow = TextOverflow.Ellipsis,
+                                    )
+                                }
+                                field()
                             }
-                            field()
-                        }
-                    },
-                )
+                        },
+                    )
+                    targetLimit?.let { limit ->
+                        Text(
+                            "(${targetKeys.size} / $limit)",
+                            modifier = Modifier.padding(start = Dimens.dp8),
+                            color = LocalContentColor.current.copy(alpha = .68f),
+                            fontWeight = FontWeight.SemiBold,
+                            maxLines = 1,
+                        )
+                    }
+                }
             } else {
                 Text(
-                    title,
+                    targetLimit?.let { "$title (${targetKeys.size} / $it)" } ?: title,
                     modifier = Modifier.weight(1f),
                     fontWeight = FontWeight.Black,
                     fontSize = Dimens.sp20,
@@ -580,7 +596,7 @@ private fun ClassicPageRail(
                 onClick = { onPage(pages.indexOf(ClassicLauncherPage.MinkSpace)) },
             ) {
                 Icon(
-                    Icons.Default.AutoAwesome,
+                    Icons.Default.ViewCarousel,
                     stringResource(R.string.settings_tab_mini_apps),
                     Modifier.size(18.dp),
                 )

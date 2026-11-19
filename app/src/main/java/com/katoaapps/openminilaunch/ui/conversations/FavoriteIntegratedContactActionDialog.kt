@@ -9,6 +9,7 @@ import androidx.compose.foundation.layout.widthIn
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.Message
+import androidx.compose.material.icons.automirrored.filled.OpenInNew
 import androidx.compose.material.icons.filled.DeleteOutline
 import androidx.compose.material.icons.filled.Download
 import androidx.compose.material.icons.filled.Edit
@@ -19,6 +20,7 @@ import androidx.compose.material3.Button
 import androidx.compose.material3.Icon
 import androidx.compose.material3.IconButton
 import androidx.compose.material3.MaterialTheme
+import androidx.compose.material3.OutlinedButton
 import androidx.compose.material3.OutlinedTextField
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -49,6 +51,7 @@ internal fun FavoriteIntegratedContactActionDialog(
     callAvailability: FavoriteIntegratedCallAvailability?,
     attentionColorArgb: Int?,
     onMessage: () -> Unit,
+    onOpenConversation: () -> Unit,
     onCall: () -> Unit,
     onInstallProvider: () -> Unit,
     onReconnect: () -> Unit,
@@ -117,6 +120,7 @@ internal fun FavoriteIntegratedContactActionDialog(
                     AvailabilityAction(
                         availability = availability,
                         onMessage = onMessage,
+                        onOpenConversation = onOpenConversation,
                         onInstallProvider = onInstallProvider,
                         onReconnect = onReconnect,
                     )
@@ -211,15 +215,25 @@ private fun UnavailableReason(availability: FavoriteIntegratedContactAvailabilit
 private fun AvailabilityAction(
     availability: FavoriteIntegratedContactAvailability,
     onMessage: () -> Unit,
+    onOpenConversation: () -> Unit,
     onInstallProvider: () -> Unit,
     onReconnect: () -> Unit,
 ) {
     when (availability) {
-        is FavoriteIntegratedContactAvailability.Available -> PrimaryActionButton(
-            label = stringResource(R.string.message),
-            icon = { Icon(Icons.AutoMirrored.Filled.Message, null, Modifier.size(Dimens.dp18)) },
-            onClick = onMessage,
-        )
+        is FavoriteIntegratedContactAvailability.Available -> {
+            PrimaryActionButton(
+                label = stringResource(R.string.message),
+                icon = { Icon(Icons.AutoMirrored.Filled.Message, null, Modifier.size(Dimens.dp18)) },
+                onClick = onMessage,
+            )
+            OutlinedButton(
+                onClick = onOpenConversation,
+                modifier = Modifier.fillMaxWidth().padding(top = Dimens.dp8),
+            ) {
+                Icon(Icons.AutoMirrored.Filled.OpenInNew, null, Modifier.size(Dimens.dp18))
+                Text(stringResource(R.string.open_conversation), Modifier.padding(start = Dimens.dp6))
+            }
+        }
         is FavoriteIntegratedContactAvailability.AppNotInstalled -> {
             if (availability.installAvailable) {
                 PrimaryActionButton(

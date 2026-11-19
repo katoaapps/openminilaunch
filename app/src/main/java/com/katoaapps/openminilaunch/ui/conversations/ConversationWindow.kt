@@ -97,13 +97,18 @@ internal fun ConversationWindow(
         if (conversation.messages.isNotEmpty()) messageListState.scrollToItem(conversation.messages.size + 1)
     }
 
-    val windowModifier = Modifier.fillMaxSize().then(
-        if (embedded) {
-            Modifier
-        } else {
-            Modifier.statusBarsPadding().navigationBarsPadding().imePadding()
-        },
-    )
+    val windowModifier = Modifier.fillMaxSize()
+        .then(
+            if (embedded) {
+                Modifier
+            } else {
+                Modifier.statusBarsPadding().navigationBarsPadding()
+            },
+        )
+        // Embedded Classic Conversations used to inherit the global Magic Box's IME inset.
+        // Apply it at the conversation window instead so the reply composer remains visible
+        // while the global Magic Box is intentionally absent.
+        .imePadding()
     Column(windowModifier) {
         PageHeader(displayName, goBack)
         ConversationWindowHeader(conversation, favoriteContact, actions, activity)

@@ -89,6 +89,7 @@ internal fun HomeScreen(
     val magicExpanded = magicBoxSessionState.expanded
     val classicLayout = store.homeLayoutStyle == HomeLayoutStyle.CLASSIC
     var classicVerticalGesturesEnabled by remember { mutableStateOf(false) }
+    var classicConversationsActive by remember(classicLayout) { mutableStateOf(false) }
     var launcherKeyboardVisible by remember { mutableStateOf(false) }
     var magicBoxFocusRearmToken by remember { mutableIntStateOf(0) }
     var showLockDisclosure by remember { mutableStateOf(false) }
@@ -201,6 +202,7 @@ internal fun HomeScreen(
                     dockedMinkKeyboardHeight,
                 )
             }
+            val showHomeMagicBox = !classicLayout || !classicConversationsActive
             Box(
                 Modifier.fillMaxSize()
                     .blur(if (magicExpanded) Dimens.dp10 else Dimens.dp0)
@@ -253,6 +255,10 @@ internal fun HomeScreen(
                                 onVerticalGesturesEnabledChange = {
                                     classicVerticalGesturesEnabled = it
                                 },
+                                onConversationsActiveChange = { active ->
+                                    classicConversationsActive = active
+                                    if (active) launcherKeyboardVisible = false
+                                },
                                 onTodoCenterChanged = { widgetCenter = it },
                                 onMagicBoxReadinessRequested = {
                                     magicBoxFocusRearmToken++
@@ -282,10 +288,14 @@ internal fun HomeScreen(
                             )
                         }
                     }
-                    Spacer(
-                        Modifier.navigationBarsPadding()
-                            .height(Dimens.dp88 + softInputRowHeight),
-                    )
+                    if (showHomeMagicBox) {
+                        Spacer(
+                            Modifier.navigationBarsPadding()
+                                .height(Dimens.dp88 + softInputRowHeight),
+                        )
+                    } else {
+                        Spacer(Modifier.windowInsetsBottomHeight(WindowInsets.navigationBars))
+                    }
                 }
             }
         }
@@ -297,51 +307,53 @@ internal fun HomeScreen(
                 destination = widgetCenter,
             )
         }
-        HomeMagicBox(
-            store = store,
-            actions = actions,
-            sessionState = magicBoxSessionState,
-            modifier = Modifier.fillMaxSize().zIndex(if (magicExpanded) 20f else 0f),
-            collapsedModifier = Modifier.widthIn(max = collapsedBarMaxWidth).fillMaxWidth()
-                .offset(x = collapsedBarOffsetX).navigationBarsPadding().imePadding()
-                .padding(horizontal = Dimens.dp22, vertical = Dimens.dp12)
-                .onGloballyPositioned { coordinates ->
-                    val origin = coordinates.positionInRoot()
-                    magicCenter = origin + Offset(coordinates.size.width / 2f, coordinates.size.height / 2f)
-                },
-            keyboardInputEnabled = keyboardInputEnabled,
-            autoOpenSoftwareKeyboardOnHome = store.openSoftwareKeyboardOnHome,
-            homeRequestToken = homeRequestToken,
-            focusRearmToken = magicBoxFocusRearmToken,
-            onTodoAdded = { text ->
-                if (MinkSpaceMiniApp.TODO in store.enabledMinkSpaceMiniApps) {
-                    flyingTodo = text
-                    todoJumpToken++
-                } else {
-                    coroutineScope.launch {
-                        todoSnackbarHostState.currentSnackbarData?.dismiss()
-                        val result = todoSnackbarHostState.showSnackbar(
-                            message = context.getString(R.string.todo_added),
-                            actionLabel = context.getString(R.string.open_todos),
-                            duration = SnackbarDuration.Long,
-                        )
-                        if (result == SnackbarResult.ActionPerformed) openTodos()
-                    }
-                }
-            },
-            onOpenKeyboardSettings = { openSettings(SettingsDestination.KEYBOARD) },
-            onOpenTotalScreen = store.minkSpaceTotalScreenShortcut
-                ?.takeIf { MinkSpaceMiniAppCatalog.get(it).supportsTotalScreen }
-                ?.let { miniApp ->
-                    {
-                        MinkSpaceMiniAppCatalog.get(miniApp)
-                            .let(minkSpacePresentation::showTotalScreen)
+        if (!classicLayout || !classicConversationsActive) {
+            HomeMagicBox(
+                store = store,
+                actions = actions,
+                sessionState = magicBoxSessionState,
+                modifier = Modifier.fillMaxSize().zIndex(if (magicExpanded) 20f else 0f),
+                collapsedModifier = Modifier.widthIn(max = collapsedBarMaxWidth).fillMaxWidth()
+                    .offset(x = collapsedBarOffsetX).navigationBarsPadding().imePadding()
+                    .padding(horizontal = Dimens.dp22, vertical = Dimens.dp12)
+                    .onGloballyPositioned { coordinates ->
+                        val origin = coordinates.positionInRoot()
+                        magicCenter = origin + Offset(coordinates.size.width / 2f, coordinates.size.height / 2f)
+                    },
+                keyboardInputEnabled = keyboardInputEnabled,
+                autoOpenSoftwareKeyboardOnHome = store.openSoftwareKeyboardOnHome,
+                homeRequestToken = homeRequestToken,
+                focusRearmToken = magicBoxFocusRearmToken,
+                onTodoAdded = { text ->
+                    if (MinkSpaceMiniApp.TODO in store.enabledMinkSpaceMiniApps) {
+                        flyingTodo = text
+                        todoJumpToken++
+                    } else {
+                        coroutineScope.launch {
+                            todoSnackbarHostState.currentSnackbarData?.dismiss()
+                            val result = todoSnackbarHostState.showSnackbar(
+                                message = context.getString(R.string.todo_added),
+                                actionLabel = context.getString(R.string.open_todos),
+                                duration = SnackbarDuration.Long,
+                            )
+                            if (result == SnackbarResult.ActionPerformed) openTodos()
+                        }
                     }
                 },
-            onOpenTodos = openTodos,
-            appAccessState = appAccessState,
-            onLauncherKeyboardVisibilityChanged = { launcherKeyboardVisible = it },
-        )
+                onOpenKeyboardSettings = { openSettings(SettingsDestination.KEYBOARD) },
+                onOpenTotalScreen = store.minkSpaceTotalScreenShortcut
+                    ?.takeIf { MinkSpaceMiniAppCatalog.get(it).supportsTotalScreen }
+                    ?.let { miniApp ->
+                        {
+                            MinkSpaceMiniAppCatalog.get(miniApp)
+                                .let(minkSpacePresentation::showTotalScreen)
+                        }
+                    },
+                onOpenTodos = openTodos,
+                appAccessState = appAccessState,
+                onLauncherKeyboardVisibilityChanged = { launcherKeyboardVisible = it },
+            )
+        }
         SnackbarHost(
             hostState = todoSnackbarHostState,
             modifier = Modifier

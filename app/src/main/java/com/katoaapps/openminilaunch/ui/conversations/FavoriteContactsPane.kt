@@ -29,6 +29,7 @@ import com.katoaapps.openminilaunch.features.contacts.FavoriteContactCatalog
 import com.katoaapps.openminilaunch.features.contacts.FavoriteContactRouteStore
 import com.katoaapps.openminilaunch.features.contacts.FavoriteIntegratedContactAddResult
 import com.katoaapps.openminilaunch.features.demo.DemoFavoriteData
+import com.katoaapps.openminilaunch.features.messaging.PreferredMessageDraftResult
 import com.katoaapps.openminilaunch.model.CommunicationRecipient
 import com.katoaapps.openminilaunch.model.AndroidContactPhone
 import com.katoaapps.openminilaunch.model.AndroidPhoneSelection
@@ -366,6 +367,26 @@ private fun FavoriteContactsContent(
                 val packageName = routes.call.resolvePackage(store.preferredCallingPackage)
                 requestCall(phone.rawNumber, packageName)
             }
+            FavoriteContactAction.OPEN_CONVERSATION -> {
+                val result = actions.openPreferredMessageDraft(
+                    recipient = CommunicationRecipient(
+                        address = phone.rawNumber,
+                        displayName = contact.displayName,
+                        detail = phone.label,
+                    ),
+                    body = "",
+                    preferredPackage = routes.message.resolvePackage(
+                        store.preferredMessagingPackage,
+                    ),
+                )
+                if (result == PreferredMessageDraftResult.FAILED) {
+                    Toast.makeText(
+                        context,
+                        context.getString(R.string.no_compatible_messaging_app),
+                        Toast.LENGTH_SHORT,
+                    ).show()
+                }
+            }
         }
         selectedContact = null
         pendingPhoneChoice = null
@@ -417,6 +438,35 @@ private fun FavoriteContactsContent(
             context.getString(R.string.integrated_contact_unavailable),
             Toast.LENGTH_LONG,
         ).show()
+    }
+
+    fun openIntegratedConversation(contact: FavoriteIntegratedContact) {
+        val opened = when (val endpoint = contact.endpoints.firstOrNull()) {
+            is IntegratedContactEndpoint.ConversationShortcut -> {
+                actions.resolveIntegratedContact(endpoint)?.let(actions::launchLauncherTarget)
+                    ?: false
+            }
+            is IntegratedContactEndpoint.ProviderAddress -> {
+                actions.openPreferredMessageDraft(
+                    recipient = CommunicationRecipient(
+                        address = endpoint.address,
+                        displayName = contact.displayName,
+                        detail = actions.appLabel(endpoint.packageName),
+                        userEntered = true,
+                    ),
+                    body = "",
+                    preferredPackage = endpoint.packageName,
+                ) != PreferredMessageDraftResult.FAILED
+            }
+            null -> false
+        }
+        if (!opened) {
+            Toast.makeText(
+                context,
+                context.getString(R.string.integrated_contact_unavailable),
+                Toast.LENGTH_LONG,
+            ).show()
+        }
     }
 
     fun callIntegratedContact(contact: FavoriteIntegratedContact) {
@@ -533,6 +583,10 @@ private fun FavoriteContactsContent(
             onMessage = {
                 selectedIntegratedContact = null
                 composeIntegratedMessage(contact)
+            },
+            onOpenConversation = {
+                selectedIntegratedContact = null
+                openIntegratedConversation(contact)
             },
             onCall = {
                 selectedIntegratedContact = null

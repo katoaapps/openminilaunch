@@ -14,6 +14,7 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.KeyboardArrowRight
 import androidx.compose.material.icons.automirrored.filled.Message
+import androidx.compose.material.icons.automirrored.filled.OpenInNew
 import androidx.compose.material.icons.filled.Close
 import androidx.compose.material.icons.filled.Contacts
 import androidx.compose.material.icons.filled.Phone
@@ -56,6 +57,7 @@ import com.katoaapps.openminilaunch.ui.theme.Muted
 internal enum class FavoriteContactAction {
     MESSAGE,
     CALL,
+    OPEN_CONVERSATION,
 }
 
 @Composable
@@ -128,6 +130,9 @@ internal fun FavoriteAndroidContactActionDialog(
                         enabled = availablePhones.isNotEmpty(),
                         onCall = { onAction(FavoriteContactAction.CALL) },
                         onMessage = { onAction(FavoriteContactAction.MESSAGE) },
+                        onOpenConversation = {
+                            onAction(FavoriteContactAction.OPEN_CONVERSATION)
+                        },
                         modifier = Modifier.padding(top = Dimens.dp18),
                     )
                 }
@@ -292,27 +297,38 @@ private fun FavoriteContactPrimaryActions(
     enabled: Boolean,
     onCall: () -> Unit,
     onMessage: () -> Unit,
+    onOpenConversation: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
-    Row(
-        modifier = modifier.fillMaxWidth(),
-        horizontalArrangement = Arrangement.spacedBy(Dimens.dp8),
-    ) {
-        Button(
-            onClick = onMessage,
-            enabled = enabled,
-            modifier = Modifier.weight(1f),
-        ) {
-            Icon(Icons.AutoMirrored.Filled.Message, null)
-            Text(stringResource(R.string.message), Modifier.padding(start = Dimens.dp6))
-        }
+    Column(modifier.fillMaxWidth()) {
         OutlinedButton(
-            onClick = onCall,
+            onClick = onOpenConversation,
             enabled = enabled,
-            modifier = Modifier.weight(1f),
+            modifier = Modifier.fillMaxWidth(),
         ) {
-            Icon(Icons.Default.Phone, null)
-            Text(stringResource(R.string.call), Modifier.padding(start = Dimens.dp6))
+            Icon(Icons.AutoMirrored.Filled.OpenInNew, null)
+            Text(stringResource(R.string.open_conversation), Modifier.padding(start = Dimens.dp6))
+        }
+        Row(
+            modifier = Modifier.fillMaxWidth().padding(top = Dimens.dp8),
+            horizontalArrangement = Arrangement.spacedBy(Dimens.dp8),
+        ) {
+            Button(
+                onClick = onMessage,
+                enabled = enabled,
+                modifier = Modifier.weight(1f),
+            ) {
+                Icon(Icons.AutoMirrored.Filled.Message, null)
+                Text(stringResource(R.string.message), Modifier.padding(start = Dimens.dp6))
+            }
+            OutlinedButton(
+                onClick = onCall,
+                enabled = enabled,
+                modifier = Modifier.weight(1f),
+            ) {
+                Icon(Icons.Default.Phone, null)
+                Text(stringResource(R.string.call), Modifier.padding(start = Dimens.dp6))
+            }
         }
     }
 }

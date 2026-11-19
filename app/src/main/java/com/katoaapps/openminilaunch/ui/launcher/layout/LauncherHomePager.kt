@@ -169,7 +169,7 @@ internal fun LauncherHomePager(
             }
         }
         val goToMinkDay: () -> Unit = {
-            if (!store.showMinkDayTab) {
+            if (classicLayout || !store.showMinkDayTab) {
                 openMinkDay()
             } else {
                 onFocusedPageChange(MINK_DAY_PAGE)
