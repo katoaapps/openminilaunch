@@ -1102,4 +1102,11 @@
     <string name="home_layout_classic_description">Interface de lanceur classique inspirée de BlackBerry</string>
     <string name="classic_folder_number">Dossier %1$d</string>
     <string name="classic_empty_folder">Ajoutez des applis pour personnaliser cette page.</string>
+    <string name="home_folder_connect">Connexions</string>
+    <string name="home_folder_tasks">Tâches</string>
+    <string name="home_folder_media">Médias</string>
+    <string name="home_folder_compose">Créer</string>
+    <string name="home_folder_browse">Parcourir</string>
+    <string name="home_folder_tools">Outils</string>
+    <string name="home_folder_fun">Loisirs</string>
 </resources>

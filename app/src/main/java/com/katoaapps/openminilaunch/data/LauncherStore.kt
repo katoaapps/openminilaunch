@@ -21,6 +21,7 @@ import com.katoaapps.openminilaunch.features.contacts.FavoriteAttentionColorStor
 import com.katoaapps.openminilaunch.features.contacts.AndroidFavoriteAttentionReconciler
 import com.katoaapps.openminilaunch.features.contacts.FavoriteContactOrderStore
 import com.katoaapps.openminilaunch.features.contacts.FavoriteIntegratedContactStore
+import com.katoaapps.openminilaunch.features.apps.FreshHomeFolderSeed
 import com.katoaapps.openminilaunch.features.minkspace.MinkSpaceMiniApp
 import com.katoaapps.openminilaunch.features.profile.ProfileRepository
 import com.katoaapps.openminilaunch.model.*
@@ -362,6 +363,14 @@ class LauncherStore private constructor(context: Context) {
         if (onboardingComplete || quickDrawerPreferences.quickAppsDefaultsInitialized) return
         if (drawerTargets.isEmpty()) launcherSelections.setDrawerTargets(defaultTargetKeys)
         quickDrawerPreferences.markQuickAppsDefaultsInitialized()
+    }
+
+    /** Populates the shared Mink/Classic App Grid only for a genuinely fresh install. */
+    internal fun initializeFreshHomeFolders(seeds: List<FreshHomeFolderSeed>) {
+        launcherSelections.initializeFreshHomeFolders(
+            seeds = seeds,
+            allowSeeding = !onboardingComplete,
+        )
     }
 
     fun addDrawerTarget(targetKey: String): Boolean = launcherSelections.addDrawerTarget(targetKey)

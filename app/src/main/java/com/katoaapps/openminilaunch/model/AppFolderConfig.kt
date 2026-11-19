@@ -9,13 +9,15 @@ enum class AppFolderColorMode {
     CUSTOM,
 }
 
-/** Persisted definition for a user-created collection shown from an App Grid slot. */
+/** Persisted definition for a user-owned or seeded collection shown from an App Grid slot. */
 data class AppFolderConfig(
     val id: String,
     val customName: String? = null,
     val orderedTargetKeys: List<String>,
     val colorMode: AppFolderColorMode = AppFolderColorMode.DEFAULT,
     val colorArgb: Int? = null,
+    /** Keeps intentional purpose pages as folders when they contain fewer than two apps. */
+    val retainAsContainer: Boolean = false,
 )
 
 internal fun AppFolderConfig.normalized(): AppFolderConfig {
@@ -46,5 +48,8 @@ internal fun appFolderColorMode(
 
 internal fun Iterable<AppFolderConfig>.normalizedAppFolders(): List<AppFolderConfig> =
     map(AppFolderConfig::normalized)
-        .filter { it.id.isNotBlank() && it.orderedTargetKeys.size >= 2 }
+        .filter { folder ->
+            folder.id.isNotBlank() &&
+                (folder.retainAsContainer || folder.orderedTargetKeys.size >= 2)
+        }
         .distinctBy(AppFolderConfig::id)

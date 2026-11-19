@@ -61,6 +61,18 @@ class AppFolderConfigTest {
     }
 
     @Test
+    fun `retained purpose container survives with no targets`() {
+        val folder = AppFolderConfig(
+            id = "fun",
+            customName = "Fun",
+            orderedTargetKeys = emptyList(),
+            retainAsContainer = true,
+        )
+
+        assertEquals(listOf(folder), listOf(folder).normalizedAppFolders())
+    }
+
+    @Test
     fun `assignment normalization rejects invalid slots and missing folders`() {
         val normalized = mapOf<AppGridSlot, AppGridAssignment>(
             AppGridSlot.MESSAGE to AppGridAssignment.Target(" messages "),

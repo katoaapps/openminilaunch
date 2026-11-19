@@ -43,6 +43,23 @@ class AppGridTargetPruningTest {
         assertEquals(listOf(TARGET_ONE, TARGET_THREE), result.folders.single().orderedTargetKeys)
     }
 
+    @Test fun retainedPurposeFolderStaysEmptyAfterItsLastAppIsRemoved() {
+        val folder = AppFolderConfig(
+            id = FOLDER_ID,
+            customName = "Fun",
+            orderedTargetKeys = listOf(TARGET_ONE),
+            retainAsContainer = true,
+        )
+        val result = pruneAppGridTargets(
+            assignments = mapOf(AppGridSlot.NOTE to AppGridAssignment.Folder(FOLDER_ID)),
+            folders = listOf(folder),
+            shouldRemove = { it == TARGET_ONE },
+        )
+
+        assertEquals(AppGridAssignment.Folder(FOLDER_ID), result.assignments[AppGridSlot.NOTE])
+        assertEquals(emptyList<String>(), result.folders.single().orderedTargetKeys)
+    }
+
     private companion object {
         const val FOLDER_ID = "folder-1"
         const val TARGET_ONE = "app:0:com.example.one/.MainActivity"

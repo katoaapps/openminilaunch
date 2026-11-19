@@ -82,7 +82,10 @@ class MainActivity : FragmentActivity(), MagicHardwareHotkeyHost {
         store.initializeFreshQuickApps(actions.defaultQuickAppSelectionKeys())
         actions.removeLegacyLockAdmin()
         lifecycleScope.launch {
-            withContext(Dispatchers.IO) { actions.installedApps() }
+            val freshHomeFolderSeeds = withContext(Dispatchers.IO) {
+                actions.freshHomeFolderSeeds()
+            }
+            store.initializeFreshHomeFolders(freshHomeFolderSeeds)
             store.migrateLauncherSelections(actions::normalizedLauncherSelectionKey)
         }
         setContent {

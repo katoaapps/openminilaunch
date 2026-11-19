@@ -251,6 +251,15 @@
     <string name="tracked_tap_to_remove">SELECTED · TAP TO REMOVE</string>
     <string name="remove_app">Remove %1$s</string>
 
+    <!-- One-time purpose folders shared by fresh Mink and Classic Home layouts -->
+    <string name="home_folder_connect">Connect</string>
+    <string name="home_folder_tasks">Tasks</string>
+    <string name="home_folder_media">Media</string>
+    <string name="home_folder_compose">Compose</string>
+    <string name="home_folder_browse">Browse</string>
+    <string name="home_folder_tools">Tools</string>
+    <string name="home_folder_fun">Fun</string>
+
     <!-- Display labels stored by stable enum values -->
     <string name="shortcut_note">Note</string>
     <string name="shortcut_calendar">Calendar</string>

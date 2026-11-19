@@ -1102,4 +1102,11 @@
     <string name="home_layout_classic_description">受 BlackBerry 启发的经典启动器界面</string>
     <string name="classic_folder_number">文件夹 %1$d</string>
     <string name="classic_empty_folder">添加应用，打造属于你的页面。</string>
+    <string name="home_folder_connect">联系</string>
+    <string name="home_folder_tasks">任务</string>
+    <string name="home_folder_media">媒体</string>
+    <string name="home_folder_compose">创作</string>
+    <string name="home_folder_browse">浏览</string>
+    <string name="home_folder_tools">工具</string>
+    <string name="home_folder_fun">娱乐</string>
 </resources>

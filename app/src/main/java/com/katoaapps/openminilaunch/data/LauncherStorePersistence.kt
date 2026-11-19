@@ -23,6 +23,9 @@ import java.util.UUID
 
 /** JSON serialization for LauncherStore. This keeps storage details out of its state API. */
 internal class LauncherStorePersistence(private val prefs: SharedPreferences) {
+    val freshHomeFoldersInitialized: Boolean
+        get() = prefs.getBoolean(FRESH_HOME_FOLDERS_INITIALIZED_KEY, false)
+
     fun loadTodos(): List<TodoItem> = runCatching {
         val array = JSONArray(prefs.getString(TODOS_KEY, "[]") ?: "[]")
         buildList {
@@ -152,6 +155,7 @@ internal class LauncherStorePersistence(private val prefs: SharedPreferences) {
         confirmedAppGridChoices: List<AppGridSlot>,
         drawerTargets: List<String>,
         libraryShortcutTargets: List<String>,
+        freshHomeFoldersInitialized: Boolean? = null,
     ) {
         val assignments = JSONObject().apply {
             appGridAssignments.forEach { (slot, assignment) ->
@@ -176,20 +180,24 @@ internal class LauncherStorePersistence(private val prefs: SharedPreferences) {
                         put("colorMode", folder.colorMode.name)
                     }
                     folder.colorArgb?.let { put("colorArgb", it) }
+                    if (folder.retainAsContainer) put("retainAsContainer", true)
                 })
             }
         }
         val drawer = JSONArray().apply { drawerTargets.forEach(::put) }
         val confirmed = JSONArray().apply { confirmedAppGridChoices.forEach { put(it.name) } }
         val libraryShortcuts = JSONArray().apply { libraryShortcutTargets.forEach(::put) }
-        prefs.edit()
+        val editor = prefs.edit()
             .putString(APP_GRID_ASSIGNMENTS_KEY, assignments.toString())
             .putString(APP_FOLDERS_KEY, folders.toString())
             .putString(SHORTCUTS_KEY, shortcuts.toString())
             .putString(CONFIRMED_SHORTCUTS_KEY, confirmed.toString())
             .putString(DRAWER_KEY, drawer.toString())
             .putString(LIBRARY_SHORTCUTS_KEY, libraryShortcuts.toString())
-            .apply()
+        freshHomeFoldersInitialized?.let {
+            editor.putBoolean(FRESH_HOME_FOLDERS_INITIALIZED_KEY, it)
+        }
+        editor.apply()
     }
 
     fun saveSearchFolders(folders: List<SearchFolder>) {
@@ -353,6 +361,7 @@ internal class LauncherStorePersistence(private val prefs: SharedPreferences) {
                     },
                     colorMode = appFolderColorMode(folder.optString("colorMode").takeIf(String::isNotBlank), colorArgb),
                     colorArgb = colorArgb,
+                    retainAsContainer = folder.optBoolean("retainAsContainer", false),
                 ),
             )
         }
@@ -366,6 +375,7 @@ internal class LauncherStorePersistence(private val prefs: SharedPreferences) {
         const val APP_GRID_ASSIGNMENTS_KEY = "app_grid_assignments"
         const val CONFIRMED_SHORTCUTS_KEY = "confirmed_shortcut_choices"
         const val DRAWER_KEY = "drawer"
+        const val FRESH_HOME_FOLDERS_INITIALIZED_KEY = "fresh_home_folders_initialized_v1"
         const val LIBRARY_SHORTCUTS_KEY = "library_shortcuts"
         const val SEARCH_FOLDERS_KEY = "search_folders"
         const val SEARCH_HISTORY_KEY = "search_history"

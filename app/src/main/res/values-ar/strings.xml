@@ -1138,4 +1138,11 @@
     <string name="home_layout_classic_description">واجهة مشغّل كلاسيكية مستوحاة من BlackBerry</string>
     <string name="classic_folder_number">المجلد %1$d</string>
     <string name="classic_empty_folder">أضف تطبيقات لتخصيص هذه الصفحة.</string>
+    <string name="home_folder_connect">اتصال</string>
+    <string name="home_folder_tasks">مهام</string>
+    <string name="home_folder_media">وسائط</string>
+    <string name="home_folder_compose">إنشاء</string>
+    <string name="home_folder_browse">تصفح</string>
+    <string name="home_folder_tools">أدوات</string>
+    <string name="home_folder_fun">مرح</string>
 </resources>

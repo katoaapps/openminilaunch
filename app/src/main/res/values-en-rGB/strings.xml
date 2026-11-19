@@ -1102,4 +1102,11 @@
     <string name="home_layout_classic_description">BlackBerry-inspired classic launcher UI</string>
     <string name="classic_folder_number">Folder %1$d</string>
     <string name="classic_empty_folder">Add apps to make this page yours.</string>
+    <string name="home_folder_connect">Connect</string>
+    <string name="home_folder_tasks">Tasks</string>
+    <string name="home_folder_media">Media</string>
+    <string name="home_folder_compose">Compose</string>
+    <string name="home_folder_browse">Browse</string>
+    <string name="home_folder_tools">Tools</string>
+    <string name="home_folder_fun">Fun</string>
 </resources>

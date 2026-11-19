@@ -1102,4 +1102,11 @@
     <string name="home_layout_classic_description">BlackBerry سے متاثر کلاسک لانچر UI</string>
     <string name="classic_folder_number">فولڈر %1$d</string>
     <string name="classic_empty_folder">اس صفحے کو اپنا بنانے کے لیے ایپس شامل کریں۔</string>
+    <string name="home_folder_connect">رابطہ</string>
+    <string name="home_folder_tasks">کام</string>
+    <string name="home_folder_media">میڈیا</string>
+    <string name="home_folder_compose">تخلیق</string>
+    <string name="home_folder_browse">براؤز</string>
+    <string name="home_folder_tools">ٹولز</string>
+    <string name="home_folder_fun">تفریح</string>
 </resources>

@@ -1102,4 +1102,11 @@
     <string name="home_layout_classic_description">BlackBerry に着想を得たクラシックなランチャー UI</string>
     <string name="classic_folder_number">フォルダー %1$d</string>
     <string name="classic_empty_folder">アプリを追加して、このページを自分仕様にしましょう。</string>
+    <string name="home_folder_connect">つながる</string>
+    <string name="home_folder_tasks">タスク</string>
+    <string name="home_folder_media">メディア</string>
+    <string name="home_folder_compose">作成</string>
+    <string name="home_folder_browse">ブラウズ</string>
+    <string name="home_folder_tools">ツール</string>
+    <string name="home_folder_fun">ゲーム</string>
 </resources>

@@ -320,6 +320,7 @@ internal object LauncherBackupCodec {
                         put("colorMode", folder.colorMode.name)
                     }
                     putNullable("colorArgb", folder.colorArgb)
+                    if (folder.retainAsContainer) put("retainAsContainer", true)
                 })
             }
         })
@@ -690,6 +691,7 @@ internal object LauncherBackupCodec {
                     orderedTargetKeys = folder.optJSONArray("targetKeys").safeTargets(),
                     colorMode = appFolderColorMode(folder.optString("colorMode").takeIf(String::isNotBlank), colorArgb),
                     colorArgb = colorArgb,
+                    retainAsContainer = folder.optBoolean("retainAsContainer", false),
                 ),
             )
         }

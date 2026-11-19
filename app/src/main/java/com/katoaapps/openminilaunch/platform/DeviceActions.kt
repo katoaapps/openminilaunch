@@ -9,6 +9,10 @@ import com.katoaapps.openminilaunch.features.ai.AiHandoffResult
 import com.katoaapps.openminilaunch.features.ai.AiProviderCatalog
 import com.katoaapps.openminilaunch.features.ai.AiProviderOption
 import com.katoaapps.openminilaunch.features.apps.LauncherAppRepository
+import com.katoaapps.openminilaunch.features.apps.FreshHomeFolderCandidate
+import com.katoaapps.openminilaunch.features.apps.FreshHomeFolderSeed
+import com.katoaapps.openminilaunch.features.apps.HomeFolderPurpose
+import com.katoaapps.openminilaunch.features.apps.freshHomeFolderSeeds
 import com.katoaapps.openminilaunch.features.apps.LauncherPackageRemoval
 import com.katoaapps.openminilaunch.features.apps.LauncherShortcutRepository
 import com.katoaapps.openminilaunch.features.apps.LegacyLauncherShortcutRepository
@@ -54,6 +58,7 @@ import android.content.pm.PackageManager
 import android.net.Uri
 import android.os.Build
 import android.app.SearchManager
+import android.telecom.TelecomManager
 import android.provider.Settings
 import android.provider.CalendarContract
 import android.provider.ContactsContract
@@ -236,6 +241,57 @@ class DeviceActions(private val context: Context) {
 
     internal fun defaultQuickAppSelectionKeys(): List<String> =
         QuickAppBuiltIn.defaultOrder.map(QuickAppBuiltIn::selectionKey) + MinkPadLauncherEntry.KEY
+
+    /** Builds the one-time purpose folders used by both fresh Mink and Classic layouts. */
+    internal fun freshHomeFolderSeeds(): List<FreshHomeFolderSeed> {
+        val preferredPackages = buildMap {
+            defaultMessagingPackage()?.let { put(it, HomeFolderPurpose.CONNECT) }
+            context.getSystemService(TelecomManager::class.java)
+                ?.defaultDialerPackage
+                ?.let { put(it, HomeFolderPurpose.CONNECT) }
+            defaultPackageForCategory(Intent.CATEGORY_APP_CONTACTS)
+                ?.let { put(it, HomeFolderPurpose.CONNECT) }
+            defaultPackageForCategory(Intent.CATEGORY_APP_EMAIL)
+                ?.let { put(it, HomeFolderPurpose.CONNECT) }
+            defaultPackageForCategory(Intent.CATEGORY_APP_CALENDAR)
+                ?.let { put(it, HomeFolderPurpose.TASKS) }
+            defaultPackageForCategory(Intent.CATEGORY_APP_MUSIC)
+                ?.let { put(it, HomeFolderPurpose.MEDIA) }
+            defaultPackageForCategory(Intent.CATEGORY_APP_GALLERY)
+                ?.let { put(it, HomeFolderPurpose.COMPOSE) }
+            defaultPackageForCategory(Intent.CATEGORY_APP_BROWSER)
+                ?.let { put(it, HomeFolderPurpose.BROWSE) }
+            defaultPackageForCategory(Intent.CATEGORY_APP_MAPS)
+                ?.let { put(it, HomeFolderPurpose.BROWSE) }
+            defaultPackageForCategory(Intent.CATEGORY_APP_FILES)
+                ?.let { put(it, HomeFolderPurpose.TOOLS) }
+        }
+        val candidates = installedApps()
+            .asSequence()
+            .filter { !it.isWorkProfile && it.isAvailable && it.selectionKey != MinkPadLauncherEntry.KEY }
+            .map { target ->
+                FreshHomeFolderCandidate(
+                    selectionKey = target.selectionKey,
+                    packageName = target.packageName,
+                    label = target.label,
+                    applicationCategory = launcherAppRepository.applicationCategory(target),
+                    preferredPurpose = preferredPackages[target.packageName],
+                )
+            }
+            .toList()
+        return freshHomeFolderSeeds(
+            candidates = candidates,
+            locale = context.resources.configuration.locales[0],
+            title = { purpose -> context.getString(purpose.titleRes) },
+        )
+    }
+
+    private fun defaultPackageForCategory(category: String): String? =
+        Intent(Intent.ACTION_MAIN)
+            .addCategory(category)
+            .resolveActivity(context.packageManager)
+            ?.packageName
+            ?.takeUnless { it == "android" }
 
     fun launcherTargetLabel(selectionKey: String): String = resolveLauncherSelection(selectionKey).label
 

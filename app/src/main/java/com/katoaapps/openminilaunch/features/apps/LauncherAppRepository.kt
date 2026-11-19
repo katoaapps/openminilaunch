@@ -2,6 +2,7 @@ package com.katoaapps.openminilaunch.features.apps
 
 import android.content.ComponentName
 import android.content.Context
+import android.content.pm.ApplicationInfo
 import android.content.pm.LauncherActivityInfo
 import android.content.pm.LauncherApps
 import android.graphics.drawable.Drawable
@@ -139,6 +140,10 @@ internal class LauncherAppRepository private constructor(context: Context) {
         if (launcherAppIdentity(selectionKey) != null) return selectionKey
         return targets().firstOrNull { !it.isWorkProfile && it.packageName == selectionKey }?.selectionKey
     }
+
+    fun applicationCategory(target: LauncherAppTarget): Int =
+        activityInfo(target.selectionKey)?.applicationInfo?.category
+            ?: ApplicationInfo.CATEGORY_UNDEFINED
 
     fun icon(target: LauncherAppTarget): Drawable? {
         if (target.selectionKey == MinkPadLauncherEntry.KEY) return appContext.getDrawable(R.drawable.ic_minkpad_notification)

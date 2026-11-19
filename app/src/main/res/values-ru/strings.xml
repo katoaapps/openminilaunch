@@ -1120,4 +1120,11 @@
     <string name="home_layout_classic_description">Классический интерфейс лаунчера в стиле BlackBerry</string>
     <string name="classic_folder_number">Папка %1$d</string>
     <string name="classic_empty_folder">Добавьте приложения, чтобы настроить эту страницу.</string>
+    <string name="home_folder_connect">Связь</string>
+    <string name="home_folder_tasks">Задачи</string>
+    <string name="home_folder_media">Медиа</string>
+    <string name="home_folder_compose">Создать</string>
+    <string name="home_folder_browse">Обзор</string>
+    <string name="home_folder_tools">Инструменты</string>
+    <string name="home_folder_fun">Развлечения</string>
 </resources>

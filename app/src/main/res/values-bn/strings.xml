@@ -1102,4 +1102,11 @@
     <string name="home_layout_classic_description">BlackBerry-অনুপ্রাণিত ক্লাসিক লঞ্চার UI</string>
     <string name="classic_folder_number">ফোল্ডার %1$d</string>
     <string name="classic_empty_folder">এই পেজটি নিজের মতো করতে অ্যাপ যোগ করুন।</string>
+    <string name="home_folder_connect">যোগাযোগ</string>
+    <string name="home_folder_tasks">কাজ</string>
+    <string name="home_folder_media">মিডিয়া</string>
+    <string name="home_folder_compose">তৈরি</string>
+    <string name="home_folder_browse">ব্রাউজ</string>
+    <string name="home_folder_tools">টুলস</string>
+    <string name="home_folder_fun">মজা</string>
 </resources>

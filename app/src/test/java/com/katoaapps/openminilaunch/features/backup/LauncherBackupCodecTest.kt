@@ -410,6 +410,7 @@ class LauncherBackupCodecTest {
             ),
             colorMode = AppFolderColorMode.CUSTOM,
             colorArgb = 0xFF123456.toInt(),
+            retainAsContainer = true,
         )
         val original = sample.copy(
             launcher = sample.launcher.copy(

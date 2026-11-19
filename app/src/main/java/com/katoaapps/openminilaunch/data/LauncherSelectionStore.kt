@@ -2,6 +2,7 @@ package com.katoaapps.openminilaunch.data
 
 import androidx.compose.runtime.mutableStateListOf
 import androidx.compose.runtime.mutableStateMapOf
+import com.katoaapps.openminilaunch.features.apps.FreshHomeFolderSeed
 import com.katoaapps.openminilaunch.model.AppFolderConfig
 import com.katoaapps.openminilaunch.model.AppFolderColorMode
 import com.katoaapps.openminilaunch.model.AppGridAssignment
@@ -47,6 +48,47 @@ internal class LauncherSelectionStore(private val persistence: LauncherStorePers
         libraryShortcutTargets.addAll(snapshot.libraryShortcutTargets.normalizedTargetKeys())
     }
 
+    /**
+     * Seeds all fresh Home assignments in one persisted snapshot. Existing or restored choices
+     * always win, and the marker prevents a later onboarding reset from repopulating cleared slots.
+     */
+    fun initializeFreshHomeFolders(
+        seeds: List<FreshHomeFolderSeed>,
+        allowSeeding: Boolean,
+    ): Boolean {
+        if (persistence.freshHomeFoldersInitialized) return false
+        val hasExistingChoices = appGridAssignments.isNotEmpty() ||
+            appFolders.isNotEmpty() ||
+            confirmedAppGridChoices.isNotEmpty()
+        if (!allowSeeding || hasExistingChoices) {
+            saveSelections(freshHomeFoldersInitialized = true)
+            return false
+        }
+
+        val folders = mutableListOf<AppFolderConfig>()
+        val assignments = linkedMapOf<AppGridSlot, AppGridAssignment>()
+        configurableAppGridSlots.zip(seeds).forEach { (slot, seed) ->
+            val targets = seed.selectionKeys
+                .map(String::trim)
+                .filter(String::isNotEmpty)
+                .distinct()
+                .take(MAX_APP_FOLDER_TARGETS)
+            val folder = AppFolderConfig(
+                id = UUID.randomUUID().toString(),
+                customName = seed.title,
+                orderedTargetKeys = targets,
+                retainAsContainer = true,
+            )
+            folders += folder
+            assignments[slot] = AppGridAssignment.Folder(folder.id)
+        }
+        replaceAppGridState(assignments, folders)
+        confirmedAppGridChoices.clear()
+        confirmedAppGridChoices.addAll(assignments.keys)
+        saveSelections(freshHomeFoldersInitialized = true)
+        return assignments.isNotEmpty()
+    }
+
     fun placePinnedAppGridTarget(slot: AppGridSlot, targetKey: String) {
         if (slot !in configurableAppGridSlots || targetKey.isBlank()) return
         val currentAssignment = appGridAssignment(slot)
@@ -87,13 +129,19 @@ internal class LauncherSelectionStore(private val persistence: LauncherStorePers
             .filter(String::isNotEmpty)
             .distinct()
             .take(MAX_APP_FOLDER_TARGETS)
-        val assignment = when (targets.size) {
-            0 -> null
-            1 -> AppGridAssignment.Target(targets.single())
+        val existingFolder = (appGridAssignments[slot] as? AppGridAssignment.Folder)
+            ?.folderId
+            ?.let(::appFolder)
+        val assignment = when {
+            existingFolder?.retainAsContainer == true -> {
+                val folder = existingFolder.copy(orderedTargetKeys = targets)
+                val existingIndex = appFolders.indexOfFirst { it.id == folder.id }
+                appFolders[existingIndex] = folder
+                AppGridAssignment.Folder(folder.id)
+            }
+            targets.isEmpty() -> null
+            targets.size == 1 -> AppGridAssignment.Target(targets.single())
             else -> {
-                val existingFolder = (appGridAssignments[slot] as? AppGridAssignment.Folder)
-                    ?.folderId
-                    ?.let(::appFolder)
                 val folder = AppFolderConfig(
                     id = existingFolder?.id ?: UUID.randomUUID().toString(),
                     customName = existingFolder?.customName,
@@ -323,13 +371,14 @@ internal class LauncherSelectionStore(private val persistence: LauncherStorePers
         }
     }
 
-    private fun saveSelections() {
+    private fun saveSelections(freshHomeFoldersInitialized: Boolean? = null) {
         persistence.saveLauncherSelections(
             appGridAssignments,
             appFolders,
             confirmedAppGridChoices,
             drawerTargets,
             libraryShortcutTargets,
+            freshHomeFoldersInitialized,
         )
     }
 

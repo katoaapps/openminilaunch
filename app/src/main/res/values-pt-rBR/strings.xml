@@ -1102,4 +1102,11 @@
     <string name="home_layout_classic_description">Interface clássica inspirada no BlackBerry</string>
     <string name="classic_folder_number">Pasta %1$d</string>
     <string name="classic_empty_folder">Adicione apps para deixar esta página do seu jeito.</string>
+    <string name="home_folder_connect">Conectar</string>
+    <string name="home_folder_tasks">Tarefas</string>
+    <string name="home_folder_media">Mídia</string>
+    <string name="home_folder_compose">Criar</string>
+    <string name="home_folder_browse">Explorar</string>
+    <string name="home_folder_tools">Ferramentas</string>
+    <string name="home_folder_fun">Diversão</string>
 </resources>

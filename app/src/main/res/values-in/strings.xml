@@ -1102,4 +1102,11 @@
     <string name="home_layout_classic_description">UI peluncur klasik yang terinspirasi BlackBerry</string>
     <string name="classic_folder_number">Folder %1$d</string>
     <string name="classic_empty_folder">Tambahkan aplikasi untuk menyesuaikan halaman ini.</string>
+    <string name="home_folder_connect">Terhubung</string>
+    <string name="home_folder_tasks">Tugas</string>
+    <string name="home_folder_media">Media</string>
+    <string name="home_folder_compose">Buat</string>
+    <string name="home_folder_browse">Jelajah</string>
+    <string name="home_folder_tools">Alat</string>
+    <string name="home_folder_fun">Seru</string>
 </resources>

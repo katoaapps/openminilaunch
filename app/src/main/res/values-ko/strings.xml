@@ -1102,4 +1102,11 @@
     <string name="home_layout_classic_description">BlackBerry에서 영감을 받은 클래식 런처 UI</string>
     <string name="classic_folder_number">폴더 %1$d</string>
     <string name="classic_empty_folder">앱을 추가해 이 페이지를 꾸며 보세요.</string>
+    <string name="home_folder_connect">연결</string>
+    <string name="home_folder_tasks">작업</string>
+    <string name="home_folder_media">미디어</string>
+    <string name="home_folder_compose">만들기</string>
+    <string name="home_folder_browse">탐색</string>
+    <string name="home_folder_tools">도구</string>
+    <string name="home_folder_fun">재미</string>
 </resources>

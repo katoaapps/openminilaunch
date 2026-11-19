@@ -122,9 +122,17 @@ internal fun pruneAppGridTargets(
                 is AppGridAssignment.Folder -> {
                     val folder = foldersById[assignment.folderId] ?: return@forEach
                     val retainedTargets = folder.orderedTargetKeys.filterNot(shouldRemove)
-                    when (retainedTargets.size) {
-                        0 -> Unit
-                        1 -> put(slot, AppGridAssignment.Target(retainedTargets.single()))
+                    when {
+                        folder.retainAsContainer -> {
+                            val retainedFolder = folder.copy(orderedTargetKeys = retainedTargets)
+                            retainedFolders[retainedFolder.id] = retainedFolder
+                            put(slot, AppGridAssignment.Folder(retainedFolder.id))
+                        }
+                        retainedTargets.isEmpty() -> Unit
+                        retainedTargets.size == 1 -> put(
+                            slot,
+                            AppGridAssignment.Target(retainedTargets.single()),
+                        )
                         else -> {
                             val retainedFolder = folder.copy(orderedTargetKeys = retainedTargets)
                             retainedFolders[retainedFolder.id] = retainedFolder
