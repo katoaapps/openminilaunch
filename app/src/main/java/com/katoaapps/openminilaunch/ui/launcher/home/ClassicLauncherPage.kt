@@ -43,7 +43,7 @@ internal fun classicHomePageIndex(
 ): Int = homeSlot
     ?.let { slot -> pages.indexOfFirst { it is ClassicLauncherPage.Folder && it.slot == slot } }
     ?.takeIf { it >= 0 }
-    ?: pages.indexOf(ClassicLauncherPage.MinkSpace).coerceAtLeast(0)
+    ?: pages.indexOf(ClassicLauncherPage.QuickApps).coerceAtLeast(0)
 
 /** Conversation replies own typing; every other completed page change returns it to Magic Box. */
 internal fun shouldRearmMagicBox(

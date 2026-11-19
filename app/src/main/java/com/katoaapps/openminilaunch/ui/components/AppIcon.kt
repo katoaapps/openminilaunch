@@ -4,9 +4,12 @@ import com.katoaapps.openminilaunch.platform.DeviceActions
 import com.katoaapps.openminilaunch.data.LauncherStore
 import com.katoaapps.openminilaunch.features.appearance.WATERMELON_EMOJI
 import com.katoaapps.openminilaunch.features.iconpacks.IconPackRepository
+import com.katoaapps.openminilaunch.features.quickdrawer.QuickAppBuiltIn
 import com.katoaapps.openminilaunch.model.IconSource
+import com.katoaapps.openminilaunch.model.LauncherActionTarget
 import com.katoaapps.openminilaunch.model.LauncherAppTarget
 import com.katoaapps.openminilaunch.model.LauncherTarget
+import com.katoaapps.openminilaunch.ui.appgrid.defaultIcon
 import com.katoaapps.openminilaunch.ui.theme.MinkBlack
 import com.katoaapps.openminilaunch.ui.theme.MinkWhite
 
@@ -20,6 +23,7 @@ import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.Apps
 import androidx.compose.material.icons.filled.Block
+import androidx.compose.material.icons.filled.Checklist
 import androidx.compose.material3.Icon
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
@@ -120,6 +124,20 @@ internal fun LauncherTargetIcon(
     val context = LocalContext.current
     val store = LauncherStore.get(context)
     val appearance = store.iconAppearance
+    if (target is LauncherActionTarget) {
+        val action = QuickAppBuiltIn.fromSelectionKey(target.selectionKey)
+        val imageVector = action?.appGridSlot?.defaultIcon()
+            ?: if (action == QuickAppBuiltIn.TODOS) Icons.Default.Checklist else Icons.Default.Apps
+        Icon(
+            imageVector = imageVector,
+            contentDescription = contentDescription,
+            modifier = Modifier.size(size),
+            tint = appearance.minkBuiltInIconTint(
+                themedTint ?: MaterialTheme.colorScheme.onSurface,
+            ),
+        )
+        return
+    }
     val override = store.appIconOverrides[target.selectionKey]
     val iconPacks = remember(context) { IconPackRepository.get(context) }
     val iconPacksRevision by iconPacks.revision.collectAsState()

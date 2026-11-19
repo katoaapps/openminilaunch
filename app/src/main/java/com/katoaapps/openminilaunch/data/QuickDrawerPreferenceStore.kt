@@ -8,6 +8,9 @@ import androidx.core.content.edit
 
 /** Appearance and optional entry points owned by the Quick Drawer surface. */
 internal class QuickDrawerPreferenceStore(private val prefs: SharedPreferences) {
+    val quickAppsDefaultsInitialized: Boolean
+        get() = prefs.getBoolean(QUICK_APPS_DEFAULTS_INITIALIZED_KEY, false)
+
     var showMinkPadButton by mutableStateOf(
         prefs.getBoolean(SHOW_MINKPAD_BUTTON_KEY, true),
     )
@@ -50,10 +53,15 @@ internal class QuickDrawerPreferenceStore(private val prefs: SharedPreferences) 
         }
     }
 
+    fun markQuickAppsDefaultsInitialized() {
+        prefs.edit { putBoolean(QUICK_APPS_DEFAULTS_INITIALIZED_KEY, true) }
+    }
+
     private companion object {
         const val SHOW_MINKPAD_BUTTON_KEY = "quick_drawer_show_minkpad_button"
         const val SHOW_PRIVATE_SPACE_BUTTON_KEY = "quick_drawer_show_private_space_button"
         const val SHOW_WORK_PROFILE_BUTTON_KEY = "quick_drawer_show_work_profile_button"
         const val COLOR_ARGB_KEY = "quick_drawer_color_argb"
+        const val QUICK_APPS_DEFAULTS_INITIALIZED_KEY = "quick_apps_defaults_initialized_v1"
     }
 }

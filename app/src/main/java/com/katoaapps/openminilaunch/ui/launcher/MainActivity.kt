@@ -5,6 +5,7 @@ import android.app.Activity
 import android.app.ActivityManager
 import android.app.role.RoleManager
 import android.appwidget.AppWidgetHost
+import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
@@ -67,7 +68,7 @@ class MainActivity : FragmentActivity(), MagicHardwareHotkeyHost {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        todoFeatureRuntime.handleNavigationIntent(intent)
+        handleLauncherIntent(intent)
         WindowCompat.setDecorFitsSystemWindows(window, false)
         allowContentBesideDisplayCutouts()
         val store = LauncherStore.get(this)
@@ -78,6 +79,7 @@ class MainActivity : FragmentActivity(), MagicHardwareHotkeyHost {
         widgetConfigurationResult = savedInstanceState?.takeIf { it.containsKey(STATE_WIDGET_RESULT_ID) }
             ?.let { it.getInt(STATE_WIDGET_RESULT_ID) to it.getBoolean(STATE_WIDGET_RESULT_OK) }
         actions = DeviceActions(this)
+        store.initializeFreshQuickApps(actions.defaultQuickAppSelectionKeys())
         actions.removeLegacyLockAdmin()
         lifecycleScope.launch {
             withContext(Dispatchers.IO) { actions.installedApps() }
@@ -138,9 +140,19 @@ class MainActivity : FragmentActivity(), MagicHardwareHotkeyHost {
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
         setIntent(intent)
-        todoFeatureRuntime.handleNavigationIntent(intent)
+        handleLauncherIntent(intent)
         // Home requests reuse the launcher activity. This token resets transient Compose pages.
         if (intent.action == Intent.ACTION_MAIN) homeRequestToken++
+    }
+
+    private fun handleLauncherIntent(intent: Intent?) {
+        todoFeatureRuntime.handleNavigationIntent(intent)
+        if (intent?.action == ACTION_OPEN_TODOS) {
+            todoFeatureRuntime.requestHomeBoardNavigation()
+            // This handoff is a one-shot command, not durable Activity state. Consuming it keeps
+            // configuration changes or process restoration from reopening To-dos unexpectedly.
+            intent.action = null
+        }
     }
 
     internal fun configureAppWidget(
@@ -198,5 +210,13 @@ class MainActivity : FragmentActivity(), MagicHardwareHotkeyHost {
         } else {
             homeRoleLauncher.launch(Intent(Settings.ACTION_HOME_SETTINGS))
         }
+    }
+
+    companion object {
+        private const val ACTION_OPEN_TODOS =
+            "com.katoaapps.openminilaunch.action.OPEN_TODOS"
+
+        internal fun openTodosIntent(context: Context): Intent =
+            Intent(context, MainActivity::class.java).setAction(ACTION_OPEN_TODOS)
     }
 }

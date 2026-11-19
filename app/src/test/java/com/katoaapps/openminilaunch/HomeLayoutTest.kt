@@ -79,10 +79,10 @@ class HomeLayoutTest {
         assertEquals(ClassicLauncherPage.Widgets, pages.last())
     }
 
-    @Test fun classicHomeDefaultsToMiniAppsUntilAFolderIsSelected() {
+    @Test fun classicHomeDefaultsToQuickAppsUntilAFolderIsSelected() {
         val pages = classicLauncherPages(configurableAppGridSlots)
 
-        assertEquals(pages.indexOf(ClassicLauncherPage.MinkSpace), classicHomePageIndex(pages, null))
+        assertEquals(pages.indexOf(ClassicLauncherPage.QuickApps), classicHomePageIndex(pages, null))
         assertEquals(
             pages.indexOfFirst {
                 it is ClassicLauncherPage.Folder && it.slot == AppGridSlot.FILES

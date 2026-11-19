@@ -290,7 +290,7 @@ private fun <T> AppPickerDialogContent(
 @Composable
 internal fun LauncherTargetPickerDialog(
     title: String,
-    apps: List<LauncherAppTarget>,
+    apps: List<LauncherTarget>,
     shortcuts: List<LauncherShortcutTarget>,
     selected: Set<String>,
     selectedOrder: List<String> = selected.toList(),
@@ -327,7 +327,8 @@ internal fun LauncherTargetPickerDialog(
     val visibleTargets = remember(allTargets, selectedCategory) {
         allTargets.filter { target ->
             when (selectedCategory) {
-                LauncherTargetCategory.APPS -> target is LauncherAppTarget
+                LauncherTargetCategory.APPS ->
+                    target is LauncherAppTarget || target is LauncherActionTarget
                 LauncherTargetCategory.SHORTCUTS -> target is LauncherShortcutTarget
             }
         }
@@ -414,7 +415,7 @@ internal fun LauncherTargetPickerDialog(
             { filteredTargets ->
                 LauncherShortcutGroupList(
                     shortcuts = filteredTargets.filterIsInstance<LauncherShortcutTarget>(),
-                    apps = apps,
+                    apps = apps.filterIsInstance<LauncherAppTarget>(),
                     selected = selected,
                     actions = actions,
                     multiSelect = multiSelect,

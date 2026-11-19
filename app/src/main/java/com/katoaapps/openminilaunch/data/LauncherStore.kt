@@ -357,6 +357,13 @@ class LauncherStore private constructor(context: Context) {
     fun setDrawerTargets(targetKeys: List<String>): Boolean =
         launcherSelections.setDrawerTargets(targetKeys)
 
+    /** Seeds a useful Classic Home once without repopulating a collection the user later clears. */
+    internal fun initializeFreshQuickApps(defaultTargetKeys: List<String>) {
+        if (onboardingComplete || quickDrawerPreferences.quickAppsDefaultsInitialized) return
+        if (drawerTargets.isEmpty()) launcherSelections.setDrawerTargets(defaultTargetKeys)
+        quickDrawerPreferences.markQuickAppsDefaultsInitialized()
+    }
+
     fun addDrawerTarget(targetKey: String): Boolean = launcherSelections.addDrawerTarget(targetKey)
 
     fun replaceDrawerTarget(index: Int, targetKey: String): Boolean =

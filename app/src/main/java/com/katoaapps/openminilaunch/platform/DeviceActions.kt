@@ -23,6 +23,9 @@ import com.katoaapps.openminilaunch.features.messaging.MessagingProviderOption
 import com.katoaapps.openminilaunch.features.messaging.MessagingProviderAvailability
 import com.katoaapps.openminilaunch.features.messaging.ConversationShortcutDraftResult
 import com.katoaapps.openminilaunch.features.messaging.PreferredMessageDraftResult
+import com.katoaapps.openminilaunch.features.minkpad.MinkPadLauncherEntry
+import com.katoaapps.openminilaunch.features.quickdrawer.QuickAppBuiltIn
+import com.katoaapps.openminilaunch.features.quickdrawer.QuickAppBuiltInCatalog
 import com.katoaapps.openminilaunch.features.updates.GITHUB_LATEST_APK_URL
 import com.katoaapps.openminilaunch.features.updates.GITHUB_RELEASES_URL
 import com.katoaapps.openminilaunch.features.updates.FDROID_PACKAGE_URL
@@ -30,7 +33,9 @@ import com.katoaapps.openminilaunch.model.*
 import com.katoaapps.openminilaunch.ui.apps.AllAppsActivity
 import com.katoaapps.openminilaunch.ui.apps.PrivateAppsActivity
 import com.katoaapps.openminilaunch.ui.apps.work.WorkAppsActivity
+import com.katoaapps.openminilaunch.ui.launcher.MainActivity
 import com.katoaapps.openminilaunch.ui.minkspace.media.MediaLabActivity
+import com.katoaapps.openminilaunch.todoFeatureRuntime
 
 import android.Manifest
 import android.app.ActivityOptions
@@ -65,6 +70,7 @@ class DeviceActions(private val context: Context) {
     private val legacyShortcutRepository = LegacyLauncherShortcutRepository.get(context)
     private val privateSpaceRepository = PrivateSpaceRepository.get(context)
     private val workProfileRepository = WorkProfileRepository.get(context)
+    private val quickAppBuiltIns = QuickAppBuiltInCatalog(context)
     val launcherAppsRevision: StateFlow<Long> = launcherAppRepository.revision
     val launcherShortcutsRevision: StateFlow<Long> = launcherShortcutRepository.revision
     internal val launcherPackageRemovals: SharedFlow<LauncherPackageRemoval> =
@@ -217,12 +223,19 @@ class DeviceActions(private val context: Context) {
         launcherAppRepository.resolve(selectionKey)
 
     fun resolveLauncherSelection(selectionKey: String): LauncherTarget =
-        launcherShortcutRepository.resolve(selectionKey)
+        quickAppBuiltIns.resolve(selectionKey)
+            ?: launcherShortcutRepository.resolve(selectionKey)
             ?: legacyShortcutRepository.resolve(selectionKey)
             ?: launcherAppRepository.resolve(selectionKey)
 
     fun normalizedLauncherSelectionKey(selectionKey: String): String? =
-        launcherAppRepository.normalizedSelectionKey(selectionKey)
+        quickAppBuiltIns.resolve(selectionKey)?.selectionKey
+            ?: launcherAppRepository.normalizedSelectionKey(selectionKey)
+
+    internal fun quickAppBuiltInTargets(): List<LauncherActionTarget> = quickAppBuiltIns.targets()
+
+    internal fun defaultQuickAppSelectionKeys(): List<String> =
+        QuickAppBuiltIn.defaultOrder.map(QuickAppBuiltIn::selectionKey) + MinkPadLauncherEntry.KEY
 
     fun launcherTargetLabel(selectionKey: String): String = resolveLauncherSelection(selectionKey).label
 
@@ -232,12 +245,16 @@ class DeviceActions(private val context: Context) {
     fun launcherAppIcon(target: LauncherAppTarget): Drawable? = launcherAppRepository.icon(target)
 
     fun launcherTargetIcon(target: LauncherTarget): Drawable? = when (target) {
+        // Launcher-owned actions use the same Compose vectors as the Mink App Grid.
+        // There is intentionally no duplicate Android Drawable for this path.
+        is LauncherActionTarget -> null
         is LauncherAppTarget -> launcherAppRepository.icon(target)
         is LauncherShortcutTarget -> launcherShortcutRepository.icon(target)
         is LegacyLauncherShortcutTarget -> legacyShortcutRepository.icon(target)
     }
 
     fun launchLauncherTarget(target: LauncherTarget): Boolean = when (target) {
+        is LauncherActionTarget -> launchQuickAppBuiltIn(target)
         is LauncherAppTarget -> launcherAppRepository.launch(target)
         is LauncherShortcutTarget -> launcherShortcutRepository.launch(target)
         is LegacyLauncherShortcutTarget -> legacyShortcutRepository.launch(target)
@@ -245,6 +262,33 @@ class DeviceActions(private val context: Context) {
 
     fun launchLauncherSelection(selectionKey: String): Boolean =
         launchLauncherTarget(resolveLauncherSelection(selectionKey))
+
+    private fun launchQuickAppBuiltIn(target: LauncherActionTarget): Boolean {
+        val action = QuickAppBuiltIn.fromSelectionKey(target.selectionKey) ?: return false
+        if (action == QuickAppBuiltIn.CALENDAR) {
+            return start(
+                Intent(Intent.ACTION_MAIN).addCategory(Intent.CATEGORY_APP_CALENDAR),
+            )
+        }
+        action.appGridSlot?.let { slot ->
+            launchAppGridSlot(slot = slot, assignedTarget = null, openDrawer = {})
+            return true
+        }
+        return when (action) {
+            QuickAppBuiltIn.TODOS -> {
+                if (context is MainActivity) {
+                    context.todoFeatureRuntime.requestHomeBoardNavigation()
+                    true
+                } else {
+                    // Assistant and other temporary surfaces hand navigation to the launcher as
+                    // one explicit request. A generic HOME intent would independently reset Home
+                    // and race the asynchronous board-navigation request.
+                    start(MainActivity.openTodosIntent(context))
+                }
+            }
+            else -> false
+        }
+    }
 
     fun supportsAppBubbles(): Boolean = appBubbleManager.isSupported()
 

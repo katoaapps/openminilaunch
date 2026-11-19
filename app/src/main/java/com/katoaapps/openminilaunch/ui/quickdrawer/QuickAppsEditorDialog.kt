@@ -39,6 +39,9 @@ internal fun QuickAppsEditorDialog(
     val shortcuts by produceState<List<LauncherShortcutTarget>?>(null, launcherShortcutsRevision) {
         value = withContext(Dispatchers.IO) { actions.installedShortcuts() }
     }
+    val availableApps = remember(apps) {
+        actions.quickAppBuiltInTargets() + apps.orEmpty()
+    }
     val draftSelection = remember {
         mutableStateListOf<String>().apply { addAll(store.drawerTargets) }
     }
@@ -46,7 +49,7 @@ internal fun QuickAppsEditorDialog(
 
     LauncherTargetPickerDialog(
         title = stringResource(R.string.quick_apps),
-        apps = apps.orEmpty(),
+        apps = availableApps,
         shortcuts = shortcuts.orEmpty(),
         selected = draftSelection.toSet(),
         selectedOrder = draftSelection.toList(),
