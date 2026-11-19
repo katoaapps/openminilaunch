@@ -4,7 +4,8 @@
     <string name="home_spotlight_minkspace_title">迷你应用在这里</string>
     <string name="home_spotlight_minkspace_description">在 MinkSpace 中上下滑动以切换迷你应用。点按支持的应用可展开。</string>
     <string name="home_spotlight_magic_title">开始输入</string>
-    <string name="home_spotlight_magic_description">使用普通文字或 Magic Box 热键进行搜索、发消息、通话、记笔记和启动操作。</string>
+    <string name="home_spotlight_magic_description">正常输入即可搜索，或先输入热键，告诉 Magic Box 你想做什么。</string>
+    <string name="home_spotlight_magic_hotkeys">@ 消息 · # 通话 · − 待办 · / 备注 · + 日程 · ? 应用 · * 助理</string>
     <string name="home_spotlight_keyboard_title">不只是键盘</string>
     <string name="home_spotlight_keyboard_description">点按打开键盘。长按启动 Adrift。</string>
     <string name="home_spotlight_header_title">主页一目了然</string>
@@ -14,4 +15,11 @@
     <string name="notifications">通知</string>
     <string name="replay_home_tour">重播主页导览</string>
     <string name="replay_home_tour_summary">重新查看主页控件、快捷方式和手势</string>
+    <string name="home_spotlight_classic_pages_title">一页页浏览主页</string>
+    <string name="home_spotlight_classic_pages_description">滑动浏览 Mini Apps、七个应用和文件夹页面、Quick Apps 及小组件。</string>
+    <string name="home_spotlight_classic_rail_title">跳转到任意页面</string>
+    <string name="home_spotlight_classic_rail_description">使用底部导航在对话、Mini Apps、文件夹、Quick Apps 和小组件之间跳转。</string>
+    <string name="home_spotlight_classic_gestures_title">经典快捷操作</string>
+    <string name="home_spotlight_classic_gestures_description">向上滑动查看所有应用，向下滑动查看通知。</string>
+    <string name="start_typing">开始输入</string>
 </resources>

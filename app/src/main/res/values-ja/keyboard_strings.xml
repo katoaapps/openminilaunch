@@ -41,6 +41,17 @@
     <string name="keyboard_key_new_line">改行</string>
     <string name="keyboard_key_search">検索</string>
     <string name="onboarding_keyboard_title">キーボードを選択</string>
-    <string name="onboarding_keyboard_description">Mink のランチャーキーボードは Magic Box 内にのみ表示されます。使用するキーのスタイルとテーマカラーの組み合わせを選んでください。</string>
+    <string name="onboarding_keyboard_description">ホームから入力するときに Mink で使うキーボードを選びます。</string>
+    <string name="onboarding_mink_keyboard_title">Mink キーボード</string>
+    <string name="onboarding_mink_keyboard_description">標準はフラットで、Magic Box のアクションを内蔵しています。</string>
+    <string name="onboarding_system_keyboard_title">システムキーボード</string>
+    <string name="onboarding_system_keyboard_description">スマートフォンに設定済みの Android キーボードを使います。</string>
+    <string name="onboarding_keyboard_preview_hint">ここに入力して試せます。</string>
+    <string name="onboarding_keyboard_hotkey_text">メッセージを送る</string>
+    <string name="onboarding_keyboard_hotkey_call">電話する</string>
+    <string name="onboarding_keyboard_hotkey_todo">To-do を追加</string>
+    <string name="onboarding_keyboard_hotkey_note">メモを書く</string>
+    <string name="onboarding_keyboard_hotkey_event">予定を追加</string>
+    <string name="onboarding_keyboard_hotkey_app">アプリを探す</string>
     <string name="onboarding_keyboard_change_later">後から SYM を長押しするか、Magic Box → キーボードで変更できます。</string>
 </resources>

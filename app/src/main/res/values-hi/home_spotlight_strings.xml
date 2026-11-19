@@ -4,7 +4,8 @@
     <string name="home_spotlight_minkspace_title">मिनी ऐप यहाँ हैं</string>
     <string name="home_spotlight_minkspace_description">मिनी ऐप बदलने के लिए MinkSpace में ऊपर या नीचे स्वाइप करें। समर्थित ऐप को बड़ा करने के लिए टैप करें।</string>
     <string name="home_spotlight_magic_title">टाइप करना शुरू करें</string>
-    <string name="home_spotlight_magic_description">सामान्य टेक्स्ट या Magic Box हॉटकी से खोजें, संदेश भेजें, कॉल करें, नोट बनाएँ और कार्रवाइयाँ चलाएँ।</string>
+    <string name="home_spotlight_magic_description">खोजने के लिए सामान्य रूप से टाइप करें या Magic Box को अपना काम बताने के लिए हॉटकी से शुरू करें।</string>
+    <string name="home_spotlight_magic_hotkeys">@ संदेश · # कॉल · − कार्य · / नोट · + ईवेंट · ? ऐप · * असिस्टेंट</string>
     <string name="home_spotlight_keyboard_title">सिर्फ़ कीबोर्ड नहीं</string>
     <string name="home_spotlight_keyboard_description">कीबोर्ड खोलने के लिए टैप करें। Adrift शुरू करने के लिए दबाकर रखें।</string>
     <string name="home_spotlight_header_title">एक नज़र में होम</string>
@@ -14,4 +15,11 @@
     <string name="notifications">सूचनाएँ</string>
     <string name="replay_home_tour">होम टूर फिर चलाएँ</string>
     <string name="replay_home_tour_summary">होम नियंत्रण, शॉर्टकट और जेस्चर फिर देखें</string>
+    <string name="home_spotlight_classic_pages_title">आपका होम, हर पेज पर</string>
+    <string name="home_spotlight_classic_pages_description">Mini Apps, ऐप और फ़ोल्डर के सात पेज, Quick Apps और विजेट के बीच स्वाइप करें।</string>
+    <string name="home_spotlight_classic_rail_title">किसी भी पेज पर जाएँ</string>
+    <string name="home_spotlight_classic_rail_description">बातचीत, Mini Apps, फ़ोल्डर, Quick Apps और विजेट के बीच जाने के लिए नीचे की रेल इस्तेमाल करें।</string>
+    <string name="home_spotlight_classic_gestures_title">क्लासिक शॉर्टकट</string>
+    <string name="home_spotlight_classic_gestures_description">सभी ऐप्स के लिए ऊपर और सूचनाओं के लिए नीचे स्वाइप करें।</string>
+    <string name="start_typing">टाइप करना शुरू करें</string>
 </resources>

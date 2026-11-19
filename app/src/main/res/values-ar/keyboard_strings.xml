@@ -41,6 +41,17 @@
     <string name="keyboard_key_new_line">سطر جديد</string>
     <string name="keyboard_key_search">بحث</string>
     <string name="onboarding_keyboard_title">اختر لوحة المفاتيح</string>
-    <string name="onboarding_keyboard_description">تبقى لوحة مفاتيح مشغّل Mink داخل Magic Box. اختر نمط المفاتيح وترتيب ألوان السمة الذي تريد البدء به.</string>
+    <string name="onboarding_keyboard_description">اختر لوحة المفاتيح التي يستخدمها Mink عندما تكتب من الشاشة الرئيسية.</string>
+    <string name="onboarding_mink_keyboard_title">لوحة مفاتيح Mink</string>
+    <string name="onboarding_mink_keyboard_description">مسطحة افتراضيًا، مع إجراءات Magic Box مدمجة.</string>
+    <string name="onboarding_system_keyboard_title">لوحة مفاتيح النظام</string>
+    <string name="onboarding_system_keyboard_description">استخدم لوحة مفاتيح Android المضبوطة مسبقًا على هاتفك.</string>
+    <string name="onboarding_keyboard_preview_hint">اكتب هنا لتجربتها.</string>
+    <string name="onboarding_keyboard_hotkey_text">أرسل رسالة</string>
+    <string name="onboarding_keyboard_hotkey_call">اتصل بشخص</string>
+    <string name="onboarding_keyboard_hotkey_todo">أضف مهمة</string>
+    <string name="onboarding_keyboard_hotkey_note">اكتب ملاحظة</string>
+    <string name="onboarding_keyboard_hotkey_event">أضف حدثًا</string>
+    <string name="onboarding_keyboard_hotkey_app">ابحث عن التطبيقات</string>
     <string name="onboarding_keyboard_change_later">يمكنك تغيير ذلك لاحقًا بالضغط مطولًا على SYM، أو من Magic Box ← لوحة المفاتيح.</string>
 </resources>

@@ -4,7 +4,8 @@
     <string name="home_spotlight_minkspace_title">Мини-приложения находятся здесь</string>
     <string name="home_spotlight_minkspace_description">Проведите вверх или вниз внутри MinkSpace, чтобы переключать мини-приложения. Нажмите поддерживаемое приложение, чтобы развернуть его.</string>
     <string name="home_spotlight_magic_title">Начните печатать</string>
-    <string name="home_spotlight_magic_description">Ищите, отправляйте сообщения, звоните, создавайте заметки и запускайте действия с помощью текста или горячих клавиш Magic Box.</string>
+    <string name="home_spotlight_magic_description">Печатайте как обычно для поиска или начните с горячей клавиши, чтобы сообщить Magic Box, что вы хотите сделать.</string>
+    <string name="home_spotlight_magic_hotkeys">@ Сообщение · # Вызов · − Задача · / Заметка · + Событие · ? Приложение · * Ассистент</string>
     <string name="home_spotlight_keyboard_title">Больше, чем клавиатура</string>
     <string name="home_spotlight_keyboard_description">Нажмите, чтобы открыть клавиатуру. Нажмите и удерживайте, чтобы запустить Adrift.</string>
     <string name="home_spotlight_header_title">Главное с первого взгляда</string>
@@ -14,4 +15,11 @@
     <string name="notifications">Уведомления</string>
     <string name="replay_home_tour">Повторить обзор главного экрана</string>
     <string name="replay_home_tour_summary">Снова посмотреть элементы управления, ярлыки и жесты</string>
+    <string name="home_spotlight_classic_pages_title">Главный экран, страница за страницей</string>
+    <string name="home_spotlight_classic_pages_description">Листайте Mini Apps, семь страниц приложений и папок, Quick Apps и виджеты.</string>
+    <string name="home_spotlight_classic_rail_title">Перейти к любой странице</string>
+    <string name="home_spotlight_classic_rail_description">Используйте нижнюю панель для перехода между разговорами, Mini Apps, папками, Quick Apps и виджетами.</string>
+    <string name="home_spotlight_classic_gestures_title">Классические жесты</string>
+    <string name="home_spotlight_classic_gestures_description">Проведите вверх для всех приложений и вниз для уведомлений.</string>
+    <string name="start_typing">Начать ввод</string>
 </resources>

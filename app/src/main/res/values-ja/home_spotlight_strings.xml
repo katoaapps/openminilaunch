@@ -4,7 +4,8 @@
     <string name="home_spotlight_minkspace_title">ミニアプリはこちら</string>
     <string name="home_spotlight_minkspace_description">MinkSpace 内を上下にスワイプしてミニアプリを切り替えます。対応アプリをタップすると拡大します。</string>
     <string name="home_spotlight_magic_title">入力を始める</string>
-    <string name="home_spotlight_magic_description">通常のテキストや Magic Box のホットキーで、検索、メッセージ、通話、メモ、アクションを実行できます。</string>
+    <string name="home_spotlight_magic_description">通常どおり入力して検索するか、ホットキーから始めて Magic Box にしたいことを伝えます。</string>
+    <string name="home_spotlight_magic_hotkeys">@ メッセージ · # 通話 · − To-do · / メモ · + 予定 · ? アプリ · * アシスタント</string>
     <string name="home_spotlight_keyboard_title">キーボード以上の機能</string>
     <string name="home_spotlight_keyboard_description">タップでキーボードを開きます。長押しで Adrift を起動します。</string>
     <string name="home_spotlight_header_title">ホームをひと目で確認</string>
@@ -14,4 +15,11 @@
     <string name="notifications">通知</string>
     <string name="replay_home_tour">ホームツアーを再生</string>
     <string name="replay_home_tour_summary">ホームの操作、ショートカット、ジェスチャーを確認</string>
+    <string name="home_spotlight_classic_pages_title">ページごとに使うホーム</string>
+    <string name="home_spotlight_classic_pages_description">Mini Apps、7 つのアプリとフォルダのページ、Quick Apps、ウィジェットをスワイプして移動します。</string>
+    <string name="home_spotlight_classic_rail_title">どのページにもすぐ移動</string>
+    <string name="home_spotlight_classic_rail_description">下部レールで会話、Mini Apps、フォルダ、Quick Apps、ウィジェットの間を移動します。</string>
+    <string name="home_spotlight_classic_gestures_title">クラシックショートカット</string>
+    <string name="home_spotlight_classic_gestures_description">上にスワイプしてすべてのアプリを、下にスワイプして通知を開きます。</string>
+    <string name="start_typing">入力を開始</string>
 </resources>

@@ -4,7 +4,8 @@
     <string name="home_spotlight_minkspace_title">Mini App ada di sini</string>
     <string name="home_spotlight_minkspace_description">Geser ke atas atau bawah di MinkSpace untuk berpindah Mini App. Ketuk app yang didukung untuk memperluas.</string>
     <string name="home_spotlight_magic_title">Mulai mengetik</string>
-    <string name="home_spotlight_magic_description">Cari, kirim pesan, telepon, buat catatan, dan jalankan tindakan dengan teks biasa atau tombol pintas Magic Box.</string>
+    <string name="home_spotlight_magic_description">Ketik seperti biasa untuk mencari, atau mulai dengan tombol pintas untuk memberi tahu Magic Box apa yang ingin Anda lakukan.</string>
+    <string name="home_spotlight_magic_hotkeys">@ Pesan · # Panggilan · − Tugas · / Catatan · + Acara · ? Aplikasi · * Asisten</string>
     <string name="home_spotlight_keyboard_title">Lebih dari keyboard</string>
     <string name="home_spotlight_keyboard_description">Ketuk untuk membuka keyboard. Tekan lama untuk membuka Adrift.</string>
     <string name="home_spotlight_header_title">Beranda dalam sekilas</string>
@@ -14,4 +15,11 @@
     <string name="notifications">Notifikasi</string>
     <string name="replay_home_tour">Ulangi tur Beranda</string>
     <string name="replay_home_tour_summary">Tinjau kontrol, pintasan, dan gestur Beranda</string>
+    <string name="home_spotlight_classic_pages_title">Beranda Anda, halaman demi halaman</string>
+    <string name="home_spotlight_classic_pages_description">Geser melalui Mini Apps, tujuh halaman aplikasi dan folder, Quick Apps, serta Widget.</string>
+    <string name="home_spotlight_classic_rail_title">Lompat ke halaman mana pun</string>
+    <string name="home_spotlight_classic_rail_description">Gunakan bilah bawah untuk berpindah antara Percakapan, Mini Apps, folder, Quick Apps, dan Widget.</string>
+    <string name="home_spotlight_classic_gestures_title">Pintasan klasik</string>
+    <string name="home_spotlight_classic_gestures_description">Geser ke atas untuk Semua Aplikasi dan ke bawah untuk notifikasi.</string>
+    <string name="start_typing">Mulai mengetik</string>
 </resources>

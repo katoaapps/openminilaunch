@@ -41,6 +41,17 @@
     <string name="keyboard_key_new_line">New line</string>
     <string name="keyboard_key_search">Search</string>
     <string name="onboarding_keyboard_title">Choose your keyboard</string>
-    <string name="onboarding_keyboard_description">Mink’s launcher keyboard stays inside Magic Box. Choose the key style and theme-colour arrangement you want to start with.</string>
+    <string name="onboarding_keyboard_description">Choose the keyboard Mink should use when you type from Home.</string>
+    <string name="onboarding_mink_keyboard_title">Mink Keyboard</string>
+    <string name="onboarding_mink_keyboard_description">Flat by default, with Magic Box actions built in.</string>
+    <string name="onboarding_system_keyboard_title">System Keyboard</string>
+    <string name="onboarding_system_keyboard_description">Use the Android keyboard already set on your phone.</string>
+    <string name="onboarding_keyboard_preview_hint">Type here to try it.</string>
+    <string name="onboarding_keyboard_hotkey_text">Text someone</string>
+    <string name="onboarding_keyboard_hotkey_call">Call someone</string>
+    <string name="onboarding_keyboard_hotkey_todo">Add a to-do</string>
+    <string name="onboarding_keyboard_hotkey_note">Write a note</string>
+    <string name="onboarding_keyboard_hotkey_event">Add an event</string>
+    <string name="onboarding_keyboard_hotkey_app">Find apps</string>
     <string name="onboarding_keyboard_change_later">You can change this later by pressing and holding SYM, or in Magic Box → Keyboard.</string>
 </resources>

@@ -4,7 +4,8 @@
     <string name="home_spotlight_minkspace_title">Les mini-apps sont ici</string>
     <string name="home_spotlight_minkspace_description">Balayez vers le haut ou le bas dans MinkSpace pour parcourir les mini-apps. Touchez les apps compatibles pour les agrandir.</string>
     <string name="home_spotlight_magic_title">Commencez à saisir</string>
-    <string name="home_spotlight_magic_description">Recherchez, envoyez des messages, appelez, créez des notes et lancez des actions avec du texte ou les raccourcis Magic Box.</string>
+    <string name="home_spotlight_magic_description">Tapez normalement pour rechercher, ou commencez par un raccourci pour indiquer à Magic Box ce que vous voulez faire.</string>
+    <string name="home_spotlight_magic_hotkeys">@ Message · # Appel · − Tâche · / Note · + Événement · ? App · * Assistant</string>
     <string name="home_spotlight_keyboard_title">Plus qu’un clavier</string>
     <string name="home_spotlight_keyboard_description">Touchez pour ouvrir le clavier. Appuyez longuement pour lancer Adrift.</string>
     <string name="home_spotlight_header_title">Accueil en un coup d’œil</string>
@@ -14,4 +15,11 @@
     <string name="notifications">Notifications</string>
     <string name="replay_home_tour">Revoir la visite de l’Accueil</string>
     <string name="replay_home_tour_summary">Revoir les commandes, raccourcis et gestes de l’Accueil</string>
+    <string name="home_spotlight_classic_pages_title">Votre accueil, page par page</string>
+    <string name="home_spotlight_classic_pages_description">Parcourez les Mini Apps, vos sept pages d’apps et de dossiers, les Quick Apps et les Widgets.</string>
+    <string name="home_spotlight_classic_rail_title">Accédez à n’importe quelle page</string>
+    <string name="home_spotlight_classic_rail_description">Utilisez la barre inférieure pour passer entre Conversations, Mini Apps, dossiers, Quick Apps et Widgets.</string>
+    <string name="home_spotlight_classic_gestures_title">Raccourcis classiques</string>
+    <string name="home_spotlight_classic_gestures_description">Balayez vers le haut pour Toutes les apps et vers le bas pour les notifications.</string>
+    <string name="start_typing">Commencez à écrire</string>
 </resources>

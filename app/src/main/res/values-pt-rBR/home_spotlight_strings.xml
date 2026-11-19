@@ -4,7 +4,8 @@
     <string name="home_spotlight_minkspace_title">Os miniapps ficam aqui</string>
     <string name="home_spotlight_minkspace_description">Deslize para cima ou para baixo no MinkSpace para alternar entre miniapps. Toque nos compatíveis para expandir.</string>
     <string name="home_spotlight_magic_title">Comece a digitar</string>
-    <string name="home_spotlight_magic_description">Pesquise, envie mensagens, ligue, crie notas e execute ações com texto comum ou teclas de atalho da Magic Box.</string>
+    <string name="home_spotlight_magic_description">Digite normalmente para pesquisar ou comece com um atalho para dizer à Magic Box o que você quer fazer.</string>
+    <string name="home_spotlight_magic_hotkeys">@ Mensagem · # Chamada · − Tarefa · / Nota · + Evento · ? App · * Assistente</string>
     <string name="home_spotlight_keyboard_title">Mais que um teclado</string>
     <string name="home_spotlight_keyboard_description">Toque para abrir o teclado. Toque e segure para iniciar o Adrift.</string>
     <string name="home_spotlight_header_title">Início em um relance</string>
@@ -14,4 +15,11 @@
     <string name="notifications">Notificações</string>
     <string name="replay_home_tour">Repetir tour do Início</string>
     <string name="replay_home_tour_summary">Reveja controles, atalhos e gestos do Início</string>
+    <string name="home_spotlight_classic_pages_title">Sua tela inicial, página por página</string>
+    <string name="home_spotlight_classic_pages_description">Passe pelos Mini Apps, suas sete páginas de apps e pastas, Quick Apps e Widgets.</string>
+    <string name="home_spotlight_classic_rail_title">Vá para qualquer página</string>
+    <string name="home_spotlight_classic_rail_description">Use a barra inferior para alternar entre Conversas, Mini Apps, pastas, Quick Apps e Widgets.</string>
+    <string name="home_spotlight_classic_gestures_title">Atalhos clássicos</string>
+    <string name="home_spotlight_classic_gestures_description">Deslize para cima para Todos os Apps e para baixo para as notificações.</string>
+    <string name="start_typing">Comece a digitar</string>
 </resources>

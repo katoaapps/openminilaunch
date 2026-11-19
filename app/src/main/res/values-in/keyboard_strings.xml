@@ -41,6 +41,17 @@
     <string name="keyboard_key_new_line">Baris baru</string>
     <string name="keyboard_key_search">Cari</string>
     <string name="onboarding_keyboard_title">Pilih keyboard Anda</string>
-    <string name="onboarding_keyboard_description">Keyboard peluncur Mink tetap berada di dalam Magic Box. Pilih gaya tombol dan susunan warna tema yang ingin Anda gunakan.</string>
+    <string name="onboarding_keyboard_description">Pilih keyboard yang akan digunakan Mink saat Anda mengetik dari Beranda.</string>
+    <string name="onboarding_mink_keyboard_title">Keyboard Mink</string>
+    <string name="onboarding_mink_keyboard_description">Datar secara default, dengan tindakan Magic Box bawaan.</string>
+    <string name="onboarding_system_keyboard_title">Keyboard sistem</string>
+    <string name="onboarding_system_keyboard_description">Gunakan keyboard Android yang sudah diatur di ponsel Anda.</string>
+    <string name="onboarding_keyboard_preview_hint">Ketik di sini untuk mencobanya.</string>
+    <string name="onboarding_keyboard_hotkey_text">Kirim pesan</string>
+    <string name="onboarding_keyboard_hotkey_call">Telepon seseorang</string>
+    <string name="onboarding_keyboard_hotkey_todo">Tambahkan tugas</string>
+    <string name="onboarding_keyboard_hotkey_note">Tulis catatan</string>
+    <string name="onboarding_keyboard_hotkey_event">Tambahkan acara</string>
+    <string name="onboarding_keyboard_hotkey_app">Cari aplikasi</string>
     <string name="onboarding_keyboard_change_later">Anda dapat mengubahnya nanti dengan menekan dan menahan SYM, atau melalui Magic Box → Keyboard.</string>
 </resources>

@@ -26,12 +26,12 @@ import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.automirrored.filled.ArrowBack
 import androidx.compose.material.icons.automirrored.filled.ArrowForward
-import androidx.compose.material.icons.automirrored.filled.Chat
 import androidx.compose.material.icons.filled.Assistant
 import androidx.compose.material.icons.filled.Contacts
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Keyboard
 import androidx.compose.material.icons.filled.Palette
+import androidx.compose.material.icons.filled.ViewCarousel
 import androidx.compose.material3.Button
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Icon
@@ -68,20 +68,15 @@ import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.compose.LocalLifecycleOwner
 import com.katoaapps.openminilaunch.R
 import com.katoaapps.openminilaunch.data.LauncherStore
-import com.katoaapps.openminilaunch.features.messaging.MessagingProviderCatalog
-import com.katoaapps.openminilaunch.features.messaging.MessagingProviderOption
 import com.katoaapps.openminilaunch.features.magic.hasUsableHardwareKeyboard
 import com.katoaapps.openminilaunch.features.appearance.HomeWallpaperRepository
 import com.katoaapps.openminilaunch.features.appearance.applyBundledHomeTheme
 import com.katoaapps.openminilaunch.model.PalettePreference
 import com.katoaapps.openminilaunch.platform.DeviceActions
 import com.katoaapps.openminilaunch.platform.isPermanentlyDenied
-import com.katoaapps.openminilaunch.ui.settings.MessagingProviderPickerDialog
 import com.katoaapps.openminilaunch.ui.theme.Dimens
 import com.katoaapps.openminilaunch.ui.theme.Rust
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
-import kotlinx.coroutines.withContext
 
 private data class OnboardingPage(
     val step: OnboardingStep,
@@ -91,19 +86,19 @@ private data class OnboardingPage(
 
 internal enum class OnboardingStep {
     HOME,
+    LAYOUT,
     THEME,
     KEYBOARD,
     CONTACTS,
-    MESSAGING,
     ASSISTANT,
 }
 
 internal fun onboardingStepOrder(showKeyboardSetup: Boolean): List<OnboardingStep> = buildList {
     add(OnboardingStep.HOME)
+    add(OnboardingStep.LAYOUT)
     add(OnboardingStep.THEME)
     if (showKeyboardSetup) add(OnboardingStep.KEYBOARD)
     add(OnboardingStep.CONTACTS)
-    add(OnboardingStep.MESSAGING)
     add(OnboardingStep.ASSISTANT)
 }
 
@@ -137,10 +132,6 @@ internal fun OnboardingScreen(
         )
     }
     var assistantRoleHeld by remember { mutableStateOf(actions.isAssistantRoleHeld()) }
-    var pickingMessaging by remember { mutableStateOf(false) }
-    var messagingOptions by remember { mutableStateOf<List<MessagingProviderOption>>(emptyList()) }
-    var messagingOptionsLoaded by remember { mutableStateOf(false) }
-    var messagingOptionsRefresh by remember { mutableIntStateOf(0) }
     var applyingThemeId by remember { mutableStateOf<String?>(null) }
 
     val contactsPermission = rememberLauncherForActivityResult(
@@ -166,21 +157,10 @@ internal fun OnboardingScreen(
                     Manifest.permission.READ_CONTACTS,
                 ) == PackageManager.PERMISSION_GRANTED
                 assistantRoleHeld = actions.isAssistantRoleHeld()
-                if (pickingMessaging) {
-                    messagingOptionsLoaded = false
-                    messagingOptionsRefresh++
-                }
             }
         }
         lifecycleOwner.lifecycle.addObserver(observer)
         onDispose { lifecycleOwner.lifecycle.removeObserver(observer) }
-    }
-
-    LaunchedEffect(pickingMessaging, messagingOptionsRefresh) {
-        if (pickingMessaging) {
-            messagingOptions = withContext(Dispatchers.IO) { actions.messagingProviderOptions() }
-            messagingOptionsLoaded = true
-        }
     }
 
     val pages = onboardingStepOrder(showKeyboardSetup).map { step ->
@@ -190,9 +170,14 @@ internal fun OnboardingScreen(
                 stringResource(R.string.default_home_app),
                 Icons.Default.Home,
             )
+            OnboardingStep.LAYOUT -> OnboardingPage(
+                step,
+                stringResource(R.string.onboarding_choose_home_title),
+                Icons.Default.ViewCarousel,
+            )
             OnboardingStep.THEME -> OnboardingPage(
                 step,
-                stringResource(R.string.home_themes),
+                stringResource(R.string.onboarding_make_it_yours_title),
                 Icons.Default.Palette,
             )
             OnboardingStep.KEYBOARD -> OnboardingPage(
@@ -204,11 +189,6 @@ internal fun OnboardingScreen(
                 step,
                 stringResource(R.string.onboarding_contacts_title),
                 Icons.Default.Contacts,
-            )
-            OnboardingStep.MESSAGING -> OnboardingPage(
-                step,
-                stringResource(R.string.onboarding_messages_title),
-                Icons.AutoMirrored.Filled.Chat,
             )
             OnboardingStep.ASSISTANT -> OnboardingPage(
                 step,
@@ -238,6 +218,10 @@ internal fun OnboardingScreen(
                     onChooseHome = requestHomeRole,
                     onManageHome = { actions.openHomeSettings() },
                 )
+                OnboardingStep.LAYOUT -> OnboardingHomeLayoutSetupPage(
+                    selected = store.homeLayoutStyle,
+                    onSelect = store::updateHomeLayoutStyle,
+                )
                 OnboardingStep.THEME -> OnboardingThemeSetupPage(
                     store = store,
                     applyingThemeId = applyingThemeId,
@@ -265,9 +249,16 @@ internal fun OnboardingScreen(
                     preferences = store.launcherKeyboardPreferences,
                     themePrimaryArgb = store.effectiveHomePanelColorArgb,
                     themeSecondaryArgb = store.effectiveThemeSecondaryColorArgb,
-                    onStyle = { style ->
+                    onUseMinkKeyboard = { useMinkKeyboard ->
                         store.updateLauncherKeyboardPreferences(
-                            store.launcherKeyboardPreferences.copy(style = style),
+                            store.launcherKeyboardPreferences.copy(
+                                useMinkKeyboard = useMinkKeyboard,
+                                style = if (useMinkKeyboard) {
+                                    com.katoaapps.openminilaunch.model.LauncherKeyboardStyle.FLAT_PRIMARY
+                                } else {
+                                    store.launcherKeyboardPreferences.style
+                                },
+                            ),
                         )
                     },
                 )
@@ -275,14 +266,6 @@ internal fun OnboardingScreen(
                     granted = contactsGranted,
                     onAllow = { contactsPermission.launch(Manifest.permission.READ_CONTACTS) },
                     onManage = actions::openAppPermissionSettings,
-                )
-                OnboardingStep.MESSAGING -> OnboardingMessagingSetupPage(
-                    sendAutomatically = store.sendMessagesAutomatically,
-                    onSendAutomaticallyChanged = store::updateSendMessagesAutomatically,
-                    selectedProvider = store.preferredMessagingPackage
-                        ?.let(actions::appLabel)
-                        ?: stringResource(R.string.system_messages),
-                    onChooseProvider = { pickingMessaging = true },
                 )
                 OnboardingStep.ASSISTANT -> OnboardingAssistantSetupPage(
                     active = assistantRoleHeld,
@@ -292,30 +275,6 @@ internal fun OnboardingScreen(
                 )
             }
         }
-    }
-
-    if (pickingMessaging) {
-        MessagingProviderPickerDialog(
-            title = stringResource(R.string.choose_preferred_messaging_app),
-            options = messagingOptions,
-            loading = !messagingOptionsLoaded,
-            selectedProviderId = MessagingProviderCatalog.providerForPackage(
-                store.preferredMessagingPackage,
-            )?.id ?: MessagingProviderCatalog.SYSTEM_DEFAULT_PROVIDER_ID,
-            showUnavailable = true,
-            onProvider = { option ->
-                if (option.systemDefault) {
-                    store.resetPreferredMessagingApp()
-                } else {
-                    option.preferencePackageName?.let(store::setPreferredMessagingApp)
-                }
-                pickingMessaging = false
-            },
-            onInstall = { option ->
-                option.preferencePackageName?.let(actions::openMessagingProviderInstallPage)
-            },
-            onDismiss = { pickingMessaging = false },
-        )
     }
 }
 
@@ -328,6 +287,8 @@ private fun OnboardingFrame(
     onNext: () -> Unit,
     content: @Composable () -> Unit,
 ) {
+    val compactKeyboardPage = pages[page].step == OnboardingStep.KEYBOARD
+    val contentScrollState = rememberScrollState()
     Surface(Modifier.fillMaxSize(), color = MaterialTheme.colorScheme.background) {
         Box(Modifier.fillMaxSize(), contentAlignment = Alignment.Center) {
             Column(
@@ -340,7 +301,9 @@ private fun OnboardingFrame(
                     .padding(horizontal = Dimens.dp24),
             ) {
                 Row(
-                    Modifier.fillMaxWidth().padding(top = Dimens.dp18),
+                    Modifier.fillMaxWidth().padding(
+                        top = if (compactKeyboardPage) Dimens.dp10 else Dimens.dp18,
+                    ),
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
                     Surface(
@@ -374,19 +337,29 @@ private fun OnboardingFrame(
                 }
                 LinearProgressIndicator(
                     progress = { (page + 1).toFloat() / pages.size },
-                    modifier = Modifier.fillMaxWidth().padding(top = Dimens.dp18),
+                    modifier = Modifier.fillMaxWidth().padding(
+                        top = if (compactKeyboardPage) Dimens.dp10 else Dimens.dp18,
+                    ),
                     color = Rust,
                     trackColor = MaterialTheme.colorScheme.surfaceContainerHighest,
                     drawStopIndicator = {},
                 )
                 Row(
-                    Modifier.fillMaxWidth().padding(top = Dimens.dp28, bottom = Dimens.dp20),
+                    Modifier.fillMaxWidth().padding(
+                        top = if (compactKeyboardPage) Dimens.dp12 else Dimens.dp28,
+                        bottom = if (compactKeyboardPage) Dimens.dp10 else Dimens.dp20,
+                    ),
                     verticalAlignment = Alignment.CenterVertically,
                 ) {
-                    Icon(pages[page].icon, null, Modifier.size(Dimens.dp40), tint = Rust)
+                    Icon(
+                        pages[page].icon,
+                        null,
+                        Modifier.size(if (compactKeyboardPage) Dimens.dp32 else Dimens.dp40),
+                        tint = Rust,
+                    )
                     Text(
                         pages[page].title,
-                        fontSize = Dimens.sp28,
+                        fontSize = if (compactKeyboardPage) Dimens.sp24 else Dimens.sp28,
                         fontWeight = FontWeight.Black,
                         modifier = Modifier.padding(start = Dimens.dp14),
                     )
@@ -395,13 +368,21 @@ private fun OnboardingFrame(
                     Modifier
                         .weight(1f)
                         .fillMaxWidth()
-                        .verticalScroll(rememberScrollState()),
+                        .then(
+                            if (compactKeyboardPage) {
+                                Modifier
+                            } else {
+                                Modifier.verticalScroll(contentScrollState)
+                            },
+                        ),
                 ) {
                     content()
                 }
                 HorizontalDivider(color = MaterialTheme.colorScheme.outlineVariant)
                 Row(
-                    Modifier.fillMaxWidth().padding(vertical = Dimens.dp16),
+                    Modifier.fillMaxWidth().padding(
+                        vertical = if (compactKeyboardPage) Dimens.dp10 else Dimens.dp16,
+                    ),
                     horizontalArrangement = Arrangement.spacedBy(Dimens.dp12),
                     verticalAlignment = Alignment.CenterVertically,
                 ) {

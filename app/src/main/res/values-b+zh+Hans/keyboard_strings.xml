@@ -41,6 +41,17 @@
     <string name="keyboard_key_new_line">换行</string>
     <string name="keyboard_key_search">搜索</string>
     <string name="onboarding_keyboard_title">选择键盘</string>
-    <string name="onboarding_keyboard_description">Mink 的启动器键盘仅显示在 Magic Box 中。请选择要使用的按键样式和主题配色。</string>
+    <string name="onboarding_keyboard_description">选择 Mink 在主页输入时使用的键盘。</string>
+    <string name="onboarding_mink_keyboard_title">Mink 键盘</string>
+    <string name="onboarding_mink_keyboard_description">默认无边框，并内置 Magic Box 操作。</string>
+    <string name="onboarding_system_keyboard_title">系统键盘</string>
+    <string name="onboarding_system_keyboard_description">使用手机上已设置的 Android 键盘。</string>
+    <string name="onboarding_keyboard_preview_hint">在此输入以试用。</string>
+    <string name="onboarding_keyboard_hotkey_text">发消息</string>
+    <string name="onboarding_keyboard_hotkey_call">打电话</string>
+    <string name="onboarding_keyboard_hotkey_todo">添加待办</string>
+    <string name="onboarding_keyboard_hotkey_note">写备注</string>
+    <string name="onboarding_keyboard_hotkey_event">添加日程</string>
+    <string name="onboarding_keyboard_hotkey_app">查找应用</string>
     <string name="onboarding_keyboard_change_later">稍后可以长按 SYM，或前往 Magic Box → 键盘进行更改。</string>
 </resources>

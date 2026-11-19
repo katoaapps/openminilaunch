@@ -41,6 +41,17 @@
     <string name="keyboard_key_new_line">Новая строка</string>
     <string name="keyboard_key_search">Поиск</string>
     <string name="onboarding_keyboard_title">Выберите клавиатуру</string>
-    <string name="onboarding_keyboard_description">Клавиатура лаунчера Mink остаётся внутри Magic Box. Выберите стиль клавиш и сочетание цветов темы для начала работы.</string>
+    <string name="onboarding_keyboard_description">Выберите клавиатуру, которую Mink будет использовать при вводе с главного экрана.</string>
+    <string name="onboarding_mink_keyboard_title">Клавиатура Mink</string>
+    <string name="onboarding_mink_keyboard_description">По умолчанию плоская, со встроенными действиями Magic Box.</string>
+    <string name="onboarding_system_keyboard_title">Системная клавиатура</string>
+    <string name="onboarding_system_keyboard_description">Используйте клавиатуру Android, уже настроенную на телефоне.</string>
+    <string name="onboarding_keyboard_preview_hint">Введите текст, чтобы попробовать.</string>
+    <string name="onboarding_keyboard_hotkey_text">Написать сообщение</string>
+    <string name="onboarding_keyboard_hotkey_call">Позвонить</string>
+    <string name="onboarding_keyboard_hotkey_todo">Добавить задачу</string>
+    <string name="onboarding_keyboard_hotkey_note">Создать заметку</string>
+    <string name="onboarding_keyboard_hotkey_event">Добавить событие</string>
+    <string name="onboarding_keyboard_hotkey_app">Найти приложения</string>
     <string name="onboarding_keyboard_change_later">Позже это можно изменить, удерживая SYM, или в разделе Magic Box → Клавиатура.</string>
 </resources>

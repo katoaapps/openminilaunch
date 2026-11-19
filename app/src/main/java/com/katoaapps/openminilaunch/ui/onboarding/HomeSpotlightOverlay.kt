@@ -2,6 +2,12 @@
 
 package com.katoaapps.openminilaunch.ui.onboarding
 
+import androidx.compose.animation.Crossfade
+import androidx.compose.animation.core.RepeatMode
+import androidx.compose.animation.core.animateFloat
+import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.rememberInfiniteTransition
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Canvas
 import androidx.compose.foundation.background
 import androidx.compose.foundation.gestures.detectHorizontalDragGestures
@@ -33,8 +39,10 @@ import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableFloatStateOf
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -55,6 +63,7 @@ import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import com.katoaapps.openminilaunch.R
 import com.katoaapps.openminilaunch.ui.theme.Dimens
+import kotlinx.coroutines.delay
 import kotlin.math.roundToInt
 
 @Composable
@@ -64,6 +73,7 @@ internal fun HomeSpotlightOverlay(
     count: Int,
     targetBounds: Rect?,
     gestureStep: Boolean,
+    clearClassicSlabRail: Boolean,
     onPrevious: () -> Unit,
     onNext: () -> Unit,
 ) {
@@ -82,7 +92,7 @@ internal fun HomeSpotlightOverlay(
             Canvas(Modifier.fillMaxSize()) {
                 drawRect(TOUR_SCRIM.copy(alpha = .64f))
             }
-            GestureDirectionCues()
+            GestureDirectionCues(classic = step.classicGestureCues)
         } else if (spotlight != null) {
             SpotlightScrim(spotlight)
             SpotlightInputGuard(spotlight, widthPx, heightPx)
@@ -95,6 +105,7 @@ internal fun HomeSpotlightOverlay(
                 count = count,
                 target = spotlight,
                 screenHeightPx = heightPx,
+                clearClassicSlabRail = clearClassicSlabRail,
                 onPrevious = onPrevious,
                 onNext = onNext,
             )
@@ -158,16 +169,28 @@ private fun BoxScope.TourHelpCard(
     count: Int,
     target: Rect?,
     screenHeightPx: Float,
+    clearClassicSlabRail: Boolean,
     onPrevious: () -> Unit,
     onNext: () -> Unit,
 ) {
     var horizontalDrag by remember(index) { mutableFloatStateOf(0f) }
     val density = LocalDensity.current
-    val placeAtTop = target?.center?.y?.let { it > screenHeightPx * .5f } == true
+    val anchorAboveTarget = step.target == HomeTourTarget.MAGIC_BOX ||
+        step.target == HomeTourTarget.KEYBOARD_ACTION
+    val targetBottomPadding = if (anchorAboveTarget && target != null) {
+        with(density) { (screenHeightPx - target.top).toDp() } + Dimens.dp12
+    } else {
+        Dimens.dp24
+    }
+    val bottomPadding = if (clearClassicSlabRail) {
+        maxOf(targetBottomPadding, CLASSIC_SLAB_RAIL_CLEARANCE)
+    } else {
+        targetBottomPadding
+    }
     Surface(
         modifier = Modifier
-            .align(if (placeAtTop) Alignment.TopCenter else Alignment.BottomCenter)
-            .padding(horizontal = Dimens.dp16, vertical = Dimens.dp24)
+            .align(Alignment.BottomCenter)
+            .padding(start = Dimens.dp16, end = Dimens.dp16, bottom = bottomPadding)
             .widthIn(max = 420.dp)
             .fillMaxWidth()
             .pointerInput(index) {
@@ -206,6 +229,16 @@ private fun BoxScope.TourHelpCard(
                 fontSize = Dimens.sp14,
                 textAlign = TextAlign.Center,
             )
+            if (step.target == HomeTourTarget.MAGIC_BOX) {
+                Spacer(Modifier.height(Dimens.dp10))
+                Text(
+                    stringResource(R.string.home_spotlight_magic_hotkeys),
+                    color = MaterialTheme.colorScheme.primary,
+                    fontSize = Dimens.sp13,
+                    fontWeight = FontWeight.Bold,
+                    textAlign = TextAlign.Center,
+                )
+            }
             Spacer(Modifier.height(Dimens.dp14))
             Box(
                 Modifier.fillMaxWidth(),
@@ -237,7 +270,11 @@ private fun BoxScope.TourHelpCard(
                 ) {
                     Text(
                         stringResource(
-                            if (index == count - 1) R.string.done else R.string.next,
+                            when {
+                                step.target == HomeTourTarget.MAGIC_BOX -> R.string.start_typing
+                                index == count - 1 -> R.string.done
+                                else -> R.string.next
+                            },
                         ),
                     )
                 }
@@ -246,65 +283,100 @@ private fun BoxScope.TourHelpCard(
     }
 }
 
+private val CLASSIC_SLAB_RAIL_CLEARANCE = 148.dp
+
 @Composable
-private fun BoxScope.GestureDirectionCues() {
-    DirectionCue(
-        label = stringResource(R.string.all_apps),
-        icon = { Icon(Icons.Default.SwipeUp, null) },
-        modifier = Modifier.align(Alignment.TopCenter).padding(top = Dimens.dp24),
-    )
-    DirectionCue(
-        label = stringResource(R.string.notifications),
-        icon = { Icon(Icons.Default.SwipeDown, null) },
-        modifier = Modifier.align(Alignment.BottomCenter).padding(bottom = 220.dp),
-    )
-    DirectionCue(
-        label = stringResource(R.string.widgets),
-        icon = { Icon(Icons.Default.SwipeLeft, null) },
-        modifier = Modifier.align(Alignment.CenterStart).padding(start = Dimens.dp8),
-        vertical = true,
-    )
-    DirectionCue(
-        label = stringResource(R.string.mink_day),
-        icon = { Icon(Icons.Default.SwipeRight, null) },
-        modifier = Modifier.align(Alignment.CenterEnd).padding(end = Dimens.dp8),
-        vertical = true,
-    )
+private fun BoxScope.GestureDirectionCues(classic: Boolean) {
+    val cues = remember(classic) {
+        buildList {
+            add(GestureCue(R.string.all_apps, GestureDirection.UP))
+            add(GestureCue(R.string.notifications, GestureDirection.DOWN))
+            if (!classic) {
+                add(GestureCue(R.string.widgets, GestureDirection.LEFT))
+                add(GestureCue(R.string.mink_day, GestureDirection.RIGHT))
+            }
+        }
+    }
+    var cueIndex by remember(classic) { mutableIntStateOf(0) }
+    LaunchedEffect(classic) {
+        while (true) {
+            delay(GESTURE_CUE_DURATION_MS)
+            cueIndex = (cueIndex + 1) % cues.size
+        }
+    }
+    Crossfade(
+        targetState = cues[cueIndex],
+        animationSpec = tween(GESTURE_CUE_FADE_MS),
+        label = "homeGestureCue",
+        modifier = Modifier.align(Alignment.Center),
+    ) { cue ->
+        DirectionCue(cue)
+    }
 }
 
 @Composable
-private fun DirectionCue(
-    label: String,
-    icon: @Composable () -> Unit,
-    modifier: Modifier,
-    vertical: Boolean = false,
-) {
+private fun DirectionCue(cue: GestureCue) {
+    val density = LocalDensity.current
+    val motionTransition = rememberInfiniteTransition(label = "gestureSwipeMotion")
+    val motion by motionTransition.animateFloat(
+        initialValue = -.5f,
+        targetValue = .5f,
+        animationSpec = infiniteRepeatable(
+            animation = tween(GESTURE_MOTION_MS),
+            repeatMode = RepeatMode.Restart,
+        ),
+        label = "gestureSwipeOffset",
+    )
+    val travelPx = with(density) { GESTURE_TRAVEL.toPx() }
+    val icon = when (cue.direction) {
+        GestureDirection.UP -> Icons.Default.SwipeUp
+        GestureDirection.DOWN -> Icons.Default.SwipeDown
+        GestureDirection.LEFT -> Icons.Default.SwipeLeft
+        GestureDirection.RIGHT -> Icons.Default.SwipeRight
+    }
     Surface(
-        modifier = modifier,
         shape = RoundedCornerShape(Dimens.dp20),
         color = MaterialTheme.colorScheme.primaryContainer,
         contentColor = MaterialTheme.colorScheme.onPrimaryContainer,
         shadowElevation = Dimens.dp6,
     ) {
-        if (vertical) {
-            Column(
-                Modifier.padding(horizontal = Dimens.dp8, vertical = Dimens.dp10),
-                horizontalAlignment = Alignment.CenterHorizontally,
-            ) {
-                icon()
-                Text(label, fontSize = Dimens.sp11, fontWeight = FontWeight.Bold)
-            }
-        } else {
-            Row(
-                Modifier.padding(horizontal = Dimens.dp12, vertical = Dimens.dp6),
-                verticalAlignment = Alignment.CenterVertically,
-            ) {
-                icon()
-                Text(label, fontSize = Dimens.sp12, fontWeight = FontWeight.Bold)
-            }
+        Column(
+            Modifier.padding(horizontal = Dimens.dp28, vertical = Dimens.dp18),
+            horizontalAlignment = Alignment.CenterHorizontally,
+            verticalArrangement = Arrangement.spacedBy(Dimens.dp8),
+        ) {
+            Icon(
+                icon,
+                null,
+                Modifier.size(Dimens.dp56).graphicsLayer {
+                    translationX = when (cue.direction) {
+                        GestureDirection.LEFT -> -motion * travelPx
+                        GestureDirection.RIGHT -> motion * travelPx
+                        else -> 0f
+                    }
+                    translationY = when (cue.direction) {
+                        GestureDirection.UP -> -motion * travelPx
+                        GestureDirection.DOWN -> motion * travelPx
+                        else -> 0f
+                    }
+                },
+            )
+            Text(
+                stringResource(cue.labelRes),
+                fontSize = Dimens.sp15,
+                fontWeight = FontWeight.Bold,
+                textAlign = TextAlign.Center,
+            )
         }
     }
 }
+
+private data class GestureCue(
+    val labelRes: Int,
+    val direction: GestureDirection,
+)
+
+private enum class GestureDirection { UP, DOWN, LEFT, RIGHT }
 
 private fun Rect.expandAndClamp(padding: Float, maxWidth: Float, maxHeight: Float): Rect = Rect(
     left = (left - padding).coerceAtLeast(0f),
@@ -316,3 +388,7 @@ private fun Rect.expandAndClamp(padding: Float, maxWidth: Float, maxHeight: Floa
 private val SPOTLIGHT_PADDING = 8.dp
 private val SPOTLIGHT_CORNER = 22.dp
 private val TOUR_SCRIM = Color.Black.copy(alpha = .76f)
+private val GESTURE_TRAVEL = 18.dp
+private const val GESTURE_CUE_DURATION_MS = 1_350L
+private const val GESTURE_CUE_FADE_MS = 220
+private const val GESTURE_MOTION_MS = 760

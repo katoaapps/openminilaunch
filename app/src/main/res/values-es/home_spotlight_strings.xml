@@ -4,7 +4,8 @@
     <string name="home_spotlight_minkspace_title">Las miniapps viven aquí</string>
     <string name="home_spotlight_minkspace_description">Desliza hacia arriba o abajo en MinkSpace para cambiar de miniapp. Toca las compatibles para ampliarlas.</string>
     <string name="home_spotlight_magic_title">Empieza a escribir</string>
-    <string name="home_spotlight_magic_description">Busca, envía mensajes, llama, crea notas e inicia acciones con texto normal o las teclas rápidas de Magic Box.</string>
+    <string name="home_spotlight_magic_description">Escribe normalmente para buscar o empieza con una tecla rápida para indicar a Magic Box qué quieres hacer.</string>
+    <string name="home_spotlight_magic_hotkeys">@ Mensaje · # Llamada · − Tarea · / Nota · + Evento · ? App · * Asistente</string>
     <string name="home_spotlight_keyboard_title">Más que un teclado</string>
     <string name="home_spotlight_keyboard_description">Toca para abrir el teclado. Mantén pulsado para iniciar Adrift.</string>
     <string name="home_spotlight_header_title">Tu inicio de un vistazo</string>
@@ -14,4 +15,11 @@
     <string name="notifications">Notificaciones</string>
     <string name="replay_home_tour">Repetir recorrido de Inicio</string>
     <string name="replay_home_tour_summary">Repasa los controles, accesos directos y gestos de Inicio</string>
+    <string name="home_spotlight_classic_pages_title">Tu Inicio, página a página</string>
+    <string name="home_spotlight_classic_pages_description">Desliza por Mini Apps, tus siete páginas de apps y carpetas, Quick Apps y Widgets.</string>
+    <string name="home_spotlight_classic_rail_title">Salta a cualquier página</string>
+    <string name="home_spotlight_classic_rail_description">Usa la barra inferior para saltar entre Conversaciones, Mini Apps, carpetas, Quick Apps y Widgets.</string>
+    <string name="home_spotlight_classic_gestures_title">Atajos clásicos</string>
+    <string name="home_spotlight_classic_gestures_description">Desliza hacia arriba para ver Todas las apps y hacia abajo para las notificaciones.</string>
+    <string name="start_typing">Empieza a escribir</string>
 </resources>

@@ -9,10 +9,10 @@ class OnboardingStepOrderTest {
         assertEquals(
             listOf(
                 OnboardingStep.HOME,
+                OnboardingStep.LAYOUT,
                 OnboardingStep.THEME,
                 OnboardingStep.KEYBOARD,
                 OnboardingStep.CONTACTS,
-                OnboardingStep.MESSAGING,
                 OnboardingStep.ASSISTANT,
             ),
             onboardingStepOrder(showKeyboardSetup = true),
@@ -24,9 +24,9 @@ class OnboardingStepOrderTest {
         assertEquals(
             listOf(
                 OnboardingStep.HOME,
+                OnboardingStep.LAYOUT,
                 OnboardingStep.THEME,
                 OnboardingStep.CONTACTS,
-                OnboardingStep.MESSAGING,
                 OnboardingStep.ASSISTANT,
             ),
             onboardingStepOrder(showKeyboardSetup = false),

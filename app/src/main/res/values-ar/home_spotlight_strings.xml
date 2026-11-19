@@ -4,7 +4,8 @@
     <string name="home_spotlight_minkspace_title">التطبيقات المصغّرة هنا</string>
     <string name="home_spotlight_minkspace_description">اسحب لأعلى أو لأسفل داخل MinkSpace للتنقل بين التطبيقات المصغّرة. اضغط على التطبيقات المدعومة لتوسيعها.</string>
     <string name="home_spotlight_magic_title">ابدأ الكتابة</string>
-    <string name="home_spotlight_magic_description">ابحث وأرسل الرسائل واتصل وأنشئ الملاحظات وشغّل الإجراءات بالنص العادي أو مفاتيح Magic Box السريعة.</string>
+    <string name="home_spotlight_magic_description">اكتب بشكل طبيعي للبحث، أو ابدأ بمفتاح سريع لإخبار Magic Box بما تريد فعله.</string>
+    <string name="home_spotlight_magic_hotkeys">@ رسالة · # مكالمة · − مهمة · / ملاحظة · + حدث · ? تطبيق · * مساعد</string>
     <string name="home_spotlight_keyboard_title">أكثر من لوحة مفاتيح</string>
     <string name="home_spotlight_keyboard_description">اضغط لفتح لوحة المفاتيح. اضغط مطولاً لتشغيل Adrift.</string>
     <string name="home_spotlight_header_title">الرئيسية بنظرة واحدة</string>
@@ -14,4 +15,11 @@
     <string name="notifications">الإشعارات</string>
     <string name="replay_home_tour">إعادة جولة الرئيسية</string>
     <string name="replay_home_tour_summary">مراجعة عناصر التحكم والاختصارات والإيماءات في الرئيسية</string>
+    <string name="home_spotlight_classic_pages_title">شاشتك الرئيسية، صفحة تلو الأخرى</string>
+    <string name="home_spotlight_classic_pages_description">تنقل بين Mini Apps وصفحات التطبيقات والمجلدات السبع وQuick Apps والأدوات.</string>
+    <string name="home_spotlight_classic_rail_title">انتقل إلى أي صفحة</string>
+    <string name="home_spotlight_classic_rail_description">استخدم الشريط السفلي للتنقل بين المحادثات وMini Apps والمجلدات وQuick Apps والأدوات.</string>
+    <string name="home_spotlight_classic_gestures_title">اختصارات كلاسيكية</string>
+    <string name="home_spotlight_classic_gestures_description">اسحب لأعلى لعرض كل التطبيقات ولأسفل لعرض الإشعارات.</string>
+    <string name="start_typing">ابدأ الكتابة</string>
 </resources>

@@ -41,6 +41,17 @@
     <string name="keyboard_key_new_line">Nouvelle ligne</string>
     <string name="keyboard_key_search">Rechercher</string>
     <string name="onboarding_keyboard_title">Choisissez votre clavier</string>
-    <string name="onboarding_keyboard_description">Le clavier du lanceur Mink reste dans Magic Box. Choisissez le style des touches et la disposition des couleurs du thème pour commencer.</string>
+    <string name="onboarding_keyboard_description">Choisissez le clavier que Mink doit utiliser lorsque vous écrivez depuis l’accueil.</string>
+    <string name="onboarding_mink_keyboard_title">Clavier Mink</string>
+    <string name="onboarding_mink_keyboard_description">Plat par défaut, avec les actions Magic Box intégrées.</string>
+    <string name="onboarding_system_keyboard_title">Clavier système</string>
+    <string name="onboarding_system_keyboard_description">Utilisez le clavier Android déjà configuré sur votre téléphone.</string>
+    <string name="onboarding_keyboard_preview_hint">Écrivez ici pour l’essayer.</string>
+    <string name="onboarding_keyboard_hotkey_text">Envoyer un message</string>
+    <string name="onboarding_keyboard_hotkey_call">Appeler quelqu’un</string>
+    <string name="onboarding_keyboard_hotkey_todo">Ajouter une tâche</string>
+    <string name="onboarding_keyboard_hotkey_note">Écrire une note</string>
+    <string name="onboarding_keyboard_hotkey_event">Ajouter un événement</string>
+    <string name="onboarding_keyboard_hotkey_app">Rechercher des apps</string>
     <string name="onboarding_keyboard_change_later">Vous pourrez modifier ce choix plus tard en maintenant SYM appuyé ou dans Magic Box → Clavier.</string>
 </resources>

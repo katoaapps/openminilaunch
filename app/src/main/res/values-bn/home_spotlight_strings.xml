@@ -4,7 +4,8 @@
     <string name="home_spotlight_minkspace_title">মিনি অ্যাপ এখানে থাকে</string>
     <string name="home_spotlight_minkspace_description">মিনি অ্যাপ বদলাতে MinkSpace-এর ভেতরে উপরে বা নিচে সোয়াইপ করুন। সমর্থিত অ্যাপ বড় করতে ট্যাপ করুন।</string>
     <string name="home_spotlight_magic_title">টাইপ করা শুরু করুন</string>
-    <string name="home_spotlight_magic_description">সাধারণ লেখা বা Magic Box হটকি দিয়ে খুঁজুন, বার্তা পাঠান, কল করুন, নোট লিখুন এবং কাজ চালু করুন।</string>
+    <string name="home_spotlight_magic_description">খুঁজতে স্বাভাবিকভাবে টাইপ করুন, অথবা Magic Box-কে আপনার কাজ জানাতে হটকি দিয়ে শুরু করুন।</string>
+    <string name="home_spotlight_magic_hotkeys">@ বার্তা · # কল · − করণীয় · / নোট · + ইভেন্ট · ? অ্যাপ · * অ্যাসিস্ট্যান্ট</string>
     <string name="home_spotlight_keyboard_title">শুধু কীবোর্ড নয়</string>
     <string name="home_spotlight_keyboard_description">কীবোর্ড খুলতে ট্যাপ করুন। Adrift চালু করতে চেপে ধরুন।</string>
     <string name="home_spotlight_header_title">এক নজরে হোম</string>
@@ -14,4 +15,11 @@
     <string name="notifications">বিজ্ঞপ্তি</string>
     <string name="replay_home_tour">হোম ট্যুর আবার দেখুন</string>
     <string name="replay_home_tour_summary">হোমের নিয়ন্ত্রণ, শর্টকাট ও অঙ্গভঙ্গি আবার দেখুন</string>
+    <string name="home_spotlight_classic_pages_title">আপনার হোম, পৃষ্ঠায় পৃষ্ঠায়</string>
+    <string name="home_spotlight_classic_pages_description">Mini Apps, অ্যাপ ও ফোল্ডারের সাতটি পৃষ্ঠা, Quick Apps এবং উইজেটের মধ্যে সোয়াইপ করুন।</string>
+    <string name="home_spotlight_classic_rail_title">যেকোনো পৃষ্ঠায় যান</string>
+    <string name="home_spotlight_classic_rail_description">কথোপকথন, Mini Apps, ফোল্ডার, Quick Apps ও উইজেটের মধ্যে যেতে নিচের রেল ব্যবহার করুন।</string>
+    <string name="home_spotlight_classic_gestures_title">ক্লাসিক শর্টকাট</string>
+    <string name="home_spotlight_classic_gestures_description">সব অ্যাপের জন্য ওপরে এবং বিজ্ঞপ্তির জন্য নিচে সোয়াইপ করুন।</string>
+    <string name="start_typing">টাইপ করা শুরু করুন</string>
 </resources>

@@ -41,6 +41,17 @@
     <string name="keyboard_key_new_line">নতুন লাইন</string>
     <string name="keyboard_key_search">অনুসন্ধান</string>
     <string name="onboarding_keyboard_title">আপনার কীবোর্ড বেছে নিন</string>
-    <string name="onboarding_keyboard_description">Mink-এর লঞ্চার কীবোর্ড Magic Box-এর মধ্যেই থাকে। শুরু করার জন্য আপনার পছন্দের কী স্টাইল ও থিমের রঙের বিন্যাস বেছে নিন।</string>
+    <string name="onboarding_keyboard_description">হোম থেকে টাইপ করার সময় Mink যে কীবোর্ড ব্যবহার করবে সেটি বেছে নিন।</string>
+    <string name="onboarding_mink_keyboard_title">Mink কীবোর্ড</string>
+    <string name="onboarding_mink_keyboard_description">ডিফল্টভাবে ফ্ল্যাট, Magic Box অ্যাকশনসহ।</string>
+    <string name="onboarding_system_keyboard_title">সিস্টেম কীবোর্ড</string>
+    <string name="onboarding_system_keyboard_description">আপনার ফোনে আগে থেকে সেট করা Android কীবোর্ড ব্যবহার করুন।</string>
+    <string name="onboarding_keyboard_preview_hint">চেষ্টা করতে এখানে টাইপ করুন।</string>
+    <string name="onboarding_keyboard_hotkey_text">বার্তা পাঠান</string>
+    <string name="onboarding_keyboard_hotkey_call">কাউকে কল করুন</string>
+    <string name="onboarding_keyboard_hotkey_todo">করণীয় যোগ করুন</string>
+    <string name="onboarding_keyboard_hotkey_note">নোট লিখুন</string>
+    <string name="onboarding_keyboard_hotkey_event">ইভেন্ট যোগ করুন</string>
+    <string name="onboarding_keyboard_hotkey_app">অ্যাপ খুঁজুন</string>
     <string name="onboarding_keyboard_change_later">পরে SYM চেপে ধরে অথবা Magic Box → কীবোর্ডে গিয়ে এটি পরিবর্তন করতে পারবেন।</string>
 </resources>

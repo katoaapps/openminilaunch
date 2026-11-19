@@ -4,7 +4,8 @@
     <string name="home_spotlight_minkspace_title">迷你應用程式喺呢度</string>
     <string name="home_spotlight_minkspace_description">喺 MinkSpace 入面向上或向下掃，切換迷你應用程式。撳支援嘅應用程式即可展開。</string>
     <string name="home_spotlight_magic_title">開始輸入</string>
-    <string name="home_spotlight_magic_description">用一般文字或 Magic Box 快捷鍵搜尋、傳訊息、打電話、記筆記同啟動動作。</string>
+    <string name="home_spotlight_magic_description">正常輸入就可以搜尋，或者先輸入快捷鍵，話俾 Magic Box 知你想做咩。</string>
+    <string name="home_spotlight_magic_hotkeys">@ 訊息 · # 通話 · − 待辦 · / 筆記 · + 活動 · ? 應用程式 · * 助理</string>
     <string name="home_spotlight_keyboard_title">唔只係鍵盤</string>
     <string name="home_spotlight_keyboard_description">撳一下開啟鍵盤。長按啟動 Adrift。</string>
     <string name="home_spotlight_header_title">主頁一目了然</string>
@@ -14,4 +15,11 @@
     <string name="notifications">通知</string>
     <string name="replay_home_tour">重播主頁導覽</string>
     <string name="replay_home_tour_summary">重溫主頁控制、捷徑同手勢</string>
+    <string name="home_spotlight_classic_pages_title">你嘅主畫面，逐頁睇</string>
+    <string name="home_spotlight_classic_pages_description">掃過 Mini Apps、七個應用程式同資料夾頁面、Quick Apps 同小工具。</string>
+    <string name="home_spotlight_classic_rail_title">跳去任何一頁</string>
+    <string name="home_spotlight_classic_rail_description">用底部導覽列喺對話、Mini Apps、資料夾、Quick Apps 同小工具之間跳轉。</string>
+    <string name="home_spotlight_classic_gestures_title">經典捷徑</string>
+    <string name="home_spotlight_classic_gestures_description">向上掃顯示所有應用程式，向下掃顯示通知。</string>
+    <string name="start_typing">開始輸入</string>
 </resources>

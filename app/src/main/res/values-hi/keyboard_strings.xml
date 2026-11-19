@@ -41,6 +41,17 @@
     <string name="keyboard_key_new_line">नई पंक्ति</string>
     <string name="keyboard_key_search">खोजें</string>
     <string name="onboarding_keyboard_title">अपना कीबोर्ड चुनें</string>
-    <string name="onboarding_keyboard_description">Mink का लॉन्चर कीबोर्ड Magic Box के अंदर ही रहता है। शुरू करने के लिए अपनी पसंद की कुंजी शैली और थीम रंग व्यवस्था चुनें।</string>
+    <string name="onboarding_keyboard_description">होम से टाइप करते समय Mink द्वारा इस्तेमाल किया जाने वाला कीबोर्ड चुनें।</string>
+    <string name="onboarding_mink_keyboard_title">Mink कीबोर्ड</string>
+    <string name="onboarding_mink_keyboard_description">डिफ़ॉल्ट रूप से फ़्लैट, अंतर्निहित Magic Box कार्रवाइयों के साथ।</string>
+    <string name="onboarding_system_keyboard_title">सिस्टम कीबोर्ड</string>
+    <string name="onboarding_system_keyboard_description">अपने फ़ोन पर पहले से सेट Android कीबोर्ड इस्तेमाल करें।</string>
+    <string name="onboarding_keyboard_preview_hint">आज़माने के लिए यहाँ टाइप करें।</string>
+    <string name="onboarding_keyboard_hotkey_text">किसी को संदेश भेजें</string>
+    <string name="onboarding_keyboard_hotkey_call">किसी को कॉल करें</string>
+    <string name="onboarding_keyboard_hotkey_todo">कार्य जोड़ें</string>
+    <string name="onboarding_keyboard_hotkey_note">नोट लिखें</string>
+    <string name="onboarding_keyboard_hotkey_event">ईवेंट जोड़ें</string>
+    <string name="onboarding_keyboard_hotkey_app">ऐप खोजें</string>
     <string name="onboarding_keyboard_change_later">आप बाद में SYM को दबाकर रखने या Magic Box → कीबोर्ड में जाकर इसे बदल सकते हैं।</string>
 </resources>

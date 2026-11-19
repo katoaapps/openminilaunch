@@ -4,7 +4,8 @@
     <string name="home_spotlight_minkspace_title">منی ایپس یہاں ہیں</string>
     <string name="home_spotlight_minkspace_description">منی ایپس بدلنے کے لیے MinkSpace میں اوپر یا نیچے سوائپ کریں۔ معاون ایپس کو پھیلانے کے لیے ٹیپ کریں۔</string>
     <string name="home_spotlight_magic_title">ٹائپ کرنا شروع کریں</string>
-    <string name="home_spotlight_magic_description">عام متن یا Magic Box ہاٹ کیز سے تلاش، پیغام، کال، نوٹس اور ایکشنز شروع کریں۔</string>
+    <string name="home_spotlight_magic_description">تلاش کے لیے عام انداز میں ٹائپ کریں، یا Magic Box کو مطلوبہ کام بتانے کے لیے ہاٹ کی سے شروع کریں۔</string>
+    <string name="home_spotlight_magic_hotkeys">@ پیغام · # کال · − کام · / نوٹ · + ایونٹ · ? ایپ · * اسسٹنٹ</string>
     <string name="home_spotlight_keyboard_title">صرف کی بورڈ نہیں</string>
     <string name="home_spotlight_keyboard_description">کی بورڈ کھولنے کے لیے ٹیپ کریں۔ Adrift شروع کرنے کے لیے دبا کر رکھیں۔</string>
     <string name="home_spotlight_header_title">ہوم ایک نظر میں</string>
@@ -14,4 +15,11 @@
     <string name="notifications">اطلاعات</string>
     <string name="replay_home_tour">ہوم ٹور دوبارہ چلائیں</string>
     <string name="replay_home_tour_summary">ہوم کنٹرولز، شارٹ کٹس اور اشارے دوبارہ دیکھیں</string>
+    <string name="home_spotlight_classic_pages_title">آپ کا ہوم، صفحہ بہ صفحہ</string>
+    <string name="home_spotlight_classic_pages_description">Mini Apps، ایپس اور فولڈرز کے سات صفحات، Quick Apps اور وجٹس میں سوائپ کریں۔</string>
+    <string name="home_spotlight_classic_rail_title">کسی بھی صفحے پر جائیں</string>
+    <string name="home_spotlight_classic_rail_description">گفتگو، Mini Apps، فولڈرز، Quick Apps اور وجٹس کے درمیان جانے کے لیے نیچے کی ریل استعمال کریں۔</string>
+    <string name="home_spotlight_classic_gestures_title">کلاسک شارٹ کٹس</string>
+    <string name="home_spotlight_classic_gestures_description">تمام ایپس کے لیے اوپر اور اطلاعات کے لیے نیچے سوائپ کریں۔</string>
+    <string name="start_typing">ٹائپ کرنا شروع کریں</string>
 </resources>

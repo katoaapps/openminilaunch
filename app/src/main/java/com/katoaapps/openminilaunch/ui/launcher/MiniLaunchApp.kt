@@ -398,9 +398,13 @@ internal fun MiniLaunchApp(
         if (showHomeFeatureTour && !showTutorial && !showUpdateNotice) {
             HomeFeatureTour(
                 registry = homeTourTargetRegistry,
+                layoutStyle = store.homeLayoutStyle,
                 onComplete = {
                     store.markUpdateSeen(HOME_FEATURE_TOUR_ID)
                     showHomeFeatureTour = false
+                    // The final lesson hands control directly to Magic Box. Return to Home while
+                    // restoring keyboardInputEnabled rearms the collapsed editor for its first key.
+                    homePageRequestToken++
                 },
             )
         }

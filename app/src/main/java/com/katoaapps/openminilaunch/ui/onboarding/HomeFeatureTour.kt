@@ -7,13 +7,17 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
+import androidx.compose.ui.platform.LocalConfiguration
 import com.katoaapps.openminilaunch.R
+import com.katoaapps.openminilaunch.features.magic.hasUsableHardwareKeyboard
+import com.katoaapps.openminilaunch.model.HomeLayoutStyle
 import kotlinx.coroutines.delay
 
 internal data class HomeTourStep(
     val target: HomeTourTarget,
     val titleRes: Int,
     val descriptionRes: Int,
+    val classicGestureCues: Boolean = false,
 )
 
 internal fun shouldShowHomeFeatureTour(
@@ -21,48 +25,85 @@ internal fun shouldShowHomeFeatureTour(
     currentTourSeen: Boolean,
 ): Boolean = onboardingComplete && !currentTourSeen
 
-internal fun homeFeatureTourSteps(): List<HomeTourStep> {
-    val folderStep = HomeTourStep(
-        target = HomeTourTarget.APP_GRID,
-        titleRes = R.string.home_spotlight_folders_title,
-        descriptionRes = R.string.home_spotlight_folders_description,
-    )
-    return listOf(
-        folderStep,
-        HomeTourStep(
-            HomeTourTarget.MINK_SPACE,
-            R.string.home_spotlight_minkspace_title,
-            R.string.home_spotlight_minkspace_description,
-        ),
-        HomeTourStep(
-            HomeTourTarget.MAGIC_BOX,
-            R.string.home_spotlight_magic_title,
-            R.string.home_spotlight_magic_description,
-        ),
-        HomeTourStep(
-            HomeTourTarget.KEYBOARD_ACTION,
-            R.string.home_spotlight_keyboard_title,
-            R.string.home_spotlight_keyboard_description,
-        ),
-        HomeTourStep(
-            HomeTourTarget.HEADER,
-            R.string.home_spotlight_header_title,
-            R.string.home_spotlight_header_description,
-        ),
-        HomeTourStep(
-            HomeTourTarget.GESTURES,
-            R.string.home_spotlight_gestures_title,
-            R.string.home_spotlight_gestures_description,
-        ),
-    )
-}
+internal fun homeFeatureTourSteps(layoutStyle: HomeLayoutStyle): List<HomeTourStep> =
+    if (layoutStyle == HomeLayoutStyle.CLASSIC) classicHomeFeatureTourSteps()
+    else minkHomeFeatureTourSteps()
+
+private fun minkHomeFeatureTourSteps(): List<HomeTourStep> = listOf(
+    HomeTourStep(
+        HomeTourTarget.APP_GRID,
+        R.string.home_spotlight_folders_title,
+        R.string.home_spotlight_folders_description,
+    ),
+    HomeTourStep(
+        HomeTourTarget.MINK_SPACE,
+        R.string.home_spotlight_minkspace_title,
+        R.string.home_spotlight_minkspace_description,
+    ),
+    HomeTourStep(
+        HomeTourTarget.HEADER,
+        R.string.home_spotlight_header_title,
+        R.string.home_spotlight_header_description,
+    ),
+    HomeTourStep(
+        HomeTourTarget.GESTURES,
+        R.string.home_spotlight_gestures_title,
+        R.string.home_spotlight_gestures_description,
+    ),
+    HomeTourStep(
+        HomeTourTarget.KEYBOARD_ACTION,
+        R.string.home_spotlight_keyboard_title,
+        R.string.home_spotlight_keyboard_description,
+    ),
+    HomeTourStep(
+        HomeTourTarget.MAGIC_BOX,
+        R.string.home_spotlight_magic_title,
+        R.string.home_spotlight_magic_description,
+    ),
+)
+
+private fun classicHomeFeatureTourSteps(): List<HomeTourStep> = listOf(
+    HomeTourStep(
+        HomeTourTarget.CLASSIC_PAGES,
+        R.string.home_spotlight_classic_pages_title,
+        R.string.home_spotlight_classic_pages_description,
+    ),
+    HomeTourStep(
+        HomeTourTarget.CLASSIC_RAIL,
+        R.string.home_spotlight_classic_rail_title,
+        R.string.home_spotlight_classic_rail_description,
+    ),
+    HomeTourStep(
+        HomeTourTarget.HEADER,
+        R.string.home_spotlight_header_title,
+        R.string.home_spotlight_header_description,
+    ),
+    HomeTourStep(
+        HomeTourTarget.GESTURES,
+        R.string.home_spotlight_classic_gestures_title,
+        R.string.home_spotlight_classic_gestures_description,
+        classicGestureCues = true,
+    ),
+    HomeTourStep(
+        HomeTourTarget.KEYBOARD_ACTION,
+        R.string.home_spotlight_keyboard_title,
+        R.string.home_spotlight_keyboard_description,
+    ),
+    HomeTourStep(
+        HomeTourTarget.MAGIC_BOX,
+        R.string.home_spotlight_magic_title,
+        R.string.home_spotlight_magic_description,
+    ),
+)
 
 @Composable
 internal fun HomeFeatureTour(
     registry: HomeTourTargetRegistry,
+    layoutStyle: HomeLayoutStyle,
     onComplete: () -> Unit,
 ) {
-    val steps = remember { homeFeatureTourSteps() }
+    val configuration = LocalConfiguration.current
+    val steps = remember(layoutStyle) { homeFeatureTourSteps(layoutStyle) }
     var currentIndex by remember { mutableIntStateOf(0) }
     val step = steps[currentIndex]
     val targetBounds = registry[step.target]
@@ -89,6 +130,11 @@ internal fun HomeFeatureTour(
         count = steps.size,
         targetBounds = targetBounds,
         gestureStep = gestureStep,
+        clearClassicSlabRail = layoutStyle == HomeLayoutStyle.CLASSIC &&
+            !hasUsableHardwareKeyboard(
+                configuration.keyboard,
+                configuration.hardKeyboardHidden,
+            ),
         onPrevious = { if (currentIndex > 0) currentIndex-- },
         onNext = {
             if (currentIndex < steps.lastIndex) currentIndex++ else onComplete()

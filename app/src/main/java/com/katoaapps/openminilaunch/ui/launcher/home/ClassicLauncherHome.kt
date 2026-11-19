@@ -90,6 +90,8 @@ import com.katoaapps.openminilaunch.ui.components.UnavailableLauncherTargetIcon
 import com.katoaapps.openminilaunch.ui.conversations.ConversationCenterScreen
 import com.katoaapps.openminilaunch.ui.minkspace.core.MinkSpaceHost
 import com.katoaapps.openminilaunch.ui.minkspace.core.MinkSpacePresentationState
+import com.katoaapps.openminilaunch.ui.onboarding.HomeTourTarget
+import com.katoaapps.openminilaunch.ui.onboarding.homeTourTarget
 import com.katoaapps.openminilaunch.ui.theme.Dimens
 import com.katoaapps.openminilaunch.ui.theme.MinkFeatureColors
 import com.katoaapps.openminilaunch.ui.theme.resolveContentColor
@@ -188,7 +190,8 @@ internal fun ClassicLauncherHome(
         Column(Modifier.fillMaxSize()) {
             HorizontalPager(
                 state = pagerState,
-                modifier = Modifier.fillMaxWidth().weight(1f),
+                modifier = Modifier.fillMaxWidth().weight(1f)
+                    .homeTourTarget(HomeTourTarget.CLASSIC_PAGES),
                 userScrollEnabled = !minkSpacePresentation.isExpanded,
                 key = { pages[it].stableKey },
             ) { page ->
@@ -293,6 +296,7 @@ internal fun ClassicLauncherHome(
                             )
                         }
                     },
+                    modifier = Modifier.homeTourTarget(HomeTourTarget.CLASSIC_RAIL),
                 )
             }
         }
@@ -558,6 +562,7 @@ private fun ClassicPageRail(
     contentColor: Color,
     onPage: (Int) -> Unit,
     onConversations: () -> Unit,
+    modifier: Modifier = Modifier,
 ) {
     val conversations = ConversationNotificationStore.currentConversations(
         useDemoData = store.demoModeEnabled,
@@ -571,7 +576,7 @@ private fun ClassicPageRail(
         defaultColorArgb = MinkFeatureColors.ConversationAttention.toArgb(),
     )
     Box(
-        Modifier.fillMaxWidth().height(48.dp).padding(horizontal = Dimens.dp8),
+        modifier.fillMaxWidth().height(48.dp).padding(horizontal = Dimens.dp8),
     ) {
         ConversationAttentionButton(
             conversationCount = conversations.size,

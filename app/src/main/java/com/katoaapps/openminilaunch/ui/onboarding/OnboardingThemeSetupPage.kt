@@ -19,7 +19,7 @@ internal fun OnboardingThemeSetupPage(
 ) {
     Column(verticalArrangement = Arrangement.spacedBy(Dimens.dp18)) {
         Text(
-            stringResource(R.string.home_themes_description),
+            stringResource(R.string.onboarding_theme_description),
             fontSize = Dimens.sp18,
         )
         HomeThemeGallery(
