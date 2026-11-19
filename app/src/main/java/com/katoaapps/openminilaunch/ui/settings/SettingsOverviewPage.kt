@@ -42,7 +42,7 @@ internal fun SettingsOverviewPage(
         SettingsSection.MINI_APPS -> MinkSpaceSettingsPage(
             store = store,
             actions = actions,
-            openMinkBoardSettings = { onNavigate(SettingsDestination.MINKBOARD_HOME) },
+            openTodoSettings = { onNavigate(SettingsDestination.TODOS_HOME) },
             goBack = goBack,
         )
         SettingsSection.MAGIC_BOX -> MagicBoxSettingsPage(

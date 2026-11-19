@@ -99,6 +99,7 @@ dependencies {
     implementation(project(":minkpad-core"))
     implementation(project(":minkboard-core"))
     implementation(project(":minkboard-data-android"))
+    implementation(project(":minkboard-focus-android"))
     implementation(project(":minkboard-compose"))
     implementation("androidx.core:core-ktx:1.13.1")
     implementation("androidx.activity:activity-compose:1.9.0")

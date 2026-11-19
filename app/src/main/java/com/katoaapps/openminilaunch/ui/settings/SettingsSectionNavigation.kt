@@ -48,7 +48,7 @@ internal enum class SettingsSection(
 
 internal fun settingsSectionFor(destination: SettingsDestination): SettingsSection = when (destination) {
     SettingsDestination.MINK_SPACE,
-    SettingsDestination.MINKBOARD_HOME -> SettingsSection.MINI_APPS
+    SettingsDestination.TODOS_HOME -> SettingsSection.MINI_APPS
 
     SettingsDestination.APP_BUBBLES,
     SettingsDestination.KEYBOARD,

@@ -4,7 +4,6 @@ import android.content.Context
 import androidx.room.withTransaction
 import androidx.sqlite.db.SimpleSQLiteQuery
 import com.katoaapps.minkboard.core.MinkBoardDefaults
-import com.katoaapps.minkboard.core.FocusTimerStore
 import com.katoaapps.minkboard.core.LauncherBoardBackupDesignation
 import com.katoaapps.minkboard.core.LauncherBoardDesignation
 import com.katoaapps.minkboard.core.LauncherBoardIntegrationStore
@@ -26,6 +25,7 @@ import com.katoaapps.minkboard.core.LauncherTodoMigrationPlan
 import com.katoaapps.minkboard.core.LauncherWorkspaceImportOutcome
 import com.katoaapps.minkboard.core.LauncherWorkspaceIntegrationStore
 import com.katoaapps.minkboard.core.MinkBoardRepository
+import com.katoaapps.minkboard.core.MinkBoardFocus
 import com.katoaapps.minkboard.core.MinkBoardRules
 import com.katoaapps.minkboard.core.MinkBoardTemplates
 import com.katoaapps.minkboard.core.PortableArchiveValidator
@@ -64,13 +64,13 @@ import kotlinx.coroutines.flow.distinctUntilChanged
 import kotlinx.coroutines.flow.flowOn
 import kotlinx.coroutines.flow.map
 
-class RoomMinkBoardRepository internal constructor(
+internal class RoomMinkBoardRepository(
     private val database: MinkBoardDatabase,
     private val cipher: FieldCipher,
     private val idFactory: () -> String,
     private val clockMillis: () -> Long,
 ) : MinkBoardRepository,
-    FocusTimerStore,
+    MinkBoardFocus,
     WorkspaceArchiveStore,
     LauncherBoardIntegrationStore,
     LauncherWorkspaceIntegrationStore {

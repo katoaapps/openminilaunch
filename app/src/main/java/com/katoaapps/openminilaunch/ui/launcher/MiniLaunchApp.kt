@@ -36,7 +36,7 @@ import androidx.core.view.WindowInsetsCompat
 import androidx.core.view.WindowInsetsControllerCompat
 import com.katoaapps.openminilaunch.R
 import com.katoaapps.openminilaunch.data.LauncherStore
-import com.katoaapps.openminilaunch.openMinkMinkBoardRuntime
+import com.katoaapps.openminilaunch.todoFeatureRuntime
 import com.katoaapps.openminilaunch.features.demo.DemoCaptureMoment
 import com.katoaapps.openminilaunch.model.ContactAppRoute
 import com.katoaapps.openminilaunch.model.Screen
@@ -51,7 +51,7 @@ import com.katoaapps.openminilaunch.ui.launcher.layout.pairForFocusedPage
 import com.katoaapps.openminilaunch.ui.launcher.layout.visibleLauncherPages
 import com.katoaapps.openminilaunch.ui.magic.rememberMagicBoxSessionState
 import com.katoaapps.openminilaunch.ui.magic.AssistantActivity
-import com.katoaapps.openminilaunch.ui.minkboard.OpenMinkBoardScreen
+import com.katoaapps.minklauncher.todos.presentation.TodoBoardRoute
 import com.katoaapps.openminilaunch.ui.minkspace.core.rememberMinkSpacePresentationState
 import com.katoaapps.openminilaunch.ui.onboarding.FeatureUpdateDialog
 import com.katoaapps.openminilaunch.ui.onboarding.GooglePlayBetaDialog
@@ -144,10 +144,10 @@ internal fun MiniLaunchApp(
         }
     }
     val context = LocalContext.current
-    val minkBoardRuntime = remember(context) { context.openMinkMinkBoardRuntime }
-    val minkBoardNavigation by minkBoardRuntime.navigationRequest.collectAsState()
-    LaunchedEffect(minkBoardNavigation?.token) {
-        if (minkBoardNavigation != null) screen = Screen.TODOS
+    val todoFeatureRuntime = remember(context) { context.todoFeatureRuntime }
+    val todoNavigation by todoFeatureRuntime.navigationRequest.collectAsState()
+    LaunchedEffect(todoNavigation?.token) {
+        if (todoNavigation != null) screen = Screen.TODOS
     }
     val view = LocalView.current
 
@@ -330,10 +330,11 @@ internal fun MiniLaunchApp(
                             },
                         )
                     }
-                    Screen.TODOS -> OpenMinkBoardScreen(
+                    Screen.TODOS -> TodoBoardRoute(
+                        runtime = todoFeatureRuntime,
                         modifier = Modifier.fillMaxSize(),
                         onOpenSettings = {
-                            settingsDestination = SettingsDestination.MINKBOARD_HOME
+                            settingsDestination = SettingsDestination.TODOS_HOME
                             screen = Screen.SETTINGS
                         },
                     )

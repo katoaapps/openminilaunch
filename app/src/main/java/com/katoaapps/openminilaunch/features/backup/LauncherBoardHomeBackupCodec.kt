@@ -4,7 +4,7 @@ import com.katoaapps.minkboard.data.PassphraseAesGcmEnvelopeCodec
 import com.katoaapps.minkboard.data.PassphraseEnvelopeConfig
 import com.katoaapps.minkboard.data.PassphraseEnvelopeDecodeResult
 import com.katoaapps.minkboard.model.StatusId
-import com.katoaapps.openminilaunch.features.minkboard.LauncherVisibleStatuses
+import com.katoaapps.minklauncher.todos.home.TodoVisibleStatuses
 import java.nio.charset.StandardCharsets
 import java.security.SecureRandom
 import org.json.JSONArray
@@ -12,7 +12,7 @@ import org.json.JSONObject
 
 internal data class LauncherBoardHomeBackup(
     /** Null means all statuses; a non-empty list means an explicit ordered selection. */
-    val visibleStatusIds: List<String>?,
+    val resolveTodoVisibleStatusIds: List<String>?,
 )
 
 internal sealed interface LauncherBoardHomeDecodeResult {
@@ -36,13 +36,13 @@ internal class LauncherBoardHomeBackupCodec(
         writeIterations = writeIterations,
     )
 
-    fun encode(visibility: LauncherVisibleStatuses, secret: CharArray): ByteArray? = runCatching {
+    fun encode(visibility: TodoVisibleStatuses, secret: CharArray): ByteArray? = runCatching {
         val payload = JSONObject()
             .put("schemaVersion", PAYLOAD_VERSION)
             .apply {
                 when (visibility) {
-                    LauncherVisibleStatuses.All -> put("mode", MODE_ALL)
-                    is LauncherVisibleStatuses.Selected -> {
+                    TodoVisibleStatuses.All -> put("mode", MODE_ALL)
+                    is TodoVisibleStatuses.Selected -> {
                         put("mode", MODE_SELECTED)
                         put(
                             "statusIds",
@@ -80,14 +80,14 @@ internal class LauncherBoardHomeBackupCodec(
             }
             when (payload.getString("mode")) {
             MODE_ALL -> LauncherBoardHomeDecodeResult.Decoded(
-                LauncherBoardHomeBackup(visibleStatusIds = null),
+                LauncherBoardHomeBackup(resolveTodoVisibleStatusIds = null),
             )
             MODE_SELECTED -> {
                 val ids = payload.getJSONArray("statusIds")
                 require(ids.length() in 1..MAX_STATUS_IDS)
                 LauncherBoardHomeDecodeResult.Decoded(
                     LauncherBoardHomeBackup(
-                        visibleStatusIds = buildList {
+                        resolveTodoVisibleStatusIds = buildList {
                             repeat(ids.length()) { index ->
                                 ids.getString(index)
                                     .also { require(it.isNotBlank() && it.length <= MAX_ID_LENGTH) }

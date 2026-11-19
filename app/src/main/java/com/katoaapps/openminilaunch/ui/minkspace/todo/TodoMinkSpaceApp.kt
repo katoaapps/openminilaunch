@@ -19,13 +19,13 @@ import com.katoaapps.minkboard.model.StatusId
 import com.katoaapps.openminilaunch.R
 import com.katoaapps.openminilaunch.data.LauncherStore
 import com.katoaapps.openminilaunch.features.minkspace.MinkSpaceMiniApp
-import com.katoaapps.openminilaunch.openMinkMinkBoardRuntime
+import com.katoaapps.openminilaunch.todoFeatureRuntime
 import com.katoaapps.openminilaunch.ui.launcher.home.HomeTodoTextMetrics
 import com.katoaapps.openminilaunch.ui.minkspace.core.MinkSpaceApp
 import com.katoaapps.openminilaunch.ui.minkspace.core.MinkSpaceMiniAppManifest
 import com.katoaapps.openminilaunch.ui.minkspace.core.MinkSpaceMiniAppSettingsTarget
 import com.katoaapps.openminilaunch.ui.minkspace.core.MinkSpaceScope
-import com.katoaapps.openminilaunch.ui.minkboard.OpenMinkHomeCardDialog
+import com.katoaapps.minklauncher.todos.presentation.TodoCardDialogRoute
 import kotlinx.coroutines.flow.catch
 
 /** Todo's complete MinkSpace adapter. The feature only receives platform primitives through [MinkSpaceScope]. */
@@ -40,10 +40,10 @@ internal class TodoMinkSpaceApp(
 
     @Composable
     override fun Content(scope: MinkSpaceScope, modifier: Modifier) {
-        val runtime = LocalContext.current.openMinkMinkBoardRuntime
+        val runtime = LocalContext.current.todoFeatureRuntime
         val boardAccessRevision by runtime.boardAccessRevision.collectAsState()
         val activeFocusSession by remember(runtime) {
-            runtime.repository.observeFocusSession().catch { emit(null) }
+            runtime.minkBoard.focus.observeFocusSession().catch { emit(null) }
         }.collectAsState(initial = null)
         var openCardIdValue by remember { mutableStateOf<String?>(null) }
         var cardRevealSequence by remember { mutableStateOf(0) }
@@ -67,7 +67,7 @@ internal class TodoMinkSpaceApp(
                     modifier = Modifier.fillMaxSize(),
                 )
             } else {
-                MinkBoardTodoPager(
+                BoardBackedTodoPager(
                     controller = runtime.launcherController,
                     openBoard = openHomeBoard,
                     openStatus = { boardId: BoardId, statusId: StatusId ->
@@ -101,7 +101,8 @@ internal class TodoMinkSpaceApp(
             }
         }
         openCardIdValue?.let { cardIdValue ->
-            OpenMinkHomeCardDialog(
+            TodoCardDialogRoute(
+                runtime = runtime,
                 controller = runtime.launcherController,
                 cardId = CardId(cardIdValue),
                 onDismiss = { openCardIdValue = null },

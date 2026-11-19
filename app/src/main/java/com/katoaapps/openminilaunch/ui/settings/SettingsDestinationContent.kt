@@ -77,10 +77,10 @@ internal fun SettingsDestinationContent(
         SettingsDestination.MINK_SPACE -> MinkSpaceSettingsPage(
             store = store,
             actions = actions,
-            openMinkBoardSettings = { onNavigate(SettingsDestination.MINKBOARD_HOME) },
+            openTodoSettings = { onNavigate(SettingsDestination.TODOS_HOME) },
             goBack = onNavigateBack,
         )
-        SettingsDestination.MINKBOARD_HOME -> MinkBoardHomeSettingsPage(
+        SettingsDestination.TODOS_HOME -> TodoHomeSettingsPage(
             goBack = onNavigateBack,
         )
         SettingsDestination.APP_GRID -> AppGridSettingsPage(

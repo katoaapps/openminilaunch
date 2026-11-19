@@ -18,61 +18,75 @@ import kotlinx.coroutines.flow.Flow
 import kotlinx.coroutines.flow.first
 import kotlinx.coroutines.flow.map
 
-interface MinkBoardRepository {
+/**
+ * Compatibility aggregate for code that still expects one repository object.
+ *
+ * New host integrations should depend on [MinkBoardApi] or one of its narrow capabilities.
+ */
+interface MinkBoardRepository :
+    MinkBoardBoards,
+    MinkBoardStatuses,
+    MinkBoardCards,
+    MinkBoardSubtasks {
     /**
      * Hydrates the complete workspace. Reserve this for explicit whole-workspace operations such
      * as archive creation; interactive surfaces should use [observeBoardSummaries] and
      * [observeBoard].
      */
-    fun observeWorkspace(): Flow<MinkBoardWorkspace>
+    override fun observeWorkspace(): Flow<MinkBoardWorkspace>
 
     /** Lightweight metadata for menus and board management. */
-    fun observeBoardSummaries(): Flow<List<BoardSummary>> = observeWorkspace().map { workspace ->
-        workspace.boards.map { snapshot ->
-            BoardSummary(
-                board = snapshot.board,
-                statusCount = snapshot.statuses.size,
-                cardCount = snapshot.cards.size,
-            )
+    override fun observeBoardSummaries(): Flow<List<BoardSummary>> =
+        observeWorkspace().map { workspace ->
+            workspace.boards.map { snapshot ->
+                BoardSummary(
+                    board = snapshot.board,
+                    statusCount = snapshot.statuses.size,
+                    cardCount = snapshot.cards.size,
+                )
+            }
         }
-    }
 
     /** Fully hydrates only the requested board. */
-    fun observeBoard(boardId: BoardId): Flow<BoardSnapshot?> = observeWorkspace().map { workspace ->
+    override fun observeBoard(boardId: BoardId): Flow<BoardSnapshot?> =
+        observeWorkspace().map { workspace ->
         workspace.board(boardId)
     }
 
-    suspend fun board(boardId: BoardId): BoardSnapshot? = observeBoard(boardId).first()
+    override suspend fun board(boardId: BoardId): BoardSnapshot? = observeBoard(boardId).first()
 
-    suspend fun ensureDefaultWorkspace()
+    override suspend fun ensureDefaultWorkspace()
 
-    suspend fun createBoard(draft: BoardDraft): BoardId
-    suspend fun createBoardFromTemplate(draft: BoardDraft, templateId: BoardTemplateId): BoardId
-    suspend fun renameBoard(boardId: BoardId, name: String)
-    suspend fun updateBoard(boardId: BoardId, update: BoardUpdate)
-    suspend fun reorderBoards(orderedBoardIds: List<BoardId>)
-    suspend fun deleteBoard(boardId: BoardId)
-    suspend fun deleteBoards(boardIds: Set<BoardId>) {
+    override suspend fun createBoard(draft: BoardDraft): BoardId
+    override suspend fun createBoardFromTemplate(
+        draft: BoardDraft,
+        templateId: BoardTemplateId,
+    ): BoardId
+    override suspend fun renameBoard(boardId: BoardId, name: String)
+    override suspend fun updateBoard(boardId: BoardId, update: BoardUpdate)
+    override suspend fun reorderBoards(orderedBoardIds: List<BoardId>)
+    override suspend fun deleteBoard(boardId: BoardId)
+    override suspend fun deleteBoards(boardIds: Set<BoardId>) {
         boardIds.forEach { boardId -> deleteBoard(boardId) }
     }
 
-    suspend fun addStatus(boardId: BoardId, draft: StatusDraft): StatusId
-    suspend fun updateStatus(statusId: StatusId, update: StatusUpdate)
-    suspend fun reorderStatuses(boardId: BoardId, orderedStatusIds: List<StatusId>)
-    suspend fun deleteStatus(statusId: StatusId, policy: StatusDeletionPolicy)
+    override suspend fun addStatus(boardId: BoardId, draft: StatusDraft): StatusId
+    override suspend fun updateStatus(statusId: StatusId, update: StatusUpdate)
+    override suspend fun reorderStatuses(boardId: BoardId, orderedStatusIds: List<StatusId>)
+    override suspend fun deleteStatus(statusId: StatusId, policy: StatusDeletionPolicy)
 
-    suspend fun addCard(statusId: StatusId, draft: CardDraft): CardId
+    override suspend fun addCard(statusId: StatusId, draft: CardDraft): CardId
     /**
      * Deep-copies [cardId] immediately after its source. When supplied, [title] is encrypted as
      * part of the same transaction so hosts never observe a half-renamed duplicate.
      */
-    suspend fun cloneCard(cardId: CardId, title: String? = null): CardId
-    suspend fun updateCard(cardId: CardId, update: CardUpdate)
-    suspend fun moveCard(cardId: CardId, destination: StatusId, position: Int = Int.MAX_VALUE)
-    suspend fun deleteCard(cardId: CardId)
+    override suspend fun cloneCard(cardId: CardId, title: String?): CardId
+    override suspend fun updateCard(cardId: CardId, update: CardUpdate)
+    override suspend fun moveCard(cardId: CardId, destination: StatusId, position: Int)
+    override suspend fun deleteCard(cardId: CardId)
 
-    suspend fun addSubtask(cardId: CardId, text: String): SubtaskId
-    suspend fun updateSubtask(subtaskId: SubtaskId, text: String)
-    suspend fun setSubtaskCompleted(subtaskId: SubtaskId, completed: Boolean)
-    suspend fun deleteSubtask(subtaskId: SubtaskId)
+    override suspend fun addSubtask(cardId: CardId, text: String): SubtaskId
+    override suspend fun updateSubtask(subtaskId: SubtaskId, text: String)
+    override suspend fun setSubtaskCompleted(subtaskId: SubtaskId, completed: Boolean)
+    override suspend fun deleteSubtask(subtaskId: SubtaskId)
 }

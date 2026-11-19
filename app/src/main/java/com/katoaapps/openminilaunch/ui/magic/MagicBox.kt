@@ -3,7 +3,7 @@
 package com.katoaapps.openminilaunch.ui.magic
 
 import com.katoaapps.openminilaunch.R
-import com.katoaapps.openminilaunch.openMinkMinkBoardRuntime
+import com.katoaapps.openminilaunch.todoFeatureRuntime
 import com.katoaapps.openminilaunch.data.*
 import com.katoaapps.openminilaunch.model.*
 import com.katoaapps.openminilaunch.platform.*
@@ -102,7 +102,7 @@ internal fun MagicBoxContent(
     val context = LocalContext.current
     val coroutineScope = rememberCoroutineScope()
     val minkBoardController = remember(context) {
-        context.openMinkMinkBoardRuntime.launcherController
+        context.todoFeatureRuntime.launcherController
     }
     val configuration = LocalConfiguration.current
     val useDirectHardwareInput = hasUsableHardwareKeyboard(

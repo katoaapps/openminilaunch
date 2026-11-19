@@ -22,7 +22,7 @@ import androidx.compose.ui.platform.LocalConfiguration
 import androidx.core.view.WindowCompat
 import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.lifecycleScope
-import com.katoaapps.openminilaunch.openMinkMinkBoardRuntime
+import com.katoaapps.openminilaunch.todoFeatureRuntime
 import com.katoaapps.openminilaunch.data.LauncherStore
 import com.katoaapps.openminilaunch.platform.DeviceActions
 import com.katoaapps.openminilaunch.ui.components.applyLargeDisplayOrientation
@@ -67,7 +67,7 @@ class MainActivity : FragmentActivity(), MagicHardwareHotkeyHost {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        openMinkMinkBoardRuntime.handleNavigationIntent(intent)
+        todoFeatureRuntime.handleNavigationIntent(intent)
         WindowCompat.setDecorFitsSystemWindows(window, false)
         allowContentBesideDisplayCutouts()
         val store = LauncherStore.get(this)
@@ -124,21 +124,21 @@ class MainActivity : FragmentActivity(), MagicHardwareHotkeyHost {
 
     override fun onStart() {
         super.onStart()
-        openMinkMinkBoardRuntime.onForegrounded()
+        todoFeatureRuntime.onForegrounded()
         runCatching { appWidgetHost.startListening() }
         actions.refreshDynamicLauncherIcons()
     }
 
     override fun onStop() {
         runCatching { appWidgetHost.stopListening() }
-        if (!isChangingConfigurations) openMinkMinkBoardRuntime.onBackgrounded()
+        if (!isChangingConfigurations) todoFeatureRuntime.onBackgrounded()
         super.onStop()
     }
 
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
         setIntent(intent)
-        openMinkMinkBoardRuntime.handleNavigationIntent(intent)
+        todoFeatureRuntime.handleNavigationIntent(intent)
         // Home requests reuse the launcher activity. This token resets transient Compose pages.
         if (intent.action == Intent.ACTION_MAIN) homeRequestToken++
     }

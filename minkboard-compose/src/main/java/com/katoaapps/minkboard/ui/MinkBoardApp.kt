@@ -111,6 +111,13 @@ import kotlinx.coroutines.launch
 import sh.calvin.reorderable.ReorderableItem
 import sh.calvin.reorderable.rememberReorderableLazyListState
 
+/**
+ * Host-supplied commands for the stateless shared board surface.
+ *
+ * Production hosts normally adapt [com.katoaapps.minkboard.core.MinkBoardApi] in a ViewModel or
+ * controller, while retaining ownership of navigation, authentication, focus presentation, and
+ * user-facing error handling.
+ */
 data class MinkBoardActions(
     val selectBoard: (BoardId) -> Unit,
     /** Returns the new opaque ID so a bounded host can persist its managed editable board. */

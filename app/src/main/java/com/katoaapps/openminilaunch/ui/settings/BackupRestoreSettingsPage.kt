@@ -33,7 +33,9 @@ import androidx.compose.ui.text.input.PasswordVisualTransformation
 import com.katoaapps.minkboard.core.LauncherBackupApplyResult
 import com.katoaapps.openminilaunch.BuildConfig
 import com.katoaapps.openminilaunch.R
-import com.katoaapps.openminilaunch.openMinkMinkBoardRuntime
+import com.katoaapps.openminilaunch.todoBoardBackupBridge
+import com.katoaapps.openminilaunch.todoFeatureRuntime
+import com.katoaapps.minklauncher.todos.home.TodoInitializationState
 import com.katoaapps.openminilaunch.data.LauncherStore
 import com.katoaapps.openminilaunch.features.backup.LauncherBackup
 import com.katoaapps.openminilaunch.features.backup.LauncherBackupFile
@@ -105,15 +107,14 @@ internal fun BackupRestoreSettingsPage(
                 val succeeded = withContext(Dispatchers.IO) {
                     val secret = pendingExportSecret ?: return@withContext false
                     try {
-                        val runtime = context.openMinkMinkBoardRuntime
+                        val runtime = context.todoFeatureRuntime
                         if (runtime.launcherController.initialize() !=
-                            com.katoaapps.openminilaunch.features.minkboard
-                                .LauncherBoardInitializationState.Ready
+                            TodoInitializationState.Ready
                         ) {
                             return@withContext false
                         }
                         when (
-                            val result = runtime.backupCoordinator.createEncryptedBackup(
+                            val result = context.todoBoardBackupBridge.coordinator.createEncryptedBackup(
                                 sourceApp = "Mink Launcher Open Source",
                                 secret = secret,
                             )
@@ -382,7 +383,7 @@ internal fun BackupRestoreSettingsPage(
                         scope.launch {
                             val boardRestored = withContext(Dispatchers.IO) {
                                 try {
-                                    val coordinator = context.openMinkMinkBoardRuntime.backupCoordinator
+                                    val coordinator = context.todoBoardBackupBridge.coordinator
                                     when (val prepared = coordinator.prepareRestore(backup, secret)) {
                                         is OpenMinkBoardRestorePreparationResult.Prepared -> when (
                                             coordinator.applyPrepared(prepared)

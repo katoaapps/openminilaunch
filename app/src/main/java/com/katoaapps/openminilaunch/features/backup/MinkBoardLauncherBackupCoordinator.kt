@@ -19,8 +19,8 @@ import com.katoaapps.minkboard.core.WorkspaceImportMode
 import com.katoaapps.minkboard.core.toPortableSnapshot
 import com.katoaapps.minkboard.model.MinkBoardWorkspace
 import com.katoaapps.minkboard.model.StatusId
-import com.katoaapps.openminilaunch.features.minkboard.LauncherBoardHomePreferences
-import com.katoaapps.openminilaunch.features.minkboard.LauncherVisibleStatuses
+import com.katoaapps.minklauncher.todos.home.TodoHomePreferences
+import com.katoaapps.minklauncher.todos.home.TodoVisibleStatuses
 import java.util.UUID
 
 internal sealed interface OpenMinkEncryptedBoardBackupResult {
@@ -51,7 +51,7 @@ internal sealed interface OpenMinkBoardRestorePreparationResult {
 internal class MinkBoardLauncherBackupCoordinator(
     private val workflow: MinkBoardLauncherBackupWorkflow,
     private val facade: MinkBoardLauncherFacade,
-    private val homePreferences: LauncherBoardHomePreferences,
+    private val homePreferences: TodoHomePreferences,
     private val homeCodec: LauncherBoardHomeBackupCodec = LauncherBoardHomeBackupCodec(),
     private val clockMillis: () -> Long = System::currentTimeMillis,
 ) {
@@ -166,7 +166,7 @@ internal class MinkBoardLauncherBackupCoordinator(
         }
 
         if (result is LauncherBackupApplyResult.WorkspaceImported) {
-            val visibility = prepared.home?.visibleStatusIds
+            val visibility = prepared.home?.resolveTodoVisibleStatusIds
             if (visibility == null) {
                 homePreferences.showAllStatuses()
             } else {
@@ -174,7 +174,7 @@ internal class MinkBoardLauncherBackupCoordinator(
                     result.outcome.importResult.ids.statusIds[portableId]
                 }.distinct()
                 homePreferences.restore(
-                    LauncherVisibleStatuses.Selected(
+                    TodoVisibleStatuses.Selected(
                         mapped.ifEmpty {
                             listOf(result.outcome.launcherDesignation.intakeStatusId)
                         },

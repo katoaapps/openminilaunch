@@ -19,5 +19,6 @@ include(
     ":minkboard-model",
     ":minkboard-core",
     ":minkboard-data-android",
+    ":minkboard-focus-android",
     ":minkboard-compose",
 )

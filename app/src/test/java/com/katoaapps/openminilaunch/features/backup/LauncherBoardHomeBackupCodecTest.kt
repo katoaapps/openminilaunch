@@ -1,7 +1,7 @@
 package com.katoaapps.openminilaunch.features.backup
 
 import com.katoaapps.minkboard.model.StatusId
-import com.katoaapps.openminilaunch.features.minkboard.LauncherVisibleStatuses
+import com.katoaapps.minklauncher.todos.home.TodoVisibleStatuses
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
@@ -12,7 +12,7 @@ class LauncherBoardHomeBackupCodecTest {
 
     @Test fun allStatusesRoundTrip() {
         val secret = "minktest123".toCharArray()
-        val envelope = checkNotNull(codec.encode(LauncherVisibleStatuses.All, secret))
+        val envelope = checkNotNull(codec.encode(TodoVisibleStatuses.All, secret))
 
         assertEquals(
             LauncherBoardHomeDecodeResult.Decoded(LauncherBoardHomeBackup(null)),
@@ -22,7 +22,7 @@ class LauncherBoardHomeBackupCodecTest {
 
     @Test fun selectedStatusesRemainOrderedAndEncrypted() {
         val secret = "minktest123".toCharArray()
-        val visibility = LauncherVisibleStatuses.Selected(
+        val visibility = TodoVisibleStatuses.Selected(
             listOf(StatusId("todo-private-id"), StatusId("done-private-id")),
         )
         val envelope = checkNotNull(codec.encode(visibility, secret))
@@ -30,14 +30,14 @@ class LauncherBoardHomeBackupCodecTest {
 
         assertEquals(
             listOf("todo-private-id", "done-private-id"),
-            restored.backup.visibleStatusIds,
+            restored.backup.resolveTodoVisibleStatusIds,
         )
         assertFalse(String(envelope).contains("todo-private-id"))
     }
 
     @Test fun wrongPassphraseFailsClosed() {
         val envelope = checkNotNull(
-            codec.encode(LauncherVisibleStatuses.All, "minktest123".toCharArray()),
+            codec.encode(TodoVisibleStatuses.All, "minktest123".toCharArray()),
         )
 
         assertTrue(
