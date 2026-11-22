@@ -21,14 +21,26 @@ class WidgetGesturePolicyTest {
     }
 
     @Test
-    fun verticalAndDiagonalMovementRemainWithWidgetWall() {
+    fun clearlyVerticalMovementRemainsWithWidgetWall() {
         assertEquals(
             WidgetGestureAxis.VERTICAL,
             classifyWidgetGesture(dx = 8f, dy = 24f, touchSlop = 8),
         )
+    }
+
+    @Test
+    fun ambiguousDiagonalStartWaitsForDirectionalIntent() {
+        assertEquals(
+            WidgetGestureAxis.UNDECIDED,
+            classifyWidgetGesture(dx = 12f, dy = 12f, touchSlop = 8),
+        )
+        assertEquals(
+            WidgetGestureAxis.HORIZONTAL,
+            classifyWidgetGesture(dx = 28f, dy = 14f, touchSlop = 8),
+        )
         assertEquals(
             WidgetGestureAxis.VERTICAL,
-            classifyWidgetGesture(dx = 12f, dy = 12f, touchSlop = 8),
+            classifyWidgetGesture(dx = 14f, dy = 28f, touchSlop = 8),
         )
     }
 

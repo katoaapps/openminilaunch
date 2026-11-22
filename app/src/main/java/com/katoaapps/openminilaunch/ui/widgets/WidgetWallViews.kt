@@ -59,7 +59,10 @@ internal class WidgetCardView(context: Context) : LinearLayout(context) {
         label.ellipsize = android.text.TextUtils.TruncateAt.END
         header.addView(label, LinearLayout.LayoutParams(0, LayoutParams.WRAP_CONTENT, 1f))
         sizeLabel.setTextSize(android.util.TypedValue.COMPLEX_UNIT_SP, 10f)
-        header.addView(sizeLabel, LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT))
+        sizeLabel.gravity = Gravity.CENTER
+        sizeLabel.minWidth = context.dp(44)
+        sizeLabel.minHeight = context.dp(44)
+        header.addView(sizeLabel, LinearLayout.LayoutParams(LayoutParams.WRAP_CONTENT, context.dp(44)))
         options.setImageDrawable(MoreDrawable())
         options.background = null
         options.contentDescription = context.getString(R.string.widget_options)
@@ -141,8 +144,7 @@ internal class WidgetCardView(context: Context) : LinearLayout(context) {
         onResize: () -> Unit,
         onRemove: () -> Unit,
     ) {
-        options.visibility = VISIBLE
-        options.setOnClickListener { anchor ->
+        val showOptions: (View) -> Unit = { anchor ->
             PopupMenu(context, anchor).apply {
                 if (canResize) menu.add(context.getString(R.string.resize_widget, label.text))
                     .setOnMenuItemClickListener { onResize(); true }
@@ -153,12 +155,20 @@ internal class WidgetCardView(context: Context) : LinearLayout(context) {
                 show()
             }
         }
+        options.visibility = VISIBLE
+        options.setOnClickListener(showOptions)
+        sizeLabel.isClickable = true
+        sizeLabel.isFocusable = true
+        sizeLabel.setOnClickListener(showOptions)
         options.setColorFilter(palette.muted)
     }
 
     fun clearOptions() {
         options.visibility = INVISIBLE
         options.setOnClickListener(null)
+        sizeLabel.isClickable = false
+        sizeLabel.isFocusable = false
+        sizeLabel.setOnClickListener(null)
     }
 
     fun showWidget(

@@ -174,8 +174,13 @@ internal class WidgetWallAdapter(private val context: Context) : RecyclerView.Ad
             onRemove = { callbacks?.onRemove?.invoke(entry) },
         )
         val widgetView = hostedViews.getOrPut(entry.appWidgetId) {
-            host.createView(context, entry.appWidgetId, info).apply {
-                setAppWidget(entry.appWidgetId, info)
+            val boundHost = host
+            val view = if (boundHost is InteractiveAppWidgetHost) {
+                boundHost.obtainView(context, entry.appWidgetId, info)
+            } else {
+                boundHost.createView(context, entry.appWidgetId, info)
+            }
+            view.apply {
                 ViewCompat.setNestedScrollingEnabled(this, true)
             }
         }

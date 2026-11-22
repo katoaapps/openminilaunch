@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.content.Context
 import android.graphics.Rect
 import android.util.AttributeSet
+import android.util.Log
 import android.view.MotionEvent
 import android.view.VelocityTracker
 import android.view.View
@@ -13,6 +14,7 @@ import android.widget.AdapterViewAnimator
 import android.widget.CompoundButton
 import android.widget.HorizontalScrollView
 import androidx.recyclerview.widget.RecyclerView
+import com.katoaapps.openminilaunch.BuildConfig
 import kotlin.math.abs
 
 internal enum class WidgetGestureAxis { UNDECIDED, HORIZONTAL, VERTICAL }
@@ -24,7 +26,10 @@ internal fun classifyWidgetGesture(
 ): WidgetGestureAxis = when {
     maxOf(abs(dx), abs(dy)) <= touchSlop -> WidgetGestureAxis.UNDECIDED
     abs(dx) > abs(dy) * 1.08f -> WidgetGestureAxis.HORIZONTAL
-    else -> WidgetGestureAxis.VERTICAL
+    abs(dy) > abs(dx) * 1.08f -> WidgetGestureAxis.VERTICAL
+    // Do not permanently lock a nearly diagonal start to the vertical wall. Keep observing the
+    // same DOWN-relative movement until the user's intended axis becomes clear.
+    else -> WidgetGestureAxis.UNDECIDED
 }
 
 /**
@@ -49,6 +54,7 @@ internal class WidgetWallRecyclerView @JvmOverloads constructor(
     private var totalX = 0f
     private var hitChain: List<View> = emptyList()
     private var velocityTracker: VelocityTracker? = null
+    private var loggedAmbiguousMovement = false
 
     override fun dispatchTouchEvent(event: MotionEvent): Boolean {
         if (event.actionMasked == MotionEvent.ACTION_DOWN && horizontalDragHandler != null) {
@@ -79,26 +85,16 @@ internal class WidgetWallRecyclerView @JvmOverloads constructor(
                 lastY = event.y
                 hitChain = findHitChain(event.rawX, event.rawY)
                 velocityTracker = VelocityTracker.obtain().also { it.addMovement(event) }
+                gestureLog(
+                    "DOWN x=${event.x.toInt()} y=${event.y.toInt()} " +
+                        "hits=${hitChain.joinToString(" > ") { it.javaClass.simpleName }}",
+                )
                 super.onInterceptTouchEvent(event)
                 return false
             }
             MotionEvent.ACTION_MOVE -> {
                 velocityTracker?.addMovement(event)
-                val dx = event.x - downX
-                val dy = event.y - downY
-                if (axis == WidgetGestureAxis.UNDECIDED) {
-                    axis = classifyWidgetGesture(dx, dy, touchSlop)
-                    if (axis == WidgetGestureAxis.HORIZONTAL) {
-                        val direction = if (dx < 0f) 1 else -1
-                        if (horizontalDragHandler == null ||
-                            hitChain.any { it.ownsHorizontalGesture(direction) }
-                        ) {
-                            horizontalChildOwnsGesture = true
-                        } else {
-                            horizontalDragHandler?.onDragStart()
-                        }
-                    }
-                }
+                resolveAxis(event)
                 return when (axis) {
                     WidgetGestureAxis.HORIZONTAL -> {
                         if (horizontalChildOwnsGesture) return false
@@ -150,10 +146,16 @@ internal class WidgetWallRecyclerView @JvmOverloads constructor(
     }
 
     override fun onTouchEvent(event: MotionEvent): Boolean {
+        if (event.actionMasked == MotionEvent.ACTION_MOVE) {
+            velocityTracker?.addMovement(event)
+            // When the touched descendant does not consume DOWN (for example a plain header label
+            // or empty RemoteViews region), RecyclerView itself becomes the touch target. Its later
+            // MOVE events bypass onInterceptTouchEvent, so axis resolution must also happen here.
+            resolveAxis(event)
+        }
         if (axis != WidgetGestureAxis.HORIZONTAL || horizontalChildOwnsGesture) {
             return super.onTouchEvent(event)
         }
-        velocityTracker?.addMovement(event)
         when (event.actionMasked) {
             MotionEvent.ACTION_MOVE -> {
                 val delta = event.x - lastX
@@ -173,6 +175,42 @@ internal class WidgetWallRecyclerView @JvmOverloads constructor(
         return true
     }
 
+    private fun resolveAxis(event: MotionEvent) {
+        if (axis != WidgetGestureAxis.UNDECIDED) return
+        val dx = event.x - downX
+        val dy = event.y - downY
+        axis = classifyWidgetGesture(dx, dy, touchSlop)
+        when (axis) {
+            WidgetGestureAxis.HORIZONTAL -> {
+                val direction = if (dx < 0f) 1 else -1
+                val owningChild = hitChain.firstOrNull {
+                    it.ownsHorizontalGesture(direction)
+                }
+                if (horizontalDragHandler == null || owningChild != null) {
+                    horizontalChildOwnsGesture = true
+                    gestureLog(
+                        "LOCK HORIZONTAL dx=${dx.toInt()} dy=${dy.toInt()} " +
+                            "owner=${owningChild?.javaClass?.simpleName ?: "none"}",
+                    )
+                } else {
+                    gestureLog(
+                        "LOCK HORIZONTAL dx=${dx.toInt()} dy=${dy.toInt()} owner=page",
+                    )
+                    horizontalDragHandler?.onDragStart()
+                }
+            }
+            WidgetGestureAxis.VERTICAL -> {
+                gestureLog("LOCK VERTICAL dx=${dx.toInt()} dy=${dy.toInt()}")
+            }
+            WidgetGestureAxis.UNDECIDED -> {
+                if (!loggedAmbiguousMovement && maxOf(abs(dx), abs(dy)) > touchSlop) {
+                    loggedAmbiguousMovement = true
+                    gestureLog("WAIT DIAGONAL dx=${dx.toInt()} dy=${dy.toInt()}")
+                }
+            }
+        }
+    }
+
     override fun onDetachedFromWindow() {
         if (axis == WidgetGestureAxis.HORIZONTAL && !horizontalChildOwnsGesture) {
             horizontalDragHandler?.onDragCancel()
@@ -185,10 +223,15 @@ internal class WidgetWallRecyclerView @JvmOverloads constructor(
     private fun finishHorizontalGesture(cancelled: Boolean) {
         if (axis != WidgetGestureAxis.HORIZONTAL || horizontalChildOwnsGesture) return
         if (cancelled) {
+            gestureLog("END HORIZONTAL cancelled totalX=${totalX.toInt()}")
             horizontalDragHandler?.onDragCancel()
         } else {
             velocityTracker?.computeCurrentVelocity(1000)
-            horizontalDragHandler?.onDragEnd(totalX, velocityTracker?.xVelocity ?: 0f)
+            val velocityX = velocityTracker?.xVelocity ?: 0f
+            gestureLog(
+                "END HORIZONTAL totalX=${totalX.toInt()} velocityX=${velocityX.toInt()}",
+            )
+            horizontalDragHandler?.onDragEnd(totalX, velocityX)
         }
     }
 
@@ -201,6 +244,7 @@ internal class WidgetWallRecyclerView @JvmOverloads constructor(
         outerVerticalWasRebased = false
         totalX = 0f
         hitChain = emptyList()
+        loggedAmbiguousMovement = false
     }
 
     private fun findHitChain(rawX: Float, rawY: Float): List<View> {
@@ -230,10 +274,26 @@ internal class WidgetWallRecyclerView @JvmOverloads constructor(
     )
 }
 
-private fun View.ownsHorizontalGesture(direction: Int): Boolean =
-    this is AbsSeekBar || this is CompoundButton || this is HorizontalScrollView ||
-        (this is RecyclerView && layoutManager?.canScrollHorizontally() == true) ||
+private fun gestureLog(message: String) {
+    if (BuildConfig.DEBUG) Log.d("WidgetGesture", message)
+}
+
+private fun View.ownsHorizontalGesture(direction: Int): Boolean = when (this) {
+    // These controls use a horizontal drag as their primary interaction, even when the thumb is
+    // already at an edge.
+    is AbsSeekBar, is CompoundButton -> true
+
+    // Only retain a scrollable child's gesture while it can continue in that direction. This lets
+    // the launcher page take over at the child's edge, like a conventional launcher widget page.
+    is HorizontalScrollView -> canScrollHorizontally(direction)
+    is RecyclerView -> layoutManager?.canScrollHorizontally() == true &&
         canScrollHorizontally(direction)
+
+    // Do not trust View.canScrollHorizontally() generically. Ellipsized TextViews and broad
+    // RemoteViews descendants can report horizontal range even though they are not user-pannable,
+    // which used to create dead areas across widget headers and visually empty widget content.
+    else -> false
+}
 
 private fun View.ownsVerticalGesture(direction: Int): Boolean =
     // StackView and AdapterViewFlipper consume discrete swipes but do not expose scroll range

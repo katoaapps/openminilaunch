@@ -359,14 +359,16 @@ internal fun BoardBackedTodoPager(
                                     Modifier
                                         .fillMaxWidth()
                                         .weight(1f)
-                                        .border(
-                                            width = if (highlightedCardId == card.id) {
-                                                Dimens.dp3
+                                        .then(
+                                            if (highlightedCardId == card.id) {
+                                                Modifier.border(
+                                                    width = Dimens.dp3,
+                                                    color = contentColor,
+                                                    shape = RoundedCornerShape(Dimens.dp8),
+                                                )
                                             } else {
-                                                Dimens.dp0
+                                                Modifier
                                             },
-                                            color = contentColor,
-                                            shape = RoundedCornerShape(Dimens.dp8),
                                         )
                                         .clickable {
                                             openCard(ready.board.board.id, card.id)

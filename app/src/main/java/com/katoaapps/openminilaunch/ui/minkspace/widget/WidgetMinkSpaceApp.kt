@@ -100,8 +100,7 @@ internal class WidgetMinkSpaceApp(
                         expansion = scope.expansion,
                         contentColor = scope.contentColor,
                         hostViewFactory = {
-                            activity.appWidgetHost.createView(context, appWidgetId, info).apply {
-                                setAppWidget(appWidgetId, info)
+                            activity.appWidgetHost.obtainView(context, appWidgetId, info).apply {
                                 ViewCompat.setNestedScrollingEnabled(this, true)
                             }
                         },
