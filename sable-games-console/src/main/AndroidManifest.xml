@@ -1,0 +1,28 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Sable Games Console's reusable engine. It reads the motion sensor only while a tilt game or
+     levelling screen is visible, and reads add-on games only from a folder the owner selects. -->
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <uses-feature android:name="android.hardware.sensor.accelerometer" android:required="false" />
+
+    <application>
+        <activity
+            android:name="org.sableos.games.console.ConsoleActivity"
+            android:documentLaunchMode="intoExisting"
+            android:exported="true"
+            android:icon="@drawable/ic_game_tilt"
+            android:label="Tilt Games"
+            android:launchMode="standard"
+            android:resizeableActivity="true"
+            android:taskAffinity="${applicationId}.sablegames.console"
+            android:configChanges="orientation|screenSize|screenLayout|smallestScreenSize|keyboard|keyboardHidden|navigation"
+            android:theme="@android:style/Theme.Material.NoActionBar">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+            <property
+                android:name="android.window.PROPERTY_SUPPORTS_MULTI_INSTANCE_SYSTEM_UI"
+                android:value="true" />
+        </activity>
+    </application>
+</manifest>

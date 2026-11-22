@@ -40,7 +40,7 @@ internal fun QuickAppsEditorDialog(
         value = withContext(Dispatchers.IO) { actions.installedShortcuts() }
     }
     val availableApps = remember(apps) {
-        actions.quickAppBuiltInTargets() + apps.orEmpty()
+        actions.quickAppBuiltInTargets() + actions.sableGameTargets() + apps.orEmpty()
     }
     val draftSelection = remember {
         mutableStateListOf<String>().apply { addAll(store.drawerTargets) }

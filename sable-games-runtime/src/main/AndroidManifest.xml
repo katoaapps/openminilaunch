@@ -1,0 +1,298 @@
+<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android">
+    <queries>
+        <provider android:authorities="org.sableos.appearance" />
+    </queries>
+
+    <application>
+        <activity
+            android:name="org.sableos.games.SableGameActivity"
+            android:exported="false"
+            android:resizeableActivity="true"
+            android:theme="@android:style/Theme.Material.NoActionBar" />
+        <!-- A unique launcher component per top-level game gives each game its own task identity in
+             Recents and makes it independently discoverable by system launchers. OpenMink filters
+             its own package from ordinary app discovery and exposes these through its game catalog.
+             The route-less host above remains private. -->
+        <activity
+            android:name="org.sableos.games.SudokuActivity"
+            android:icon="@drawable/ic_game_sudoku"
+            android:label="Sudoku"
+            android:documentLaunchMode="intoExisting"
+            android:configChanges="orientation|screenLayout|screenSize|smallestScreenSize|keyboard|keyboardHidden|navigation"
+            android:excludeFromRecents="false"
+            android:exported="true"
+            android:launchMode="standard"
+            android:resizeableActivity="true"
+            android:taskAffinity="${applicationId}.sablegames.sudoku"
+            android:theme="@android:style/Theme.Material.NoActionBar">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+            <property
+                android:name="android.window.PROPERTY_SUPPORTS_MULTI_INSTANCE_SYSTEM_UI"
+                android:value="true" />
+        </activity>
+        <activity
+            android:name="org.sableos.games.MinesweeperActivity"
+            android:icon="@drawable/ic_game_minesweeper"
+            android:label="Minesweeper"
+            android:documentLaunchMode="intoExisting"
+            android:configChanges="orientation|screenLayout|screenSize|smallestScreenSize|keyboard|keyboardHidden|navigation"
+            android:excludeFromRecents="false"
+            android:exported="true"
+            android:launchMode="standard"
+            android:resizeableActivity="true"
+            android:taskAffinity="${applicationId}.sablegames.minesweeper"
+            android:theme="@android:style/Theme.Material.NoActionBar">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+            <property
+                android:name="android.window.PROPERTY_SUPPORTS_MULTI_INSTANCE_SYSTEM_UI"
+                android:value="true" />
+        </activity>
+        <activity
+            android:name="org.sableos.games.Game2048Activity"
+            android:icon="@drawable/ic_game_2048"
+            android:label="2048"
+            android:documentLaunchMode="intoExisting"
+            android:configChanges="orientation|screenLayout|screenSize|smallestScreenSize|keyboard|keyboardHidden|navigation"
+            android:excludeFromRecents="false"
+            android:exported="true"
+            android:launchMode="standard"
+            android:resizeableActivity="true"
+            android:taskAffinity="${applicationId}.sablegames.game2048"
+            android:theme="@android:style/Theme.Material.NoActionBar">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+            <property
+                android:name="android.window.PROPERTY_SUPPORTS_MULTI_INSTANCE_SYSTEM_UI"
+                android:value="true" />
+        </activity>
+        <activity
+            android:name="org.sableos.games.BricksActivity"
+            android:icon="@drawable/ic_game_bricks"
+            android:label="Bricks"
+            android:documentLaunchMode="intoExisting"
+            android:configChanges="orientation|screenLayout|screenSize|smallestScreenSize|keyboard|keyboardHidden|navigation"
+            android:excludeFromRecents="false"
+            android:exported="true"
+            android:launchMode="standard"
+            android:resizeableActivity="true"
+            android:taskAffinity="${applicationId}.sablegames.bricks"
+            android:theme="@android:style/Theme.Material.NoActionBar">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+            <property
+                android:name="android.window.PROPERTY_SUPPORTS_MULTI_INSTANCE_SYSTEM_UI"
+                android:value="true" />
+        </activity>
+        <activity
+            android:name="org.sableos.games.SnakeActivity"
+            android:icon="@drawable/ic_game_snake"
+            android:label="Snake"
+            android:documentLaunchMode="intoExisting"
+            android:configChanges="orientation|screenLayout|screenSize|smallestScreenSize|keyboard|keyboardHidden|navigation"
+            android:excludeFromRecents="false"
+            android:exported="true"
+            android:launchMode="standard"
+            android:resizeableActivity="true"
+            android:taskAffinity="${applicationId}.sablegames.snake"
+            android:theme="@android:style/Theme.Material.NoActionBar">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+            <property
+                android:name="android.window.PROPERTY_SUPPORTS_MULTI_INSTANCE_SYSTEM_UI"
+                android:value="true" />
+        </activity>
+        <activity
+            android:name="org.sableos.games.BlocksActivity"
+            android:icon="@drawable/ic_game_blocks"
+            android:label="Blocks"
+            android:documentLaunchMode="intoExisting"
+            android:configChanges="orientation|screenLayout|screenSize|smallestScreenSize|keyboard|keyboardHidden|navigation"
+            android:excludeFromRecents="false"
+            android:exported="true"
+            android:launchMode="standard"
+            android:resizeableActivity="true"
+            android:taskAffinity="${applicationId}.sablegames.blocks"
+            android:theme="@android:style/Theme.Material.NoActionBar">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+            <property
+                android:name="android.window.PROPERTY_SUPPORTS_MULTI_INSTANCE_SYSTEM_UI"
+                android:value="true" />
+        </activity>
+        <activity
+            android:name="org.sableos.games.ReversiActivity"
+            android:icon="@drawable/ic_game_reversi"
+            android:label="Reversi"
+            android:documentLaunchMode="intoExisting"
+            android:configChanges="orientation|screenLayout|screenSize|smallestScreenSize|keyboard|keyboardHidden|navigation"
+            android:excludeFromRecents="false"
+            android:exported="true"
+            android:launchMode="standard"
+            android:resizeableActivity="true"
+            android:taskAffinity="${applicationId}.sablegames.reversi"
+            android:theme="@android:style/Theme.Material.NoActionBar">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+            <property
+                android:name="android.window.PROPERTY_SUPPORTS_MULTI_INSTANCE_SYSTEM_UI"
+                android:value="true" />
+        </activity>
+        <activity
+            android:name="org.sableos.games.SolitaireActivity"
+            android:icon="@drawable/ic_game_solitaire"
+            android:label="Solitaire"
+            android:documentLaunchMode="intoExisting"
+            android:configChanges="orientation|screenLayout|screenSize|smallestScreenSize|keyboard|keyboardHidden|navigation"
+            android:excludeFromRecents="false"
+            android:exported="true"
+            android:launchMode="standard"
+            android:resizeableActivity="true"
+            android:taskAffinity="${applicationId}.sablegames.solitaire"
+            android:theme="@android:style/Theme.Material.NoActionBar">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+            <property
+                android:name="android.window.PROPERTY_SUPPORTS_MULTI_INSTANCE_SYSTEM_UI"
+                android:value="true" />
+        </activity>
+        <activity
+            android:name="org.sableos.games.MahjongActivity"
+            android:icon="@drawable/ic_game_mahjong"
+            android:label="Mahjong"
+            android:documentLaunchMode="intoExisting"
+            android:configChanges="orientation|screenLayout|screenSize|smallestScreenSize|keyboard|keyboardHidden|navigation"
+            android:excludeFromRecents="false"
+            android:exported="true"
+            android:launchMode="standard"
+            android:resizeableActivity="true"
+            android:taskAffinity="${applicationId}.sablegames.mahjong"
+            android:theme="@android:style/Theme.Material.NoActionBar">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+            <property
+                android:name="android.window.PROPERTY_SUPPORTS_MULTI_INSTANCE_SYSTEM_UI"
+                android:value="true" />
+        </activity>
+        <activity
+            android:name="org.sableos.games.WordsActivity"
+            android:icon="@drawable/ic_game_words"
+            android:label="Words"
+            android:documentLaunchMode="intoExisting"
+            android:configChanges="orientation|screenLayout|screenSize|smallestScreenSize|keyboard|keyboardHidden|navigation"
+            android:excludeFromRecents="false"
+            android:exported="true"
+            android:launchMode="standard"
+            android:resizeableActivity="true"
+            android:taskAffinity="${applicationId}.sablegames.words"
+            android:theme="@android:style/Theme.Material.NoActionBar">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+            <property
+                android:name="android.window.PROPERTY_SUPPORTS_MULTI_INSTANCE_SYSTEM_UI"
+                android:value="true" />
+        </activity>
+        <activity
+            android:name="org.sableos.games.CardGamesActivity"
+            android:icon="@drawable/ic_game_cards"
+            android:label="Card Games"
+            android:documentLaunchMode="intoExisting"
+            android:configChanges="orientation|screenLayout|screenSize|smallestScreenSize|keyboard|keyboardHidden|navigation"
+            android:excludeFromRecents="false"
+            android:exported="true"
+            android:launchMode="standard"
+            android:resizeableActivity="true"
+            android:taskAffinity="${applicationId}.sablegames.cards"
+            android:theme="@android:style/Theme.Material.NoActionBar">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+            <property
+                android:name="android.window.PROPERTY_SUPPORTS_MULTI_INSTANCE_SYSTEM_UI"
+                android:value="true" />
+        </activity>
+        <activity
+            android:name="org.sableos.games.SnakesAndLaddersActivity"
+            android:icon="@drawable/ic_game_snakes_ladders"
+            android:label="Snakes &amp; Ladders"
+            android:documentLaunchMode="intoExisting"
+            android:configChanges="orientation|screenLayout|screenSize|smallestScreenSize|keyboard|keyboardHidden|navigation"
+            android:excludeFromRecents="false"
+            android:exported="true"
+            android:launchMode="standard"
+            android:resizeableActivity="true"
+            android:taskAffinity="${applicationId}.sablegames.snakesladders"
+            android:theme="@android:style/Theme.Material.NoActionBar">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+            <property
+                android:name="android.window.PROPERTY_SUPPORTS_MULTI_INSTANCE_SYSTEM_UI"
+                android:value="true" />
+        </activity>
+        <activity
+            android:name="org.sableos.games.LudoActivity"
+            android:icon="@drawable/ic_game_ludo"
+            android:label="Ludo"
+            android:documentLaunchMode="intoExisting"
+            android:configChanges="orientation|screenLayout|screenSize|smallestScreenSize|keyboard|keyboardHidden|navigation"
+            android:excludeFromRecents="false"
+            android:exported="true"
+            android:launchMode="standard"
+            android:resizeableActivity="true"
+            android:taskAffinity="${applicationId}.sablegames.ludo"
+            android:theme="@android:style/Theme.Material.NoActionBar">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+            <property
+                android:name="android.window.PROPERTY_SUPPORTS_MULTI_INSTANCE_SYSTEM_UI"
+                android:value="true" />
+        </activity>
+        <activity
+            android:name="org.sableos.games.ScaffoldActivity"
+            android:icon="@drawable/ic_game_scaffold"
+            android:label="Scaffold"
+            android:documentLaunchMode="intoExisting"
+            android:configChanges="orientation|screenLayout|screenSize|smallestScreenSize|keyboard|keyboardHidden|navigation"
+            android:excludeFromRecents="false"
+            android:exported="true"
+            android:launchMode="standard"
+            android:resizeableActivity="true"
+            android:taskAffinity="${applicationId}.sablegames.scaffold"
+            android:theme="@android:style/Theme.Material.NoActionBar">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+            <property
+                android:name="android.window.PROPERTY_SUPPORTS_MULTI_INSTANCE_SYSTEM_UI"
+                android:value="true" />
+        </activity>
+    </application>
+</manifest>

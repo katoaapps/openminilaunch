@@ -503,19 +503,19 @@
     <string name="backup_local_file">स्थानीय फ़ाइल</string>
     <string name="backup_restore_description">एक OpenMink वितरण को अनइंस्टॉल करने से पहले अपना पोर्टेबल लॉन्चर सेटअप सहेजें, फिर दूसरा इंस्टॉल करने के बाद इसे आयात करें। फ़ाइल Android के दस्तावेज़ पिकर के माध्यम से जहाँ भी आप चुनते हैं वहीं रहती है।</string>
     <string name="export_backup">बैकअप निर्यात करें</string>
-    <string name="export_backup_description">सेटिंग्स, ऐप विकल्प, लेआउट और कार्य सहेजें</string>
+    <string name="export_backup_description">सेटिंग, ऐप विकल्प, लेआउट और एन्क्रिप्ट किया गया MinkBoard डेटा सहेजें</string>
     <string name="import_backup">बैकअप आयात करें</string>
     <string name="import_backup_description">पहले से निर्यात की गई फ़ाइल की समीक्षा करें और उसे पुनर्स्थापित करें</string>
     <string name="backup_not_included_description">Android अनुमतियाँ, सिस्टम भूमिकाएँ, एक्सेसिबिलिटी और सूचना पहुँच, विजेट की सामग्री और ऐप-विशिष्ट सेटिंग, वॉलपेपर छवि फ़ाइलें, दस्तावेज़ फ़ोल्डर पहुँच और हाल का खोज इतिहास शामिल नहीं हैं। अनुपलब्ध ऐप या आइकन पैक दोबारा इंस्टॉल और चुने जाने तक वैकल्पिक सेटिंग इस्तेमाल कर सकते हैं।</string>
     <string name="backup_exported">बैकअप निर्यात किया गया</string>
     <string name="backup_export_failed">बैकअप निर्यात नहीं किया जा सका</string>
-    <string name="backup_import_failed">वह फ़ाइल समर्थित OpenMink बैकअप नहीं है</string>
+    <string name="backup_import_failed">वह बैकअप असमर्थित या क्षतिग्रस्त है, या किसी दूसरे पासफ़्रेज़ का उपयोग करता है</string>
     <string name="backup_imported">बैकअप पुनर्स्थापित हुआ। Android अनुमतियाँ फिर से चालू करें और विजेट सेटअप स्थानों या दस्तावेज़ फ़ोल्डरों की समीक्षा करें।</string>
     <string name="backup_imported_widget_limit">बैकअप पुनर्स्थापित हुआ। इस डिवाइस पर विजेट सीमा पूरी होने के कारण %1$d विजेट स्थान छोड़ दिए गए।</string>
     <string name="restore_widget_placeholders">विजेट सेटअप स्थान जोड़ें</string>
     <string name="restore_widget_placeholders_description">अपने वर्तमान विजेट रखें और इस बैकअप के विजेट दोबारा सेट करने के लिए %1$d स्थान जोड़ें।</string>
     <string name="confirm_backup_import">इस बैकअप को पुनर्स्थापित करें?</string>
-    <string name="confirm_backup_import_description">OpenMink %1$s · %2$s · %3$d to-dos\n\nयह आपकी वर्तमान पोर्टेबल सेटिंग्स, लॉन्चर लेआउट, ऐप विकल्प और कार्य को बदल देता है।</string>
+    <string name="confirm_backup_import_description">OpenMink %1$s · %2$s · %3$d पुराने टू-डू\n\nपोर्टेबल सेटिंग, लॉन्चर लेआउट और ऐप विकल्प वापस लाए जाते हैं। मौजूदा बोर्ड हटाए बिना टू-डू को MinkBoard के रूप में इंपोर्ट किया जाता है।</string>
     <string name="unknown_date">अज्ञात तिथि</string>
     <string name="unknown_version">अज्ञात संस्करण</string>
     <string name="permissions">अनुमतियाँ</string>
@@ -1108,5 +1108,4 @@
     <string name="home_folder_compose">बनाएँ</string>
     <string name="home_folder_browse">ब्राउज़</string>
     <string name="home_folder_tools">टूल्स</string>
-    <string name="home_folder_fun">मनोरंजन</string>
 </resources>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- German. Draft from the project owner (2026-10-29), checked against the English, not yet reviewed by a fluent speaker. Keys and placeholders must match values/strings.xml (DesignTextTest checks). -->
+<resources>
+    <string name="sable_playback_error">Wiedergabefehler</string>
+    <string name="sable_pause">Pause</string>
+    <string name="sable_play">Abspielen</string>
+    <string name="sable_t_top_b_bottom_space">T oben · B unten · Space Seite · N/P nächste/vorherige</string>
+    <string name="sable_more_destinations">Weitere Ziele: %1$s</string>
+    <string name="sable_more_actions">Weitere Aktionen</string>
+    <string name="sable_more_actions_for">Weitere Aktionen für %1$s</string>
+    <string name="sable_jump_to">Zu %1$s springen</string>
+    <string name="sable_return_to">Zu %1$s zurückkehren</string>
+    <string name="sable_undo">Rückgängig</string>
+</resources>

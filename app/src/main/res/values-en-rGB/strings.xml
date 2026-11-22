@@ -503,19 +503,19 @@
     <string name="backup_local_file">Local file</string>
     <string name="backup_restore_description">Save your portable launcher setup before uninstalling one OpenMink distribution, then import it after installing another. The file stays wherever you choose through Android’s document picker.</string>
     <string name="export_backup">Export backup</string>
-    <string name="export_backup_description">Save settings, app choices, layout, and to-dos</string>
+    <string name="export_backup_description">Save settings, app choices, layout, and encrypted MinkBoard data</string>
     <string name="import_backup">Import backup</string>
     <string name="import_backup_description">Review and restore a previously exported file</string>
     <string name="backup_not_included_description">Android permissions, system roles, accessibility and notification access, widget contents and app-specific widget settings, wallpaper image files, document-folder access, and recent query history are not included. Choices for unavailable apps or icon packs may fall back until those apps are installed and selected again.</string>
     <string name="backup_exported">Backup exported</string>
     <string name="backup_export_failed">Couldn’t export the backup</string>
-    <string name="backup_import_failed">That file isn’t a supported OpenMink backup</string>
+    <string name="backup_import_failed">That backup is unsupported, damaged, or uses a different passphrase</string>
     <string name="backup_imported">Backup restored. Re-enable Android permissions and review any widget setup placeholders or document folders.</string>
     <string name="backup_imported_widget_limit">Backup restored. %1$d widget placeholders were skipped because this device already reached the widget limit.</string>
     <string name="restore_widget_placeholders">Add widget setup placeholders</string>
     <string name="restore_widget_placeholders_description">Keep your current widgets and add %1$d places where widgets from this backup can be set up again.</string>
     <string name="confirm_backup_import">Restore this backup?</string>
-    <string name="confirm_backup_import_description">OpenMink %1$s · %2$s · %3$d to-dos\n\nThis replaces your current portable settings, launcher layout, app choices, and to-dos.</string>
+    <string name="confirm_backup_import_description">OpenMink %1$s · %2$s · %3$d legacy to-dos\n\nPortable settings, launcher layout, and app choices are restored. The to-dos are imported as a MinkBoard without deleting existing boards.</string>
     <string name="unknown_date">Unknown date</string>
     <string name="unknown_version">unknown version</string>
     <string name="permissions">Permissions</string>
@@ -1108,5 +1108,4 @@
     <string name="home_folder_compose">Compose</string>
     <string name="home_folder_browse">Browse</string>
     <string name="home_folder_tools">Tools</string>
-    <string name="home_folder_fun">Fun</string>
 </resources>

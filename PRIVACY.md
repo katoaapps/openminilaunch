@@ -9,7 +9,8 @@ described below.
 
 ## Information stored on this device
 
-The app stores launcher settings, App Grid folders and choices, Quick Drawer choices, to-dos, the
+The app stores launcher settings, App Grid folders and choices, Quick Drawer choices, MinkBoard
+boards, statuses, cards, subtasks, and focus-timer state; the
 five most recent successful plain-text queries, approved document-folder references, optional
 cropped Home wallpaper, widget configuration, Mink’s Day preferences, app-bubble preferences,
 MinkSpace mini-app preferences, launcher-keyboard preferences, and onboarding state in app-private
@@ -51,12 +52,14 @@ They are not uploaded or used to create an account.
 
 ## Portable backup
 
-An explicit portable backup is readable JSON. It includes portable launcher layout and settings,
-App Grid folders, Quick Drawer choices, launcher-keyboard preferences, MinkSpace order and
-enablement, to-dos, Virtual Contact Card details and links, Mink-created integrated Favorites and
-their ordering, and widget restore recipes so a user can move between distributions. The export
-screen warns that readable contact details may be present. For Mink-created Favorites, that can
-include display names, phone numbers, usernames, provider routes, and app shortcut identifiers.
+An explicit portable backup uses a versioned JSON container. It includes portable launcher layout
+and settings, App Grid folders, Quick Drawer choices, launcher-keyboard preferences, MinkSpace order
+and enablement, Virtual Contact Card details and links, Mink-created integrated Favorites and their
+ordering, and widget restore recipes so a user can move between distributions. MinkBoard boards,
+statuses, cards, subtasks, and focus state are stored in a passphrase-encrypted envelope inside that
+container. The export screen warns that readable contact details may be present elsewhere in the
+JSON. For Mink-created Favorites, that can include display names, phone numbers, usernames, provider
+routes, and app shortcut identifiers.
 
 Widget restore recipes contain the provider package and component, app and widget labels, saved
 layout position, and requested size. They do not contain Android widget IDs, live widget contents, or
@@ -150,6 +153,17 @@ Optional permissions and special access are used as follows:
   bubbling. The notification names the selected app but contains no Magic Box text, message, or
   launcher content. It makes no network request and does not require draw-over-other-apps or
   accessibility access.
+- **MinkBoard focus timers:** A timer starts only after the user chooses a card and duration. A
+  special-use foreground service keeps its running notification visible and controllable while the
+  app is not open. Alarm scheduling completes the timer; Android 12 or newer may provide exact-alarm
+  special access, otherwise Mink uses an inexact alarm and warns that the alert may arrive late.
+  Reboot-completed access restores an unfinished timer after restart. Vibration and a short wake lock
+  power the finished alert, which stops automatically or when dismissed. Notification permission is
+  requested on Android 13 or newer only when the user starts this workflow.
+- **Protected boards:** Board protection uses Android's device-credential or biometric prompt only
+  after the user enables protection or opens or changes a protected board. MinkLauncher receives the
+  success, cancellation, or error result; it does not receive or store the fingerprint, face data,
+  PIN, pattern, or password used by Android.
 - **Usage access:** Reads foreground events only for apps the user includes in Mink’s Day while
   MinkLauncher OpenSource is visible. Other apps are excluded from its trail and totals. The app
   stores the daily limit, pause preference, and app choices but does not create a separate

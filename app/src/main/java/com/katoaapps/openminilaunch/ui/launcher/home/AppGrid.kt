@@ -66,7 +66,6 @@ internal fun AppGrid(
     actions: DeviceActions,
     appAccessState: MinkAppAccessState,
     onPausedApp: (String) -> Unit,
-    onConfigureExtraApp: () -> Unit,
     compact: Boolean = false,
     contentColor: Color = MaterialTheme.colorScheme.onSurface,
     itemContainerColor: Color = MinkTransparent,
@@ -136,7 +135,7 @@ internal fun AppGrid(
                             } else if (appPaused) {
                                 onPausedApp(checkNotNull(pausedTargetPackage))
                             } else if (slot == AppGridSlot.EXTRA && assignedTargetKey == null) {
-                                onConfigureExtraApp()
+                                editingSelectionSlot = slot
                             } else {
                                 actions.launchAppGridSlot(slot, assignedTargetKey, openDrawer)
                             }
@@ -247,7 +246,7 @@ internal fun AppGrid(
     }
 
     editingSelectionSlot?.let { slot ->
-        val editorApps = remember(slot, launcherAppsRevision) { actions.installedApps() }
+        val editorApps = remember(slot, launcherAppsRevision) { actions.selectableApps() }
         val editorShortcuts = remember(slot, launcherShortcutsRevision) { actions.installedShortcuts() }
         AppGridSelectionDialog(
             slot = slot,

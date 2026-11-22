@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Hindi. Draft from the project owner (2026-10-29), checked against the English, not yet reviewed by a fluent speaker. Keys and placeholders must match values/strings.xml (DesignTextTest checks). -->
+<resources>
+    <string name="sable_playback_error">चलाने में त्रुटि</string>
+    <string name="sable_pause">पॉज़ करें</string>
+    <string name="sable_play">चलाएँ</string>
+    <string name="sable_t_top_b_bottom_space">T ऊपर · B नीचे · Space पेज · N/P अगला/पिछला</string>
+    <string name="sable_more_destinations">और गंतव्य: %1$s</string>
+    <string name="sable_more_actions">और कार्रवाइयाँ</string>
+    <string name="sable_more_actions_for">%1$s के लिए और कार्रवाइयाँ</string>
+    <string name="sable_jump_to">%1$s पर जाएँ</string>
+    <string name="sable_return_to">%1$s पर वापस जाएँ</string>
+    <string name="sable_undo">पूर्ववत करें</string>
+</resources>

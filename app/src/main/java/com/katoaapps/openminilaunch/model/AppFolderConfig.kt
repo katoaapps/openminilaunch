@@ -1,7 +1,7 @@
 package com.katoaapps.openminilaunch.model
 
 internal const val MAX_APP_FOLDER_NAME_LENGTH = 80
-internal const val MAX_APP_FOLDER_TARGETS = 12
+internal const val MAX_APP_FOLDER_TARGETS = 16
 
 enum class AppFolderColorMode {
     DEFAULT,

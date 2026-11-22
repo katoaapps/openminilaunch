@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Korean. Draft from the project owner (2026-10-29), checked against the English, not yet reviewed by a fluent speaker. Keys and placeholders must match values/strings.xml (DesignTextTest checks). -->
+<resources>
+    <string name="sable_playback_error">재생 오류</string>
+    <string name="sable_pause">일시정지</string>
+    <string name="sable_play">재생</string>
+    <string name="sable_t_top_b_bottom_space">T 맨 위 · B 맨 아래 · Space 페이지 · N/P 다음/이전</string>
+    <string name="sable_more_destinations">추가 이동 위치: %1$s</string>
+    <string name="sable_more_actions">추가 작업</string>
+    <string name="sable_more_actions_for">%1$s의 추가 작업</string>
+    <string name="sable_jump_to">%1$s(으)로 이동</string>
+    <string name="sable_return_to">%1$s(으)로 돌아가기</string>
+    <string name="sable_undo">실행 취소</string>
+</resources>

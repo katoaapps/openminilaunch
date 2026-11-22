@@ -305,7 +305,7 @@ internal fun ClassicLauncherHome(
     editingSlot?.let { slot ->
         val appsRevision by actions.launcherAppsRevision.collectAsState()
         val shortcutsRevision by actions.launcherShortcutsRevision.collectAsState()
-        val apps = remember(slot, appsRevision) { actions.installedApps() }
+        val apps = remember(slot, appsRevision) { actions.selectableApps() }
         val shortcuts = remember(slot, shortcutsRevision) { actions.installedShortcuts() }
         AppGridSelectionDialog(
             slot = slot,

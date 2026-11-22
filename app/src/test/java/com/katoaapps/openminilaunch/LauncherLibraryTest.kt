@@ -3,11 +3,34 @@ package com.katoaapps.openminilaunch
 import com.katoaapps.openminilaunch.features.apps.launcherLibraryTargets
 import com.katoaapps.openminilaunch.features.apps.launcherDiscoveryLabel
 import com.katoaapps.openminilaunch.features.apps.launcherDiscoveryMatches
+import com.katoaapps.openminilaunch.model.LauncherActionTarget
 import com.katoaapps.openminilaunch.model.LauncherShortcutTarget
 import org.junit.Assert.assertEquals
 import org.junit.Test
 
 class LauncherLibraryTest {
+    @Test fun embeddedGamesRemainDiscoverableWithoutPretendingToBeInstalledApps() {
+        val sudoku = LauncherActionTarget(
+            label = "Sudoku",
+            packageName = "com.katoaapps.openminilaunch",
+            selectionKey = "internal:sable-game:sudoku",
+        )
+
+        val targets = launcherLibraryTargets(
+            apps = listOf(sudoku),
+            alwaysVisibleTargetKeys = emptyList(),
+            appShortcuts = emptyList(),
+            includeAppShortcuts = false,
+            resolveTarget = { error("No saved targets expected") },
+        )
+
+        assertEquals(listOf(sudoku), targets)
+        assertEquals(
+            true,
+            launcherDiscoveryMatches(sudoku, "sud", packageLabel = { "Mink Launcher" }),
+        )
+    }
+
     @Test fun savedShortcutsAreDeduplicatedAndSortedForDiscovery() {
         val alpha = shortcut("Alpha", "shortcut:alpha")
         val beta = shortcut("beta", "shortcut:beta")

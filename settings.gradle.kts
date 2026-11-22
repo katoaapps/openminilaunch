@@ -21,4 +21,7 @@ include(
     ":minkboard-data-android",
     ":minkboard-focus-android",
     ":minkboard-compose",
+    ":sable-design",
+    ":sable-games-runtime",
+    ":sable-games-console",
 )

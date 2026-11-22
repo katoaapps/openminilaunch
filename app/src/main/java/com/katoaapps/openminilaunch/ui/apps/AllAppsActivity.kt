@@ -139,7 +139,7 @@ internal fun AllAppsScreen(
     ) {
         value = withContext(Dispatchers.IO) {
             launcherLibraryTargets(
-                apps = actions.installedApps(),
+                apps = actions.selectableApps(),
                 alwaysVisibleTargetKeys = alwaysVisibleTargetKeys,
                 appShortcuts = actions.installedShortcuts(),
                 includeAppShortcuts = store.includeAppShortcutsInDiscovery,

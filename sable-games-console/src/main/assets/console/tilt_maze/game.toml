@@ -1,0 +1,10 @@
+# Sable Games Console game. Ported from rustmix-wave's Tilt Maze (MIT, Piyush Daiya).
+id = "tilt_maze"
+name = "Tilt Maze"
+entry = "main.lua"
+version = "1.0"
+shelf = "motion"
+input = ["tilt", "keys"]
+best = "high"
+summary = "Tilt the phone to roll the ball through the maze to the green square."
+controls = "Tilt, the trackpad or W A S D roll the ball. Space starts the level over."

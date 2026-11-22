@@ -51,6 +51,7 @@ import com.katoaapps.openminilaunch.ui.launcher.layout.pairForFocusedPage
 import com.katoaapps.openminilaunch.ui.launcher.layout.visibleLauncherPages
 import com.katoaapps.openminilaunch.ui.magic.rememberMagicBoxSessionState
 import com.katoaapps.openminilaunch.ui.magic.AssistantActivity
+import com.katoaapps.openminilaunch.ui.magic.SelectedMessageRecipient
 import com.katoaapps.minklauncher.todos.presentation.TodoBoardRoute
 import com.katoaapps.openminilaunch.ui.minkspace.core.rememberMinkSpacePresentationState
 import com.katoaapps.openminilaunch.ui.onboarding.FeatureUpdateDialog
@@ -82,24 +83,43 @@ internal fun MiniLaunchApp(
     actions: DeviceActions,
     requestHomeRole: () -> Unit,
     homeRequestToken: Int,
-    setSettingsVisibleInRecents: (Boolean) -> Unit,
+    homeRequest: MinkHomeRequest?,
+    isWorkspaceHost: Boolean,
+    workspaceRequest: MinkWorkspaceRequest?,
+    openWorkspace: (Screen, SettingsDestination) -> Unit,
+    openHome: (MinkHomeRequest) -> Unit,
+    closeWorkspace: () -> Unit,
 ) {
-    var screen by rememberSaveable { mutableStateOf(Screen.HOME) }
-    var settingsDestination by rememberSaveable { mutableStateOf(SettingsDestination.OVERVIEW) }
-    var showTutorial by rememberSaveable { mutableStateOf(!store.onboardingComplete) }
+    var screen by rememberSaveable {
+        mutableStateOf(workspaceRequest?.screen ?: Screen.HOME)
+    }
+    var settingsDestination by rememberSaveable {
+        mutableStateOf(
+            workspaceRequest?.settingsDestination ?: SettingsDestination.OVERVIEW,
+        )
+    }
+    var showTutorial by rememberSaveable {
+        mutableStateOf(!isWorkspaceHost && !store.onboardingComplete)
+    }
     var showUpdateNotice by rememberSaveable {
-        mutableStateOf(store.onboardingComplete && !store.hasSeenUpdate(FEATURE_UPDATE_ID))
+        mutableStateOf(
+            !isWorkspaceHost && store.onboardingComplete &&
+                !store.hasSeenUpdate(FEATURE_UPDATE_ID),
+        )
     }
     var showHomeFeatureTour by rememberSaveable {
         mutableStateOf(
-            shouldShowHomeFeatureTour(
+            !isWorkspaceHost && shouldShowHomeFeatureTour(
                 onboardingComplete = store.onboardingComplete,
                 currentTourSeen = store.hasSeenUpdate(HOME_FEATURE_TOUR_ID),
             ),
         )
     }
     var showGooglePlayBetaNotice by rememberSaveable {
-        mutableStateOf(store.onboardingComplete && !store.hasSeenUpdate(GOOGLE_PLAY_BETA_NOTICE_ID))
+        mutableStateOf(
+            !isWorkspaceHost && store.onboardingComplete &&
+                !store.hasSeenUpdate(GOOGLE_PLAY_BETA_NOTICE_ID),
+        )
     }
     var tutorialRun by rememberSaveable { mutableIntStateOf(0) }
     val homeMagicBoxSessionState = rememberMagicBoxSessionState()
@@ -115,11 +135,43 @@ internal fun MiniLaunchApp(
     val twoPanelState = rememberLazyListState(
         initialFirstVisibleItemIndex = pairForFocusedPage(HOME_PAGE, store.showMinkDayTab),
     )
-    LaunchedEffect(screen) {
-        setSettingsVisibleInRecents(screen == Screen.SETTINGS)
+    LaunchedEffect(workspaceRequest?.token) {
+        workspaceRequest?.let { request ->
+            screen = request.screen
+            settingsDestination = request.settingsDestination
+        }
+    }
+    LaunchedEffect(homeRequest?.token) {
+        when (val request = homeRequest) {
+            is MinkHomeRequest.Message -> {
+                homeMagicBoxSessionState.prepareMessageRecipient(request.recipient)
+                focusedLauncherPage = HOME_PAGE
+                homePageRequestToken++
+                screen = Screen.HOME
+            }
+            is MinkHomeRequest.FeatureTour -> {
+                focusedLauncherPage = HOME_PAGE
+                homePageRequestToken++
+                screen = Screen.HOME
+                showHomeFeatureTour = true
+            }
+            is MinkHomeRequest.DemoHome -> {
+                homeMagicBoxSessionState.resetForDemoHome()
+                focusedLauncherPage = HOME_PAGE
+                homePageRequestToken++
+                screen = Screen.HOME
+            }
+            is MinkHomeRequest.DemoSearch -> {
+                homeMagicBoxSessionState.prepareDemoSearch(request.query)
+                focusedLauncherPage = HOME_PAGE
+                homePageRequestToken++
+                screen = Screen.HOME
+            }
+            null -> Unit
+        }
     }
     LaunchedEffect(homeRequestToken) {
-        if (homeRequestToken > 0) {
+        if (!isWorkspaceHost && homeRequestToken > 0) {
             screen = Screen.HOME
             focusedLauncherPage = HOME_PAGE
             homePageRequestToken++
@@ -147,7 +199,10 @@ internal fun MiniLaunchApp(
     val todoFeatureRuntime = remember(context) { context.todoFeatureRuntime }
     val todoNavigation by todoFeatureRuntime.navigationRequest.collectAsState()
     LaunchedEffect(todoNavigation?.token) {
-        if (todoNavigation != null) screen = Screen.TODOS
+        if (todoNavigation != null) {
+            if (isWorkspaceHost) screen = Screen.TODOS
+            else openWorkspace(Screen.TODOS, SettingsDestination.OVERVIEW)
+        }
     }
     val view = LocalView.current
 
@@ -178,7 +233,9 @@ internal fun MiniLaunchApp(
                 else show(WindowInsetsCompat.Type.statusBars())
             }
         }
-        BackHandler(enabled = !showTutorial && screen != Screen.HOME) { screen = Screen.HOME }
+        BackHandler(enabled = !showTutorial && screen != Screen.HOME) {
+            if (isWorkspaceHost) closeWorkspace() else screen = Screen.HOME
+        }
         BackHandler(
             enabled = !showTutorial && screen == Screen.HOME &&
                 focusedLauncherPage != HOME_PAGE,
@@ -243,17 +300,23 @@ internal fun MiniLaunchApp(
                                     magicBoxSessionState = homeMagicBoxSessionState,
                                     minkSpacePresentation = minkSpacePresentation,
                                     openSettings = { destination ->
-                                        settingsDestination = destination
-                                        screen = Screen.SETTINGS
+                                        openWorkspace(Screen.SETTINGS, destination)
                                     },
                                     openTodos = {
-                                        screen = Screen.TODOS
+                                        openWorkspace(Screen.TODOS, SettingsDestination.OVERVIEW)
                                     },
                                     openVCardSettings = {
                                         openVirtualContactCard(context)
                                     },
-                                    openConversations = { screen = Screen.CONVERSATIONS },
-                                    openMinkDay = { screen = Screen.MINK_DAY },
+                                    openConversations = {
+                                        openWorkspace(
+                                            Screen.CONVERSATIONS,
+                                            SettingsDestination.OVERVIEW,
+                                        )
+                                    },
+                                    openMinkDay = {
+                                        openWorkspace(Screen.MINK_DAY, SettingsDestination.OVERVIEW)
+                                    },
                                     onComposeMessage = { recipient, route ->
                                         minkSpacePresentation.collapse()
                                         val providerPackage =
@@ -283,32 +346,36 @@ internal fun MiniLaunchApp(
                             onRepeatTutorial = { tutorialRun++; showTutorial = true },
                             onReplayHomeTour = {
                                 settingsDestination = SettingsDestination.OVERVIEW
-                                focusedLauncherPage = HOME_PAGE
-                                homePageRequestToken++
-                                screen = Screen.HOME
-                                showHomeFeatureTour = true
+                                openHome(
+                                    MinkHomeRequest.FeatureTour(
+                                        android.os.SystemClock.elapsedRealtimeNanos(),
+                                    ),
+                                )
                             },
                             initialDestination = settingsDestination,
                             onIconStyleApplied = {
                                 settingsDestination = SettingsDestination.OVERVIEW
                                 animateHomeEntrance = true
-                                screen = Screen.HOME
+                                if (isWorkspaceHost) closeWorkspace()
+                                else screen = Screen.HOME
                             },
                             onHomeLayoutApplied = {
                                 settingsDestination = SettingsDestination.OVERVIEW
                                 focusedLauncherPage = HOME_PAGE
                                 homePageRequestToken++
                                 animateHomeEntrance = true
-                                screen = Screen.HOME
+                                if (isWorkspaceHost) closeWorkspace()
+                                else screen = Screen.HOME
                             },
                             onDemoCaptureMoment = { moment ->
                                 settingsDestination = SettingsDestination.OVERVIEW
                                 when (moment) {
                                     DemoCaptureMoment.HOME -> {
-                                        homeMagicBoxSessionState.resetForDemoHome()
-                                        focusedLauncherPage = HOME_PAGE
-                                        homePageRequestToken++
-                                        screen = Screen.HOME
+                                        openHome(
+                                            MinkHomeRequest.DemoHome(
+                                                android.os.SystemClock.elapsedRealtimeNanos(),
+                                            ),
+                                        )
                                     }
                                     DemoCaptureMoment.QUICK_APPS -> {
                                         context.startActivity(Intent(context, AssistantActivity::class.java))
@@ -317,16 +384,19 @@ internal fun MiniLaunchApp(
                                         screen = Screen.CONVERSATIONS
                                     }
                                     DemoCaptureMoment.MAGIC_BOX_SEARCH -> {
-                                        homeMagicBoxSessionState.prepareDemoSearch("invoice")
-                                        focusedLauncherPage = HOME_PAGE
-                                        homePageRequestToken++
-                                        screen = Screen.HOME
+                                        openHome(
+                                            MinkHomeRequest.DemoSearch(
+                                                token = android.os.SystemClock.elapsedRealtimeNanos(),
+                                                query = "invoice",
+                                            ),
+                                        )
                                     }
                                 }
                             },
                             goBack = {
                                 settingsDestination = SettingsDestination.OVERVIEW
-                                screen = Screen.HOME
+                                if (isWorkspaceHost) closeWorkspace()
+                                else screen = Screen.HOME
                             },
                         )
                     }
@@ -345,30 +415,43 @@ internal fun MiniLaunchApp(
                             onComposeMessage = { recipient, route ->
                                 minkSpacePresentation.collapse()
                                 val providerPackage = (route as? ContactAppRoute.Package)?.packageName
-                                homeMagicBoxSessionState.prepareMessage(
-                                    recipient = recipient,
-                                    providerPackage = providerPackage,
-                                    providerRouteOverridden = route != ContactAppRoute.Inherit,
+                                openHome(
+                                    MinkHomeRequest.Message(
+                                        token = android.os.SystemClock.elapsedRealtimeNanos(),
+                                        recipient = SelectedMessageRecipient.AddressRecipient(
+                                            recipient = recipient,
+                                            providerPackage = providerPackage,
+                                            providerRouteOverridden =
+                                                route != ContactAppRoute.Inherit,
+                                        ),
+                                    ),
                                 )
-                                focusedLauncherPage = HOME_PAGE
-                                homePageRequestToken++
-                                screen = Screen.HOME
                             },
                             onComposeConversationMessage = { conversation ->
                                 minkSpacePresentation.collapse()
-                                homeMagicBoxSessionState.prepareConversationMessage(conversation)
-                                focusedLauncherPage = HOME_PAGE
-                                homePageRequestToken++
-                                screen = Screen.HOME
+                                openHome(
+                                    MinkHomeRequest.Message(
+                                        token = android.os.SystemClock.elapsedRealtimeNanos(),
+                                        recipient = SelectedMessageRecipient.ConversationRecipient(
+                                            conversation,
+                                        ),
+                                    ),
+                                )
                             },
-                            goBack = { screen = Screen.HOME },
+                            goBack = {
+                                if (isWorkspaceHost) closeWorkspace()
+                                else screen = Screen.HOME
+                            },
                         )
                     }
                     Screen.MINK_DAY -> FontAppearanceTheme(store) {
                         MinkDayScreen(
                             store = store,
                             isActive = true,
-                            goHome = { screen = Screen.HOME },
+                            goHome = {
+                                if (isWorkspaceHost) closeWorkspace()
+                                else screen = Screen.HOME
+                            },
                         )
                     }
                 }
@@ -380,8 +463,7 @@ internal fun MiniLaunchApp(
                 onOpenSettings = {
                     store.markUpdateSeen(FEATURE_UPDATE_ID)
                     showUpdateNotice = false
-                    screen = Screen.SETTINGS
-                    settingsDestination = SettingsDestination.OVERVIEW
+                    openWorkspace(Screen.SETTINGS, SettingsDestination.OVERVIEW)
                 },
                 onReviewTutorial = {
                     store.markUpdateSeen(FEATURE_UPDATE_ID)

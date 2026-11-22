@@ -55,7 +55,6 @@ internal fun BoxScope.HomeFocusPanel(
     openTodos: () -> Unit,
     openVCardSettings: () -> Unit,
     openMinkSpaceSettings: () -> Unit,
-    openAppGridSettings: () -> Unit,
     onTodoCenterChanged: (Offset) -> Unit,
     onPausedApp: (String) -> Unit,
     onOpenDrawer: () -> Unit,
@@ -81,11 +80,11 @@ internal fun BoxScope.HomeFocusPanel(
     } else {
         com.katoaapps.openminilaunch.ui.theme.MinkWhite.copy(alpha = .24f)
     }
-    val panelHeight = if (expandToAvailableHeight) {
-        availableHeight
-    } else {
-        minOf(availableHeight, focusPanelHeight)
-    }
+    val panelHeight = resolvedHomeFocusPanelHeight(
+        availableHeight = availableHeight,
+        preferredHeight = focusPanelHeight,
+        expandToAvailableHeight = expandToAvailableHeight,
+    )
     val itemsPerPage = visibleTodoItemsForHeight(panelHeight.value)
     val todoTextMetrics = homeTodoTextMetrics(
         largeDisplay = configuration.smallestScreenWidthDp >= 600,
@@ -97,7 +96,7 @@ internal fun BoxScope.HomeFocusPanel(
     val focusModifier = if (expandToAvailableHeight) {
         Modifier.fillMaxSize()
     } else {
-        Modifier.fillMaxWidth().height(focusPanelHeight).align(
+        Modifier.fillMaxWidth().height(panelHeight).align(
             if (store.alignHomePanelBottom) Alignment.BottomCenter else Alignment.TopCenter,
         )
     }
@@ -180,7 +179,6 @@ internal fun BoxScope.HomeFocusPanel(
                             actions = actions,
                             appAccessState = appAccessState,
                             onPausedApp = onPausedApp,
-                            onConfigureExtraApp = openAppGridSettings,
                             compact = qwertyHome,
                             contentColor = contentColor,
                             itemContainerColor = contentColor.copy(alpha = .09f),
@@ -193,3 +191,10 @@ internal fun BoxScope.HomeFocusPanel(
         }
     }
 }
+
+/** Prevents a fixed-height Home panel from overflowing into the Magic Box on constrained panes. */
+internal fun resolvedHomeFocusPanelHeight(
+    availableHeight: Dp,
+    preferredHeight: Dp,
+    expandToAvailableHeight: Boolean,
+): Dp = if (expandToAvailableHeight) availableHeight else minOf(availableHeight, preferredHeight)

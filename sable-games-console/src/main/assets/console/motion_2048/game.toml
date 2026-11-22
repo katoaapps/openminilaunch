@@ -1,0 +1,10 @@
+# Sable Games Console game. Ported from rustmix-wave's Motion 2048 (MIT, Piyush Daiya).
+id = "motion_2048"
+name = "Motion 2048"
+entry = "main.lua"
+version = "1.0"
+shelf = "motion"
+input = ["tilt", "keys"]
+best = "high"
+summary = "Tilt to slide every tile; equal tiles merge. One tilt, one slide."
+controls = "Tilt, the trackpad or W A S D slide the tiles. Level the phone between slides."

@@ -40,20 +40,24 @@ internal class MagicBoxSessionState private constructor(
         providerPackage: String?,
         providerRouteOverridden: Boolean,
     ) {
-        textState.value = TextFieldValue()
-        selectedRecipientState.value = SelectedMessageRecipient.AddressRecipient(
-            recipient = recipient,
-            providerPackage = providerPackage,
-            providerRouteOverridden = providerRouteOverridden,
+        prepareMessageRecipient(
+            SelectedMessageRecipient.AddressRecipient(
+                recipient = recipient,
+                providerPackage = providerPackage,
+                providerRouteOverridden = providerRouteOverridden,
+            ),
         )
-        routeState.value = MagicBoxRoute.MESSAGE
-        expandedState.value = true
     }
 
     /** Starts a message draft for an exact app-published conversation shortcut. */
     fun prepareConversationMessage(conversation: LauncherShortcutTarget) {
+        prepareMessageRecipient(SelectedMessageRecipient.ConversationRecipient(conversation))
+    }
+
+    /** Restores a recipient handed back to the real Home task from another Mink workspace. */
+    fun prepareMessageRecipient(recipient: SelectedMessageRecipient) {
         textState.value = TextFieldValue()
-        selectedRecipientState.value = SelectedMessageRecipient.ConversationRecipient(conversation)
+        selectedRecipientState.value = recipient
         routeState.value = MagicBoxRoute.MESSAGE
         expandedState.value = true
     }

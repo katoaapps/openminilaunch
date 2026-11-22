@@ -503,19 +503,19 @@
     <string name="backup_local_file">স্থানীয় ফাইল</string>
     <string name="backup_restore_description">একটি OpenMink ডিস্ট্রিবিউশন আনইনস্টল করার আগে আপনার পোর্টেবল লঞ্চার সেটআপ সংরক্ষণ করুন, তারপর অন্যটি ইনস্টল করার পরে এটি আমদানি করুন৷ Android-এর ডকুমেন্ট পিকারের মাধ্যমে আপনি যেখানেই চয়ন করেন সেখানে ফাইলটি থাকে।</string>
     <string name="export_backup">ব্যাকআপ রপ্তানি করুন</string>
-    <string name="export_backup_description">সেটিংস, অ্যাপ পছন্দ, লেআউট এবং করণীয় সংরক্ষণ করুন</string>
+    <string name="export_backup_description">সেটিংস, অ্যাপ পছন্দ, লেআউট এবং এনক্রিপ্ট করা MinkBoard ডেটা সংরক্ষণ করুন</string>
     <string name="import_backup">ব্যাকআপ আমদানি করুন</string>
     <string name="import_backup_description">পূর্বে রপ্তানি করা ফাইল পর্যালোচনা এবং পুনরুদ্ধার করুন</string>
     <string name="backup_not_included_description">Android অনুমতি, সিস্টেমের ভূমিকা, অ্যাক্সেসিবিলিটি ও বিজ্ঞপ্তি অ্যাক্সেস, উইজেটের বিষয়বস্তু ও অ্যাপ-নির্দিষ্ট সেটিংস, ওয়ালপেপার ছবি, নথি ফোল্ডার অ্যাক্সেস এবং সাম্প্রতিক অনুসন্ধান ইতিহাস অন্তর্ভুক্ত নয়। অনুপলব্ধ অ্যাপ বা আইকন প্যাক পুনরায় ইনস্টল ও নির্বাচন না করা পর্যন্ত বিকল্প সেটিং ব্যবহার করতে পারে।</string>
     <string name="backup_exported">ব্যাকআপ রপ্তানি করা হয়েছে</string>
     <string name="backup_export_failed">ব্যাকআপ রপ্তানি করা যায়নি</string>
-    <string name="backup_import_failed">এই ফাইলটি একটি সমর্থিত OpenMink ব্যাকআপ নয়৷</string>
+    <string name="backup_import_failed">ব্যাকআপটি সমর্থিত নয়, ক্ষতিগ্রস্ত, অথবা অন্য পাসফ্রেজ ব্যবহার করে</string>
     <string name="backup_imported">ব্যাকআপ পুনরুদ্ধার হয়েছে। Android অনুমতি আবার চালু করুন এবং উইজেট সেটআপের স্থান বা নথি ফোল্ডার পর্যালোচনা করুন।</string>
     <string name="backup_imported_widget_limit">ব্যাকআপ পুনরুদ্ধার হয়েছে। এই ডিভাইসটি উইজেট সীমায় পৌঁছে যাওয়ায় %1$dটি উইজেটের স্থান বাদ দেওয়া হয়েছে।</string>
     <string name="restore_widget_placeholders">উইজেট সেটআপের স্থান যোগ করুন</string>
     <string name="restore_widget_placeholders_description">বর্তমান উইজেটগুলো রেখে এই ব্যাকআপের উইজেট আবার সেট করার জন্য %1$dটি স্থান যোগ করুন।</string>
     <string name="confirm_backup_import">এই ব্যাকআপ পুনরুদ্ধার করবেন?</string>
-    <string name="confirm_backup_import_description">OpenMink %1$s · %2$s · %3$d to-dos\n\nএটি আপনার বর্তমান পোর্টেবল সেটিংস, লঞ্চার লেআউট, অ্যাপ পছন্দ এবং করণীয়গুলি প্রতিস্থাপন করে৷</string>
+    <string name="confirm_backup_import_description">OpenMink %1$s · %2$s · %3$dটি পুরোনো করণীয়\n\nপোর্টেবল সেটিংস, লঞ্চার লেআউট এবং অ্যাপ পছন্দ পুনরুদ্ধার করা হয়। বিদ্যমান বোর্ড না মুছে করণীয়গুলো MinkBoard হিসেবে আমদানি করা হয়।</string>
     <string name="unknown_date">অজানা তারিখ</string>
     <string name="unknown_version">অজানা সংস্করণ</string>
     <string name="permissions">অনুমতি</string>
@@ -1108,5 +1108,4 @@
     <string name="home_folder_compose">তৈরি</string>
     <string name="home_folder_browse">ব্রাউজ</string>
     <string name="home_folder_tools">টুলস</string>
-    <string name="home_folder_fun">মজা</string>
 </resources>

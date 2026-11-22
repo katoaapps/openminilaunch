@@ -101,6 +101,8 @@ dependencies {
     implementation(project(":minkboard-data-android"))
     implementation(project(":minkboard-focus-android"))
     implementation(project(":minkboard-compose"))
+    implementation(project(":sable-games-runtime"))
+    implementation(project(":sable-games-console"))
     implementation("androidx.core:core-ktx:1.13.1")
     implementation("androidx.activity:activity-compose:1.9.0")
     implementation("androidx.fragment:fragment-ktx:1.8.5")

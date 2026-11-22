@@ -56,4 +56,5 @@ internal fun shouldRearmMagicBox(
 
 /** Scrollable embedded tools retain vertical motion; app pages retain launcher gestures. */
 internal val ClassicLauncherPage.supportsLauncherVerticalGestures: Boolean
-    get() = this == ClassicLauncherPage.QuickApps || this is ClassicLauncherPage.Folder
+    get() = this == ClassicLauncherPage.QuickApps ||
+        this is ClassicLauncherPage.Folder

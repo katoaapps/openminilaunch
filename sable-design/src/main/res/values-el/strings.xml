@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Greek. Draft from the project owner (2026-10-29), checked against the English, not yet reviewed by a fluent speaker. Keys and placeholders must match values/strings.xml (DesignTextTest checks). -->
+<resources>
+    <string name="sable_playback_error">σφάλμα αναπαραγωγής</string>
+    <string name="sable_pause">Παύση</string>
+    <string name="sable_play">Αναπαραγωγή</string>
+    <string name="sable_t_top_b_bottom_space">T επάνω · B κάτω · Space σελίδα · N/P επόμενη/προηγούμενη</string>
+    <string name="sable_more_destinations">Περισσότεροι προορισμοί: %1$s</string>
+    <string name="sable_more_actions">Περισσότερες ενέργειες</string>
+    <string name="sable_more_actions_for">Περισσότερες ενέργειες για %1$s</string>
+    <string name="sable_jump_to">Μετάβαση σε %1$s</string>
+    <string name="sable_return_to">Επιστροφή σε %1$s</string>
+    <string name="sable_undo">Αναίρεση</string>
+</resources>

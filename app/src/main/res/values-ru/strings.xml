@@ -1,8 +1,8 @@
 <?xml version='1.0' encoding='utf-8'?>
 <resources>
     <string name="app_name">MinkLauncher OpenSource</string>
-    <string name="show_mink_day_tab">Показывать вкладку «День Mink»</string>
-    <string name="show_mink_day_tab_description">Оставляет «День Mink» среди страниц главного экрана. Отключите, чтобы открывать его только кнопкой на главном экране или из настроек.</string>
+    <string name="show_mink_day_tab">Показывать вкладку Mink’s Day</string>
+    <string name="show_mink_day_tab_description">Оставляет Mink’s Day среди страниц главного экрана. Отключите, чтобы открывать его только кнопкой на главном экране или из настроек.</string>
     <string name="choose_icon">Выбрать значок</string>
     <string name="choose_app_icon">Выбрать один значок приложения</string>
     <string name="use_default_app_icon">Использовать значок по умолчанию</string>
@@ -503,19 +503,19 @@
     <string name="backup_local_file">Локальный файл</string>
     <string name="backup_restore_description">Сохраните настройки портативной программы запуска перед удалением одного дистрибутива OpenMink, а затем импортируйте их после установки другого. Файл остается там, где вы выберете с помощью средства выбора документов Android.</string>
     <string name="export_backup">Экспортировать резервную копию</string>
-    <string name="export_backup_description">Сохраняйте настройки, выбор приложений, макет и задачи.</string>
+    <string name="export_backup_description">Сохраните настройки, выбор приложений, макет и зашифрованные данные MinkBoard</string>
     <string name="import_backup">Импортировать резервную копию</string>
     <string name="import_backup_description">Просмотр и восстановление ранее экспортированного файла</string>
     <string name="backup_not_included_description">Разрешения Android, системные роли, специальные возможности и доступ к уведомлениям, содержимое и настройки виджетов, файлы обоев, доступ к папкам документов и недавняя история поиска не включаются. Для недоступных приложений и пакетов значков могут использоваться запасные настройки, пока они не будут снова установлены и выбраны.</string>
     <string name="backup_exported">Резервная копия экспортирована.</string>
     <string name="backup_export_failed">Не удалось экспортировать резервную копию</string>
-    <string name="backup_import_failed">Этот файл не является поддерживаемой резервной копией OpenMink.</string>
+    <string name="backup_import_failed">Эта резервная копия не поддерживается, повреждена или использует другую парольную фразу</string>
     <string name="backup_imported">Резервная копия восстановлена. Снова включите разрешения Android и проверьте места для настройки виджетов и папки документов.</string>
     <string name="backup_imported_widget_limit">Резервная копия восстановлена. Пропущено мест для виджетов: %1$d. На устройстве уже достигнут предел.</string>
     <string name="restore_widget_placeholders">Добавить места для настройки виджетов</string>
     <string name="restore_widget_placeholders_description">Сохранить текущие виджеты и добавить %1$d мест, где можно снова настроить виджеты из этой резервной копии.</string>
     <string name="confirm_backup_import">Восстановить эту резервную копию?</string>
-    <string name="confirm_backup_import_description">OpenMink %1$s · %2$s · %3$d to-dos\n\nЭто заменяет текущие переносимые настройки, макет панели запуска, выбор приложений и списки дел.</string>
+    <string name="confirm_backup_import_description">OpenMink %1$s · %2$s · %3$d старых задач\n\nПереносимые настройки, макет лаунчера и выбор приложений будут восстановлены. Задачи импортируются как MinkBoard без удаления существующих досок.</string>
     <string name="unknown_date">Неизвестная дата</string>
     <string name="unknown_version">неизвестная версия</string>
     <string name="permissions">Разрешения</string>
@@ -1126,5 +1126,4 @@
     <string name="home_folder_compose">Создать</string>
     <string name="home_folder_browse">Обзор</string>
     <string name="home_folder_tools">Инструменты</string>
-    <string name="home_folder_fun">Развлечения</string>
 </resources>

@@ -503,19 +503,19 @@
     <string name="backup_local_file">مقامی فائل</string>
     <string name="backup_restore_description">ایک OpenMink ڈسٹری بیوشن کو ان انسٹال کرنے سے پہلے اپنے پورٹیبل لانچر سیٹ اپ کو محفوظ کریں، پھر دوسری انسٹال کرنے کے بعد اسے درآمد کریں۔ فائل وہیں رہتی ہے جہاں آپ Android کے دستاویز چننے والے کے ذریعے منتخب کرتے ہیں۔</string>
     <string name="export_backup">بیک اپ برآمد کریں۔</string>
-    <string name="export_backup_description">ترتیبات، ایپ کے انتخاب، لے آؤٹ، اور کام کو محفوظ کریں۔</string>
+    <string name="export_backup_description">ترتیبات، ایپ کے انتخاب، لے آؤٹ اور خفیہ کردہ MinkBoard ڈیٹا محفوظ کریں</string>
     <string name="import_backup">بیک اپ درآمد کریں۔</string>
     <string name="import_backup_description">پہلے برآمد شدہ فائل کا جائزہ لیں اور بحال کریں۔</string>
     <string name="backup_not_included_description">Android اجازتیں، سسٹم کے کردار، رسائی اور اطلاع تک رسائی، ویجیٹ کا مواد اور ایپ کی مخصوص ترتیبات، وال پیپر تصاویر، دستاویز فولڈر تک رسائی اور حالیہ تلاش کی تاریخ شامل نہیں ہیں۔ غیر دستیاب ایپس یا آئیکن پیک دوبارہ انسٹال اور منتخب ہونے تک متبادل ترتیبات استعمال کر سکتے ہیں۔</string>
     <string name="backup_exported">بیک اپ برآمد ہو گیا۔</string>
     <string name="backup_export_failed">بیک اپ برآمد نہیں کیا جا سکا</string>
-    <string name="backup_import_failed">وہ فائل تعاون یافتہ OpenMink بیک اپ نہیں ہے۔</string>
+    <string name="backup_import_failed">یہ بیک اپ تعاون یافتہ نہیں، خراب ہے، یا مختلف پاس فریز استعمال کرتا ہے</string>
     <string name="backup_imported">بیک اپ بحال ہو گیا۔ Android اجازتیں دوبارہ فعال کریں اور ویجیٹ سیٹ اپ کی جگہوں یا دستاویز فولڈرز کا جائزہ لیں۔</string>
     <string name="backup_imported_widget_limit">بیک اپ بحال ہو گیا۔ اس ڈیوائس پر ویجیٹ کی حد پوری ہونے کی وجہ سے %1$d ویجیٹ جگہیں چھوڑ دی گئیں۔</string>
     <string name="restore_widget_placeholders">ویجیٹ سیٹ اپ کی جگہیں شامل کریں</string>
     <string name="restore_widget_placeholders_description">موجودہ ویجیٹس رکھیں اور اس بیک اپ کے ویجیٹس دوبارہ سیٹ کرنے کے لیے %1$d جگہیں شامل کریں۔</string>
     <string name="confirm_backup_import">اس بیک اپ کو بحال کریں؟</string>
-    <string name="confirm_backup_import_description">OpenMink %1$s · %2$s · %3$d to-dos\n\n یہ آپ کی موجودہ پورٹیبل ترتیبات، لانچر لے آؤٹ، ایپ کے انتخاب، اور کرنے والے کاموں کی جگہ لے لیتا ہے۔</string>
+    <string name="confirm_backup_import_description">OpenMink %1$s · %2$s · %3$d پرانے کام\n\nپورٹیبل ترتیبات، لانچر لے آؤٹ اور ایپ کے انتخاب بحال ہوتے ہیں۔ موجودہ بورڈز حذف کیے بغیر کام MinkBoard کے طور پر درآمد ہوتے ہیں۔</string>
     <string name="unknown_date">نامعلوم تاریخ</string>
     <string name="unknown_version">نامعلوم ورژن</string>
     <string name="permissions">اجازتیں</string>
@@ -1108,5 +1108,4 @@
     <string name="home_folder_compose">تخلیق</string>
     <string name="home_folder_browse">براؤز</string>
     <string name="home_folder_tools">ٹولز</string>
-    <string name="home_folder_fun">تفریح</string>
 </resources>

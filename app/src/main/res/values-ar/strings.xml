@@ -1,8 +1,8 @@
 <?xml version='1.0' encoding='utf-8'?>
 <resources>
     <string name="app_name">MinkLauncher OpenSource</string>
-    <string name="show_mink_day_tab">إظهار علامة تبويب يوم Mink</string>
-    <string name="show_mink_day_tab_description">احتفظ بيوم Mink ضمن صفحات الشاشة الرئيسية. أوقفه لفتحه فقط من زر الشاشة الرئيسية أو الإعدادات.</string>
+    <string name="show_mink_day_tab">إظهار علامة تبويب Mink’s Day</string>
+    <string name="show_mink_day_tab_description">احتفظ بـ Mink’s Day ضمن صفحات الشاشة الرئيسية. أوقفه لفتحه فقط من زر الشاشة الرئيسية أو الإعدادات.</string>
     <string name="choose_icon">اختيار رمز</string>
     <string name="choose_app_icon">اختيار رمز واحد للتطبيق</string>
     <string name="use_default_app_icon">استخدام الرمز الافتراضي</string>
@@ -503,19 +503,19 @@
     <string name="backup_local_file">الملف المحلي</string>
     <string name="backup_restore_description">احفظ إعداد المشغل المحمول الخاص بك قبل إلغاء تثبيت توزيعة OpenMink، ثم قم باستيرادها بعد تثبيت توزيعة أخرى. يبقى الملف في أي مكان تختاره من خلال منتقي المستندات Android.</string>
     <string name="export_backup">تصدير النسخة الاحتياطية</string>
-    <string name="export_backup_description">احفظ الإعدادات واختيارات التطبيقات والتخطيط والمهام</string>
+    <string name="export_backup_description">احفظ الإعدادات واختيارات التطبيقات والتخطيط وبيانات MinkBoard المشفرة</string>
     <string name="import_backup">استيراد نسخة احتياطية</string>
     <string name="import_backup_description">مراجعة واستعادة ملف تم تصديره مسبقًا</string>
     <string name="backup_not_included_description">لا تتضمن النسخة الاحتياطية أذونات Android وأدوار النظام وإمكانية الوصول والوصول إلى الإشعارات ومحتوى الأدوات وإعداداتها الخاصة بالتطبيق وملفات صور الخلفية والوصول إلى مجلد المستندات وسجل البحث الحديث. قد تستخدم التطبيقات أو حزم الأيقونات غير المتوفرة خيارات بديلة حتى تتم إعادة تثبيتها واختيارها.</string>
     <string name="backup_exported">تم تصدير النسخة الاحتياطية</string>
     <string name="backup_export_failed">تعذر تصدير النسخة الاحتياطية</string>
-    <string name="backup_import_failed">هذا الملف ليس نسخة احتياطية مدعومة من OpenMink</string>
+    <string name="backup_import_failed">النسخة الاحتياطية غير مدعومة أو تالفة أو تستخدم عبارة مرور مختلفة</string>
     <string name="backup_imported">تمت استعادة النسخة الاحتياطية. أعد تمكين أذونات Android وراجع أماكن إعداد الأدوات أو مجلدات المستندات.</string>
     <string name="backup_imported_widget_limit">تمت استعادة النسخة الاحتياطية. تم تخطي %1$d من أماكن الأدوات لأن هذا الجهاز وصل بالفعل إلى الحد الأقصى.</string>
     <string name="restore_widget_placeholders">إضافة أماكن لإعداد الأدوات</string>
     <string name="restore_widget_placeholders_description">احتفظ بأدواتك الحالية وأضف %1$d من الأماكن التي يمكن فيها إعداد أدوات هذه النسخة الاحتياطية مرة أخرى.</string>
     <string name="confirm_backup_import">هل تريد استعادة هذه النسخة الاحتياطية؟</string>
-    <string name="confirm_backup_import_description">OpenMink %1$s · %2$s · %3$d to-dos\n\nيستبدل هذا إعداداتك المحمولة الحالية وتخطيط المشغل وخيارات التطبيقات والمهام.</string>
+    <string name="confirm_backup_import_description">OpenMink %1$s · %2$s · %3$d من المهام القديمة\n\nتُستعاد الإعدادات المحمولة وتخطيط المشغل واختيارات التطبيقات. تُستورد المهام كلوحة MinkBoard من دون حذف اللوحات الحالية.</string>
     <string name="unknown_date">تاريخ غير معروف</string>
     <string name="unknown_version">نسخة غير معروفة</string>
     <string name="permissions">الأذونات</string>
@@ -1144,5 +1144,4 @@
     <string name="home_folder_compose">إنشاء</string>
     <string name="home_folder_browse">تصفح</string>
     <string name="home_folder_tools">أدوات</string>
-    <string name="home_folder_fun">مرح</string>
 </resources>

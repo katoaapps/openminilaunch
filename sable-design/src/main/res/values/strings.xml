@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- English. Single capital letters in hints (C new, S find) name keyboard keys: keep them as the key, translate the word.
+     English. Keep equal to DesignText.EN (DesignTextTest checks); translations go in values-<lang>/. -->
+<resources>
+    <string name="sable_playback_error">playback error</string>
+    <string name="sable_pause">Pause</string>
+    <string name="sable_play">Play</string>
+    <string name="sable_t_top_b_bottom_space">T top · B bottom · Space page · N/P next/previous</string>
+    <string name="sable_more_destinations">More destinations: %1$s</string>
+    <string name="sable_more_actions">More actions</string>
+    <string name="sable_more_actions_for">More actions for %1$s</string>
+    <string name="sable_jump_to">Jump to %1$s</string>
+    <string name="sable_return_to">Return to %1$s</string>
+    <string name="sable_undo">Undo</string>
+</resources>

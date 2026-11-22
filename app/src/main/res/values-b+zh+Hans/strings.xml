@@ -503,19 +503,19 @@
     <string name="backup_local_file">本地文件</string>
     <string name="backup_restore_description">在卸载一个 OpenMink 发行版之前保存便携式启动器设置，然后在安装另一个发行版后导入它。文件保留在您通过 Android 的文档选择器选择的任何位置。</string>
     <string name="export_backup">导出备份</string>
-    <string name="export_backup_description">保存设置、应用程序选择、布局和待办事项</string>
+    <string name="export_backup_description">保存设置、应用选择、布局和加密的 MinkBoard 数据</string>
     <string name="import_backup">导入备份</string>
     <string name="import_backup_description">查看并恢复以前导出的文件</string>
     <string name="backup_not_included_description">备份不包括 Android 权限、系统角色、无障碍和通知访问权限、小部件内容及应用专属设置、壁纸图像文件、文档文件夹访问权限和最近查询历史记录。不可用的应用或图标包可能暂时使用备用选项，直到重新安装并选择它们。</string>
     <string name="backup_exported">备份导出</string>
     <string name="backup_export_failed">无法导出备份</string>
-    <string name="backup_import_failed">该文件不是受支持的 OpenMink 备份</string>
+    <string name="backup_import_failed">该备份不受支持、已损坏，或使用了其他密码短语</string>
     <string name="backup_imported">备份已恢复。请重新启用 Android 权限，并检查小部件设置占位或文档文件夹。</string>
     <string name="backup_imported_widget_limit">备份已恢复。此设备已达到小部件上限，因此跳过了 %1$d 个小部件占位。</string>
     <string name="restore_widget_placeholders">添加小部件设置占位</string>
     <string name="restore_widget_placeholders_description">保留当前小部件，并添加 %1$d 个位置，以便重新设置此备份中的小部件。</string>
     <string name="confirm_backup_import">恢复这个备份吗？</string>
-    <string name="confirm_backup_import_description">OpenMink %1$s · %2$s · %3$d 待办事项\n\n这将替换您当前的便携式设置、启动器布局、应用程序选择和待办事项。</string>
+    <string name="confirm_backup_import_description">OpenMink %1$s · %2$s · %3$d 个旧版待办事项\n\n将恢复便携式设置、启动器布局和应用选择。待办事项会作为 MinkBoard 导入，不会删除现有看板。</string>
     <string name="unknown_date">日期未知</string>
     <string name="unknown_version">未知版本</string>
     <string name="permissions">权限</string>
@@ -1108,5 +1108,4 @@
     <string name="home_folder_compose">创作</string>
     <string name="home_folder_browse">浏览</string>
     <string name="home_folder_tools">工具</string>
-    <string name="home_folder_fun">娱乐</string>
 </resources>

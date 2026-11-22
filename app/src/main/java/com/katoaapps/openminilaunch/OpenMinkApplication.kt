@@ -14,6 +14,8 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.SupervisorJob
 import kotlinx.coroutines.launch
+import org.sableos.games.SableGames
+import org.sableos.games.SableGamesConfiguration
 
 class OpenMinkApplication : Application(), MinkBoardFocusRuntimeOwner {
     internal val todoFeatureRuntime by lazy(LazyThreadSafetyMode.SYNCHRONIZED) {
@@ -58,6 +60,10 @@ class OpenMinkApplication : Application(), MinkBoardFocusRuntimeOwner {
 
     override fun onCreate() {
         super.onCreate()
+        SableGames.initialize(
+            context = this,
+            configuration = SableGamesConfiguration(allowExternalConsoleGames = false),
+        )
         applicationScope.launch { minkBoardFocusRuntime.coordinator.reconcile() }
     }
 }

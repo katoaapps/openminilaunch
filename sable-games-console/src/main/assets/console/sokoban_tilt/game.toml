@@ -1,0 +1,10 @@
+# Sable Games Console game. Ported from rustmix-wave's Sokoban Tilt (MIT, Piyush Daiya).
+id = "sokoban_tilt"
+name = "Sokoban Tilt"
+entry = "main.lua"
+version = "1.0"
+shelf = "motion"
+input = ["tilt", "keys"]
+best = "high"
+summary = "Tilt to walk and push the crates onto the marks. One tilt, one step."
+controls = "Tilt, the trackpad or W A S D walk. U undoes a step, Space starts the level over."

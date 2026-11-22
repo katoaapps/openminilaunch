@@ -2,7 +2,6 @@ package com.katoaapps.openminilaunch.ui.launcher
 
 import android.annotation.SuppressLint
 import android.app.Activity
-import android.app.ActivityManager
 import android.app.role.RoleManager
 import android.appwidget.AppWidgetHost
 import android.content.Context
@@ -25,9 +24,11 @@ import androidx.fragment.app.FragmentActivity
 import androidx.lifecycle.lifecycleScope
 import com.katoaapps.openminilaunch.todoFeatureRuntime
 import com.katoaapps.openminilaunch.data.LauncherStore
+import com.katoaapps.openminilaunch.model.Screen
 import com.katoaapps.openminilaunch.platform.DeviceActions
 import com.katoaapps.openminilaunch.ui.components.applyLargeDisplayOrientation
 import com.katoaapps.openminilaunch.ui.magic.MagicHardwareHotkeyHost
+import com.katoaapps.openminilaunch.ui.settings.SettingsDestination
 import com.katoaapps.openminilaunch.ui.widgets.InteractiveAppWidgetHost
 import com.katoaapps.openminilaunch.ui.widgets.MINK_WIDGET_HOST_ID
 import kotlinx.coroutines.Dispatchers
@@ -39,9 +40,12 @@ private const val STATE_CONFIGURING_WIDGET_ID = "configuring_widget_id"
 private const val STATE_WIDGET_RESULT_ID = "widget_result_id"
 private const val STATE_WIDGET_RESULT_OK = "widget_result_ok"
 
-class MainActivity : FragmentActivity(), MagicHardwareHotkeyHost {
+open class MainActivity : FragmentActivity(), MagicHardwareHotkeyHost {
+    protected open val isWorkspaceHost: Boolean = false
     private val homeRoleLauncher = registerForActivityResult(ActivityResultContracts.StartActivityForResult()) { }
     private var homeRequestToken by mutableIntStateOf(0)
+    private var homeRequest by mutableStateOf<MinkHomeRequest?>(null)
+    private var workspaceRequest by mutableStateOf<MinkWorkspaceRequest?>(null)
     private var configuringWidgetId: Int? = null
     internal var widgetConfigurationResult by mutableStateOf<Pair<Int, Boolean>?>(null)
         private set
@@ -68,6 +72,8 @@ class MainActivity : FragmentActivity(), MagicHardwareHotkeyHost {
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+        homeRequest = MinkHomeRequestIntent.parse(intent)
+        workspaceRequest = MinkWorkspaceActivity.request(intent)
         handleLauncherIntent(intent)
         WindowCompat.setDecorFitsSystemWindows(window, false)
         allowContentBesideDisplayCutouts()
@@ -99,7 +105,12 @@ class MainActivity : FragmentActivity(), MagicHardwareHotkeyHost {
                 actions = actions,
                 requestHomeRole = ::requestHomeRole,
                 homeRequestToken = homeRequestToken,
-                setSettingsVisibleInRecents = ::setSettingsVisibleInRecents,
+                homeRequest = homeRequest,
+                isWorkspaceHost = isWorkspaceHost,
+                workspaceRequest = workspaceRequest,
+                openWorkspace = ::openWorkspace,
+                openHome = ::openHome,
+                closeWorkspace = ::finish,
             )
         }
     }
@@ -117,25 +128,15 @@ class MainActivity : FragmentActivity(), MagicHardwareHotkeyHost {
         }
     }
 
-    @Suppress("DEPRECATION")
-    private fun setSettingsVisibleInRecents(visible: Boolean) {
-        runCatching {
-            val currentTaskId = taskId
-            getSystemService(ActivityManager::class.java).appTasks
-                .firstOrNull { appTask -> appTask.taskInfo.id == currentTaskId }
-                ?.setExcludeFromRecents(!visible)
-        }
-    }
-
     override fun onStart() {
         super.onStart()
         todoFeatureRuntime.onForegrounded()
-        runCatching { appWidgetHost.startListening() }
+        if (!isWorkspaceHost) runCatching { appWidgetHost.startListening() }
         actions.refreshDynamicLauncherIcons()
     }
 
     override fun onStop() {
-        runCatching { appWidgetHost.stopListening() }
+        if (!isWorkspaceHost) runCatching { appWidgetHost.stopListening() }
         if (!isChangingConfigurations) todoFeatureRuntime.onBackgrounded()
         super.onStop()
     }
@@ -143,9 +144,15 @@ class MainActivity : FragmentActivity(), MagicHardwareHotkeyHost {
     override fun onNewIntent(intent: Intent) {
         super.onNewIntent(intent)
         setIntent(intent)
+        if (!isWorkspaceHost) {
+            MinkHomeRequestIntent.parse(intent)?.let { homeRequest = it }
+        }
+        if (isWorkspaceHost) {
+            MinkWorkspaceActivity.request(intent)?.let { workspaceRequest = it }
+        }
         handleLauncherIntent(intent)
         // Home requests reuse the launcher activity. This token resets transient Compose pages.
-        if (intent.action == Intent.ACTION_MAIN) homeRequestToken++
+        if (!isWorkspaceHost && intent.action == Intent.ACTION_MAIN) homeRequestToken++
     }
 
     private fun handleLauncherIntent(intent: Intent?) {
@@ -215,11 +222,34 @@ class MainActivity : FragmentActivity(), MagicHardwareHotkeyHost {
         }
     }
 
+    private fun openWorkspace(
+        screen: Screen,
+        settingsDestination: SettingsDestination,
+    ) {
+        if (isWorkspaceHost) {
+            workspaceRequest = MinkWorkspaceRequest(
+                token = android.os.SystemClock.elapsedRealtimeNanos(),
+                screen = screen,
+                settingsDestination = settingsDestination,
+            )
+        } else {
+            startActivity(MinkWorkspaceActivity.intent(this, screen, settingsDestination))
+        }
+    }
+
+    private fun openHome(request: MinkHomeRequest) {
+        if (isWorkspaceHost) {
+            startActivity(MinkHomeRequestIntent.create(this, request))
+        } else {
+            homeRequest = request
+        }
+    }
+
     companion object {
         private const val ACTION_OPEN_TODOS =
             "com.katoaapps.openminilaunch.action.OPEN_TODOS"
 
         internal fun openTodosIntent(context: Context): Intent =
-            Intent(context, MainActivity::class.java).setAction(ACTION_OPEN_TODOS)
+            MinkWorkspaceActivity.todosIntent(context)
     }
 }

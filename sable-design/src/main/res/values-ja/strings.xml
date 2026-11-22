@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Japanese. Draft from the project owner (2026-10-29), checked against the English, not yet reviewed by a fluent speaker. Keys and placeholders must match values/strings.xml (DesignTextTest checks). -->
+<resources>
+    <string name="sable_playback_error">再生エラー</string>
+    <string name="sable_pause">一時停止</string>
+    <string name="sable_play">再生</string>
+    <string name="sable_t_top_b_bottom_space">T 上端 · B 下端 · Space ページ送り · N/P 次/前</string>
+    <string name="sable_more_destinations">その他の移動先：%1$s</string>
+    <string name="sable_more_actions">その他の操作</string>
+    <string name="sable_more_actions_for">%1$s のその他の操作</string>
+    <string name="sable_jump_to">%1$s に移動</string>
+    <string name="sable_return_to">%1$s に戻る</string>
+    <string name="sable_undo">元に戻す</string>
+</resources>

@@ -6,7 +6,7 @@ import com.katoaapps.openminilaunch.model.LauncherTarget
 
 /** Combines regular apps with the app-published shortcuts saved for discovery surfaces. */
 internal fun launcherLibraryTargets(
-    apps: List<LauncherAppTarget>,
+    apps: List<LauncherTarget>,
     alwaysVisibleTargetKeys: List<String>,
     appShortcuts: List<LauncherShortcutTarget>,
     includeAppShortcuts: Boolean,

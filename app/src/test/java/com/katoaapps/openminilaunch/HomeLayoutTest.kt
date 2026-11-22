@@ -3,12 +3,25 @@ package com.katoaapps.openminilaunch
 import com.katoaapps.openminilaunch.ui.launcher.home.*
 import com.katoaapps.openminilaunch.model.*
 
+import androidx.compose.ui.unit.dp
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Test
+import java.io.File
 
 class HomeLayoutTest {
+    @Test
+    fun `OpenMink stays the default launcher activity before embedded games`() {
+        val manifest = File("src/main/AndroidManifest.xml").readText()
+        val launcherEntry = manifest.indexOf(".ui.launcher.LauncherEntryActivity")
+        val gamesConsole = manifest.indexOf("org.sableos.games.console.ConsoleActivity")
+
+        assertTrue(launcherEntry >= 0)
+        assertTrue(gamesConsole >= 0)
+        assertTrue(launcherEntry < gamesConsole)
+    }
+
     @Test fun todoPreviewStepsDownWithAvailableHeight() {
         assertEquals(1, visibleTodoItemsForHeight(220f))
         assertEquals(2, visibleTodoItemsForHeight(270f))
@@ -22,6 +35,45 @@ class HomeLayoutTest {
         assertEquals(68f, appGridSlotCellSizeDp(140f, 400f), .01f)
         assertEquals(59.5f, appGridSlotCellSizeDp(140f, 250f), .01f)
         assertEquals(88f, appGridSlotCellSizeDp(240f, 500f), .01f)
+    }
+
+    @Test fun homePanelRespectsSpaceReservedForMagicBox() {
+        assertEquals(320.dp, resolvedHomeFocusPanelHeight(320.dp, 420.dp, false))
+        assertEquals(420.dp, resolvedHomeFocusPanelHeight(500.dp, 420.dp, false))
+        assertEquals(500.dp, resolvedHomeFocusPanelHeight(500.dp, 420.dp, true))
+    }
+
+    @Test fun constrainedHomeLayoutsReserveSpaceForDockedMinkKeyboard() {
+        assertTrue(
+            shouldReserveDockedMinkKeyboard(
+                layoutReservesKeyboardSpace = true,
+                magicExpanded = false,
+                launcherKeyboardVisible = true,
+                keyboardInputEnabled = true,
+                autoOpenKeyboardOnHome = true,
+                useMinkKeyboard = true,
+            ),
+        )
+        assertFalse(
+            shouldReserveDockedMinkKeyboard(
+                layoutReservesKeyboardSpace = true,
+                magicExpanded = true,
+                launcherKeyboardVisible = true,
+                keyboardInputEnabled = true,
+                autoOpenKeyboardOnHome = true,
+                useMinkKeyboard = true,
+            ),
+        )
+        assertFalse(
+            shouldReserveDockedMinkKeyboard(
+                layoutReservesKeyboardSpace = false,
+                magicExpanded = false,
+                launcherKeyboardVisible = true,
+                keyboardInputEnabled = true,
+                autoOpenKeyboardOnHome = true,
+                useMinkKeyboard = true,
+            ),
+        )
     }
 
     @Test fun largeDisplayTodoTextUsesAvailableRoomAndFontScale() {
@@ -63,6 +115,14 @@ class HomeLayoutTest {
         assertEquals(R.string.shortcut_note, AppGridSlot.NOTE.labelRes)
         assertEquals(R.string.shortcut_files, AppGridSlot.FILES.labelRes)
         assertEquals(R.string.shortcut_extra, AppGridSlot.EXTRA.labelRes)
+    }
+
+    @Test fun freshHomeLayoutLeavesCreateSlotSeventh() {
+        assertEquals(6, freshHomeFolderSlots.size)
+        assertFalse(AppGridSlot.EXTRA in freshHomeFolderSlots)
+        assertEquals(AppGridSlot.EXTRA, freshHomeAppGridOrder[6])
+        assertEquals(AppGridSlot.DRAWER, freshHomeAppGridOrder[7])
+        assertEquals(AppGridSlot.entries.toSet(), freshHomeAppGridOrder.toSet())
     }
 
     @Test fun classicHomeWrapsAllSevenSlotsWithFixedDestinations() {

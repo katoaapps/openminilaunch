@@ -258,7 +258,6 @@
     <string name="home_folder_compose">Compose</string>
     <string name="home_folder_browse">Browse</string>
     <string name="home_folder_tools">Tools</string>
-    <string name="home_folder_fun">Fun</string>
 
     <!-- Display labels stored by stable enum values -->
     <string name="shortcut_note">Note</string>

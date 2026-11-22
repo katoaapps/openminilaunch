@@ -9,8 +9,8 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.stringResource
 import com.katoaapps.openminilaunch.R
 import com.katoaapps.openminilaunch.model.AppGridSlot
-import com.katoaapps.openminilaunch.model.LauncherAppTarget
 import com.katoaapps.openminilaunch.model.LauncherShortcutTarget
+import com.katoaapps.openminilaunch.model.LauncherTarget
 import com.katoaapps.openminilaunch.model.MAX_APP_FOLDER_TARGETS
 import com.katoaapps.openminilaunch.platform.DeviceActions
 import com.katoaapps.openminilaunch.ui.components.moveItem
@@ -22,7 +22,7 @@ internal fun AppGridSelectionDialog(
     slot: AppGridSlot,
     initialSelectionKeys: List<String>,
     actions: DeviceActions,
-    apps: List<LauncherAppTarget>,
+    apps: List<LauncherTarget>,
     shortcuts: List<LauncherShortcutTarget>,
     appsLoading: Boolean = false,
     shortcutsLoading: Boolean = false,

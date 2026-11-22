@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Portuguese (Brazil). Draft from the project owner (2026-10-29), checked against the English, not yet reviewed by a fluent speaker. Keys and placeholders must match values/strings.xml (DesignTextTest checks). -->
+<resources>
+    <string name="sable_playback_error">erro na reprodução</string>
+    <string name="sable_pause">Pausar</string>
+    <string name="sable_play">Reproduzir</string>
+    <string name="sable_t_top_b_bottom_space">T topo · B base · Space página · N/P próxima/anterior</string>
+    <string name="sable_more_destinations">Mais destinos: %1$s</string>
+    <string name="sable_more_actions">Mais ações</string>
+    <string name="sable_more_actions_for">Mais ações para %1$s</string>
+    <string name="sable_jump_to">Ir para %1$s</string>
+    <string name="sable_return_to">Voltar para %1$s</string>
+    <string name="sable_undo">Desfazer</string>
+</resources>

@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Simplified Chinese. Draft from the project owner (2026-10-29), checked against the English, not yet reviewed by a fluent speaker. Keys and placeholders must match values/strings.xml (DesignTextTest checks). -->
+<resources>
+    <string name="sable_playback_error">播放错误</string>
+    <string name="sable_pause">暂停</string>
+    <string name="sable_play">播放</string>
+    <string name="sable_t_top_b_bottom_space">T 顶部 · B 底部 · Space 翻页 · N/P 下一页/上一页</string>
+    <string name="sable_more_destinations">更多目标位置：%1$s</string>
+    <string name="sable_more_actions">更多操作</string>
+    <string name="sable_more_actions_for">针对 %1$s 的更多操作</string>
+    <string name="sable_jump_to">跳转到 %1$s</string>
+    <string name="sable_return_to">返回 %1$s</string>
+    <string name="sable_undo">撤销</string>
+</resources>

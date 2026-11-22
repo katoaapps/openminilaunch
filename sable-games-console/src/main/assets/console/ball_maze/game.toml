@@ -1,0 +1,10 @@
+# Sable Games Console game, new for the Q25 (owner request, 2026-11-13).
+id = "ball_maze"
+name = "Ball Maze"
+entry = "main.lua"
+version = "1.0"
+shelf = "motion"
+input = ["tilt", "keys"]
+best = "low"
+summary = "Steel balls in a maze under a clear lid: lean the phone to roll every ball into the middle. Round or square, plastic or wood, four sizes of maze."
+controls = "Tilt (or hold the arrows, W A S D) to roll. In the menu Up/Down and Left/Right choose, Space starts. N new maze, M menu."

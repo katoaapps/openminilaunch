@@ -32,7 +32,7 @@ internal fun SettingsPickerDialogs(
             slot = picker.slot,
             initialSelectionKeys = store.appGridSelectionKeys(picker.slot),
             actions = actions,
-            apps = installedApps.apps,
+            apps = installedApps.apps + actions.sableGameTargets(),
             shortcuts = installedShortcuts.shortcuts,
             appsLoading = !installedApps.loaded,
             shortcutsLoading = !installedShortcuts.loaded,

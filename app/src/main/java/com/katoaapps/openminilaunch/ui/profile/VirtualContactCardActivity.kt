@@ -2,6 +2,7 @@ package com.katoaapps.openminilaunch.ui.profile
 
 import android.content.Context
 import android.content.Intent
+import android.net.Uri
 import android.os.Bundle
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.setContent
@@ -33,7 +34,14 @@ class VirtualContactCardActivity : ComponentActivity() {
 internal fun openVirtualContactCard(context: Context) {
     context.startActivity(
         Intent(context, VirtualContactCardActivity::class.java).apply {
-            addFlags(Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_REORDER_TO_FRONT)
+            data = Uri.Builder()
+                .scheme("mink")
+                .authority(context.packageName)
+                .appendPath("contact-card")
+                .build()
+            addFlags(
+                Intent.FLAG_ACTIVITY_NEW_DOCUMENT or Intent.FLAG_ACTIVITY_RETAIN_IN_RECENTS,
+            )
         },
     )
 }

@@ -503,19 +503,19 @@
     <string name="backup_local_file">本地檔案</string>
     <string name="backup_restore_description">喺卸載一個 OpenMink 發行版之前儲存你嘅便攜式啟動器設定，然後喺安裝另一個發行版之後匯入。透過 Android 嘅文件挑選器，檔案會保留喺你選擇嘅任何地方。</string>
     <string name="export_backup">匯出備份</string>
-    <string name="export_backup_description">儲存設定、應用程式選擇、版面配置同埋待辦事項</string>
+    <string name="export_backup_description">儲存設定、應用程式選擇、版面配置同加密 MinkBoard 資料</string>
     <string name="import_backup">匯入備份</string>
     <string name="import_backup_description">睇返同埋還原之前匯出嘅檔案</string>
     <string name="backup_not_included_description">備份唔包括 Android 權限、系統角色、無障礙功能同通知存取權、小工具內容同應用程式專屬設定、壁紙圖片檔案、文件資料夾存取權同最近嘅查詢記錄。未安裝嘅應用程式或者圖示包可能會暫時用替代選項，直到重新安裝同揀選。</string>
     <string name="backup_exported">備份已經匯出</string>
     <string name="backup_export_failed">匯出唔到備份</string>
-    <string name="backup_import_failed">嗰個檔案唔係支援嘅 OpenMink 備份</string>
+    <string name="backup_import_failed">嗰個備份唔受支援、已損壞，或者使用咗另一個密碼短語</string>
     <string name="backup_imported">備份已恢復。請重新啟用 Android 權限，並檢查小工具設定位置或者文件資料夾。</string>
     <string name="backup_imported_widget_limit">備份已恢復。呢部裝置已經去到小工具上限，所以略過咗 %1$d 個小工具位置。</string>
     <string name="restore_widget_placeholders">加入小工具設定位置</string>
     <string name="restore_widget_placeholders_description">保留而家嘅小工具，並加入 %1$d 個位置，等你可以重新設定備份入面嘅小工具。</string>
     <string name="confirm_backup_import">還原呢個備份？</string>
-    <string name="confirm_backup_import_description">OpenMink %1$s · %2$s · %3$d 個待辦事項\n\n呢個會取代你而家嘅便攜式設定、啟動器版面配置、應用程式選擇同埋待辦事項。</string>
+    <string name="confirm_backup_import_description">OpenMink %1$s · %2$s · %3$d 個舊版待辦事項\n\n便攜式設定、啟動器版面配置同應用程式選擇會還原。待辦事項會匯入成 MinkBoard，而唔會刪除現有看板。</string>
     <string name="unknown_date">未知日期</string>
     <string name="unknown_version">未知版本</string>
     <string name="permissions">權限</string>
@@ -1108,5 +1108,4 @@
     <string name="home_folder_compose">創作</string>
     <string name="home_folder_browse">瀏覽</string>
     <string name="home_folder_tools">工具</string>
-    <string name="home_folder_fun">娛樂</string>
 </resources>

@@ -11,6 +11,8 @@ import com.katoaapps.openminilaunch.model.MAX_APP_FOLDER_NAME_LENGTH
 import com.katoaapps.openminilaunch.model.MAX_APP_FOLDER_TARGETS
 import com.katoaapps.openminilaunch.model.MAX_DRAWER_APPS
 import com.katoaapps.openminilaunch.model.configurableAppGridSlots
+import com.katoaapps.openminilaunch.model.freshHomeAppGridOrder
+import com.katoaapps.openminilaunch.model.freshHomeFolderSlots
 import com.katoaapps.openminilaunch.model.normalizedAppFolders
 import com.katoaapps.openminilaunch.model.normalizedAppGridAssignments
 import com.katoaapps.openminilaunch.model.normalizedAppGridOrder
@@ -67,7 +69,7 @@ internal class LauncherSelectionStore(private val persistence: LauncherStorePers
 
         val folders = mutableListOf<AppFolderConfig>()
         val assignments = linkedMapOf<AppGridSlot, AppGridAssignment>()
-        configurableAppGridSlots.zip(seeds).forEach { (slot, seed) ->
+        freshHomeFolderSlots.zip(seeds).forEach { (slot, seed) ->
             val targets = seed.selectionKeys
                 .map(String::trim)
                 .filter(String::isNotEmpty)
@@ -83,9 +85,13 @@ internal class LauncherSelectionStore(private val persistence: LauncherStorePers
             assignments[slot] = AppGridAssignment.Folder(folder.id)
         }
         replaceAppGridState(assignments, folders)
+        appGridOrder.clear()
+        appGridOrder.addAll(freshHomeAppGridOrder)
         confirmedAppGridChoices.clear()
-        confirmedAppGridChoices.addAll(assignments.keys)
+        // The create slot is deliberately empty, not awaiting a legacy default choice.
+        confirmedAppGridChoices.addAll(configurableAppGridSlots)
         saveSelections(freshHomeFoldersInitialized = true)
+        persistence.saveAppGridOrder(appGridOrder)
         return assignments.isNotEmpty()
     }
 

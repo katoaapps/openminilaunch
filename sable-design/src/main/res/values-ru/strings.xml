@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Russian. Draft from the project owner (2026-10-29), checked against the English, not yet reviewed by a fluent speaker. Keys and placeholders must match values/strings.xml (DesignTextTest checks). -->
+<resources>
+    <string name="sable_playback_error">ошибка воспроизведения</string>
+    <string name="sable_pause">Пауза</string>
+    <string name="sable_play">Воспроизвести</string>
+    <string name="sable_t_top_b_bottom_space">T вверх · B вниз · Space страница · N/P следующая/предыдущая</string>
+    <string name="sable_more_destinations">Другие места назначения: %1$s</string>
+    <string name="sable_more_actions">Дополнительные действия</string>
+    <string name="sable_more_actions_for">Дополнительные действия для %1$s</string>
+    <string name="sable_jump_to">Перейти к %1$s</string>
+    <string name="sable_return_to">Вернуться к %1$s</string>
+    <string name="sable_undo">Отменить</string>
+</resources>

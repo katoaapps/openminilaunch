@@ -340,7 +340,7 @@ internal fun MagicBoxContent(
             emptyList()
         } else if (route == MagicBoxRoute.APP && searchTerm.isNotBlank()) {
             val targets = launcherLibraryTargets(
-                apps = actions.installedApps(),
+                apps = actions.selectableApps(),
                 alwaysVisibleTargetKeys = alwaysVisibleTargetKeys,
                 appShortcuts = actions.installedShortcuts(),
                 includeAppShortcuts = store.includeAppShortcutsInDiscovery,

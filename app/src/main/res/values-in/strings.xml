@@ -503,19 +503,19 @@
     <string name="backup_local_file">Berkas lokal</string>
     <string name="backup_restore_description">Simpan pengaturan peluncur portabel Anda sebelum menghapus instalasi salah satu distribusi OpenMink, lalu impor setelah menginstal yang lain. File tetap berada di mana pun Anda memilih melalui pemilih dokumen Android.</string>
     <string name="export_backup">Ekspor cadangan</string>
-    <string name="export_backup_description">Simpan pengaturan, pilihan aplikasi, tata letak, dan tugas</string>
+    <string name="export_backup_description">Simpan setelan, pilihan aplikasi, tata letak, dan data MinkBoard terenkripsi</string>
     <string name="import_backup">Impor cadangan</string>
     <string name="import_backup_description">Tinjau dan pulihkan file yang diekspor sebelumnya</string>
     <string name="backup_not_included_description">Izin Android, peran sistem, aksesibilitas dan akses notifikasi, isi widget serta pengaturan khusus aplikasinya, file gambar wallpaper, akses folder dokumen, dan riwayat kueri terkini tidak disertakan. Pilihan aplikasi atau paket ikon yang tidak tersedia mungkin memakai alternatif hingga aplikasi tersebut diinstal dan dipilih kembali.</string>
     <string name="backup_exported">Cadangan diekspor</string>
     <string name="backup_export_failed">Tidak dapat mengekspor cadangan</string>
-    <string name="backup_import_failed">File tersebut bukan cadangan OpenMink yang didukung</string>
+    <string name="backup_import_failed">Cadangan tidak didukung, rusak, atau menggunakan frasa sandi lain</string>
     <string name="backup_imported">Cadangan dipulihkan. Aktifkan kembali izin Android dan tinjau ruang penyiapan widget atau folder dokumen.</string>
     <string name="backup_imported_widget_limit">Cadangan dipulihkan. %1$d ruang widget dilewati karena perangkat ini sudah mencapai batas.</string>
     <string name="restore_widget_placeholders">Tambahkan ruang penyiapan widget</string>
     <string name="restore_widget_placeholders_description">Pertahankan widget saat ini dan tambahkan %1$d ruang untuk menyiapkan kembali widget dari cadangan ini.</string>
     <string name="confirm_backup_import">Pulihkan cadangan ini?</string>
-    <string name="confirm_backup_import_description">OpenMink %1$s · %2$s · %3$d tugas\n\nIni menggantikan pengaturan portabel Anda saat ini, tata letak peluncur, pilihan aplikasi, dan tugas.</string>
+    <string name="confirm_backup_import_description">OpenMink %1$s · %2$s · %3$d tugas lama\n\nSetelan portabel, tata letak peluncur, dan pilihan aplikasi dipulihkan. Tugas diimpor sebagai MinkBoard tanpa menghapus papan yang ada.</string>
     <string name="unknown_date">Tanggal tidak diketahui</string>
     <string name="unknown_version">versi yang tidak diketahui</string>
     <string name="permissions">Izin</string>
@@ -1108,5 +1108,4 @@
     <string name="home_folder_compose">Buat</string>
     <string name="home_folder_browse">Jelajah</string>
     <string name="home_folder_tools">Alat</string>
-    <string name="home_folder_fun">Seru</string>
 </resources>

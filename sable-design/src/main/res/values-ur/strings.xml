@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Urdu. Draft from the project owner (2026-10-29), checked against the English, not yet reviewed by a fluent speaker. Keys and placeholders must match values/strings.xml (DesignTextTest checks). -->
+<resources>
+    <string name="sable_playback_error">چلانے میں خرابی</string>
+    <string name="sable_pause">وقفہ دیں</string>
+    <string name="sable_play">چلائیں</string>
+    <string name="sable_t_top_b_bottom_space">T اوپر · B نیچے · Space صفحہ · N/P اگلا/پچھلا</string>
+    <string name="sable_more_destinations">مزید منزلیں: %1$s</string>
+    <string name="sable_more_actions">مزید اقدامات</string>
+    <string name="sable_more_actions_for">%1$s کے لیے مزید اقدامات</string>
+    <string name="sable_jump_to">%1$s پر جائیں</string>
+    <string name="sable_return_to">%1$s پر واپس جائیں</string>
+    <string name="sable_undo">واپس کریں</string>
+</resources>

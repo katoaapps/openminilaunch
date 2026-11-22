@@ -41,6 +41,7 @@ import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.graphics.luminance
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.semantics.clearAndSetSemantics
 import androidx.compose.ui.semantics.contentDescription
 import androidx.compose.ui.unit.Dp
@@ -125,6 +126,14 @@ internal fun LauncherTargetIcon(
     val store = LauncherStore.get(context)
     val appearance = store.iconAppearance
     if (target is LauncherActionTarget) {
+        actions.sableGameEntry(target.selectionKey)?.let { game ->
+            Image(
+                painter = painterResource(game.iconRes),
+                contentDescription = contentDescription,
+                modifier = Modifier.size(size),
+            )
+            return
+        }
         val action = QuickAppBuiltIn.fromSelectionKey(target.selectionKey)
         val imageVector = action?.appGridSlot?.defaultIcon()
             ?: if (action == QuickAppBuiltIn.TODOS) Icons.Default.Checklist else Icons.Default.Apps

@@ -1,0 +1,10 @@
+# Sable Games Console game, new for the Q25 (owner request, 2026-11-13).
+id = "tilt_racer"
+name = "Tilt Racer"
+entry = "main.lua"
+version = "1.0"
+shelf = "motion"
+input = ["tilt", "keys"]
+best = "high"
+summary = "Steer by tilting the phone and keep clear of the traffic. It gets faster the further you go."
+controls = "Tilt or hold Left/Right (the trackpad, A and D) to steer. Space boosts."

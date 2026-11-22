@@ -1,8 +1,8 @@
 <?xml version='1.0' encoding='utf-8'?>
 <resources>
     <string name="app_name">MinkLauncher OpenSource</string>
-    <string name="show_mink_day_tab">Mostrar a guia Dia do Mink</string>
-    <string name="show_mink_day_tab_description">Mantenha o Dia do Mink nos gestos da tela inicial. Desative para abri-lo apenas pelo botão da tela inicial ou pelas Configurações.</string>
+    <string name="show_mink_day_tab">Mostrar a guia Mink’s Day</string>
+    <string name="show_mink_day_tab_description">Mantenha o Mink’s Day nos gestos da tela inicial. Desative para abri-lo apenas pelo botão da tela inicial ou pelas Configurações.</string>
     <string name="choose_icon">Escolher ícone</string>
     <string name="choose_app_icon">Escolher um ícone para o app</string>
     <string name="use_default_app_icon">Usar ícone padrão</string>
@@ -503,19 +503,19 @@
     <string name="backup_local_file">Arquivo local</string>
     <string name="backup_restore_description">Salve a configuração do seu iniciador portátil antes de desinstalar uma distribuição OpenMink e importe-a após instalar outra. O arquivo fica onde você escolher por meio do seletor de documentos do Android.</string>
     <string name="export_backup">Exportar backup</string>
-    <string name="export_backup_description">Salve configurações, opções de aplicativos, layout e tarefas</string>
+    <string name="export_backup_description">Salve configurações, opções de apps, layout e dados criptografados do MinkBoard</string>
     <string name="import_backup">Importar backup</string>
     <string name="import_backup_description">Revise e restaure um arquivo exportado anteriormente</string>
     <string name="backup_not_included_description">Permissões do Android, funções do sistema, acessibilidade e acesso a notificações, conteúdo e configurações específicas dos widgets, arquivos de imagem do papel de parede, acesso a pastas de documentos e histórico de consultas recentes não estão incluídos. As opções de apps ou pacotes de ícones indisponíveis podem usar alternativas até que esses apps sejam instalados e selecionados novamente.</string>
     <string name="backup_exported">Backup exportado</string>
     <string name="backup_export_failed">Não foi possível exportar o backup</string>
-    <string name="backup_import_failed">Esse arquivo não é um backup OpenMink compatível</string>
+    <string name="backup_import_failed">O backup não é compatível, está danificado ou usa outra senha</string>
     <string name="backup_imported">Backup restaurado. Reative as permissões do Android e revise os espaços de configuração de widgets ou as pastas de documentos.</string>
     <string name="backup_imported_widget_limit">Backup restaurado. %1$d espaços de widgets foram ignorados porque este dispositivo já atingiu o limite.</string>
     <string name="restore_widget_placeholders">Adicionar espaços de configuração de widgets</string>
     <string name="restore_widget_placeholders_description">Mantenha seus widgets atuais e adicione %1$d espaços onde os widgets deste backup poderão ser configurados novamente.</string>
     <string name="confirm_backup_import">Restaurar este backup?</string>
-    <string name="confirm_backup_import_description">OpenMink %1$s · %2$s · %3$d tarefas\n\nIsso substitui suas configurações portáteis atuais, layout do iniciador, opções de aplicativos e tarefas.</string>
+    <string name="confirm_backup_import_description">OpenMink %1$s · %2$s · %3$d tarefas antigas\n\nAs configurações portáteis, o layout do iniciador e as opções de apps são restaurados. As tarefas são importadas como um MinkBoard sem excluir os quadros existentes.</string>
     <string name="unknown_date">Data desconhecida</string>
     <string name="unknown_version">versão desconhecida</string>
     <string name="permissions">Permissões</string>
@@ -1108,5 +1108,4 @@
     <string name="home_folder_compose">Criar</string>
     <string name="home_folder_browse">Explorar</string>
     <string name="home_folder_tools">Ferramentas</string>
-    <string name="home_folder_fun">Diversão</string>
 </resources>

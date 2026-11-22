@@ -1,0 +1,10 @@
+# Sable Games Console game, new for the Q25 (owner request, 2026-11-13).
+id = "tilt_circuit"
+name = "Tilt Circuit"
+entry = "main.lua"
+version = "1.0"
+shelf = "motion"
+input = ["tilt", "keys"]
+best = "low"
+summary = "Three laps of a twisting circuit against two rival cars. The library keeps your fastest race, in seconds."
+controls = "Tilt or hold Left/Right (the trackpad, A and D) to steer; lean back or hold Down (S) to brake. C changes your car's colour."

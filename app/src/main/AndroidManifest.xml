@@ -157,10 +157,10 @@
             android:theme="@style/Theme.MiniLaunch.Assistant" />
         <activity
             android:name=".ui.magic.AssistantActivity"
-            android:excludeFromRecents="true"
+            android:excludeFromRecents="false"
             android:exported="true"
-            android:launchMode="singleTop"
-            android:taskAffinity=""
+            android:launchMode="singleTask"
+            android:taskAffinity="${applicationId}.assistant"
             android:theme="@style/Theme.MiniLaunch.Assistant"
             android:windowSoftInputMode="adjustResize|stateAlwaysVisible">
             <intent-filter>
@@ -175,38 +175,77 @@
             android:targetActivity=".ui.magic.AssistantActivity" />
         <activity
             android:name=".ui.apps.AllAppsActivity"
-            android:excludeFromRecents="true"
+            android:documentLaunchMode="intoExisting"
+            android:excludeFromRecents="false"
             android:exported="false"
-            android:launchMode="singleTop"
+            android:launchMode="standard"
+            android:taskAffinity="${applicationId}.workspace"
             android:theme="@style/Theme.MiniLaunch" />
         <activity
             android:name=".ui.apps.PrivateAppsActivity"
-            android:excludeFromRecents="true"
+            android:documentLaunchMode="intoExisting"
+            android:excludeFromRecents="false"
             android:exported="false"
-            android:launchMode="singleTop"
+            android:launchMode="standard"
+            android:taskAffinity="${applicationId}.workspace"
             android:theme="@style/Theme.MiniLaunch" />
         <activity
             android:name=".ui.apps.work.WorkAppsActivity"
-            android:excludeFromRecents="true"
+            android:documentLaunchMode="intoExisting"
+            android:excludeFromRecents="false"
             android:exported="false"
-            android:launchMode="singleTop"
+            android:launchMode="standard"
+            android:taskAffinity="${applicationId}.workspace"
             android:theme="@style/Theme.MiniLaunch" />
         <activity
             android:name=".ui.minkpad.MinkPadActivity"
+            android:documentLaunchMode="intoExisting"
             android:excludeFromRecents="false"
             android:exported="false"
             android:label="@string/minkpad_name"
-            android:launchMode="singleTop"
+            android:launchMode="standard"
             android:resizeableActivity="true"
             android:taskAffinity="${applicationId}.minkpad"
             android:theme="@style/Theme.MiniLaunch"
             android:windowSoftInputMode="adjustResize" />
         <activity
             android:name=".ui.minkspace.media.MediaLabActivity"
+            android:documentLaunchMode="intoExisting"
             android:excludeFromRecents="false"
             android:exported="false"
-            android:launchMode="singleTop"
+            android:launchMode="standard"
+            android:taskAffinity="${applicationId}.workspace"
             android:theme="@style/Theme.MiniLaunch" />
+        <activity
+            android:name=".ui.launcher.MinkWorkspaceActivity"
+            android:configChanges="orientation|screenLayout|screenSize|smallestScreenSize"
+            android:documentLaunchMode="intoExisting"
+            android:excludeFromRecents="false"
+            android:exported="false"
+            android:launchMode="standard"
+            android:taskAffinity="${applicationId}.workspace"
+            android:theme="@style/Theme.MiniLaunch"
+            android:windowSoftInputMode="adjustResize" />
+        <!-- Keep the product entry before embedded launcher-capable game activities. Android Studio
+             uses the first MAIN/LAUNCHER component when its run target is "Default Activity". -->
+        <activity
+            android:name=".ui.launcher.LauncherEntryActivity"
+            android:excludeFromRecents="true"
+            android:exported="true"
+            android:theme="@style/Theme.MiniLaunch.Home">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+        <!-- Each top-level embedded game has a distinct task activity in sable-games-runtime.
+             Console is its own host because its games share one console/library surface. -->
+        <activity
+            android:name="org.sableos.games.console.ConsoleActivity"
+            android:documentLaunchMode="intoExisting"
+            android:excludeFromRecents="false"
+            android:launchMode="standard"
+            tools:replace="android:launchMode" />
         <activity
             android:name=".ui.shortcuts.PinShortcutActivity"
             android:excludeFromRecents="true"
@@ -228,22 +267,13 @@
         </receiver>
         <activity
             android:name=".ui.profile.VirtualContactCardActivity"
+            android:documentLaunchMode="intoExisting"
             android:excludeFromRecents="false"
             android:exported="false"
             android:label="@string/profile"
-            android:launchMode="singleTop"
+            android:launchMode="standard"
             android:taskAffinity="${applicationId}.vcard"
             android:windowSoftInputMode="adjustResize" />
-        <activity
-            android:name=".ui.launcher.LauncherEntryActivity"
-            android:excludeFromRecents="true"
-            android:exported="true"
-            android:theme="@style/Theme.MiniLaunch.Home">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN" />
-                <category android:name="android.intent.category.LAUNCHER" />
-            </intent-filter>
-        </activity>
         <activity
             android:name=".ui.launcher.MainActivity"
             android:clearTaskOnLaunch="true"

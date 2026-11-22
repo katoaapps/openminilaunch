@@ -8,7 +8,7 @@ import java.text.Collator
 import java.util.Locale
 import kotlin.math.ceil
 
-/** The seven purpose-based folders shared by fresh Mink and Classic Home layouts. */
+/** The six purpose-based folders shared by fresh Mink and Classic Home layouts. */
 internal enum class HomeFolderPurpose(@param:StringRes val titleRes: Int) {
     CONNECT(R.string.home_folder_connect),
     TASKS(R.string.home_folder_tasks),
@@ -16,7 +16,6 @@ internal enum class HomeFolderPurpose(@param:StringRes val titleRes: Int) {
     COMPOSE(R.string.home_folder_compose),
     BROWSE(R.string.home_folder_browse),
     TOOLS(R.string.home_folder_tools),
-    FUN(R.string.home_folder_fun),
 }
 
 internal data class FreshHomeFolderCandidate(
@@ -79,7 +78,7 @@ internal fun freshHomeFolderSeeds(
     }
 }
 
-internal fun purposeForApplicationCategory(category: Int): HomeFolderPurpose = when (category) {
+internal fun purposeForApplicationCategory(category: Int): HomeFolderPurpose? = when (category) {
     ApplicationInfo.CATEGORY_SOCIAL -> HomeFolderPurpose.CONNECT
     ApplicationInfo.CATEGORY_PRODUCTIVITY -> HomeFolderPurpose.TASKS
     ApplicationInfo.CATEGORY_AUDIO,
@@ -88,6 +87,8 @@ internal fun purposeForApplicationCategory(category: Int): HomeFolderPurpose = w
     -> HomeFolderPurpose.MEDIA
     ApplicationInfo.CATEGORY_IMAGE -> HomeFolderPurpose.COMPOSE
     ApplicationInfo.CATEGORY_MAPS -> HomeFolderPurpose.BROWSE
-    ApplicationInfo.CATEGORY_GAME -> HomeFolderPurpose.FUN
+    // The final Home slot stays unassigned. Games remain discoverable through search, See All,
+    // and manual folder selection instead of creating a dedicated Fun folder on first launch.
+    ApplicationInfo.CATEGORY_GAME -> null
     else -> HomeFolderPurpose.TOOLS
 }

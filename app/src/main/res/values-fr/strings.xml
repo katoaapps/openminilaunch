@@ -1,8 +1,8 @@
 <?xml version='1.0' encoding='utf-8'?>
 <resources>
     <string name="app_name">MinkLauncher OpenSource</string>
-    <string name="show_mink_day_tab">Afficher l’onglet Journée de Mink</string>
-    <string name="show_mink_day_tab_description">Conservez Journée de Mink dans les balayages d’accueil. Désactivez cette option pour l’ouvrir uniquement depuis son bouton d’accueil ou les paramètres.</string>
+    <string name="show_mink_day_tab">Afficher l’onglet Mink’s Day</string>
+    <string name="show_mink_day_tab_description">Conservez Mink’s Day dans les balayages d’accueil. Désactivez cette option pour l’ouvrir uniquement depuis son bouton d’accueil ou les paramètres.</string>
     <string name="choose_icon">Choisir l’icône</string>
     <string name="choose_app_icon">Choisir une icône d’application</string>
     <string name="use_default_app_icon">Utiliser l’icône par défaut</string>
@@ -503,19 +503,19 @@
     <string name="backup_local_file">Fichier local</string>
     <string name="backup_restore_description">Enregistrez la configuration de votre lanceur portable avant de désinstaller une distribution OpenMink, puis importez-la après en avoir installé une autre. Le fichier reste là où vous le souhaitez grâce au sélecteur de documents du Android.</string>
     <string name="export_backup">Exporter la sauvegarde</string>
-    <string name="export_backup_description">Enregistrez les paramètres, les choix d\'applications, la mise en page et les tâches</string>
+    <string name="export_backup_description">Enregistrez les paramètres, les applications, la mise en page et les données MinkBoard chiffrées</string>
     <string name="import_backup">Importer une sauvegarde</string>
     <string name="import_backup_description">Examiner et restaurer un fichier précédemment exporté</string>
     <string name="backup_not_included_description">Les autorisations Android, les rôles système, l\'accessibilité et l\'accès aux notifications, le contenu et les réglages propres aux widgets, les fichiers image de fond d\'écran, l\'accès aux dossiers de documents et l\'historique des requêtes récentes ne sont pas inclus. Les choix d\'applications ou de packs d\'icônes indisponibles peuvent utiliser une solution de secours jusqu\'à leur réinstallation et leur nouvelle sélection.</string>
     <string name="backup_exported">Sauvegarde exportée</string>
     <string name="backup_export_failed">Impossible d\'exporter la sauvegarde</string>
-    <string name="backup_import_failed">Ce fichier n\'est pas une sauvegarde OpenMink prise en charge</string>
+    <string name="backup_import_failed">Cette sauvegarde n’est pas prise en charge, est endommagée ou utilise une autre phrase secrète</string>
     <string name="backup_imported">Sauvegarde restaurée. Réactivez les autorisations Android et vérifiez les emplacements de configuration des widgets ou les dossiers de documents.</string>
     <string name="backup_imported_widget_limit">Sauvegarde restaurée. %1$d emplacements de widgets ont été ignorés, car cet appareil a déjà atteint la limite.</string>
     <string name="restore_widget_placeholders">Ajouter des emplacements de configuration de widgets</string>
     <string name="restore_widget_placeholders_description">Conservez vos widgets actuels et ajoutez %1$d emplacements où les widgets de cette sauvegarde pourront être configurés à nouveau.</string>
     <string name="confirm_backup_import">Restaurer cette sauvegarde ?</string>
-    <string name="confirm_backup_import_description">OpenMink %1$s · %2$s · %3$d tâches à faire\n\nCela remplace vos paramètres portables actuels, la disposition du lanceur, les choix d\'applications et les tâches à faire.</string>
+    <string name="confirm_backup_import_description">OpenMink %1$s · %2$s · %3$d anciennes tâches\n\nLes paramètres portables, la disposition du lanceur et les applications sont restaurés. Les tâches sont importées dans un MinkBoard sans supprimer les tableaux existants.</string>
     <string name="unknown_date">Date inconnue</string>
     <string name="unknown_version">version inconnue</string>
     <string name="permissions">Autorisations</string>
@@ -1108,5 +1108,4 @@
     <string name="home_folder_compose">Créer</string>
     <string name="home_folder_browse">Parcourir</string>
     <string name="home_folder_tools">Outils</string>
-    <string name="home_folder_fun">Loisirs</string>
 </resources>

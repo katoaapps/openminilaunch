@@ -18,6 +18,14 @@ internal const val MAX_DRAWER_APPS = 8
 
 val configurableAppGridSlots: List<AppGridSlot> = AppGridSlot.entries.filterNot { it == AppGridSlot.DRAWER }
 
+/** Fresh layouts reserve the create slot instead of populating it with a purpose folder. */
+internal val freshHomeFolderSlots: List<AppGridSlot> =
+    configurableAppGridSlots.filterNot { it == AppGridSlot.EXTRA }
+
+/** Six purpose folders, then the create slot, with Quick Drawer fixed in the eighth position. */
+internal val freshHomeAppGridOrder: List<AppGridSlot> =
+    freshHomeFolderSlots + AppGridSlot.EXTRA + AppGridSlot.DRAWER
+
 /** Keeps the Quick Drawer as the fixed eighth Home slot while preserving app-slot order. */
 internal fun normalizedAppGridOrder(order: Iterable<AppGridSlot>): List<AppGridSlot> = buildList {
     order.forEach { slot ->

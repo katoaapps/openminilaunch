@@ -28,6 +28,7 @@ import com.katoaapps.openminilaunch.features.messaging.MessagingProviderAvailabi
 import com.katoaapps.openminilaunch.features.messaging.ConversationShortcutDraftResult
 import com.katoaapps.openminilaunch.features.messaging.PreferredMessageDraftResult
 import com.katoaapps.openminilaunch.features.minkpad.MinkPadLauncherEntry
+import com.katoaapps.openminilaunch.features.games.SableGameLauncherCatalog
 import com.katoaapps.openminilaunch.features.quickdrawer.QuickAppBuiltIn
 import com.katoaapps.openminilaunch.features.quickdrawer.QuickAppBuiltInCatalog
 import com.katoaapps.openminilaunch.features.updates.GITHUB_LATEST_APK_URL
@@ -42,6 +43,7 @@ import com.katoaapps.openminilaunch.ui.minkspace.media.MediaLabActivity
 import com.katoaapps.openminilaunch.todoFeatureRuntime
 
 import android.Manifest
+import android.app.Activity
 import android.app.ActivityOptions
 import android.provider.AlarmClock
 import android.content.Context
@@ -76,6 +78,7 @@ class DeviceActions(private val context: Context) {
     private val privateSpaceRepository = PrivateSpaceRepository.get(context)
     private val workProfileRepository = WorkProfileRepository.get(context)
     private val quickAppBuiltIns = QuickAppBuiltInCatalog(context)
+    private val sableGames = SableGameLauncherCatalog(context)
     val launcherAppsRevision: StateFlow<Long> = launcherAppRepository.revision
     val launcherShortcutsRevision: StateFlow<Long> = launcherShortcutRepository.revision
     internal val launcherPackageRemovals: SharedFlow<LauncherPackageRemoval> =
@@ -158,6 +161,9 @@ class DeviceActions(private val context: Context) {
 
     fun installedApps(): List<LauncherAppTarget> = launcherAppRepository.targets()
 
+    /** Apps plus in-process game destinations that may occupy launcher-owned surfaces. */
+    internal fun selectableApps(): List<LauncherTarget> = installedApps() + sableGames.targets()
+
     fun installedShortcuts(): List<LauncherShortcutTarget> = launcherShortcutRepository.targets()
 
     fun recentConversationShortcuts(
@@ -229,15 +235,21 @@ class DeviceActions(private val context: Context) {
 
     fun resolveLauncherSelection(selectionKey: String): LauncherTarget =
         quickAppBuiltIns.resolve(selectionKey)
+            ?: sableGames.resolve(selectionKey)
             ?: launcherShortcutRepository.resolve(selectionKey)
             ?: legacyShortcutRepository.resolve(selectionKey)
             ?: launcherAppRepository.resolve(selectionKey)
 
     fun normalizedLauncherSelectionKey(selectionKey: String): String? =
         quickAppBuiltIns.resolve(selectionKey)?.selectionKey
+            ?: sableGames.resolve(selectionKey)?.selectionKey
             ?: launcherAppRepository.normalizedSelectionKey(selectionKey)
 
     internal fun quickAppBuiltInTargets(): List<LauncherActionTarget> = quickAppBuiltIns.targets()
+
+    internal fun sableGameTargets(): List<LauncherActionTarget> = sableGames.targets()
+
+    internal fun sableGameEntry(selectionKey: String) = sableGames.entry(selectionKey)
 
     internal fun defaultQuickAppSelectionKeys(): List<String> =
         QuickAppBuiltIn.defaultOrder.map(QuickAppBuiltIn::selectionKey) + MinkPadLauncherEntry.KEY
@@ -320,6 +332,7 @@ class DeviceActions(private val context: Context) {
         launchLauncherTarget(resolveLauncherSelection(selectionKey))
 
     private fun launchQuickAppBuiltIn(target: LauncherActionTarget): Boolean {
+        if (sableGames.launch(target)) return true
         val action = QuickAppBuiltIn.fromSelectionKey(target.selectionKey) ?: return false
         if (action == QuickAppBuiltIn.CALENDAR) {
             return start(
@@ -381,13 +394,28 @@ class DeviceActions(private val context: Context) {
 
     fun openSystemSettings() = start(Intent(Settings.ACTION_SETTINGS))
 
-    fun openAllApps() = start(Intent(context, AllAppsActivity::class.java))
+    fun openAllApps() = start(workspaceIntent(AllAppsActivity::class.java))
 
-    fun openPrivateApps() = start(Intent(context, PrivateAppsActivity::class.java))
+    fun openPrivateApps() = start(workspaceIntent(PrivateAppsActivity::class.java))
 
-    fun openWorkApps() = start(Intent(context, WorkAppsActivity::class.java))
+    fun openWorkApps() = start(workspaceIntent(WorkAppsActivity::class.java))
 
-    fun openMediaLab() = start(Intent(context, MediaLabActivity::class.java))
+    fun openMediaLab() = start(workspaceIntent(MediaLabActivity::class.java))
+
+    private fun workspaceIntent(activityClass: Class<out Activity>): Intent =
+        Intent(context, activityClass)
+            .setData(
+                Uri.Builder()
+                    .scheme("mink")
+                    .authority(context.packageName)
+                    .appendPath("workspace")
+                    .appendPath(activityClass.simpleName.lowercase())
+                    .build(),
+            )
+            .addFlags(
+                Intent.FLAG_ACTIVITY_NEW_DOCUMENT or
+                    Intent.FLAG_ACTIVITY_RETAIN_IN_RECENTS,
+            )
 
     internal fun workProfileSnapshot(): WorkProfileSnapshot = workProfileRepository.snapshot()
 
@@ -403,7 +431,7 @@ class DeviceActions(private val context: Context) {
                 ?.isAvailable == true
 
     fun openAllAppsFromBottom() = startWithAnimation(
-        intent = Intent(context, AllAppsActivity::class.java),
+        intent = workspaceIntent(AllAppsActivity::class.java),
         options = ActivityOptions.makeCustomAnimation(
             context,
             R.anim.slide_in_from_bottom,

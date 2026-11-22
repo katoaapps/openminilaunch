@@ -1,0 +1,14 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!-- Arabic. Draft from the project owner (2026-10-29), checked against the English, not yet reviewed by a fluent speaker. Keys and placeholders must match values/strings.xml (DesignTextTest checks). -->
+<resources>
+    <string name="sable_playback_error">خطأ في التشغيل</string>
+    <string name="sable_pause">إيقاف مؤقت</string>
+    <string name="sable_play">تشغيل</string>
+    <string name="sable_t_top_b_bottom_space">T الأعلى · B الأسفل · Space الصفحة · N/P التالي/السابق</string>
+    <string name="sable_more_destinations">وجهات أخرى: %1$s</string>
+    <string name="sable_more_actions">إجراءات أخرى</string>
+    <string name="sable_more_actions_for">إجراءات أخرى لـ %1$s</string>
+    <string name="sable_jump_to">الانتقال إلى %1$s</string>
+    <string name="sable_return_to">العودة إلى %1$s</string>
+    <string name="sable_undo">تراجع</string>
+</resources>

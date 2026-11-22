@@ -503,19 +503,19 @@
     <string name="backup_local_file">ローカルファイル</string>
     <string name="backup_restore_description">OpenMink ディストリビューションをアンインストールする前にポータブル ランチャーのセットアップを保存し、別のディストリビューションをインストールした後にそれをインポートします。ファイルは、Android のドキュメント ピッカーで選択した場所に残ります。</string>
     <string name="export_backup">バックアップのエクスポート</string>
-    <string name="export_backup_description">設定、アプリの選択、レイアウト、To-Do を保存します</string>
+    <string name="export_backup_description">設定、アプリの選択、レイアウト、暗号化された MinkBoard データを保存します</string>
     <string name="import_backup">バックアップのインポート</string>
     <string name="import_backup_description">以前にエクスポートしたファイルを確認して復元する</string>
     <string name="backup_not_included_description">Android の権限、システムロール、ユーザー補助と通知へのアクセス、ウィジェットの内容とアプリ固有の設定、壁紙画像ファイル、ドキュメントフォルダーへのアクセス、最近の検索履歴は含まれません。利用できないアプリやアイコンパックは、再インストールして選択し直すまで代替設定になる場合があります。</string>
     <string name="backup_exported">バックアップがエクスポートされました</string>
     <string name="backup_export_failed">バックアップをエクスポートできませんでした</string>
-    <string name="backup_import_failed">そのファイルはサポートされている OpenMink バックアップではありません</string>
+    <string name="backup_import_failed">そのバックアップは未対応か破損しているか、別のパスフレーズを使用しています</string>
     <string name="backup_imported">バックアップを復元しました。Android の権限を再度有効にし、ウィジェット設定用の場所やドキュメントフォルダーを確認してください。</string>
     <string name="backup_imported_widget_limit">バックアップを復元しました。この端末は上限に達しているため、%1$d 個のウィジェット用の場所をスキップしました。</string>
     <string name="restore_widget_placeholders">ウィジェット設定用の場所を追加</string>
     <string name="restore_widget_placeholders_description">現在のウィジェットを残したまま、このバックアップのウィジェットを再設定できる場所を %1$d 個追加します。</string>
     <string name="confirm_backup_import">このバックアップを復元しますか?</string>
-    <string name="confirm_backup_import_description">OpenMink %1$s · %2$s · %3$d 件の To-Do\n\n現在のポータブル設定、ランチャーのレイアウト、アプリの選択、To-Do を置き換えます。</string>
+    <string name="confirm_backup_import_description">OpenMink %1$s · %2$s · 従来の To-Do %3$d 件\n\nポータブル設定、ランチャーのレイアウト、アプリの選択を復元します。To-Do は既存のボードを削除せずに MinkBoard として読み込まれます。</string>
     <string name="unknown_date">日付不明</string>
     <string name="unknown_version">不明なバージョン</string>
     <string name="permissions">権限</string>
@@ -1048,7 +1048,7 @@
     <string name="onboarding_assistant_sms_description">「Mink Assistant で自動送信」をオンにすると、相手を選び、メッセージを書いてアクションを押した後に、Mink が通信事業者の SMS を一度だけ送信できます。ほかのメッセージアプリでは、引き続き準備済みの下書きが開きます。</string>
     <string name="onboarding_assistant_quick_apps_title">個人アシスタントをすぐそばに</string>
     <string name="onboarding_assistant_quick_apps_description">Gemini、ChatGPT、Bixby、または別のアシスタントアプリやショートカットをクイックアプリに追加できます。Mink Assistant を開くたびに、ワンタップで呼び出せます。</string>
-    <string name="onboarding_contacts_setup_description">連絡先へのアクセスを許可すると、ホーム画面から直接メッセージや通話ができます。</string>
+    <string name="onboarding_contacts_setup_description">連絡先へのアクセスを許可すると、Mink がホーム画面から直接メッセージや通話を行えるようにします。</string>
     <string name="onboarding_messages_setup_description">@ を入力して、いつも使うアプリを選びます。Mink がメッセージを準備し、お気に入りごとに後から別のアプリを指定できます。</string>
     <string name="onboarding_messages_draft_note">自動メッセージは最初からオンです。Android のアクセス準備が整うとシステムメッセージは SMS を直接送信し、連携アプリは作成済みの下書きを開きます。</string>
     <string name="home_tour_title">試してみたいこと</string>
@@ -1108,5 +1108,4 @@
     <string name="home_folder_compose">作成</string>
     <string name="home_folder_browse">ブラウズ</string>
     <string name="home_folder_tools">ツール</string>
-    <string name="home_folder_fun">ゲーム</string>
 </resources>

@@ -1,0 +1,10 @@
+# Sable Games Console game, new for the Q25 (owner request, 2026-11-13).
+id = "ramp_rush"
+name = "Ramp Rush"
+entry = "main.lua"
+version = "1.0"
+shelf = "motion"
+input = ["tilt", "keys"]
+best = "low"
+summary = "A stunt car seen from behind, racing through a desert canyon at sunset. Jump the gaps, roll in the air to win back time, and land on your wheels. Three tracks."
+controls = "Tilt (or hold Left/Right, A and D) to steer, and in the air to roll. Lean back (Down, S) to brake. Space boosts, C changes the car's colour."

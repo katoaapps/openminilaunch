@@ -157,7 +157,9 @@ internal fun HomeScreen(
                     magicExpanded = magicExpanded,
                     verticalGesturesEnabled = !minkSpacePresentation.isExpanded &&
                         (!classicLayout || classicVerticalGesturesEnabled),
-                    observeVerticalGesturesBeforeChildren = classicLayout,
+                    // Classic folder grids get first claim on vertical motion. The launcher still
+                    // receives swipes that begin on non-scrollable space or remain unconsumed.
+                    observeVerticalGesturesBeforeChildren = false,
                     horizontalGesturesEnabled = !minkSpacePresentation.isExpanded,
                     onPaneInteracted = onPaneInteracted,
                     onHorizontalDrag = onHorizontalDrag,
@@ -178,14 +180,14 @@ internal fun HomeScreen(
             }
             val imeBottom = WindowInsets.ime.asPaddingValues().calculateBottomPadding()
             val navigationBottom = WindowInsets.navigationBars.asPaddingValues().calculateBottomPadding()
-            val dockedMinkKeyboardHeight = if (
-                classicLayout &&
-                !magicExpanded &&
-                launcherKeyboardVisible &&
-                keyboardInputEnabled &&
-                store.openSoftwareKeyboardOnHome &&
-                store.launcherKeyboardPreferences.useMinkKeyboard
-            ) {
+            val dockedMinkKeyboardHeight = if (shouldReserveDockedMinkKeyboard(
+                layoutReservesKeyboardSpace = classicLayout || twoPanelLayout,
+                magicExpanded = magicExpanded,
+                launcherKeyboardVisible = launcherKeyboardVisible,
+                keyboardInputEnabled = keyboardInputEnabled,
+                autoOpenKeyboardOnHome = store.openSoftwareKeyboardOnHome,
+                useMinkKeyboard = store.launcherKeyboardPreferences.useMinkKeyboard,
+            )) {
                 resolveLauncherKeyboardHeightDp(
                     preferences = store.launcherKeyboardPreferences,
                     screenWidthDp = maxWidth.value.toInt(),
@@ -281,7 +283,6 @@ internal fun HomeScreen(
                                 openMinkSpaceSettings = {
                                     openSettings(SettingsDestination.MINK_SPACE)
                                 },
-                                openAppGridSettings = { openSettings(SettingsDestination.APP_GRID) },
                                 onTodoCenterChanged = { widgetCenter = it },
                                 onPausedApp = { pausedAppPackage = it },
                                 onOpenDrawer = { drawerOpen = true },
@@ -426,3 +427,18 @@ internal fun HomeScreen(
         MinkPausedAppDialog(actions.appLabel(packageName)) { pausedAppPackage = null }
     }
 }
+
+/** Classic and two-panel layouts must shrink their content when the docked keyboard raises Magic Box. */
+internal fun shouldReserveDockedMinkKeyboard(
+    layoutReservesKeyboardSpace: Boolean,
+    magicExpanded: Boolean,
+    launcherKeyboardVisible: Boolean,
+    keyboardInputEnabled: Boolean,
+    autoOpenKeyboardOnHome: Boolean,
+    useMinkKeyboard: Boolean,
+): Boolean = layoutReservesKeyboardSpace &&
+    !magicExpanded &&
+    launcherKeyboardVisible &&
+    keyboardInputEnabled &&
+    autoOpenKeyboardOnHome &&
+    useMinkKeyboard

@@ -2,6 +2,8 @@ package com.katoaapps.openminilaunch.features.apps
 
 import android.content.pm.ApplicationInfo
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
+import org.junit.Assert.assertNull
 import org.junit.Test
 import java.util.Locale
 
@@ -15,7 +17,7 @@ class FreshHomeFolderPopulationTest {
         assertEquals(HomeFolderPurpose.MEDIA, purposeForApplicationCategory(ApplicationInfo.CATEGORY_NEWS))
         assertEquals(HomeFolderPurpose.COMPOSE, purposeForApplicationCategory(ApplicationInfo.CATEGORY_IMAGE))
         assertEquals(HomeFolderPurpose.BROWSE, purposeForApplicationCategory(ApplicationInfo.CATEGORY_MAPS))
-        assertEquals(HomeFolderPurpose.FUN, purposeForApplicationCategory(ApplicationInfo.CATEGORY_GAME))
+        assertNull(purposeForApplicationCategory(ApplicationInfo.CATEGORY_GAME))
         assertEquals(HomeFolderPurpose.TOOLS, purposeForApplicationCategory(ApplicationInfo.CATEGORY_UNDEFINED))
     }
 
@@ -42,6 +44,8 @@ class FreshHomeFolderPopulationTest {
         )
 
         assertEquals(HomeFolderPurpose.entries, seeds.map(FreshHomeFolderSeed::purpose))
+        assertEquals(6, seeds.size)
+        assertFalse(seeds.flatMap(FreshHomeFolderSeed::selectionKeys).contains("fun"))
         assertEquals(listOf("messages", "social"), seeds.first().selectionKeys)
         assertEquals(listOf("tasks"), seeds[1].selectionKeys)
     }
