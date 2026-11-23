@@ -17,6 +17,12 @@
     <string name="replay_home_tour_summary">Reveja controles, atalhos e gestos do Início</string>
     <string name="home_spotlight_classic_pages_title">Sua tela inicial, página por página</string>
     <string name="home_spotlight_classic_pages_description">Passe pelos Mini Apps, suas sete páginas de apps e pastas, Quick Apps e Widgets.</string>
+    <string name="home_spotlight_classic_folder_title_title">Dê um nome a cada pasta</string>
+    <string name="home_spotlight_classic_folder_title_description">Toque no título para renomear esta pasta.</string>
+    <string name="home_spotlight_classic_folder_home_title">Escolha a página inicial</string>
+    <string name="home_spotlight_classic_folder_home_description">Toque em Início para o Classic abrir esta pasta primeiro.</string>
+    <string name="home_spotlight_classic_folder_edit_title">Edite esta pasta</string>
+    <string name="home_spotlight_classic_folder_edit_description">Toque em + para adicionar, remover ou reordenar apps e atalhos.</string>
     <string name="home_spotlight_classic_rail_title">Vá para qualquer página</string>
     <string name="home_spotlight_classic_rail_description">Use a barra inferior para alternar entre Conversas, Mini Apps, pastas, Quick Apps e Widgets.</string>
     <string name="home_spotlight_classic_gestures_title">Atalhos clássicos</string>

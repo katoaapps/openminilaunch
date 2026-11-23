@@ -14,6 +14,12 @@
     <string name="home_spotlight_gestures_description">Swipe from Home to reach the spaces around it.</string>
     <string name="home_spotlight_classic_pages_title">Your Home, page by page</string>
     <string name="home_spotlight_classic_pages_description">Swipe through Mini Apps, your seven app and folder pages, Quick Apps, and Widgets.</string>
+    <string name="home_spotlight_classic_folder_title_title">Name each folder</string>
+    <string name="home_spotlight_classic_folder_title_description">Tap the title to rename this folder.</string>
+    <string name="home_spotlight_classic_folder_home_title">Choose your starting page</string>
+    <string name="home_spotlight_classic_folder_home_description">Tap Home to make this the folder Classic opens first.</string>
+    <string name="home_spotlight_classic_folder_edit_title">Edit this folder</string>
+    <string name="home_spotlight_classic_folder_edit_description">Tap + to add, remove, or reorder its apps and shortcuts.</string>
     <string name="home_spotlight_classic_rail_title">Jump to any page</string>
     <string name="home_spotlight_classic_rail_description">Use the bottom rail to jump between Conversations, Mini Apps, folders, Quick Apps, and Widgets.</string>
     <string name="home_spotlight_classic_gestures_title">Classic shortcuts</string>

@@ -17,6 +17,12 @@
     <string name="replay_home_tour_summary">مراجعة عناصر التحكم والاختصارات والإيماءات في الرئيسية</string>
     <string name="home_spotlight_classic_pages_title">شاشتك الرئيسية، صفحة تلو الأخرى</string>
     <string name="home_spotlight_classic_pages_description">تنقل بين Mini Apps وصفحات التطبيقات والمجلدات السبع وQuick Apps والأدوات.</string>
+    <string name="home_spotlight_classic_folder_title_title">سمِّ كل مجلد</string>
+    <string name="home_spotlight_classic_folder_title_description">اضغط على العنوان لإعادة تسمية هذا المجلد.</string>
+    <string name="home_spotlight_classic_folder_home_title">اختر صفحة البداية</string>
+    <string name="home_spotlight_classic_folder_home_description">اضغط على زر الصفحة الرئيسية لجعل هذا المجلد أول ما يفتحه العرض الكلاسيكي.</string>
+    <string name="home_spotlight_classic_folder_edit_title">عدّل هذا المجلد</string>
+    <string name="home_spotlight_classic_folder_edit_description">اضغط على + لإضافة التطبيقات والاختصارات أو إزالتها أو إعادة ترتيبها.</string>
     <string name="home_spotlight_classic_rail_title">انتقل إلى أي صفحة</string>
     <string name="home_spotlight_classic_rail_description">استخدم الشريط السفلي للتنقل بين المحادثات وMini Apps والمجلدات وQuick Apps والأدوات.</string>
     <string name="home_spotlight_classic_gestures_title">اختصارات كلاسيكية</string>

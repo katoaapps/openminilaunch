@@ -17,6 +17,12 @@
     <string name="replay_home_tour_summary">重溫主頁控制、捷徑同手勢</string>
     <string name="home_spotlight_classic_pages_title">你嘅主畫面，逐頁睇</string>
     <string name="home_spotlight_classic_pages_description">掃過 Mini Apps、七個應用程式同資料夾頁面、Quick Apps 同小工具。</string>
+    <string name="home_spotlight_classic_folder_title_title">為每個資料夾命名</string>
+    <string name="home_spotlight_classic_folder_title_description">撳標題就可以重新命名呢個資料夾。</string>
+    <string name="home_spotlight_classic_folder_home_title">揀選起始頁面</string>
+    <string name="home_spotlight_classic_folder_home_description">撳主畫面按鈕，將呢個資料夾設為 Classic 首先開啟嘅頁面。</string>
+    <string name="home_spotlight_classic_folder_edit_title">編輯呢個資料夾</string>
+    <string name="home_spotlight_classic_folder_edit_description">撳 + 新增、移除或重新排列 app 同捷徑。</string>
     <string name="home_spotlight_classic_rail_title">跳去任何一頁</string>
     <string name="home_spotlight_classic_rail_description">用底部導覽列喺對話、Mini Apps、資料夾、Quick Apps 同小工具之間跳轉。</string>
     <string name="home_spotlight_classic_gestures_title">經典捷徑</string>

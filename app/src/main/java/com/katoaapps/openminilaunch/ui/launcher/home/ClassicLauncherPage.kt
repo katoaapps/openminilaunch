@@ -1,6 +1,7 @@
 package com.katoaapps.openminilaunch.ui.launcher.home
 
 import com.katoaapps.openminilaunch.model.AppGridSlot
+import com.katoaapps.openminilaunch.model.freshHomeFolderSlots
 
 /** Stable page identities used by the Classic Home pager and its navigation rail. */
 internal sealed interface ClassicLauncherPage {
@@ -67,6 +68,9 @@ internal fun classicHomePageIndex(
 ): Int = homeSlot
     ?.let { slot -> pages.indexOfFirst { it is ClassicLauncherPage.Folder && it.slot == slot } }
     ?.takeIf { it >= 0 }
+    ?: pages.indexOfFirst {
+        it is ClassicLauncherPage.Folder && it.slot == freshHomeFolderSlots.first()
+    }.takeIf { it >= 0 }
     ?: pages.indexOf(ClassicLauncherPage.QuickApps).coerceAtLeast(0)
 
 /** Conversation replies own typing; every other completed page change returns it to Magic Box. */
@@ -78,7 +82,6 @@ internal fun shouldRearmMagicBox(
     previousPage != currentPage &&
     currentPage != ClassicLauncherPage.Conversations
 
-/** Scrollable embedded tools retain vertical motion; app pages retain launcher gestures. */
+/** Quick Apps uses Home gestures; folder grids route only their own reached-edge gestures. */
 internal val ClassicLauncherPage.supportsLauncherVerticalGestures: Boolean
-    get() = this == ClassicLauncherPage.QuickApps ||
-        this is ClassicLauncherPage.Folder
+    get() = this == ClassicLauncherPage.QuickApps

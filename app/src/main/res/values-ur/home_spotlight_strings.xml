@@ -17,6 +17,12 @@
     <string name="replay_home_tour_summary">ہوم کنٹرولز، شارٹ کٹس اور اشارے دوبارہ دیکھیں</string>
     <string name="home_spotlight_classic_pages_title">آپ کا ہوم، صفحہ بہ صفحہ</string>
     <string name="home_spotlight_classic_pages_description">Mini Apps، ایپس اور فولڈرز کے سات صفحات، Quick Apps اور وجٹس میں سوائپ کریں۔</string>
+    <string name="home_spotlight_classic_folder_title_title">ہر فولڈر کو نام دیں</string>
+    <string name="home_spotlight_classic_folder_title_description">اس فولڈر کا نام بدلنے کے لیے عنوان پر ٹیپ کریں۔</string>
+    <string name="home_spotlight_classic_folder_home_title">ابتدائی صفحہ منتخب کریں</string>
+    <string name="home_spotlight_classic_folder_home_description">Classic میں پہلے یہ فولڈر کھولنے کے لیے ہوم پر ٹیپ کریں۔</string>
+    <string name="home_spotlight_classic_folder_edit_title">اس فولڈر میں ترمیم کریں</string>
+    <string name="home_spotlight_classic_folder_edit_description">ایپس اور شارٹ کٹس شامل، حذف یا دوبارہ ترتیب دینے کے لیے + پر ٹیپ کریں۔</string>
     <string name="home_spotlight_classic_rail_title">کسی بھی صفحے پر جائیں</string>
     <string name="home_spotlight_classic_rail_description">گفتگو، Mini Apps، فولڈرز، Quick Apps اور وجٹس کے درمیان جانے کے لیے نیچے کی ریل استعمال کریں۔</string>
     <string name="home_spotlight_classic_gestures_title">کلاسک شارٹ کٹس</string>

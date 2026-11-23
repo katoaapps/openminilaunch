@@ -17,6 +17,12 @@
     <string name="replay_home_tour_summary">Repasa los controles, accesos directos y gestos de Inicio</string>
     <string name="home_spotlight_classic_pages_title">Tu Inicio, página a página</string>
     <string name="home_spotlight_classic_pages_description">Desliza por Mini Apps, tus siete páginas de apps y carpetas, Quick Apps y Widgets.</string>
+    <string name="home_spotlight_classic_folder_title_title">Pon nombre a cada carpeta</string>
+    <string name="home_spotlight_classic_folder_title_description">Toca el título para cambiar el nombre de esta carpeta.</string>
+    <string name="home_spotlight_classic_folder_home_title">Elige tu página inicial</string>
+    <string name="home_spotlight_classic_folder_home_description">Toca Inicio para que Classic abra primero esta carpeta.</string>
+    <string name="home_spotlight_classic_folder_edit_title">Edita esta carpeta</string>
+    <string name="home_spotlight_classic_folder_edit_description">Toca + para añadir, quitar o reordenar sus apps y accesos directos.</string>
     <string name="home_spotlight_classic_rail_title">Salta a cualquier página</string>
     <string name="home_spotlight_classic_rail_description">Usa la barra inferior para saltar entre Conversaciones, Mini Apps, carpetas, Quick Apps y Widgets.</string>
     <string name="home_spotlight_classic_gestures_title">Atajos clásicos</string>

@@ -17,6 +17,12 @@
     <string name="replay_home_tour_summary">重新查看主页控件、快捷方式和手势</string>
     <string name="home_spotlight_classic_pages_title">一页页浏览主页</string>
     <string name="home_spotlight_classic_pages_description">滑动浏览 Mini Apps、七个应用和文件夹页面、Quick Apps 及小组件。</string>
+    <string name="home_spotlight_classic_folder_title_title">为每个文件夹命名</string>
+    <string name="home_spotlight_classic_folder_title_description">点按标题即可重命名此文件夹。</string>
+    <string name="home_spotlight_classic_folder_home_title">选择起始页面</string>
+    <string name="home_spotlight_classic_folder_home_description">点按主页按钮，将此文件夹设为经典模式首先打开的页面。</string>
+    <string name="home_spotlight_classic_folder_edit_title">编辑此文件夹</string>
+    <string name="home_spotlight_classic_folder_edit_description">点按 + 可添加、移除或重新排列应用和快捷方式。</string>
     <string name="home_spotlight_classic_rail_title">跳转到任意页面</string>
     <string name="home_spotlight_classic_rail_description">使用底部导航在对话、Mini Apps、文件夹、Quick Apps 和小组件之间跳转。</string>
     <string name="home_spotlight_classic_gestures_title">经典快捷操作</string>

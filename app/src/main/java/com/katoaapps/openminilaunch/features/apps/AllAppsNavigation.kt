@@ -19,7 +19,7 @@ internal fun appIndexForLetter(apps: List<LaunchableApp>, letter: Char): Int? =
     indexForLetter(apps, letter, LaunchableApp::label)
 
 internal fun initialAllAppsIndex(apps: List<LaunchableApp>): Int =
-    appIndexForLetter(apps, 'M') ?: 0
+    appIndexForLetter(apps, 'A') ?: 0
 
 internal fun letterForApp(app: LaunchableApp?): Char? =
     app?.let { initialLetter(it, LaunchableApp::label) }
@@ -28,7 +28,7 @@ internal fun launcherTargetIndexForLetter(targets: List<LauncherTarget>, letter:
     indexForLetter(targets, letter, LauncherTarget::label)
 
 internal fun initialLauncherTargetsIndex(targets: List<LauncherTarget>): Int =
-    launcherTargetIndexForLetter(targets, 'M') ?: 0
+    launcherTargetIndexForLetter(targets, 'A') ?: 0
 
 internal fun letterForLauncherTarget(target: LauncherTarget?): Char? =
     target?.let { initialLetter(it, LauncherTarget::label) }

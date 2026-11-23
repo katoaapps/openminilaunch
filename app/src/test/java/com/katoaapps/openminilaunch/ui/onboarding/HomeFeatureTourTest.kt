@@ -53,6 +53,9 @@ class HomeFeatureTourTest {
         assertEquals(
             listOf(
                 HomeTourTarget.CLASSIC_PAGES,
+                HomeTourTarget.CLASSIC_FOLDER_TITLE,
+                HomeTourTarget.CLASSIC_FOLDER_HOME,
+                HomeTourTarget.CLASSIC_FOLDER_EDIT,
                 HomeTourTarget.CLASSIC_RAIL,
                 HomeTourTarget.HEADER,
                 HomeTourTarget.GESTURES,

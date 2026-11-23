@@ -162,14 +162,14 @@ internal fun HomeScreen(
                     magicExpanded = magicExpanded,
                     verticalGesturesEnabled = !minkSpacePresentation.isExpanded &&
                         (!classicLayout || classicUiState.verticalGesturesEnabled),
-                    // Classic folder grids get first claim on vertical motion. The launcher still
-                    // receives swipes that begin on non-scrollable space or remain unconsumed.
+                    // Classic folder grids own scrolling and route their reached-edge gestures
+                    // locally. Quick Apps still uses this Home-level detector.
                     observeVerticalGesturesBeforeChildren = false,
                     horizontalGesturesEnabled = !minkSpacePresentation.isExpanded,
                     onPaneInteracted = onPaneInteracted,
                     onHorizontalDrag = onHorizontalDrag,
                     onHorizontalDragFinished = onHorizontalDragFinished,
-                    onSwipeUp = { actions.openAllAppsFromBottom() },
+                    onSwipeUp = actions::openAllApps,
                     onSwipeDown = actions::expandNotificationShade,
                     onDoubleTap = ::lockFromHome,
                 ),
@@ -232,7 +232,6 @@ internal fun HomeScreen(
                         onUpdate = { showUpdateConfirmation = true },
                         onConversations = openConversations,
                         classicLayout = classicLayout,
-                        onQuickDrawer = { drawerOpen = true },
                         openSettings = openSettings,
                     )
                     BoxWithConstraints(

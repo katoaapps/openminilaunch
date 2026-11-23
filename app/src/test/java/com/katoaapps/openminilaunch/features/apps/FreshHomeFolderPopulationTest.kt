@@ -22,6 +22,56 @@ class FreshHomeFolderPopulationTest {
     }
 
     @Test
+    fun capabilitiesRefineBroadCategoriesWithoutOverridingSpecificOnes() {
+        assertEquals(
+            HomeFolderPurpose.COMPOSE,
+            purposeForFreshHomeCandidate(
+                candidate(
+                    "writer",
+                    "Writer",
+                    ApplicationInfo.CATEGORY_PRODUCTIVITY,
+                    capabilityPurposes = setOf(HomeFolderPurpose.COMPOSE),
+                ),
+            ),
+        )
+        assertEquals(
+            HomeFolderPurpose.CONNECT,
+            purposeForFreshHomeCandidate(
+                candidate(
+                    "mail",
+                    "Mail",
+                    ApplicationInfo.CATEGORY_UNDEFINED,
+                    capabilityPurposes = setOf(
+                        HomeFolderPurpose.COMPOSE,
+                        HomeFolderPurpose.CONNECT,
+                    ),
+                ),
+            ),
+        )
+        assertEquals(
+            HomeFolderPurpose.MEDIA,
+            purposeForFreshHomeCandidate(
+                candidate(
+                    "player",
+                    "Player",
+                    ApplicationInfo.CATEGORY_VIDEO,
+                    capabilityPurposes = setOf(HomeFolderPurpose.COMPOSE),
+                ),
+            ),
+        )
+        assertNull(
+            purposeForFreshHomeCandidate(
+                candidate(
+                    "game",
+                    "Game",
+                    ApplicationInfo.CATEGORY_GAME,
+                    capabilityPurposes = setOf(HomeFolderPurpose.COMPOSE),
+                ),
+            ),
+        )
+    }
+
+    @Test
     fun defaultHandlersOverrideCategoryAndSortFirst() {
         val seeds = freshHomeFolderSeeds(
             candidates = listOf(
@@ -51,8 +101,8 @@ class FreshHomeFolderPopulationTest {
     }
 
     @Test
-    fun capsInitialPopulationAtEightAndUsesOneAppPerPackage() {
-        val candidates = (1..70).map { index ->
+    fun capsInitialPopulationAtSixteenAndUsesOneAppPerPackage() {
+        val candidates = (1..100).map { index ->
             FreshHomeFolderCandidate(
                 selectionKey = "key-$index",
                 packageName = "package-$index",
@@ -69,8 +119,8 @@ class FreshHomeFolderPopulationTest {
         val tools = freshHomeFolderSeeds(candidates, Locale.US) { it.name }
             .single { it.purpose == HomeFolderPurpose.TOOLS }
 
-        assertEquals(8, tools.selectionKeys.size)
-        assertEquals(8, tools.selectionKeys.distinct().size)
+        assertEquals(16, tools.selectionKeys.size)
+        assertEquals(16, tools.selectionKeys.distinct().size)
     }
 
     private fun candidate(
@@ -78,11 +128,13 @@ class FreshHomeFolderPopulationTest {
         label: String,
         category: Int,
         preferredPurpose: HomeFolderPurpose? = null,
+        capabilityPurposes: Set<HomeFolderPurpose> = emptySet(),
     ) = FreshHomeFolderCandidate(
         selectionKey = key,
         packageName = "package.$key",
         label = label,
         applicationCategory = category,
         preferredPurpose = preferredPurpose,
+        capabilityPurposes = capabilityPurposes,
     )
 }

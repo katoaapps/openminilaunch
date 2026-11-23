@@ -10,6 +10,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.BoxWithConstraints
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -18,6 +19,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.grid.GridCells
 import androidx.compose.foundation.lazy.grid.LazyVerticalGrid
 import androidx.compose.foundation.lazy.grid.items
+import androidx.compose.foundation.lazy.grid.rememberLazyGridState
 import androidx.compose.foundation.pager.HorizontalPager
 import androidx.compose.foundation.pager.rememberPagerState
 import androidx.compose.foundation.shape.CircleShape
@@ -212,14 +214,15 @@ internal fun ClassicLauncherHome(
                         launcherKeyboardVisible = launcherKeyboardVisible,
                         onUiStateChanged = { conversationUiState = it },
                     )
-                    ClassicLauncherPage.QuickApps -> ClassicTargetPage(
-                        title = stringResource(R.string.quick_apps),
-                        targetKeys = store.drawerTargets,
+                    ClassicLauncherPage.QuickApps -> QuickDrawerSurface(
+                        store = store,
                         actions = actions,
                         appAccessState = appAccessState,
-                        onEdit = onEditQuickApps,
-                        onUnavailable = { unavailableTarget = it },
+                        contentColor = contentColor,
+                        onHostDismiss = {},
+                        onManageQuickApps = onEditQuickApps,
                         onPausedApp = onPausedApp,
+                        modifier = Modifier.fillMaxSize(),
                     )
                     ClassicLauncherPage.Widgets -> WidgetPage(
                         store = store,
@@ -278,6 +281,7 @@ internal fun ClassicLauncherHome(
                                     )
                                 }
                             },
+                            publishTourTargets = pagerState.currentPage == page,
                             onUnavailable = { unavailableTarget = it },
                             onPausedApp = onPausedApp,
                         )
@@ -354,6 +358,7 @@ private fun ClassicTargetPage(
     isHome: Boolean = false,
     onHome: (() -> Unit)? = null,
     onTitleCommit: ((String?) -> Unit)? = null,
+    publishTourTargets: Boolean = false,
     onUnavailable: (LauncherTarget) -> Unit,
     onPausedApp: (String) -> Unit,
 ) {
@@ -363,6 +368,7 @@ private fun ClassicTargetPage(
         targetKeys.map(actions::resolveLauncherSelection)
     }
     val focusManager = LocalFocusManager.current
+    val gridState = rememberLazyGridState()
     var draftTitle by remember(titleEditable, editableTitleValue) {
         mutableStateOf(editableTitleValue)
     }
@@ -371,13 +377,31 @@ private fun ClassicTargetPage(
         if (!titleEditable) return
         onTitleCommit?.invoke(draftTitle.trim().ifEmpty { null })
     }
-    Column(Modifier.fillMaxSize().padding(horizontal = Dimens.dp12)) {
+    Column(
+        Modifier.fillMaxSize()
+            .classicFolderEdgeGestures(
+                gridState = gridState,
+                itemCount = targets.size,
+                onSwipeUp = actions::openAllApps,
+                onSwipeDown = actions::expandNotificationShade,
+            )
+            .padding(horizontal = Dimens.dp12),
+    ) {
         Row(
             Modifier.fillMaxWidth().padding(vertical = Dimens.dp6),
             verticalAlignment = Alignment.CenterVertically,
         ) {
             if (titleEditable) {
-                Row(Modifier.weight(1f), verticalAlignment = Alignment.CenterVertically) {
+                Row(
+                    Modifier.weight(1f).then(
+                        if (publishTourTargets) {
+                            Modifier.homeTourTarget(HomeTourTarget.CLASSIC_FOLDER_TITLE)
+                        } else {
+                            Modifier
+                        },
+                    ),
+                    verticalAlignment = Alignment.CenterVertically,
+                ) {
                     BasicTextField(
                         value = draftTitle,
                         onValueChange = { draftTitle = it.take(MAX_APP_FOLDER_NAME_LENGTH) },
@@ -434,7 +458,15 @@ private fun ClassicTargetPage(
             onHome?.let { selectHome ->
                 IconButton(
                     onClick = selectHome,
-                    modifier = Modifier.semantics { selected = isHome },
+                    modifier = Modifier
+                        .then(
+                            if (publishTourTargets) {
+                                Modifier.homeTourTarget(HomeTourTarget.CLASSIC_FOLDER_HOME)
+                            } else {
+                                Modifier
+                            },
+                        )
+                        .semantics { selected = isHome },
                 ) {
                     Icon(
                         imageVector = if (isHome) Icons.Filled.Home else Icons.Outlined.Home,
@@ -442,66 +474,116 @@ private fun ClassicTargetPage(
                     )
                 }
             }
-            IconButton(onClick = onEdit) {
+            IconButton(
+                onClick = onEdit,
+                modifier = Modifier.then(
+                    if (publishTourTargets) {
+                        Modifier.homeTourTarget(HomeTourTarget.CLASSIC_FOLDER_EDIT)
+                    } else {
+                        Modifier
+                    },
+                ),
+            ) {
                 Icon(Icons.Default.Add, stringResource(R.string.add))
             }
         }
-        if (targets.isEmpty()) {
-            Box(
-                Modifier.fillMaxSize().clickable(onClick = onEdit),
-                contentAlignment = Alignment.Center,
-            ) {
-                Text(
-                    stringResource(R.string.classic_empty_folder),
-                    color = LocalContentColor.current.copy(alpha = .68f),
-                    textAlign = TextAlign.Center,
-                )
-            }
-        } else {
-            LazyVerticalGrid(
-                columns = GridCells.Fixed(4),
-                modifier = Modifier.fillMaxSize(),
-                horizontalArrangement = Arrangement.spacedBy(Dimens.dp8),
-                verticalArrangement = Arrangement.spacedBy(Dimens.dp10),
-            ) {
-                items(targets, key = LauncherTarget::selectionKey) { target ->
-                    Column(
-                        Modifier.fillMaxWidth().clickable {
-                            when {
-                                !target.isAvailable -> onUnavailable(target)
-                                appAccessState.isPaused(target) -> onPausedApp(target.packageName)
-                                else -> actions.launchLauncherTarget(target)
-                            }
-                        }.padding(vertical = Dimens.dp6),
-                        horizontalAlignment = Alignment.CenterHorizontally,
+        BoxWithConstraints(Modifier.fillMaxWidth().weight(1f)) {
+            if (targets.isEmpty()) {
+                Column(Modifier.fillMaxSize()) {
+                    Box(
+                        Modifier.fillMaxWidth().clickable(onClick = onEdit)
+                            .padding(vertical = Dimens.dp48),
+                        contentAlignment = Alignment.Center,
                     ) {
-                        Box(Modifier.size(Dimens.dp48), contentAlignment = Alignment.Center) {
-                            if (target.isAvailable) {
-                                LauncherTargetIcon(target, actions, Dimens.dp48)
-                            } else {
-                                UnavailableLauncherTargetIcon(
-                                    size = Dimens.dp48,
-                                    contentDescription = stringResource(R.string.app_unavailable),
-                                )
-                            }
-                            if (target.isAvailable && appAccessState.isPaused(target)) {
-                                MinkPausedBadge(Modifier.align(Alignment.Center))
-                            }
-                        }
                         Text(
-                            if (target.isAvailable) target.label else stringResource(R.string.app_unavailable),
-                            modifier = Modifier.padding(top = Dimens.dp5),
-                            fontSize = Dimens.sp11,
-                            maxLines = 2,
-                            overflow = TextOverflow.Ellipsis,
+                            stringResource(R.string.classic_empty_folder),
+                            color = LocalContentColor.current.copy(alpha = .68f),
                             textAlign = TextAlign.Center,
                         )
                     }
+                    Spacer(Modifier.fillMaxWidth().weight(1f))
+                }
+            } else {
+                val rowCount = (targets.size + CLASSIC_TARGET_COLUMNS - 1) /
+                    CLASSIC_TARGET_COLUMNS
+                val desiredGridHeight = Dimens.dp96 * rowCount +
+                    Dimens.dp10 * (rowCount - 1).coerceAtLeast(0)
+                val gridHeight = minOf(desiredGridHeight, maxHeight)
+                Column(Modifier.fillMaxSize()) {
+                    LazyVerticalGrid(
+                        columns = GridCells.Fixed(CLASSIC_TARGET_COLUMNS),
+                        state = gridState,
+                        modifier = Modifier.fillMaxWidth().height(gridHeight),
+                        horizontalArrangement = Arrangement.spacedBy(Dimens.dp8),
+                        verticalArrangement = Arrangement.spacedBy(Dimens.dp10),
+                    ) {
+                        items(targets, key = LauncherTarget::selectionKey) { target ->
+                            ClassicTargetCell(
+                                target = target,
+                                actions = actions,
+                                appAccessState = appAccessState,
+                                onUnavailable = onUnavailable,
+                                onPausedApp = onPausedApp,
+                            )
+                        }
+                    }
+                    // When every row fits, the rest of the page remains a reliable gesture zone.
+                    Spacer(Modifier.fillMaxWidth().weight(1f))
                 }
             }
         }
     }
 }
+
+@Composable
+private fun ClassicTargetCell(
+    target: LauncherTarget,
+    actions: DeviceActions,
+    appAccessState: MinkAppAccessState,
+    onUnavailable: (LauncherTarget) -> Unit,
+    onPausedApp: (String) -> Unit,
+    modifier: Modifier = Modifier,
+) {
+    Column(
+        modifier.fillMaxWidth().height(Dimens.dp96).clickable {
+            when {
+                !target.isAvailable -> onUnavailable(target)
+                appAccessState.isPaused(target) -> onPausedApp(target.packageName)
+                else -> actions.launchLauncherTarget(target)
+            }
+        }.padding(vertical = Dimens.dp6),
+        horizontalAlignment = Alignment.CenterHorizontally,
+    ) {
+        Box(Modifier.size(Dimens.dp48), contentAlignment = Alignment.Center) {
+            if (target.isAvailable) {
+                LauncherTargetIcon(
+                    target = target,
+                    actions = actions,
+                    size = Dimens.dp48,
+                    normalizeTransparentBounds = true,
+                )
+            } else {
+                UnavailableLauncherTargetIcon(
+                    size = Dimens.dp48,
+                    contentDescription = stringResource(R.string.app_unavailable),
+                )
+            }
+            if (target.isAvailable && appAccessState.isPaused(target)) {
+                MinkPausedBadge(Modifier.align(Alignment.Center))
+            }
+        }
+        Text(
+            if (target.isAvailable) target.label else stringResource(R.string.app_unavailable),
+            modifier = Modifier.padding(top = Dimens.dp5),
+            fontSize = Dimens.sp11,
+            maxLines = 2,
+            overflow = TextOverflow.Ellipsis,
+            textAlign = TextAlign.Center,
+        )
+    }
+}
+
+private const val CLASSIC_TARGET_COLUMNS = 4
 
 @Composable
 private fun ClassicMinkSpacePage(

@@ -17,6 +17,12 @@
     <string name="replay_home_tour_summary">হোমের নিয়ন্ত্রণ, শর্টকাট ও অঙ্গভঙ্গি আবার দেখুন</string>
     <string name="home_spotlight_classic_pages_title">আপনার হোম, পৃষ্ঠায় পৃষ্ঠায়</string>
     <string name="home_spotlight_classic_pages_description">Mini Apps, অ্যাপ ও ফোল্ডারের সাতটি পৃষ্ঠা, Quick Apps এবং উইজেটের মধ্যে সোয়াইপ করুন।</string>
+    <string name="home_spotlight_classic_folder_title_title">প্রতিটি ফোল্ডারের নাম দিন</string>
+    <string name="home_spotlight_classic_folder_title_description">এই ফোল্ডারের নাম বদলাতে শিরোনামে ট্যাপ করুন।</string>
+    <string name="home_spotlight_classic_folder_home_title">শুরুর পৃষ্ঠা বেছে নিন</string>
+    <string name="home_spotlight_classic_folder_home_description">Classic-এ প্রথমে এই ফোল্ডার খুলতে হোম বোতামে ট্যাপ করুন।</string>
+    <string name="home_spotlight_classic_folder_edit_title">এই ফোল্ডার সম্পাদনা করুন</string>
+    <string name="home_spotlight_classic_folder_edit_description">অ্যাপ ও শর্টকাট যোগ, সরানো বা পুনর্বিন্যাস করতে + ট্যাপ করুন।</string>
     <string name="home_spotlight_classic_rail_title">যেকোনো পৃষ্ঠায় যান</string>
     <string name="home_spotlight_classic_rail_description">কথোপকথন, Mini Apps, ফোল্ডার, Quick Apps ও উইজেটের মধ্যে যেতে নিচের রেল ব্যবহার করুন।</string>
     <string name="home_spotlight_classic_gestures_title">ক্লাসিক শর্টকাট</string>

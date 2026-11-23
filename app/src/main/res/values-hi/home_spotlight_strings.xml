@@ -17,6 +17,12 @@
     <string name="replay_home_tour_summary">होम नियंत्रण, शॉर्टकट और जेस्चर फिर देखें</string>
     <string name="home_spotlight_classic_pages_title">आपका होम, हर पेज पर</string>
     <string name="home_spotlight_classic_pages_description">Mini Apps, ऐप और फ़ोल्डर के सात पेज, Quick Apps और विजेट के बीच स्वाइप करें।</string>
+    <string name="home_spotlight_classic_folder_title_title">हर फ़ोल्डर को नाम दें</string>
+    <string name="home_spotlight_classic_folder_title_description">इस फ़ोल्डर का नाम बदलने के लिए शीर्षक पर टैप करें।</string>
+    <string name="home_spotlight_classic_folder_home_title">अपना शुरुआती पेज चुनें</string>
+    <string name="home_spotlight_classic_folder_home_description">Classic में इस फ़ोल्डर को पहले खोलने के लिए होम बटन पर टैप करें।</string>
+    <string name="home_spotlight_classic_folder_edit_title">इस फ़ोल्डर को संपादित करें</string>
+    <string name="home_spotlight_classic_folder_edit_description">ऐप और शॉर्टकट जोड़ने, हटाने या उनका क्रम बदलने के लिए + पर टैप करें।</string>
     <string name="home_spotlight_classic_rail_title">किसी भी पेज पर जाएँ</string>
     <string name="home_spotlight_classic_rail_description">बातचीत, Mini Apps, फ़ोल्डर, Quick Apps और विजेट के बीच जाने के लिए नीचे की रेल इस्तेमाल करें।</string>
     <string name="home_spotlight_classic_gestures_title">क्लासिक शॉर्टकट</string>

@@ -17,6 +17,12 @@
     <string name="replay_home_tour_summary">Снова посмотреть элементы управления, ярлыки и жесты</string>
     <string name="home_spotlight_classic_pages_title">Главный экран, страница за страницей</string>
     <string name="home_spotlight_classic_pages_description">Листайте Mini Apps, семь страниц приложений и папок, Quick Apps и виджеты.</string>
+    <string name="home_spotlight_classic_folder_title_title">Назовите каждую папку</string>
+    <string name="home_spotlight_classic_folder_title_description">Нажмите заголовок, чтобы переименовать эту папку.</string>
+    <string name="home_spotlight_classic_folder_home_title">Выберите начальную страницу</string>
+    <string name="home_spotlight_classic_folder_home_description">Нажмите «Главная», чтобы Classic сначала открывал эту папку.</string>
+    <string name="home_spotlight_classic_folder_edit_title">Измените эту папку</string>
+    <string name="home_spotlight_classic_folder_edit_description">Нажмите +, чтобы добавить, удалить или переставить приложения и ярлыки.</string>
     <string name="home_spotlight_classic_rail_title">Перейти к любой странице</string>
     <string name="home_spotlight_classic_rail_description">Используйте нижнюю панель для перехода между разговорами, Mini Apps, папками, Quick Apps и виджетами.</string>
     <string name="home_spotlight_classic_gestures_title">Классические жесты</string>

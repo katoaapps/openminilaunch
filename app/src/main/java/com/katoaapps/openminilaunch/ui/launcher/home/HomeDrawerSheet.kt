@@ -71,14 +71,45 @@ internal fun HomeDrawerSheet(
     onManageQuickApps: () -> Unit,
     onPausedApp: (String) -> Unit,
 ) {
+    val drawerColor = store.quickDrawerColorArgb?.let(::Color) ?: MaterialTheme.colorScheme.background
+    val drawerContentColor = readableContentColor(drawerColor)
+
+    ModalBottomSheet(
+        onDismissRequest = onDismiss,
+        sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true),
+        containerColor = drawerColor,
+        contentColor = drawerContentColor,
+    ) {
+        QuickDrawerSurface(
+            store = store,
+            actions = actions,
+            appAccessState = appAccessState,
+            contentColor = drawerContentColor,
+            onHostDismiss = onDismiss,
+            onManageQuickApps = onManageQuickApps,
+            onPausedApp = onPausedApp,
+        )
+    }
+}
+
+/** Shared Quick Drawer body used by the sheet and the dedicated Classic page. */
+@Composable
+internal fun QuickDrawerSurface(
+    store: LauncherStore,
+    actions: DeviceActions,
+    appAccessState: MinkAppAccessState,
+    contentColor: Color,
+    onHostDismiss: () -> Unit,
+    onManageQuickApps: () -> Unit,
+    onPausedApp: (String) -> Unit,
+    modifier: Modifier = Modifier,
+) {
     val context = LocalContext.current
     var quickAppsOpen by remember { mutableStateOf(false) }
     val demoModeEnabled = store.demoModeEnabled
     val showDemoPreview = {
         Toast.makeText(context, R.string.demo_preview_action, Toast.LENGTH_SHORT).show()
     }
-    val drawerColor = store.quickDrawerColorArgb?.let(::Color) ?: MaterialTheme.colorScheme.background
-    val drawerContentColor = readableContentColor(drawerColor)
     val destinations = quickDrawerDestinations(
         showMinkPad = store.showMinkPadInQuickDrawer,
         showPrivateSpace = store.showPrivateSpaceInQuickDrawer,
@@ -88,12 +119,7 @@ internal fun HomeDrawerSheet(
         workSpaceAvailable = store.demoModeEnabled || actions.workProfileAvailable(),
     )
 
-    ModalBottomSheet(
-        onDismissRequest = onDismiss,
-        sheetState = rememberModalBottomSheetState(skipPartiallyExpanded = true),
-        containerColor = drawerColor,
-        contentColor = drawerContentColor,
-    ) {
+    Column(modifier.fillMaxWidth()) {
         Text(
             stringResource(R.string.your_drawer),
             Modifier.padding(horizontal = Dimens.dp24),
@@ -107,7 +133,7 @@ internal fun HomeDrawerSheet(
                 if (demoModeEnabled) {
                     showDemoPreview()
                 } else if (actions.openGooglePlayBetaPage()) {
-                    onDismiss()
+                    onHostDismiss()
                 } else {
                     Toast.makeText(context, R.string.no_browser_available, Toast.LENGTH_SHORT).show()
                 }
@@ -115,15 +141,15 @@ internal fun HomeDrawerSheet(
         )
         ManageQuickAppsRow(
             selectedCount = if (demoModeEnabled) 4 else store.drawerTargets.size,
-            contentColor = drawerContentColor,
+            contentColor = contentColor,
             onClick = { quickAppsOpen = true },
         )
         QuickDrawerNavigationGrid(
             destinations = destinations,
-            contentColor = drawerContentColor,
+            contentColor = contentColor,
             onDestination = { destination ->
                 if (!demoModeEnabled) {
-                    onDismiss()
+                    onHostDismiss()
                     when (destination) {
                         QuickDrawerDestination.MINKPAD_LITE -> MinkPadLauncherEntry.open(context)
                         QuickDrawerDestination.ALL_APPS -> actions.openAllApps()
@@ -145,16 +171,16 @@ internal fun HomeDrawerSheet(
             appAccessState = appAccessState,
             onEdit = {
                 quickAppsOpen = false
-                onDismiss()
+                onHostDismiss()
                 onManageQuickApps()
             },
             onLaunch = {
                 quickAppsOpen = false
-                onDismiss()
+                onHostDismiss()
             },
             onPausedApp = { packageName ->
                 quickAppsOpen = false
-                onDismiss()
+                onHostDismiss()
                 onPausedApp(packageName)
             },
             onDismiss = { quickAppsOpen = false },

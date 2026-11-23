@@ -24,6 +24,7 @@ internal data class FreshHomeFolderCandidate(
     val label: String,
     val applicationCategory: Int,
     val preferredPurpose: HomeFolderPurpose? = null,
+    val capabilityPurposes: Set<HomeFolderPurpose> = emptySet(),
 )
 
 internal data class FreshHomeFolderSeed(
@@ -53,16 +54,14 @@ internal fun freshHomeFolderSeeds(
     } else {
         ceil(eligible.size / HomeFolderPurpose.entries.size.toDouble())
             .toInt()
-            .coerceIn(1, minOf(8, MAX_APP_FOLDER_TARGETS))
+            .coerceIn(1, minOf(16, MAX_APP_FOLDER_TARGETS))
     }
     val collator = Collator.getInstance(locale).apply { strength = Collator.PRIMARY }
 
     return HomeFolderPurpose.entries.map { purpose ->
         val selected = eligible
             .asSequence()
-            .filter { candidate ->
-                (candidate.preferredPurpose ?: purposeForApplicationCategory(candidate.applicationCategory)) == purpose
-            }
+            .filter { candidate -> purposeForFreshHomeCandidate(candidate) == purpose }
             .sortedWith(
                 compareByDescending<FreshHomeFolderCandidate> { it.preferredPurpose == purpose }
                     .thenComparator { left, right -> collator.compare(left.label, right.label) },
@@ -77,6 +76,37 @@ internal fun freshHomeFolderSeeds(
         )
     }
 }
+
+/**
+ * Chooses one initial folder for an app. Strong user defaults always win, declared Android
+ * categories remain authoritative, and exported capabilities only refine broad productivity or
+ * fallback categories. This keeps the generated folders useful without duplicating apps.
+ */
+internal fun purposeForFreshHomeCandidate(
+    candidate: FreshHomeFolderCandidate,
+): HomeFolderPurpose? {
+    candidate.preferredPurpose?.let { return it }
+    val categoryPurpose = purposeForApplicationCategory(candidate.applicationCategory)
+    if (categoryPurpose == null) return null
+    if (
+        candidate.applicationCategory == ApplicationInfo.CATEGORY_PRODUCTIVITY ||
+        categoryPurpose == HomeFolderPurpose.TOOLS
+    ) {
+        capabilityPurpose(candidate.capabilityPurposes)?.let { return it }
+    }
+    return categoryPurpose
+}
+
+private fun capabilityPurpose(
+    purposes: Set<HomeFolderPurpose>,
+): HomeFolderPurpose? = CAPABILITY_PURPOSE_PRIORITY.firstOrNull(purposes::contains)
+
+private val CAPABILITY_PURPOSE_PRIORITY = listOf(
+    HomeFolderPurpose.CONNECT,
+    HomeFolderPurpose.COMPOSE,
+    HomeFolderPurpose.BROWSE,
+    HomeFolderPurpose.MEDIA,
+)
 
 internal fun purposeForApplicationCategory(category: Int): HomeFolderPurpose? = when (category) {
     ApplicationInfo.CATEGORY_SOCIAL -> HomeFolderPurpose.CONNECT

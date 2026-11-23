@@ -13,6 +13,7 @@ import com.katoaapps.openminilaunch.ui.appgrid.defaultIcon
 import com.katoaapps.openminilaunch.ui.theme.MinkBlack
 import com.katoaapps.openminilaunch.ui.theme.MinkWhite
 
+import android.graphics.Bitmap
 import android.graphics.drawable.AdaptiveIconDrawable
 import android.os.Build
 import androidx.compose.foundation.Image
@@ -121,6 +122,7 @@ internal fun LauncherTargetIcon(
     size: Dp,
     themedTint: Color? = null,
     contentDescription: String? = null,
+    normalizeTransparentBounds: Boolean = false,
 ) {
     val context = LocalContext.current
     val store = LauncherStore.get(context)
@@ -164,6 +166,7 @@ internal fun LauncherTargetIcon(
         size = size,
         themedTint = appearance.minkAppIconTint(themedTint),
         contentDescription = contentDescription,
+        normalizeTransparentBounds = normalizeTransparentBounds,
     )
 }
 
@@ -210,6 +213,7 @@ private fun RenderedAppIcon(
     size: Dp,
     themedTint: Color?,
     contentDescription: String?,
+    normalizeTransparentBounds: Boolean = false,
 ) {
     val context = LocalContext.current
     val density = LocalDensity.current
@@ -220,7 +224,12 @@ private fun RenderedAppIcon(
     val targetBitmapSize = with(density) {
         (size * MONOCHROME_ICON_SCALE).roundToPx()
     }.coerceAtLeast(MIN_ICON_BITMAP_SIZE_PX)
-    val rendered = remember(iconKey, themedTint != null, targetBitmapSize) {
+    val rendered = remember(
+        iconKey,
+        themedTint != null,
+        targetBitmapSize,
+        normalizeTransparentBounds,
+    ) {
         val drawable = drawable()
         val monochrome = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.TIRAMISU) {
             (drawable as? AdaptiveIconDrawable)?.monochrome
@@ -228,8 +237,16 @@ private fun RenderedAppIcon(
             null
         }
         val source = if (themedTint != null) monochrome ?: drawable else drawable
-        source?.toBitmap(width = targetBitmapSize, height = targetBitmapSize)?.asImageBitmap()?.let {
-            RenderedIconBitmap(it, monochrome != null && source === monochrome)
+        source?.toBitmap(width = targetBitmapSize, height = targetBitmapSize)?.let { bitmap ->
+            val normalized = if (normalizeTransparentBounds) {
+                bitmap.cropTransparentBounds()
+            } else {
+                bitmap
+            }
+            RenderedIconBitmap(
+                normalized.asImageBitmap(),
+                monochrome != null && source === monochrome,
+            )
         }
     }
     if (rendered != null) {
@@ -286,3 +303,32 @@ private fun WatermelonAppIcon(size: Dp, description: String?) {
 }
 
 private data class RenderedIconBitmap(val bitmap: ImageBitmap, val isMonochrome: Boolean)
+
+/**
+ * Some shortcut and icon-pack drawables include large transparent gutters. Classic Home uses a
+ * fixed icon box, so trim only those invisible pixels before fitting the bitmap into that box.
+ * Other icon surfaces retain the drawable's authored bounds.
+ */
+private fun Bitmap.cropTransparentBounds(alphaThreshold: Int = 8): Bitmap {
+    if (!hasAlpha() || width <= 1 || height <= 1) return this
+
+    val pixels = IntArray(width * height)
+    getPixels(pixels, 0, width, 0, 0, width, height)
+    var left = width
+    var top = height
+    var right = -1
+    var bottom = -1
+    pixels.forEachIndexed { index, pixel ->
+        if ((pixel ushr 24) > alphaThreshold) {
+            val x = index % width
+            val y = index / width
+            if (x < left) left = x
+            if (x > right) right = x
+            if (y < top) top = y
+            if (y > bottom) bottom = y
+        }
+    }
+    if (right < left || bottom < top) return this
+    if (left == 0 && top == 0 && right == width - 1 && bottom == height - 1) return this
+    return Bitmap.createBitmap(this, left, top, right - left + 1, bottom - top + 1)
+}

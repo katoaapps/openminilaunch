@@ -17,6 +17,12 @@
     <string name="replay_home_tour_summary">ホームの操作、ショートカット、ジェスチャーを確認</string>
     <string name="home_spotlight_classic_pages_title">ページごとに使うホーム</string>
     <string name="home_spotlight_classic_pages_description">Mini Apps、7 つのアプリとフォルダのページ、Quick Apps、ウィジェットをスワイプして移動します。</string>
+    <string name="home_spotlight_classic_folder_title_title">各フォルダに名前を付ける</string>
+    <string name="home_spotlight_classic_folder_title_description">タイトルをタップして、このフォルダの名前を変更できます。</string>
+    <string name="home_spotlight_classic_folder_home_title">開始ページを選ぶ</string>
+    <string name="home_spotlight_classic_folder_home_description">ホームをタップすると、Classic でこのフォルダが最初に開きます。</string>
+    <string name="home_spotlight_classic_folder_edit_title">このフォルダを編集</string>
+    <string name="home_spotlight_classic_folder_edit_description">+ をタップして、アプリやショートカットの追加、削除、並べ替えができます。</string>
     <string name="home_spotlight_classic_rail_title">どのページにもすぐ移動</string>
     <string name="home_spotlight_classic_rail_description">下部レールで会話、Mini Apps、フォルダ、Quick Apps、ウィジェットの間を移動します。</string>
     <string name="home_spotlight_classic_gestures_title">クラシックショートカット</string>

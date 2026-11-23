@@ -17,6 +17,12 @@
     <string name="replay_home_tour_summary">Tinjau kontrol, pintasan, dan gestur Beranda</string>
     <string name="home_spotlight_classic_pages_title">Beranda Anda, halaman demi halaman</string>
     <string name="home_spotlight_classic_pages_description">Geser melalui Mini Apps, tujuh halaman aplikasi dan folder, Quick Apps, serta Widget.</string>
+    <string name="home_spotlight_classic_folder_title_title">Beri nama setiap folder</string>
+    <string name="home_spotlight_classic_folder_title_description">Ketuk judul untuk mengganti nama folder ini.</string>
+    <string name="home_spotlight_classic_folder_home_title">Pilih halaman awal</string>
+    <string name="home_spotlight_classic_folder_home_description">Ketuk Beranda agar Classic membuka folder ini terlebih dahulu.</string>
+    <string name="home_spotlight_classic_folder_edit_title">Edit folder ini</string>
+    <string name="home_spotlight_classic_folder_edit_description">Ketuk + untuk menambah, menghapus, atau mengurutkan ulang aplikasi dan pintasan.</string>
     <string name="home_spotlight_classic_rail_title">Lompat ke halaman mana pun</string>
     <string name="home_spotlight_classic_rail_description">Gunakan bilah bawah untuk berpindah antara Percakapan, Mini Apps, folder, Quick Apps, dan Widget.</string>
     <string name="home_spotlight_classic_gestures_title">Pintasan klasik</string>

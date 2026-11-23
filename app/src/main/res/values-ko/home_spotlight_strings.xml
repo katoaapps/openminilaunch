@@ -17,6 +17,12 @@
     <string name="replay_home_tour_summary">홈 컨트롤, 바로가기 및 제스처 다시 보기</string>
     <string name="home_spotlight_classic_pages_title">페이지로 구성된 홈</string>
     <string name="home_spotlight_classic_pages_description">Mini Apps, 7개의 앱 및 폴더 페이지, Quick Apps와 위젯을 스와이프해 이동하세요.</string>
+    <string name="home_spotlight_classic_folder_title_title">각 폴더에 이름 지정</string>
+    <string name="home_spotlight_classic_folder_title_description">제목을 탭하여 이 폴더의 이름을 바꿀 수 있습니다.</string>
+    <string name="home_spotlight_classic_folder_home_title">시작 페이지 선택</string>
+    <string name="home_spotlight_classic_folder_home_description">홈을 탭하면 Classic에서 이 폴더가 먼저 열립니다.</string>
+    <string name="home_spotlight_classic_folder_edit_title">이 폴더 편집</string>
+    <string name="home_spotlight_classic_folder_edit_description">+를 탭하여 앱과 바로가기를 추가, 제거 또는 재정렬하세요.</string>
     <string name="home_spotlight_classic_rail_title">원하는 페이지로 이동</string>
     <string name="home_spotlight_classic_rail_description">하단 레일에서 대화, Mini Apps, 폴더, Quick Apps와 위젯 사이를 이동하세요.</string>
     <string name="home_spotlight_classic_gestures_title">클래식 바로가기</string>

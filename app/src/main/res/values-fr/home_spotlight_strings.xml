@@ -17,6 +17,12 @@
     <string name="replay_home_tour_summary">Revoir les commandes, raccourcis et gestes de l’Accueil</string>
     <string name="home_spotlight_classic_pages_title">Votre accueil, page par page</string>
     <string name="home_spotlight_classic_pages_description">Parcourez les Mini Apps, vos sept pages d’apps et de dossiers, les Quick Apps et les Widgets.</string>
+    <string name="home_spotlight_classic_folder_title_title">Nommez chaque dossier</string>
+    <string name="home_spotlight_classic_folder_title_description">Touchez le titre pour renommer ce dossier.</string>
+    <string name="home_spotlight_classic_folder_home_title">Choisissez la page de démarrage</string>
+    <string name="home_spotlight_classic_folder_home_description">Touchez Accueil pour ouvrir d’abord ce dossier en mode Classique.</string>
+    <string name="home_spotlight_classic_folder_edit_title">Modifiez ce dossier</string>
+    <string name="home_spotlight_classic_folder_edit_description">Touchez + pour ajouter, retirer ou réorganiser ses applications et raccourcis.</string>
     <string name="home_spotlight_classic_rail_title">Accédez à n’importe quelle page</string>
     <string name="home_spotlight_classic_rail_description">Utilisez la barre inférieure pour passer entre Conversations, Mini Apps, dossiers, Quick Apps et Widgets.</string>
     <string name="home_spotlight_classic_gestures_title">Raccourcis classiques</string>

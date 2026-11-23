@@ -26,8 +26,11 @@ class AllAppsNavigationTest {
     }
 
     @Test
-    fun initialFocusPrefersM() {
-        assertEquals(1, initialAllAppsIndex(apps))
+    fun initialFocusPrefersAThenFallsBackToTheFirstApp() {
+        val appsWithA = listOf(LaunchableApp("Asana", "asana")) + apps
+
+        assertEquals(0, initialAllAppsIndex(appsWithA))
+        assertEquals(0, initialAllAppsIndex(apps))
         assertEquals(0, initialAllAppsIndex(apps.take(1)))
     }
 

@@ -69,6 +69,21 @@ private fun classicHomeFeatureTourSteps(): List<HomeTourStep> = listOf(
         R.string.home_spotlight_classic_pages_description,
     ),
     HomeTourStep(
+        HomeTourTarget.CLASSIC_FOLDER_TITLE,
+        R.string.home_spotlight_classic_folder_title_title,
+        R.string.home_spotlight_classic_folder_title_description,
+    ),
+    HomeTourStep(
+        HomeTourTarget.CLASSIC_FOLDER_HOME,
+        R.string.home_spotlight_classic_folder_home_title,
+        R.string.home_spotlight_classic_folder_home_description,
+    ),
+    HomeTourStep(
+        HomeTourTarget.CLASSIC_FOLDER_EDIT,
+        R.string.home_spotlight_classic_folder_edit_title,
+        R.string.home_spotlight_classic_folder_edit_description,
+    ),
+    HomeTourStep(
         HomeTourTarget.CLASSIC_RAIL,
         R.string.home_spotlight_classic_rail_title,
         R.string.home_spotlight_classic_rail_description,

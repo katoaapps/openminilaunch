@@ -12,6 +12,7 @@ import com.katoaapps.openminilaunch.features.apps.LauncherAppRepository
 import com.katoaapps.openminilaunch.features.apps.FreshHomeFolderCandidate
 import com.katoaapps.openminilaunch.features.apps.FreshHomeFolderSeed
 import com.katoaapps.openminilaunch.features.apps.HomeFolderPurpose
+import com.katoaapps.openminilaunch.features.apps.HomeFolderCapabilityDiscovery
 import com.katoaapps.openminilaunch.features.apps.freshHomeFolderSeeds
 import com.katoaapps.openminilaunch.features.apps.LauncherPackageRemoval
 import com.katoaapps.openminilaunch.features.apps.LauncherShortcutRepository
@@ -278,6 +279,8 @@ class DeviceActions(private val context: Context) {
             defaultPackageForCategory(Intent.CATEGORY_APP_FILES)
                 ?.let { put(it, HomeFolderPurpose.TOOLS) }
         }
+        val capabilityPurposes = HomeFolderCapabilityDiscovery(context.packageManager)
+            .purposesByPackage()
         val candidates = installedApps()
             .asSequence()
             .filter { !it.isWorkProfile && it.isAvailable && it.selectionKey != MinkPadLauncherEntry.KEY }
@@ -288,6 +291,7 @@ class DeviceActions(private val context: Context) {
                     label = target.label,
                     applicationCategory = launcherAppRepository.applicationCategory(target),
                     preferredPurpose = preferredPackages[target.packageName],
+                    capabilityPurposes = capabilityPurposes[target.packageName].orEmpty(),
                 )
             }
             .toList()
@@ -394,7 +398,14 @@ class DeviceActions(private val context: Context) {
 
     fun openSystemSettings() = start(Intent(Settings.ACTION_SETTINGS))
 
-    fun openAllApps() = start(workspaceIntent(AllAppsActivity::class.java))
+    fun openAllApps() = startWithAnimation(
+        intent = workspaceIntent(AllAppsActivity::class.java),
+        options = ActivityOptions.makeCustomAnimation(
+            context,
+            R.anim.slide_in_from_bottom,
+            R.anim.hold_position,
+        ),
+    )
 
     fun openPrivateApps() = start(workspaceIntent(PrivateAppsActivity::class.java))
 
@@ -429,15 +440,6 @@ class DeviceActions(private val context: Context) {
             userGatewaySelectionKey
                 ?.let(::resolveLauncherSelection)
                 ?.isAvailable == true
-
-    fun openAllAppsFromBottom() = startWithAnimation(
-        intent = workspaceIntent(AllAppsActivity::class.java),
-        options = ActivityOptions.makeCustomAnimation(
-            context,
-            R.anim.slide_in_from_bottom,
-            R.anim.hold_position,
-        ),
-    )
 
     fun appLabel(packageName: String): String {
         synchronized(labelCache) { labelCache[packageName]?.let { return it } }

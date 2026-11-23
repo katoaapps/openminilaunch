@@ -139,10 +139,34 @@ class HomeLayoutTest {
         assertEquals(ClassicLauncherPage.Widgets, pages.last())
     }
 
-    @Test fun classicHomeDefaultsToQuickAppsUntilAFolderIsSelected() {
+    @Test fun classicFolderEdgeGesturesWaitForTheMatchingScrollBoundary() {
+        assertEquals(
+            ClassicFolderEdgeAction.EXPAND_NOTIFICATIONS,
+            classicFolderEdgeAction(8f, 80f, 48f, false, true),
+        )
+        assertEquals(
+            ClassicFolderEdgeAction.OPEN_ALL_APPS,
+            classicFolderEdgeAction(-5f, -80f, 48f, true, false),
+        )
+        assertEquals(
+            null,
+            classicFolderEdgeAction(8f, 80f, 48f, true, true),
+        )
+        assertEquals(
+            null,
+            classicFolderEdgeAction(90f, -80f, 48f, false, false),
+        )
+    }
+
+    @Test fun classicHomeDefaultsToConnectUntilAFolderIsSelected() {
         val pages = classicLauncherPages(configurableAppGridSlots)
 
-        assertEquals(pages.indexOf(ClassicLauncherPage.QuickApps), classicHomePageIndex(pages, null))
+        assertEquals(
+            pages.indexOfFirst {
+                it is ClassicLauncherPage.Folder && it.slot == freshHomeFolderSlots.first()
+            },
+            classicHomePageIndex(pages, null),
+        )
         assertEquals(
             pages.indexOfFirst {
                 it is ClassicLauncherPage.Folder && it.slot == AppGridSlot.FILES
@@ -190,9 +214,9 @@ class HomeLayoutTest {
         )
     }
 
-    @Test fun classicHomePreservesVerticalMotionForEmbeddedTools() {
+    @Test fun classicHomeDelegatesFolderEdgesInsteadOfStealingGridScroll() {
         assertTrue(ClassicLauncherPage.QuickApps.supportsLauncherVerticalGestures)
-        assertTrue(
+        assertFalse(
             ClassicLauncherPage.Folder(AppGridSlot.NOTE, 1)
                 .supportsLauncherVerticalGestures,
         )
@@ -221,6 +245,6 @@ class HomeLayoutTest {
         assertFalse(widgets.homeKeyboardInputAllowed)
         assertFalse(widgets.verticalGesturesEnabled)
         assertTrue(folder.homeKeyboardInputAllowed)
-        assertTrue(folder.verticalGesturesEnabled)
+        assertFalse(folder.verticalGesturesEnabled)
     }
 }
