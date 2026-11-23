@@ -294,11 +294,13 @@ internal fun ClassicLauncherHome(
                     currentPage = pagerState.currentPage,
                     pages = pages,
                     contentColor = contentColor,
-                    onPage = { page -> scope.launch { pagerState.animateScrollToPage(page) } },
+                    // Rail icons are direct destinations, not a request to visibly travel through
+                    // every page between the current one and the selected one.
+                    onPage = { page -> scope.launch { pagerState.scrollToPage(page) } },
                     onConversations = {
                         conversationRootRequestToken++
                         scope.launch {
-                            pagerState.animateScrollToPage(
+                            pagerState.scrollToPage(
                                 pages.indexOf(ClassicLauncherPage.Conversations),
                             )
                         }
