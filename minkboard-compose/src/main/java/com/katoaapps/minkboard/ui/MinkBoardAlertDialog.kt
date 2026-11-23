@@ -1,8 +1,13 @@
 package com.katoaapps.minkboard.ui
 
+import androidx.compose.foundation.layout.WindowInsets
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.ime
 import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.safeDrawing
+import androidx.compose.foundation.layout.union
 import androidx.compose.foundation.layout.widthIn
+import androidx.compose.foundation.layout.windowInsetsPadding
 import androidx.compose.material3.AlertDialogDefaults
 import androidx.compose.material3.AlertDialog as MaterialAlertDialog
 import androidx.compose.runtime.Composable
@@ -40,6 +45,7 @@ fun MinkBoardAlertDialog(
         onDismissRequest = onDismissRequest,
         confirmButton = confirmButton,
         modifier = Modifier
+            .windowInsetsPadding(WindowInsets.safeDrawing.union(WindowInsets.ime))
             .padding(horizontal = 20.dp)
             .widthIn(max = 720.dp)
             .fillMaxWidth()
@@ -54,6 +60,9 @@ fun MinkBoardAlertDialog(
         titleContentColor = titleContentColor,
         textContentColor = textContentColor,
         tonalElevation = tonalElevation,
-        properties = DialogProperties(usePlatformDefaultWidth = false),
+        properties = DialogProperties(
+            usePlatformDefaultWidth = false,
+            decorFitsSystemWindows = false,
+        ),
     )
 }

@@ -8,6 +8,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.semantics.SemanticsActions
 import androidx.compose.ui.semantics.SemanticsProperties
 import androidx.compose.ui.test.SemanticsNodeInteraction
+import androidx.compose.ui.test.assertIsDisplayed
 import androidx.compose.ui.test.hasSetTextAction
 import androidx.compose.ui.test.hasTestTag
 import androidx.compose.ui.test.onNodeWithContentDescription
@@ -80,6 +81,56 @@ class EditorStateRestorationTest {
         composeRule.onNodeWithText("Cancel").performClick()
         assertEquals(0, createCount)
         assertEquals(1, dismissCount)
+    }
+
+    @Test
+    fun longEditCardBodyKeepsSaveAndCancelVisible() {
+        val boardId = BoardId("board")
+        val status = BoardStatus(
+            id = StatusId("status"),
+            boardId = boardId,
+            name = "In progress",
+            colorArgb = DEFAULT_STATUS_COLOR_ARGB,
+            isDoneStatus = false,
+            position = 0,
+        )
+        val card = BoardCard(
+            id = CardId("card"),
+            statusId = status.id,
+            title = "Ship MinkBoard",
+            details = "Long note body.\n".repeat(100),
+            dueDate = null,
+            isMajor = false,
+            position = 0,
+            createdAtEpochMillis = 1L,
+            updatedAtEpochMillis = 1L,
+        )
+        var draft by mutableStateOf(
+            CardEditorDraft(
+                title = card.title,
+                details = card.details,
+                destinationStatusIdValue = status.id.value,
+            ),
+        )
+
+        composeRule.setContent {
+            MaterialTheme {
+                EditCardDialog(
+                    card = card,
+                    draft = draft,
+                    statuses = listOf(status),
+                    currentStatus = status,
+                    onDraftChange = { draft = it },
+                    onDismiss = {},
+                    onSave = { _, _ -> },
+                )
+            }
+        }
+
+        composeRule.onNodeWithText(composeRule.activity.getString(R.string.save))
+            .assertIsDisplayed()
+        composeRule.onNodeWithText(composeRule.activity.getString(R.string.cancel))
+            .assertIsDisplayed()
     }
 
     @Test

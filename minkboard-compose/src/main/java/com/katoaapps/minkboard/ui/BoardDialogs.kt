@@ -293,6 +293,7 @@ internal fun EditCardDialog(
                         .testTag(CARD_DETAILS_FIELD_TEST_TAG),
                     label = { Text(stringResource(R.string.card_details)) },
                     minLines = 5,
+                    maxLines = 10,
                 )
             }
         },

@@ -33,7 +33,7 @@ internal class AndroidMinkBoardFocusNotifier(
         } else {
             config.text.focusingTitle(snapshot.cardTitle)
         }
-        val body = runningBody(snapshot)
+        val body = focusNotificationBody(snapshot.cardDetails, config.text.runningBody)
         return NotificationCompat.Builder(applicationContext, config.channels.running)
             .setSmallIcon(config.smallIconResId)
             .setContentTitle(title)
@@ -102,10 +102,12 @@ internal class AndroidMinkBoardFocusNotifier(
         } else {
             config.channels.finishedQuiet
         }
+        val body = focusNotificationBody(snapshot.cardDetails, config.text.finishedBody)
         return NotificationCompat.Builder(applicationContext, channelId)
             .setSmallIcon(config.smallIconResId)
             .setContentTitle(title)
-            .setContentText(config.text.finishedBody)
+            .setContentText(body)
+            .setStyle(NotificationCompat.BigTextStyle().bigText(body))
             .setContentIntent(openPendingIntent(snapshot))
             .setDeleteIntent(
                 actionPendingIntent(
@@ -159,13 +161,6 @@ internal class AndroidMinkBoardFocusNotifier(
     fun notificationRunningId(): Int = config.ids.running
 
     fun notificationFinishedId(): Int = config.ids.finished
-
-    private fun runningBody(snapshot: FocusTimerSnapshot): String {
-        val details = snapshot.cardDetails.trim()
-        if (details.isEmpty()) return config.text.runningBody
-        if (details.length <= MAX_NOTIFICATION_DETAILS_LENGTH) return details
-        return details.take(MAX_NOTIFICATION_DETAILS_LENGTH - 1).trimEnd() + "…"
-    }
 
     private fun openPendingIntent(snapshot: FocusTimerSnapshot): PendingIntent =
         PendingIntent.getActivity(
@@ -229,9 +224,15 @@ internal class AndroidMinkBoardFocusNotifier(
         manager.createNotificationChannels(listOf(running, finishedAlerting, finishedQuiet))
     }
 
-    private companion object {
-        const val MAX_NOTIFICATION_DETAILS_LENGTH = 1_000
-    }
+}
+
+internal const val MAX_FOCUS_NOTIFICATION_DETAILS_LENGTH = 1_000
+
+internal fun focusNotificationBody(cardDetails: String, fallback: String): String {
+    val details = cardDetails.trim()
+    if (details.isEmpty()) return fallback
+    if (details.length <= MAX_FOCUS_NOTIFICATION_DETAILS_LENGTH) return details
+    return details.take(MAX_FOCUS_NOTIFICATION_DETAILS_LENGTH - 1).trimEnd() + "…"
 }
 
 private fun durationSeconds(startedAt: Long, endsAt: Long): Int =
