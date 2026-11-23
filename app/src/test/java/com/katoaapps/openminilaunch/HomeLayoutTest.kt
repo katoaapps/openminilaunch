@@ -200,4 +200,27 @@ class HomeLayoutTest {
         assertFalse(ClassicLauncherPage.Widgets.supportsLauncherVerticalGestures)
         assertFalse(ClassicLauncherPage.MinkSpace.supportsLauncherVerticalGestures)
     }
+
+    @Test fun classicUiStateKeepsRootConversationsSeparateFromReplyInput() {
+        val root = ClassicLauncherUiState(page = ClassicLauncherPage.Conversations)
+        val reply = root.copy(conversationReplyActive = true)
+
+        assertTrue(root.homeKeyboardInputAllowed)
+        assertFalse(root.shouldShowHomeMagicBox(magicExpanded = false))
+        assertTrue(root.shouldShowHomeMagicBox(magicExpanded = true))
+        assertFalse(reply.homeKeyboardInputAllowed)
+        assertFalse(reply.shouldShowHomeMagicBox(magicExpanded = true))
+    }
+
+    @Test fun classicUiStateSeparatesWidgetAndFolderInputRules() {
+        val widgets = ClassicLauncherUiState(page = ClassicLauncherPage.Widgets)
+        val folder = ClassicLauncherUiState(
+            page = ClassicLauncherPage.Folder(AppGridSlot.NOTE, 1),
+        )
+
+        assertFalse(widgets.homeKeyboardInputAllowed)
+        assertFalse(widgets.verticalGesturesEnabled)
+        assertTrue(folder.homeKeyboardInputAllowed)
+        assertTrue(folder.verticalGesturesEnabled)
+    }
 }

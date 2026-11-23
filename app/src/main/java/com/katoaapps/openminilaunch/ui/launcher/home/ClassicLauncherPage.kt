@@ -27,6 +27,30 @@ internal sealed interface ClassicLauncherPage {
     }
 }
 
+/** The small slice of Classic pager state that affects Home-level input and overlays. */
+internal data class ClassicLauncherUiState(
+    val page: ClassicLauncherPage? = null,
+    val conversationReplyActive: Boolean = false,
+) {
+    val conversationsActive: Boolean
+        get() = page == ClassicLauncherPage.Conversations
+
+    val widgetsActive: Boolean
+        get() = page == ClassicLauncherPage.Widgets
+
+    val verticalGesturesEnabled: Boolean
+        get() = page?.supportsLauncherVerticalGestures == true
+
+    private val replyEditorOwnsInput: Boolean
+        get() = conversationsActive && conversationReplyActive
+
+    val homeKeyboardInputAllowed: Boolean
+        get() = !widgetsActive && !replyEditorOwnsInput
+
+    fun shouldShowHomeMagicBox(magicExpanded: Boolean): Boolean =
+        !conversationsActive || (magicExpanded && !replyEditorOwnsInput)
+}
+
 internal fun classicLauncherPages(slots: List<AppGridSlot>): List<ClassicLauncherPage> = buildList {
     add(ClassicLauncherPage.Conversations)
     add(ClassicLauncherPage.MinkSpace)

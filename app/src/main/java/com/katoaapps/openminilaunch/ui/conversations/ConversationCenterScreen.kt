@@ -31,6 +31,7 @@ import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
@@ -65,6 +66,12 @@ import com.katoaapps.openminilaunch.ui.theme.Sage
 
 private const val CONVERSATION_FEATURE_TOUR_ID = "conversation_feature_tour_v1"
 
+/** Embedded host state; content selection and reply drafts remain owned by Conversations. */
+internal data class ConversationCenterUiState(
+    val replyEditorActive: Boolean = false,
+    val keyboardVisible: Boolean = false,
+)
+
 /** Conversations surface containing active messages and favorite people. */
 @Composable
 internal fun ConversationCenterScreen(
@@ -76,7 +83,7 @@ internal fun ConversationCenterScreen(
     embedded: Boolean = false,
     rootRequestToken: Int = 0,
     launcherKeyboardVisible: Boolean = false,
-    onKeyboardVisibilityChanged: (Boolean) -> Unit = {},
+    onUiStateChanged: (ConversationCenterUiState) -> Unit = {},
 ) {
     val context = LocalContext.current
     val activity = context as ComponentActivity
@@ -145,13 +152,24 @@ internal fun ConversationCenterScreen(
     }
     val selectedConversation = conversations.firstOrNull { it.id == selectedConversationId }
     val selectedActivityAt = selectedConversation?.let(::conversationActivityAt)
+    val uiState = ConversationCenterUiState(
+        replyEditorActive = selectedConversation?.replyTarget != null,
+        keyboardVisible = conversationKeyboardVisible,
+    )
+    val currentOnUiStateChanged by rememberUpdatedState(onUiStateChanged)
+
+    LaunchedEffect(uiState) {
+        currentOnUiStateChanged(uiState)
+    }
+    DisposableEffect(Unit) {
+        onDispose { currentOnUiStateChanged(ConversationCenterUiState()) }
+    }
 
     LaunchedEffect(rootRequestToken) {
         if (rootRequestToken > 0) {
             selectedConversationId = null
             selectedSection = ConversationSection.MESSAGES
             conversationKeyboardVisible = false
-            onKeyboardVisibilityChanged(false)
         }
     }
 
@@ -203,7 +221,6 @@ internal fun ConversationCenterScreen(
                     launcherKeyboardVisible = launcherKeyboardVisible,
                     onKeyboardVisibilityChanged = { visible ->
                         conversationKeyboardVisible = visible
-                        onKeyboardVisibilityChanged(visible)
                     },
                 )
             } else {

@@ -88,6 +88,7 @@ import com.katoaapps.openminilaunch.ui.appgrid.UnavailableLauncherTargetDialog
 import com.katoaapps.openminilaunch.ui.components.LauncherTargetIcon
 import com.katoaapps.openminilaunch.ui.components.UnavailableLauncherTargetIcon
 import com.katoaapps.openminilaunch.ui.conversations.ConversationCenterScreen
+import com.katoaapps.openminilaunch.ui.conversations.ConversationCenterUiState
 import com.katoaapps.openminilaunch.ui.minkspace.core.MinkSpaceHost
 import com.katoaapps.openminilaunch.ui.minkspace.core.MinkSpacePresentationState
 import com.katoaapps.openminilaunch.ui.onboarding.HomeTourTarget
@@ -116,8 +117,7 @@ internal fun ClassicLauncherHome(
     openMinkSpaceSettings: () -> Unit,
     onEditQuickApps: () -> Unit,
     onPausedApp: (String) -> Unit,
-    onVerticalGesturesEnabledChange: (Boolean) -> Unit,
-    onConversationsActiveChange: (Boolean) -> Unit,
+    onUiStateChange: (ClassicLauncherUiState) -> Unit,
     onTodoCenterChanged: (Offset) -> Unit,
     onMagicBoxReadinessRequested: () -> Unit,
     launcherKeyboardVisible: Boolean,
@@ -137,7 +137,7 @@ internal fun ClassicLauncherHome(
     val widgetHorizontalDragHandler = rememberWidgetPagerDragHandler(pagerState)
     var editingSlot by remember { mutableStateOf<AppGridSlot?>(null) }
     var unavailableTarget by remember { mutableStateOf<LauncherTarget?>(null) }
-    var conversationKeyboardVisible by remember { mutableStateOf(false) }
+    var conversationUiState by remember { mutableStateOf(ConversationCenterUiState()) }
     var conversationRootRequestToken by remember { mutableIntStateOf(0) }
     var previousPage by remember(pages) {
         mutableStateOf(pages.getOrNull(pagerState.currentPage))
@@ -160,21 +160,24 @@ internal fun ClassicLauncherHome(
             pagerState.animateScrollToPage(minkSpacePage)
         }
     }
-    LaunchedEffect(pagerState.currentPage, pages) {
-        val currentPage = pages.getOrNull(pagerState.currentPage)
+    val currentPage = pages.getOrNull(pagerState.currentPage)
+    val uiState = ClassicLauncherUiState(
+        page = currentPage,
+        conversationReplyActive = conversationUiState.replyEditorActive,
+    )
+    LaunchedEffect(uiState) {
+        onUiStateChange(uiState)
+    }
+    LaunchedEffect(currentPage, pages) {
         val leftConversations = previousPage == ClassicLauncherPage.Conversations &&
             currentPage != null &&
             currentPage != ClassicLauncherPage.Conversations
         if (leftConversations) {
-            conversationKeyboardVisible = false
+            conversationUiState = ConversationCenterUiState()
             softwareKeyboard?.hide()
             focusManager.clearFocus(force = true)
             conversationRootRequestToken++
         }
-        onVerticalGesturesEnabledChange(
-            currentPage?.supportsLauncherVerticalGestures == true,
-        )
-        onConversationsActiveChange(currentPage == ClassicLauncherPage.Conversations)
         if (shouldRearmMagicBox(previousPage, currentPage)) {
             onMagicBoxReadinessRequested()
         }
@@ -207,7 +210,7 @@ internal fun ClassicLauncherHome(
                         embedded = true,
                         rootRequestToken = conversationRootRequestToken,
                         launcherKeyboardVisible = launcherKeyboardVisible,
-                        onKeyboardVisibilityChanged = { conversationKeyboardVisible = it },
+                        onUiStateChanged = { conversationUiState = it },
                     )
                     ClassicLauncherPage.QuickApps -> ClassicTargetPage(
                         title = stringResource(R.string.quick_apps),
@@ -281,7 +284,7 @@ internal fun ClassicLauncherHome(
                     }
                 }
             }
-            if (!conversationKeyboardVisible) {
+            if (!conversationUiState.keyboardVisible) {
                 ClassicPageRail(
                     store = store,
                     currentPage = pagerState.currentPage,

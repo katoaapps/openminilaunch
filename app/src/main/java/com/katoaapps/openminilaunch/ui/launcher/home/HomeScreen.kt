@@ -88,13 +88,18 @@ internal fun HomeScreen(
     var magicCenter by remember { mutableStateOf(Offset.Zero) }
     val magicExpanded = magicBoxSessionState.expanded
     val classicLayout = store.homeLayoutStyle == HomeLayoutStyle.CLASSIC
-    var classicVerticalGesturesEnabled by remember { mutableStateOf(false) }
-    var classicConversationsActive by remember(classicLayout) { mutableStateOf(false) }
+    var classicUiState by remember(classicLayout) {
+        mutableStateOf(ClassicLauncherUiState())
+    }
     var launcherKeyboardVisible by remember { mutableStateOf(false) }
     var magicBoxFocusRearmToken by remember { mutableIntStateOf(0) }
     var showLockDisclosure by remember { mutableStateOf(false) }
     var showUpdateConfirmation by remember { mutableStateOf(false) }
     var pausedAppPackage by remember { mutableStateOf<String?>(null) }
+    val homeKeyboardInputEnabled = keyboardInputEnabled &&
+        (!classicLayout || classicUiState.homeKeyboardInputAllowed)
+    val showHomeMagicBox = !classicLayout ||
+        classicUiState.shouldShowHomeMagicBox(magicExpanded)
     val appAccessState by rememberMinkAppAccessState(store, minkStatusActive)
     val todoSnackbarHostState = remember { SnackbarHostState() }
     val coroutineScope = rememberCoroutineScope()
@@ -156,7 +161,7 @@ internal fun HomeScreen(
                 .homePaneGestures(
                     magicExpanded = magicExpanded,
                     verticalGesturesEnabled = !minkSpacePresentation.isExpanded &&
-                        (!classicLayout || classicVerticalGesturesEnabled),
+                        (!classicLayout || classicUiState.verticalGesturesEnabled),
                     // Classic folder grids get first claim on vertical motion. The launcher still
                     // receives swipes that begin on non-scrollable space or remain unconsumed.
                     observeVerticalGesturesBeforeChildren = false,
@@ -184,7 +189,7 @@ internal fun HomeScreen(
                 layoutReservesKeyboardSpace = classicLayout || twoPanelLayout,
                 magicExpanded = magicExpanded,
                 launcherKeyboardVisible = launcherKeyboardVisible,
-                keyboardInputEnabled = keyboardInputEnabled,
+                keyboardInputEnabled = homeKeyboardInputEnabled,
                 autoOpenKeyboardOnHome = store.openSoftwareKeyboardOnHome,
                 useMinkKeyboard = store.launcherKeyboardPreferences.useMinkKeyboard,
             )) {
@@ -204,7 +209,6 @@ internal fun HomeScreen(
                     dockedMinkKeyboardHeight,
                 )
             }
-            val showHomeMagicBox = !classicLayout || !classicConversationsActive
             Box(
                 Modifier.fillMaxSize()
                     .blur(if (magicExpanded) Dimens.dp10 else Dimens.dp0)
@@ -254,12 +258,11 @@ internal fun HomeScreen(
                                 },
                                 onEditQuickApps = { quickAppsEditorOpen = true },
                                 onPausedApp = { pausedAppPackage = it },
-                                onVerticalGesturesEnabledChange = {
-                                    classicVerticalGesturesEnabled = it
-                                },
-                                onConversationsActiveChange = { active ->
-                                    classicConversationsActive = active
-                                    if (active) launcherKeyboardVisible = false
+                                onUiStateChange = { state ->
+                                    classicUiState = state
+                                    if (state.conversationsActive || state.widgetsActive) {
+                                        launcherKeyboardVisible = false
+                                    }
                                 },
                                 onTodoCenterChanged = { widgetCenter = it },
                                 onMagicBoxReadinessRequested = {
@@ -308,7 +311,7 @@ internal fun HomeScreen(
                 destination = widgetCenter,
             )
         }
-        if (!classicLayout || !classicConversationsActive) {
+        if (showHomeMagicBox) {
             HomeMagicBox(
                 store = store,
                 actions = actions,
@@ -321,7 +324,7 @@ internal fun HomeScreen(
                         val origin = coordinates.positionInRoot()
                         magicCenter = origin + Offset(coordinates.size.width / 2f, coordinates.size.height / 2f)
                     },
-                keyboardInputEnabled = keyboardInputEnabled,
+                keyboardInputEnabled = homeKeyboardInputEnabled,
                 autoOpenSoftwareKeyboardOnHome = store.openSoftwareKeyboardOnHome,
                 homeRequestToken = homeRequestToken,
                 focusRearmToken = magicBoxFocusRearmToken,

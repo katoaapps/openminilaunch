@@ -944,7 +944,8 @@ internal fun MagicBoxContent(
         !expanded &&
         !smsFlow.sentConfirmationVisible &&
         !todoCompletionPending
-    val showLauncherKeyboard = useMinkKeyboard &&
+    val showLauncherKeyboard = keyboardInputEnabled &&
+        useMinkKeyboard &&
         !minkKeyboardMinimized &&
         !todoCompletionPending &&
         (expanded || showDockedLauncherKeyboard)
