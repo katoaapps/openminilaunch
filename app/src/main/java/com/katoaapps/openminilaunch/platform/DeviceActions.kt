@@ -722,6 +722,9 @@ class DeviceActions(private val context: Context) {
     fun openGooglePlayBetaPage(): Boolean =
         start(Intent(Intent.ACTION_VIEW, Uri.parse(MINKLAUNCHER_BETA_URL)))
 
+    fun openDonationPage(): Boolean =
+        start(Intent(Intent.ACTION_VIEW, Uri.parse(OPENMINK_DONATION_URL)))
+
     fun webSearch(query: String, preferredPackage: String? = null): Boolean {
         val clean = query.trim()
         if (clean.isEmpty()) return false
@@ -790,6 +793,7 @@ class DeviceActions(private val context: Context) {
         const val EXTRA_SETTINGS_FRAGMENT_ARG_KEY = ":settings:fragment_args_key"
         const val MINKLAUNCHER_BETA_URL = "https://minklauncher.com/beta"
         const val MINKLAUNCHER_SUBREDDIT_URL = "https://reddit.com/r/minklauncher"
+        const val OPENMINK_DONATION_URL = "https://buymeacoffee.com/katoaapps"
         const val SAMSUNG_CLOCK_PACKAGE = "com.sec.android.app.clockpackage"
         val CLOCK_PACKAGES = listOf(
             SAMSUNG_CLOCK_PACKAGE,

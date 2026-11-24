@@ -7,6 +7,7 @@ import androidx.compose.material.icons.automirrored.filled.Chat
 import androidx.compose.material.icons.filled.AccountCircle
 import androidx.compose.material.icons.filled.Assistant
 import androidx.compose.material.icons.filled.Apps
+import androidx.compose.material.icons.filled.Coffee
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.ImportExport
 import androidx.compose.material.icons.filled.Info
@@ -173,6 +174,11 @@ private fun MoreSettingsSection(
             subtitle = stringResource(R.string.settings_system_summary),
             icon = Icons.Default.Settings,
         ) { actions.openSystemSettings() }
+        SettingsCategoryRow(
+            title = stringResource(R.string.buy_me_a_coffee),
+            subtitle = stringResource(R.string.support_openmink_development),
+            icon = Icons.Default.Coffee,
+        ) { actions.openDonationPage() }
         SettingsCategoryRow(
             title = stringResource(R.string.about),
             subtitle = stringResource(R.string.settings_about_summary),
