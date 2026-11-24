@@ -2,7 +2,10 @@
 
 package com.katoaapps.openminilaunch.ui.launcher.home
 
+import androidx.compose.animation.core.FastOutSlowInEasing
 import androidx.compose.animation.core.animateDpAsState
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -42,6 +45,7 @@ import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
+import androidx.compose.runtime.key
 import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
@@ -54,6 +58,7 @@ import androidx.compose.ui.focus.onFocusChanged
 import androidx.compose.ui.geometry.Offset
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.graphics.SolidColor
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.graphics.toArgb
 import androidx.compose.ui.layout.onGloballyPositioned
 import androidx.compose.ui.layout.positionInRoot
@@ -130,6 +135,7 @@ internal fun ClassicLauncherHome(
     val pages = classicLauncherPages(classicSlots)
     val homePage = classicHomePageIndex(pages, store.classicHomeSlot)
     val minkSpacePage = pages.indexOf(ClassicLauncherPage.MinkSpace)
+    val widgetsPage = pages.indexOf(ClassicLauncherPage.Widgets)
     val pagerState = rememberPagerState(
         initialPage = homePage,
         pageCount = pages::size,
@@ -141,6 +147,8 @@ internal fun ClassicLauncherHome(
     var unavailableTarget by remember { mutableStateOf<LauncherTarget?>(null) }
     var conversationUiState by remember { mutableStateOf(ConversationCenterUiState()) }
     var conversationRootRequestToken by remember { mutableIntStateOf(0) }
+    var conversationRevealToken by remember { mutableIntStateOf(0) }
+    var widgetsRevealToken by remember { mutableIntStateOf(0) }
     var previousPage by remember(pages) {
         mutableStateOf(pages.getOrNull(pagerState.currentPage))
     }
@@ -201,19 +209,23 @@ internal fun ClassicLauncherHome(
                 key = { pages[it].stableKey },
             ) { page ->
                 when (val classicPage = pages[page]) {
-                    ClassicLauncherPage.Conversations -> ConversationCenterScreen(
-                        store = store,
-                        actions = actions,
-                        onComposeMessage = onComposeMessage,
-                        onComposeConversationMessage = onComposeConversationMessage,
-                        goBack = {
-                            scope.launch { pagerState.animateScrollToPage(homePage) }
-                        },
-                        embedded = true,
-                        rootRequestToken = conversationRootRequestToken,
-                        launcherKeyboardVisible = launcherKeyboardVisible,
-                        onUiStateChanged = { conversationUiState = it },
-                    )
+                    ClassicLauncherPage.Conversations -> ClassicDestinationReveal(
+                        triggerToken = conversationRevealToken,
+                    ) {
+                        ConversationCenterScreen(
+                            store = store,
+                            actions = actions,
+                            onComposeMessage = onComposeMessage,
+                            onComposeConversationMessage = onComposeConversationMessage,
+                            goBack = {
+                                scope.launch { pagerState.animateScrollToPage(homePage) }
+                            },
+                            embedded = true,
+                            rootRequestToken = conversationRootRequestToken,
+                            launcherKeyboardVisible = launcherKeyboardVisible,
+                            onUiStateChanged = { conversationUiState = it },
+                        )
+                    }
                     ClassicLauncherPage.QuickApps -> QuickDrawerSurface(
                         store = store,
                         actions = actions,
@@ -224,15 +236,19 @@ internal fun ClassicLauncherHome(
                         onPausedApp = onPausedApp,
                         modifier = Modifier.fillMaxSize(),
                     )
-                    ClassicLauncherPage.Widgets -> WidgetPage(
-                        store = store,
-                        actions = actions,
-                        goHome = {
-                            scope.launch { pagerState.animateScrollToPage(homePage) }
-                        },
-                        embedded = true,
-                        horizontalDragHandler = widgetHorizontalDragHandler,
-                    )
+                    ClassicLauncherPage.Widgets -> ClassicDestinationReveal(
+                        triggerToken = widgetsRevealToken,
+                    ) {
+                        WidgetPage(
+                            store = store,
+                            actions = actions,
+                            goHome = {
+                                scope.launch { pagerState.animateScrollToPage(homePage) }
+                            },
+                            embedded = true,
+                            horizontalDragHandler = widgetHorizontalDragHandler,
+                        )
+                    }
                     ClassicLauncherPage.MinkSpace -> ClassicMinkSpacePage(
                         store = store,
                         actions = actions,
@@ -299,11 +315,18 @@ internal fun ClassicLauncherHome(
                     onPage = { page -> scope.launch { pagerState.scrollToPage(page) } },
                     onConversations = {
                         conversationRootRequestToken++
+                        conversationRevealToken++
                         scope.launch {
                             pagerState.scrollToPage(
                                 pages.indexOf(ClassicLauncherPage.Conversations),
                             )
                         }
+                    },
+                    // Widgets can take a beat to compose. Request the destination during the next
+                    // pager remeasure so the adjacent Quick Apps page is not left on screen first.
+                    onWidgets = {
+                        widgetsRevealToken++
+                        pagerState.requestScrollToPage(widgetsPage)
                     },
                     modifier = Modifier.homeTourTarget(HomeTourTarget.CLASSIC_RAIL),
                 )
@@ -649,6 +672,7 @@ private fun ClassicPageRail(
     contentColor: Color,
     onPage: (Int) -> Unit,
     onConversations: () -> Unit,
+    onWidgets: () -> Unit,
     modifier: Modifier = Modifier,
 ) {
     val conversations = ConversationNotificationStore.currentConversations(
@@ -724,7 +748,7 @@ private fun ClassicPageRail(
         ClassicRailIcon(
             selected = currentPage == pages.indexOf(ClassicLauncherPage.Widgets),
             selectionColor = contentColor,
-            onClick = { onPage(pages.indexOf(ClassicLauncherPage.Widgets)) },
+            onClick = onWidgets,
             modifier = Modifier.align(Alignment.CenterEnd),
         ) {
             Icon(
@@ -732,6 +756,43 @@ private fun ClassicPageRail(
                 stringResource(R.string.widgets),
                 Modifier.size(20.dp),
             )
+        }
+    }
+}
+
+/** A lightweight destination reveal that does not animate or recreate the pager itself. */
+@Composable
+private fun ClassicDestinationReveal(
+    triggerToken: Int,
+    content: @Composable () -> Unit,
+) {
+    if (triggerToken <= 0) {
+        Box(Modifier.fillMaxSize()) { content() }
+        return
+    }
+
+    val rippleDistancePx = with(LocalDensity.current) { 7.dp.toPx() }
+    key(triggerToken) {
+        var revealed by remember { mutableStateOf(false) }
+        val progress by animateFloatAsState(
+            targetValue = if (revealed) 1f else 0f,
+            animationSpec = tween(
+                durationMillis = 170,
+                easing = FastOutSlowInEasing,
+            ),
+            label = "classic destination reveal",
+        )
+        LaunchedEffect(Unit) { revealed = true }
+
+        Box(
+            Modifier.fillMaxSize().graphicsLayer {
+                alpha = progress
+                scaleX = .96f + (.04f * progress)
+                scaleY = scaleX
+                translationY = rippleDistancePx * (1f - progress)
+            },
+        ) {
+            content()
         }
     }
 }
