@@ -72,6 +72,7 @@ internal fun AppFolderContentsDialog(
     titleOverride: String? = null,
     targetsOverride: List<LauncherTarget>? = null,
     appearanceEditable: Boolean = true,
+    showAddAction: Boolean = true,
 ) {
     val targets = targetsOverride ?: folder.orderedTargetKeys.map(actions::resolveLauncherSelection)
     var draftName by remember(folder.id) { mutableStateOf(folder.customName.orEmpty()) }
@@ -155,11 +156,13 @@ internal fun AppFolderContentsDialog(
                                 overflow = TextOverflow.Ellipsis,
                             )
                         }
-                        IconButton(onClick = {
-                            commitAppearance()
-                            onEdit()
-                        }) {
-                            Icon(Icons.Default.Add, stringResource(R.string.add))
+                        if (showAddAction) {
+                            IconButton(onClick = {
+                                commitAppearance()
+                                onEdit()
+                            }) {
+                                Icon(Icons.Default.Add, stringResource(R.string.add))
+                            }
                         }
                         IconButton(onClick = ::commitAndDismiss) {
                             Icon(Icons.Default.Close, stringResource(R.string.close))

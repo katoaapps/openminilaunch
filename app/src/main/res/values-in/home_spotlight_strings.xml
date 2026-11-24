@@ -28,4 +28,6 @@
     <string name="home_spotlight_classic_gestures_title">Pintasan klasik</string>
     <string name="home_spotlight_classic_gestures_description">Geser ke atas untuk Semua Aplikasi dan ke bawah untuk notifikasi.</string>
     <string name="start_typing">Mulai mengetik</string>
+    <string name="home_spotlight_quick_drawer_title">Quick Drawer</string>
+    <string name="home_spotlight_quick_drawer_description">Buka Quick Apps, game, MinkPad Lite, Semua Aplikasi, dan ruang aplikasi yang tersedia dari sini.</string>
 </resources>

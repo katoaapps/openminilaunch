@@ -28,4 +28,6 @@
     <string name="home_spotlight_classic_gestures_title">經典捷徑</string>
     <string name="home_spotlight_classic_gestures_description">向上掃顯示所有應用程式，向下掃顯示通知。</string>
     <string name="start_typing">開始輸入</string>
+    <string name="home_spotlight_quick_drawer_title">Quick Drawer</string>
+    <string name="home_spotlight_quick_drawer_description">喺呢度開啟 Quick Apps、遊戲、MinkPad Lite、所有應用程式同可用嘅應用程式空間。</string>
 </resources>

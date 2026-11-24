@@ -18,6 +18,11 @@ internal class MinkSpacePreferenceStore(private val prefs: SharedPreferences) {
     var totalScreenShortcut by mutableStateOf(loadTotalScreenShortcut())
         private set
 
+    var shouldStartOnManager by mutableStateOf(
+        !prefs.getBoolean(KEY_INITIAL_MANAGER_SHOWN, false),
+    )
+        private set
+
     fun setEnabled(miniApp: MinkSpaceMiniApp, enabled: Boolean) {
         enabledMiniApps = if (enabled) {
             enabledMiniApps + miniApp
@@ -38,6 +43,12 @@ internal class MinkSpacePreferenceStore(private val prefs: SharedPreferences) {
     fun updateTotalScreenShortcut(miniApp: MinkSpaceMiniApp?) {
         totalScreenShortcut = miniApp
         prefs.edit { putString(KEY_TOTAL_SCREEN_SHORTCUT, miniApp?.stableId ?: TOTAL_SCREEN_OFF) }
+    }
+
+    fun markInitialManagerShown() {
+        if (!shouldStartOnManager) return
+        shouldStartOnManager = false
+        prefs.edit { putBoolean(KEY_INITIAL_MANAGER_SHOWN, true) }
     }
 
     fun replaceFromBackup(
@@ -108,6 +119,7 @@ internal class MinkSpacePreferenceStore(private val prefs: SharedPreferences) {
         const val KEY_ENABLED = "mink_space_enabled_mini_apps"
         const val KEY_VCARD_MINI_APP_MIGRATED = "mink_space_vcard_migration_complete"
         const val KEY_TOTAL_SCREEN_SHORTCUT = "mink_space_total_screen_shortcut"
+        const val KEY_INITIAL_MANAGER_SHOWN = "mink_space_initial_manager_shown"
         const val TOTAL_SCREEN_OFF = "off"
     }
 }

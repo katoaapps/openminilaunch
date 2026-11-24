@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="quick_drawer_tour_updates_title">新機能またはベータアクセス</string>
+    <string name="quick_drawer_tour_updates_description">変更点を確認するか、現在のGoogle Playテストに参加できます。</string>
+    <string name="quick_drawer_tour_quick_apps_description">Mink Assistantを開いたときにも、これらのアプリが表示されます。</string>
+    <string name="quick_drawer_tour_games_description">SableOS向けに開発されたSable Gamesのゲームをプレイできます。</string>
+    <string name="quick_drawer_tour_all_apps_description">このデバイスにインストールされているすべてのアプリを開きます。</string>
+    <string name="quick_drawer_tour_private_space_description">Androidのプライベートスペースに保存されたアプリを開きます。</string>
+    <string name="quick_drawer_tour_work_space_description">仕事用プロファイルのアプリを開きます。</string>
+    <string name="replay_quick_drawer_tour">Quick Drawerツアーを再生</string>
+    <string name="replay_quick_drawer_tour_summary">更新、Quick Apps、ゲーム、アプリスペースを確認</string>
+    <string name="licenses_and_attribution">ライセンスと帰属表示</string>
+    <string name="sable_games_license_summary">SableOS向けに開発されたSable Gamesと、同梱されている第三者通知</string>
+    <string name="quick_drawer_tour_minkpad_description">このスマートフォンをBluetoothキーボード、トラックパッド、またはリモコンとして使えます。</string>
+</resources>

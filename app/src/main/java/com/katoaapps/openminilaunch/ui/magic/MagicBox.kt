@@ -95,6 +95,7 @@ internal fun MagicBoxContent(
     captureActivityCommandHotkeys: Boolean = false,
     homeRequestToken: Int = 0,
     focusRearmToken: Int = 0,
+    keyboardDismissRequestToken: Int = 0,
     enableFirstOpenTour: Boolean = false,
     onTodoAdded: (String, onAnimationFinished: () -> Unit) -> Unit = { _, finished ->
         finished()
@@ -242,6 +243,17 @@ internal fun MagicBoxContent(
         if (useMinkKeyboard) minkKeyboardMinimized = false
         focusRequestShowsKeyboard = showSoftwareKeyboard
         focusRequestSerial += 1
+    }
+
+    LaunchedEffect(keyboardDismissRequestToken) {
+        if (keyboardDismissRequestToken > 0) {
+            // Quick Drawer is outside Magic Box's editor flow. Retire either keyboard host
+            // without clearing the draft so returning Home can resume the same session.
+            showKeyboardWhileCollapsed = false
+            minkKeyboardMinimized = true
+            keyboard?.hide()
+            focusManager.clearFocus(force = true)
+        }
     }
 
     fun chooseMessagingApp(draft: MessageDraft) {

@@ -20,6 +20,8 @@ internal sealed interface MinkHomeRequest {
 
     data class MagicBoxTour(override val token: Long) : MinkHomeRequest
 
+    data class QuickDrawerTour(override val token: Long) : MinkHomeRequest
+
     data class DemoHome(override val token: Long) : MinkHomeRequest
 
     data class DemoSearch(
@@ -41,6 +43,7 @@ internal object MinkHomeRequestIntent {
     private const val TYPE_MESSAGE = "message"
     private const val TYPE_FEATURE_TOUR = "feature_tour"
     private const val TYPE_MAGIC_BOX_TOUR = "magic_box_tour"
+    private const val TYPE_QUICK_DRAWER_TOUR = "quick_drawer_tour"
     private const val TYPE_DEMO_HOME = "demo_home"
     private const val TYPE_DEMO_SEARCH = "demo_search"
 
@@ -53,6 +56,7 @@ internal object MinkHomeRequestIntent {
                     is MinkHomeRequest.Message -> TYPE_MESSAGE
                     is MinkHomeRequest.FeatureTour -> TYPE_FEATURE_TOUR
                     is MinkHomeRequest.MagicBoxTour -> TYPE_MAGIC_BOX_TOUR
+                    is MinkHomeRequest.QuickDrawerTour -> TYPE_QUICK_DRAWER_TOUR
                     is MinkHomeRequest.DemoHome -> TYPE_DEMO_HOME
                     is MinkHomeRequest.DemoSearch -> TYPE_DEMO_SEARCH
                 },
@@ -64,6 +68,7 @@ internal object MinkHomeRequestIntent {
                     is MinkHomeRequest.DemoSearch -> putExtra(EXTRA_QUERY, request.query)
                     is MinkHomeRequest.FeatureTour,
                     is MinkHomeRequest.MagicBoxTour,
+                    is MinkHomeRequest.QuickDrawerTour,
                     is MinkHomeRequest.DemoHome,
                     -> Unit
                 }
@@ -79,6 +84,7 @@ internal object MinkHomeRequestIntent {
                 ?.let { recipient -> MinkHomeRequest.Message(token, recipient) }
             TYPE_FEATURE_TOUR -> MinkHomeRequest.FeatureTour(token)
             TYPE_MAGIC_BOX_TOUR -> MinkHomeRequest.MagicBoxTour(token)
+            TYPE_QUICK_DRAWER_TOUR -> MinkHomeRequest.QuickDrawerTour(token)
             TYPE_DEMO_HOME -> MinkHomeRequest.DemoHome(token)
             TYPE_DEMO_SEARCH -> MinkHomeRequest.DemoSearch(
                 token = token,

@@ -14,6 +14,7 @@ import androidx.compose.ui.layout.onGloballyPositioned
 
 internal enum class HomeTourTarget {
     APP_GRID,
+    QUICK_DRAWER,
     CLASSIC_PAGES,
     CLASSIC_FOLDER_TITLE,
     CLASSIC_FOLDER_HOME,

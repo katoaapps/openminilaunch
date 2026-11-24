@@ -152,10 +152,14 @@ internal fun AppGrid(
                                 .size(slotSize)
                                 .animateItem()
                                 .then(
-                                    if (slot == tourTargetSlot) {
-                                        Modifier.homeTourTarget(HomeTourTarget.APP_GRID)
-                                    } else {
-                                        Modifier
+                                    when {
+                                        slot == AppGridSlot.DRAWER -> Modifier.homeTourTarget(
+                                            HomeTourTarget.QUICK_DRAWER,
+                                        )
+                                        slot == tourTargetSlot -> Modifier.homeTourTarget(
+                                            HomeTourTarget.APP_GRID,
+                                        )
+                                        else -> Modifier
                                     },
                                 )
                                 .clip(RoundedCornerShape(if (compact) Dimens.dp14 else Dimens.dp18))

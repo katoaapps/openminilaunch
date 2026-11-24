@@ -8,12 +8,12 @@ class OnboardingStepOrderTest {
     fun slabChoosesThemeBeforeKeyboard() {
         assertEquals(
             listOf(
-                OnboardingStep.HOME,
                 OnboardingStep.LAYOUT,
                 OnboardingStep.THEME,
                 OnboardingStep.KEYBOARD,
                 OnboardingStep.CONTACTS,
                 OnboardingStep.ASSISTANT,
+                OnboardingStep.HOME,
             ),
             onboardingStepOrder(showKeyboardSetup = true),
         )
@@ -23,11 +23,11 @@ class OnboardingStepOrderTest {
     fun hardwareKeyboardPhoneStillChoosesThemeWithoutSoftwareKeyboardStep() {
         assertEquals(
             listOf(
-                OnboardingStep.HOME,
                 OnboardingStep.LAYOUT,
                 OnboardingStep.THEME,
                 OnboardingStep.CONTACTS,
                 OnboardingStep.ASSISTANT,
+                OnboardingStep.HOME,
             ),
             onboardingStepOrder(showKeyboardSetup = false),
         )

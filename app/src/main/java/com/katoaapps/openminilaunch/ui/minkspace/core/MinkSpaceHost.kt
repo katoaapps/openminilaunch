@@ -35,6 +35,7 @@ internal fun MinkSpaceHost(
     openMinkSpaceSettings: () -> Unit,
     presentationState: MinkSpacePresentationState,
     expandedPresentation: Boolean,
+    active: Boolean,
     modifier: Modifier = Modifier,
 ) {
     val dependencies = remember(
@@ -71,7 +72,14 @@ internal fun MinkSpaceHost(
         }
     }
     val settingsPage = activeMiniApps.size
-    val pagerState = rememberPagerState(pageCount = { activeMiniApps.size + 1 })
+    val pagerState = rememberPagerState(
+        initialPage = initialMinkSpacePage(
+            settingsPage = settingsPage,
+            shouldStartOnManager = store.shouldStartMinkSpaceOnManager,
+            demoModeEnabled = store.demoModeEnabled,
+        ),
+        pageCount = { activeMiniApps.size + 1 },
+    )
 
     BackHandler(enabled = presentationState.isExpanded) {
         presentationState.collapse()
@@ -80,6 +88,12 @@ internal fun MinkSpaceHost(
     LaunchedEffect(activeMiniApps) {
         if (pagerState.currentPage > settingsPage) {
             pagerState.scrollToPage(settingsPage)
+        }
+    }
+    LaunchedEffect(active, store.shouldStartMinkSpaceOnManager) {
+        if (active && store.shouldStartMinkSpaceOnManager && !store.demoModeEnabled) {
+            if (pagerState.currentPage != settingsPage) pagerState.scrollToPage(settingsPage)
+            store.markInitialMinkSpaceManagerShown()
         }
     }
     LaunchedEffect(todoJumpToken, activeMiniApps) {
@@ -133,3 +147,9 @@ internal fun MinkSpaceHost(
         }
     }
 }
+
+internal fun initialMinkSpacePage(
+    settingsPage: Int,
+    shouldStartOnManager: Boolean,
+    demoModeEnabled: Boolean,
+): Int = if (shouldStartOnManager && !demoModeEnabled) settingsPage else 0

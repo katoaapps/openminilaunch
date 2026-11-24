@@ -58,6 +58,7 @@ internal fun BoxScope.HomeFocusPanel(
     onTodoCenterChanged: (Offset) -> Unit,
     onPausedApp: (String) -> Unit,
     onOpenDrawer: () -> Unit,
+    active: Boolean,
 ) {
     val minkSpaceExpanded = minkSpacePresentation.isExpanded
     val configuration = LocalConfiguration.current
@@ -153,6 +154,7 @@ internal fun BoxScope.HomeFocusPanel(
                     openMinkSpaceSettings = openMinkSpaceSettings,
                     presentationState = minkSpacePresentation,
                     expandedPresentation = expansionLayout.expandedPresentation,
+                    active = active,
                     modifier = Modifier
                         .weight(1f)
                         .fillMaxHeight()

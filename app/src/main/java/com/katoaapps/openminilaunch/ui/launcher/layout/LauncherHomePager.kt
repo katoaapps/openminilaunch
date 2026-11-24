@@ -57,6 +57,8 @@ internal fun LauncherHomePager(
     homePageRequestToken: Int,
     keyboardInputEnabled: Boolean,
     homeRequestToken: Int,
+    quickDrawerTourRequestToken: Long,
+    onQuickDrawerTourRequestHandled: () -> Unit,
     magicBoxSessionState: MagicBoxSessionState,
     minkSpacePresentation: MinkSpacePresentationState,
     openSettings: (SettingsDestination) -> Unit,
@@ -213,6 +215,8 @@ internal fun LauncherHomePager(
                 onMinkSpaceExpandedChange = { minkSpaceExpanded = it },
                 keyboardInputEnabled = keyboardInputEnabled,
                 homeRequestToken = homeRequestToken,
+                quickDrawerTourRequestToken = quickDrawerTourRequestToken,
+                onQuickDrawerTourRequestHandled = onQuickDrawerTourRequestHandled,
                 magicBoxSessionState = magicBoxSessionState,
                 minkSpacePresentation = minkSpacePresentation,
             )
@@ -227,6 +231,8 @@ internal fun LauncherHomePager(
                 magicBoxExpanded = magicBoxExpanded,
                 minkSpaceExpanded = minkSpaceExpanded,
                 homeRequestToken = homeRequestToken,
+                quickDrawerTourRequestToken = quickDrawerTourRequestToken,
+                onQuickDrawerTourRequestHandled = onQuickDrawerTourRequestHandled,
                 magicBoxSessionState = magicBoxSessionState,
                 minkSpacePresentation = minkSpacePresentation,
                 onFocusPage = onFocusedPageChange,
@@ -280,6 +286,9 @@ internal fun LauncherHomePager(
                                     onMinkSpaceExpandedChange = { minkSpaceExpanded = it },
                                     keyboardInputEnabled = keyboardInputEnabled,
                                     homeRequestToken = homeRequestToken,
+                                    quickDrawerTourRequestToken = quickDrawerTourRequestToken,
+                                    onQuickDrawerTourRequestHandled =
+                                        onQuickDrawerTourRequestHandled,
                                     magicBoxSessionState = magicBoxSessionState,
                                     minkSpacePresentation = minkSpacePresentation,
                                 )

@@ -6,9 +6,9 @@ import org.junit.Test
 
 class MinkSpacePreferenceDefaultsTest {
     @Test
-    fun missingPreferenceStartsWithTodoAndVCardEnabled() {
+    fun missingPreferenceStartsWithOnlyTodoEnabled() {
         assertEquals(
-            setOf(MinkSpaceMiniApp.TODO, MinkSpaceMiniApp.VCARD),
+            setOf(MinkSpaceMiniApp.TODO),
             enabledMinkSpaceMiniAppsFromStableIds(null),
         )
     }

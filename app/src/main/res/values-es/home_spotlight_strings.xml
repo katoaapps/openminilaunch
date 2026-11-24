@@ -28,4 +28,6 @@
     <string name="home_spotlight_classic_gestures_title">Atajos clásicos</string>
     <string name="home_spotlight_classic_gestures_description">Desliza hacia arriba para ver Todas las apps y hacia abajo para las notificaciones.</string>
     <string name="start_typing">Empieza a escribir</string>
+    <string name="home_spotlight_quick_drawer_title">Quick Drawer</string>
+    <string name="home_spotlight_quick_drawer_description">Abre Quick Apps, juegos, MinkPad Lite, Todas las apps y los espacios de apps disponibles desde aquí.</string>
 </resources>

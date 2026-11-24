@@ -28,4 +28,6 @@
     <string name="home_spotlight_classic_gestures_title">کلاسک شارٹ کٹس</string>
     <string name="home_spotlight_classic_gestures_description">تمام ایپس کے لیے اوپر اور اطلاعات کے لیے نیچے سوائپ کریں۔</string>
     <string name="start_typing">ٹائپ کرنا شروع کریں</string>
+    <string name="home_spotlight_quick_drawer_title">Quick Drawer</string>
+    <string name="home_spotlight_quick_drawer_description">یہاں سے Quick Apps، گیمز، MinkPad Lite، تمام ایپس اور دستیاب ایپ اسپیسز کھولیں۔</string>
 </resources>

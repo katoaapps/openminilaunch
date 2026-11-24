@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="quick_drawer_tour_updates_title">Новинки или доступ к бета-версии</string>
+    <string name="quick_drawer_tour_updates_description">Посмотрите изменения или присоединитесь к текущему тестированию Google Play.</string>
+    <string name="quick_drawer_tour_quick_apps_description">Эти приложения также отображаются при запуске Mink Assistant.</string>
+    <string name="quick_drawer_tour_games_description">Играйте в игры Sable Games, изначально созданные для SableOS.</string>
+    <string name="quick_drawer_tour_all_apps_description">Откройте все приложения, установленные на устройстве.</string>
+    <string name="quick_drawer_tour_private_space_description">Откройте приложения из закрытого пространства Android.</string>
+    <string name="quick_drawer_tour_work_space_description">Откройте приложения рабочего профиля.</string>
+    <string name="replay_quick_drawer_tour">Повторить обзор Quick Drawer</string>
+    <string name="replay_quick_drawer_tour_summary">Снова посмотреть обновления, Quick Apps, игры и пространства приложений</string>
+    <string name="licenses_and_attribution">Лицензии и атрибуция</string>
+    <string name="sable_games_license_summary">Sable Games, изначально созданные для SableOS, и включённые уведомления третьих сторон</string>
+    <string name="quick_drawer_tour_minkpad_description">Используйте этот телефон как Bluetooth-клавиатуру, трекпад или пульт дистанционного управления.</string>
+</resources>

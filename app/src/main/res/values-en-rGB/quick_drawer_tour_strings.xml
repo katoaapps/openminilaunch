@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="quick_drawer_tour_updates_title">What’s new or beta access</string>
+    <string name="quick_drawer_tour_updates_description">See what changed or join the current Google Play test from here.</string>
+    <string name="quick_drawer_tour_quick_apps_description">These apps also appear when Mink Assistant opens.</string>
+    <string name="quick_drawer_tour_games_description">Play games from Sable Games, originally created for SableOS.</string>
+    <string name="quick_drawer_tour_all_apps_description">Open every app installed on this device.</string>
+    <string name="quick_drawer_tour_private_space_description">Open apps kept in Android Private Space.</string>
+    <string name="quick_drawer_tour_work_space_description">Open apps from your work profile.</string>
+    <string name="replay_quick_drawer_tour">Replay Quick Drawer tour</string>
+    <string name="replay_quick_drawer_tour_summary">Review updates, Quick Apps, games, and app spaces</string>
+    <string name="licenses_and_attribution">Licences &amp; attribution</string>
+    <string name="sable_games_license_summary">Sable Games, originally created for SableOS, and bundled third-party notices</string>
+    <string name="quick_drawer_tour_minkpad_description">Use this phone as a Bluetooth keyboard, trackpad or remote control.</string>
+</resources>

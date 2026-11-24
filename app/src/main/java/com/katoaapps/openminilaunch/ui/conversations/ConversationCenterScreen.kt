@@ -81,6 +81,7 @@ internal fun ConversationCenterScreen(
     onComposeConversationMessage: (LauncherShortcutTarget) -> Unit,
     goBack: () -> Unit,
     embedded: Boolean = false,
+    hostActive: Boolean = true,
     rootRequestToken: Int = 0,
     launcherKeyboardVisible: Boolean = false,
     onUiStateChanged: (ConversationCenterUiState) -> Unit = {},
@@ -267,7 +268,7 @@ internal fun ConversationCenterScreen(
             onDismiss = { showAccessDisclosure = false },
         )
     }
-    if (showFeatureTour) {
+    if (showFeatureTour && hostActive) {
         ConversationFeatureTour(
             onDismiss = {
                 store.markUpdateSeen(CONVERSATION_FEATURE_TOUR_ID)

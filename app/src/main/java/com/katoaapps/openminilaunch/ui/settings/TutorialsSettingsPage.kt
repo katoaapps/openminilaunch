@@ -2,6 +2,7 @@ package com.katoaapps.openminilaunch.ui.settings
 
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.filled.AutoAwesome
+import androidx.compose.material.icons.filled.Apps
 import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.RestartAlt
 import androidx.compose.runtime.Composable
@@ -15,6 +16,7 @@ internal fun TutorialsSettingsPage(
     onRepeatSetup: () -> Unit,
     onReplayHomeTour: () -> Unit,
     onReplayMagicBoxTour: () -> Unit,
+    onReplayQuickDrawerTour: () -> Unit,
     goBack: () -> Unit,
 ) {
     SettingsPage(stringResource(R.string.tutorials), goBack) {
@@ -35,6 +37,12 @@ internal fun TutorialsSettingsPage(
             stringResource(R.string.replay_magic_box_tour_summary),
             Icons.Default.AutoAwesome,
             onClick = onReplayMagicBoxTour,
+        )
+        SettingsRow(
+            stringResource(R.string.replay_quick_drawer_tour),
+            stringResource(R.string.replay_quick_drawer_tour_summary),
+            Icons.Default.Apps,
+            onClick = onReplayQuickDrawerTour,
         )
     }
 }

@@ -16,7 +16,7 @@ internal enum class MinkSpaceMiniApp(
 
     companion object {
         val defaultOrder: List<MinkSpaceMiniApp> = entries
-        val defaultEnabled: Set<MinkSpaceMiniApp> = setOf(TODO, VCARD)
+        val defaultEnabled: Set<MinkSpaceMiniApp> = setOf(TODO)
 
         fun fromStableId(stableId: String): MinkSpaceMiniApp? =
             entries.firstOrNull { it.stableId == stableId }

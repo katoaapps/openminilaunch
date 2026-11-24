@@ -28,4 +28,6 @@
     <string name="home_spotlight_classic_gestures_title">Classic shortcuts</string>
     <string name="home_spotlight_classic_gestures_description">Swipe up for All Apps and down for notifications.</string>
     <string name="start_typing">Start typing</string>
+    <string name="home_spotlight_quick_drawer_title">Quick Drawer</string>
+    <string name="home_spotlight_quick_drawer_description">Open Quick Apps, games, MinkPad Lite, All Apps and available app spaces from here.</string>
 </resources>

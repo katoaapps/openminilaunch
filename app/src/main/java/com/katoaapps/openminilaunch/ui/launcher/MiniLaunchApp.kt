@@ -123,6 +123,7 @@ internal fun MiniLaunchApp(
     }
     var tutorialRun by rememberSaveable { mutableIntStateOf(0) }
     var repeatSetupOnly by rememberSaveable { mutableStateOf(false) }
+    var quickDrawerTourRequestToken by rememberSaveable { mutableStateOf(0L) }
     val homeMagicBoxSessionState = rememberMagicBoxSessionState()
     val homeTourTargetRegistry = rememberHomeTourTargetRegistry()
     val minkSpacePresentation = rememberMinkSpacePresentationState()
@@ -158,6 +159,12 @@ internal fun MiniLaunchApp(
             }
             is MinkHomeRequest.MagicBoxTour -> {
                 homeMagicBoxSessionState.prepareFeatureTour()
+                focusedLauncherPage = HOME_PAGE
+                homePageRequestToken++
+                screen = Screen.HOME
+            }
+            is MinkHomeRequest.QuickDrawerTour -> {
+                quickDrawerTourRequestToken = request.token
                 focusedLauncherPage = HOME_PAGE
                 homePageRequestToken++
                 screen = Screen.HOME
@@ -311,6 +318,10 @@ internal fun MiniLaunchApp(
                                             !showHomeFeatureTour &&
                                             !showGooglePlayBetaNotice,
                                     homeRequestToken = homeRequestToken,
+                                    quickDrawerTourRequestToken = quickDrawerTourRequestToken,
+                                    onQuickDrawerTourRequestHandled = {
+                                        quickDrawerTourRequestToken = 0L
+                                    },
                                     magicBoxSessionState = homeMagicBoxSessionState,
                                     minkSpacePresentation = minkSpacePresentation,
                                     openSettings = { destination ->
@@ -374,6 +385,14 @@ internal fun MiniLaunchApp(
                                 settingsDestination = SettingsDestination.OVERVIEW
                                 openHome(
                                     MinkHomeRequest.MagicBoxTour(
+                                        android.os.SystemClock.elapsedRealtimeNanos(),
+                                    ),
+                                )
+                            },
+                            onReplayQuickDrawerTour = {
+                                settingsDestination = SettingsDestination.OVERVIEW
+                                openHome(
+                                    MinkHomeRequest.QuickDrawerTour(
                                         android.os.SystemClock.elapsedRealtimeNanos(),
                                     ),
                                 )

@@ -48,6 +48,8 @@ internal fun LauncherTwoPanel(
     magicBoxExpanded: Boolean,
     minkSpaceExpanded: Boolean,
     homeRequestToken: Int,
+    quickDrawerTourRequestToken: Long,
+    onQuickDrawerTourRequestHandled: () -> Unit,
     magicBoxSessionState: MagicBoxSessionState,
     minkSpacePresentation: MinkSpacePresentationState,
     onFocusPage: (Int) -> Unit,
@@ -137,6 +139,8 @@ internal fun LauncherTwoPanel(
                 onMinkSpaceExpandedChange = onMinkSpaceExpandedChange,
                 keyboardInputEnabled = true,
                 homeRequestToken = homeRequestToken,
+                quickDrawerTourRequestToken = quickDrawerTourRequestToken,
+                onQuickDrawerTourRequestHandled = onQuickDrawerTourRequestHandled,
                 magicBoxSessionState = magicBoxSessionState,
                 minkSpacePresentation = minkSpacePresentation,
                 paneModifier = Modifier.offset { IntOffset(homeLeftPx, 0) }

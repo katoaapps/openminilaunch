@@ -20,6 +20,7 @@ internal fun SettingsDestinationContent(
     onRepeatTutorial: () -> Unit,
     onReplayHomeTour: () -> Unit,
     onReplayMagicBoxTour: () -> Unit,
+    onReplayQuickDrawerTour: () -> Unit,
     onNavigate: (SettingsDestination) -> Unit,
     onOverviewNavigate: (SettingsDestination) -> Unit,
     onNavigateBack: () -> Unit,
@@ -168,6 +169,7 @@ internal fun SettingsDestinationContent(
             onRepeatSetup = onRepeatTutorial,
             onReplayHomeTour = onReplayHomeTour,
             onReplayMagicBoxTour = onReplayMagicBoxTour,
+            onReplayQuickDrawerTour = onReplayQuickDrawerTour,
             goBack = onNavigateBack,
         )
         SettingsDestination.DEMO_STUDIO -> DemoStudioSettingsPage(

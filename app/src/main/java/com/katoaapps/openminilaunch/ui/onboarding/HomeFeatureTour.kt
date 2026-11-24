@@ -36,6 +36,11 @@ private fun minkHomeFeatureTourSteps(): List<HomeTourStep> = listOf(
         R.string.home_spotlight_folders_description,
     ),
     HomeTourStep(
+        HomeTourTarget.QUICK_DRAWER,
+        R.string.home_spotlight_quick_drawer_title,
+        R.string.home_spotlight_quick_drawer_description,
+    ),
+    HomeTourStep(
         HomeTourTarget.MINK_SPACE,
         R.string.home_spotlight_minkspace_title,
         R.string.home_spotlight_minkspace_description,

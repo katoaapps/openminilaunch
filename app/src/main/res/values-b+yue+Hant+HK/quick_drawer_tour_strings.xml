@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="quick_drawer_tour_updates_title">新功能或測試版存取</string>
+    <string name="quick_drawer_tour_updates_description">喺呢度查看更新內容或加入目前嘅 Google Play 測試。</string>
+    <string name="quick_drawer_tour_quick_apps_description">開啟 Mink Assistant 時亦會顯示呢啲應用程式。</string>
+    <string name="quick_drawer_tour_games_description">遊玩最初為 SableOS 製作嘅 Sable Games 遊戲。</string>
+    <string name="quick_drawer_tour_all_apps_description">開啟呢部裝置已安裝嘅所有應用程式。</string>
+    <string name="quick_drawer_tour_private_space_description">開啟存放喺 Android 私密空間嘅應用程式。</string>
+    <string name="quick_drawer_tour_work_space_description">開啟工作設定檔中嘅應用程式。</string>
+    <string name="replay_quick_drawer_tour">重播 Quick Drawer 導覽</string>
+    <string name="replay_quick_drawer_tour_summary">重溫更新、Quick Apps、遊戲同應用程式空間</string>
+    <string name="licenses_and_attribution">授權同署名</string>
+    <string name="sable_games_license_summary">最初為 SableOS 製作嘅 Sable Games，同隨附嘅第三方聲明</string>
+    <string name="quick_drawer_tour_minkpad_description">將呢部手機用作藍牙鍵盤、觸控板或遙控器。</string>
+</resources>

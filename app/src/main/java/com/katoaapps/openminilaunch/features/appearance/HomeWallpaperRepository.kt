@@ -2,6 +2,7 @@ package com.katoaapps.openminilaunch.features.appearance
 
 import android.annotation.SuppressLint
 import android.app.WallpaperManager
+import android.app.WallpaperColors
 import android.content.Context
 import android.graphics.Bitmap
 import android.graphics.BitmapFactory
@@ -11,10 +12,13 @@ import android.os.Build
 import android.os.Handler
 import android.os.Looper
 import androidx.annotation.DrawableRes
+import androidx.annotation.RequiresApi
 import androidx.compose.runtime.mutableStateOf
 import com.katoaapps.openminilaunch.model.HomeWallpaperAppearance
 import java.io.File
 import kotlin.math.roundToInt
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.withContext
 
 internal class HomeWallpaperRepository(context: Context) {
     private val appContext = context.applicationContext
@@ -32,9 +36,9 @@ internal class HomeWallpaperRepository(context: Context) {
                 wallpaperManager.addOnColorsChangedListener(
                     { colors, which ->
                         if (which and WallpaperManager.FLAG_SYSTEM != 0) {
-                            systemWallpaperAppearanceState.value = colors?.primaryColor
-                                ?.toArgb()
-                                ?.let(::singleColorAppearance)
+                            colors?.toContrastAppearance()?.let { appearance ->
+                                systemWallpaperAppearanceState.value = appearance
+                            }
                         }
                     },
                     Handler(Looper.getMainLooper()),
@@ -55,6 +59,18 @@ internal class HomeWallpaperRepository(context: Context) {
         decodeSampled(maximumSide) { options ->
             BitmapFactory.decodeResource(appContext.resources, drawableRes, options)
         }
+
+    /**
+     * Refreshes the contrast sample after Home becomes visible. On recent Android versions the
+     * raw wallpaper may be private, so WallpaperColors' dark-text hint remains the reliable
+     * fallback instead of borrowing the selected theme's unrelated background color.
+     */
+    suspend fun refreshSystemWallpaperAppearance() {
+        val refreshed = withContext(Dispatchers.IO) {
+            readSystemWallpaperPixelsAppearance() ?: readSystemWallpaperAppearance()
+        }
+        if (refreshed != null) systemWallpaperAppearanceState.value = refreshed
+    }
 
     /**
      * Android may withhold the raw system wallpaper from third-party apps. Return a private,
@@ -175,12 +191,49 @@ internal class HomeWallpaperRepository(context: Context) {
         if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O_MR1) return null
         return runCatching {
             wallpaperManager.getWallpaperColors(WallpaperManager.FLAG_SYSTEM)
-                ?.primaryColor
-                ?.toArgb()
-                ?.let(::singleColorAppearance)
+                ?.toContrastAppearance()
         }.getOrNull()
     }
 
-    private fun singleColorAppearance(argb: Int): HomeWallpaperAppearance =
-        HomeWallpaperAppearance(averageColorArgb = argb, headerColorArgb = argb)
+    private fun readSystemWallpaperPixelsAppearance(): HomeWallpaperAppearance? {
+        val thumbnail = loadSystemWallpaperThumbnail(maximumSide = 256) ?: return null
+        return try {
+            HomeWallpaperAppearanceAnalyzer.analyze(thumbnail)
+        } finally {
+            thumbnail.recycle()
+        }
+    }
+}
+
+/**
+ * WallpaperColors' primary swatch is a palette color, not necessarily the color behind launcher
+ * text. Its dark-text hint is Android's explicit statement that dark foregrounds are safe across
+ * the wallpaper, so represent that contrast decision with a light/dark reference surface.
+ */
+@RequiresApi(Build.VERSION_CODES.O_MR1)
+private fun WallpaperColors.toContrastAppearance(): HomeWallpaperAppearance {
+    val supportsDarkText = if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.S) {
+        colorHints and WallpaperColors.HINT_SUPPORTS_DARK_TEXT != 0
+    } else {
+        null
+    }
+    return systemWallpaperContrastAppearance(
+        primaryColorArgb = primaryColor.toArgb(),
+        supportsDarkText = supportsDarkText,
+    )
+}
+
+internal fun systemWallpaperContrastAppearance(
+    primaryColorArgb: Int,
+    supportsDarkText: Boolean?,
+): HomeWallpaperAppearance {
+    val contrastReference = when (supportsDarkText) {
+        true -> 0xFFFFFFFF.toInt()
+        false -> 0xFF000000.toInt()
+        null -> primaryColorArgb
+    }
+    return HomeWallpaperAppearance(
+        averageColorArgb = contrastReference,
+        headerColorArgb = contrastReference,
+    )
 }

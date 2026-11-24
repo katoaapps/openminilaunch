@@ -28,4 +28,6 @@
     <string name="notifications">Notifications</string>
     <string name="replay_home_tour">Replay Home Tour</string>
     <string name="replay_home_tour_summary">Review Home controls, shortcuts, and gestures</string>
+    <string name="home_spotlight_quick_drawer_title">Quick Drawer</string>
+    <string name="home_spotlight_quick_drawer_description">Open Quick Apps, games, MinkPad Lite, All Apps, and available app spaces from here.</string>
 </resources>

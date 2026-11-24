@@ -28,4 +28,6 @@
     <string name="home_spotlight_classic_gestures_title">क्लासिक शॉर्टकट</string>
     <string name="home_spotlight_classic_gestures_description">सभी ऐप्स के लिए ऊपर और सूचनाओं के लिए नीचे स्वाइप करें।</string>
     <string name="start_typing">टाइप करना शुरू करें</string>
+    <string name="home_spotlight_quick_drawer_title">Quick Drawer</string>
+    <string name="home_spotlight_quick_drawer_description">यहाँ से Quick Apps, गेम, MinkPad Lite, सभी ऐप और उपलब्ध ऐप स्पेस खोलें।</string>
 </resources>

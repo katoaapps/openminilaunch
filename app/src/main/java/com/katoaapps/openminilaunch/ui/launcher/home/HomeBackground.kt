@@ -8,6 +8,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.produceState
 import androidx.compose.runtime.remember
@@ -28,6 +29,15 @@ internal fun HomeBackground(store: LauncherStore, modifier: Modifier = Modifier)
     val imageRevision = store.appBackgroundImageRevision
     val wallpaperFile = store.appBackgroundImageFile
     val bundledWallpaper = store.appBackgroundPreset
+    LaunchedEffect(
+        store.useSystemHomeWallpaper,
+        store.appBackgroundColorArgb,
+        store.homePanelColorArgb,
+    ) {
+        if (store.useSystemHomeWallpaper) {
+            store.refreshSystemHomeWallpaperAppearance()
+        }
+    }
     val wallpaperBitmap by produceState<Bitmap?>(
         initialValue = null,
         imageEnabled,

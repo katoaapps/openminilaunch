@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="quick_drawer_tour_updates_title">নতুন কী বা বিটা অ্যাক্সেস</string>
+    <string name="quick_drawer_tour_updates_description">এখান থেকে পরিবর্তন দেখুন বা বর্তমান Google Play পরীক্ষায় যোগ দিন।</string>
+    <string name="quick_drawer_tour_quick_apps_description">Mink Assistant খুললেও এই অ্যাপগুলো দেখা যায়।</string>
+    <string name="quick_drawer_tour_games_description">Sable Games-এর গেম খেলুন, যা মূলত SableOS-এর জন্য তৈরি।</string>
+    <string name="quick_drawer_tour_all_apps_description">এই ডিভাইসে ইনস্টল করা সব অ্যাপ খুলুন।</string>
+    <string name="quick_drawer_tour_private_space_description">Android Private Space-এ রাখা অ্যাপ খুলুন।</string>
+    <string name="quick_drawer_tour_work_space_description">আপনার কাজের প্রোফাইলের অ্যাপ খুলুন।</string>
+    <string name="replay_quick_drawer_tour">Quick Drawer ট্যুর আবার দেখুন</string>
+    <string name="replay_quick_drawer_tour_summary">আপডেট, Quick Apps, গেম ও অ্যাপ স্পেস আবার দেখুন</string>
+    <string name="licenses_and_attribution">লাইসেন্স ও স্বীকৃতি</string>
+    <string name="sable_games_license_summary">Sable Games, মূলত SableOS-এর জন্য তৈরি, এবং অন্তর্ভুক্ত তৃতীয়-পক্ষ নোটিশ</string>
+    <string name="quick_drawer_tour_minkpad_description">এই ফোনটিকে Bluetooth কীবোর্ড, ট্র্যাকপ্যাড বা রিমোট কন্ট্রোল হিসেবে ব্যবহার করুন।</string>
+</resources>

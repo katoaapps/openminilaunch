@@ -127,7 +127,10 @@ internal fun ClassicLauncherHome(
     onUiStateChange: (ClassicLauncherUiState) -> Unit,
     onTodoCenterChanged: (Offset) -> Unit,
     onMagicBoxReadinessRequested: () -> Unit,
+    onQuickDrawerEntered: () -> Unit,
     launcherKeyboardVisible: Boolean,
+    quickDrawerTourRequestToken: Long = 0L,
+    onQuickDrawerTourComplete: () -> Unit = {},
     modifier: Modifier = Modifier,
 ) {
     val scope = rememberCoroutineScope()
@@ -136,6 +139,7 @@ internal fun ClassicLauncherHome(
     val homePage = classicHomePageIndex(pages, store.classicHomeSlot)
     val minkSpacePage = pages.indexOf(ClassicLauncherPage.MinkSpace)
     val widgetsPage = pages.indexOf(ClassicLauncherPage.Widgets)
+    val quickAppsPage = pages.indexOf(ClassicLauncherPage.QuickApps)
     val pagerState = rememberPagerState(
         initialPage = homePage,
         pageCount = pages::size,
@@ -170,7 +174,18 @@ internal fun ClassicLauncherHome(
             pagerState.animateScrollToPage(minkSpacePage)
         }
     }
+    LaunchedEffect(quickDrawerTourRequestToken) {
+        if (quickDrawerTourRequestToken > 0L && pagerState.currentPage != quickAppsPage) {
+            pagerState.scrollToPage(quickAppsPage)
+        }
+    }
     val currentPage = pages.getOrNull(pagerState.currentPage)
+    val settledPage = pages.getOrNull(pagerState.settledPage)
+    LaunchedEffect(settledPage) {
+        if (settledPage == ClassicLauncherPage.QuickApps) {
+            onQuickDrawerEntered()
+        }
+    }
     val uiState = ClassicLauncherUiState(
         page = currentPage,
         conversationReplyActive = conversationUiState.replyEditorActive,
@@ -221,6 +236,7 @@ internal fun ClassicLauncherHome(
                                 scope.launch { pagerState.animateScrollToPage(homePage) }
                             },
                             embedded = true,
+                            hostActive = pagerState.settledPage == page,
                             rootRequestToken = conversationRootRequestToken,
                             launcherKeyboardVisible = launcherKeyboardVisible,
                             onUiStateChanged = { conversationUiState = it },
@@ -235,6 +251,8 @@ internal fun ClassicLauncherHome(
                         onManageQuickApps = onEditQuickApps,
                         onPausedApp = onPausedApp,
                         modifier = Modifier.fillMaxSize(),
+                        tourRequestToken = quickDrawerTourRequestToken,
+                        onTourComplete = onQuickDrawerTourComplete,
                     )
                     ClassicLauncherPage.Widgets -> ClassicDestinationReveal(
                         triggerToken = widgetsRevealToken,
@@ -659,6 +677,7 @@ private fun ClassicMinkSpacePage(
             openMinkSpaceSettings = openMinkSpaceSettings,
             presentationState = presentationState,
             expandedPresentation = true,
+            active = active,
             modifier = Modifier.fillMaxSize().padding(Dimens.dp12),
         )
     }

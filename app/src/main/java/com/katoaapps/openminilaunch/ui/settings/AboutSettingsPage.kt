@@ -20,6 +20,7 @@ import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Download
 import androidx.compose.material.icons.filled.Forum
 import androidx.compose.material.icons.filled.Gavel
+import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Palette
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.PrivacyTip
@@ -29,6 +30,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableIntStateOf
+import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
@@ -50,6 +52,7 @@ internal fun AboutSettingsPage(
     val enabledMessage = stringResource(R.string.demo_search_data_enabled)
     val disabledMessage = stringResource(R.string.demo_search_data_disabled)
     var versionTapCount by remember { mutableIntStateOf(0) }
+    var showLicenses by remember { mutableStateOf(false) }
     SettingsPage(stringResource(R.string.about), goBack) {
         SettingsSwitchRow(
             title = stringResource(R.string.github_update_checks),
@@ -116,6 +119,13 @@ internal fun AboutSettingsPage(
             Icons.Default.Gavel,
             onClick = actions::openTermsOfUse,
         )
+        HorizontalDivider(color = Sage)
+        SettingsRow(
+            stringResource(R.string.licenses_and_attribution),
+            stringResource(R.string.sable_games_license_summary),
+            Icons.Default.Info,
+            onClick = { showLicenses = true },
+        )
         if (store.demoModeEnabled) {
             SettingsRow(
                 stringResource(R.string.demo_studio),
@@ -142,4 +152,5 @@ internal fun AboutSettingsPage(
             Text(BuildConfig.VERSION_NAME, color = Muted)
         }
     }
+    if (showLicenses) OpenSourceLicensesDialog { showLicenses = false }
 }

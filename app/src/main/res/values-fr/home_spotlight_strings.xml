@@ -28,4 +28,6 @@
     <string name="home_spotlight_classic_gestures_title">Raccourcis classiques</string>
     <string name="home_spotlight_classic_gestures_description">Balayez vers le haut pour Toutes les apps et vers le bas pour les notifications.</string>
     <string name="start_typing">Commencez à écrire</string>
+    <string name="home_spotlight_quick_drawer_title">Quick Drawer</string>
+    <string name="home_spotlight_quick_drawer_description">Ouvrez Quick Apps, les jeux, MinkPad Lite, Toutes les apps et les espaces d’apps disponibles depuis ici.</string>
 </resources>

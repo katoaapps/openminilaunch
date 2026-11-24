@@ -1,0 +1,15 @@
+# Third-party notices
+
+Sable Games is Apache-2.0 (see LICENSE). These parts keep their own licences.
+
+| Component | Used for | Licence |
+| --- | --- | --- |
+| LuaJ 3.0.1 (`org.luaj:luaj-jse`) | Runs the Lua games in Sable Games Console | MIT (https://github.com/luaj/luaj) |
+| `sable-games-console/src/main/java/org/luaj/vm2/lib/MeteredPatterns.java` | Step-counted Lua string patterns for the console's sandbox; follows LuaJ's `StringLib` matcher | MIT, as LuaJ |
+| Phosphor Icons (regular `game-controller` glyph) | Retained Sable Games Console adaptive/monochrome icon resources | MIT (https://github.com/phosphor-icons/core) |
+| rustmix-wave by Piyush Daiya | Starting game logic for Motion 2048, Tilt Maze, and Sokoban Tilt; the Android/Lua ports include additional levels and adaptations | MIT (https://github.com/aimindseye/rustmix-wave) |
+| "Top Down F1 Cars" by EdSquare | Six recolored racing-car images used by Tilt Racer and Tilt Circuit | CC0 (https://opengameart.org/node/65197) |
+| "Track Tiles" by TRBRY | Track artwork arranged and cut into the two Tilt Circuit courses | CC BY 3.0 / OGA-BY 3.0 (https://opengameart.org/content/track-tiles) |
+| AndroidX, Jetpack Compose, Kotlin standard library | App framework | Apache-2.0 |
+
+The active `ic_game_*` arcade badges used by OpenMink's game activities, See All, Magic Box, and folders are original integration artwork released under this project's Apache-2.0 terms. The older `ic_sable_game_*` console icon resources remain Phosphor-derived and retain the MIT attribution above.

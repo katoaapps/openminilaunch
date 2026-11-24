@@ -250,6 +250,7 @@
     <string name="quick_drawer">Quick Drawer</string>
     <string name="manage_quick_apps">क्विक ऐप्स प्रबंधित करें</string>
     <string name="quick_apps">क्विक ऐप्स</string>
+    <string name="games_beta">गेम्स (बीटा)</string>
     <string name="quick_apps_assistant_description">Mink Assistant खुलने पर दिखने वाले ऐप चुनें।</string>
     <string name="quick_apps_empty">Quick Drawer से क्विक ऐप्स चुनें।</string>
     <string name="minkpad_lite">MinkPad Lite</string>

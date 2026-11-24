@@ -94,12 +94,12 @@ internal enum class OnboardingStep {
 }
 
 internal fun onboardingStepOrder(showKeyboardSetup: Boolean): List<OnboardingStep> = buildList {
-    add(OnboardingStep.HOME)
     add(OnboardingStep.LAYOUT)
     add(OnboardingStep.THEME)
     if (showKeyboardSetup) add(OnboardingStep.KEYBOARD)
     add(OnboardingStep.CONTACTS)
     add(OnboardingStep.ASSISTANT)
+    add(OnboardingStep.HOME)
 }
 
 @Composable

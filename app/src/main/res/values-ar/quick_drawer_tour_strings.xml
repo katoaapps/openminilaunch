@@ -1,0 +1,15 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="quick_drawer_tour_updates_title">ما الجديد أو الوصول التجريبي</string>
+    <string name="quick_drawer_tour_updates_description">اطّلع على التغييرات أو انضم إلى اختبار Google Play الحالي من هنا.</string>
+    <string name="quick_drawer_tour_quick_apps_description">تظهر هذه التطبيقات أيضًا عند فتح Mink Assistant.</string>
+    <string name="quick_drawer_tour_games_description">العب ألعاب Sable Games التي أُنشئت في الأصل لنظام SableOS.</string>
+    <string name="quick_drawer_tour_all_apps_description">افتح كل التطبيقات المثبتة على هذا الجهاز.</string>
+    <string name="quick_drawer_tour_private_space_description">افتح التطبيقات المحفوظة في المساحة الخاصة في Android.</string>
+    <string name="quick_drawer_tour_work_space_description">افتح التطبيقات من ملف العمل.</string>
+    <string name="replay_quick_drawer_tour">إعادة جولة Quick Drawer</string>
+    <string name="replay_quick_drawer_tour_summary">راجع التحديثات وQuick Apps والألعاب ومساحات التطبيقات</string>
+    <string name="licenses_and_attribution">التراخيص والإسناد</string>
+    <string name="sable_games_license_summary">Sable Games، أُنشئت في الأصل لنظام SableOS، وإشعارات الجهات الخارجية المضمّنة</string>
+    <string name="quick_drawer_tour_minkpad_description">استخدم هذا الهاتف كلوحة مفاتيح أو لوحة لمس أو جهاز تحكم عن بُعد عبر Bluetooth.</string>
+</resources>

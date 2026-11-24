@@ -28,4 +28,6 @@
     <string name="home_spotlight_classic_gestures_title">ক্লাসিক শর্টকাট</string>
     <string name="home_spotlight_classic_gestures_description">সব অ্যাপের জন্য ওপরে এবং বিজ্ঞপ্তির জন্য নিচে সোয়াইপ করুন।</string>
     <string name="start_typing">টাইপ করা শুরু করুন</string>
+    <string name="home_spotlight_quick_drawer_title">Quick Drawer</string>
+    <string name="home_spotlight_quick_drawer_description">এখান থেকে Quick Apps, গেম, MinkPad Lite, সব অ্যাপ এবং উপলভ্য অ্যাপ স্পেস খুলুন।</string>
 </resources>

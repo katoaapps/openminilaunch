@@ -177,6 +177,7 @@ class LauncherStore private constructor(context: Context) {
     internal val minkSpaceMiniAppOrder get() = minkSpacePreferences.order
     internal val enabledMinkSpaceMiniApps get() = minkSpacePreferences.enabledMiniApps
     internal val minkSpaceTotalScreenShortcut get() = minkSpacePreferences.totalScreenShortcut
+    internal val shouldStartMinkSpaceOnManager get() = minkSpacePreferences.shouldStartOnManager
     internal val minkSpaceWidgetId get() = minkSpaceWidgetStore.appWidgetId
     val effectiveHomePanelColorArgb: Int
         get() = demoModeStore.effectivePanelColor(
@@ -589,6 +590,10 @@ class LauncherStore private constructor(context: Context) {
         minkSpacePreferences.updateTotalScreenShortcut(miniApp)
     }
 
+    internal fun markInitialMinkSpaceManagerShown() {
+        minkSpacePreferences.markInitialManagerShown()
+    }
+
     internal fun replaceMinkSpacePreferencesFromBackup(
         order: List<MinkSpaceMiniApp>,
         enabledMiniApps: Set<MinkSpaceMiniApp>,
@@ -637,6 +642,10 @@ class LauncherStore private constructor(context: Context) {
 
     fun useSystemHomeWallpaper() {
         appearancePreferences.useSystemHomeWallpaper()
+    }
+
+    internal suspend fun refreshSystemHomeWallpaperAppearance() {
+        homeWallpaperRepository.refreshSystemWallpaperAppearance()
     }
 
     internal fun retainAndUseSystemHomeWallpaper(appearance: HomeWallpaperAppearance) {

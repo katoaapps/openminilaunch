@@ -38,6 +38,7 @@ class HomeFeatureTourTest {
         assertEquals(
             listOf(
                 HomeTourTarget.APP_GRID,
+                HomeTourTarget.QUICK_DRAWER,
                 HomeTourTarget.MINK_SPACE,
                 HomeTourTarget.HEADER,
                 HomeTourTarget.GESTURES,

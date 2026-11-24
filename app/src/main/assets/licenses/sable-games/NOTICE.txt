@@ -1,0 +1,9 @@
+Sable Games
+Copyright 2026 The Sable Games contributors
+
+This product is licensed under the Apache License, Version 2.0 (see LICENSE),
+except for the third-party components listed in THIRD_PARTY_NOTICES.md, which
+keep their own licences.
+
+The games were first written for SableOS (https://github.com/aimindseye/zinwaq25-sableos)
+and moved to this repository so they install on any keyboard phone.

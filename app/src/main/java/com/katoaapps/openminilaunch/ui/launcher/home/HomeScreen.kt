@@ -68,6 +68,8 @@ internal fun HomeScreen(
     onMinkSpaceExpandedChange: (Boolean) -> Unit = {},
     keyboardInputEnabled: Boolean,
     homeRequestToken: Int,
+    quickDrawerTourRequestToken: Long = 0L,
+    onQuickDrawerTourRequestHandled: () -> Unit = {},
     magicBoxSessionState: MagicBoxSessionState,
     minkSpacePresentation: MinkSpacePresentationState,
     paneModifier: Modifier = Modifier.fillMaxSize(),
@@ -93,6 +95,7 @@ internal fun HomeScreen(
     }
     var launcherKeyboardVisible by remember { mutableStateOf(false) }
     var magicBoxFocusRearmToken by remember { mutableIntStateOf(0) }
+    var keyboardDismissRequestToken by remember { mutableIntStateOf(0) }
     var showLockDisclosure by remember { mutableStateOf(false) }
     var showUpdateConfirmation by remember { mutableStateOf(false) }
     var pausedAppPackage by remember { mutableStateOf<String?>(null) }
@@ -111,6 +114,12 @@ internal fun HomeScreen(
         if (actions.isLockServiceEnabled()) actions.lockDevice()
     }
     LaunchedEffect(magicExpanded) { onMagicExpandedChange(magicExpanded) }
+    LaunchedEffect(quickDrawerTourRequestToken, classicLayout) {
+        if (quickDrawerTourRequestToken > 0L && !classicLayout) {
+            keyboardDismissRequestToken++
+            drawerOpen = true
+        }
+    }
     LaunchedEffect(minkSpacePresentation.isExpanded) {
         onMinkSpaceExpandedChange(minkSpacePresentation.isExpanded)
     }
@@ -267,7 +276,12 @@ internal fun HomeScreen(
                                 onMagicBoxReadinessRequested = {
                                     magicBoxFocusRearmToken++
                                 },
+                                onQuickDrawerEntered = {
+                                    keyboardDismissRequestToken++
+                                },
                                 launcherKeyboardVisible = launcherKeyboardVisible,
+                                quickDrawerTourRequestToken = quickDrawerTourRequestToken,
+                                onQuickDrawerTourComplete = onQuickDrawerTourRequestHandled,
                             )
                         } else {
                             HomeFocusPanel(
@@ -287,7 +301,11 @@ internal fun HomeScreen(
                                 },
                                 onTodoCenterChanged = { widgetCenter = it },
                                 onPausedApp = { pausedAppPackage = it },
-                                onOpenDrawer = { drawerOpen = true },
+                                onOpenDrawer = {
+                                    keyboardDismissRequestToken++
+                                    drawerOpen = true
+                                },
+                                active = minkStatusActive,
                             )
                         }
                     }
@@ -327,6 +345,7 @@ internal fun HomeScreen(
                 autoOpenSoftwareKeyboardOnHome = store.openSoftwareKeyboardOnHome,
                 homeRequestToken = homeRequestToken,
                 focusRearmToken = magicBoxFocusRearmToken,
+                keyboardDismissRequestToken = keyboardDismissRequestToken,
                 onTodoAdded = { text ->
                     if (MinkSpaceMiniApp.TODO in store.enabledMinkSpaceMiniApps) {
                         flyingTodo = text
@@ -414,6 +433,8 @@ internal fun HomeScreen(
             onDismiss = { drawerOpen = false },
             onManageQuickApps = { quickAppsEditorOpen = true },
             onPausedApp = { pausedAppPackage = it },
+            tourRequestToken = quickDrawerTourRequestToken,
+            onTourComplete = onQuickDrawerTourRequestHandled,
         )
     }
 
