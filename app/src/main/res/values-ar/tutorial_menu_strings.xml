@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="tutorials">البرامج التعليمية</string>
+    <string name="tutorials_summary">أعد الإعداد وجولات الميزات</string>
+    <string name="replay_magic_box_tour">إعادة جولة Magic Box</string>
+    <string name="replay_magic_box_tour_summary">راجع مفاتيح الاختصار وإجراءات التطبيقات ووجهات البحث</string>
+</resources>

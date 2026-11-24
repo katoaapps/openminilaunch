@@ -20,11 +20,9 @@ import androidx.compose.material.icons.filled.Email
 import androidx.compose.material.icons.filled.Download
 import androidx.compose.material.icons.filled.Forum
 import androidx.compose.material.icons.filled.Gavel
-import androidx.compose.material.icons.filled.Home
 import androidx.compose.material.icons.filled.Palette
 import androidx.compose.material.icons.filled.PlayArrow
 import androidx.compose.material.icons.filled.PrivacyTip
-import androidx.compose.material.icons.filled.School
 import androidx.compose.material.icons.filled.SystemUpdateAlt
 import androidx.compose.material3.HorizontalDivider
 import androidx.compose.material3.Text
@@ -44,8 +42,6 @@ private const val DEMO_MODE_TAP_COUNT = 8
 internal fun AboutSettingsPage(
     store: LauncherStore,
     actions: DeviceActions,
-    onRepeatTutorial: () -> Unit,
-    onReplayHomeTour: () -> Unit,
     onOpenDemoStudio: () -> Unit,
     goBack: () -> Unit,
 ) {
@@ -119,18 +115,6 @@ internal fun AboutSettingsPage(
             stringResource(R.string.terms_summary),
             Icons.Default.Gavel,
             onClick = actions::openTermsOfUse,
-        )
-        SettingsRow(
-            stringResource(R.string.repeat_tutorial),
-            stringResource(R.string.repeat_tutorial_summary),
-            Icons.Default.School,
-            onClick = onRepeatTutorial,
-        )
-        SettingsRow(
-            stringResource(R.string.replay_home_tour),
-            stringResource(R.string.replay_home_tour_summary),
-            Icons.Default.Home,
-            onClick = onReplayHomeTour,
         )
         if (store.demoModeEnabled) {
             SettingsRow(

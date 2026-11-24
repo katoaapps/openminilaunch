@@ -19,6 +19,7 @@ internal fun SettingsDestinationContent(
     requestHomeRole: () -> Unit,
     onRepeatTutorial: () -> Unit,
     onReplayHomeTour: () -> Unit,
+    onReplayMagicBoxTour: () -> Unit,
     onNavigate: (SettingsDestination) -> Unit,
     onOverviewNavigate: (SettingsDestination) -> Unit,
     onNavigateBack: () -> Unit,
@@ -160,10 +161,14 @@ internal fun SettingsDestinationContent(
         SettingsDestination.ABOUT -> AboutSettingsPage(
             store,
             actions,
-            onRepeatTutorial,
-            onReplayHomeTour,
             { onNavigate(SettingsDestination.DEMO_STUDIO) },
             onNavigateBack,
+        )
+        SettingsDestination.TUTORIALS -> TutorialsSettingsPage(
+            onRepeatSetup = onRepeatTutorial,
+            onReplayHomeTour = onReplayHomeTour,
+            onReplayMagicBoxTour = onReplayMagicBoxTour,
+            goBack = onNavigateBack,
         )
         SettingsDestination.DEMO_STUDIO -> DemoStudioSettingsPage(
             store = store,

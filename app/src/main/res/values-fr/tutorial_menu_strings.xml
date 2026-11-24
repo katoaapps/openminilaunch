@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="tutorials">Tutoriels</string>
+    <string name="tutorials_summary">Revoir la configuration et les visites guidées</string>
+    <string name="replay_magic_box_tour">Revoir la visite de Magic Box</string>
+    <string name="replay_magic_box_tour_summary">Revoir les raccourcis, les actions d’apps et les destinations de recherche</string>
+</resources>

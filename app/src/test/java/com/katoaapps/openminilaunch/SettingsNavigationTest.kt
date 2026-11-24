@@ -93,6 +93,20 @@ class SettingsNavigationTest {
         )
     }
 
+    @Test fun tutorialsOpenFromMoreOverview() {
+        assertEquals(
+            listOf(
+                SettingsDestination.OVERVIEW,
+                SettingsDestination.TUTORIALS,
+            ),
+            settingsPathTo(SettingsDestination.TUTORIALS),
+        )
+        assertEquals(
+            SettingsSection.MORE,
+            settingsSectionFor(SettingsDestination.TUTORIALS),
+        )
+    }
+
     @Test fun magicBoxDetailsReturnDirectlyToTheirSectionRoot() {
         assertEquals(
             listOf(SettingsDestination.OVERVIEW, SettingsDestination.FILE_SEARCH),

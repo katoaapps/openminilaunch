@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="tutorials">Tutoriales</string>
+    <string name="tutorials_summary">Repite la configuración y los recorridos de funciones</string>
+    <string name="replay_magic_box_tour">Repetir recorrido de Magic Box</string>
+    <string name="replay_magic_box_tour_summary">Repasa atajos, acciones de apps y destinos de búsqueda</string>
+</resources>

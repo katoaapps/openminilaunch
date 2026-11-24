@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="tutorials">Обучение</string>
+    <string name="tutorials_summary">Повторить настройку и обзоры функций</string>
+    <string name="replay_magic_box_tour">Повторить обзор Magic Box</string>
+    <string name="replay_magic_box_tour_summary">Снова посмотреть горячие клавиши, действия приложений и варианты поиска</string>
+</resources>

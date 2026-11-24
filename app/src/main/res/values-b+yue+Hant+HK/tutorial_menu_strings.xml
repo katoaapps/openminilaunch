@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="tutorials">教學</string>
+    <string name="tutorials_summary">重複設定同功能導覽</string>
+    <string name="replay_magic_box_tour">重播 Magic Box 導覽</string>
+    <string name="replay_magic_box_tour_summary">重溫快捷鍵、應用程式操作同搜尋目的地</string>
+</resources>

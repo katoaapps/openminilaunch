@@ -9,6 +9,9 @@ import com.katoaapps.openminilaunch.features.conversations.*
 import com.katoaapps.openminilaunch.features.files.*
 import com.katoaapps.openminilaunch.features.magic.*
 import com.katoaapps.openminilaunch.ui.components.*
+import com.katoaapps.openminilaunch.ui.magic.tutorial.MagicBoxTourTarget
+import com.katoaapps.openminilaunch.ui.magic.tutorial.MagicBoxTourTargetRegistry
+import com.katoaapps.openminilaunch.ui.magic.tutorial.magicBoxTourTarget
 import com.katoaapps.openminilaunch.ui.theme.*
 
 import androidx.compose.foundation.Image
@@ -220,7 +223,12 @@ internal fun SearchHistoryList(
 private data class MagicCommand(val key: Char, val labelRes: Int, val color: Color)
 
 @Composable
-internal fun MagicBoxLegend(activePrefix: Char?, enabled: Boolean = true, onSelect: (Char) -> Unit) {
+internal fun MagicBoxLegend(
+    activePrefix: Char?,
+    enabled: Boolean = true,
+    tourRegistry: MagicBoxTourTargetRegistry? = null,
+    onSelect: (Char) -> Unit,
+) {
     val commands = listOf(
         MagicCommand('@', R.string.command_text, MagicTextColor),
         MagicCommand('#', R.string.command_call, MagicCallColor),
@@ -253,7 +261,12 @@ internal fun MagicBoxLegend(activePrefix: Char?, enabled: Boolean = true, onSele
                         val activeContentColor = if (command.key == '-') LightInk else MinkWhite
                         Surface(
                             onClick = { if (enabled) onSelect(command.key) },
-                            modifier = Modifier.weight(1f),
+                            modifier = Modifier
+                                .weight(1f)
+                                .magicBoxTourTarget(
+                                    tourRegistry,
+                                    command.key.magicBoxTourTarget(),
+                                ),
                             shape = RoundedCornerShape(Dimens.dp12),
                             color = if (active) command.color else MaterialTheme.colorScheme.surfaceContainerLow,
                             contentColor = (if (active) activeContentColor else MaterialTheme.colorScheme.onSurface)
@@ -281,6 +294,16 @@ internal fun MagicBoxLegend(activePrefix: Char?, enabled: Boolean = true, onSele
             }
         }
     }
+}
+
+private fun Char.magicBoxTourTarget(): MagicBoxTourTarget = when (this) {
+    '@' -> MagicBoxTourTarget.MESSAGE_HOTKEY
+    '#' -> MagicBoxTourTarget.CALL_HOTKEY
+    '-' -> MagicBoxTourTarget.TODO_HOTKEY
+    MAGIC_NOTE_TRIGGER -> MagicBoxTourTarget.NOTE_HOTKEY
+    '+' -> MagicBoxTourTarget.EVENT_HOTKEY
+    '?' -> MagicBoxTourTarget.APP_HOTKEY
+    else -> error("Unsupported Magic Box hotkey: $this")
 }
 
 @Composable
@@ -314,11 +337,12 @@ internal fun SuggestionRow(
     leadingContent: (@Composable () -> Unit)? = null,
     supportingText: String? = null,
     onLongClick: (() -> Unit)? = null,
+    modifier: Modifier = Modifier,
     onClick: () -> Unit,
 ) {
     val contentColor = MaterialTheme.colorScheme.onSurface
     Row(
-        Modifier.fillMaxWidth().clip(RoundedCornerShape(Dimens.dp14))
+        modifier.fillMaxWidth().clip(RoundedCornerShape(Dimens.dp14))
             .background(MaterialTheme.colorScheme.surfaceContainerLow)
             .then(
                 if (onLongClick == null) {

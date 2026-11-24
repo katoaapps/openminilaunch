@@ -13,6 +13,7 @@ import androidx.compose.material.icons.filled.Info
 import androidx.compose.material.icons.filled.Keyboard
 import androidx.compose.material.icons.filled.Pets
 import androidx.compose.material.icons.filled.Phone
+import androidx.compose.material.icons.filled.School
 import androidx.compose.material.icons.filled.Security
 import androidx.compose.material.icons.filled.Settings
 import androidx.compose.runtime.Composable
@@ -178,5 +179,10 @@ private fun MoreSettingsSection(
             status = stringResource(R.string.version_summary, BuildConfig.VERSION_NAME),
             icon = Icons.Default.Info,
         ) { onNavigate(SettingsDestination.ABOUT) }
+        SettingsCategoryRow(
+            title = stringResource(R.string.tutorials),
+            subtitle = stringResource(R.string.tutorials_summary),
+            icon = Icons.Default.School,
+        ) { onNavigate(SettingsDestination.TUTORIALS) }
     }
 }

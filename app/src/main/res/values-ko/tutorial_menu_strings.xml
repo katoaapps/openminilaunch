@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="tutorials">튜토리얼</string>
+    <string name="tutorials_summary">설정과 기능 둘러보기를 다시 확인하세요</string>
+    <string name="replay_magic_box_tour">Magic Box 둘러보기 다시 재생</string>
+    <string name="replay_magic_box_tour_summary">단축키, 앱 작업 및 검색 대상을 다시 확인하세요</string>
+</resources>

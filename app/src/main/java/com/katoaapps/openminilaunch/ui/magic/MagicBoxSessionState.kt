@@ -30,6 +30,7 @@ internal class MagicBoxSessionState private constructor(
         mutableStateOf(selectedRecipient)
     val routeState: MutableState<MagicBoxRoute> = mutableStateOf(route)
     val expandedState: MutableState<Boolean> = mutableStateOf(expanded)
+    val featureTourRequestState: MutableState<Boolean> = mutableStateOf(false)
 
     val expanded: Boolean
         get() = expandedState.value
@@ -68,6 +69,20 @@ internal class MagicBoxSessionState private constructor(
         selectedRecipientState.value = null
         routeState.value = MagicBoxRoute.SEARCH
         expandedState.value = true
+    }
+
+    /** Clears pending input and opens Home so a requested Magic Box lesson owns the editor. */
+    fun prepareFeatureTour() {
+        textState.value = TextFieldValue()
+        selectedRecipientState.value = null
+        routeState.value = MagicBoxRoute.SEARCH
+        expandedState.value = true
+        featureTourRequestState.value = true
+    }
+
+    /** Consumes the manual replay event so remounting Home cannot replay it again. */
+    fun consumeFeatureTourRequest() {
+        featureTourRequestState.value = false
     }
 
     /** Returns the persistent Home editor to its clean opening frame. */

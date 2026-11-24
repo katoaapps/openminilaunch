@@ -3,10 +3,21 @@ package com.katoaapps.openminilaunch.ui.magic
 import com.katoaapps.openminilaunch.features.magic.MagicBoxRoute
 import com.katoaapps.openminilaunch.model.LauncherShortcutTarget
 import org.junit.Assert.assertEquals
+import org.junit.Assert.assertFalse
 import org.junit.Assert.assertTrue
 import org.junit.Test
 
 class MagicBoxSessionStateTest {
+    @Test fun manualFeatureTourRequestIsConsumedOnceByPersistentHomeSession() {
+        val state = MagicBoxSessionState.empty()
+
+        state.prepareFeatureTour()
+        assertTrue(state.featureTourRequestState.value)
+
+        state.consumeFeatureTourRequest()
+        assertFalse(state.featureTourRequestState.value)
+    }
+
     @Test fun integratedConversationStartsLockedMagicBoxDraft() {
         val conversation = LauncherShortcutTarget(
             label = "May Wong",

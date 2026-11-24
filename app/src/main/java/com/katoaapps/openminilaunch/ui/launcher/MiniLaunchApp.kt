@@ -122,6 +122,7 @@ internal fun MiniLaunchApp(
         )
     }
     var tutorialRun by rememberSaveable { mutableIntStateOf(0) }
+    var repeatSetupOnly by rememberSaveable { mutableStateOf(false) }
     val homeMagicBoxSessionState = rememberMagicBoxSessionState()
     val homeTourTargetRegistry = rememberHomeTourTargetRegistry()
     val minkSpacePresentation = rememberMinkSpacePresentationState()
@@ -154,6 +155,12 @@ internal fun MiniLaunchApp(
                 homePageRequestToken++
                 screen = Screen.HOME
                 showHomeFeatureTour = true
+            }
+            is MinkHomeRequest.MagicBoxTour -> {
+                homeMagicBoxSessionState.prepareFeatureTour()
+                focusedLauncherPage = HOME_PAGE
+                homePageRequestToken++
+                screen = Screen.HOME
             }
             is MinkHomeRequest.DemoHome -> {
                 homeMagicBoxSessionState.resetForDemoHome()
@@ -261,13 +268,20 @@ internal fun MiniLaunchApp(
                         actions = actions,
                         requestHomeRole = requestHomeRole,
                         onFinish = {
+                            val returnToTutorials = repeatSetupOnly
+                            repeatSetupOnly = false
                             store.completeOnboarding()
                             store.markUpdateSeen(FEATURE_UPDATE_ID)
                             showTutorial = false
-                            screen = Screen.HOME
-                            focusedLauncherPage = HOME_PAGE
-                            homePageRequestToken++
-                            showHomeFeatureTour = true
+                            if (returnToTutorials) {
+                                settingsDestination = SettingsDestination.TUTORIALS
+                                screen = Screen.SETTINGS
+                            } else {
+                                screen = Screen.HOME
+                                focusedLauncherPage = HOME_PAGE
+                                homePageRequestToken++
+                                showHomeFeatureTour = true
+                            }
                             if (!actions.isHomeRoleHeld()) requestHomeRole()
                         },
                     )
@@ -343,11 +357,23 @@ internal fun MiniLaunchApp(
                             store = store,
                             actions = actions,
                             requestHomeRole = requestHomeRole,
-                            onRepeatTutorial = { tutorialRun++; showTutorial = true },
+                            onRepeatTutorial = {
+                                repeatSetupOnly = true
+                                tutorialRun++
+                                showTutorial = true
+                            },
                             onReplayHomeTour = {
                                 settingsDestination = SettingsDestination.OVERVIEW
                                 openHome(
                                     MinkHomeRequest.FeatureTour(
+                                        android.os.SystemClock.elapsedRealtimeNanos(),
+                                    ),
+                                )
+                            },
+                            onReplayMagicBoxTour = {
+                                settingsDestination = SettingsDestination.OVERVIEW
+                                openHome(
+                                    MinkHomeRequest.MagicBoxTour(
                                         android.os.SystemClock.elapsedRealtimeNanos(),
                                     ),
                                 )

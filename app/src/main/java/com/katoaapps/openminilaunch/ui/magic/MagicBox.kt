@@ -23,6 +23,14 @@ import com.katoaapps.openminilaunch.features.messaging.*
 import com.katoaapps.minkboard.core.LauncherCardAddResult
 import com.katoaapps.openminilaunch.features.wellbeing.MinkAppAccessState
 import com.katoaapps.openminilaunch.ui.components.*
+import com.katoaapps.openminilaunch.ui.magic.tutorial.MAGIC_BOX_FEATURE_TOUR_ID
+import com.katoaapps.openminilaunch.ui.magic.tutorial.MAGIC_BOX_TOUR_SEARCH_QUERY
+import com.katoaapps.openminilaunch.ui.magic.tutorial.MagicBoxFeatureTour
+import com.katoaapps.openminilaunch.ui.magic.tutorial.MagicBoxTourScene
+import com.katoaapps.openminilaunch.ui.magic.tutorial.magicBoxTourSteps
+import com.katoaapps.openminilaunch.ui.magic.tutorial.rememberMagicBoxTourTargetRegistry
+import com.katoaapps.openminilaunch.ui.magic.tutorial.route
+import com.katoaapps.openminilaunch.ui.magic.tutorial.shouldStartMagicBoxFeatureTour
 import com.katoaapps.openminilaunch.ui.theme.*
 import com.katoaapps.openminilaunch.platform.hasMediaReadAccess
 import com.katoaapps.openminilaunch.platform.isPermanentlyDenied
@@ -53,6 +61,7 @@ import androidx.compose.material.icons.automirrored.filled.Send
 import androidx.compose.material.icons.filled.*
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.focus.FocusRequester
@@ -86,6 +95,7 @@ internal fun MagicBoxContent(
     captureActivityCommandHotkeys: Boolean = false,
     homeRequestToken: Int = 0,
     focusRearmToken: Int = 0,
+    enableFirstOpenTour: Boolean = false,
     onTodoAdded: (String, onAnimationFinished: () -> Unit) -> Unit = { _, finished ->
         finished()
     },
@@ -123,11 +133,19 @@ internal fun MagicBoxContent(
     val localAppAccessState = if (appAccessState == null) rememberMinkAppAccessState(store) else null
     val effectiveAppAccessState = appAccessState ?: checkNotNull(localAppAccessState).value
     val editorSession = sessionState ?: rememberMagicBoxSessionState(initiallyExpanded)
+    val magicBoxTourRegistry = rememberMagicBoxTourTargetRegistry()
     var text by editorSession.textState
     val initialInputCorrection = remember { InitialMagicInputCorrection() }
     var selectedRecipient by editorSession.selectedRecipientState
     var route by editorSession.routeState
     var expanded by editorSession.expandedState
+    val featureTourRequested by editorSession.featureTourRequestState
+    var featureTourActive by rememberSaveable { mutableStateOf(false) }
+    var featureTourStarted by rememberSaveable { mutableStateOf(false) }
+    var featureTourIndex by rememberSaveable { mutableIntStateOf(0) }
+    val activeFeatureTourStep = magicBoxTourSteps
+        .getOrNull(featureTourIndex)
+        .takeIf { featureTourActive }
     var showKeyboardWhileCollapsed by remember {
         mutableStateOf(shouldAutoOpenOnHome && !useMinkKeyboard && !initiallyExpanded)
     }
@@ -326,6 +344,11 @@ internal fun MagicBoxContent(
     }
     val alwaysVisibleTargetKeys = store.pinnedLauncherSelectionKeys
     val appSearchMatcher = remember(actions) { AppSearchMatcher(actions::appLabel) }
+    val tutorialSettingsTarget = remember(launcherAppsRevision) {
+        actions.installedApps().firstOrNull { target ->
+            target.packageName == ANDROID_SETTINGS_PACKAGE && !target.isWorkProfile
+        }
+    }
     val appResults = remember(
         route,
         searchTerm,
@@ -335,8 +358,12 @@ internal fun MagicBoxContent(
         alwaysVisibleTargetKeys,
         store.includeAppShortcutsInDiscovery,
         appSearchMatcher,
+        activeFeatureTourStep?.scene,
+        tutorialSettingsTarget,
     ) {
-        if (store.demoModeEnabled) {
+        if (activeFeatureTourStep?.scene == MagicBoxTourScene.APP_SEARCH) {
+            listOfNotNull(tutorialSettingsTarget)
+        } else if (store.demoModeEnabled) {
             emptyList()
         } else if (route == MagicBoxRoute.APP && searchTerm.isNotBlank()) {
             val targets = launcherLibraryTargets(
@@ -414,6 +441,65 @@ internal fun MagicBoxContent(
         route = nextRoute
         expanded = true
         refocus(showSoftwareKeyboard = showSoftwareKeyboard)
+    }
+
+    fun startFeatureTour() {
+        featureTourStarted = true
+        // The lesson writes its own sample text. Retire either keyboard host before
+        // changing routes so a pending focus/show request cannot flash between scenes.
+        showKeyboardWhileCollapsed = false
+        featureTourActive = true
+        featureTourIndex = 0
+        clearCommand()
+        minkKeyboardMinimized = true
+        keyboard?.hide()
+        focusManager.clearFocus(force = true)
+    }
+
+    LaunchedEffect(expanded, enableFirstOpenTour, featureTourStarted) {
+        if (
+            shouldStartMagicBoxFeatureTour(
+                enabled = enableFirstOpenTour,
+                expanded = expanded,
+                currentTourSeen = store.hasSeenUpdate(MAGIC_BOX_FEATURE_TOUR_ID),
+                alreadyStarted = featureTourStarted,
+            )
+        ) {
+            startFeatureTour()
+        }
+    }
+
+    LaunchedEffect(
+        enableFirstOpenTour,
+        featureTourRequested,
+    ) {
+        if (enableFirstOpenTour && featureTourRequested) {
+            editorSession.consumeFeatureTourRequest()
+            startFeatureTour()
+        }
+    }
+
+    LaunchedEffect(featureTourActive, featureTourIndex) {
+        if (!featureTourActive) return@LaunchedEffect
+        val step = magicBoxTourSteps[featureTourIndex]
+        clearCommand()
+        route = step.route()
+        val tutorialQuery = when (step.scene) {
+            MagicBoxTourScene.HOTKEYS -> ""
+            MagicBoxTourScene.APP_SEARCH ->
+                tutorialSettingsTarget?.label ?: context.getString(R.string.settings)
+            MagicBoxTourScene.SEARCH_DESTINATIONS -> MAGIC_BOX_TOUR_SEARCH_QUERY
+        }
+        text = TextFieldValue(
+            text = tutorialQuery,
+            selection = TextRange(tutorialQuery.length),
+        )
+        expanded = true
+        minkKeyboardMinimized = true
+        keyboard?.hide()
+        focusManager.clearFocus(force = true)
+        withFrameNanos { }
+        magicResultsScroll.scrollTo(magicResultsScroll.maxValue)
     }
 
     fun updateEditorValue(value: TextFieldValue, correctHardwareInput: Boolean) {
@@ -830,8 +916,12 @@ internal fun MagicBoxContent(
         todoCompletionPending,
         focusRearmToken,
         lifecycleFocusRearmToken,
+        featureTourActive,
     ) {
-        if (!keyboardInputEnabled) {
+        if (featureTourActive) {
+            keyboard?.hide()
+            focusManager.clearFocus(force = true)
+        } else if (!keyboardInputEnabled) {
             keyboard?.hide()
             focusManager.clearFocus(force = true)
         } else if (!expanded && !smsFlow.sentConfirmationVisible && !todoCompletionPending) {
@@ -896,7 +986,7 @@ internal fun MagicBoxContent(
     }
 
     LaunchedEffect(focusRequestSerial) {
-        if (focusRequestSerial > 0) {
+        if (focusRequestSerial > 0 && !featureTourActive) {
             if (useMinkKeyboard) {
                 while (!textFieldPlaced) withFrameNanos { }
                 withFrameNanos { }
@@ -919,6 +1009,7 @@ internal fun MagicBoxContent(
     MagicHardwareHotkeyEffect(
         enabled = captureActivityCommandHotkeys &&
             keyboardInputEnabled &&
+            !featureTourActive &&
             !expanded &&
             !smsFlow.sentConfirmationVisible &&
             !todoCompletionPending,
@@ -946,6 +1037,7 @@ internal fun MagicBoxContent(
         !todoCompletionPending
     val showLauncherKeyboard = keyboardInputEnabled &&
         useMinkKeyboard &&
+        !featureTourActive &&
         !minkKeyboardMinimized &&
         !todoCompletionPending &&
         (expanded || showDockedLauncherKeyboard)
@@ -969,7 +1061,7 @@ internal fun MagicBoxContent(
         focusManager.clearFocus(force = true)
     }
 
-    BackHandler(enabled = expanded || showLauncherKeyboard) {
+    BackHandler(enabled = (expanded || showLauncherKeyboard) && !featureTourActive) {
         if (!todoCompletionPending) {
             if (showLauncherKeyboard) minimizeMinkKeyboard() else requestDismiss()
         }
@@ -1106,6 +1198,9 @@ internal fun MagicBoxContent(
                             permissionLauncher.launch(Manifest.permission.READ_CONTACTS)
                         },
                         onClearMessage = ::requestClearMessageDraft,
+                        tourRegistry = magicBoxTourRegistry.takeIf { featureTourActive },
+                        tutorialSearchDemo = activeFeatureTourStep?.scene ==
+                            MagicBoxTourScene.SEARCH_DESTINATIONS,
                         modifier = Modifier.fillMaxWidth().weight(1f),
                     )
                 } else {
@@ -1125,7 +1220,11 @@ internal fun MagicBoxContent(
                         onSelect = ::selectApp,
                     )
                 } else {
-                    MagicBoxLegend(route.trigger, enabled = true) { key ->
+                    MagicBoxLegend(
+                        activePrefix = activeFeatureTourStep?.hotkey ?: route.trigger,
+                        enabled = !featureTourActive,
+                        tourRegistry = magicBoxTourRegistry.takeIf { featureTourActive },
+                    ) { key ->
                         MagicBoxRoute.fromTrigger(key)?.let(::activateRoute)
                     }
                 }
@@ -1159,7 +1258,7 @@ internal fun MagicBoxContent(
                 },
                 route = route,
                 submissionPending = todoCompletionPending,
-                acceptPlatformTextInput = !useMinkKeyboard,
+                acceptPlatformTextInput = !useMinkKeyboard && !featureTourActive,
                 actionVisuals = actionVisuals,
                 actionContentColor = actionContentColor,
                 focusRequester = focusRequester,
@@ -1229,44 +1328,72 @@ internal fun MagicBoxContent(
 
         }
 
-        MagicLauncherKeyboardHost(
-            visible = showLauncherKeyboard,
-            value = text,
-            onValueChange = { value ->
-                val changed = value.text != text.text
-                onLauncherKeyboardValueChange(value)
-                if (!expanded && changed) {
-                    expanded = true
-                    refocus(showSoftwareKeyboard = false)
-                }
-            },
-            preferences = launcherKeyboardPreferences,
-            themePrimaryArgb = store.effectiveHomePanelColorArgb,
-            themeSecondaryArgb = store.effectiveThemeSecondaryColorArgb,
-            onHotkey = { trigger ->
-                val nextRoute = MagicBoxRoute.fromTrigger(trigger)
-                val shouldActivateRoute = nextRoute != null &&
-                    shouldActivateLauncherKeyboardRoute(
-                        route = route,
-                        text = text.text,
-                        hasSelectedRecipient = selectedRecipient != null,
-                    )
-                if (shouldActivateRoute) {
-                    activateRoute(checkNotNull(nextRoute), showSoftwareKeyboard = false)
-                }
-                shouldActivateRoute
-            },
-            onSubmit = ::submit,
-            multiline = expanded && noteMode,
-            onOpenSettings = onOpenKeyboardSettings,
-            onMinimize = ::minimizeMinkKeyboard,
-            modifier = Modifier.align(Alignment.BottomCenter),
-        )
+        // Removing the host, rather than merely animating it to hidden, guarantees that
+        // programmatic tutorial text never redraws one frame of the Mink keyboard.
+        if (!featureTourActive) {
+            MagicLauncherKeyboardHost(
+                visible = showLauncherKeyboard,
+                value = text,
+                onValueChange = { value ->
+                    val changed = value.text != text.text
+                    onLauncherKeyboardValueChange(value)
+                    if (!expanded && changed) {
+                        expanded = true
+                        refocus(showSoftwareKeyboard = false)
+                    }
+                },
+                preferences = launcherKeyboardPreferences,
+                themePrimaryArgb = store.effectiveHomePanelColorArgb,
+                themeSecondaryArgb = store.effectiveThemeSecondaryColorArgb,
+                onHotkey = { trigger ->
+                    val nextRoute = MagicBoxRoute.fromTrigger(trigger)
+                    val shouldActivateRoute = nextRoute != null &&
+                        shouldActivateLauncherKeyboardRoute(
+                            route = route,
+                            text = text.text,
+                            hasSelectedRecipient = selectedRecipient != null,
+                        )
+                    if (shouldActivateRoute) {
+                        activateRoute(checkNotNull(nextRoute), showSoftwareKeyboard = false)
+                    }
+                    shouldActivateRoute
+                },
+                onSubmit = ::submit,
+                multiline = expanded && noteMode,
+                onOpenSettings = onOpenKeyboardSettings,
+                onMinimize = ::minimizeMinkKeyboard,
+                modifier = Modifier.align(Alignment.BottomCenter),
+            )
+        }
 
         SmsSentConfirmation(
             visible = smsFlow.sentConfirmationVisible,
             modifier = Modifier.align(Alignment.Center),
         )
+
+        if (featureTourActive) {
+            MagicBoxFeatureTour(
+                currentIndex = featureTourIndex,
+                registry = magicBoxTourRegistry,
+                settingsTarget = tutorialSettingsTarget,
+                actions = actions,
+                onPrevious = {
+                    if (featureTourIndex > 0) featureTourIndex--
+                },
+                onNext = {
+                    if (featureTourIndex < magicBoxTourSteps.lastIndex) {
+                        featureTourIndex++
+                    } else {
+                        store.markUpdateSeen(MAGIC_BOX_FEATURE_TOUR_ID)
+                        featureTourActive = false
+                        clearCommand()
+                        expanded = true
+                        minkKeyboardMinimized = false
+                        refocus(showSoftwareKeyboard = !useMinkKeyboard)
+                    }
+                },
+            )
+        }
     }
     MagicDraftDialogHost(
         showNoteDelete = showNoteDeleteConfirmation,
@@ -1383,6 +1510,8 @@ internal fun MagicBoxContent(
         )
     }
 }
+
+private const val ANDROID_SETTINGS_PACKAGE = "com.android.settings"
 
 private fun Context.findComponentActivity(): ComponentActivity? {
     var current: Context? = this

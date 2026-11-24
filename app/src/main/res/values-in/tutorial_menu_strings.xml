@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="tutorials">Tutorial</string>
+    <string name="tutorials_summary">Ulangi penyiapan dan tur fitur</string>
+    <string name="replay_magic_box_tour">Ulangi tur Magic Box</string>
+    <string name="replay_magic_box_tour_summary">Tinjau hotkey, tindakan aplikasi, dan tujuan pencarian</string>
+</resources>

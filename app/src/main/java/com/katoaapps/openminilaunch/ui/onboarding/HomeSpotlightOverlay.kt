@@ -22,7 +22,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
-import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.widthIn
@@ -59,12 +58,10 @@ import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
-import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import com.katoaapps.openminilaunch.R
 import com.katoaapps.openminilaunch.ui.theme.Dimens
 import kotlinx.coroutines.delay
-import kotlin.math.roundToInt
 
 @Composable
 internal fun HomeSpotlightOverlay(
@@ -95,10 +92,12 @@ internal fun HomeSpotlightOverlay(
             GestureDirectionCues(classic = step.classicGestureCues)
         } else if (spotlight != null) {
             SpotlightScrim(spotlight)
-            SpotlightInputGuard(spotlight, widthPx, heightPx)
         }
 
         if (gestureStep || spotlight != null) {
+            // The cutout is visual only. Keep every underlying Home control inert so a
+            // learner cannot open, drag, long-press, or swipe the highlighted feature.
+            TutorialInputGuard(index)
             TourHelpCard(
                 step = step,
                 index = index,
@@ -140,25 +139,11 @@ private fun SpotlightScrim(spotlight: Rect) {
 }
 
 @Composable
-private fun SpotlightInputGuard(spotlight: Rect, screenWidthPx: Float, screenHeightPx: Float) {
-    BlockingRegion(0f, 0f, screenWidthPx, spotlight.top)
-    BlockingRegion(0f, spotlight.bottom, screenWidthPx, screenHeightPx)
-    BlockingRegion(0f, spotlight.top, spotlight.left, spotlight.bottom)
-    BlockingRegion(spotlight.right, spotlight.top, screenWidthPx, spotlight.bottom)
-}
-
-@Composable
-private fun BlockingRegion(left: Float, top: Float, right: Float, bottom: Float) {
-    if (right <= left || bottom <= top) return
-    val density = LocalDensity.current
+private fun TutorialInputGuard(index: Int) {
     Box(
         Modifier
-            .offset { IntOffset(left.roundToInt(), top.roundToInt()) }
-            .size(
-                width = with(density) { (right - left).toDp() },
-                height = with(density) { (bottom - top).toDp() },
-            )
-            .pointerInput(Unit) { detectTapGestures(onPress = { tryAwaitRelease() }) },
+            .fillMaxSize()
+            .pointerInput(index) { detectTapGestures(onPress = { tryAwaitRelease() }) },
     )
 }
 

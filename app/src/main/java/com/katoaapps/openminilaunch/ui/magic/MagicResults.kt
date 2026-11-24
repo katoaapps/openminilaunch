@@ -45,6 +45,9 @@ import com.katoaapps.openminilaunch.model.LauncherAppTarget
 import com.katoaapps.openminilaunch.model.LauncherShortcutTarget
 import com.katoaapps.openminilaunch.platform.DeviceActions
 import com.katoaapps.openminilaunch.ui.components.LauncherTargetIcon
+import com.katoaapps.openminilaunch.ui.magic.tutorial.MagicBoxTourTarget
+import com.katoaapps.openminilaunch.ui.magic.tutorial.MagicBoxTourTargetRegistry
+import com.katoaapps.openminilaunch.ui.magic.tutorial.magicBoxTourTarget
 import com.katoaapps.openminilaunch.ui.theme.DestructiveColor
 import com.katoaapps.openminilaunch.ui.theme.Dimens
 import com.katoaapps.openminilaunch.ui.theme.MagicTodoColor
@@ -87,6 +90,8 @@ internal fun MagicResultsPanel(
     onIncludeAppShortcutsChange: (Boolean) -> Unit,
     onRequestContacts: () -> Unit,
     onClearMessage: () -> Unit,
+    tourRegistry: MagicBoxTourTargetRegistry? = null,
+    tutorialSearchDemo: Boolean = false,
     modifier: Modifier = Modifier,
 ) {
     Box(modifier = modifier, contentAlignment = Alignment.BottomCenter) {
@@ -126,6 +131,8 @@ internal fun MagicResultsPanel(
                 onLongPressApp = onLongPressApp,
                 onIncludeAppShortcutsChange = onIncludeAppShortcutsChange,
                 onRequestContacts = onRequestContacts,
+                tourRegistry = tourRegistry,
+                tutorialSearchDemo = tutorialSearchDemo,
             )
         }
         if (showClearMessage) {
@@ -177,6 +184,8 @@ internal fun MagicResultsContent(
     onLongPressApp: (LauncherAppTarget) -> Unit,
     onIncludeAppShortcutsChange: (Boolean) -> Unit,
     onRequestContacts: () -> Unit,
+    tourRegistry: MagicBoxTourTargetRegistry? = null,
+    tutorialSearchDemo: Boolean = false,
 ) {
     if (onOpenTodos != null && route == MagicBoxRoute.TODO && rawText.isBlank()) {
         SuggestionRow(
@@ -193,7 +202,7 @@ internal fun MagicResultsContent(
             onClearAll = store::clearSearchHistory,
         )
     }
-    if (plainQuery.isNotBlank() && fileSearchLoading) {
+    if (!tutorialSearchDemo && plainQuery.isNotBlank() && fileSearchLoading) {
         Column(verticalArrangement = Arrangement.spacedBy(Dimens.dp6)) {
             Text(
                 text = stringResource(R.string.searching_this_device),
@@ -203,18 +212,25 @@ internal fun MagicResultsContent(
             LinearProgressIndicator(Modifier.fillMaxWidth())
         }
     }
-    if (fileResults.isNotEmpty()) {
+    if (!tutorialSearchDemo && fileResults.isNotEmpty()) {
         FileResultsGrid(fileResults, fileSearchRepository, onOpenFile)
     }
-    if (plainQuery.length >= 2 && !hasMediaAccess && !store.demoModeEnabled) {
+    if (!tutorialSearchDemo && plainQuery.length >= 2 && !hasMediaAccess && !store.demoModeEnabled) {
         FilledTonalButton(onClick = onRequestMedia) {
             Icon(Icons.Default.PhotoLibrary, null, Modifier.size(Dimens.dp18))
             Text(stringResource(R.string.search_media_filenames), Modifier.padding(start = Dimens.dp8))
         }
     }
-    if (plainQuery.isNotBlank() && store.searchFolders.isEmpty() && !store.demoModeEnabled) {
+    if (
+        plainQuery.isNotBlank() &&
+        ((store.searchFolders.isEmpty() && !store.demoModeEnabled) || tutorialSearchDemo)
+    ) {
         Surface(
             onClick = onRequestFolder,
+            modifier = Modifier.magicBoxTourTarget(
+                tourRegistry,
+                MagicBoxTourTarget.DOCUMENT_SEARCH,
+            ),
             shape = RoundedCornerShape(Dimens.dp14),
             color = MagicTodoColor.copy(alpha = .18f),
         ) {
@@ -237,14 +253,18 @@ internal fun MagicResultsContent(
                 label = stringResource(R.string.web),
                 detail = stringResource(R.string.search_browser),
                 icon = Icons.Default.Public,
-                modifier = Modifier.weight(1f),
+                modifier = Modifier
+                    .weight(1f)
+                    .magicBoxTourTarget(tourRegistry, MagicBoxTourTarget.WEB_SEARCH),
                 onClick = onSubmitWeb,
             )
             SearchDestinationButton(
                 label = stringResource(R.string.ai),
                 detail = store.preferredAiPackage?.let(actions::appLabel) ?: stringResource(R.string.choose_an_app),
                 icon = Icons.Default.AutoAwesome,
-                modifier = Modifier.weight(1f),
+                modifier = Modifier
+                    .weight(1f)
+                    .magicBoxTourTarget(tourRegistry, MagicBoxTourTarget.AI_SEARCH),
                 onClick = onSubmitAi,
             )
         }
@@ -298,7 +318,7 @@ internal fun MagicResultsContent(
             )
         }
     }
-    appResults.forEach { app ->
+    appResults.forEachIndexed { index, app ->
         SuggestionRow(
             text = launcherDiscoveryLabel(app, actions::appLabel),
             leadingContent = { LauncherTargetIcon(app, actions, Dimens.dp26) },
@@ -306,6 +326,11 @@ internal fun MagicResultsContent(
                 .takeIf { app.isWorkProfile },
             onLongClick = (app as? LauncherAppTarget)?.let { target ->
                 { onLongPressApp(target) }
+            },
+            modifier = if (index == 0) {
+                Modifier.magicBoxTourTarget(tourRegistry, MagicBoxTourTarget.APP_RESULT)
+            } else {
+                Modifier
             },
         ) { onSelectApp(app) }
     }

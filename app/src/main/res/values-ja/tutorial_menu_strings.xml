@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="tutorials">チュートリアル</string>
+    <string name="tutorials_summary">設定と機能ツアーをもう一度見る</string>
+    <string name="replay_magic_box_tour">Magic Boxツアーを再生</string>
+    <string name="replay_magic_box_tour_summary">ホットキー、アプリ操作、検索先を確認</string>
+</resources>

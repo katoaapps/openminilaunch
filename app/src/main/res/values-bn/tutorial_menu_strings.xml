@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <string name="tutorials">টিউটোরিয়াল</string>
+    <string name="tutorials_summary">সেটআপ ও ফিচার ট্যুর আবার দেখুন</string>
+    <string name="replay_magic_box_tour">Magic Box ট্যুর আবার দেখুন</string>
+    <string name="replay_magic_box_tour_summary">হটকি, অ্যাপ অ্যাকশন ও সার্চ গন্তব্য আবার দেখুন</string>
+</resources>

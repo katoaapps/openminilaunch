@@ -46,6 +46,7 @@ internal fun HomeMagicBox(
         captureActivityCommandHotkeys = true,
         homeRequestToken = homeRequestToken,
         focusRearmToken = focusRearmToken,
+        enableFirstOpenTour = true,
         onTodoAdded = { text, animationFinished ->
             onTodoAdded(text)
             animationFinished()
