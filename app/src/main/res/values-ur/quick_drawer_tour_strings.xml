@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="quick_drawer_tour_updates_title">نیا کیا ہے یا بیٹا رسائی</string>
-    <string name="quick_drawer_tour_updates_description">یہاں تبدیلیاں دیکھیں یا موجودہ Google Play ٹیسٹ میں شامل ہوں۔</string>
     <string name="quick_drawer_tour_quick_apps_description">Mink Assistant کھلنے پر یہ ایپس بھی دکھائی دیتی ہیں۔</string>
     <string name="quick_drawer_tour_games_description">Sable Games کے گیمز کھیلیں، جو اصل میں SableOS کے لیے بنائے گئے تھے۔</string>
     <string name="quick_drawer_tour_all_apps_description">اس ڈیوائس پر انسٹال تمام ایپس کھولیں۔</string>

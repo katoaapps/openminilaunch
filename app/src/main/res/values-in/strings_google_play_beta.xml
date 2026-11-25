@@ -6,4 +6,5 @@
     <string name="google_play_beta_notice_backup">Jika salinan ini berasal dari GitHub atau F-Droid, ekspor cadangan sebelum beralih. Android tidak dapat menginstal versi Play di atas aplikasi yang ditandatangani oleh distributor lain.</string>
     <string name="view_beta_instructions">Lihat petunjuk beta</string>
     <string name="join_google_play_beta">Gabung dengan beta Google Play</string>
+    <string name="whats_new_summary">Lihat apa yang berubah dalam rilis ini</string>
 </resources>

@@ -59,6 +59,7 @@ internal fun LauncherTwoPanel(
     openTodos: () -> Unit,
     openVCardSettings: () -> Unit,
     openConversations: () -> Unit,
+    openWhatsNew: () -> Unit,
     showMinkDayTab: Boolean,
     onMinkSpaceExpandedChange: (Boolean) -> Unit,
     modifier: Modifier = Modifier,
@@ -131,6 +132,7 @@ internal fun LauncherTwoPanel(
                 openTodos = openTodos,
                 openVCardSettings = openVCardSettings,
                 openConversations = openConversations,
+                openWhatsNew = openWhatsNew,
                 openMinkDay = onMinkDay,
                 minkStatusActive = true,
                 onMagicExpandedChange = { expanded ->

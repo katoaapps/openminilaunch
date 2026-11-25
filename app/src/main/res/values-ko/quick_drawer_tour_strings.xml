@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="quick_drawer_tour_updates_title">새로운 기능 또는 베타 참여</string>
-    <string name="quick_drawer_tour_updates_description">여기에서 변경 사항을 확인하거나 현재 Google Play 테스트에 참여하세요.</string>
     <string name="quick_drawer_tour_quick_apps_description">Mink Assistant를 열 때도 이 앱들이 표시됩니다.</string>
     <string name="quick_drawer_tour_games_description">원래 SableOS용으로 제작된 Sable Games의 게임을 플레이하세요.</string>
     <string name="quick_drawer_tour_all_apps_description">이 기기에 설치된 모든 앱을 엽니다.</string>

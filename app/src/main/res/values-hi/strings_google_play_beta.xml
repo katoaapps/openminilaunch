@@ -6,4 +6,5 @@
     <string name="google_play_beta_notice_backup">अगर यह कॉपी GitHub या F-Droid से आई है, तो बदलने से पहले बैकअप एक्सपोर्ट करें।Android किसी दूसरे वितरक द्वारा साइन किए गए ऐप के ऊपर Play बिल्ड इंस्टॉल नहीं कर सकता।</string>
     <string name="view_beta_instructions">बीटा निर्देश देखें</string>
     <string name="join_google_play_beta">Google Play बीटा में शामिल हों</string>
+    <string name="whats_new_summary">देखें कि इस रिलीज़ में क्या बदला है</string>
 </resources>

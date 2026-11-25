@@ -6,4 +6,5 @@
     <string name="google_play_beta_notice_backup">如果呢個版本來自 GitHub 或 F-Droid，切換前請先匯出備份。Android 無法直接喺由其他發佈者簽署嘅應用程式上安裝 Play 版本。</string>
     <string name="view_beta_instructions">查看測試說明</string>
     <string name="join_google_play_beta">加入 Google Play 測試版</string>
+    <string name="whats_new_summary">睇下今次版本有咩更新</string>
 </resources>

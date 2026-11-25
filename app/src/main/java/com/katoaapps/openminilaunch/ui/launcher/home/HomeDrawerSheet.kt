@@ -24,7 +24,7 @@ import androidx.compose.material.icons.automirrored.filled.ArrowForward
 import androidx.compose.material.icons.filled.Apps
 import androidx.compose.material.icons.filled.BusinessCenter
 import androidx.compose.material.icons.filled.GridView
-import androidx.compose.material.icons.filled.PlayArrow
+import androidx.compose.material.icons.filled.NewReleases
 import androidx.compose.material.icons.filled.Shield
 import androidx.compose.material.icons.filled.SportsEsports
 import androidx.compose.material3.Icon
@@ -82,6 +82,7 @@ internal fun HomeDrawerSheet(
     appAccessState: MinkAppAccessState,
     onDismiss: () -> Unit,
     onManageQuickApps: () -> Unit,
+    onOpenWhatsNew: () -> Unit,
     onPausedApp: (String) -> Unit,
     tourRequestToken: Long = 0L,
     onTourComplete: () -> Unit = {},
@@ -102,6 +103,7 @@ internal fun HomeDrawerSheet(
             contentColor = drawerContentColor,
             onHostDismiss = onDismiss,
             onManageQuickApps = onManageQuickApps,
+            onOpenWhatsNew = onOpenWhatsNew,
             onPausedApp = onPausedApp,
             tourRequestToken = tourRequestToken,
             onTourComplete = onTourComplete,
@@ -118,6 +120,7 @@ internal fun QuickDrawerSurface(
     contentColor: Color,
     onHostDismiss: () -> Unit,
     onManageQuickApps: () -> Unit,
+    onOpenWhatsNew: () -> Unit,
     onPausedApp: (String) -> Unit,
     modifier: Modifier = Modifier,
     tourRequestToken: Long = 0L,
@@ -163,8 +166,8 @@ internal fun QuickDrawerSurface(
                 letterSpacing = Dimens.sp1,
             )
             QuickDrawerAnnouncementRow(
-                title = stringResource(R.string.join_google_play_beta),
-                summary = stringResource(R.string.google_play_beta_summary),
+                title = stringResource(R.string.whats_new),
+                summary = stringResource(R.string.whats_new_summary),
                 modifier = Modifier.quickDrawerTourTarget(
                     tourRegistry,
                     QuickDrawerTourTarget.ANNOUNCEMENT,
@@ -172,10 +175,9 @@ internal fun QuickDrawerSurface(
                 onClick = {
                     if (demoModeEnabled) {
                         showDemoPreview()
-                    } else if (actions.openGooglePlayBetaPage()) {
-                        onHostDismiss()
                     } else {
-                        Toast.makeText(context, R.string.no_browser_available, Toast.LENGTH_SHORT).show()
+                        onHostDismiss()
+                        onOpenWhatsNew()
                     }
                 },
             )
@@ -283,7 +285,7 @@ private fun QuickDrawerAnnouncementRow(
             verticalAlignment = Alignment.CenterVertically,
             horizontalArrangement = Arrangement.spacedBy(Dimens.dp12),
         ) {
-            Icon(Icons.Default.PlayArrow, null)
+            Icon(Icons.Default.NewReleases, null)
             Column(Modifier.weight(1f)) {
                 Text(
                     title,

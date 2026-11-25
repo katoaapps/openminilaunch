@@ -60,6 +60,7 @@ internal fun HomeScreen(
     openTodos: () -> Unit,
     openVCardSettings: () -> Unit,
     openConversations: () -> Unit,
+    openWhatsNew: () -> Unit,
     openMinkDay: () -> Unit,
     onComposeMessage: (CommunicationRecipient, ContactAppRoute) -> Unit = { _, _ -> },
     onComposeConversationMessage: (LauncherShortcutTarget) -> Unit = {},
@@ -265,6 +266,7 @@ internal fun HomeScreen(
                                     openSettings(SettingsDestination.MINK_SPACE)
                                 },
                                 onEditQuickApps = { quickAppsEditorOpen = true },
+                                onOpenWhatsNew = openWhatsNew,
                                 onPausedApp = { pausedAppPackage = it },
                                 onUiStateChange = { state ->
                                     classicUiState = state
@@ -432,6 +434,7 @@ internal fun HomeScreen(
             appAccessState = appAccessState,
             onDismiss = { drawerOpen = false },
             onManageQuickApps = { quickAppsEditorOpen = true },
+            onOpenWhatsNew = openWhatsNew,
             onPausedApp = { pausedAppPackage = it },
             tourRequestToken = quickDrawerTourRequestToken,
             onTourComplete = onQuickDrawerTourRequestHandled,

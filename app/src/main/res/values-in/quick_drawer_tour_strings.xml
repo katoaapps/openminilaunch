@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="quick_drawer_tour_updates_title">Yang baru atau akses beta</string>
-    <string name="quick_drawer_tour_updates_description">Lihat perubahan atau gabung uji Google Play saat ini dari sini.</string>
     <string name="quick_drawer_tour_quick_apps_description">Aplikasi ini juga muncul saat Mink Assistant dibuka.</string>
     <string name="quick_drawer_tour_games_description">Mainkan game dari Sable Games, yang awalnya dibuat untuk SableOS.</string>
     <string name="quick_drawer_tour_all_apps_description">Buka semua aplikasi yang terpasang di perangkat ini.</string>

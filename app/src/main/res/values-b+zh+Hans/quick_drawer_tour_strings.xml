@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="quick_drawer_tour_updates_title">新功能或测试版访问</string>
-    <string name="quick_drawer_tour_updates_description">在此查看更新内容或加入当前的 Google Play 测试。</string>
     <string name="quick_drawer_tour_quick_apps_description">打开 Mink Assistant 时也会显示这些应用。</string>
     <string name="quick_drawer_tour_games_description">畅玩最初为 SableOS 创建的 Sable Games 游戏。</string>
     <string name="quick_drawer_tour_all_apps_description">打开此设备上安装的所有应用。</string>

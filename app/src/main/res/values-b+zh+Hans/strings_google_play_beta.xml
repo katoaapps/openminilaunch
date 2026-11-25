@@ -6,4 +6,5 @@
     <string name="google_play_beta_notice_backup">如果此版本来自 GitHub 或 F-Droid，请在切换前导出备份。Android 无法在由其他分发方签名的应用上直接安装 Play 版本。</string>
     <string name="view_beta_instructions">查看测试说明</string>
     <string name="join_google_play_beta">加入 Google Play 测试版</string>
+    <string name="whats_new_summary">查看此版本中的新变化</string>
 </resources>

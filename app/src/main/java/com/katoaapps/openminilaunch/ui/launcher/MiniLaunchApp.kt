@@ -339,6 +339,7 @@ internal fun MiniLaunchApp(
                                             SettingsDestination.OVERVIEW,
                                         )
                                     },
+                                    openWhatsNew = { showUpdateNotice = true },
                                     openMinkDay = {
                                         openWorkspace(Screen.MINK_DAY, SettingsDestination.OVERVIEW)
                                     },

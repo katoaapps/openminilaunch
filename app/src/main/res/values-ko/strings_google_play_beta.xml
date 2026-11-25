@@ -6,4 +6,5 @@
     <string name="google_play_beta_notice_backup">이 앱을 GitHub 또는 F-Droid에서 설치했다면 전환하기 전에 백업을 내보내세요. Android는 다른 배포자가 서명한 앱 위에 Play 버전을 설치할 수 없습니다.</string>
     <string name="view_beta_instructions">베타 안내 보기</string>
     <string name="join_google_play_beta">Google Play 베타 참여</string>
+    <string name="whats_new_summary">이번 릴리스의 변경 사항을 확인하세요</string>
 </resources>

@@ -6,4 +6,5 @@
     <string name="google_play_beta_notice_backup">এই কপিটি GitHub বা F-Droid থেকে এলে পরিবর্তনের আগে একটি ব্যাকআপ এক্সপোর্ট করুন। অন্য পরিবেশকের স্বাক্ষর করা অ্যাপের ওপর Android Play সংস্করণ ইনস্টল করতে পারে না।</string>
     <string name="view_beta_instructions">বিটা নির্দেশনা দেখুন</string>
     <string name="join_google_play_beta">Google Play বিটায় যোগ দিন</string>
+    <string name="whats_new_summary">এই রিলিজে কী পরিবর্তন হয়েছে দেখুন</string>
 </resources>

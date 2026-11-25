@@ -6,4 +6,5 @@
     <string name="google_play_beta_notice_backup">إذا كانت هذه النسخة من GitHub أو F-Droid، فصدّر نسخة احتياطية قبل الانتقال. لا يستطيع Android تثبيت إصدار Play فوق تطبيق موقّع من موزّع آخر.</string>
     <string name="view_beta_instructions">عرض تعليمات الإصدار التجريبي</string>
     <string name="join_google_play_beta">الانضمام إلى إصدار Google Play التجريبي</string>
+    <string name="whats_new_summary">تعرّف على ما تغيّر في هذا الإصدار</string>
 </resources>

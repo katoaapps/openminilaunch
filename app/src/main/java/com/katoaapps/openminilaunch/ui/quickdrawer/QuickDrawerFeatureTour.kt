@@ -84,8 +84,8 @@ internal fun quickDrawerTourSteps(
     add(
         QuickDrawerTourStep(
             QuickDrawerTourTarget.ANNOUNCEMENT,
-            R.string.quick_drawer_tour_updates_title,
-            R.string.quick_drawer_tour_updates_description,
+            R.string.whats_new,
+            R.string.whats_new_summary,
         ),
     )
     add(

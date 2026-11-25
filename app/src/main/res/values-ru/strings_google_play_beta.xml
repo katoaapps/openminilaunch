@@ -6,4 +6,5 @@
     <string name="google_play_beta_notice_backup">Если эта копия установлена из GitHub или F-Droid, экспортируйте резервную копию перед переходом. Android не может установить версию из Play поверх приложения, подписанного другим распространителем.</string>
     <string name="view_beta_instructions">Открыть инструкции по бета-тестированию</string>
     <string name="join_google_play_beta">Присоединиться к бета-тестированию Google Play</string>
+    <string name="whats_new_summary">Посмотрите, что изменилось в этом выпуске</string>
 </resources>

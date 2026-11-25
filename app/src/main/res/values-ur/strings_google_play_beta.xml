@@ -6,4 +6,5 @@
     <string name="google_play_beta_notice_backup">اگر یہ کاپی GitHub یا F-Droid سے آئی ہے تو تبدیل کرنے سے پہلے بیک اپ ایکسپورٹ کریں۔ Android کسی دوسرے تقسیم کار کی دستخط شدہ ایپ پر Play ورژن انسٹال نہیں کر سکتا۔</string>
     <string name="view_beta_instructions">بیٹا ہدایات دیکھیں</string>
     <string name="join_google_play_beta">Google Play بیٹا میں شامل ہوں</string>
+    <string name="whats_new_summary">دیکھیں کہ اس ریلیز میں کیا بدلا ہے</string>
 </resources>

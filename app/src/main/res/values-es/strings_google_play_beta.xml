@@ -6,4 +6,5 @@
     <string name="google_play_beta_notice_backup">Si esta copia proviene de GitHub o F-Droid, exporta una copia de seguridad antes de cambiar. Android no puede instalar la versión de Play sobre una app firmada por otro distribuidor.</string>
     <string name="view_beta_instructions">Ver instrucciones de la beta</string>
     <string name="join_google_play_beta">Unirse a la beta de Google Play</string>
+    <string name="whats_new_summary">Consulta los cambios de esta versión</string>
 </resources>

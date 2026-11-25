@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="quick_drawer_tour_updates_title">নতুন কী বা বিটা অ্যাক্সেস</string>
-    <string name="quick_drawer_tour_updates_description">এখান থেকে পরিবর্তন দেখুন বা বর্তমান Google Play পরীক্ষায় যোগ দিন।</string>
     <string name="quick_drawer_tour_quick_apps_description">Mink Assistant খুললেও এই অ্যাপগুলো দেখা যায়।</string>
     <string name="quick_drawer_tour_games_description">Sable Games-এর গেম খেলুন, যা মূলত SableOS-এর জন্য তৈরি।</string>
     <string name="quick_drawer_tour_all_apps_description">এই ডিভাইসে ইনস্টল করা সব অ্যাপ খুলুন।</string>

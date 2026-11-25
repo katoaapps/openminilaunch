@@ -1,7 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="quick_drawer_tour_updates_title">ما الجديد أو الوصول التجريبي</string>
-    <string name="quick_drawer_tour_updates_description">اطّلع على التغييرات أو انضم إلى اختبار Google Play الحالي من هنا.</string>
     <string name="quick_drawer_tour_quick_apps_description">تظهر هذه التطبيقات أيضًا عند فتح Mink Assistant.</string>
     <string name="quick_drawer_tour_games_description">العب ألعاب Sable Games التي أُنشئت في الأصل لنظام SableOS.</string>
     <string name="quick_drawer_tour_all_apps_description">افتح كل التطبيقات المثبتة على هذا الجهاز.</string>
