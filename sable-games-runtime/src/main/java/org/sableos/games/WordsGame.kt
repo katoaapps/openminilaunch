@@ -30,6 +30,25 @@ internal data class WordsGame(
 
     fun erase(): WordsGame = if (over) this else copy(typing = typing.dropLast(1))
 
+    /**
+     * Replaces the in-progress guess with text supplied by a software keyboard. The physical-key
+     * path still uses [type], while this keeps filtering and the five-letter limit in the game
+     * model instead of duplicating those rules in the Compose screen.
+     */
+    fun replaceTyping(text: String): WordsGame =
+        if (over) {
+            this
+        } else {
+            copy(
+                typing =
+                    text
+                        .map(Char::uppercaseChar)
+                        .filter { it in 'A'..'Z' }
+                        .take(LENGTH)
+                        .joinToString(""),
+            )
+        }
+
     /** Enter: the typed word becomes a guess once it has five letters. */
     fun submit(): WordsGame =
         if (over ||

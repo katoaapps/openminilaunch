@@ -2,6 +2,7 @@ package com.katoaapps.openminilaunch.ui.launcher
 
 import android.annotation.SuppressLint
 import android.app.Activity
+import android.app.ActivityManager
 import android.app.role.RoleManager
 import android.appwidget.AppWidgetHost
 import android.content.Context
@@ -111,6 +112,7 @@ open class MainActivity : FragmentActivity(), MagicHardwareHotkeyHost {
                 openWorkspace = ::openWorkspace,
                 openHome = ::openHome,
                 closeWorkspace = ::finish,
+                onWorkspaceScreenChanged = ::updateWorkspaceTaskDescription,
             )
         }
     }
@@ -235,6 +237,14 @@ open class MainActivity : FragmentActivity(), MagicHardwareHotkeyHost {
         } else {
             startActivity(MinkWorkspaceActivity.intent(this, screen, settingsDestination))
         }
+    }
+
+    @Suppress("DEPRECATION")
+    private fun updateWorkspaceTaskDescription(screen: Screen) {
+        if (!isWorkspaceHost) return
+        setTaskDescription(
+            ActivityManager.TaskDescription(getString(screen.workspaceRecentsLabelRes())),
+        )
     }
 
     private fun openHome(request: MinkHomeRequest) {

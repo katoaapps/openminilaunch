@@ -89,6 +89,7 @@ internal fun MiniLaunchApp(
     openWorkspace: (Screen, SettingsDestination) -> Unit,
     openHome: (MinkHomeRequest) -> Unit,
     closeWorkspace: () -> Unit,
+    onWorkspaceScreenChanged: (Screen) -> Unit,
 ) {
     var screen by rememberSaveable {
         mutableStateOf(workspaceRequest?.screen ?: Screen.HOME)
@@ -137,6 +138,9 @@ internal fun MiniLaunchApp(
     val twoPanelState = rememberLazyListState(
         initialFirstVisibleItemIndex = pairForFocusedPage(HOME_PAGE, store.showMinkDayTab),
     )
+    LaunchedEffect(isWorkspaceHost, screen) {
+        if (isWorkspaceHost) onWorkspaceScreenChanged(screen)
+    }
     LaunchedEffect(workspaceRequest?.token) {
         workspaceRequest?.let { request ->
             screen = request.screen

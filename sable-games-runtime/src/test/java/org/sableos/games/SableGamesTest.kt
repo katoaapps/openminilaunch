@@ -36,7 +36,10 @@ class SableGamesTest {
 
             assertTrue(activityName, activity.contains("android:resizeableActivity=\"true\""))
             assertTrue(activityName, activity.contains("android:exported=\"true\""))
-            assertTrue(activityName, activity.contains("android:icon=\"@drawable/ic_game_"))
+            assertTrue(activityName, activity.contains("android:excludeFromRecents=\"false\""))
+            assertTrue(activityName, activity.contains("android:documentLaunchMode=\"intoExisting\""))
+            assertTrue(activityName, activity.contains("android:label=\"@string/"))
+            assertTrue(activityName, activity.contains("android:icon=\"@mipmap/ic_sable_app_"))
             assertTrue(activityName, activity.contains("android.intent.action.MAIN"))
             assertTrue(activityName, activity.contains("android.intent.category.LAUNCHER"))
             val affinity = activity.substringAfter("android:taskAffinity=\"").substringBefore('"')
@@ -53,6 +56,7 @@ class SableGamesTest {
                 .substringAfter("android:name=\"org.sableos.games.SableGameActivity\"")
                 .substringBefore("/>")
         assertTrue(internalHost, internalHost.contains("android:exported=\"false\""))
+        assertTrue(internalHost, internalHost.contains("android:excludeFromRecents=\"true\""))
     }
 
     @Test

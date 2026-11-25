@@ -4,6 +4,9 @@ import android.content.Context
 import android.content.Intent
 import android.net.Uri
 import android.os.SystemClock
+import androidx.annotation.StringRes
+import com.katoaapps.minkboard.ui.R as MinkBoardR
+import com.katoaapps.openminilaunch.R
 import com.katoaapps.openminilaunch.model.Screen
 import com.katoaapps.openminilaunch.ui.settings.SettingsDestination
 
@@ -13,6 +16,16 @@ internal data class MinkWorkspaceRequest(
     val screen: Screen,
     val settingsDestination: SettingsDestination = SettingsDestination.OVERVIEW,
 )
+
+/** Localized title shown for the workspace document in Android Recents. */
+@StringRes
+internal fun Screen.workspaceRecentsLabelRes(): Int = when (this) {
+    Screen.HOME -> R.string.app_name
+    Screen.SETTINGS -> R.string.settings
+    Screen.TODOS -> MinkBoardR.string.minkboard_title
+    Screen.CONVERSATIONS -> R.string.conversations
+    Screen.MINK_DAY -> R.string.mink_day
+}
 
 /**
  * Hosts Mink's full-screen work separately from the default launcher task.

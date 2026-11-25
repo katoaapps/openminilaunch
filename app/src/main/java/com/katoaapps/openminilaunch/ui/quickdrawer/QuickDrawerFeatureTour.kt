@@ -15,6 +15,7 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.offset
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.widthIn
@@ -48,17 +49,20 @@ import androidx.compose.ui.graphics.drawscope.Stroke
 import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.layout.boundsInRoot
 import androidx.compose.ui.layout.onGloballyPositioned
+import androidx.compose.ui.layout.onSizeChanged
 import androidx.compose.ui.layout.positionInRoot
 import androidx.compose.ui.input.pointer.pointerInput
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
+import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.zIndex
 import com.katoaapps.openminilaunch.R
 import com.katoaapps.openminilaunch.ui.theme.Dimens
 import kotlinx.coroutines.delay
+import kotlin.math.roundToInt
 
 internal const val QUICK_DRAWER_FEATURE_TOUR_ID = "quick_drawer_spotlight_tour_v1"
 
@@ -299,32 +303,27 @@ private fun BoxScope.QuickDrawerTourCard(
     onNext: () -> Unit,
 ) {
     var horizontalDrag by remember(index) { mutableFloatStateOf(0f) }
+    var cardHeightPx by remember(index) { mutableIntStateOf(0) }
     val density = LocalDensity.current
-    val placeAboveTarget = target.center.y > screenHeightPx * .5f
-    val alignment = if (placeAboveTarget) Alignment.BottomCenter else Alignment.TopCenter
-    val topPadding = if (placeAboveTarget) {
-        Dimens.dp18
-    } else {
-        with(density) { target.bottom.toDp() } + Dimens.dp12
-    }
-    val bottomPadding = if (placeAboveTarget) {
-        with(density) { (screenHeightPx - target.top).toDp() } + Dimens.dp12
-    } else {
-        Dimens.dp18
-    }
+    val edgeMarginPx = with(density) { Dimens.dp18.toPx() }
+    val targetGapPx = with(density) { Dimens.dp12.toPx() }
+    val cardTopPx = quickDrawerTourCardTop(
+        target = target,
+        screenHeightPx = screenHeightPx,
+        cardHeightPx = cardHeightPx.toFloat(),
+        edgeMarginPx = edgeMarginPx,
+        targetGapPx = targetGapPx,
+    )
     val cardContentColor = MaterialTheme.colorScheme.inverseOnSurface
 
     Surface(
         modifier = Modifier
-            .align(alignment)
-            .padding(
-                start = Dimens.dp16,
-                end = Dimens.dp16,
-                top = topPadding,
-                bottom = bottomPadding,
-            )
+            .align(Alignment.TopCenter)
+            .padding(horizontal = Dimens.dp16)
             .widthIn(max = 420.dp)
             .fillMaxWidth()
+            .onSizeChanged { cardHeightPx = it.height }
+            .offset { IntOffset(x = 0, y = cardTopPx.roundToInt()) }
             .pointerInput(index) {
                 detectHorizontalDragGestures(
                     onHorizontalDrag = { _, amount -> horizontalDrag += amount },
@@ -390,6 +389,36 @@ private fun BoxScope.QuickDrawerTourCard(
             }
         }
     }
+}
+
+/**
+ * Places the help card wholly on-screen whenever possible. The target's midpoint is not a reliable
+ * proxy for available room on compact sheets: a target can be in the upper half while leaving too
+ * little space below for the card's navigation row.
+ */
+internal fun quickDrawerTourCardTop(
+    target: Rect,
+    screenHeightPx: Float,
+    cardHeightPx: Float,
+    edgeMarginPx: Float,
+    targetGapPx: Float,
+): Float {
+    val maxTop = (screenHeightPx - edgeMarginPx - cardHeightPx).coerceAtLeast(edgeMarginPx)
+    val aboveTop = target.top - targetGapPx - cardHeightPx
+    val belowTop = target.bottom + targetGapPx
+    val aboveFits = aboveTop >= edgeMarginPx
+    val belowFits = belowTop + cardHeightPx <= screenHeightPx - edgeMarginPx
+    val spaceAbove = target.top - targetGapPx - edgeMarginPx
+    val spaceBelow = screenHeightPx - target.bottom - targetGapPx - edgeMarginPx
+
+    val preferredTop = when {
+        aboveFits && belowFits -> if (spaceAbove >= spaceBelow) aboveTop else belowTop
+        aboveFits -> aboveTop
+        belowFits -> belowTop
+        spaceAbove >= spaceBelow -> aboveTop
+        else -> belowTop
+    }
+    return preferredTop.coerceIn(edgeMarginPx, maxTop)
 }
 
 private fun Rect.expandAndClamp(

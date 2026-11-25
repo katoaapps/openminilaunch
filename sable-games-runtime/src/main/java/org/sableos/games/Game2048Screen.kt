@@ -29,6 +29,7 @@ import androidx.compose.ui.unit.dp
 import org.sableos.design.SableSpacing
 import org.sableos.games.GamesText.t
 import kotlin.math.abs
+import kotlin.random.Random
 
 private val Board2048 = Color(0xFF1C2147)
 private val Empty2048 = Color(0xFF262C58)
@@ -47,14 +48,16 @@ private val Tile2048 = Color(0xFFFFFFFF)
 
 @Composable
 internal fun Game2048Screen() {
-    var board by remember { mutableStateOf(initial2048Board()) }
+    val random = remember { Random(System.nanoTime()) }
+    var board by remember { mutableStateOf(GamesCore.game2048Start(random)) }
     var score by remember { mutableLongStateOf(0L) }
 
     fun slide(direction: Int) {
         val result =
-            GamesCore.game2048Slide(
+            GamesCore.game2048Move(
                 board,
                 direction,
+                random,
             )
 
         check(result.size == 17)
@@ -67,7 +70,7 @@ internal fun Game2048Screen() {
     }
 
     fun reset() {
-        board = initial2048Board()
+        board = GamesCore.game2048Start(random)
         score = 0L
     }
 
@@ -229,23 +232,3 @@ private fun tileColor(value: Int): Color =
         1024 -> Tile1024
         else -> Tile2048
     }
-
-private fun initial2048Board(): IntArray =
-    intArrayOf(
-        2,
-        2,
-        4,
-        4,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-        0,
-    )

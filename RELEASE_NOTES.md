@@ -1,4 +1,4 @@
-Open 3.2.3 is a major Home update with an optional Classic layout, a rebuilt To-Dos experience powered by MinkBoard, a rewritten Widget Wall, refreshed onboarding, and 31 built-in Mink Games.
+Open 4.0.0 is a major Home update with an optional Classic layout, a rebuilt To-Dos experience powered by MinkBoard, a rewritten Widget Wall, refreshed onboarding, and 31 built-in Mink Games.
 
 ## Home and onboarding
 
@@ -12,7 +12,7 @@ Open 3.2.3 is a major Home update with an optional Classic layout, a rebuilt To-
 
 - **To-Dos 2.0:** Existing saved to-dos migrate once into a local two-status MinkBoard. New to-dos appear first, open through the canonical card workflow, and stay synchronized with board and status changes.
 - **Full board access remains available:** The To-Dos mini-app provides focused card and status controls, while the embedded MinkBoard surface handles board creation, richer editing, reordering, focus timers, import, and export.
-- **Portable board backups:** Backup schema 5 adds passphrase-encrypted MinkBoard data and non-destructive board restore. Older supported backups still import, but backups created by 3.2.3 require a schema-5-capable OpenMink release so boards are never silently discarded.
+- **Portable board backups:** Backup schema 5 adds passphrase-encrypted MinkBoard data and non-destructive board restore. Older supported backups still import, but backups created by 4.0.0 require a schema-5-capable OpenMink release so boards are never silently discarded.
 
 ## Widgets, conversations, and input
 

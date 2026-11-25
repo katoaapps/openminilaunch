@@ -8,9 +8,10 @@
         <activity
             android:name="org.sableos.games.console.ConsoleActivity"
             android:documentLaunchMode="intoExisting"
+            android:excludeFromRecents="false"
             android:exported="true"
-            android:icon="@drawable/ic_game_tilt"
-            android:label="Tilt Games"
+            android:icon="@mipmap/ic_sable_game"
+            android:label="@string/console_title"
             android:launchMode="standard"
             android:resizeableActivity="true"
             android:taskAffinity="${applicationId}.sablegames.console"

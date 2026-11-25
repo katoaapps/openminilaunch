@@ -189,4 +189,14 @@ class BoardGamesTest {
         assertFalse(losing.won)
         assertTrue(WordsGame.ANSWERS.all { it.length == 5 && it.all(Char::isUpperCase) })
     }
+
+    @Test
+    fun wordsNormalizesSoftwareKeyboardInput() {
+        val game = WordsGame("CRANE").replaceTyping("ab-12cdef")
+        assertEquals("ABCDE", game.typing)
+        assertEquals("OTHER", game.replaceTyping("other").typing)
+
+        val finished = WordsGame("CRANE", guesses = listOf("CRANE"))
+        assertEquals(finished, finished.replaceTyping("other"))
+    }
 }

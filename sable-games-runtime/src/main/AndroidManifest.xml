@@ -7,6 +7,7 @@
     <application>
         <activity
             android:name="org.sableos.games.SableGameActivity"
+            android:excludeFromRecents="true"
             android:exported="false"
             android:resizeableActivity="true"
             android:theme="@android:style/Theme.Material.NoActionBar" />
@@ -16,8 +17,8 @@
              The route-less host above remains private. -->
         <activity
             android:name="org.sableos.games.SudokuActivity"
-            android:icon="@drawable/ic_game_sudoku"
-            android:label="Sudoku"
+            android:icon="@mipmap/ic_sable_app_sudoku"
+            android:label="@string/task_label_sudoku"
             android:documentLaunchMode="intoExisting"
             android:configChanges="orientation|screenLayout|screenSize|smallestScreenSize|keyboard|keyboardHidden|navigation"
             android:excludeFromRecents="false"
@@ -36,8 +37,8 @@
         </activity>
         <activity
             android:name="org.sableos.games.MinesweeperActivity"
-            android:icon="@drawable/ic_game_minesweeper"
-            android:label="Minesweeper"
+            android:icon="@mipmap/ic_sable_app_minesweeper"
+            android:label="@string/task_label_minesweeper"
             android:documentLaunchMode="intoExisting"
             android:configChanges="orientation|screenLayout|screenSize|smallestScreenSize|keyboard|keyboardHidden|navigation"
             android:excludeFromRecents="false"
@@ -56,8 +57,8 @@
         </activity>
         <activity
             android:name="org.sableos.games.Game2048Activity"
-            android:icon="@drawable/ic_game_2048"
-            android:label="2048"
+            android:icon="@mipmap/ic_sable_app_2048"
+            android:label="@string/task_label_2048"
             android:documentLaunchMode="intoExisting"
             android:configChanges="orientation|screenLayout|screenSize|smallestScreenSize|keyboard|keyboardHidden|navigation"
             android:excludeFromRecents="false"
@@ -76,8 +77,8 @@
         </activity>
         <activity
             android:name="org.sableos.games.BricksActivity"
-            android:icon="@drawable/ic_game_bricks"
-            android:label="Bricks"
+            android:icon="@mipmap/ic_sable_app_bricks"
+            android:label="@string/bricks"
             android:documentLaunchMode="intoExisting"
             android:configChanges="orientation|screenLayout|screenSize|smallestScreenSize|keyboard|keyboardHidden|navigation"
             android:excludeFromRecents="false"
@@ -96,8 +97,8 @@
         </activity>
         <activity
             android:name="org.sableos.games.SnakeActivity"
-            android:icon="@drawable/ic_game_snake"
-            android:label="Snake"
+            android:icon="@mipmap/ic_sable_app_snake"
+            android:label="@string/snake"
             android:documentLaunchMode="intoExisting"
             android:configChanges="orientation|screenLayout|screenSize|smallestScreenSize|keyboard|keyboardHidden|navigation"
             android:excludeFromRecents="false"
@@ -116,8 +117,8 @@
         </activity>
         <activity
             android:name="org.sableos.games.BlocksActivity"
-            android:icon="@drawable/ic_game_blocks"
-            android:label="Blocks"
+            android:icon="@mipmap/ic_sable_app_blocks"
+            android:label="@string/blocks"
             android:documentLaunchMode="intoExisting"
             android:configChanges="orientation|screenLayout|screenSize|smallestScreenSize|keyboard|keyboardHidden|navigation"
             android:excludeFromRecents="false"
@@ -136,8 +137,8 @@
         </activity>
         <activity
             android:name="org.sableos.games.ReversiActivity"
-            android:icon="@drawable/ic_game_reversi"
-            android:label="Reversi"
+            android:icon="@mipmap/ic_sable_app_reversi"
+            android:label="@string/reversi"
             android:documentLaunchMode="intoExisting"
             android:configChanges="orientation|screenLayout|screenSize|smallestScreenSize|keyboard|keyboardHidden|navigation"
             android:excludeFromRecents="false"
@@ -156,8 +157,8 @@
         </activity>
         <activity
             android:name="org.sableos.games.SolitaireActivity"
-            android:icon="@drawable/ic_game_solitaire"
-            android:label="Solitaire"
+            android:icon="@mipmap/ic_sable_app_solitaire"
+            android:label="@string/solitaire"
             android:documentLaunchMode="intoExisting"
             android:configChanges="orientation|screenLayout|screenSize|smallestScreenSize|keyboard|keyboardHidden|navigation"
             android:excludeFromRecents="false"
@@ -176,8 +177,8 @@
         </activity>
         <activity
             android:name="org.sableos.games.MahjongActivity"
-            android:icon="@drawable/ic_game_mahjong"
-            android:label="Mahjong"
+            android:icon="@mipmap/ic_sable_app_mahjong"
+            android:label="@string/mahjong"
             android:documentLaunchMode="intoExisting"
             android:configChanges="orientation|screenLayout|screenSize|smallestScreenSize|keyboard|keyboardHidden|navigation"
             android:excludeFromRecents="false"
@@ -196,8 +197,8 @@
         </activity>
         <activity
             android:name="org.sableos.games.WordsActivity"
-            android:icon="@drawable/ic_game_words"
-            android:label="Words"
+            android:icon="@mipmap/ic_sable_app_words"
+            android:label="@string/words"
             android:documentLaunchMode="intoExisting"
             android:configChanges="orientation|screenLayout|screenSize|smallestScreenSize|keyboard|keyboardHidden|navigation"
             android:excludeFromRecents="false"
@@ -216,8 +217,8 @@
         </activity>
         <activity
             android:name="org.sableos.games.CardGamesActivity"
-            android:icon="@drawable/ic_game_cards"
-            android:label="Card Games"
+            android:icon="@mipmap/ic_sable_app_cards"
+            android:label="@string/task_label_card_games"
             android:documentLaunchMode="intoExisting"
             android:configChanges="orientation|screenLayout|screenSize|smallestScreenSize|keyboard|keyboardHidden|navigation"
             android:excludeFromRecents="false"
@@ -236,8 +237,8 @@
         </activity>
         <activity
             android:name="org.sableos.games.SnakesAndLaddersActivity"
-            android:icon="@drawable/ic_game_snakes_ladders"
-            android:label="Snakes &amp; Ladders"
+            android:icon="@mipmap/ic_sable_app_snakes_ladders"
+            android:label="@string/task_label_snakes_and_ladders"
             android:documentLaunchMode="intoExisting"
             android:configChanges="orientation|screenLayout|screenSize|smallestScreenSize|keyboard|keyboardHidden|navigation"
             android:excludeFromRecents="false"
@@ -256,8 +257,8 @@
         </activity>
         <activity
             android:name="org.sableos.games.LudoActivity"
-            android:icon="@drawable/ic_game_ludo"
-            android:label="Ludo"
+            android:icon="@mipmap/ic_sable_app_ludo"
+            android:label="@string/task_label_ludo"
             android:documentLaunchMode="intoExisting"
             android:configChanges="orientation|screenLayout|screenSize|smallestScreenSize|keyboard|keyboardHidden|navigation"
             android:excludeFromRecents="false"
@@ -276,8 +277,8 @@
         </activity>
         <activity
             android:name="org.sableos.games.ScaffoldActivity"
-            android:icon="@drawable/ic_game_scaffold"
-            android:label="Scaffold"
+            android:icon="@mipmap/ic_sable_app_scaffold"
+            android:label="@string/task_label_scaffold"
             android:documentLaunchMode="intoExisting"
             android:configChanges="orientation|screenLayout|screenSize|smallestScreenSize|keyboard|keyboardHidden|navigation"
             android:excludeFromRecents="false"

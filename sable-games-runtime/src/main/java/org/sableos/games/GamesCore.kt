@@ -1,5 +1,7 @@
 package org.sableos.games
 
+import kotlin.random.Random
+
 /**
  * Sable Games' rules, in Kotlin (they were the games-core Rust crate).
  *
@@ -380,6 +382,42 @@ internal object GamesCore {
             slots.forEachIndexed { position, cell -> cells[cell] = merged[position] }
         }
         return cells + score
+    }
+
+    /**
+     * Performs one complete 2048 move. A changed board receives one new tile; a blocked swipe is
+     * returned unchanged and does not consume randomness. The score remains the final element so
+     * callers can use the same result shape as [game2048Slide].
+     */
+    fun game2048Move(
+        board: IntArray,
+        direction: Int,
+        random: Random,
+    ): LongArray {
+        val result = game2048Slide(board, direction)
+        val moved = IntArray(TILES) { result[it].toInt() }
+        if (moved.contentEquals(board)) return result
+
+        addRandom2048Tile(moved, random)
+        return LongArray(TILES + 1) { index ->
+            if (index == TILES) result[TILES] else moved[index].toLong()
+        }
+    }
+
+    /** A new board starts with two independently placed tiles, as the standard game does. */
+    fun game2048Start(random: Random): IntArray =
+        IntArray(TILES).also { board ->
+            repeat(2) { addRandom2048Tile(board, random) }
+        }
+
+    private fun addRandom2048Tile(
+        board: IntArray,
+        random: Random,
+    ) {
+        val empty = board.indices.filter { board[it] == 0 }
+        if (empty.isEmpty()) return
+        val slot = empty[random.nextInt(empty.size)]
+        board[slot] = if (random.nextInt(10) == 0) 4 else 2
     }
 
     private fun slot(

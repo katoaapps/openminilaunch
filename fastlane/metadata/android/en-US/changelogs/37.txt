@@ -1,0 +1,3 @@
+Open 4.0.0 adds optional Classic Home, To-Dos 2.0 powered by MinkBoard, refreshed onboarding, a rewritten Widget Wall, and 31 built-in Mink Games.
+
+Regular folders now hold 16 items, Magic Box and Conversations recover input more reliably, and backups can include passphrase-encrypted boards. Focus timers add optional notification, alarm, vibration, and biometric/device-credential workflows.

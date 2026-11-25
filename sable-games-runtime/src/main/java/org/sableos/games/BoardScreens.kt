@@ -17,6 +17,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.BasicTextField
+import androidx.compose.foundation.text.KeyboardActions
+import androidx.compose.foundation.text.KeyboardOptions
 import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -30,8 +33,14 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.alpha
+import androidx.compose.ui.focus.FocusRequester
+import androidx.compose.ui.focus.focusRequester
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalSoftwareKeyboardController
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.ImeAction
+import androidx.compose.ui.text.input.KeyboardCapitalization
+import androidx.compose.ui.text.input.KeyboardType
 import androidx.compose.ui.unit.Dp
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -72,10 +81,11 @@ private const val BLOCKED_ALPHA = 0.55f
 private fun BoardSurface(
     side: Dp,
     color: Color,
+    modifier: Modifier = Modifier,
     content: @Composable BoxScope.() -> Unit,
 ) {
     Surface(
-        modifier = Modifier.size(side),
+        modifier = modifier.size(side),
         shape = MaterialTheme.shapes.large,
         color = color,
         border = BorderStroke(1.dp, color.copy(alpha = 0.6f)),
@@ -643,9 +653,16 @@ private fun MahjongTile(
 internal fun WordsScreen() {
     val random = remember { Random(System.nanoTime()) }
     var game by remember { mutableStateOf(WordsGame.start(random)) }
+    val inputFocus = remember { FocusRequester() }
+    val keyboard = LocalSoftwareKeyboardController.current
 
     fun reset() {
         game = WordsGame.start(random)
+    }
+
+    fun openTouchKeyboard() {
+        inputFocus.requestFocus()
+        keyboard?.show()
     }
 
     GameKeyHandler(GameKind.Words) { command ->
@@ -680,7 +697,38 @@ internal fun WordsScreen() {
         actions = listOf(GameAction(tab = true, label = t("new_label"), key = "Enter", onClick = ::reset)),
     ) { side ->
         val colors = MaterialTheme.colorScheme
-        BoardSurface(side, WordsField) {
+        BoardSurface(
+            side = side,
+            color = WordsField,
+            modifier = Modifier.clickable(onClick = ::openTouchKeyboard),
+        ) {
+            // The board remains the only visible source of truth. This tiny editor exists solely to
+            // bridge slab and foldable software keyboards into the same WordsGame state used by
+            // physical-key events.
+            BasicTextField(
+                value = game.typing,
+                onValueChange = { entered -> game = game.replaceTyping(entered) },
+                modifier =
+                    Modifier
+                        .align(Alignment.BottomEnd)
+                        .size(1.dp)
+                        .alpha(0f)
+                        .focusRequester(inputFocus),
+                keyboardOptions =
+                    KeyboardOptions(
+                        capitalization = KeyboardCapitalization.Characters,
+                        autoCorrectEnabled = false,
+                        keyboardType = KeyboardType.Text,
+                        imeAction = ImeAction.Done,
+                    ),
+                keyboardActions =
+                    KeyboardActions(
+                        onDone = {
+                            game = if (game.over) WordsGame.start(random) else game.submit()
+                        },
+                    ),
+                singleLine = true,
+            )
             Column(
                 Modifier.fillMaxSize(),
                 verticalArrangement = Arrangement.spacedBy(4.dp, Alignment.CenterVertically),
@@ -738,6 +786,23 @@ internal fun WordsScreen() {
                     }
                 }
                 Spacer(Modifier.height(2.dp))
+            }
+            Surface(
+                onClick = ::openTouchKeyboard,
+                modifier =
+                    Modifier
+                        .align(Alignment.BottomEnd)
+                        .padding(4.dp),
+                shape = RoundedCornerShape(5.dp),
+                color = Gold,
+                contentColor = WordsField,
+            ) {
+                Text(
+                    text = "Aa",
+                    modifier = Modifier.padding(horizontal = 7.dp, vertical = 3.dp),
+                    fontWeight = FontWeight.Bold,
+                    fontSize = 11.sp,
+                )
             }
         }
     }

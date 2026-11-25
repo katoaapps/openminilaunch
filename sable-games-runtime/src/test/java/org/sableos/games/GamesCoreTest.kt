@@ -4,6 +4,7 @@ import org.junit.Assert.assertArrayEquals
 import org.junit.Assert.assertEquals
 import org.junit.Assert.assertTrue
 import org.junit.Test
+import kotlin.random.Random
 
 class GamesCoreTest {
     private val puzzle = "530070000600195000098000060800060003400803001700020006060000280000419005000080079"
@@ -69,5 +70,32 @@ class GamesCoreTest {
         assertEquals(12L, result[16])
         val down = GamesCore.game2048Slide(intArrayOf(2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0, 2, 0, 0, 0), 3)
         assertEquals(listOf(0L, 0L, 4L, 4L), listOf(down[0], down[4], down[8], down[12]))
+    }
+
+    @Test
+    fun game2048StartsWithTwoTiles() {
+        val board = GamesCore.game2048Start(Random(2048))
+
+        assertEquals(2, board.count { it != 0 })
+        assertTrue(board.filter { it != 0 }.all { it == 2 || it == 4 })
+    }
+
+    @Test
+    fun game2048ChangedMoveSpawnsExactlyOneTile() {
+        val board = intArrayOf(0, 2, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
+        val result = GamesCore.game2048Move(board, 0, Random(2048))
+        val moved = result.copyOfRange(0, 16)
+
+        assertEquals(2, moved.count { it != 0L })
+        assertTrue(moved.all { it == 0L || it == 2L || it == 4L })
+    }
+
+    @Test
+    fun game2048BlockedMoveDoesNotSpawn() {
+        val board = intArrayOf(2, 4, 8, 16, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0)
+        val result = GamesCore.game2048Move(board, 0, Random(2048))
+
+        assertArrayEquals(board.map(Int::toLong).toLongArray(), result.copyOfRange(0, 16))
+        assertEquals(0L, result[16])
     }
 }

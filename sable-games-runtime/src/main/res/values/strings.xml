@@ -2,6 +2,15 @@
 <!-- English. Single capital letters in hints (C new, S find) name keyboard keys: keep them as the key, translate the word.
      English. Keep equal to GamesText.EN (GamesTextTest checks); translations go in values-<lang>/. -->
 <resources>
+    <!-- Task labels without translated in-game titles yet. Keep these centralized so the
+         manifest and system Recents UI never depend on hardcoded activity text. -->
+    <string name="task_label_sudoku" translatable="false">Sudoku</string>
+    <string name="task_label_minesweeper" translatable="false">Minesweeper</string>
+    <string name="task_label_2048" translatable="false">2048</string>
+    <string name="task_label_card_games" translatable="false">Card Games</string>
+    <string name="task_label_snakes_and_ladders" translatable="false">Snakes &amp; Ladders</string>
+    <string name="task_label_ludo" translatable="false">Ludo</string>
+    <string name="task_label_scaffold" translatable="false">Scaffold</string>
     <string name="game_over_space_plays_again">Game over · Space plays again</string>
     <string name="paused_p_resumes">Paused · P resumes</string>
     <string name="snake">Snake</string>
