@@ -18,7 +18,7 @@ import androidx.compose.ui.graphics.asImageBitmap
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
 import com.katoaapps.openminilaunch.data.LauncherStore
-import com.katoaapps.openminilaunch.ui.theme.resolveContentColor
+import com.katoaapps.openminilaunch.ui.theme.resolveUserSelectedContentColor
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.withContext
 
@@ -80,7 +80,7 @@ internal fun launcherBackgroundColor(store: LauncherStore, header: Boolean = fal
 
 @Composable
 internal fun launcherBackgroundContentColor(store: LauncherStore, header: Boolean = false): Color =
-    resolveContentColor(
+    resolveUserSelectedContentColor(
         background = launcherBackgroundColor(store, header),
-        preferred = store.fontAppearance.colorArgb?.let(::Color),
+        selected = store.fontAppearance.colorArgb?.let(::Color),
     )

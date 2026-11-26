@@ -48,4 +48,19 @@ class UiColorsTest {
         assertEquals(Color(0xFF172019), resolveContentColor(lightBackground, preferredLight))
         assertTrue(contrastRatio(lightBackground, resolveContentColor(lightBackground, preferredLight)) >= 4.5f)
     }
+
+    @Test
+    fun userSelectedContentColorOverridesAutomaticContrast() {
+        val incorrectlyEstimatedDarkBackground = Color(0xFF101512)
+        val selectedBlack = Color.Black
+
+        assertEquals(
+            selectedBlack,
+            resolveUserSelectedContentColor(incorrectlyEstimatedDarkBackground, selectedBlack),
+        )
+        assertEquals(
+            Color(0xFFFAF9F6),
+            resolveUserSelectedContentColor(incorrectlyEstimatedDarkBackground, null),
+        )
+    }
 }

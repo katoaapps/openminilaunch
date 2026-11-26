@@ -72,6 +72,10 @@ internal fun resolveContentColor(background: Color, preferred: Color?): Color =
     preferred?.let { ensureReadableContentColor(background, it) }
         ?: readableContentColor(background)
 
+/** A deliberate user font color is authoritative; only Automatic derives from the background. */
+internal fun resolveUserSelectedContentColor(background: Color, selected: Color?): Color =
+    selected ?: readableContentColor(background)
+
 /** Returns the color perceived when [foreground] is drawn over [background]. */
 internal fun compositeColor(foreground: Color, background: Color): Color {
     val inverseForegroundAlpha = 1f - foreground.alpha

@@ -38,7 +38,7 @@ import com.katoaapps.openminilaunch.ui.onboarding.homeTourTarget
 import com.katoaapps.openminilaunch.ui.theme.Dimens
 import com.katoaapps.openminilaunch.ui.theme.cathedralGlassBrush
 import com.katoaapps.openminilaunch.ui.theme.cathedralGlassCompositeColor
-import com.katoaapps.openminilaunch.ui.theme.resolveContentColor
+import com.katoaapps.openminilaunch.ui.theme.resolveUserSelectedContentColor
 import com.katoaapps.openminilaunch.ui.theme.shouldUseDarkForeground
 
 @Composable
@@ -71,9 +71,9 @@ internal fun BoxScope.HomeFocusPanel(
         transparency = panelTransparency,
         backdropColor = launcherBackgroundColor(store),
     )
-    val contentColor = resolveContentColor(
+    val contentColor = resolveUserSelectedContentColor(
         background = visiblePanelColor,
-        preferred = store.fontAppearance.colorArgb?.let(::Color),
+        selected = store.fontAppearance.colorArgb?.let(::Color),
     )
     val mutedColor = contentColor.copy(alpha = .68f)
     val insetColor = if (contentColor == com.katoaapps.openminilaunch.ui.theme.MinkWhite) {
