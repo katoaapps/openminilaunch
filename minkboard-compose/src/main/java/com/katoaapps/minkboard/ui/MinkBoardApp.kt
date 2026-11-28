@@ -234,6 +234,46 @@ fun MinkBoardApp(
     }
     val boardMenuScrollState = rememberScrollState()
 
+    val keyboardCommandsEnabled = visibleSelectedBoard != null &&
+        isSelectedBoardAccessible &&
+        editorState == MinkBoardEditorState.None &&
+        openCardId == null &&
+        !boardMenuOpen &&
+        !showCalendar &&
+        !showBoardMap &&
+        !showAddMenu &&
+        !showManageBoards &&
+        !showCardStatusPicker
+    val orderedKeyboardStatuses = visibleSelectedBoard?.statuses?.sortedBy { it.position }.orEmpty()
+    val keyboardFallbackStatusId = orderedKeyboardStatuses
+        .getOrNull(statusListState.firstVisibleItemIndex)
+        ?.id
+        ?: orderedKeyboardStatuses.firstOrNull()?.id
+    val boardKeyboardNavigation = rememberBoardKeyboardNavigation(
+        board = visibleSelectedBoard,
+        enabled = keyboardCommandsEnabled,
+        fallbackStatusId = keyboardFallbackStatusId,
+        onNewCard = { statusId ->
+            visibleSelectedBoard?.let { board ->
+                onEditorStateChange(
+                    MinkBoardEditorState.NewCard(
+                        boardIdValue = board.board.id.value,
+                        statusIdValue = statusId.value,
+                    ),
+                )
+            }
+        },
+        onOpenCard = { cardId ->
+            visibleSelectedBoard?.let { board -> actions.openCard(board.board.id, cardId) }
+        },
+        onStatusHighlighted = { statusId ->
+            val statusIndex = orderedKeyboardStatuses.indexOfFirst { it.id == statusId }
+            if (statusIndex >= 0) {
+                boardNavigationScope.launch { statusListState.animateScrollToItem(statusIndex) }
+            }
+        },
+    )
+
     var previousSelectedBoardId by remember { mutableStateOf(effectiveSelectedBoardId?.value) }
     LaunchedEffect(effectiveSelectedBoardId?.value, editableBoardIdValues) {
         // Treat the first hydrated board as loading, not user navigation, or a host-restored
@@ -300,7 +340,9 @@ fun MinkBoardApp(
     }
 
     Scaffold(
-        modifier = modifier.fillMaxSize(),
+        modifier = modifier
+            .fillMaxSize()
+            .then(boardKeyboardNavigation.modifier),
         snackbarHost = { SnackbarHost(snackbarHostState) },
         topBar = {
             TopAppBar(
@@ -756,6 +798,8 @@ fun MinkBoardApp(
                                             ?: 0,
                                         compactLayout = useCompactCards,
                                         focusedCardId = focusedCardPlacement?.cardId,
+                                        keyboardHighlightedCardId = boardKeyboardNavigation
+                                            .highlightedCardId(status.id),
                                         statusDragHandle = {
                                             Icon(
                                                 imageVector = Icons.Default.DragHandle,
@@ -819,6 +863,7 @@ fun MinkBoardApp(
                                             )
                                         },
                                         onOpenCard = { card ->
+                                            boardKeyboardNavigation.select(status.id, card.id)
                                             actions.openCard(visibleSelectedBoard.board.id, card.id)
                                         },
                                         revealCard = pendingCardReveal

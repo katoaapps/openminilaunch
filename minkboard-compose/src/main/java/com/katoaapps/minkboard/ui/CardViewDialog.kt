@@ -11,6 +11,7 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.verticalScroll
 import androidx.compose.material.icons.Icons
 import androidx.compose.material.icons.outlined.CalendarMonth
+import androidx.compose.material.icons.outlined.CheckCircle
 import androidx.compose.material.icons.outlined.Checklist
 import androidx.compose.material.icons.outlined.ContentCopy
 import androidx.compose.material.icons.outlined.Delete
@@ -52,6 +53,8 @@ internal fun CardViewDialog(
     onEdit: () -> Unit,
     onManageSubtasks: () -> Unit,
     onFocus: () -> Unit,
+    canMarkDone: Boolean,
+    onMarkDone: () -> Unit,
     canSendToTop: Boolean,
     canSendToBottom: Boolean,
     onSendToTop: () -> Unit,
@@ -93,6 +96,17 @@ internal fun CardViewDialog(
                     expanded = moreMenuOpen,
                     onDismissRequest = { moreMenuOpen = false },
                 ) {
+                    DropdownMenuItem(
+                        text = { Text(stringResource(R.string.mark_done)) },
+                        leadingIcon = {
+                            Icon(Icons.Outlined.CheckCircle, contentDescription = null)
+                        },
+                        enabled = canMarkDone,
+                        onClick = {
+                            moreMenuOpen = false
+                            onMarkDone()
+                        },
+                    )
                     DropdownMenuItem(
                         text = { Text(stringResource(R.string.subtasks)) },
                         leadingIcon = { Icon(Icons.Outlined.Checklist, contentDescription = null) },

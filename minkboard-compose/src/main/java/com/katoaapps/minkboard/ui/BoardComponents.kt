@@ -106,6 +106,7 @@ internal fun BoardStatusPanel(
     nextStatusCardCount: Int,
     compactLayout: Boolean,
     focusedCardId: CardId?,
+    keyboardHighlightedCardId: CardId?,
     statusDragHandle: @Composable () -> Unit,
     modifier: Modifier = Modifier,
     onAddCard: () -> Unit,
@@ -163,6 +164,11 @@ internal fun BoardStatusPanel(
             delay(100)
         }
         onRevealFinished(target.cardId)
+    }
+
+    LaunchedEffect(keyboardHighlightedCardId?.value, cards.map { it.id.value }) {
+        val targetIndex = cards.indexOfFirst { it.id == keyboardHighlightedCardId }
+        if (targetIndex >= 0) cardListState.animateScrollToItem(targetIndex)
     }
 
     LaunchedEffect(activeVerticalScrollTarget) {
@@ -304,6 +310,7 @@ internal fun BoardStatusPanel(
                                 dragDropState = dragDropState,
                                 compactLayout = compactLayout,
                                 isRevealHighlighted = highlightedCardId == card.id,
+                                isKeyboardHighlighted = keyboardHighlightedCardId == card.id,
                                 isFocusRunning = focusedCardId == card.id,
                                 accessibilityActions = buildList {
                                     if (index > 0) {
@@ -392,6 +399,7 @@ private fun BoardCardTile(
     dragDropState: CardDragDropState,
     compactLayout: Boolean,
     isRevealHighlighted: Boolean,
+    isKeyboardHighlighted: Boolean,
     isFocusRunning: Boolean,
     accessibilityActions: List<CustomAccessibilityAction>,
     onClick: () -> Unit,
@@ -401,7 +409,8 @@ private fun BoardCardTile(
     val cardContentColor = readableContentColor(statusColor)
     val secondaryContentColor = cardContentColor.copy(alpha = 0.78f)
     val cardBorder = when {
-        isRevealHighlighted -> BorderStroke(4.dp, cardContentColor)
+        isRevealHighlighted -> BorderStroke(4.dp, Color.White)
+        isKeyboardHighlighted -> BorderStroke(3.dp, Color.White)
         card.isMajor -> BorderStroke(2.dp, IMPORTANT_COLOR)
         dueState == CardDueState.Overdue -> BorderStroke(2.dp, MaterialTheme.colorScheme.error)
         else -> null
@@ -418,7 +427,7 @@ private fun BoardCardTile(
         null
     }
     val hapticFeedback = LocalHapticFeedback.current
-    var dragHandleCoordinates by remember(card.id) { mutableStateOf<LayoutCoordinates?>(null) }
+    var cardCoordinates by remember(card.id) { mutableStateOf<LayoutCoordinates?>(null) }
     val focusDashPhase = if (isFocusRunning) {
         val focusTransition = rememberInfiniteTransition(label = "focused card border")
         val phase by focusTransition.animateFloat(
@@ -442,7 +451,26 @@ private fun BoardCardTile(
         onClick = onClick,
         modifier = Modifier
             .onGloballyPositioned { coordinates ->
+                cardCoordinates = coordinates
                 dragDropState.registerCard(card.id, coordinates.boundsInRoot())
+            }
+            .pointerInput(card.id, dragDropState) {
+                detectDragGesturesAfterLongPress(
+                    onDragStart = { localOffset ->
+                        cardCoordinates?.let { coordinates ->
+                            hapticFeedback.performHapticFeedback(HapticFeedbackType.LongPress)
+                            dragDropState.startDrag(
+                                card = card,
+                                pointerInRoot = coordinates.localToRoot(localOffset),
+                            )
+                        }
+                    },
+                    onDrag = { change, _ -> change.consume() },
+                    // The board-level pointer owner completes or cancels the gesture. It remains
+                    // composed when edge scrolling disposes this source card.
+                    onDragEnd = {},
+                    onDragCancel = {},
+                )
             }
             .graphicsLayer { alpha = if (dragDropState.isDragging(card.id)) 0.28f else 1f }
             .drawWithContent {
@@ -452,7 +480,7 @@ private fun BoardCardTile(
                     val inset = strokeWidth / 2f
                     val gap = 7.dp.toPx()
                     drawRoundRect(
-                        color = cardContentColor,
+                        color = Color.White,
                         topLeft = Offset(inset, inset),
                         size = Size(
                             width = size.width - strokeWidth,
@@ -589,28 +617,7 @@ private fun BoardCardTile(
             Box(
                 modifier = Modifier
                     .size(if (compactLayout) 36.dp else 48.dp)
-                    .onGloballyPositioned { dragHandleCoordinates = it }
-                    .semantics { contentDescription = reorderCardDescription }
-                    .pointerInput(card.id, dragDropState) {
-                        detectDragGesturesAfterLongPress(
-                            onDragStart = { localOffset ->
-                                dragHandleCoordinates?.let { coordinates ->
-                                    hapticFeedback.performHapticFeedback(HapticFeedbackType.LongPress)
-                                    dragDropState.startDrag(
-                                        card = card,
-                                        pointerInRoot = coordinates.localToRoot(localOffset),
-                                    )
-                                }
-                            },
-                            onDrag = { change, _ ->
-                                change.consume()
-                            },
-                            // The board-level pointer owner completes or cancels the gesture. It
-                            // remains composed when edge scrolling disposes this source card.
-                            onDragEnd = {},
-                            onDragCancel = {},
-                        )
-                    },
+                    .semantics { contentDescription = reorderCardDescription },
                 contentAlignment = Alignment.Center,
             ) {
                 Icon(

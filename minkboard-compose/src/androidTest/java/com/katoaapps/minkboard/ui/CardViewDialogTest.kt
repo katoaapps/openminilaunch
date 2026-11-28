@@ -56,6 +56,8 @@ class CardViewDialogTest {
                     onEdit = {},
                     onManageSubtasks = {},
                     onFocus = {},
+                    canMarkDone = true,
+                    onMarkDone = {},
                     canSendToTop = true,
                     canSendToBottom = true,
                     onSendToTop = {},
@@ -69,6 +71,7 @@ class CardViewDialogTest {
         composeRule.onNodeWithContentDescription("Card options").performClick()
 
         val actionTops = listOf(
+            "Mark done",
             "Subtasks",
             "Start focus timer",
             "Send to top",

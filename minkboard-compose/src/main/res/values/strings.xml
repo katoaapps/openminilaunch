@@ -53,6 +53,7 @@
     <string name="delete_card_title">Delete this card?</string>
     <string name="delete_card_body">“%1$s” and all of its subtasks will be deleted.</string>
     <string name="done">Done</string>
+    <string name="mark_done">Mark done</string>
     <string name="manage_boards">Manage boards</string>
     <string name="switch_board">Switch board</string>
     <string name="edit_board">Edit board</string>

@@ -63,6 +63,7 @@ fun MinkBoardCardDialogHost(
 
     if (editorState == MinkBoardEditorState.None && openCard != null) {
         val cardStatus = board.statuses.firstOrNull { it.id == openCard.statusId }
+        val doneStatus = board.statuses.firstOrNull { it.isDoneStatus }
         val cardDuplicateSuffix = stringResource(R.string.duplicate_title_suffix)
         if (cardStatus != null) {
             val statusCards = board.cardsIn(cardStatus.id)
@@ -97,6 +98,16 @@ fun MinkBoardCardDialogHost(
                                 cardIdValue = openCard.id.value,
                             ),
                         )
+                    }
+                },
+                canMarkDone = doneStatus != null && cardStatus.id != doneStatus.id,
+                onMarkDone = {
+                    doneStatus?.let { destination ->
+                        actions.moveCard(openCard.id, destination.id, 0) { placement ->
+                            actions.closeCard()
+                            onEditorStateChange(MinkBoardEditorState.None)
+                            onCardPlacementChanged(placement)
+                        }
                     }
                 },
                 canSendToTop = cardIndex > 0,

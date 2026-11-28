@@ -47,6 +47,28 @@ internal fun SubtaskManagerDialog(
     val latestDraft by rememberUpdatedState(draft)
     val orderedSubtasks = card.subtasks.sortedBy { it.position }
     val completedCount = orderedSubtasks.count(BoardSubtask::isCompleted)
+    val editingSubtask = orderedSubtasks.firstOrNull {
+        it.id.value == draft.editingSubtaskIdValue
+    }
+
+    fun saveDraftAndDismiss() {
+        val pendingText = latestDraft.pendingSubtaskText.trim()
+        val editedText = latestDraft.editingSubtaskText.trim()
+
+        fun savePendingOrDismiss() {
+            if (pendingText.isNotEmpty()) {
+                onAddSubtask(pendingText, onDismiss)
+            } else {
+                onDismiss()
+            }
+        }
+
+        if (editingSubtask != null && editedText.isNotEmpty()) {
+            onUpdateSubtask(editingSubtask, editedText, ::savePendingOrDismiss)
+        } else {
+            savePendingOrDismiss()
+        }
+    }
 
     MinkBoardAlertDialog(
         onDismissRequest = onDismiss,
@@ -203,7 +225,10 @@ internal fun SubtaskManagerDialog(
             }
         },
         confirmButton = {
-            Button(onClick = onDismiss) {
+            Button(
+                onClick = ::saveDraftAndDismiss,
+                enabled = editingSubtask == null || draft.editingSubtaskText.isNotBlank(),
+            ) {
                 Text(stringResource(R.string.done))
             }
         },

@@ -208,6 +208,75 @@ class EditorStateRestorationTest {
     }
 
     @Test
+    fun doneSavesActiveEditAndPendingSubtaskBeforeDismissing() {
+        val cardId = CardId("card")
+        val existing = BoardSubtask(
+            id = SubtaskId("existing"),
+            cardId = cardId,
+            text = "Original step",
+            isCompleted = false,
+            position = 0,
+        )
+        var card by mutableStateOf(
+            BoardCard(
+                id = cardId,
+                statusId = StatusId("status"),
+                title = "Ship MinkBoard",
+                details = "",
+                dueDate = null,
+                isMajor = false,
+                position = 0,
+                createdAtEpochMillis = 1L,
+                updatedAtEpochMillis = 1L,
+                subtasks = listOf(existing),
+            ),
+        )
+        var draft by mutableStateOf(
+            SubtaskManagerDraft(
+                pendingSubtaskText = "New step",
+                editingSubtaskIdValue = existing.id.value,
+                editingSubtaskText = "Updated step",
+            ),
+        )
+        val operations = mutableListOf<String>()
+
+        composeRule.setContent {
+            MaterialTheme {
+                SubtaskManagerDialog(
+                    card = card,
+                    draft = draft,
+                    onDraftChange = { draft = it },
+                    onDismiss = { operations += "dismiss" },
+                    onAddSubtask = { text, onSuccess ->
+                        operations += "add:$text"
+                        onSuccess()
+                    },
+                    onUpdateSubtask = { subtask, text, onSuccess ->
+                        operations += "update:${subtask.id.value}:$text"
+                        card = card.copy(
+                            subtasks = card.subtasks.map { current ->
+                                if (current.id == subtask.id) current.copy(text = text) else current
+                            },
+                        )
+                        onSuccess()
+                    },
+                    onToggleSubtask = { _, _ -> },
+                    onDeleteSubtask = {},
+                )
+            }
+        }
+
+        composeRule.onNodeWithText(composeRule.activity.getString(R.string.done)).performClick()
+
+        composeRule.runOnIdle {
+            assertEquals(
+                listOf("update:existing:Updated step", "add:New step", "dismiss"),
+                operations,
+            )
+        }
+    }
+
+    @Test
     fun archivePassphrasesAreAbsentAfterSavedStateRestoration() {
         var exportCount = 0
         val restoration = StateRestorationTester(composeRule)
